@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Path to store the original MAC address
+ORIGINAL_MAC_FILE="/tmp/original_mac_address"
+
+# Function to change MAC address and bring the network interface down and up
+change_mac_address() {
+    local interface="en0"
+
+    # Check if restoring the original MAC address
+    if [ "$1" == "--restore" ]; then
+        if [ -f "$ORIGINAL_MAC_FILE" ]; then
+            local original_mac_address=$(cat "$ORIGINAL_MAC_FILE")
+            sudo ifconfig $interface ether $original_mac_address
+            sudo ifconfig $interface down
+            sudo ifconfig $interface up
+            echo "Restored the original MAC address: $original_mac_address"
+        else
+            echo "Original MAC address not found."
+            return 1
+        fi
+        return 0
+    fi
+
+    # Check if MAC address argument is provided
+    if [ -z "$1" ]; then
+        echo "Usage: change_mac_address <new_mac_address> | --restore"
+        return 1
+    fi
+
+    # Save the original MAC address if not already saved
+    if [ ! -f "$ORIGINAL_MAC_FILE" ]; then
+        local original_mac_address=$(ifconfig $interface | grep ether | awk '{print $2}')
+        echo $original_mac_address > "$ORIGINAL_MAC_FILE"
+    fi
+
+    # Assign the new MAC address
+    local new_mac_address="$1"
+    sudo ifconfig $interface ether $new_mac_address
+
+    # Bring the network interface down and up
+    sudo ifconfig $interface down
+    sudo ifconfig $interface up
+
+    # Verify and display the current MAC address
+    echo "MAC address changed to:"
+    ifconfig $interface | grep ether
+}
+
+# Example usage:
+# change_mac_address "12:34:56:78:9A:BC"
+# change_mac_address --restore

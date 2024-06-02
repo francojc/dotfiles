@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# Purpose:
+# Restore macOS dotfiles, configurations, and settings from backup sources.
+# This script is intended to be run after a fresh macOS installation.
+
+# Process:
+
+# - Install [Homebrew](https://brew.sh/):
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# DOTFILES --------------------------------------------------------------------
+# Install `stow` for managing dotfiles
+brew install stow
+
+# - `cd` into home
+cd ~
+
+# - Stow dotfiles
+# `stow` will create symlinks in the home directory
+# to the dotfiles in the repository
+stow ~/.dotfiles/
+
+# HOMEBREW --------------------------------------------------------------------
+# - Install Homebrew packages
+brew bundle --file=Brewfile
+
+# - Decrypt and move
+gpg -d ~/.dotfiles/.ssh.tar.gz.gpg | tar -xz -C ~/.ssh
+mkdir -p ~/.continue/
+gpg -d ~/.dotfiles/.continue/settings.json.gpg > ~/.continue/settings.json
+
+# PASSWORD STORE ---------------------------------------------------------------
+# - Clone pass-store repository
+git clone https://github.com/francojc/password-store.git ~/.password-store
+
+# - Decrypt `~/password-store/`
+gpg -d ~/.password-store/private-key.asc.gpg > ~/.password-store/private-key.asc
+
+# - Import private key
+gpg --import ~/.password-store/private-key.asc
+
+# - Veryify private key
+gpg --list-keys
+
+# - Verify password-store
+pass
+
+# - Remove private key
+shred --remove ~/.password-store/private-key.asc
+
+# - Export environment variables
+~/.password-store/export-password-store
+
+# - Set macOS preferences
+source .macos

@@ -1,0 +1,32 @@
+#!/Users/francojc/bin/shell/bin/python
+
+from openai import OpenAI
+import os
+import json
+import argparse
+
+client = OpenAI()
+
+# Load API key from environment variable
+api_key = os.getenv("OPENAI_API_KEY")
+
+# Set the API key
+client.api_key = api_key
+
+# Pull the cli argument for the audio file path
+parser = argparse.ArgumentParser(description='Transcribe an audio file using OpenAI (Whisper-1). File uploads are currently limited to 25 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm.')
+parser.add_argument('file_path', type=str, help='Path to the audio file')
+args = parser.parse_args()
+
+# Load the audio file and transcribe it
+audio_file = open(args.file_path, "rb")
+transcript = client.audio.transcriptions.create(model = "whisper-1", file=audio_file, response_format="text")
+
+# Write the transcript to a text file
+file_path = os.path.splitext(args.file_path)[0] + ".txt"
+file = open(file_path, "w")
+file.write(transcript)
+
+# Close the audio file
+audio_file.close()
+
