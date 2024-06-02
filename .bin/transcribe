@@ -1,4 +1,4 @@
-#!/Users/francojc/bin/shell/bin/python
+#!/Users/francojc/.bin/.venv/bin/python
 
 from openai import OpenAI
 import os

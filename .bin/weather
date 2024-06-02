@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+#!/Users/francojc/.bin/.venv/bin/python
 
+import argparse
 import requests
 import os
 
@@ -24,12 +25,9 @@ icon_mapping = {
     "50n": "🌫️",
 }
 
-# Load API key from environment variable
-api_key = os.getenv("OPENWEATHER_API_KEY")
-
 
 def get_weather(location):
-    api_key = api_key  # OpenWeatherMap API
+    api_key = os.getenv("OPENWEATHER_API_KEY")  # OpenWeatherMap API
     base_url = "https://api.openweathermap.org/data/2.5/weather"
     exclude = "minutely,hourly,daily,alerts"
     units = "imperial"  # use "metric" for Celsius
@@ -46,4 +44,15 @@ def get_weather(location):
     else:
         return "Error fetching weather data"
 
-print(get_weather("Winston-Salem, us"))
+def main():
+    parser = argparse.ArgumentParser(description="Get the current weather")
+    parser.add_argument('city', type=str, help="City name")
+    parser.add_argument('country', type=str, help="Country code")
+    args = parser.parse_args()
+
+    location = f"{args.city},{args.country}"
+
+    print(get_weather(location))
+
+if __name__ == "__main__":
+    main()
