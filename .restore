@@ -13,16 +13,15 @@
 # Install `stow` for managing dotfiles
 brew install stow
 
-# - `cd` into home
-cd ~
-
 # - Stow dotfiles
 # `stow` will create symlinks in the home directory
 # to the dotfiles in the repository
-stow ~/.dotfiles/
+cd ~/.dotfiles
+stow .
 
 # HOMEBREW --------------------------------------------------------------------
 # - Install Homebrew packages
+cd ~
 brew bundle --file=Brewfile
 
 # - Decrypt and move
