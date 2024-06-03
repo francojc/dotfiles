@@ -3,24 +3,29 @@
 # Purpose: Backup script to prepare for a clean install of macOS
 # Usage: ~/.backup
 
-# Process:
-# I'm still sketching out the process, but the general idea is to:
-
 # 1. Compress and encrypt:
-#  - `tar -czf ~/.ssh.tar.gz ~/.ssh/`; `gpg -c ~/.ssh.tar.gz`;
-#  - `gpg -c ~/.continue/settings.json`
-#  * `echo "*.gpg\n" >> ~/.password-store/.stow-local-ignore`
+# echo ".*gpg$\n" >> ~/.password-store/.stow-local-ignore # run once
+# - `~/.ssh/` directory
+tar -czf ~/.ssh.tar.gz ~/.ssh
+gpg -c ~/.ssh.tar.gz
+mv ~/.ssh.tar.gz.gpg ~/.dotfiles/
+rm ~/.ssh.tar.gz
+
+#  - `gpg -c ~/.continue/config.json`
+gpg -c ~/.continue/config.json
+mkdir -p ~/.dotfiles/.continue
+mv ~/.continue/config.json.gpg ~/.dotfiles/.continue/
 
 # * 2. Backup ~/.password-store/ repository
-#  - `gpg --export-secret-keys jerid.francom@gmail.com > ~/.password-store/private-key.asc`
-#  - `gpg -c ~/.password-store/private-key.asc`
-#  - `shred ~/.password-store/private-key.asc`
-#  - `pass git add -A`
-#  - `pass git commit -m "Backup private key"`
-#  - `pass git push`
+gpg --export-secret-keys jerid.francom@gmail.com > ~/.password-store/private-key.asc
+gpg -c ~/.password-store/private-key.asc
+shred ~/.password-store/private-key.asc
+pass git add -A
+pass git commit -m "Backup private key"
+pass git push
 
-# 3. Backup all the installed packages (use `stow` to backup the Brewfile)
-#  - `brew bundle dump --file=~/.dotfiles/Brewfile`
+# 3. Backup all the installed packages
+brew bundle dump --file=~/.dotfiles/Brewfile
 
 # 4. Backup all the dotfiles in my home directory with `stow`
 #   * ~/.backup
