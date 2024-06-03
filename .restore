@@ -53,4 +53,4 @@ shred --remove ~/.password-store/private-key.asc
 ~/.password-store/export-password-store
 
 # - Set macOS preferences
-source .macos
+~/.dotfiles/.macos

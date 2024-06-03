@@ -3,6 +3,9 @@
 # Purpose: Backup script to prepare for a clean install of macOS
 # Usage: ~/.backup
 
+# 0. Change to the home directory
+cd ~
+
 # 1. Compress and encrypt:
 # echo ".*gpg$\n" >> ~/.password-store/.stow-local-ignore # run once
 # - `~/.ssh/` directory

@@ -1,5 +1,9 @@
-.DS_Store
 README.md
 .git
 .*gpg$
 
+.backup
+.restore
+.macos
+
+.DS_Store
