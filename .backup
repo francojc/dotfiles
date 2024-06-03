@@ -39,9 +39,9 @@ brew bundle dump --file=~/.dotfiles/Brewfile
 #   * ~/.zshrc
 #   * ~/Brewfile
 #   * ~/.bin/
-#   - ~/.config/
-#   - ~/.continue/settings.json.gpg
-#   - ~/.ssh.tar.gz.gpg
+#   * ~/.config/
+#   * ~/.continue/settings.json.gpg
+#   * ~/.ssh.tar.gz.gpg
 #   - ~/.zsh/
 
 # 5. Backup the following directories with `rsync` or Time Machine?
