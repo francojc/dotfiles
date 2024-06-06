@@ -6,4 +6,5 @@ README.md
 .restore
 .macos
 
+dotfiles.code-workspace
 .DS_Store

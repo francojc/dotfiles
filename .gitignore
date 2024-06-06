@@ -6,3 +6,4 @@
 .quarto
 /.config/raycast/*
 /.continue
+dotfiles.code-workspace
