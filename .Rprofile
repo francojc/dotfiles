@@ -1,6 +1,13 @@
 .First <- function() {
-  # cat("---:", getwd(), "\n")
+  r <- getOption("repos")
+  r["CRAN"] <- "https://cloud.r-project.org"
+  options(repos = r)
 }
+
+# if (interactive()) prompt::set_prompt(prompt::prompt_fancy)
+if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
+  parts = list("status", "memory", "git")
+))
 
 # Aliases for common setups
 
@@ -70,5 +77,5 @@
 }
 
 .Last <- function() {
-  cat("\n¡Adiós!\n") # Say bye!
+
 }

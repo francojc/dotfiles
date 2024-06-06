@@ -25,9 +25,16 @@ cd ~
 brew bundle --file=Brewfile
 
 # - Decrypt and move
-gpg -d ~/.dotfiles/.ssh.tar.gz.gpg | tar -xz -C ~/.ssh
+gpg -d ~/.dotfiles/.ssh.tar.gz.gpg
+tar -xvzf ~/.dotfiles/.ssh.tar.gz # sends to ~/Users/... (fix)
+shred --remove ~/.dotfiles/.ssh.tar.gz.gpg
+shred --remove ~/.dotfiles/.ssh.tar.gz
+
 mkdir -p ~/.continue/
-gpg -d ~/.dotfiles/.continue/settings.json.gpg > ~/.continue/settings.json
+gpg -d ~/.dotfiles/.continue/config.json.gpg > ~/.dotfiles/.continue/config.json
+cd ~/.dotfiles
+stow --adopt .
+cd ~
 
 # PASSWORD STORE ---------------------------------------------------------------
 # - Clone pass-store repository

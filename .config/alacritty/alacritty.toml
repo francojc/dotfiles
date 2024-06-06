@@ -9,12 +9,11 @@ TERM = "xterm-256color"
 size = 13.0
 
 [font.normal]
-family = "MesloLGS NF"
+family = "MesloLGL Nerd Font Mono"
 style = "Regular"
 
 [scrolling]
-history = 10000
-multiplier = 3
+history = 20000
 
 [window]
 dynamic_title = true
@@ -23,3 +22,10 @@ decorations = "Buttonless"
 [window.padding]
 x = 10
 y = 10
+
+[selection]
+save_to_clipboard = true
+
+[cursor.style]
+shape = "Underline"
+blinking = "On"

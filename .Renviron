@@ -1,10 +1,3 @@
-# Set memory
-
-R_MAX_VSIZE=16Gb
-
-# Set CRAN mirror
-options(repos = c(CRAN = "https://cran.rstudio.com/"))
-
 # Set local library for packages
 R_LIBS_USER=/Users/francojc/R/Library/
 
@@ -12,9 +5,6 @@ R_LIBS_USER=/Users/francojc/R/Library/
 TZ='America/New_York'
 
 # Other configuration
-
-RSTUDIO_PANDOC=/usr/local/bin/pandoc
-RETICULATE_PYTHON=/usr/local/bin/python
 CANVAS_BASE_URL='https://wakeforest.instructure.com'
 QUALTRICS_BASE_URL='wakeforest.ca1.qualtrics.com'
 plotly_username='jcolef'

@@ -1,10 +1,5 @@
 # ZSH configuration file
 
-# Brew binary (Apple Silicon)
-# if [[ -f "/opt/homebrew/bin/brew" ]] then
-#  eval "$(/opt/homebrew/bin/brew shellenv)"
-#fi
-
 # --- FZF ---
 eval "$(fzf --zsh)"
 
@@ -16,6 +11,8 @@ bindkey '^U' backward-kill-line
 bindkey '^Y' yank
 bindkey '^[[1;3D' backward-word # ctrl + left arrow
 bindkey '^[[1;3C' forward-word # ctrl + right arrow (not working)
+bindkey '^[[A' up-line-or-history # up arrow
+bindkey '^[[B' down-line-or-history # down arrow
 
 # --- HISTORY ---
 HISTSIZE=5000
@@ -29,10 +26,6 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 setopt hist_ignore_space
-
-# --- PATHS ---
-export PATH="/usr/local/sbin:$PATH"
-export PATH="/Users/francojc/.bin:$PATH"
 
 # --- ALIASES ---
 
@@ -118,20 +111,6 @@ function qtree() {
     command tree $DIR -L $L -CF
 }
 
-# ENVIRONMENT VARIABLES
-export EDITOR='nvim'
-export PAGER='bat'
-export MANPAGER="sh -c 'col -b | bat -l man -p'"
-export VISUAL='nvim'
-
-export HOMEBREW_NO_ENV_HINTS=true
-export QUARTO_R_PATH=/usr/local/bin/R
-# Hack to fix pandoc error with quarto 1.4.* and lua/ path
-export LUA_CPATH=""
-
-# --- SECRETS (from `pass`) ---
-source ~/.variables.env
-
 # --- ZSH PLUGINS ---
 # ZSH autosuggestions
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -142,7 +121,7 @@ source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring
 # ZSH autocomplete
 source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 # ZSH alias-tips
-source ~/.zsh/alias-tips/alias-tips.plugin.zsh
+# source ~/.zsh/alias-tips/alias-tips.plugin.zsh
 
 # Deduplicate entries in PATH
 typeset -U PATH

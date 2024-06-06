@@ -4,7 +4,7 @@
 options(radian.complete_while_typing = TRUE)
 
 # auto suggest completions (experimental: may break.)
-options(radian.auto_suggest = TRUE)
+options(radian.auto_suggest = FALSE)
 
 # the minimum length of prefix to trigger auto completions
 options(radian.completion_prefix_length = 4)

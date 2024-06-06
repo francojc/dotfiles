@@ -41,9 +41,6 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-# Disable smart quotes as they’re annoying when typing code
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-
 ###############################################################################
 # Finder                                                                      #
 ###############################################################################
