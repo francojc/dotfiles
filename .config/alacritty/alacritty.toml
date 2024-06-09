@@ -5,23 +5,19 @@ import = [
 [env]
 TERM = "xterm-256color"
 
-[font]
-size = 13.0
-
-[font.normal]
-family = "MesloLGL Nerd Font Mono"
-style = "Regular"
-
-[scrolling]
-history = 20000
-
 [window]
+padding.x = 15
+padding.y = 15
 dynamic_title = true
 decorations = "Buttonless"
 
-[window.padding]
-x = 10
-y = 10
+[font]
+size = 13.0
+normal.family = "MesloLGL Nerd Font Mono"
+normal.style = "Regular"
+
+[scrolling]
+history = 20000
 
 [selection]
 save_to_clipboard = true

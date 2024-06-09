@@ -2,19 +2,16 @@
 
 # --- Keybindings for VS Code ---
 bindkey -v
-bindkey '^p' history-search-backward # previous
-bindkey '^n' history-search-forward # next
+# bindkey '^p' history-search-backward # previous
+# bindkey '^n' history-search-forward # next
 
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
 bindkey '^K' kill-whole-line
 bindkey '^U' backward-kill-line
 
-# bindkey '^Y' yank
-# bindkey '^[[1;3D' backward-word # ctrl + left arrow
-# bindkey '^[[1;3C' forward-word # ctrl + right arrow (not working)
-# bindkey '^[[A' up-line-or-history # up arrow
-# bindkey '^[[B' down-line-or-history # down arrow
+bindkey '^[[A' history-search-backward # up arrow
+bindkey '^[[B' history-search-forward # down arrow
 
 # --- HISTORY ---
 HISTSIZE=5000
@@ -34,10 +31,10 @@ setopt hist_ignore_space
 # General aliases
 alias ..='cd ..'
 alias ...='cd ../..'
-
+alias cd='z'
 alias c='clear'
 
-alias ls='lsd -1A --group-dirs=first --hyperlink=auto' # use lsd instead of ls
+alias ls='lsd --literal -A --no-symlink --hyperlink=auto' # use lsd instead of ls
 alias la='ls -l'
 
 alias fd="fd --hidden --exclude '.git'"
@@ -157,6 +154,6 @@ export PATH
 # --- FZF ---
 eval "$(fzf --zsh)"
 # --- ZOXIDE ---
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
 # --- STARSHIP PROMPT ---
 eval "$(starship init zsh)"
