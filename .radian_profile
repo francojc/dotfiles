@@ -1,23 +1,43 @@
 # Radian configuration file
 
+# See https://pygments.org/styles/
+# for a list of supported color schemes, default scheme is "native"
+options(radian.color_scheme = "native")
+
+# either  `"emacs"` (default) or `"vi"`.
+options(radian.editing_mode = "vi")
+# enable various emacs bindings in vi insert mode
+options(radian.emacs_bindings_in_vi_insert_mode = TRUE)
+# show vi mode state when radian.editing_mode is `vi`
+options(radian.show_vi_mode_prompt = TRUE)
+options(radian.vi_mode_prompt = "\033[0i;34m[{}]\033[0m ")
+
+options(radian.show_vi_mode_prompt = TRUE)
+# custom prompt for different modes
+options(
+  radian.vi_mode_prompt = list(
+    "ins" = "\033[0;34m>\033[0m ",
+    "nav" = "\033[0;33m□\033[0m ",
+    "rep" = "\033[0;31m␣\033[0m "
+  )
+)
+
+options(radian.prompt = "\033[0;34m\033[0m ")
+options(radian.shell_prompt = "\033[0;31m#!>\033[0m ")
+options(radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ")
+
 # pop up completion while typing
 options(radian.complete_while_typing = TRUE)
 
 # auto suggest completions (experimental: may break.)
-options(radian.auto_suggest = FALSE)
+options(radian.auto_suggest = TRUE)
 
 # the minimum length of prefix to trigger auto completions
 options(radian.completion_prefix_length = 4)
 
-# See https://pygments.org/styles/
-# for a list of supported color schemes, default scheme is "native"
-options(radian.color_scheme = "native")
-options(radian.prompt = "\033[0;34m>\033[0m ")
-
 # where the global history is stored, environmental variables will be expanded
 options(radian.global_history_file = "~/.radian_history")
 # the filename that local history is stored
-options(radian.local_history_file = ".radian_history") # same as R
 options(radian.history_search_no_duplicates = TRUE)
 
 # auto match brackets and quotes

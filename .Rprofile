@@ -2,12 +2,14 @@
   r <- getOption("repos")
   r["CRAN"] <- "https://cloud.r-project.org"
   options(repos = r)
+
+  # if (file.exists(".Rhistory")) utils::loadhistory(".Rhistory")
 }
 
 # if (interactive()) prompt::set_prompt(prompt::prompt_fancy)
-if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
-  parts = list("status", "memory", "git")
-))
+# if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
+#   parts = list("status", "memory", "git")
+# ))
 
 # Aliases for common setups
 
@@ -77,5 +79,5 @@ if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
 }
 
 .Last <- function() {
-
+  # savehistory(".Rhistory")
 }

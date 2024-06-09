@@ -6,6 +6,17 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+# ZSH fzf-tab
+# If ~/.zsh/fzf-tab does not exist, clone the repository
+if [ ! -d ~/.zsh/fzf-tab ]; then
+    git clone https://github.com/Aloxaf/fzf-tab ~/.zsh/fzf-tab
+fi
+# ZSH alias-tips
+# If ~/.zsh/alias-tips does not exist, clone the repository
+if [ ! -d ~/.zsh/alias-tips ]; then
+    git clone https://github.com/djui/alias-tips.git ~/.zsh/alias-tips
+fi
+
 # --- PATH ---
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/Users/francojc/.bin:$PATH"

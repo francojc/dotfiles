@@ -1,18 +1,20 @@
 # ZSH configuration file
 
-# --- FZF ---
-eval "$(fzf --zsh)"
-
 # --- Keybindings for VS Code ---
+bindkey -v
+bindkey '^p' history-search-backward # previous
+bindkey '^n' history-search-forward # next
+
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
 bindkey '^K' kill-whole-line
 bindkey '^U' backward-kill-line
-bindkey '^Y' yank
-bindkey '^[[1;3D' backward-word # ctrl + left arrow
-bindkey '^[[1;3C' forward-word # ctrl + right arrow (not working)
-bindkey '^[[A' up-line-or-history # up arrow
-bindkey '^[[B' down-line-or-history # down arrow
+
+# bindkey '^Y' yank
+# bindkey '^[[1;3D' backward-word # ctrl + left arrow
+# bindkey '^[[1;3C' forward-word # ctrl + right arrow (not working)
+# bindkey '^[[A' up-line-or-history # up arrow
+# bindkey '^[[B' down-line-or-history # down arrow
 
 # --- HISTORY ---
 HISTSIZE=5000
@@ -30,9 +32,13 @@ setopt hist_ignore_space
 # --- ALIASES ---
 
 # General aliases
+alias ..='cd ..'
+alias ...='cd ../..'
+
+alias c='clear'
+
 alias ls='lsd -1A --group-dirs=first --hyperlink=auto' # use lsd instead of ls
-alias ll='ls -G'
-alias la='ls -1alG'
+alias la='ls -l'
 
 alias fd="fd --hidden --exclude '.git'"
 
@@ -112,20 +118,45 @@ function qtree() {
 }
 
 # --- ZSH PLUGINS ---
-# ZSH autosuggestions
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ZSH syntax highlighting
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# ZSH history substring search
-source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+# ZSH completions
+FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+# ZSH autosuggestions
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# ZSH fzf-tab
+source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
+
 # ZSH autocomplete
-source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 # ZSH alias-tips
-# source ~/.zsh/alias-tips/alias-tips.plugin.zsh
+source ~/.zsh/alias-tips/alias-tips.plugin.zsh
+
+# ZSH history substring search
+# source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# Load completions
+autoload -U compinit && compinit
+
+# Z
+# source $(brew --prefix)/etc/profile.d/z.sh
+
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Deduplicate entries in PATH
 typeset -U PATH
 export PATH
 
+# Shell integrations
+# --- FZF ---
+eval "$(fzf --zsh)"
+# --- ZOXIDE ---
+eval "$(zoxide init --cmd cd zsh)"
 # --- STARSHIP PROMPT ---
 eval "$(starship init zsh)"
