@@ -1,6 +1,6 @@
 -- add tree-like file explorer
 vim.cmd("let g:netrw_liststyle = 3")
- 
+
 -- add line numbers
 local opt = vim.opt
 opt.relativenumber = true -- add numbers relative to current position
@@ -37,3 +37,6 @@ opt.splitbelow = true
 
 -- turn off swapfile
 opt.swapfile = false
+
+-- Disable Perl
+vim.cmd("let g:loaded_perl_provider = 0")
