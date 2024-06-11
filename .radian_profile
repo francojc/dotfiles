@@ -16,9 +16,9 @@ options(radian.show_vi_mode_prompt = TRUE)
 # custom prompt for different modes
 options(
   radian.vi_mode_prompt = list(
-    "ins" = "\033[0;34m>\033[0m ",
-    "nav" = "\033[0;33m□\033[0m ",
-    "rep" = "\033[0;31m␣\033[0m "
+    "ins" = "\033[0;34m>\033[0m",
+    "nav" = "\033[0;33m□\033[0m",
+    "rep" = "\033[0;31m␣\033[0m"
   )
 )
 
