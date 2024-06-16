@@ -15,7 +15,10 @@
 
 .required_pkgs <- function() {
   # Install pak if not already installed
-  if (!requireNamespace("pak", quietly = TRUE)) install.packages("pak"); pak::pak_install_extra();
+  if (!requireNamespace("pak", quietly = TRUE)) {
+    install.packages("pak")
+    pak::pak_install_extra()
+  }
 
   # Check if the renv package is installed
   if (!requireNamespace("renv", quietly = TRUE)) pak::pak("renv")
@@ -30,12 +33,17 @@
   if (!requireNamespace("usethis", quietly = TRUE)) pak::pak("usethis")
   if (!requireNamespace("pkgdown", quietly = TRUE)) pak::pak("pkgdown")
   if (!requireNamespace("testthat", quietly = TRUE)) pak::pak("testthat")
+  if (!requireNamespace("goodpractice", quietly = TRUE)) pak::pak("goodpractice")
 
   # Load the packages
-  library(devtools)
-  library(usethis)
-  library(pkgdown)
-  library(testthat)
+  suppressMessages({
+    library(devtools)
+    library(usethis)
+    library(pkgdown)
+    library(testthat)
+    library(goodpractice)
+  })
+  cli::cli_alert_success("Ready to develop!")
 }
 
 # Generate a list of dependencies for a project
