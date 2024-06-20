@@ -89,3 +89,10 @@
 .Last <- function() {
   # savehistory(".Rhistory")
 }
+
+# --- NOTES ---- 
+# TinyTex path
+# The executables for TinyTex are in `~/Library/TinyTex/bin/universal-darwin` 
+# To add them to my brew path, I symlinked them like this: 
+# ln -s ~/Library/TinyTex/bin/universal-darwin/* /opt/homebrew/bin/
+# ...
