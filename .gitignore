@@ -8,3 +8,4 @@
 /.continue
 dotfiles.code-workspace
 .config/alacritty/themes/
+.config/gh-copilot/
