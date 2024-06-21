@@ -2,16 +2,6 @@
 
 # --- Keybindings for VS Code ---
 bindkey -v
-# bindkey '^p' history-search-backward # previous
-# bindkey '^n' history-search-forward # next
-
-bindkey '^A' beginning-of-line
-bindkey '^E' end-of-line
-bindkey '^K' kill-whole-line
-bindkey '^U' backward-kill-line
-
-bindkey '^[[A' history-search-backward # up arrow
-bindkey '^[[B' history-search-forward # down arrow
 
 # --- HISTORY ---
 HISTSIZE=5000
@@ -31,10 +21,10 @@ setopt hist_ignore_space
 # General aliases
 alias ..='cd ..'
 alias ...='cd ../..'
-alias cd='z'
+
 alias c='clear'
 
-alias ls='lsd --literal -A --no-symlink --hyperlink=auto' # use lsd instead of ls
+alias ls='lsd --literal -A --no-symlink --hyperlink=auto --ignore-glob=.DS_Store' # use lsd instead of ls
 alias la='ls -l'
 
 alias fd="fd --hidden --exclude '.git'"
@@ -53,6 +43,12 @@ alias path='echo -e ${PATH//:/\\n}'
  # Rerun last command with sudo
 alias please='sudo $(fc -ln -1)'
 
+# Tmux aliases
+alias t='tmux'
+alias ta='tmux attach -t'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session -t'
+
 # Homebrew aliases
 alias buu='brew update && brew upgrade && brew cleanup && brew doctor'
 alias bs='brew search'
@@ -62,6 +58,7 @@ alias bc='brew cleanup'
 
 # Git aliases
 alias gs='git status'
+alias ga='git add'
 alias gaa='git add --all'
 alias gc='git commit -m'
 alias gp='git push'
@@ -73,6 +70,9 @@ alias gitit='gh browse > /dev/null 2>&1'
 
 # Docker aliases
 alias d='docker'
+alias dr='docker run'
+alias di='docker images -a'
+alias dps='docker ps -a'
 
 # Quarto aliases
 alias q='quarto'
@@ -85,16 +85,16 @@ alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
 
 # Suffix aliases
-# open md, txt, qmd, r files in VS Code
-alias -s md=code
-alias -s txt=code
-alias -s qmd=code
-alias -s r=code
+# open md, txt, qmd, r files in Neovim
+alias -s md=nvim
+alias -s txt=nvim
+alias -s qmd=nvim
+alias -s r=nvim
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory
 function cd() {
-    builtin cd "$@" && ll
+    z "$@" && ls
 }
 
 # Setup qtree (Quick Tree) command
@@ -119,26 +119,19 @@ function qtree() {
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # ZSH completions
 FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
 # ZSH autosuggestions
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 # ZSH fzf-tab
 source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
-
 # ZSH autocomplete
-# source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 # ZSH alias-tips
 source ~/.zsh/alias-tips/alias-tips.plugin.zsh
-
-# ZSH history substring search
-# source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+# ZSH vi-mode
+source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
 # Load completions
 autoload -U compinit && compinit
-
-# Z
-# source $(brew --prefix)/etc/profile.d/z.sh
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -155,5 +148,7 @@ export PATH
 eval "$(fzf --zsh)"
 # --- ZOXIDE ---
 eval "$(zoxide init zsh)"
-# --- STARSHIP PROMPT ---
-eval "$(starship init zsh)"
+# --- OH-MY_POSH ---
+if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+    eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/bubbles.omp.yaml)"
+fi
