@@ -7,3 +7,4 @@
 /.config/raycast/*
 /.continue
 dotfiles.code-workspace
+.config/alacritty/themes/
