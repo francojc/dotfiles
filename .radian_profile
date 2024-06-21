@@ -13,6 +13,7 @@ options(radian.show_vi_mode_prompt = TRUE)
 options(radian.vi_mode_prompt = "\033[0i;34m[{}]\033[0m ")
 
 options(radian.show_vi_mode_prompt = TRUE)
+
 # custom prompt for different modes
 options(
   radian.vi_mode_prompt = list(
@@ -41,7 +42,7 @@ options(radian.global_history_file = "~/.radian_history")
 options(radian.history_search_no_duplicates = TRUE)
 
 # auto match brackets and quotes
-options(radian.auto_match = TRUE)
+options(radian.auto_match = FALSE)
 
 # highlight matching bracket
 options(radian.highlight_matching_bracket = TRUE)
@@ -49,3 +50,13 @@ options(radian.tab_size = 2)
 
 # automatically adjust R buffer size based on terminal width
 options(radian.auto_width = TRUE)
+
+# Custom keybindings
+# [ ] Not working: seems to be an emulator conflict/ shell?
+options(
+    radian.escape_key_map = list(
+        list(key = "-", value = " <- "),
+        list(key = "p", value = " |> ")
+    )
+)
+
