@@ -1,0 +1,7 @@
+# bat config file
+--theme="zenburn"
+
+--italic-text=always
+
+--style=numbers
+
