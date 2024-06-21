@@ -31,3 +31,25 @@ keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" 
 keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+
+-- R specific keymaps -------------------
+-- R keymaps
+keymap.set("i", "<ESC>-", " <- ", { expr = true, noremap = true, silent = true, desc = "Insert <- (assignment)" })
+keymap.set("i", "<ESC>p", " |> ", { expr = true, noremap = true, silent = true, desc = "Insert |> (pipe)" })
+
+-- LSP Keymaps -------------------
+-- Copilot keymaps
+-- <TAB> to trigger completion
+keymap.set("i", '<C-J>', '<Plug>(copilot-accept-word)')
+keymap.set("i", '<C-L>', '<Plug>(copilot-accept-line)')
+keymap.set("i", '<C-\\>', '<Plug>(copilot-next)')
+
+-- Slime keymaps
+-- Send line to REPL <C-c><C-c>
+-- Send code block to REPL
+keymap.set("n", "<leader>sb", "<Plug>SlimeSendCell", { desc = "Send cell to REPL" })
+
+-- Macro Keymaps -------------------
+-- Macro to insert index (1, 2, or 3 words)
+vim.g['a'] = 'yWea\\index{<C-r>0}<ESC>'
+vim.api.nvim_set_keymap('n', '<leader>ab', '@a', { noremap = true, silent = true })
