@@ -1,5 +1,5 @@
 import = [
-  "~/.config/alacritty/themes/themes/iterm.toml"
+  "~/.config/alacritty/themes/themes/tomorrow_night_bright.toml"
 ]
 
 [env]
@@ -15,6 +15,11 @@ decorations = "Buttonless"
 size = 13.0
 normal.family = "MesloLGL Nerd Font Mono"
 normal.style = "Regular"
+italic.family = "MesloLGL Nerd Font Mono"
+italic.style = "Italic"
+
+[cursor]
+style = "Beam"
 
 [scrolling]
 history = 20000
@@ -22,6 +27,3 @@ history = 20000
 [selection]
 save_to_clipboard = true
 
-[cursor.style]
-shape = "Underline"
-blinking = "On"
