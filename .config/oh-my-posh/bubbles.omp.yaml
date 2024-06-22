@@ -50,7 +50,7 @@ blocks:
           - '{{if eq "Full" .State.String}}#4caf50{{end}}'
         leading_diamond: ' '
         properties:
-          charged_icon: "\x95 "
+          charged_icon: "\u26A1 "
           charging_icon: '⇡ '
           discharging_icon: '⇣ '
           not_charging_icon: "\uee9e "
