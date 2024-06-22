@@ -31,11 +31,12 @@ keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" 
 keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+keymap.set("n", "<leader>bo", "<cmd>%bd|e#|bd#<CR>", { desc = "Close all buffer execept current" }) -- close buffer
 
 -- R specific keymaps -------------------
 -- R keymaps
-keymap.set("i", "<ESC>-", " <- ", { expr = true, noremap = true, silent = true, desc = "Insert <- (assignment)" })
-keymap.set("i", "<ESC>p", " |> ", { expr = true, noremap = true, silent = true, desc = "Insert |> (pipe)" })
+keymap.set("i", "<M>-", " <- ", { expr = true, noremap = true, silent = true, desc = "Insert <- (assignment)" })
+keymap.set("i", "<M>p", " |> ", { expr = true, noremap = true, silent = true, desc = "Insert |> (pipe)" })
 
 -- LSP Keymaps -------------------
 -- Copilot keymaps
@@ -43,6 +44,17 @@ keymap.set("i", "<ESC>p", " |> ", { expr = true, noremap = true, silent = true, 
 keymap.set("i", '<C-J>', '<Plug>(copilot-accept-word)')
 keymap.set("i", '<C-L>', '<Plug>(copilot-accept-line)')
 keymap.set("i", '<C-\\>', '<Plug>(copilot-next)')
+
+-- Codecompanion keymaps
+keymap.set("n", "<leader>na", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+keymap.set("v", "<leader>na", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+keymap.set("n", "<leader>a", "<cmd>CodeCompanionToggle<cr>", { noremap = true, silent = true })
+keymap.set("v", "<leader>a", "<cmd>CodeCompanionToggle<cr>", { noremap = true, silent = true })
+keymap.set("v", "ga", "<cmd>CodeCompanionAdd<cr>", { noremap = true, silent = true })
+
+-- Expand `cc` into CodeCompanion in the command line
+vim.cmd([[cab cc CodeCompanion]])
+vim.cmd([[cab ccb CodeCompanionWithBuffers]])
 
 -- Slime keymaps
 -- Send line to REPL <C-c><C-c>
@@ -52,4 +64,4 @@ keymap.set("n", "<leader>sb", "<Plug>SlimeSendCell", { desc = "Send cell to REPL
 -- Macro Keymaps -------------------
 -- Macro to insert index (1, 2, or 3 words)
 vim.g['a'] = 'yWea\\index{<C-r>0}<ESC>'
-vim.api.nvim_set_keymap('n', '<leader>ab', '@a', { noremap = true, silent = true })
+keymap.set('n', '<leader>ab', '@a', { noremap = true, silent = true })

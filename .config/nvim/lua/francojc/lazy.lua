@@ -11,9 +11,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("francojc.plugins", {
+require("lazy").setup({
+  { import = "francojc.plugins" },
+  { import = "francojc.lsp" }
+}, {
+  checker = {
+    enabled = true,
+    notfiy = false,
+  },
   change_detection = {
     notify = false,
   },
 })
-
