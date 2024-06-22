@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# This script monitors changes in the current directory and renders the
+# This script monitors changes in the current directory and previews the
 # Quarto project when a change is detected. The script uses `ag` to monitor
 # changes in the current directory and its subdirectories and the `entr` tool
-# to run the `quarto render` command when a change is detected. It also takes one
+# to run the `quarto preview` command when a change is detected. It also takes one
 # argument, which is either 'html' or 'pdf' to specify the output format.
 # Example usage:
-# $ ./render_watch.sh html
+# $ ./preview_watch.sh html
 
 # Check if the argument is provided
 if [ -z "$1" ]; then
@@ -23,7 +23,7 @@ fi
 
 # Check if the required tools are installed
 if ! command -v ag &> /dev/null; then
-    echo "The 'ag' tool is not installed. Please install it using 'brew install ag'.":
+    echo "The 'ag' tool is not installed. Please install it using 'brew install ag'."
     exit 1
 fi
 
@@ -33,5 +33,5 @@ if ! command -v entr &> /dev/null; then
 fi
 
 # Run the `quarto render` command when a change is detected
-ag -g '\.(qmd|tex|bib|cls|yml)$' | entr quarto render --to $1
+ag -g '\.(qmd|tex|bib|cls|yml)$' | entr quarto preview --to $1
 
