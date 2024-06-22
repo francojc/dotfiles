@@ -45,6 +45,7 @@ alias please='sudo $(fc -ln -1)'
 
 # Tmux aliases
 alias t='tmux'
+alias tn='tmux new -s'
 alias ta='tmux attach -t'
 alias tl='tmux list-sessions'
 alias tk='tmux kill-session -t'
@@ -66,6 +67,8 @@ alias gpl='git pull'
 alias gf='git fetch'
 alias gl='git log --oneline --decorate --graph'
 alias gba='git branch -a'
+alias gd='git diff'
+alias gdf='git diff --name-only'
 alias gitit='gh browse > /dev/null 2>&1'
 
 # Docker aliases

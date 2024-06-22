@@ -7,5 +7,5 @@
 /.config/raycast/*
 /.continue
 dotfiles.code-workspace
-.config/alacritty/themes/
-.config/gh-copilot/
+/.config/alacritty/themes/
+/.config/github-copilot
