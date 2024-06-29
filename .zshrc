@@ -1,4 +1,7 @@
 # ZSH configuration file
+# ---
+# ZSH autocomplete WARN: temporary fix for freezing terminal
+source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 # --- Keybindings for VS Code ---
 bindkey -v
@@ -17,15 +20,14 @@ setopt hist_find_no_dups
 setopt hist_ignore_space
 
 # --- ALIASES ---
-
 # General aliases
 alias ..='cd ..'
 alias ...='cd ../..'
-
 alias c='clear'
 
-alias ls='lsd --literal -A --no-symlink --hyperlink=auto --ignore-glob=.DS_Store' # use lsd instead of ls
-alias la='ls -l'
+alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"'
+alias la='ls --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
+alias lt='la --tree --level=2 --ignore-glob=".git|.DS_Store"'
 
 alias fd="fd --hidden --exclude '.git'"
 
@@ -47,6 +49,7 @@ alias please='sudo $(fc -ln -1)'
 alias t='tmux'
 alias tn='tmux new -s'
 alias ta='tmux attach -t'
+alias td='tmux detach'
 alias tl='tmux list-sessions'
 alias tk='tmux kill-session -t'
 
@@ -97,7 +100,7 @@ alias -s r=nvim
 # --- FUNCTIONS ---
 # list directory contents after changing directory
 function cd() {
-    z "$@" && ls
+    z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
 # Setup qtree (Quick Tree) command
@@ -117,6 +120,15 @@ function qtree() {
     command tree $DIR -L $L -CF
 }
 
+# -- Setup yazi (Yet Another Zoxide Integration) command
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 # --- ZSH PLUGINS ---
 # ZSH syntax highlighting
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -126,27 +138,30 @@ FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ZSH fzf-tab
 source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
-# ZSH autocomplete
-source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
 # ZSH alias-tips
 source ~/.zsh/alias-tips/alias-tips.plugin.zsh
 # ZSH vi-mode
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
 # Load completions
-autoload -U compinit && compinit
+# autoload -U compinit && compinit
 
+zstyle ':completion:*' menu no
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+# WARN: temporary fix for freezing terminal
+zstyle ':autocomplete:history-search-backward:*' list-lines 10
 
 # Deduplicate entries in PATH
 typeset -U PATH
 export PATH
 
 # Shell integrations
+# --- THEFUCK ---
+eval $(thefuck --alias)
 # --- FZF ---
 eval "$(fzf --zsh)"
 # --- ZOXIDE ---

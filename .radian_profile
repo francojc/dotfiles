@@ -52,10 +52,9 @@ options(radian.tab_size = 2)
 options(radian.auto_width = TRUE)
 
 # Custom keybindings
-# [ ] Not working: seems to be an emulator conflict/ shell?
 options(
-    radian.escape_key_map = list(
-        list(key = "-", value = " <- "),
+    radian.ctrl_key_map = list(
+        list(key = "o", value = " <- "),
         list(key = "p", value = " |> ")
     )
 )

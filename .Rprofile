@@ -6,7 +6,40 @@
   # if (file.exists(".Rhistory")) utils::loadhistory(".Rhistory")
 }
 
-# if (interactive()) prompt::set_prompt(prompt::prompt_fancy)
+# Load `colorout`, check if it is installed
+if (!requireNamespace("colorout", quietly = TRUE)) {
+  pak::pak("jalvesaq/colorout")
+}
+
+# suppressMessages(require(colorout))
+#
+# setOutputColors256(
+#   number = "\x1b[38;2;192;202;245m",
+#   negnum = "\x1b[38;2;247;118;142m",
+#   # zero = "",
+#   normal = "\x1b[38;2;122;162;247m",
+#   # date = "",
+#   string = "\x1b[38;2;192;202;245m",
+#   const = 75,
+#   false = "\x1b[38;2;247;118;142m",
+#   true = "\x1b[38;2;158;206;106m",
+#   # infinite = "",
+#   # index = "",
+#   # stderror = "",
+#   warn = c(1, 16, 196),
+#   error = c(160, 231),
+#   verbose = FALSE
+# )
+
+# Disable completion from the language server
+# options(
+#   languageserver.server_capabilities =
+#     list(
+#       completionProvider = FALSE,
+#       completionItemResolve = FALSE
+#     )
+# )
+
 # if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
 #   parts = list("status", "memory", "git")
 # ))
@@ -48,7 +81,6 @@
 
 # Generate a list of dependencies for a project
 .create_dependencies <- function(additional_pkgs = NULL) {
-
   # Install required packages
   .required_pkgs()
 
@@ -61,7 +93,8 @@
 
   # If `remoteusername` is NA, then it is a CRAN package
   pkg_list$packages <- ifelse(is.na(pkg_list$remoteusername),
-    paste0(pkg_list$package, "@", pkg_list$version), paste0(pkg_list$remoteusername, "/", pkg_list$package))
+    paste0(pkg_list$package, "@", pkg_list$version), paste0(pkg_list$remoteusername, "/", pkg_list$package)
+  )
 
   writeLines(pkg_list$packages, con = "dependencies.txt")
 }
@@ -90,9 +123,9 @@
   # savehistory(".Rhistory")
 }
 
-# --- NOTES ---- 
+# --- NOTES ----
 # TinyTex path
-# The executables for TinyTex are in `~/Library/TinyTex/bin/universal-darwin` 
-# To add them to my brew path, I symlinked them like this: 
+# The executables for TinyTex are in `~/Library/TinyTex/bin/universal-darwin`
+# To add them to my brew path, I symlinked them like this:
 # ln -s ~/Library/TinyTex/bin/universal-darwin/* /opt/homebrew/bin/
 # ...

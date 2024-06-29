@@ -1,4 +1,4 @@
-#!/Users/francojc/.bin/.venv/bin/python
+#!/Users/francojc/.bin/venv/bin/python
 
 import argparse
 import requests

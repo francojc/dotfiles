@@ -34,5 +34,8 @@ export LUA_CPATH=""
 export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
 export ZVM_KEYTIMEOUT=1 # 1 second
 
+# --- NEOVIM R ---
+export R_AUTO_START=true
+
 # --- SECRETS (from `pass`) ---
 source ~/.variables.env

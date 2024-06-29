@@ -12,7 +12,7 @@ blocks:
         foreground: '#3EC669'
         leading_diamond: 
         properties:
-          style: agnoster_short
+          style: folder
           max_depth: 3
         style: diamond
         template:  {{ .Path }}
