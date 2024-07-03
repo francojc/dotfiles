@@ -1,13 +1,17 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
--- Extras
--- require("links").setup(config)
-config.hyperlinks = true -- Enable hyperlink support
+-- Set hyperlink rules
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+-- username/project paths clickable
+table.insert(config.hyperlink_rules, {
+	regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
+	format = "https://www.github.com/$1/$3",
+})
 
 -- Set the default font
 config.font = wezterm.font("MesloLGL Nerd Font Mono", { weight = "Regular" })
-config.font_size = 13.5
+config.font_size = 14.5
 
 -- Tweak the color scheme
 config.colors = {
@@ -27,7 +31,7 @@ config.window_padding = {
 	left = 10,
 	right = 10,
 	top = 20,
-	bottom = 20,
+	bottom = 10,
 }
 
 -- Cursor settings
