@@ -2,8 +2,7 @@
 
 # See https://pygments.org/styles/
 # for a list of supported color schemes, default scheme is "native"
-options(radian.color_scheme = "native")
-
+options(radian.color_scheme = "gruvbox-dark")
 # either  `"emacs"` (default) or `"vi"`.
 options(radian.editing_mode = "vi")
 # enable various emacs bindings in vi insert mode
