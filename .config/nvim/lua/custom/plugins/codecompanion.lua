@@ -8,7 +8,39 @@ return {
   config = function()
     local codecompanion = require 'codecompanion'
     codecompanion.setup {
-      -- Actions (added to the palette)
+      display = {
+        show_settings = false,
+        action_palette = {
+          width = 95,
+          height = 10,
+        },
+        chat = {
+          window = {
+            layout = 'vertical',
+            width = 0.35,
+          },
+          show_settings = false,
+        },
+      },
+      -- Strategies
+      strategies = {
+        chat = 'anthropic',
+        inline = 'anthropic',
+        tools = 'anthropic',
+      },
+      -- Adapters
+      adapters = {
+        anthropic = require('codecompanion.adapters').use('anthropic', {
+          env = {
+            api_key = 'ANTHROPIC_API_KEY',
+          },
+          schema = {
+            model = {
+              default = 'claude-3-5-sonnet-20240620',
+            },
+          },
+        }),
+      }, -- Actions (added to the palette)
       actions = {
         {
           name = 'Academic Advisor',
@@ -64,38 +96,6 @@ return {
                 return 'I have the following code:\n\n```' .. context.filetype .. '\n' .. text .. '\n```\n\n'
               end,
             },
-          },
-        },
-      },
-      -- Strategies
-      strategies = {
-        chat = 'anthropic',
-        inline = 'anthropic',
-        tools = 'anthropic',
-      },
-      -- Adapters
-      adapters = {
-        anthropic = require('codecompanion.adapters').use('anthropic', {
-          env = {
-            api_key = 'ANTHROPIC_API_KEY',
-          },
-          schema = {
-            model = {
-              default = 'claude-3-5-sonnet-20240620',
-            },
-          },
-        }),
-      },
-      display = {
-        show_settings = false,
-        action_palette = {
-          width = 95,
-          height = 10,
-        },
-        chat = {
-          window = {
-            layout = 'vertical',
-            width = 0.35,
           },
         },
       },

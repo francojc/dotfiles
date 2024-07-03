@@ -7,7 +7,6 @@ return {
       pdfviewer = '',
       Rout_more_colors = true,
       bracketed_paste = true,
-      -- In Neovim, only alphabetic letters can be mapped with CTRL key
       assignment_keymap = '<C-I>o',
       pipe_keymap = '<C-I>p',
     }

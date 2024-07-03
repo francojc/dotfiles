@@ -9,7 +9,7 @@ return {
           smart_indent_cap = true,
         },
         scope = {
-          enabled = false,
+          enabled = true,
         },
       }
     end,

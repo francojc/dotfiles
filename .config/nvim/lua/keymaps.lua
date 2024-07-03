@@ -1,14 +1,24 @@
 -- Description: Custom keymaps
---
 
 local keymap = vim.keymap -- for convenience
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
-
 keymap.set('i', 'jj', '<ESC>', { desc = 'jj to <ESC>' })
-
 keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+-- TIP: Disable arrow keys in normal mode
+keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+-- Keybinds to make split navigation easier.
+--  See `:help wincmd` for a list of all window commands
+keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Diagnostic keymaps
 keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -25,28 +35,23 @@ keymap.set('v', '<leader>aa', '<cmd>CodeCompanionAdd<cr>', { noremap = true, sil
 vim.cmd [[cab cc CodeCompanion]]
 vim.cmd [[cab ccb CodeCompanionWithBuffers]]
 
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+-- Todo-comments keymaps
+keymap.set('n', '<leader>td', '<cmd>TodoTelescope<cr>', { desc = 'Search [T]odo comments' })
+keymap.set('n', ']t', function()
+  require('todo-comments').jump_next { keywords = { 'TODO', 'FIXME' } }
+end, { desc = 'Jump to next [T]odo comment' })
+keymap.set('n', '[t', function()
+  require('todo-comments').jump_prev { keywords = { 'TODO', 'FIXME' } }
+end, { desc = 'Jump to previous [T]odo comment' })
 
--- TIP: Disable arrow keys in normal mode
-keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim-slime keymaps
+-- See `:help vim-slime`
+-- Send region
+keymap.set('x', '<leader>sl', '<Plug>SlimeRegionSend', { desc = '[S]end current [l]ine to tmux pane' })
+-- Send paragraph
+keymap.set('n', '<leader>sp', '<Plug>SlimeParagraphSend', { desc = '[S]end current [p]aragraph to tmux pane' })
+-- Send file
+keymap.set('n', '<leader>sc', '<Plug>SlimeConfig<CR><Plug>SlimeFileSend', { desc = '[S]end [c]omplete file to tmux pane' })
 
 -- [[ Macros ]]
 vim.g['a'] = 'yWea\\index{<C-r>"}<Esc>'
