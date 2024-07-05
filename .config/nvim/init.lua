@@ -46,10 +46,10 @@ vim.opt.tabstop = 2
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 5
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
+vim.opt.wrapmargin = 20
 vim.opt.hlsearch = true
 -- Displays -df-
 vim.opt.wrap = true
-vim.opt.wrapmargin = 5
 vim.opt.linebreak = true
 vim.opt.breakindent = true
 
@@ -67,6 +67,15 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     })
   end,
 })
+
+-- Column width line for R files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'r' },
+  callback = function()
+    vim.opt_local.colorcolumn = '80'
+  end,
+})
+
 -- Enable spell checking for given file types
 -- Enable spell checking by default for text files
 vim.api.nvim_create_autocmd('FileType', {
@@ -622,8 +631,9 @@ require('lazy').setup {
     },
   },
 
-  { -- Collection of various small independent plugins/modules
-    'echasnovski/mini.nvim',
+  {
+    'echasnovski/mini.nvim', -- Collection of various small independent plugins/modules
+    version = false,
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -631,6 +641,7 @@ require('lazy').setup {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
+      --  see :h text-objects
       require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -655,9 +666,6 @@ require('lazy').setup {
         return '%2l:%-2v'
       end
 
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
-      --
       -- window with buffer text overview
       local map = require 'mini.map'
       require('mini.map').setup {
@@ -676,6 +684,15 @@ require('lazy').setup {
       vim.keymap.set('n', '<Leader>mr', MiniMap.refresh, { desc = '[M]ini [R]efresh' })
       vim.keymap.set('n', '<Leader>ms', MiniMap.toggle_side, { desc = '[M]ini [S]ide' })
       vim.keymap.set('n', '<Leader>mt', MiniMap.toggle, { desc = '[M]ini [T]oggle' })
+
+      -- Mini Animate
+      require('mini.animate').setup()
+      -- Mini jumping
+      require('mini.jump2d').setup()
+      -- Mini icons
+      require('mini.icons').setup()
+      -- Mini indentscope
+      require('mini.indentscope').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
@@ -683,9 +700,7 @@ require('lazy').setup {
     build = ':TSUpdate',
     opts = { -- Autoinstall languages that are not installed
       auto_install = true,
-      highlight = {
-        enable = true,
-      },
+      highlight = { enable = true },
       indent = { enable = true },
       ensure_installed = {
         'vim',

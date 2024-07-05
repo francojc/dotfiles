@@ -44,6 +44,25 @@ keymap.set('n', '[t', function()
   require('todo-comments').jump_prev { keywords = { 'TODO', 'FIXME' } }
 end, { desc = 'Jump to previous [T]odo comment' })
 
+-- Barbar keymaps
+-- See `:help barbar`
+keymap.set('n', '<A-c>', '<Cmd>BufferClose<CR>', { noremap = true, silent = true, desc = 'Close buffer' })
+keymap.set('n', '<A-,>', '<Cmd>BufferNext<CR>', { noremap = true, silent = true, desc = 'Next buffer' })
+keymap.set('n', '<A-.>', '<Cmd>BufferPrevious<CR>', { noremap = true, silent = true, desc = 'Previous buffer' })
+keymap.set('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', { noremap = true, silent = true, desc = 'Order by buffer number' })
+keymap.set('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', { noremap = true, silent = true, desc = 'Order by directory' })
+keymap.set('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', { noremap = true, silent = true, desc = 'Order by language' })
+keymap.set('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', { noremap = true, silent = true, desc = 'Go to buffer 1' })
+keymap.set('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', { noremap = true, silent = true, desc = 'Go to buffer 2' })
+keymap.set('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', { noremap = true, silent = true, desc = 'Go to buffer 3' })
+keymap.set('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', { noremap = true, silent = true, desc = 'Go to buffer 4' })
+keymap.set('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', { noremap = true, silent = true, desc = 'Go to buffer 5' })
+keymap.set('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', { noremap = true, silent = true, desc = 'Go to buffer 6' })
+keymap.set('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', { noremap = true, silent = true, desc = 'Go to buffer 7' })
+keymap.set('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', { noremap = true, silent = true, desc = 'Go to buffer 8' })
+keymap.set('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', { noremap = true, silent = true, desc = 'Go to buffer 9' })
+keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>', { noremap = true, silent = true, desc = 'Go to last buffer' })
+
 -- vim-slime keymaps
 -- See `:help vim-slime`
 -- Send region
@@ -52,6 +71,9 @@ keymap.set('x', '<leader>sl', '<Plug>SlimeRegionSend', { desc = '[S]end current 
 keymap.set('n', '<leader>sp', '<Plug>SlimeParagraphSend', { desc = '[S]end current [p]aragraph to tmux pane' })
 -- Send file
 keymap.set('n', '<leader>sc', '<Plug>SlimeConfig<CR><Plug>SlimeFileSend', { desc = '[S]end [c]omplete file to tmux pane' })
+
+-- Aerial code outline toggle
+vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>')
 
 -- [[ Macros ]]
 vim.g['a'] = 'yWea\\index{<C-r>"}<Esc>'
