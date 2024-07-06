@@ -38,6 +38,9 @@ return {
             model = {
               default = 'claude-3-5-sonnet-20240620',
             },
+            max_tokens = {
+              default = 2048,
+            },
           },
         }),
       }, -- Actions (added to the palette)
