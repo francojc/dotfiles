@@ -141,3 +141,12 @@ stopword
 subsetting
 integrations
 qtkit
+POS
+stopwords
+tagset
+KWIC
+collocational
+pointwise
+PMI
+bigrams
+recode
