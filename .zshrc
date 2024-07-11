@@ -1,7 +1,5 @@
 # ZSH configuration file
 # ---
-# ZSH autocomplete WARN: temporary fix for freezing terminal
-source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 # --- Keybindings for VS Code ---
 bindkey -v
@@ -138,7 +136,8 @@ FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ZSH fzf-tab
 source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
-
+# ZSH autocomplete
+source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 # ZSH alias-tips
 source ~/.zsh/alias-tips/alias-tips.plugin.zsh
 # ZSH vi-mode
@@ -152,8 +151,6 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-# WARN: temporary fix for freezing terminal
-zstyle ':autocomplete:history-search-backward:*' list-lines 10
 
 # Deduplicate entries in PATH
 typeset -U PATH
@@ -164,6 +161,33 @@ export PATH
 eval $(thefuck --alias)
 # --- FZF ---
 eval "$(fzf --zsh)"
+export FZF_DEFAULT_COMMAND="rg --files"
+# setup theme
+fg="#CBE0F0"
+bg="#1C2021"
+bg_highlight="#143652"
+purple="#B388FF"
+blue="#06BCE4"
+cyan="#2CF9ED"
+export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
+export FZF_CTRL_R_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-g:reload:rg --files --no-ignore'
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+    --color header:italic
+    --header 'Press Ctrl-y to copy command onto clipboard'
+"
+export FZF_CTRL_T_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden)'
+    --bind 'ctrl-g:reload:rg --files --no-ignore'
+"
+export FZF_ALT_C_OPTS="
+    --walker-skip .git
+    --preview 'tree -C {}'
+    --bind 'ctrl-g:reload:rg --files --no-ignore'
+"
 # --- ZOXIDE ---
 eval "$(zoxide init zsh)"
 # --- OH-MY_POSH ---

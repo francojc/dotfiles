@@ -3,9 +3,9 @@
 .Rdata
 .httr-oauth
 .DS_Store
-.quarto
+/.quarto
 /.config/raycast/*
 /.continue
 dotfiles.code-workspace
-/.config/alacritty/themes/
 /.config/github-copilot
+/_freeze

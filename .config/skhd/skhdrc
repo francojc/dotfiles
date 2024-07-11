@@ -1,26 +1,27 @@
 # Changing window focus
 
 # change window focus within space
+# With Vim-like keys
 alt - j : yabai -m window --focus south
 alt - k : yabai -m window --focus north
 alt - h : yabai -m window --focus west
 alt - l : yabai -m window --focus east
 
 # modify the layout of the space
-# rotate layout clockwise
+# [r]otate
 shift + alt - r : yabai -m space --rotate 270
-# flip along y-axis
+# [y] axis
 shift + alt - y : yabai -m space --mirror y-axis
-# flip along x-axis
+# [x] axis
 shift + alt - x : yabai -m space --mirror x-axis
-# toggle between bsp and float layout
-shift + alt - t : yabai -m window --toggle float --grid 4:4:1:1:2:2
-# maximize window
+# [f]loat
+shift + alt - f : yabai -m window --toggle float --grid 4:4:1:1:2:2
+# [m]aximize
 shift + alt - m : yabai -m window --toggle zoom-fullscreen
-# balance the window tree
-shift + alt - b : yabai -m space --balance
+# [e]qualize
+shift + alt - e : yabai -m space --balance
 
-# move windows around
+# move windows around: with Vim-like keys
 # swap windows within the same space
 shift + alt - j : yabai -m window --swap south
 shift + alt - k : yabai -m window --swap north
@@ -34,8 +35,9 @@ ctrl + alt - h : yabai -m window --warp west
 ctrl + alt - l : yabai -m window --warp east
 
 # move windows between spaces
-# move window to prev and next space
+# [p]revious 
 shift + alt - p : yabai -m window --space prev;
+# [n]ext
 shift + alt - n : yabai -m window --space next;
 
 # move window to space #
@@ -47,7 +49,14 @@ shift + alt - 5 : yabai -m window --space 5;
 shift + alt - 6 : yabai -m window --space 6;
 shift + alt - 7 : yabai -m window --space 7;
 
-# start/stop/restart yabai
+# quick open applications
+# open [t]erminal
+alt - t : open -n -a "WezTerm"
+# open [b]rowser
+alt - b : open -n -a "Orion"
+
+# yabai
+# [s]tart, [q]uit, [e]xecute (restart)
 ctrl + alt - s : yabai --start-service
 ctrl + alt - q : yabai --stop-service
 ctrl + alt - e : yabai --restart-service

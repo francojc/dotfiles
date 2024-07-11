@@ -1,0 +1,33 @@
+[editor]
+line-number = "relative"
+cursorline = true
+gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+bufferline = "always"
+
+[editor.soft-wrap]
+enable = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = ["mode", "spinner", "version-control"]
+center = ["file-name"]
+right = ["diagnostics", "selections", "position", "position-percentage", "file-type"]
+separator = "│"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+
+# Keymappings
+
+[keys.insert.j]
+j = "normal_mode" # 'jj' to exit insert mode
+[keys.normal.g]
+a = "code_action" # 'ga' to show code actions
+
