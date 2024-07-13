@@ -276,7 +276,7 @@ return {
     enabled = true,
     config = function()
       require('which-key').setup({
-        preset = "modern",
+        preset = "helix",
       })
       require 'config.keymap'
     end,
