@@ -1,3 +1,64 @@
 # Configuration file
 
+[opener]
+nvim = [
+  { run = 'nvim "$@"', block = true },
+]
+mpv = [
+  { run = 'mpv "$@"', orphan = true, for = "unix" },
+]
+preview = [
+  { run = 'open -a Preview "$@"', orphan = true, for = "macos" },
+]
+google_drive = [
+  { run = 'google-drive-files.sh "$@"', orphan = true, for = "unix" },
+]
+excel = [
+  { run = 'open -a "Microsoft Excel" "$@"', orphan = true, for = "macos" },
+]
+word = [
+  { run = 'open -a "Microsoft Word" "$@"', orphan = true, for = "macos" },
+]
+powerpoint = [
+  { run = 'open -a "Microsoft PowerPoint" "$@"', orphan = true, for = "macos" },
+]
+pages = [
+  { run = 'open -a "Pages" "$@"', orphan = true, for = "macos" },
+]
+numbers = [
+  { run = 'open -a "Numbers" "$@"', orphan = true, for = "macos" },
+]
+keynote = [
+  { run = 'open -a "Keynote" "$@"', orphan = true, for = "macos" },
+]
+drawio = [
+  { run = 'open -a "draw.io" "$@"', orphan = true, for = "macos" },
+]
+open = [
+  { run = 'open "$@"', orphan = true, for = "macos" },
+]
+
+[open]
+rules = [
+    { name = "*.html", use = [ "open", "nvim" ] },
+    { mime = "text/*", use = "nvim" },
+    { mime = "video/*", use = "mpv" },
+    { mime = "audio/*", use = "mpv" },
+    { name = "*.drawio.png", use = "drawio" },
+    { mime = "image/*", use = "preview" },
+    { name = "*.pdf", use = "preview" },
+    { name = "*.gdoc", use = "google_drive" },
+    { name = "*.gsheet", use = "google_drive" },
+    { name = "*.gslides", use = "google_drive" },
+    { name = "*.xlsx", use = "excel" },
+    { name = "*.xls", use = "excel" },
+    { name = "*.docx", use = "word" },
+    { name = "*.doc", use = "word" },
+    { name = "*.pptx", use = "powerpoint" },
+    { name = "*.ppt", use = "powerpoint" },
+    { name = "*.pages", use = "pages" },
+    { name = "*.numbers", use = "numbers" },
+    { name = "*.key", use = "keynote" },
+    { name = "*", use = "nvim" },
+]
 

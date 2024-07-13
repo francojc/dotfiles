@@ -110,7 +110,7 @@ vim.opt.formatoptions:remove 'o'
 -- scroll before end of window
 vim.opt.scrolloff = 2
 
--- (don't == 0) replace certain elements with prettier ones
+-- (don't = 0) replace certain elements with prettier ones
 vim.opt.conceallevel = 0
 
 -- diagnostics

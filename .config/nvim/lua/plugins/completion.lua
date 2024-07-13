@@ -108,9 +108,9 @@ return {
               nvim_lsp = '[LSP]',
               nvim_lsp_signature_help = '[sig]',
               luasnip = '[snip]',
-              buffer = '[buf]',
+              -- buffer = '[buf]', -- disabled (07/11/2024)
               path = '[path]',
-              spell = '[spell]',
+              -- spell = '[spell]', -- disabled (07/11/2024) 
               pandoc_references = '[ref]',
               tags = '[tag]',
               treesitter = '[TS]',
@@ -127,8 +127,8 @@ return {
           { name = 'nvim_lsp' },
           { name = 'luasnip', keyword_length = 3, max_item_count = 3 },
           { name = 'pandoc_references' },
-          { name = 'buffer', keyword_length = 5, max_item_count = 3 },
-          { name = 'spell' },
+          -- { name = 'buffer', keyword_length = 5, max_item_count = 3 },
+          -- { name = 'spell' },
           { name = 'treesitter', keyword_length = 5, max_item_count = 3 },
           { name = 'calc' },
           { name = 'latex_symbols' },
@@ -173,6 +173,9 @@ return {
           },
         },
         panel = { enabled = false },
+        filetypes = {
+          ["*"] = true,
+        },
       }
     end,
   },

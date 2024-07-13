@@ -1,7 +1,6 @@
 -- plugins for notetaking and knowledge management
 
 return {
-
   {
     'nvim-neorg/neorg',
     enabled = false,
@@ -21,13 +20,24 @@ return {
 
   {
     'epwalsh/obsidian.nvim',
-    enabled = false,
+    enabled = true,
+    lazy = true,
+    cmd = {
+      'ObsidianOpen',
+      'ObsidianQuickSwitch',
+      'ObsidianNew',
+      'ObsidianSearch',
+      'ObsidianTemplate',
+      'ObsidianToday',
+      'ObsidianTomorrow',
+      'ObsidianYesterday',
+    },
     ft = 'markdown',
     event = {
       -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
       -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-      'BufReadPre ' .. vim.fn.expand '~/notes/**/*.md',
-      'BufNewFile ' .. vim.fn.expand '~/notes/**/*.md',
+      'BufReadPre ' .. vim.fn.expand '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/**/*.md',
+      'BufNewFile ' .. vim.fn.expand '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/**/*.md',
     },
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -49,9 +59,16 @@ return {
       require('obsidian').setup {
         workspaces = {
           {
-            name = 'notes',
-            path = '~/notes',
+            name = 'Notes',
+            path = '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes',
           },
+        },
+        daily_notes = {
+          folder = 'Daily',
+          -- template = "Templates/Daily Note Template.md",
+        },
+        templates = {
+          folder = 'Templates',
         },
         mappings = {
           -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
@@ -93,7 +110,6 @@ return {
           return tostring(os.time()) .. '-' .. suffix
         end,
       }
-
       vim.wo.conceallevel = 1
     end,
   },

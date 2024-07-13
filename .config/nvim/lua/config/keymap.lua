@@ -24,10 +24,16 @@ local cmap = function(key, effect)
 end
 
 -- move in command line
-cmap('<C-a>', '<Home>')
+cmap('<C-0>', '<Home>') -- this is the leader for Wezterm
 
 -- exit insert mode with jk
 imap('jj', '<esc>')
+
+-- delete single char without copying to register
+nmap('x', '"_x')
+
+-- keep last yanked text in register after pasting
+nmap('p', '"0p')
 
 -- save with ctrl+s!
 imap('<C-s>', '<esc>:update<cr><esc>')
@@ -223,10 +229,10 @@ wk.register({
   ['[q'] = { ':silent cprev<cr>', '[q]uickfix prev' },
   ['z?'] = { ':setlocal spell!<cr>', 'toggle [z]pellcheck' },
   ['zl'] = { ':Telescope spell_suggest<cr>', '[l]ist spelling suggestions' },
-  ['<left>'] = { '<cmd>echo "Use h to move!"<cr>'},
-  ['<right>'] = { '<cmd>echo "Use l to move!"<cr>'},
-  ['<up>'] = { '<cmd>echo "Use k to move!"<cr>'},
-  ['<down>'] = { '<cmd>echo "Use j to move!"<cr>'},
+  ['<left>'] = { '<cmd>echo "Use h to move!"<cr>' },
+  ['<right>'] = { '<cmd>echo "Use l to move!"<cr>' },
+  ['<up>'] = { '<cmd>echo "Use k to move!"<cr>' },
+  ['<down>'] = { '<cmd>echo "Use j to move!"<cr>' },
 }, { mode = 'n', silent = true })
 
 -- visual mode
@@ -306,16 +312,16 @@ vim.keymap.set('n', '<leader>os', get_otter_symbols_lang, { desc = 'otter [s]ymb
 
 -- normal mode with <leader>
 wk.register({
-  a = {
-    name = '[a]ctivate',
-    a = { '<cmd>AerialToggle!<cr>' },
-    c = {
-      name = '[c]ode companion',
-      c = { '<cmd>CodeCompanionActions<cr>', 'code [c]ompanion actions' },
-      t = { '<cmd>CodeCompanionToggle<cr>', 'code [t]oggle' },
-      a = { '<cmd>CodeCompanionAdd<cr>', 'code [a]dd' },
-    },
-  },
+  -- a = {
+  --   name = '[a]ctivate',
+  --   a = { '<cmd>AerialToggle!<cr>' },
+  --   c = {
+  --     name = '[c]ode companion',
+  --     c = { '<cmd>CodeCompanionActions<cr>', 'code [c]ompanion actions' },
+  --     t = { '<cmd>CodeCompanionToggle<cr>', 'code [t]oggle' },
+  --     a = { '<cmd>CodeCompanionAdd<cr>', 'code [a]dd' },
+  --   },
+  -- },
   ['<cr>'] = { send_cell, 'run code cell' },
   c = {
     name = '[c]ode / [c]ell / [c]hunk',
@@ -345,7 +351,7 @@ wk.register({
     },
   },
   e = {
-name = '[e]dit / [e]xplore',
+    name = '[e]dit / [e]xplore',
   },
   f = {
     name = '[f]ind (telescope)',
@@ -415,6 +421,9 @@ name = '[e]dit / [e]xplore',
     },
     g = { ':Neogen<cr>', 'neo[g]en docstring' },
   },
+  n = {
+    name = 'obsidia[n]',
+  },
   o = {
     name = '[o]tter & c[o]de',
     a = { require('otter').activate, 'otter [a]ctivate' },
@@ -474,5 +483,8 @@ name = '[e]dit / [e]xplore',
   x = {
     name = 'e[x]ecute',
     x = { ':w<cr>:source %<cr>', '[x] source %' },
+  },
+  y = {
+    name = '[y]azi',
   },
 }, { mode = 'n', prefix = '<leader>' })

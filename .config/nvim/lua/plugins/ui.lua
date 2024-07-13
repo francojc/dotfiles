@@ -96,10 +96,10 @@ return {
             require('telescope.themes').get_dropdown(),
           },
           fzf = {
-            fuzzy = true,                   -- false will only do exact matching
+            fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true,    -- override the file sorter
-            case_mode = 'smart_case',       -- or "ignore_case" or "respect_case"
+            override_file_sorter = true, -- override the file sorter
+            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
           },
         },
       }
@@ -118,6 +118,7 @@ return {
 
   { -- edit the file system as a buffer
     'stevearc/oil.nvim',
+    enable = false,
     opts = {
       keymaps = {
         ['<C-s>'] = false,
@@ -130,7 +131,7 @@ return {
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     keys = {
-      { '-',          ':Oil<cr>', desc = 'oil' },
+      { '-', ':Oil<cr>', desc = 'oil' },
       { '<leader>ef', ':Oil<cr>', desc = 'edit [f]iles' },
     },
     cmd = 'Oil',
@@ -178,11 +179,14 @@ return {
   --   end,
   -- },
   {
-    "romgrk/barbar.nvim",
+    'romgrk/barbar.nvim',
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
+      'lewis6991/gitsigns.nvim',
+      'nvim-tree/nvim-web-devicons',
     },
-    init = function() vim.g.barbar_auto_setup = false end,
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
     opts = {},
     version = '^1.0.0',
   },
@@ -226,7 +230,7 @@ return {
   -- or a different filetree
   {
     'nvim-neo-tree/neo-tree.nvim',
-    enabled = true,
+    enabled = false,
     branch = 'v3.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -236,6 +240,33 @@ return {
     cmd = 'Neotree',
     keys = {
       { '<space>ee', ':Neotree toggle<cr>', desc = 'toggle nvim-tree' },
+    },
+  },
+
+  {
+    'mikavilpas/yazi.nvim',
+    enable = true,
+    event = 'VeryLazy',
+    keys = {
+      {
+        -- Open the file manager at the current file's directory
+        '<leader>yy',
+        function()
+          require('yazi').yazi()
+        end,
+        desc = 'Open yazi file manager',
+      },
+      {
+        -- Open in the current working directory
+        "<leader>yw",
+        function()
+          require("yazi").yazi(nil, vim.fn.getcwd())
+        end,
+        desc = "Open the file manager in nvim's working directory" ,
+      },
+    },
+    opts = {
+      open_for_directories = true,
     },
   },
 
@@ -289,10 +320,10 @@ return {
       local trouble = require 'trouble'
       trouble.setup {}
       local function goto_next()
-        trouble.next({ skip_groups = true, jump = true })
+        trouble.next { skip_groups = true, jump = true }
       end
       local function goto_previous()
-        trouble.previous({ skip_groups = true, jump = true })
+        trouble.previous { skip_groups = true, jump = true }
       end
       vim.keymap.set('n', ']t', goto_next, { desc = 'next [t]rouble item' })
       vim.keymap.set('n', '[t', goto_previous, { desc = 'previous [t]rouble item' })
@@ -435,15 +466,15 @@ return {
     end,
   },
   { -- Aerial: code outline window
-    "stevearc/aerial.nvim",
+    'stevearc/aerial.nvim',
     opts = {},
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons",
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
     },
     vim.keymap.set('n', '<leader>at', ':AerialToggle<cr>', { desc = '[a]erial [t]oggle outline' }),
   },
   {
-    "mrjones2014/smart-splits.nvim"
-  }
+    'mrjones2014/smart-splits.nvim',
+  },
 }
