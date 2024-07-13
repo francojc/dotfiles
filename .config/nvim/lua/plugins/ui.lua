@@ -275,7 +275,9 @@ return {
     'folke/which-key.nvim',
     enabled = true,
     config = function()
-      require('which-key').setup {}
+      require('which-key').setup({
+        preset = "modern",
+      })
       require 'config.keymap'
     end,
   },
