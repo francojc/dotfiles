@@ -1,160 +1,201 @@
--- required in which-key plugin spec in plugins/ui.lua as `require 'config.keymap'`
-
+-- Import required modules
 local wk = require 'which-key'
-local ms = vim.lsp.protocol.Methods
+-- local ms = vim.lsp.protocol.Methods
 
+-- Global variables
 P = vim.print
-
 vim.g['quarto_is_r_mode'] = nil
 vim.g['reticulate_running'] = false
 
-local nmap = function(key, effect)
-  vim.keymap.set('n', key, effect, { silent = true, noremap = true })
-end
+-- Mode-specific mapping functions
+local map_funcs = {
+  n = function(key, effect, opts)
+    vim.keymap.set('n', key, effect, vim.tbl_extend('force', { silent = true, noremap = true }, opts or {}))
+  end,
+  x = function(key, effect, opts)
+    vim.keymap.set('x', key, effect, vim.tbl_extend('force', { silent = true, noremap = true }, opts or {}))
+  end,
+  i = function(key, effect, opts)
+    vim.keymap.set('i', key, effect, vim.tbl_extend('force', { silent = true, noremap = true }, opts or {}))
+  end,
+  c = function(key, effect, opts)
+    vim.keymap.set('c', key, effect, vim.tbl_extend('force', { silent = true, noremap = true }, opts or {}))
+  end,
+}
 
-local vmap = function(key, effect)
-  vim.keymap.set('v', key, effect, { silent = true, noremap = true })
-end
-
-local imap = function(key, effect)
-  vim.keymap.set('i', key, effect, { silent = true, noremap = true })
-end
-
-local cmap = function(key, effect)
-  vim.keymap.set('c', key, effect, { silent = true, noremap = true })
-end
-
--- move in command line
-cmap('<C-0>', '<Home>') -- this is the leader for Wezterm
-
--- exit insert mode with jk
-imap('jj', '<esc>')
-
--- delete single char without copying to register
-nmap('x', '"_x')
-
--- keep last yanked text in register after pasting
-nmap('p', '"0p')
-
--- save with ctrl+s!
-imap('<C-s>', '<esc>:update<cr><esc>')
-nmap('<C-s>', '<cmd>:update<cr><esc>')
-
--- Move between windows using <ctrl> direction
-nmap('<C-j>', '<C-W>j')
-nmap('<C-k>', '<C-W>k')
-nmap('<C-h>', '<C-W>h')
-nmap('<C-l>', '<C-W>l')
-
--- Resize window using <shift> arrow keys
-nmap('<S-Up>', '<cmd>resize +2<CR>')
-nmap('<S-Down>', '<cmd>resize -2<CR>')
-nmap('<S-Left>', '<cmd>vertical resize -2<CR>')
-nmap('<S-Right>', '<cmd>vertical resize +2<CR>')
-
--- Add undo break-points
-imap(',', ',<c-g>u')
-imap('.', '.<c-g>u')
-imap(';', ';<c-g>u')
-
-nmap('Q', '<Nop>')
-
---- Send code to terminal with vim-slime
---- If an R terminal has been opend, this is in r_mode
---- and will handle python code via reticulate when sent
---- from a python chunk.
---- TODO: incorpoarate this into quarto-nvim plugin
---- such that QuartoRun functions get the same capabilities
---- TODO: figure out bracketed paste for reticulate python repl.
+-- Refactored send_cell function
 local function send_cell()
   if vim.b['quarto_is_r_mode'] == nil then
     vim.fn['slime#send_cell']()
     return
   end
+
   if vim.b['quarto_is_r_mode'] == true then
     vim.g.slime_python_ipython = 0
     local is_python = require('otter.tools.functions').is_otter_language_context 'python'
+
     if is_python and not vim.b['reticulate_running'] then
       vim.fn['slime#send']('reticulate::repl_python()' .. '\r')
       vim.b['reticulate_running'] = true
-    end
-    if not is_python and vim.b['reticulate_running'] then
+    elseif not is_python and vim.b['reticulate_running'] then
       vim.fn['slime#send']('exit' .. '\r')
       vim.b['reticulate_running'] = false
     end
+
     vim.fn['slime#send_cell']()
   end
 end
 
---- Send code to terminal with vim-slime
---- If an R terminal has been opend, this is in r_mode
---- and will handle python code via reticulate when sent
---- from a python chunk.
-local slime_send_region_cmd = ':<C-u>call slime#send_op(visualmode(), 1)<CR>'
-slime_send_region_cmd = vim.api.nvim_replace_termcodes(slime_send_region_cmd, true, false, true)
+-- Refactored send_region function
 local function send_region()
-  -- if filetyps is not quarto, just send_region
+  local slime_send_region_cmd = ':<C-u>call slime#send_op(visualmode(), 1)<CR>'
+  slime_send_region_cmd = vim.api.nvim_replace_termcodes(slime_send_region_cmd, true, false, true)
+
   if vim.bo.filetype ~= 'quarto' or vim.b['quarto_is_r_mode'] == nil then
     vim.cmd('normal' .. slime_send_region_cmd)
     return
   end
+
   if vim.b['quarto_is_r_mode'] == true then
     vim.g.slime_python_ipython = 0
     local is_python = require('otter.tools.functions').is_otter_language_context 'python'
+
     if is_python and not vim.b['reticulate_running'] then
       vim.fn['slime#send']('reticulate::repl_python()' .. '\r')
       vim.b['reticulate_running'] = true
-    end
-    if not is_python and vim.b['reticulate_running'] then
+    elseif not is_python and vim.b['reticulate_running'] then
       vim.fn['slime#send']('exit' .. '\r')
       vim.b['reticulate_running'] = false
     end
+
     vim.cmd('normal' .. slime_send_region_cmd)
   end
 end
 
--- send code with ctrl+Enter
--- just like in e.g. RStudio
--- needs kitty (or other terminal) config:
--- map shift+enter send_text all \x1b[13;2u
--- map ctrl+enter send_text all \x2b[13;5u
--- WARN: testing an alternative to send current line
--- with CTRL+CR
-nmap('<c-cr>', '<Plug>SlimeParagraphSend<cr>')
-nmap('<s-cr>', '<cmd>SlimeSend1<cr>')
-imap('<c-cr>', '<Plug>SlimeParagraphSend<cr>')
-nmap('<s-cr>', '<cmd>SlimeSend1<cr>')
+-- Language-specific code chunk insertion functions
+local insert_chunk = {
+  python = function()
+    local text = '```{python}\n\n```'
+    vim.api.nvim_put(vim.split(text, '\n'), 'l', true, true)
+    vim.cmd 'normal! k$'
+  end,
+  r = function()
+    local text = '```{r}\n\n```'
+    vim.api.nvim_put(vim.split(text, '\n'), 'l', true, true)
+    vim.cmd 'normal! k$'
+  end,
+  julia = function()
+    local text = '```{julia}\n\n```'
+    vim.api.nvim_put(vim.split(text, '\n'), 'l', true, true)
+    vim.cmd 'normal! k$'
+  end,
+  lua = function()
+    local text = '```{lua}\n\n```'
+    vim.api.nvim_put(vim.split(text, '\n'), 'l', true, true)
+    vim.cmd 'normal! k$'
+  end,
+  bash = function()
+    local text = '```{bash}\n\n```'
+    vim.api.nvim_put(vim.split(text, '\n'), 'l', true, true)
+    vim.cmd 'normal! k$'
+  end,
+}
 
---- Show R dataframe in the browser
--- might not use what you think should be your default web browser
--- because it is a plain html file, not a link
--- see https://askubuntu.com/a/864698 for places to look for
-local function show_r_table()
-  local node = vim.treesitter.get_node { ignore_injections = false }
-  assert(node, 'no symbol found under cursor')
-  local text = vim.treesitter.get_node_text(node, 0)
-  local cmd = [[call slime#send("DT::datatable(]] .. text .. [[)" . "\r")]]
-  vim.cmd(cmd)
+-- Refactored new_terminal functions
+local function new_terminal(direction)
+  local terminal_cmd = direction == 'horizontal' and 'split' or 'vsplit'
+  vim.cmd(terminal_cmd)
+  vim.cmd 'terminal'
+  vim.cmd 'startinsert'
 end
 
--- keep selection after indent/dedent
-vmap('>', '>gv')
-vmap('<', '<gv')
+local function new_terminal_horizontal()
+  new_terminal 'horizontal'
+end
 
--- center after search and jumps
-nmap('n', 'nzz')
-nmap('<c-d>', '<c-d>zz') -- note conflict with Copilot?
-nmap('<c-u>', '<c-u>zz')
+local function new_terminal_vertical()
+  new_terminal 'vertical'
+end
 
--- move between splits and tabs
-nmap('<c-h>', '<c-w>h')
-nmap('<c-l>', '<c-w>l')
-nmap('<c-j>', '<c-w>j')
-nmap('<c-k>', '<c-w>k')
-nmap('H', '<cmd>tabprevious<cr>')
-nmap('L', '<cmd>tabnext<cr>')
+-- Helper function to change cwd through Yazi
+-- FIX: this is not functioning. Need to rework
+local function yazi_change_dir()
+  -- Open Yazi using the plugin
+  require('yazi').yazi()
 
-local function toggle_light_dark_theme()
+  -- Function to handle the directory change after Yazi closes
+  local function on_exit()
+    -- Get the selected item from Yazi
+    local selected = require('yazi').get_selected_item()
+
+    if selected then
+      local path = selected.path
+      local is_dir = selected.is_directory
+
+      -- If it's a directory, change to it directly
+      -- If it's a file, change to its parent directory
+      local target_dir = is_dir and path or vim.fn.fnamemodify(path, ':h')
+
+      -- Change Neovim's working directory
+      vim.cmd('cd ' .. vim.fn.fnameescape(target_dir))
+      print('Changed directory to: ' .. target_dir)
+    else
+      print 'No directory selected'
+    end
+  end
+
+  -- Set up the autocommand to handle Yazi's exit
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'YaziLeave',
+    callback = on_exit,
+    once = true,
+  })
+end
+
+-- Function to toggle conceallevel
+local function toggle_conceallevel()
+  if vim.o.conceallevel == 0 then
+    vim.o.conceallevel = 1
+  else
+    vim.o.conceallevel = 0
+  end
+end
+
+-- Helper function for LSP formatting
+local function lsp_format()
+  vim.lsp.buf.format { async = true }
+end
+
+-- Helper function for toggling line numbers
+local function toggle_line_numbers()
+  if vim.wo.number then
+    vim.wo.number = false
+    vim.wo.relativenumber = false
+  else
+    vim.wo.number = true
+    vim.wo.relativenumber = true
+  end
+end
+
+-- Helper function for toggling wrap
+local function toggle_wrap()
+  vim.wo.wrap = not vim.wo.wrap
+end
+
+local function visual_find_and_replace()
+  -- Store the current selection
+  local start_pos = vim.fn.getpos "'<"
+  local end_pos = vim.fn.getpos "'>"
+
+  -- Prompt for find and replace strings
+  local find = vim.fn.input 'Find: '
+  local replace = vim.fn.input 'Replace: '
+
+  -- Perform the substitution on the selected text
+  vim.cmd(string.format('%d,%ds/%s/%s/g', start_pos[2], end_pos[2], find, replace))
+end
+
+local function toggle_theme_color()
   if vim.o.background == 'light' then
     vim.o.background = 'dark'
   else
@@ -162,297 +203,172 @@ local function toggle_light_dark_theme()
   end
 end
 
-local is_code_chunk = function()
-  local current, _ = require('otter.keeper').get_current_language_context()
-  if current then
-    return true
-  else
-    return false
-  end
+-- Function to add blank lines and enter insert mode
+local function add_blank_lines_and_insert()
+  vim.cmd 'normal! O' -- Add blank line above
+  vim.cmd 'normal! jo' -- Add blank line below and move cursor to it
+  vim.cmd 'normal! k' -- Move cursor back to the original line
+  vim.cmd 'startinsert' -- Enter insert mode
 end
 
---- Insert code chunk of given language
---- Splits current chunk if already within a chunk
---- @param lang string
-local insert_code_chunk = function(lang)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>', true, false, true), 'n', true)
-  local keys
-  if is_code_chunk() then
-    keys = [[o```<cr><cr>```{]] .. lang .. [[}<esc>o]]
-  else
-    keys = [[o```{]] .. lang .. [[}<cr>```<esc>O]]
-  end
-  keys = vim.api.nvim_replace_termcodes(keys, true, false, true)
-  vim.api.nvim_feedkeys(keys, 'n', false)
-end
-
-local insert_r_chunk = function()
-  insert_code_chunk 'r'
-end
-
-local insert_py_chunk = function()
-  insert_code_chunk 'python'
-end
-
-local insert_lua_chunk = function()
-  insert_code_chunk 'lua'
-end
-
-local insert_julia_chunk = function()
-  insert_code_chunk 'julia'
-end
-
-local insert_bash_chunk = function()
-  insert_code_chunk 'bash'
-end
-
-local insert_ojs_chunk = function()
-  insert_code_chunk 'ojs'
-end
-
---show kepbindings with whichkey
---add your own here if you want them to
---show up in the popup as well
-
--- normal mode
+-- Which-Key mappings
 wk.add {
-  mode = { 'n' },
-  { '<c-LeftMouse>', '<cmd>lua vim.lsp.buf.definition()<CR>', desc = 'go to definition' },
-  { '<c-q>', '<cmd>q<cr>', desc = 'close buffer' },
-  { '<cm-i>', insert_py_chunk, desc = 'python code chunk' },
-  { '<down>', desc = '<cmd>echo "Use j to move!"<cr>' },
-  { '<esc>', '<cmd>noh<cr>', desc = 'remove search highlight' },
-  { '<left>', desc = '<cmd>echo "Use h to move!"<cr>' },
-  { '<m-I>', insert_py_chunk, desc = 'python code chunk' },
-  { '<m-i>', insert_r_chunk, desc = 'r code chunk' },
-  { '<right>', desc = '<cmd>echo "Use l to move!"<cr>' },
-  { '<up>', desc = '<cmd>echo "Use k to move!"<cr>' },
-  { '[q', ':silent cprev<cr>', desc = '[q]uickfix prev' },
-  { ']q', ':silent cnext<cr>', desc = '[q]uickfix next' },
-  { 'gN', 'Nzzzv', desc = 'center search' },
-  { 'gf', ':e <cfile><CR>', desc = 'edit file' },
-  { 'gl', '<c-]>', desc = 'open help link' },
-  { 'n', 'nzzzv', desc = 'center search' },
-  { 'z?', ':setlocal spell!<cr>', desc = 'toggle [z]pellcheck' },
-  { 'zl', ':Telescope spell_suggest<cr>', desc = '[l]ist spelling suggestions' },
+  { '<leader>a', group = 'A' },
+
+  -- Buffer operations
+  { '<leader>b', name = 'Buffer' },
+  { '<leader>bb', '<cmd>Telescope buffers<cr>', desc = 'Switch Buffer' },
+  { '<leader>bd', '<cmd>bdelete<cr>', desc = 'Delete Buffer' },
+  { '<leader>bn', '<cmd>bnext<cr>', desc = 'Next Buffer' },
+  { '<leader>bp', '<cmd>bprevious<cr>', desc = 'Previous Buffer' },
+
+  -- Code execution
+  { '<leader>c', name = 'Code' },
+  { '<leader>cc', send_cell, desc = 'Send Cell' },
+  { '<leader>cr', send_region, desc = 'Send Region' },
+
+  -- Debug operations
+  { '<leader>d', name = 'Debug' },
+  { '<leader>dt', name = 'Tests' },
+
+  -- Editor operations
+  { '<leader>e', name = 'Editor' },
+
+  -- File operations
+  { '<leader>f', group = 'File' },
+  { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find File' },
+  { '<leader>fr', '<cmd>Telescope oldfiles<cr>', desc = 'Open Recent File' },
+  { '<leader>fn', '<cmd>enew<cr>', desc = 'New File' },
+  { '<leader>fs', '<cmd>w<cr>', desc = 'Save File' },
+
+  -- Git operations
+  { '<leader>g', name = 'Git' },
+  { '<leader>gc', '<cmd>Telescope git_commits<cr>', desc = 'Git Commits' },
+
+  -- Help
+  { '<leader>h', name = 'Help' },
+  { '<leader>hv', '<cmd>Telescope vim_options<cr>', desc = '[V]im Options' },
+  { '<leader>hk', '<cmd>Telescope keymaps<cr>', desc = 'Search [K]eymaps' },
+  { '<leader>hh', '<cmd>Telescope help_tags<cr>', desc = 'Search [H]elp Tags' },
+  { '<leader>hc', '<cmd>CodeCompanionActions<cr>', desc = 'Open [C]odeCompanion' },
+  { '<leader>hq', '<cmd>QuartoHelp<cr>', desc = '[Q]uarto Help' },
+
+  -- Insert operations
+  { '<leader>i', name = 'Insert' },
+  { '<leader>il', add_blank_lines_and_insert, desc = 'Insert Blank Lines' },
+
+  -- LSP operations
+  { '<leader>l', name = 'LSP' },
+  { '<leader>lf', lsp_format, desc = 'Format' },
+  { '<leader>lr', vim.lsp.buf.rename, desc = 'Rename' },
+  { '<leader>la', vim.lsp.buf.code_action, desc = 'Code Action' },
+  { '<leader>ld', vim.lsp.buf.definition, desc = 'Go to Definition' },
+  { '<leader>li', vim.lsp.buf.implementation, desc = 'Go to Implementation' },
+  { '<leader>lh', vim.lsp.buf.hover, desc = 'Hover Documentation' },
+
+  -- Obsidian operations
+  { '<leader>n', name = 'Obsidian' },
+
+  -- Quarto operations
+  { '<leader>q', name = 'Quarto' },
+  { '<leader>qa', '<cmd>QuartoActivate<cr>', desc = 'Activate' },
+  { '<leader>qp', "<cmd>lua require'quarto'.quartoPreview<cr>", desc = 'Preview' },
+  { '<leader>qq', "<cmd>lua require'quarto'.quartoClosePreview<cr>", desc = 'Close Preview' },
+  { '<leader>qh', '<cmd>QuartoHelp<cr>', desc = 'Help' },
+  { '<leader>qe', "<cmd>lua require'otter'.export()<cr>", desc = 'Export' },
+  { '<leader>qE', "<cmd>lua require'otter'.export(true)<cr>", desc = 'Export Overwrite' },
+  { '<leader>qr', name = 'Run' },
+  { '<leader>qrr', '<cmd>QuartoSend<cr>', desc = 'Run Current' },
+  { '<leader>qra', '<cmd>QuartoSendAbove<cr>', desc = 'Run Above' },
+
+  -- Search operations
+  { '<leader>s', name = 'Search' },
+  { '<leader>sf', '<cmd>Telescope live_grep<cr>', desc = 'Find Text' },
+  { '<leader>sh', '<cmd>Telescope help_tags<cr>', desc = 'Find Help' },
+  { '<leader>sm', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages' },
+  { '<leader>sr', '<cmd>Telescope registers<cr>', desc = 'Registers' },
+  { '<leader>sk', '<cmd>Telescope keymaps<cr>', desc = 'Keymaps' },
+  { '<leader>sc', '<cmd>Telescope commands<cr>', desc = 'Commands' },
+  { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Todos' },
+
+  -- Terminal operations
+  { '<leader>t', name = 'Terminal' },
+  { '<leader>th', new_terminal_horizontal, desc = 'New Horizontal Terminal' },
+  { '<leader>tv', new_terminal_vertical, desc = 'New Vertical Terminal' },
+
+  -- Vim operations
+  { '<leader>v', name = 'Vim' },
+  { '<leader>vc', '<cmd>Telescope colorscheme<cr>', desc = 'View and select colorscheme' },
+  { '<leader>vl', '<cmd>Lazy<cr>', desc = 'Lazy plugin manager' },
+  { '<leader>vm', '<cmd>Mason<cr>', desc = 'Mason software installer' },
+
+  -- Yazi operations
+  { '<leader>y', name = 'Yazi' },
+  { '<leader>yd', yazi_change_dir, desc = '(Select new CWD)' },
+
+  -- Toggle operations
+  { '<leader>\\', name = 'Toggle' },
+  { '<leader>\\n', toggle_line_numbers, desc = 'Toggle Line Numbers' },
+  { '<leader>\\w', toggle_wrap, desc = 'Toggle Wrap' },
+  { '<leader>\\a', '<cmd>AerialToggle<cr>', desc = 'Toggle Aerial' },
+  { '<leader>\\t', toggle_theme_color, desc = 'Toggle light/dark theme' },
+  { '<leader>\\c', '<cmd>CodeCompanionToggle<cr>', desc = 'Toggle Code Companion' },
+  { '<leader>\\h', toggle_conceallevel, desc = 'Toggle Conceal Level' },
+
+  -- Visual mode mappings
+  {
+    mode = 'x',
+    { '<leader>c', name = 'Code' },
+    { '<leader>cr', send_region, desc = 'Send Region' },
+    { '<leader>r', name = 'Replace' },
+    { '<leader>rr', visual_find_and_replace, desc = 'Find and Replace' },
+  },
+
+  -- Normal/ Insert mode mappings
+  {
+    mode = { 'n', 'i' },
+    { '<M-->', ' <- ', desc = 'Assignment operator' },
+    { '<M-p>', ' |> ', desc = 'Pipe operator (native)' },
+    { '<M-m>', ' %>% ', desc = 'Pipe operator (magrittr)' },
+    { '<M-;>', ' :: ', desc = 'Namespace' },
+
+    { '<M-i>', name = 'Insert Chunk' },
+    { '<M-i>p', insert_chunk.python, desc = 'Python Chunk' },
+    { '<M-i>r', insert_chunk.r, desc = 'R Chunk' },
+    { '<M-i>j', insert_chunk.julia, desc = 'Julia Chunk' },
+    { '<M-i>l', insert_chunk.lua, desc = 'Lua Chunk' },
+    { '<M-i>b', insert_chunk.bash, desc = 'Bash Chunk' },
+  },
 }
 
--- visual mode
-wk.add {
-  mode = { 'v' },
-  { '.', ':norm .<cr>', desc = 'repat last normal mode command' },
-  { '<M-j>', ":m'>+<cr>`<my`>mzgv`yo`z", desc = 'move line down' },
-  { '<M-k>', ":m'<-2<cr>`>my`<mzgv`yo`z", desc = 'move line up' },
-  { '<cr>', send_region, desc = 'run code region' },
-  { 'q', ':norm @q<cr>', desc = 'repat q macro' },
-}
+-- Additional non-Which-Key mappings
+local function set_additional_mappings()
+  -- Normal mode mappings
+  map_funcs.n('j', "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = 'Down by visual lines' })
+  map_funcs.n('k', "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = 'Up by visual lines' })
+  map_funcs.n('<C-h>', '<C-w>h', { desc = 'Move to the left window' })
+  map_funcs.n('<C-j>', '<C-w>j', { desc = 'Move to the bottom window' })
+  map_funcs.n('<C-k>', '<C-w>k', { desc = 'Move to the top window' })
+  map_funcs.n('<C-l>', '<C-w>l', { desc = 'Move to the right window' })
+  map_funcs.n('H', '<cmd>tabp<cr>', { desc = 'Previous Tab' })
+  map_funcs.n('L', '<cmd>tabn<cr>', { desc = 'Next Tab' })
+  map_funcs.n('<c-d>', '<c-d>zz', { desc = 'Scroll down half page' })
+  map_funcs.n('<c-u>', '<c-u>zz', { desc = 'Scroll up half page' })
+  map_funcs.n('<esc>', '<cmd>noh<cr>', { desc = 'Clear Search Highlighting' })
+  map_funcs.n('z?', 'setlocal spell!', { desc = 'Toggle Spell Check' })
+  map_funcs.n('<c-cr>', '<Plug>SlimeParagraphSend<cr>', { desc = 'Send code phrase' })
+  map_funcs.n('<s-cr>', '<cmd>SlimeSend1<cr>', { desc = 'Send code block' })
 
--- visual with <leader>
-wk.add {
-  mode = { 'v' },
-  prefix = '<leader>',
-  { 'd', '"_d', desc = 'delete without overwriting reg' },
-  { 'p', '"_dP', desc = 'replace without overwriting reg' },
-}
+  -- Insert mode mappings
+  map_funcs.i('jj', '<Esc>')
 
--- insert mode
-wk.add {
-  mode = { 'i' },
-  { '<c-s>', '<esc>:update<cr>', desc = 'save with [c-s]' },
-  { '<c-x><c-o>', '<c-x><c-o>', desc = 'omnifunc completion' },
-  { '<m-->', ' <- ', desc = 'assign' },
-  { '<m-m>', ' |> ', desc = 'pipe' },
-  { '<m-i>', insert_r_chunk, desc = 'r code chunk' },
-  { '<cm-i>', insert_py_chunk, desc = 'python code chunk' },
-  { '<m-I>', insert_py_chunk, desc = 'python code chunk' },
-}
-
-local function new_terminal(lang)
-  vim.cmd('vsplit term://' .. lang)
+  -- Visual mode mappings
+  map_funcs.x('<', '<gv', { desc = 'Unindent' })
+  map_funcs.x('>', '>gv', { desc = 'Indent' })
+  map_funcs.x('J', ":m '>+1<cr>gv=gv", { desc = 'Move line down' })
+  map_funcs.x('K', ":m '<-2<cr>gv=gv", { desc = 'Move line up' })
+  map_funcs.x('<cr>', send_region, { desc = 'Send Region' })
 end
 
-local function new_terminal_python()
-  new_terminal 'python'
-end
-
-local function new_terminal_r()
-  new_terminal 'R --no-save'
-end
-
-local function new_terminal_radian()
-  new_terminal 'radian'
-end
-
-local function new_terminal_ipython()
-  new_terminal 'ipython --no-confirm-exit'
-end
-
-local function new_terminal_julia()
-  new_terminal 'julia'
-end
-
-local function new_terminal_shell()
-  new_terminal '$SHELL'
-end
-
-local function get_otter_symbols_lang()
-  local otterkeeper = require 'otter.keeper'
-  local main_nr = vim.api.nvim_get_current_buf()
-  local langs = {}
-  for i, l in ipairs(otterkeeper.rafts[main_nr].languages) do
-    langs[i] = i .. ': ' .. l
-  end
-  -- promt to choose one of langs
-  local i = vim.fn.inputlist(langs)
-  local lang = otterkeeper.rafts[main_nr].languages[i]
-  local params = {
-    textDocument = vim.lsp.util.make_text_document_params(),
-    otter = {
-      lang = lang,
-    },
-  }
-  -- don't pass a handler, as we want otter to use it's own handlers
-  vim.lsp.buf_request(main_nr, ms.textDocument_documentSymbol, params, nil)
-end
-
-vim.keymap.set('n', '<leader>os', get_otter_symbols_lang, { desc = 'otter [s]ymbols' })
-
--- simplify functions for which-key mappings
-local function start_r_terminal()
-  vim.b['quarto_is_r_mode'] = true
-  new_terminal_r()
-end
-local function start_radian_terminal()
-  vim.b['quarto_is_r_mode'] = true
-  new_terminal_radian()
-end
-
-local function disable_diagnostics()
-  vim.diagnostic.enable(false)
-end
-
-local function enable_diagnostics()
-  vim.diagnostic.enable()
-end
-
-local function float_diagnostics()
-  vim.diagnostic.open_float()
-end 
-
-local function show_references()
-  vim.lsp.buf.references()
-end
-
-local function show_type_definitions()
-  vim.lsp.buf.type_definition()
-end
-
-local function show_code_actions()
-  vim.lsp.buf.code_action()
-end
-
-local function inspect_tree()
-  vim.treesitter.inspect_tree()
-end
-
-
-
--- normal mode with <leader>
-wk.add {
-  mode = { 'n' },
-  prefix = '<leader>',
-  
-    { "<leader><cr>", send_cell, desc = "run code cell" },
-    { "<leader>c", group = "[c]ode / [c]ell / [c]hunk" },
-    { "<leader>ci", new_terminal_ipython, desc = "new [i]python terminal" },
-    { "<leader>cj", new_terminal_julia, desc = "new [j]ulia terminal" },
-    { "<leader>cn", new_terminal_shell, desc = "[n]ew terminal with shell" },
-    { "<leader>co", start_r_terminal, desc = "new [R] terminal" },
-    { "<leader>cp", new_terminal_python, desc = "new [p]ython terminal" },
-    { "<leader>cr", start_radian_terminal, desc = "new [radian] terminal" },
-    { "<leader>d", group = "[d]ebug" },
-    { "<leader>dt", group = "[t]est" },
-    { "<leader>e", group = "[e]dit / [e]xplore" },
-    { "<leader>f", group = "[f]ind (telescope)" },
-    { "<leader>f<space>", "<cmd>Telescope buffers<cr>", desc = "[ ] buffers" },
-    { "<leader>fM", "<cmd>Telescope man_pages<cr>", desc = "[M]an pages" },
-    { "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "[b]uffer fuzzy find" },
-    { "<leader>fc", "<cmd>Telescope git_commits<cr>", desc = "git [c]ommits" },
-    { "<leader>fd", "<cmd>Telescope buffers<cr>", desc = "[d] buffers" },
-    { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "[f]iles" },
-    { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "[g]rep" },
-    { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "[h]elp" },
-    { "<leader>fj", "<cmd>Telescope jumplist<cr>", desc = "[j]umplist" },
-    { "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "[k]eymaps" },
-    { "<leader>fl", "<cmd>Telescope loclist<cr>", desc = "[l]oclist" },
-    { "<leader>fm", "<cmd>Telescope marks<cr>", desc = "[m]arks" },
-    { "<leader>fq", "<cmd>Telescope quickfix<cr>", desc = "[q]uickfix" },
-    { "<leader>g", group = "[g]it" },
-    { "<leader>gb", group = "[b]lame" },
-    { "<leader>gbb", ":GitBlameToggle<cr>", desc = "[b]lame toggle virtual text" },
-    { "<leader>gbc", ":GitBlameCopyCommitURL<cr>", desc = "[c]opy" },
-    { "<leader>gbo", ":GitBlameOpenCommitURL<cr>", desc = "[o]pen" },
-    { "<leader>gc", ":GitConflictRefresh<cr>", desc = "[c]onflict" },
-    { "<leader>gd", group = "[d]iff" },
-    { "<leader>gdc", ":DiffviewClose<cr>", desc = "[c]lose" },
-    { "<leader>gdo", ":DiffviewOpen<cr>", desc = "[o]pen" },
-    { "<leader>gs", ":Gitsigns<cr>", desc = "git [s]igns" },
-    { "<leader>gwc", ":lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>", desc = "worktree create" },
-    { "<leader>gws", ":lua require('telescope').extensions.git_worktree.git_worktrees()<cr>", desc = "worktree switch" },
-    { "<leader>h", group = "[h]elp / [h]ide / debug" },
-    { "<leader>hc", group = "[c]onceal" },
-    { "<leader>hch", ":set conceallevel=1<cr>", desc = "[h]ide/conceal" },
-    { "<leader>hcs", ":set conceallevel=0<cr>", desc = "[s]how/unconceal" },
-    { "<leader>ht", group = "[t]reesitter" },
-    { "<leader>htt", inspect_tree, desc = "show [t]ree" },
-    { "<leader>i", group = "[i]mage" },
-    { "<leader>l", group = "[l]anguage/lsp" },
-    { "<leader>lD", show_type_definitions, desc = "type [D]efinition" },
-    { "<leader>lR", desc = "[R]ename" },
-    { "<leader>la", show_code_actions, desc = "code [a]ction" },
-    { "<leader>ld", group = "[d]iagnostics" },
-    { "<leader>ldd", disable_diagnostics, desc = "[d]isable" },
-    { "<leader>lde", enable_diagnostics, desc = "[e]nable" },
-    { "<leader>le", float_diagnostics, desc = "diagnostics (show hover [e]rror)" },
-    { "<leader>lg", ":Neogen<cr>", desc = "neo[g]en docstring" },
-    { "<leader>lr", show_references, desc = "[r]eferences" },
-    { "<leader>n", group = "obsidia[n]" },
-    { "<leader>o", group = "[o]tter & c[o]de" },
-    { "<leader>oa", require("otter").activate, desc = "otter [a]ctivate" },
-    { "<leader>ob", insert_bash_chunk, desc = "[b]ash code chunk" },
-    { "<leader>oc", "O# %%<cr>", desc = "magic [c]omment code chunk # %%" },
-    { "<leader>od", require("otter").deactivate, desc = "otter [d]eactivate" },
-    { "<leader>oj", insert_julia_chunk, desc = "[j]ulia code chunk" },
-    { "<leader>ol", insert_lua_chunk, desc = "[l]lua code chunk" },
-    { "<leader>oo", insert_ojs_chunk, desc = "[o]bservable js code chunk" },
-    { "<leader>op", insert_py_chunk, desc = "[p]ython code chunk" },
-    { "<leader>or", insert_r_chunk, desc = "[r] code chunk" },
-    { "<leader>q", group = "[q]uarto" },
-    { "<leader>qa", ":QuartoActivate<cr>", desc = "[a]ctivate" },
-    { "<leader>qe", require('otter').export, desc = "[e]xport" },
-    { "<leader>qh", ":QuartoHelp ", desc = "[h]elp" },
-    { "<leader>qp", ":lua require'quarto'.quartoPreview()<cr>", desc = "[p]review" },
-    { "<leader>qq", ":lua require'quarto'.quartoClosePreview()<cr>", desc = "[q]uiet preview" },
-    { "<leader>qr", group = "[r]un" },
-    { "<leader>qra", ":QuartoSendAll<cr>", desc = "run [a]ll" },
-    { "<leader>qrb", ":QuartoSendBelow<cr>", desc = "run [b]elow" },
-    { "<leader>qrr", ":QuartoSendAbove<cr>", desc = "to cu[r]sor" },
-    { "<leader>s", group = "[send] code (slime)" },
-    { "<leader>sc", "<Plug>SlimeSendCell", desc = "send [c]ell" },
-    { "<leader>sl", "<Plug>SlimeLineSend", desc = "send [l]ine" },
-    { "<leader>sp", "<Plug>SlimeParagraphSend", desc = "send [p]aragraph" },
-    { "<leader>t", group = "[t]odos" },
-    { "<leader>tl", "<cmd>TodoLocList<cr>", desc = "[l]ist" },
-    { "<leader>tt", "<cmd>TodoTelescope<cr>", desc = "[t]elescope" },
-    { "<leader>v", group = "[v]im" },
-    { "<leader>vc", ":Telescope colorscheme<cr>", desc = "[c]olortheme" },
-    { "<leader>vh", ':execute "h " . expand("<cword>")<cr>', desc = "vim [h]elp for current word" },
-    { "<leader>vl", ":Lazy<cr>", desc = "[l]azy package manager" },
-    { "<leader>vm", ":Mason<cr>", desc = "[m]ason software installer" },
-    { "<leader>vs", ":e $MYVIMRC | :cd %:p:h | split . | wincmd k<cr>", desc = "[s]ettings, edit vimrc" },
-    { "<leader>vt", toggle_light_dark_theme, desc = "[t]oggle light/dark theme" },
-    { "<leader>x", group = "e[x]ecute" },
-    { "<leader>xx", ":w<cr>:source %<cr>", desc = "[x] source %" },
-    { "<leader>y", group = "[y]azi" },
-}
-
+-- Call the function to set additional mappings
+set_additional_mappings()
