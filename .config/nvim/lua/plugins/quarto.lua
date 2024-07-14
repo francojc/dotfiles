@@ -60,6 +60,9 @@ return {
       ]]
 
       vim.g.slime_target = 'wezterm' -- default 'neovim'
+      vim.g.slime_default_config = {
+        relative_pane = "right",
+      }
       vim.g.slime_no_mappings = true
       vim.g.slime_python_ipython = 1
     end,
@@ -69,16 +72,11 @@ return {
       vim.g.slime_menu_config = false
       vim.g.slime_neovim_ignore_unlisted = true
 
-      local function mark_terminal()
-        local job_id = vim.b.terminal_job_id
-        vim.print('job_id: ' .. job_id)
-      end
-
-      local function set_terminal()
+      local function configure_slime()
         vim.fn.call('slime#config', {})
       end
-      vim.keymap.set('n', '<leader>cm', mark_terminal, { desc = '[m]ark terminal' })
-      vim.keymap.set('n', '<leader>cs', set_terminal, { desc = '[s]et terminal' })
+
+      vim.keymap.set("n", "<leader>ts", configure_slime, { desc = "Configure [S]lime" })
     end,
   },
 
@@ -109,14 +107,14 @@ return {
     },
     config = function(_, opts)
       require('img-clip').setup(opts)
-      vim.keymap.set('n', '<leader>ii', ':PasteImage<cr>', { desc = 'insert [i]mage from clipboard' })
+      vim.keymap.set('n', '<leader>ii', ':PasteImage<cr>', { desc = 'Insert [i]mage from clipboard' })
     end,
   },
 
   { -- preview equations
     'jbyuki/nabla.nvim',
     keys = {
-      { '<leader>qm', ':lua require"nabla".toggle_virt()<cr>', desc = 'toggle [m]ath equations' },
+      { '<leader>qm', ':lua require"nabla".toggle_virt()<cr>', desc = 'Add [m]ath equations' },
     },
   },
 
