@@ -1,12 +1,12 @@
+-- completion.lua:
 return {
-  {
+  { -- autopairs
     'windwp/nvim-autopairs',
     config = function()
       require('nvim-autopairs').setup {}
       require('nvim-autopairs').remove_rule '`'
     end,
   },
-
   { -- completion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
@@ -38,13 +38,21 @@ return {
       end
 
       cmp.setup {
+        experimental = {
+          ghost_text = true,
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        completion = {
+          autocomplete = false,
+          completeopt = 'menu,menuone,noinsert',
+        },
         mapping = {
+          ['<C-enter>'] = cmp.mapping.complete(),
+
           ['<C-f>'] = cmp.mapping.scroll_docs(-4),
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
 
@@ -110,7 +118,7 @@ return {
               luasnip = '[snip]',
               buffer = '[buf]', -- disabled (07/11/2024)
               path = '[path]',
-              spell = '[spell]', -- disabled (07/11/2024) 
+              spell = '[spell]', -- disabled (07/11/2024)
               pandoc_references = '[ref]',
               tags = '[tag]',
               treesitter = '[TS]',
@@ -174,7 +182,7 @@ return {
         },
         panel = { enabled = false },
         filetypes = {
-          ["*"] = true,
+          ['*'] = true,
         },
       }
     end,
