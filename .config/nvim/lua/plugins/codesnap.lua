@@ -7,8 +7,11 @@ return {
   },
   opts = {
     save_path = '~/Screenshots/',
-    has_breadcrumbs = true,
-    bg_theme = 'bamboo',
+    has_breadcrumbs = false,
+    has_line_number = true,
+    bg_padding = 0,
+    waternmark = "",
+    min_width = 450,
   },
 }
 
