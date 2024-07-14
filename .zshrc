@@ -161,33 +161,7 @@ export PATH
 eval $(thefuck --alias)
 # --- FZF ---
 eval "$(fzf --zsh)"
-export FZF_DEFAULT_COMMAND="rg --files"
-# setup theme
-fg="#CBE0F0"
-bg="#1C2021"
-bg_highlight="#143652"
-purple="#B388FF"
-blue="#06BCE4"
-cyan="#2CF9ED"
-export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
-export FZF_CTRL_R_OPTS="
-    --preview 'bat -n --color=always {}'
-    --bind 'ctrl-g:reload:rg --files --no-ignore'
-    --bind 'ctrl-/:toggle-preview'
-    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-    --color header:italic
-    --header 'Press Ctrl-y to copy command onto clipboard'
-"
-export FZF_CTRL_T_OPTS="
-    --preview 'bat -n --color=always {}'
-    --bind 'ctrl-/:change-preview-window(down|hidden)'
-    --bind 'ctrl-g:reload:rg --files --no-ignore'
-"
-export FZF_ALT_C_OPTS="
-    --walker-skip .git
-    --preview 'tree -C {}'
-    --bind 'ctrl-g:reload:rg --files --no-ignore'
-"
+source ~/.fzf.zsh
 # --- ZOXIDE ---
 eval "$(zoxide init zsh)"
 # --- OH-MY_POSH ---
