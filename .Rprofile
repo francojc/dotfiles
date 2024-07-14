@@ -2,8 +2,6 @@
   r <- getOption("repos")
   r["CRAN"] <- "https://cloud.r-project.org"
   options(repos = r)
-
-  # if (file.exists(".Rhistory")) utils::loadhistory(".Rhistory")
 }
 
 # Load `colorout`, check if it is installed
@@ -29,15 +27,6 @@ if (!requireNamespace("colorout", quietly = TRUE)) {
 #   warn = c(1, 16, 196),
 #   error = c(160, 231),
 #   verbose = FALSE
-# )
-
-# Disable completion from the language server
-# options(
-#   languageserver.server_capabilities =
-#     list(
-#       completionProvider = FALSE,
-#       completionItemResolve = FALSE
-#     )
 # )
 
 # if (interactive()) prompt::set_prompt(prompt::new_prompt_powerline(
