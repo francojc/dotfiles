@@ -152,6 +152,15 @@ local function yazi_change_dir()
   })
 end
 
+-- Helper function to insert a command output
+vim.api.nvim_create_user_command('InsertCommandOutput', function()
+  vim.ui.input({ prompt = 'Enter command: ' }, function(command)
+    if command then
+      vim.cmd('read !' .. command)
+    end
+  end)
+end, {})
+
 -- Function to toggle conceallevel
 local function toggle_conceallevel()
   if vim.o.conceallevel == 0 then
@@ -256,6 +265,7 @@ wk.add {
   -- Insert operations
   { '<leader>i', name = 'Insert' },
   { '<leader>il', add_blank_lines_and_insert, desc = 'Insert Blank Lines' },
+  { '<leader>ic', '<cmd>InsertCommandOutput<cr>', desc = '(Insert Command Output)' },
 
   -- LSP operations
   { '<leader>l', name = 'LSP' },
@@ -272,8 +282,8 @@ wk.add {
   -- Quarto operations
   { '<leader>q', name = 'Quarto' },
   { '<leader>qa', '<cmd>QuartoActivate<cr>', desc = 'Activate' },
-  { '<leader>qp', "<cmd>lua require'quarto'.quartoPreview<cr>", desc = 'Preview' },
-  { '<leader>qq', "<cmd>lua require'quarto'.quartoClosePreview<cr>", desc = 'Close Preview' },
+  { '<leader>qp', "<cmd>lua require'quarto'.quartoPreview()<cr>", desc = 'Preview' },
+  { '<leader>qq', "<cmd>lua require'quarto'.quartoClosePreview()<cr>", desc = 'Close Preview' },
   { '<leader>qh', '<cmd>QuartoHelp<cr>', desc = 'Help' },
   { '<leader>qe', "<cmd>lua require'otter'.export()<cr>", desc = 'Export' },
   { '<leader>qE', "<cmd>lua require'otter'.export(true)<cr>", desc = 'Export Overwrite' },
