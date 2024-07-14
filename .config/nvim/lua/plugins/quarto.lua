@@ -86,7 +86,7 @@ return {
     ft = { 'markdown', 'quarto', 'latex' },
     opts = {
       default = {
-        dir_path = 'img',
+        dir_path = 'images',
       },
       filetypes = {
         markdown = {
