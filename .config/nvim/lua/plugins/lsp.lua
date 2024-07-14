@@ -22,12 +22,6 @@ return {
       { 'williamboman/mason.nvim' },
       { 'williamboman/mason-lspconfig.nvim' },
       { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
-      { -- nice loading notifications
-        -- PERF: but can slow down startup
-        'j-hui/fidget.nvim',
-        enabled = false,
-        opts = {},
-      },
       {
         {
           'folke/lazydev.nvim',
