@@ -130,10 +130,6 @@ return {
       },
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    keys = {
-      { '-', ':Oil<cr>', desc = 'oil' },
-      { '<leader>ef', ':Oil<cr>', desc = 'edit [f]iles' },
-    },
     cmd = 'Oil',
   },
 
@@ -474,7 +470,6 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'nvim-tree/nvim-web-devicons',
     },
-    vim.keymap.set('n', '<leader>at', ':AerialToggle<cr>', { desc = '[a]erial [t]oggle outline' }),
   },
   {
     'mrjones2014/smart-splits.nvim',
