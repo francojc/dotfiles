@@ -1,5 +1,12 @@
 # Configuration file
 
+[manager]
+show_hidden = true
+linemode = "size"
+
+[preview]
+tab_size = 2
+
 [opener]
 nvim = [
   { run = 'nvim "$@"', block = true },
@@ -61,4 +68,5 @@ rules = [
     { name = "*.key", use = "keynote" },
     { name = "*", use = "nvim" },
 ]
+
 

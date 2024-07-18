@@ -1,0 +1,22 @@
+account francojc@wfu.edu
+host smtp.gmail.com
+port 465
+from francojc@wfu.edu
+user francojc@wfu.edu
+passwordeval "pass francojc@wfu.edu"
+auth on
+tls on
+tls_trust_file	/etc/ssl/cert.pem
+logfile /Users/francojc/.local/state/msmtp/msmtp.log
+tls_starttls off
+account jerid.francom@gmail.com
+host smtp.gmail.com
+port 465
+from jerid.francom@gmail.com
+user jerid.francom@gmail.com
+passwordeval "pass jerid.francom@gmail.com"
+auth on
+tls on
+tls_trust_file	/etc/ssl/cert.pem
+logfile /Users/francojc/.local/state/msmtp/msmtp.log
+tls_starttls off

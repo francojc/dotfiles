@@ -1,0 +1,18 @@
+# vim: filetype=neomuttrc
+# muttrc file for account jerid.francom@gmail.com
+set realname = "Jerid Francom"
+set from = "jerid.francom@gmail.com"
+set sendmail = "msmtp -a jerid.francom@gmail.com"
+alias me jerid.francom <jerid.francom@gmail.com>
+set folder = "/Users/francojc/.local/share/mail/jerid.francom@gmail.com"
+set header_cache = "/Users/francojc/.cache/mutt-wizard/jerid.francom_gmail.com/headers"
+set message_cachedir = "/Users/francojc/.cache/mutt-wizard/jerid.francom_gmail.com/bodies"
+set mbox_type = Maildir
+set hostname = "gmail.com"
+set signature = "~/.config/mutt/accounts/jerid.francom.signature"
+source /usr/local/share/mutt-wizard/switch.muttrc
+
+macro index u "<shell-escape>mailsync jerid.francom@gmail.com<enter>" "sync jerid.francom@gmail.com"
+
+unmailboxes *
+mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"

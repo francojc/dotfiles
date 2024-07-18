@@ -57,10 +57,11 @@ return {
             'site_libs',
             '.venv',
           },
-          layout_strategy = 'flex',
+          layout_strategy = 'vertical',
           sorting_strategy = 'ascending',
           layout_config = {
-            prompt_position = 'top',
+            prompt_position = 'bottom',
+            width = 0.95,
           },
           mappings = {
             i = {
@@ -126,7 +127,7 @@ return {
         ['<C-l>'] = false,
       },
       view_options = {
-        show_hidden = true,
+        show_hidden = true
       },
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -166,14 +167,6 @@ return {
       }
     end,
   },
-
-  -- { -- nicer-looking tabs with close icons
-  --   'nanozuki/tabby.nvim',
-  --   enabled = true,
-  --   config = function()
-  --     require('tabby.tabline').use_preset 'tab_only'
-  --   end,
-  -- },
   {
     'romgrk/barbar.nvim',
     dependencies = {

@@ -4,3 +4,13 @@ on = [ "<C-s>" ]
 run = 'shell "$SHELL" --block --confirm'
 desc = "Open shell here"
 
+[[input.prepend_keymap]]
+on   = [ "<Esc>" ]
+run  = "close"
+desc = "Cancel input"
+
+[[input.prepend_keymap]]
+on = [ "l" ]
+run = "plugin --sync smart-enter"
+desc = "Enter child directory, or open file"
+

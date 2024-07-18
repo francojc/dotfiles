@@ -6,7 +6,6 @@ local config = wezterm.config_builder()
 -- Set leader key
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 2000 }
 
--- config.send_composed_key_when_left_alt_is_pressed = true
 config.send_composed_key_when_right_alt_is_pressed = true
 
 -- WezTerm actions
@@ -111,7 +110,7 @@ config.inactive_pane_hsb = {
 }
 
 -- For example, changing the color scheme:
-config.color_scheme = "Gruvbox Dark"
+config.color_scheme = 'Gruvbox Dark (Gogh)'
 
 -- Window settings
 config.window_padding = {

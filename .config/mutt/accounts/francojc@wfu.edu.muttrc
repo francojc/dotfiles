@@ -1,0 +1,18 @@
+# vim: filetype=neomuttrc
+# muttrc file for account francojc@wfu.edu
+set realname = "Jerid Francom"
+set from = "francojc@wfu.edu"
+set sendmail = "msmtp -a francojc@wfu.edu"
+alias me francojc <francojc@wfu.edu>
+set folder = "/Users/francojc/.local/share/mail/francojc@wfu.edu"
+set header_cache = "/Users/francojc/.cache/mutt-wizard/francojc_wfu.edu/headers"
+set message_cachedir = "/Users/francojc/.cache/mutt-wizard/francojc_wfu.edu/bodies"
+set mbox_type = Maildir
+set hostname = "wfu.edu"
+set signature = "~/.config/mutt/accounts/francojc.signature"
+source /usr/local/share/mutt-wizard/switch.muttrc
+
+macro index u "<shell-escape>mailsync francojc@wfu.edu<enter>" "sync francojc@wfu.edu"
+
+unmailboxes *
+mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"
