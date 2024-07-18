@@ -182,6 +182,7 @@ univariate
 NHST
 univarite
 disfluency
+<<<<<<< Updated upstream
 priori
 jittered
 Jitter
@@ -213,3 +214,6 @@ IDEs
 colwidths
 halfsize
 exm
+=======
+toolbelt
+>>>>>>> Stashed changes
