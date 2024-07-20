@@ -29,7 +29,7 @@ local function send_cell()
     vim.fn['slime#send_cell']()
     return
   end
-
+ 
   if vim.b['quarto_is_r_mode'] == true then
     vim.g.slime_python_ipython = 0
     local is_python = require('otter.tools.functions').is_otter_language_context 'python'
@@ -253,6 +253,9 @@ wk.add {
   -- Git operations
   { '<leader>g', name = 'Git' },
   { '<leader>gc', '<cmd>Telescope git_commits<cr>', desc = 'Git Commits' },
+  { '<leader>gs', '<cmd>Telescope git_status<cr>', desc = 'Git Status' },
+  { '<leader>gt', '<cmd>Telescope git_branches<cr>', desc = 'Git Branches' },
+  { '<leader>go', '<cmd>Octo actions<cr>', desc = 'Open Octo actions'},
 
   -- Help
   { '<leader>h', name = 'Help' },
@@ -320,11 +323,13 @@ wk.add {
   { '<leader>\\', name = 'Toggle' },
   { '<leader>\\n', toggle_line_numbers, desc = 'Toggle Line Numbers' },
   { '<leader>\\w', toggle_wrap, desc = 'Toggle Wrap' },
-  { '<leader>\\a', '<cmd>AerialToggle<cr>', desc = 'Toggle Aerial' },
+  { '<leader>\\o', '<cmd>AerialToggle<cr>', desc = 'Toggle Aerial Outline' },
   { '<leader>\\t', toggle_theme_color, desc = 'Toggle light/dark theme' },
-  { '<leader>\\c', '<cmd>CodeCompanionToggle<cr>', desc = 'Toggle Code Companion' },
+  { '<leader>\\a', '<cmd>CodeCompanionToggle<cr>', desc = 'Toggle Assistant (CodeCompanion)' },
   { '<leader>\\h', toggle_conceallevel, desc = 'Toggle Conceal Level' },
-
+  { '<leader>\\c', toggle_autocomplete, desc = "Toggle code completions"},
+  { '<leader>\\d', '<cmd>TodoQuickFix<cr>', desc = "Toggle todos"},
+  
   -- Visual mode mappings
   {
     mode = 'x',
