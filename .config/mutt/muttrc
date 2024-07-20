@@ -14,7 +14,6 @@ set arrow_cursor = yes
 set status_chars = " *%A"
 set status_format = "[ Folder: %f ] [%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]"
 
-
 # Gmail-like Configuration
 
 # Refresh and get new mail
@@ -115,7 +114,6 @@ macro index,pager + "<save-message>=[Gmail]/Important<enter><enter>" "Mark as im
 # y: Remove label (not directly possible in Neomutt)
 # v: Open move to menu (not directly possible in Neomutt)
 # l: Open label menu (not directly possible in Neomutt)
-
 
 # Combo Keys
 bind index * noop

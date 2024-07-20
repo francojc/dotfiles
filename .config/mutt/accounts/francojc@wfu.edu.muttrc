@@ -12,7 +12,7 @@ set hostname = "wfu.edu"
 set signature = "~/.config/mutt/accounts/francojc.signature"
 source /usr/local/share/mutt-wizard/switch.muttrc
 
-macro index u "<shell-escape>mailsync francojc@wfu.edu<enter>" "sync francojc@wfu.edu"
+macro index <esc>r "<shell-escape>mailsync francojc@wfu.edu<enter>" "sync francojc@wfu.edu"
 
 unmailboxes *
 mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"
