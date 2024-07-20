@@ -1,4 +1,4 @@
--- completion.lua:
+-- completion.lua
 return {
   { -- autopairs
     'windwp/nvim-autopairs',
@@ -15,6 +15,7 @@ return {
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-calc',
       'hrsh7th/cmp-emoji',
       'saadparwaiz1/cmp_luasnip',
@@ -47,7 +48,7 @@ return {
           end,
         },
         completion = {
-          autocomplete = false,
+          autocomplete = false, 
           completeopt = 'menu,menuone,noinsert',
         },
         mapping = {
