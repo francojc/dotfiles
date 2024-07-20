@@ -42,13 +42,8 @@ alias path='echo -e ${PATH//:/\\n}'
  # Rerun last command with sudo
 alias please='sudo $(fc -ln -1)'
 
-# Tmux aliases
-alias t='tmux'
-alias tn='tmux new -s'
-alias ta='tmux attach -t'
-alias td='tmux detach'
-alias tl='tmux list-sessions'
-alias tk='tmux kill-session -t'
+# Taskwarrior aliases
+alias tt='taskwarrior-tui'
 
 # Homebrew aliases
 alias buu='brew update && brew upgrade && brew cleanup && brew doctor'
@@ -150,7 +145,6 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-zstyle ':autocomplete:*' default-context history-incremental-search-backward
 
 # Deduplicate entries in PATH
 typeset -U PATH
@@ -164,6 +158,8 @@ eval "$(fzf --zsh)"
 source ~/.fzf.zsh
 # --- ZOXIDE ---
 eval "$(zoxide init zsh)"
+# --- ATUIN ---
+eval "$(atuin init zsh)"
 # --- OH-MY_POSH ---
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
     eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/bubbles.omp.yaml)"
