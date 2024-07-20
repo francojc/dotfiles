@@ -100,13 +100,13 @@ config.colors = {
   background = "#202325",
   cursor_bg = "#3043C8",
   cursor_fg = "#ffffff",
-  selection_bg = "#685C53",
+  selection_bg = "#525252",
   selection_fg = "#ffffff",
 }
 
 config.inactive_pane_hsb = {
-  saturation = 0.9,
-  brightness = 0.5,
+  saturation = 1,
+  brightness = 0.25,
 }
 
 -- For example, changing the color scheme:

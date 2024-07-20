@@ -96,7 +96,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 --tabline
-vim.opt.showtabline = 1
+vim.opt.showtabline = 0
 
 --windowline
 vim.opt.winbar = '%f'

@@ -71,13 +71,13 @@ return {
     priority = 1000,
     config = function()
       local gruvbox = require 'gruvbox'
-      gruvbox.setup {
+      gruvbox.setup({
         theme = 'dark',
         contrast = 'hard',
-        sidebars = { 'qf', 'vista_kind', 'terminal', 'packer' },
+        sidebars = { 'qf', 'vista_kind', 'terminal', 'packer', 'aerial', 'codecompanion' },
         dark_float = true,
         dark_sidebar = true,
-      }
+      })
       vim.cmd.colorscheme 'gruvbox'
     end,
   },
@@ -90,7 +90,7 @@ return {
       user_default_options = {
         RGB = true, -- #RGB hex codes
         RRGGBB = true, -- #RRGGBB hex codes
-        names = true, -- "Name" codes like Blue or blue
+        names = false, -- "Name" codes like Blue or blue
         RRGGBBAA = true, -- #RRGGBBAA hex codes
         AARRGGBB = false, -- 0xAARRGGBB hex codes
         rgb_fn = false, -- CSS rgb() and rgba() functions
@@ -98,7 +98,7 @@ return {
         css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
         css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
         -- Available modes for `mode`: foreground, background,  virtualtext
-        mode = 'background', -- Set the display mode.
+        mode = 'virtualtext', -- Set the display mode.
         -- Available methods are false / true / "normal" / "lsp" / "both"
         -- True is same as normal
         tailwind = false, -- Enable tailwind colors

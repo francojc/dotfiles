@@ -1,11 +1,15 @@
 -- git plugins
 
 return {
-  { 'sindrets/diffview.nvim' },
+  { 
+    'sindrets/diffview.nvim',
+    enabled = false,
+  },
 
   -- handy git ui
   {
     'NeogitOrg/neogit',
+    enabled = false,
     lazy = true,
     cmd = 'Neogit',
     keys = {
@@ -31,6 +35,7 @@ return {
   },
   {
     'akinsho/git-conflict.nvim',
+    enabled = false,
     init = function()
       require('git-conflict').setup {
         default_mappings = false,
