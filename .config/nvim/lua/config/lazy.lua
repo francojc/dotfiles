@@ -15,7 +15,7 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup('plugins', {
   rocks = {
-    enabled = false,
+    enabled = true,
   },
   defaults = {
     version = false,

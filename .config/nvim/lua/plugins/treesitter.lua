@@ -20,11 +20,13 @@ return {
           'julia',
           'bash',
           'yaml',
+          'c',
           'lua',
           'vim',
           'query',
           'vimdoc',
           'latex', -- requires tree-sitter-cli (installed automatically via Mason)
+          'regex',
           'html',
           'css',
           'dot',

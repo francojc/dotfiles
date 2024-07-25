@@ -1,22 +1,7 @@
-# ZSH configuration file
-# ---
-# --- Keybindings for VS Code ---
-bindkey -v
-
-# --- HISTORY ---
-HISTSIZE=5000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
-setopt hist_ignore_space
-
 # --- ALIASES ---
+# Nix aliases
+alias switch='darwin-rebuild switch --flake ~/.config/nix'
+
 # General aliases
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -82,13 +67,6 @@ alias qrh='quarto render --no-clean --to html'
 alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
 
-# Suffix aliases
-# open md, txt, qmd, r files in Neovim
-alias -s md=nvim
-alias -s txt=nvim
-alias -s qmd=nvim
-alias -s r=nvim
-
 # --- FUNCTIONS ---
 # list directory contents after changing directory
 function cd() {
@@ -121,41 +99,3 @@ function yy() {
 	fi
 	rm -f -- "$tmp"
 }
-# # --- ZSH PLUGINS ---
-# # ZSH syntax highlighting
-# source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# # ZSH completions
-# # FPATH=/run/current-system/sw/share/zsh-completions:$FPATH
-# # ZSH autosuggestions
-# source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-# # ZSH fzf-tab
-# source ~/.zsh/fzf-tab/fzf-tab.plugin.zsh
-# # ZSH autocomplete
-# source ~/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-# # ZSH alias-tips
-# source ~/.zsh/alias-tips/alias-tips.plugin.zsh
-# # ZSH vi-mode
-# # source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-#
-# zstyle ':completion:*' menu no
-# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-# zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-#
-# # Deduplicate entries in PATH
-# typeset -U PATH
-# export PATH
-#
-# Shell integrations
-# --- FZF ---
-eval "$(fzf --zsh)"
-source ~/.fzf.zsh
-# --- ZOXIDE ---
-eval "$(zoxide init zsh)"
-# --- ATUIN ---
-eval "$(atuin init zsh)"
-# --- OH-MY_POSH ---
-if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
-    eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/bubbles.omp.yaml)"
-fi

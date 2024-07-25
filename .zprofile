@@ -9,12 +9,12 @@ fi
 # ZSH fzf-tab
 # If ~/.zsh/fzf-tab does not exist, clone the repository
 if [ ! -d ~/.zsh/fzf-tab ]; then
-    git clone https://github.com/Aloxaf/fzf-tab ~/.zsh/fzf-tab
+    git clone --depth 1 -- https://github.com/Aloxaf/fzf-tab ~/.zsh/fzf-tab
 fi
 # ZSH alias-tips
 # If ~/.zsh/alias-tips does not exist, clone the repository
 if [ ! -d ~/.zsh/alias-tips ]; then
-    git clone https://github.com/djui/alias-tips.git ~/.zsh/alias-tips
+    git clone --depth 1 -- https://github.com/djui/alias-tips.git ~/.zsh/alias-tips
 fi
 
 # --- PATH ---
@@ -22,6 +22,8 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH="/Users/francojc/.bin:$PATH"
 
 # --- ENVIRONMENT VARIABLES ---
+export USER=$(whoami)
+export HOSTNAME=$(hostname)
 export EDITOR='nvim'
 export PAGER='bat'
 export MANPAGER="sh -c 'col -b | bat -l man -p'"

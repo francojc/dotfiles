@@ -1,9 +1,9 @@
 -- git plugins
 
 return {
-  { 
+  {
     'sindrets/diffview.nvim',
-    enabled = false,
+    enabled = false, -- seems like there is some conflict with telescope?
   },
 
   -- handy git ui
@@ -18,7 +18,7 @@ return {
     config = function()
       require('neogit').setup {
         disable_commit_confirmation = true,
-        kind = "floating",
+        kind = 'floating',
         integrations = {
           diffview = true,
         },

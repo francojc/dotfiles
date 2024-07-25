@@ -20,8 +20,9 @@ set status_format = "[ Folder: %f ] [%r%m messages%?n? (%n new)?%?d? (%d to dele
 macro index u "<shell-escape>mbsync -a<enter><sync-mailbox>" "Sync all mail"
 
 # Sorting and Threading
-set sort = threads
-set sort_aux = reverse-last-date-received
+set use_threads=yes
+set sort = date
+set sort_aux = date
 set strict_threads = yes
 set thread_received = yes
 

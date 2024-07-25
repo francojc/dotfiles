@@ -8,17 +8,17 @@ return {
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       { "nvim-telescope/telescope-dap.nvim" },
-      {
-        "jmbuhr/telescope-zotero.nvim",
-        enabled = true,
-        dev = false,
-        dependencies = {
-          { "kkharji/sqlite.lua" },
-        },
-        config = function()
-          vim.keymap.set("n", "<leader>fz", ":Telescope zotero<cr>", { desc = "[z]otero" })
-        end,
-      },
+      -- {
+      --   "jmbuhr/telescope-zotero.nvim",
+      --   enabled = true,
+      --   dev = false,
+      --   dependencies = {
+      --     { "kkharji/sqlite.lua" },
+      --   },
+      --   config = function()
+      --     vim.keymap.set("n", "<leader>fz", ":Telescope zotero<cr>", { desc = "[z]otero" })
+      --   end,
+      -- },
     },
     config = function()
       local telescope = require("telescope")
@@ -107,7 +107,7 @@ return {
       telescope.load_extension("fzf")
       telescope.load_extension("ui-select")
       telescope.load_extension("dap")
-      telescope.load_extension("zotero")
+      -- telescope.load_extension("zotero")
     end,
   },
 
@@ -327,8 +327,13 @@ return {
     },
     config = function()
       require("noice").setup({
+        cmdline = {
+          enabled = false,
+        },
+        messages = {
+          enabled = false,
+        },
         lsp = {
-          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
           override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
@@ -337,7 +342,7 @@ return {
         },
         -- you can enable a preset for easier configuration
         presets = {
-          bottom_search = false, -- use a classic bottom cmdline for search
+          bottom_search = true, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
@@ -352,7 +357,7 @@ return {
         extensions = {
           "fzf",
           "telescope",
-          "zotero",
+          -- "zotero",
           "aerial",
         },
       })
@@ -432,7 +437,6 @@ return {
         },
         editor_only_render_when_focused = false,
         window_overlap_clear_enabled = true,
-        -- window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', 'scrollview' },
         tmux_show_only_in_active_window = true,
         window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "scrollview", "scrollview_sign" },
         max_width = nil,

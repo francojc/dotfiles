@@ -92,7 +92,7 @@ table.insert(config.hyperlink_rules, {
 
 -- Set the default font
 config.font = wezterm.font("MesloLGL Nerd Font Mono", { weight = "Regular" })
-config.font_size = 13.5
+config.font_size = 16
 
 -- Tweak the color scheme
 config.colors = {
@@ -106,8 +106,11 @@ config.colors = {
 
 config.inactive_pane_hsb = {
   saturation = 1,
-  brightness = 0.25,
+  brightness = 0.75,
 }
+
+config.window_background_opacity = 0.9
+config.macos_window_background_blur = 100
 
 -- For example, changing the color scheme:
 config.color_scheme = 'Gruvbox Dark (Gogh)'

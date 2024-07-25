@@ -29,7 +29,7 @@ local function send_cell()
     vim.fn['slime#send_cell']()
     return
   end
- 
+
   if vim.b['quarto_is_r_mode'] == true then
     vim.g.slime_python_ipython = 0
     local is_python = require('otter.tools.functions').is_otter_language_context 'python'
@@ -220,9 +220,46 @@ local function add_blank_lines_and_insert()
   vim.cmd 'startinsert' -- Enter insert mode
 end
 
+-- Function to toggle apple-music functionality
+local function toggle_play_music()
+  require('apple-music').toggle_play()
+end
+
+local function toggle_shuffle_music()
+  require('apple-music').toggle_shuffle()
+end
+
 -- Which-Key mappings
 wk.add {
-  { '<leader>a', group = 'A' },
+  { '<leader>a', group = 'Apple Music' },
+  {
+    '<leader>ap',
+    function()
+      require('apple-music').select_playlist_telescope()
+    end,
+    desc = 'Find playlists',
+  },
+  {
+    '<leader>aa',
+    function()
+      require('apple-music').select_album_telescope()
+    end,
+    desc = 'Find albums',
+  },
+  {
+    '<leader>as',
+    function()
+      require('apple-music').select_track_telescope()
+    end,
+    desc = 'Find songs',
+  },
+  {
+    '<leader>ax',
+    function()
+      require('apple-music').cleanup_all()
+    end,
+    desc = 'Cleanup temp playlists',
+  },
 
   -- Buffer operations
   { '<leader>b', name = 'Buffer' },
@@ -255,7 +292,7 @@ wk.add {
   { '<leader>gc', '<cmd>Telescope git_commits<cr>', desc = 'Git Commits' },
   { '<leader>gs', '<cmd>Telescope git_status<cr>', desc = 'Git Status' },
   { '<leader>gt', '<cmd>Telescope git_branches<cr>', desc = 'Git Branches' },
-  { '<leader>go', '<cmd>Octo actions<cr>', desc = 'Open Octo actions'},
+  { '<leader>go', '<cmd>Octo actions<cr>', desc = 'Open Octo actions' },
 
   -- Help
   { '<leader>h', name = 'Help' },
@@ -297,10 +334,8 @@ wk.add {
   -- Search operations
   { '<leader>s', name = 'Search' },
   { '<leader>sf', '<cmd>Telescope live_grep<cr>', desc = 'Find Text' },
-  { '<leader>sh', '<cmd>Telescope help_tags<cr>', desc = 'Find Help' },
-  { '<leader>sm', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages' },
-  { '<leader>sr', '<cmd>Telescope registers<cr>', desc = 'Registers' },
-  { '<leader>sk', '<cmd>Telescope keymaps<cr>', desc = 'Keymaps' },
+  { '<leader>sg', name = 'Grug' },
+  { '<leader>sgo', '<cmd>GrugFar<cr>', desc = 'Open' },
   { '<leader>sc', '<cmd>Telescope commands<cr>', desc = 'Commands' },
   { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Todos' },
 
@@ -321,22 +356,31 @@ wk.add {
 
   -- Toggle operations
   { '<leader>\\', name = 'Toggle' },
-  { '<leader>\\n', toggle_line_numbers, desc = 'Toggle Line Numbers' },
-  { '<leader>\\w', toggle_wrap, desc = 'Toggle Wrap' },
-  { '<leader>\\o', '<cmd>AerialToggle<cr>', desc = 'Toggle Aerial Outline' },
-  { '<leader>\\t', toggle_theme_color, desc = 'Toggle light/dark theme' },
-  { '<leader>\\a', '<cmd>CodeCompanionToggle<cr>', desc = 'Toggle Assistant (CodeCompanion)' },
+  { '<leader>\\a', '<cmd>CodeCompanionToggle<cr>', desc = 'Toggle Assistant' },
+  { '<leader>\\d', '<cmd>TodoQuickFix<cr>', desc = 'Toggle Todos' },
   { '<leader>\\h', toggle_conceallevel, desc = 'Toggle Conceal Level' },
-  { '<leader>\\c', toggle_autocomplete, desc = "Toggle code completions"},
-  { '<leader>\\d', '<cmd>TodoQuickFix<cr>', desc = "Toggle todos"},
-  
+  { '<leader>\\n', toggle_line_numbers, desc = 'Toggle Line Numbers' },
+  { '<leader>\\o', '<cmd>AerialToggle<cr>', desc = 'Toggle Aerial Outline' },
+  { '<leader>\\p', toggle_play_music, desc = 'Toggle Music Playback' },
+  { '<leader>\\s', toggle_shuffle_music, desc = 'Toggle Music Shuffle' },
+  { '<leader>\\t', toggle_theme_color, desc = 'Toggle Light/Dark Theme' },
+  { '<leader>\\w', toggle_wrap, desc = 'Toggle Wrap' },
+
   -- Visual mode mappings
   {
     mode = 'x',
-    { '<leader>c', name = 'Code' },
+    -- Code
+    { '<leader>c', name = 'Send Code' },
     { '<leader>cr', send_region, desc = 'Send Region' },
-    { '<leader>r', name = 'Replace' },
+    -- Find and Replace
+    { '<leader>r', name = 'Find/Replace' },
     { '<leader>rr', visual_find_and_replace, desc = 'Find and Replace' },
+    -- Wrap operations
+    { '<leader>w', name = 'Wrap Selection' },
+    { '<leader>wb', 'c**<Esc>pa**<Esc>', desc = 'Wrap bold' },
+    { '<leader>wi', 'c*<Esc>pa*<Esc>', desc = 'Wrap italic' },
+    { '<leader>ws', 'c~~<Esc>pa~~<Esc>', desc = 'Wrap strikethrough' },
+    { '<leader>wm', 'c$<Esc>pa$<Esc>', desc = 'Wrap math' },
   },
 
   -- Normal/ Insert mode mappings
