@@ -1,0 +1,53 @@
+# Taskwarrior configuration file
+
+# TUI config
+uda.taskwarrior-tui.task-report.show-info=false
+
+# include holidays.en-US.rc
+
+# University breaks
+holiday.university.name=University Break
+holiday.university.start=2024-10-17
+holiday.university.end=2024-10-20
+
+# Data location
+data.location=~/.local/share/task
+
+# Theme
+include dark-gray-256.theme
+
+# Other config
+default.project=inbox
+default.due=tomorrow
+default.priority=L
+
+confirmation=off
+report.next.columns=id,start.age,project,description.desc,tags,depends,scheduled.relative,due.relative,urgency
+report.next.labels=ID,S,Project,Desc,Tags,Dep,Sched,Due,Urg
+report.next.filter=(status:pending or status:waiting)
+
+# Calendar config
+calendar.details=full
+calendar.details.report=summary
+calendar.offset=0
+calendar.legend=off
+weekstart=Monday
+displayweeknumber=0
+due=6
+
+# color.blocked=on color3
+# color.blocking=bright yellow
+
+
+context.Research.read=+research
+context.Research.write=+research
+context.Teaching.read=+teaching
+context.Teaching.write=+teaching
+context.Service.read=+service
+context.Service.write=+service
+context.Personal.read=+personal
+context.Personal.write=+personal
+context.Short.read=+sho
+context.Short.write=+sho
+context.Work.read=+work
+context.Work.write=+work

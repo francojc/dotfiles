@@ -56,7 +56,7 @@ np(){
 			if [ "$1" != "-t" ]
 			then
 				rm ~/Library/Scripts/tmp*
-				osascript ~/Library/Scripts/album-art.applescript
+				osascript ~/Library/Scripts/am-art.applescript
 				if [ -f ~/Library/Scripts/tmp.png ]; then
 					art=$(clear; viu -b ~/Library/Scripts/tmp.png -w 31 -h 14)
 				else

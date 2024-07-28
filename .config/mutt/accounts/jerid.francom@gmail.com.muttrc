@@ -10,9 +10,10 @@ set message_cachedir = "/Users/francojc/.cache/mutt-wizard/jerid.francom_gmail.c
 set mbox_type = Maildir
 set hostname = "gmail.com"
 set signature = "~/.config/mutt/accounts/jerid.francom.signature"
-source /usr/local/share/mutt-wizard/switch.muttrc
+set sig_on_top = no
+set sig_dashes = yes
 
-macro index <esc>r "<shell-escape>mailsync jerid.francom@gmail.com<enter>" "sync jerid.francom@gmail.com"
+source /usr/local/share/mutt-wizard/switch.muttrc
 
 unmailboxes *
 mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"

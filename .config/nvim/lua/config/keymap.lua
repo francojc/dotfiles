@@ -117,41 +117,6 @@ local function new_terminal_vertical()
   new_terminal 'vertical'
 end
 
--- Helper function to change cwd through Yazi
--- FIX: this is not functioning. Need to rework
-local function yazi_change_dir()
-  -- Open Yazi using the plugin
-  require('yazi').yazi()
-
-  -- Function to handle the directory change after Yazi closes
-  local function on_exit()
-    -- Get the selected item from Yazi
-    local selected = require('yazi').get_selected_item()
-
-    if selected then
-      local path = selected.path
-      local is_dir = selected.is_directory
-
-      -- If it's a directory, change to it directly
-      -- If it's a file, change to its parent directory
-      local target_dir = is_dir and path or vim.fn.fnamemodify(path, ':h')
-
-      -- Change Neovim's working directory
-      vim.cmd('cd ' .. vim.fn.fnameescape(target_dir))
-      print('Changed directory to: ' .. target_dir)
-    else
-      print 'No directory selected'
-    end
-  end
-
-  -- Set up the autocommand to handle Yazi's exit
-  vim.api.nvim_create_autocmd('User', {
-    pattern = 'YaziLeave',
-    callback = on_exit,
-    once = true,
-  })
-end
-
 -- Helper function to insert a command output
 vim.api.nvim_create_user_command('InsertCommandOutput', function()
   vim.ui.input({ prompt = 'Enter command: ' }, function(command)
@@ -403,6 +368,7 @@ wk.add {
 -- Additional non-Which-Key mappings
 local function set_additional_mappings()
   -- Normal mode mappings
+  map_funcs.n('<leader>,', '<cmd>Alpha<cr>', { desc = 'Home' })
   map_funcs.n('j', "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = 'Down by visual lines' })
   map_funcs.n('k', "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = 'Up by visual lines' })
   map_funcs.n('<C-h>', '<C-w>h', { desc = 'Move to the left window' })

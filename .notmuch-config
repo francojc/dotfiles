@@ -1,0 +1,15 @@
+[database]
+path=/Users/francojc/.local/share/mail
+[user]
+name=Jerid Francom
+primary_email=francojc@wfu.edu
+other_email=jerid.francom@gmail.com
+[new]
+tags=unread;inbox;
+ignore=.mbsyncstate;.uidvalidity;.DS_Store;
+[search]
+exclude_tags=deleted;spam;
+[maildir]
+synchronize_flags=true
+[crypto]
+gpg_path=gpg

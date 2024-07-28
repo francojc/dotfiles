@@ -1,5 +1,8 @@
 # Changing window focus
 
+# Usage: 
+# skhd --start-service
+
 # change window focus within space
 # With Vim-like keys
 alt - j : yabai -m window --focus south
@@ -51,9 +54,9 @@ shift + alt - 7 : yabai -m window --space 7;
 
 # quick open applications
 # open [t]erminal
-alt - t : open -n -a "WezTerm"
+alt - t : open -n -a "Kitty"
 # open [b]rowser
-alt - b : open -n -a "Orion"
+alt - b : open -n -a "Arc"
 
 # yabai
 # [s]tart, [q]uit, [e]xecute (restart)

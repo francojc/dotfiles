@@ -9,8 +9,10 @@
     };
     taps = [];
     brews = [
-      "coreutils"
-      "gettext" # for radian
+      # "coreutils"
+      # "gettext" # for radian
+      "llm" # perm to install models
+      "r"
     ];
     casks = [
       "appcleaner"
@@ -41,7 +43,6 @@
       "stolendata-mpv"
       "transcribe"
       "xquartz"
-      "zoom"
       "zotero@beta"
     ];
     masApps = {};

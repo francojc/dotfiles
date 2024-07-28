@@ -6,7 +6,7 @@
   ];
   
   nixpkgs.hostPlatform = "aarch64-darwin";
-
+  nixpkgs.config.allowUnfree = true;
   nix = {
     package = pkgs.nix;
     gc.automatic = true;

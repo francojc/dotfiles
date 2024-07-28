@@ -13,11 +13,13 @@
   home.packages = with pkgs; [
     abook
     atuin
+    # calcure
     datasette
     duf
+    gettext
     lazydocker
     lazygit
-    llm
+    # llm # moved to brew (for model installs)
     luajit
     luajitPackages.luarocks
     mdcat
@@ -29,15 +31,19 @@
     pianobar
     python3
     radianWrapper
-    R
+    # R
     ripgrep
+    skhd
     sqlite
     stow
-    taskwarrior3
+    taskwarrior
     taskwarrior-tui
     tldr
+    viu
+    yabai
     yazi-unwrapped
     zoxide
+    zoom-us
   ];
 
   home.sessionVariables = {

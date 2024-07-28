@@ -38,7 +38,7 @@ alias bic='brew install --cask'
 alias bc='brew cleanup'
 
 # Git aliases
-alias gs='git status'
+alias gss='git status'
 alias ga='git add'
 alias gaa='git add --all'
 alias gc='git commit -m'

@@ -1,68 +1,85 @@
 # vim: filetype=neomuttrc
+
+# Source external configurations
 source /usr/local/share/mutt-wizard/mutt-wizard.muttrc
 source /Users/francojc/.config/mutt/accounts/francojc@wfu.edu.muttrc
-source /Users/francojc/.config/mutt/colorscheme.muttrc
 
-# yy/mm/dd 24hr time
+# General Settings
 set date_format="%y/%m/%d %H:%M"
 set pipe_decode = yes
 set thorough_search = yes
 unset help
 set arrow_cursor = yes
+set beep = yes
+set wait_key = no
+set timeout = 3
+set mail_check = 60
+set move = no
+set delete = yes
+set confirmappend = no
+set text_flowed
+unset mime_forward
 
-# Status bar
+# Status Bar
 set status_chars = " *%A"
 set status_format = "[ Folder: %f ] [%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]"
 
-# Gmail-like Configuration
-
-# Refresh and get new mail
-macro index u "<shell-escape>mbsync -a<enter><sync-mailbox>" "Sync all mail"
-
 # Sorting and Threading
-set use_threads=yes
-set sort = date
-set sort_aux = date
+set use_threads = yes
+set sort = threads
+set sort_aux = reverse-last-date-received
+set include 
+set indent_str = "> "
+set thorough_search
+set uncollapse_jump
+set sort_re
+set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set strict_threads = yes
 set thread_received = yes
-
-# Toggle thread collapsing
-bind index <space> collapse-thread
-bind index - collapse-all
-# By default, threads are collapsed
 set collapse_all = yes
 
-# Navigation within a thread
-bind pager n next-entry
-bind pager p previous-entry
-set pager_stop = yes
-
-# Gmail-specific folders
+# Gmail-specific Settings
+unset copy
 set spoolfile = "+INBOX"
 set record = "+[Gmail]/Sent Mail"
 set postponed = "+[Gmail]/Drafts"
 set trash = "+[Gmail]/Trash"
-
 set mail_check = 5
-set mail_check_recent = yes
+set mail_check_recent
 
-# Sidebar
-set sidebar_visible = yes
+# Sidebar Configuration
+set sidebar_visible
 set sidebar_width = 20
-set sidebar_short_path = yes
-set sidebar_next_new_wrap = yes
+set sidebar_short_path
+set sidebar_next_new_wrap
 set sidebar_new_mail_only = no
-set mail_check_stats = yes
+set mail_check_stats
 set sidebar_format = '%D%?F? [%F]?%* %?N?%N/? %?S?%S?'
 
-# Sidebar pins
+# Sidebar Pins
 sidebar_pin = "INBOX"
 sidebar_pin = "[Gmail]/Starred"
 sidebar_pin = "[Gmail]/Drafts"
 sidebar_pin = "[Gmail]/Sent Mail"
 sidebar_pin = "[Gmail]/All Mail"
 
-# Sidebar mappings
+# Key Bindings
+## General
+bind index,pager c mail
+bind index,pager / search
+bind pager j next-line
+bind pager k previous-line
+bind index <Return> display-message
+
+## Thread Management
+bind index <space> collapse-thread
+bind index - collapse-all
+bind pager n next-entry
+bind pager p previous-entry
+set pager_stop = yes
+set menu_scroll 
+
+## Sidebar Navigation
 bind index,pager <esc>k sidebar-prev
 bind index,pager <esc>j sidebar-next
 bind index,pager <esc>o sidebar-open
@@ -70,53 +87,31 @@ bind index,pager <esc>p sidebar-prev-new
 bind index,pager <esc>n sidebar-next-new
 bind index,pager <esc>b sidebar-toggle-visible
 
-# Compose & Chat
-bind index,pager c mail                     # Compose new message
-# d: Compose in a new tab (not directly possible in Neomutt)
-bind index,pager / search                   # Search mail
-# q: Search chat contacts (not applicable in Neomutt)
-
-# Navigation
+## Gmail-like Shortcuts
 bind index,pager g noop
 macro index,pager gi "<change-folder>=INBOX<enter>" "Go to inbox"
 macro index,pager gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred conversations"
 macro index,pager gt "<change-folder>=[Gmail]/Sent Mail<enter>" "Go to sent messages"
 macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
 macro index,pager ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail"
-# g then c: Go to Contacts (not directly possible in Neomutt)
-# g then k: Go to Tasks (not applicable in Neomutt)
 
-# Actions
+## Message Actions
 macro index,pager y "<save-message>=[Gmail]/All Mail<enter><enter>" "Archive message"
-bind index,pager d delete-message           # Delete
+bind index,pager d delete-message
 macro index,pager u "<undelete-message>" "Undelete message"
-# m: Mute conversation (not directly possible in Neomutt)
 macro index,pager ! "<save-message>=[Gmail]/Spam<enter><enter>" "Report as spam"
-bind index,pager r reply                    # Reply
-bind index,pager a group-reply              # Reply all
-bind index,pager f forward-message          # Forward
+bind index,pager r reply
+bind index,pager a group-reply
+bind index,pager f forward-message
 macro index,pager I "<clear-flag>N" "Mark as read"
 macro index,pager U "<set-flag>N" "Mark as unread"
-# `: Go to next inbox section (not directly possible in Neomutt)
-# ~: Go to previous inbox section (not directly possible in Neomutt)
 
-# Jumping
-bind pager j next-line
-bind pager k previous-line
-bind index <Return> display-message
-
-# Threadlist Selection
-bind index x tag-entry                # Select conversation
-bind index,pager s flag-message             # Star/unstar conversation
+## Selection and Flagging
+bind index x tag-entry
+bind index,pager s flag-message
 macro index,pager + "<save-message>=[Gmail]/Important<enter><enter>" "Mark as important"
-# -: Mark as not important (not directly possible in Neomutt)
 
-# Message Actions
-# y: Remove label (not directly possible in Neomutt)
-# v: Open move to menu (not directly possible in Neomutt)
-# l: Open label menu (not directly possible in Neomutt)
-
-# Combo Keys
+## Bulk Actions
 bind index * noop
 macro index *a "<tag-pattern>~A<enter><tag-prefix><save-message>=[Gmail]/All Mail<enter><enter>" "Archive all"
 macro index *n "<untag-pattern>~A<enter>" "Deselect all conversations"
@@ -126,34 +121,41 @@ macro index *s "<tag-pattern>~F<enter>" "Select starred conversations"
 macro index *t "<untag-pattern>~F<enter>" "Select unstarred conversations"
 macro index *f "<tag-prefix><clear-flag>N" "Mark tagged messages as read"
 
-# Additional settings
-set beep = no               # Turn off bell
-set wait_key = no           # Don't wait for key press
-set timeout = 3             # Timeout for user input
-set mail_check = 60         # Check for new mail every minute
-set move = no               # Don't move read messages
-set delete = yes            # Don't ask for confirmation when deleting
-set confirmappend = no      # Don't ask for confirmation when appending messages to a mailbox
-
-# Viewing URLs in the browser
+# Macros
+macro index <esc>r "<shell-escape>mailsync<enter>" "Refresh and get new mail"
 macro index,pager <esc>u "<pipe-message> urlscan<enter>" "Extract URLs and view in browser"
 macro attach,compose <esc>u "<pipe-entry> urlscan<enter>" "Extract URLs and view in browser"
-
-# View HTML messages
-set mailcap_path = ~/.config/mutt/mailcap
-auto_view text/html
-alternative_order text/plain text/html
-
-## abook integration
-set query_command = "abook --mutt-query '%s'"
 macro index,pager a "<pipe-message>abook --add-email<enter>" "Add sender to address book"
 
-# Switch between accounts
+# Account Switching
 macro index,pager <F1> '<sync-mailbox><enter-command>source /Users/francojc/.config/mutt/accounts/francojc@wfu.edu.muttrc<enter><change-folder>!<enter><check-stats>' "switch to francojc@wfu.edu"
 macro index,pager <F2> '<sync-mailbox><enter-command>source /Users/francojc/.config/mutt/accounts/jerid.francom@gmail.com.muttrc<enter><change-folder>!<enter><check-stats>' "switch to jerid.francom@gmail.com"
 
-# GPG settings
+# HTML and Attachment Handling
+set mailcap_path = ~/.config/mutt/mailcap
+auto_view text/html text/calendar application/ics
+alternative_order text/html text/plain text/enriched text/*
+
+# Address Book
+set query_command = "abook --mutt-query '%s'"
+
+# GPG Settings
 set pgp_use_gpg_agent = yes
 set pgp_timeout = 3600
+
+# Hooks
+# Macro to send email and then sync (using 'Y' instead of 'y')
+macro compose Y "<send-message><shell-escape>mailsync<enter>" "Send and sync mail"
+
+# Advanced search using ripgrep
+# Ripgrep + fzf search for current account
+bind index,pager s noop
+
+# Use notmuch for searching /~b <search term>
+bind index,pager sn search-next
+bind index,pager sp search-opposite
+
+# Ripgrep + fzf search for current account
+macro index,pager sr "<enter-command>unset wait_key<enter><shell-escape>search_mutt.sh \"$(echo $my_account | cut -d '@' -f 1)\"<enter><change-folder-readonly>~/.cache/mutt_results<enter>" "search mail (using fzf and ripgrep) in current account"
 
 # vim: set ft=neomuttrc:

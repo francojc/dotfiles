@@ -5,8 +5,8 @@
     eza
     fd
     fzf
-    gettext
     git
+    ghostscript
     home-manager
     htop
     isync
@@ -16,16 +16,16 @@
     m-cli
     mas
     msmtp
+    ncdu
     neofetch
     notmuch
     pass
-    skhd
+    poppler
     tree
     urlscan
     vim
     wezterm
     xclip
-    yabai
     zsh
   ];
 }
