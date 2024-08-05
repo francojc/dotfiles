@@ -1,5 +1,6 @@
 # Set local library for packages
-R_LIBS_USER=/Users/francojc/R/Library/
+# R_LIBS_USER=/Users/francojc/R/Library/
+R_LIB_USER=
 
 # Set locale
 TZ='America/New_York'

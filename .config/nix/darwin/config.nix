@@ -1,10 +1,10 @@
 # ~/.config/nix/darwin/config.nix
-{ config, pkgs, self, ... }: {
+{ config, pkgs, self, inputs, ... }: {
   imports = [
     ./packages.nix
     ./homebrew.nix
   ];
-  
+
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
   nix = {

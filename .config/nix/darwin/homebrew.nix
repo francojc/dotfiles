@@ -7,12 +7,10 @@
       cleanup = "zap";
       upgrade = true;
     };
-    taps = [];
+    taps = [ ];
     brews = [
-      # "coreutils"
-      # "gettext" # for radian
-      "llm" # perm to install models
-      "r"
+      "llm" # permission to install models
+      # "r"
     ];
     casks = [
       "appcleaner"
@@ -21,6 +19,7 @@
       "bettermouse"
       "bitwarden"
       "calibre"
+      "chromium"
       "datasette"
       "docker"
       "drawio"
@@ -36,15 +35,12 @@
       "mullvadvpn"
       "obsidian"
       "praat"
-      "quarto"
       "raycast"
       "rectangle"
       "sequel-ace"
-      "stolendata-mpv"
       "transcribe"
-      "xquartz"
       "zotero@beta"
     ];
-    masApps = {};
+    masApps = { };
   };
 }

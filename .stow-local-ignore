@@ -2,9 +2,8 @@ README.md
 .git
 .*gpg$
 
-.backup
-.restore
 .macos
 
-dotfiles.code-workspace
 .DS_Store
+
+.config/direnv

@@ -39,4 +39,5 @@ yabai -m rule --add app="^Photos$" manage=off
 yabai -m rule --add app="^Calendar$" manage=off
 yabai -m rule --add app="^FaceTime$" manage=off
 yabai -m rule --add app="^App Store$" manage=off
+yabai -m rule --add app="^Rectangle$" manage=off
 

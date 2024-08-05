@@ -1,54 +1,58 @@
-# ~/.config/nix/home-manager/home.nix
-{ config, pkgs, ... }: {
+# ~/.config/nix/home/config.nix
+{ config, pkgs, lib, ... }: {
 
   imports = [
     ./zsh.nix
-    # ./git.nix
-    # ./neovim.nix
+    ./vim.nix
+    ./neovim
   ];
 
-  home.stateVersion = "23.05";
-  programs.home-manager.enable = true;
-
-  home.packages = with pkgs; [
-    abook
-    atuin
-    # calcure
-    datasette
-    duf
-    gettext
-    lazydocker
-    lazygit
-    # llm # moved to brew (for model installs)
-    luajit
-    luajitPackages.luarocks
-    mdcat
-    neomutt
-    neovim
-    nodejs
-    oh-my-posh
-    pandoc
-    pianobar
-    python3
-    radianWrapper
-    # R
-    ripgrep
-    skhd
-    sqlite
-    stow
-    taskwarrior
-    taskwarrior-tui
-    tldr
-    viu
-    yabai
-    yazi-unwrapped
-    zoxide
-    zoom-us
-  ];
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
 
+  programs.home-manager.enable = true;
+
   # Add any other home-manager specific configurations here
+  home = {
+    stateVersion = "23.05";
+    sessionVariables = {
+      EDITOR = "nvim";
+    };
+    packages = with pkgs; [
+      abook
+      atuin
+      datasette
+      duf
+      gettext
+      gh
+      gv
+      lazydocker
+      lazygit
+      luajit
+      luajitPackages.luarocks
+      mdcat
+      neomutt
+      nodejs
+      oh-my-posh
+      pandoc
+      pianobar
+      poppler_utils
+      python3
+      ripgrep
+      skhd
+      sqlite
+      stow
+      tldr
+      viu
+      wtf
+      xquartz
+      yabai
+      yazi-unwrapped
+      zoxide
+      zoom-us
+    ];
+  };
 }

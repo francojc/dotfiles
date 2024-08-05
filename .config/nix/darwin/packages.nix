@@ -18,9 +18,10 @@
     msmtp
     ncdu
     neofetch
+    nix-prefetch-git
     notmuch
     pass
-    poppler
+    qpdf
     tree
     urlscan
     vim

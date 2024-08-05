@@ -1,4 +1,1 @@
--- Configuration files for neovim
-require 'config.global'
-require 'config.lazy'
-require 'config.autocommands'
+/nix/store/grgzm4gcpb7p9x0vv0mq7qdagmk8dx4g-home-manager-files/.config/nvim/init.lua
