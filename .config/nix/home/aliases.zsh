@@ -73,6 +73,11 @@ function cd() {
     z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
+# Neomutt
+function nm() {
+    mailsync && neomutt
+  }
+
 # Setup qtree (Quick Tree) command
 # - first argument is the directory to list (default is current directory)
 # - second argument is the -L value (default is 2)

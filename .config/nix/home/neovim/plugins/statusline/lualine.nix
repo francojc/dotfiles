@@ -5,9 +5,9 @@ in
 {
   plugins.lualine = {
     enable = true;
-    globalstatus = true;
+    globalstatus = false;
     disabledFiletypes = {
-      statusline = [ "dashboard" "alpha" "starter" ];
+      statusline = [ "dashboard" "alpha" "starter" "NvimTree" ];
     };
     theme = {
       normal = {

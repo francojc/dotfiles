@@ -1,6 +1,12 @@
 [
   # General maps
-
+  # Go home!
+  {
+    mode = "n";
+    key = "<C-,>";
+    action = "<Cmd>Alpha<CR>";
+    options = { desc = "Go home!"; };
+  }
   # Exit insert mode
   {
     mode = "i";
@@ -82,6 +88,12 @@
     action = "<Cmd>NvimTreeToggle<CR>";
     options = { desc = "Toggle Tree"; };
   }
+  {
+    mode = "n";
+    key = "<leader>fn";
+    action = "<Cmd>ene <bar> startinsert<CR>";
+    options = { desc = "New File"; };
+  }
   # Git
   # Obsidian
   {
@@ -90,13 +102,16 @@
     action = "<Cmd>ObsidianToggle<CR>";
     options = { desc = "Obsidian"; };
   }
-  # Terminal
+
+  # Search
   {
-    mode = [ "n" ];
-    key = "<leader>t";
-    action = "+terminal";
+    mode = "n";
+    key = "<leader>st";
+    action = "<Cmd>TodoTelescope<CR>";
+    options = { desc = "Search Todos"; };
   }
 
+  # Terminal
   {
     mode = [ "n" ];
     key = "<leader>ts";
@@ -135,6 +150,12 @@
     key = "<leader>\\s";
     action = "<Cmd>set spell!<CR>";
     options = { desc = "Toggle Spell"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>\\r";
+    action = "<Cmd>lua toggle_r_lsp()<CR>";
+    options = { desc = "Toggle R LSP"; };
   }
 
   # Tabs

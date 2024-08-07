@@ -1,6 +1,9 @@
 # default layou for yabai
 yabai -m config layout bsp
 
+# Set normal window opacity
+yabai -m config normal_window_opacity 0.75
+
 # new window spawns to the right, vertical
 # split or the bottom if horizontal split
 yabai -m config window_placement second_child

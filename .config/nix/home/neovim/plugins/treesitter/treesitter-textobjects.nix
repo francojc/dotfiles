@@ -1,4 +1,5 @@
 {
+  # Select text objects
   plugins.treesitter-textobjects = {
     enable = true;
     select = {

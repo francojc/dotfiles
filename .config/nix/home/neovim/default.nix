@@ -7,6 +7,7 @@ let
   pluginConfigs = map import [
     # Colorscheme
     ./plugins/colorscheme/colorscheme.nix
+    ./plugins/colorscheme/colorizer.nix
     # Completion
     ./plugins/completion/cmp.nix
     ./plugins/completion/lspkind.nix
@@ -31,11 +32,13 @@ let
     # UI
     ./plugins/ui/alpha.nix
     ./plugins/ui/bufferline.nix
+    # ./plugins/ui/headlines.nix
     ./plugins/ui/nvim-notify.nix
     ./plugins/ui/nvim-tree.nix
     ./plugins/ui/precognition.nix
     ./plugins/ui/telescope.nix
     # Utils
+    ./plugins/utils/airline.nix
     ./plugins/utils/codecompanion.nix
     ./plugins/utils/comment.nix
     ./plugins/utils/copilot-chat.nix
@@ -44,6 +47,7 @@ let
     ./plugins/utils/harpoon.nix
     ./plugins/utils/illuminate.nix
     ./plugins/utils/markdown.nix
+    # ./plugins/utils/markview.nix
     ./plugins/utils/mini.nix
     ./plugins/utils/nvim-autopairs.nix
     ./plugins/utils/obsidian.nix

@@ -1,6 +1,5 @@
 {
   plugins = {
-    cmp-emoji = { enable = true; };
     cmp = {
       enable = true;
       settings = {
@@ -14,7 +13,7 @@
         };
         snippet = {
           expand = ''
-            function()
+            function(args)
               require('luasnip').lsp_expand(args.body)
             end
           '';
@@ -25,41 +24,15 @@
         };
         formatting = { fields = [ "kind" "abbr" "menu" ]; };
         sources = [
-          {
-            name = "otter";
-          }
-          {
-            name = "nvim_lsp";
-            keyword_length = 3;
-            group_index = 2;
-          }
-          {
-            name = "emoji";
-            trigger_characters = [ ":" ];
-          }
-          {
-            name = "buffer"; # text within current buffer
-            option.get_bufnrs.__raw = "vim.api.nvim_list_bufs";
-            keyword_length = 3;
-            group_index = 4;
-          }
+          # { name = "otter"; }
+          { name = "nvim_lsp"; }
+          { name = "emoji"; }
+          # { name = "buffer"; } # text within current buffer }
           # { name = "copilot"; }
-          {
-            name = "path"; # file system paths
-          }
-          {
-            name = "luasnip"; # snippets
-            keyword_length = 3;
-            trigger_characters = [ "+" ];
-            priority = 1;
-            group_index = 1;
-          }
-          {
-            name = "nvim_lsp_signature_help";
-          }
-          {
-            name = "treesitter";
-          }
+          { name = "path"; } # file system paths
+          { name = "luasnip"; } # snippets
+          { name = "nvim_lsp_signature_help"; }
+          { name = "treesitter"; }
         ];
 
         window = {
@@ -82,13 +55,8 @@
               cmp.mapping(function(fallback)
                 if cmp.visible() then
                   cmp.select_next_item()
-                -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                -- they way you will only jump inside the snippet region
                 elseif luasnip.expand_or_locally_jumpable() then
                   luasnip.expand_or_jump()
-                -- -- seems to interfere with copilot buffer selection 
-                -- elseif has_words_before() then
-                --   cmp.complete()
                 else
                   fallback()
                 end
@@ -111,13 +79,14 @@
         };
       };
     };
+    cmp-emoji = { enable = true; }; # emoji
     cmp-nvim-lsp = { enable = true; }; # lsp
-    cmp-buffer = { enable = true; };
+    cmp-buffer = { enable = true; }; # text within current buffer
     cmp-path = { enable = true; }; # file system paths
     cmp_luasnip = { enable = true; }; # snippets
     cmp-cmdline = { enable = false; }; # autocomplete for cmdline
-    cmp-nvim-lsp-signature-help = { enable = true; };
-    cmp-treesitter = { enable = true; };
+    cmp-nvim-lsp-signature-help = { enable = true; }; # signature help
+    cmp-treesitter = { enable = true; }; # treesitter
   };
   extraConfigLua = ''
     luasnip = require("luasnip")
@@ -147,6 +116,6 @@
         Event = "",
         Operator = "",
         TypeParameter = "",
-      } 
+      }
   '';
 }

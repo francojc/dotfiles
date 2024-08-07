@@ -16,4 +16,4 @@ set sig_dashes = yes
 source /usr/local/share/mutt-wizard/switch.muttrc
 
 unmailboxes *
-mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"
+mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail" "=[Gmail]/Spam"

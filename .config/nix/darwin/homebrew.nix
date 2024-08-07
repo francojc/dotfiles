@@ -10,7 +10,6 @@
     taps = [ ];
     brews = [
       "llm" # permission to install models
-      # "r"
     ];
     casks = [
       "appcleaner"

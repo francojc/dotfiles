@@ -1,7 +1,6 @@
 # ~/.config/home/vim.nix
 { config, pkgs, ... }:
 {
-  # FIX: xquartz opens a window when running vim, do not want
   programs.vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [

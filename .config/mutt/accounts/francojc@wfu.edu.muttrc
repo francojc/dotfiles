@@ -28,7 +28,7 @@ set include_onlyfirst
 
 # Mailboxes
 unmailboxes *
-mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail"
+mailboxes "=INBOX" "=[Gmail]/Starred" "=[Gmail]/Drafts" "=[Gmail]/Sent Mail" "=[Gmail]/All Mail" "=[Gmail]/Spam"
 
 # Ensure signature is always used
 # send-hook . 'set signature="~/.config/mutt/accounts/francojc.signature"'

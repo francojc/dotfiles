@@ -28,7 +28,7 @@ set status_format = "[ Folder: %f ] [%r%m messages%?n? (%n new)?%?d? (%d to dele
 set use_threads = yes
 set sort = threads
 set sort_aux = reverse-last-date-received
-set include 
+set include
 set indent_str = "> "
 set thorough_search
 set uncollapse_jump
@@ -62,6 +62,7 @@ sidebar_pin = "[Gmail]/Starred"
 sidebar_pin = "[Gmail]/Drafts"
 sidebar_pin = "[Gmail]/Sent Mail"
 sidebar_pin = "[Gmail]/All Mail"
+sidebar_pin = "[Gmail]/Spam"
 
 # Key Bindings
 ## General
@@ -77,7 +78,7 @@ bind index - collapse-all
 bind pager n next-entry
 bind pager p previous-entry
 set pager_stop = yes
-set menu_scroll 
+set menu_scroll
 
 ## Sidebar Navigation
 bind index,pager <esc>k sidebar-prev

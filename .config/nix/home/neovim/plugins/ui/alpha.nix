@@ -2,7 +2,13 @@
   plugins.alpha =
     let
       nixFlake = [
-        "📦 NixVim"
+        "                                                     "
+        " ███    ██ ███████  ██████  ██    ██ ██ ███    ███   "
+        " ████   ██ ██      ██    ██ ██    ██ ██ ████  ████   "
+        " ██ ██  ██ █████   ██    ██ ██    ██ ██ ██ ████ ██   "
+        " ██  ██ ██ ██      ██    ██  ██  ██  ██ ██  ██  ██   "
+        " ██   ████ ███████  ██████    ████   ██ ██      ██   "
+        "                                                     "
       ];
     in
     {
@@ -50,16 +56,44 @@
             [
               (
                 mkButton
-                  "f"
-                  "<CMD>lua require('telescope.builtin').find_files({hidden = true})<CR>"
-                  "🔍 Find File"
-                  "Operator"
+                  "q"
+                  "<CMD>qa<CR>"
+                  " "
+                  "String"
               )
               (
                 mkButton
-                  "q"
-                  "<CMD>qa<CR>"
-                  "💣 Quit Neovim"
+                  "n"
+                  "<CMD>ene <BAR> startinsert<CR>"
+                  " New File"
+                  "String"
+              )
+              (
+                mkButton
+                  "f"
+                  "<CMD>Telescope find_files<CR>"
+                  " Find File"
+                  "String"
+              )
+              (
+                mkButton
+                  "p"
+                  "<CMD>Telescope live_grep<CR>"
+                  " Find Pattern"
+                  "String"
+              )
+              (
+                mkButton
+                  "b"
+                  "<CMD>Telescope file_browser<CR>"
+                  " File Browser"
+                  "String"
+              )
+              (
+                mkButton
+                  "t"
+                  "<CMD>TodoTelescope<CR>"
+                  " Search Todos"
                   "String"
               )
             ];

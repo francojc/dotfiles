@@ -25,7 +25,6 @@
     tree
     urlscan
     vim
-    wezterm
     xclip
     zsh
   ];

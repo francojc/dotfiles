@@ -11,6 +11,7 @@
         "markdown_inline"
         "bash"
         "vim"
+        "vimwiki"
         "latex"
         "regex"
         "html"
@@ -18,6 +19,7 @@
         "dot"
         "javascript"
         "mermaid"
+        "query"
       ];
       indent = { enable = true; };
       highlight = {

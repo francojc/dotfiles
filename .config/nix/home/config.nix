@@ -26,27 +26,20 @@
       atuin
       datasette
       duf
-      gettext
       gh
       gv
       lazydocker
       lazygit
-      luajit
-      luajitPackages.luarocks
       mdcat
       neomutt
-      nodejs
       oh-my-posh
       pandoc
       pianobar
-      poppler_utils
       python3
       ripgrep
       skhd
       sqlite
-      stow
       tldr
-      viu
       wtf
       xquartz
       yabai
