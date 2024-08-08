@@ -4,10 +4,10 @@
   relativenumber = true;
   clipboard = "unnamedplus";
 
-  # Spell 
+  # Spell
   spell = false; # set spell off by default
   spelllang = "en_us";
-  spellfile = "~/.spell/en.utf-8.add";
+  # spellfile = "~/.spell/en.utf-8.add"; # FIX: Not sure how to config spellfile
 
   # Set tabs to 2 spaces
   tabstop = 2;
@@ -63,7 +63,7 @@
   signcolumn = "yes";
 
   # Enable cursor line highlight
-  cursorline = false; # Highlight the line where the cursor is located
+  cursorline = true; # Highlight the line where the cursor is located
   cursorlineopt = "number";
 
   # Set fold settings

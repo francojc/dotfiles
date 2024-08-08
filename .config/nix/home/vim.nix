@@ -6,6 +6,8 @@
     plugins = with pkgs.vimPlugins; [
       vim-airline
       nerdtree
+      fzf-vim
+      lightline-vim
     ];
     settings = {
       background = "dark";
@@ -31,6 +33,8 @@
       set nowritebackup
       set noswapfile
       set clipboard = "unnamedplus"
+
+      let g:lightline = { 'colorscheme': 'quiet', }
     '';
   };
 }

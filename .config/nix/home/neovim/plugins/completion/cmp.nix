@@ -26,7 +26,7 @@
         sources = [
           # { name = "otter"; }
           { name = "nvim_lsp"; }
-          { name = "emoji"; }
+          # { name = "emoji"; }
           # { name = "buffer"; } # text within current buffer }
           # { name = "copilot"; }
           { name = "path"; } # file system paths
@@ -79,12 +79,12 @@
         };
       };
     };
-    cmp-emoji = { enable = true; }; # emoji
+    cmp-emoji = { enable = false; }; # emoji
     cmp-nvim-lsp = { enable = true; }; # lsp
-    cmp-buffer = { enable = true; }; # text within current buffer
+    cmp-buffer = { enable = false; }; # text within current buffer
     cmp-path = { enable = true; }; # file system paths
     cmp_luasnip = { enable = true; }; # snippets
-    cmp-cmdline = { enable = false; }; # autocomplete for cmdline
+    cmp-cmdline = { enable = true; }; # autocomplete for cmdline
     cmp-nvim-lsp-signature-help = { enable = true; }; # signature help
     cmp-treesitter = { enable = true; }; # treesitter
   };

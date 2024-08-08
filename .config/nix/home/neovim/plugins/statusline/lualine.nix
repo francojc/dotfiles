@@ -7,7 +7,7 @@ in
     enable = true;
     globalstatus = false;
     disabledFiletypes = {
-      statusline = [ "dashboard" "alpha" "starter" "NvimTree" ];
+      statusline = [ "dashboard" "starter" "alpha" "NvimTree" "codecompanion" "copilot-chat" ];
     };
     theme = {
       normal = {

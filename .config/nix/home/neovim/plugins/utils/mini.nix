@@ -5,6 +5,7 @@
       ai = { };
       surround = { };
       indentscope = { };
+      icons = { };
     };
   };
 }

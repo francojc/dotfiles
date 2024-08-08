@@ -1,5 +1,0 @@
-{
-  plugins.airline = {
-    enable = true;
-  };
-}

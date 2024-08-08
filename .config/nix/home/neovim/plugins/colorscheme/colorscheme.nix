@@ -10,7 +10,7 @@ in
       # colorscheme = import ../../colors/${config.programs.nixvim.colorscheme}.nix { };
     };
     gruvbox = {
-      enable = false;
+      enable = true;
       settings = {
         transparent_mode = true;
       };
@@ -58,7 +58,7 @@ in
     rose-pine = {
       enable = false;
       settings = {
-        style = "main"; #  "main", "moon", "dawn" or raw lua code
+        style = "moon"; #  "main", "moon", "dawn" or raw lua code
         styles = {
           bold = false;
           italic = false;

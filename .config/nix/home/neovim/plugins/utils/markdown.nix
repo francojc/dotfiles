@@ -26,7 +26,7 @@
         quote = {
           icon = "❝",
         },
-        file_types = { "markdown", "quarto", "vimwiki" },
+        file_types = { "markdown", "quarto", "qmd", "vimwiki" },
       })
   '';
 }

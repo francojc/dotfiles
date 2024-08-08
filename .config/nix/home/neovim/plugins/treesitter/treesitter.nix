@@ -11,7 +11,6 @@
         "markdown_inline"
         "bash"
         "vim"
-        "vimwiki"
         "latex"
         "regex"
         "html"

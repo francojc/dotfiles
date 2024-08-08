@@ -7,13 +7,17 @@
     ./neovim
   ];
 
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
+  programs = {
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
 
-  programs.home-manager.enable = true;
+    home-manager = {
+      enable = true;
+    };
+  };
 
   # Add any other home-manager specific configurations here
   home = {
