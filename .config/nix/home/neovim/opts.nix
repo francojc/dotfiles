@@ -7,6 +7,7 @@
   # Spell
   spell = false; # set spell off by default
   spelllang = "en_us";
+  spellfile = "~/.config/nvim/spell/en.utf-8.add";
   # spellfile = "~/.spell/en.utf-8.add"; # FIX: Not sure how to config spellfile
 
   # Set tabs to 2 spaces

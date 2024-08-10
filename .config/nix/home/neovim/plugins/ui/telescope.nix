@@ -4,9 +4,23 @@
     extensions = {
       file-browser = {
         enable = true;
+        settings = {
+          grouped = true;
+          hiddent = {
+            file_browser = true;
+          };
+        };
       };
       fzf-native = {
         enable = true;
+      };
+      frecency = {
+        enable = true;
+        settings = {
+          hide_current_buffer = true;
+          show_filter_column = false;
+          show_scores = false;
+        };
       };
     };
     settings = {
@@ -17,33 +31,14 @@
           };
         };
         sorting_strategy = "ascending";
+        path_display = {
+          filename_first = {
+            reverse_directories = true;
+          };
+        };
       };
     };
     keymaps = {
-      "<leader><space>" = {
-        action = "find_files";
-        options = {
-          desc = "Find project files";
-        };
-      };
-      "<leader>/" = {
-        action = "live_grep";
-        options = {
-          desc = "Grep (root dir)";
-        };
-      };
-      "<leader>:" = {
-        action = "command_history";
-        options = {
-          desc = "Command History";
-        };
-      };
-      "<leader>b" = {
-        action = "buffers";
-        options = {
-          desc = "+buffer";
-        };
-      };
       "<leader>ff" = {
         action = "find_files";
         options = {
@@ -56,22 +51,10 @@
           desc = "Find text";
         };
       };
-      "<leader>fr" = {
-        action = "oldfiles";
-        options = {
-          desc = "Recent";
-        };
-      };
       "<leader>fb" = {
         action = "buffers";
         options = {
           desc = "Buffers";
-        };
-      };
-      "<C-p>" = {
-        action = "git_files";
-        options = {
-          desc = "Search git files";
         };
       };
       "<leader>gc" = {
@@ -189,6 +172,22 @@
       action = "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>";
       options = {
         desc = "File browser";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>fr";
+      action = "<cmd>Telescope frecency workspace=CWD<cr>";
+      options = {
+        desc = "Recent (cwd)";
+      };
+    }
+    {
+      mode = "n";
+      key = "<leader>fR";
+      action = "<cmd>Telescope frecency<cr>";
+      options = {
+        desc = "Recent (global)";
       };
     }
   ];

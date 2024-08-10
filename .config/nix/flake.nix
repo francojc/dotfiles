@@ -8,8 +8,8 @@
     home-manager.url = "github:nix-community/home-manager";
     nixvim.url = "github:nix-community/nixvim";
   };
-  
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, nixvim, ...}:
+
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, nixvim, ... }:
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -23,15 +23,18 @@
         modules = [
           ./darwin/config.nix
           ./user/config.nix
-          home-manager.darwinModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.verbose = true;
-            home-manager.users.francojc = {
-              imports = [
-                ./home/config.nix
-                nixvim.homeManagerModules.nixvim
-              ];
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              verbose = true;
+              users.francojc = {
+                imports = [
+                  ./home/config.nix
+                  nixvim.homeManagerModules.nixvim
+                ];
+              };
             };
           }
         ];

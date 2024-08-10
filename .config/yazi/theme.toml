@@ -1,6 +1,7 @@
 # vim:fileencoding=utf-8
 [flavor]
-use = "onedark"
+use = "gruvbox-dark"
+# use = "onedark"
 
 # # : Manager {{{
 #

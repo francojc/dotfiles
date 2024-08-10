@@ -60,11 +60,6 @@
     action = "+ui";
   }
 
-  {
-    mode = "n";
-    key = "<leader><Tab>";
-    action = "+tab";
-  }
   # Assistants
   {
     mode = "n";
@@ -78,9 +73,13 @@
     action = "<Cmd>CodeCompanionActions<CR>";
     options = { desc = "CodeCompanion Actions"; };
   }
+
+  # Buffers
+
   # Code
   # Debug
   # (e)
+
   # Files
   {
     mode = "n";
@@ -98,9 +97,69 @@
   # Obsidian
   {
     mode = "n";
-    key = "<leader>o";
-    action = "<Cmd>ObsidianToggle<CR>";
-    options = { desc = "Obsidian"; };
+    key = "<leader>on";
+    action = "<Cmd>ObsidianNew<CR>";
+    options = { desc = "New note"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>oN";
+    action = "<Cmd>ObsidianNewFromTemplate<CR>";
+    options = { desc = "New note from template"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>ot";
+    action = "<Cmd>ObsidianToday<CR>";
+    options = { desc = "Today's note"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>os";
+    action = "<Cmd>ObsidianSearch<CR>";
+    options = { desc = "Search notes"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>oS";
+    action = "<Cmd>ObsidianQuickSwitch<CR>";
+    options = { desc = "Quick switch between notes"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>ot";
+    action = "<Cmd>ObsidianTags<CR>";
+    options = { desc = "Search notes by tags/ list tags"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>oi";
+    action = "<Cmd>ObsidianPasteImg<CR>";
+    options = { desc = "Paste image from clipboard"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>or";
+    action = "<Cmd>ObsidianRename<CR>";
+    options = { desc = "Rename note"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>oo";
+    action = "<Cmd>ObsidianTOC<CR>";
+    options = { desc = "Open note outline"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>ol";
+    action = "<Cmd>ObsidianLink<CR>";
+    options = { desc = "Insert link to existing note"; };
+  }
+  {
+    mode = "n";
+    key = "<leader>oL";
+    action = "<Cmd>ObsidianLinkNew<CR>";
+    options = { desc = "Insert link to new note from selection"; };
   }
 
   # Search
@@ -156,27 +215,6 @@
     key = "<leader>\\r";
     action = "<Cmd>lua toggle_r_lsp()<CR>";
     options = { desc = "Toggle R LSP"; };
-  }
-
-  # Tabs
-  {
-    mode = "n";
-    key = "<leader><tab><tab>";
-    action = "<cmd>tabnew<cr>";
-    options = {
-      silent = true;
-      desc = "New Tab";
-    };
-  }
-
-  {
-    mode = "n";
-    key = "<leader><tab>d";
-    action = "<cmd>tabclose<cr>";
-    options = {
-      silent = true;
-      desc = "Close tab";
-    };
   }
 
   # Windows

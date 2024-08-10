@@ -32,6 +32,7 @@ let
     # # UI
     ./plugins/ui/alpha.nix
     ./plugins/ui/bufferline.nix
+    ./plugins/ui/dressing.nix
     # # ./plugins/ui/headlines.nix
     ./plugins/ui/nvim-notify.nix
     ./plugins/ui/nvim-tree.nix
@@ -49,7 +50,7 @@ let
     # # ./plugins/utils/markview.nix
     ./plugins/utils/mini.nix
     ./plugins/utils/nvim-autopairs.nix
-    # ./plugins/utils/obsidian.nix
+    ./plugins/utils/obsidian.nix
     # ./plugins/utils/oil.nix
     ./plugins/utils/slime.nix
     ./plugins/utils/todo-comments.nix

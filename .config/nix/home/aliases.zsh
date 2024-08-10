@@ -2,7 +2,6 @@
 # Nix aliases
 alias switch='darwin-rebuild switch --flake ~/.config/nix'
 
-# General aliases
 alias ..='cd ..'
 alias ...='cd ../..'
 alias c='clear'
@@ -66,6 +65,9 @@ alias qr='quarto render'
 alias qrh='quarto render --no-clean --to html'
 alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
+
+# Obsidian
+alias on='cd /Users/francojc/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes && nvim'
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory

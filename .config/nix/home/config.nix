@@ -38,6 +38,7 @@
       neomutt
       oh-my-posh
       pandoc
+      pngpaste
       pianobar
       python3
       ripgrep
@@ -48,6 +49,7 @@
       xquartz
       yabai
       yazi-unwrapped
+      yt-dlp
       zoxide
       zoom-us
     ];

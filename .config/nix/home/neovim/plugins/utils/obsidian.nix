@@ -7,6 +7,10 @@
         min_chars = 2;
         nvim_cmp = true;
       };
+      attachments = {
+        img_folder = "Assets/Attachments";
+      };
+      notes_subdir = "Inbox";
       new_notes_location = "notes_subdir";
       workspaces = [
         {
@@ -15,7 +19,7 @@
         }
       ];
       daily_notes = {
-        template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Templates/Daily Note Template.md";
+        template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Templates/Dailies.md";
         folder = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Daily";
       };
       mappings = {
