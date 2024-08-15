@@ -27,8 +27,11 @@
     };
     packages = with pkgs; [
       abook
+      arc-browser
       atuin
+      audacity
       datasette
+      drawio
       duf
       gh
       gv
@@ -36,18 +39,20 @@
       lazygit
       mdcat
       neomutt
+      nerdfonts
       oh-my-posh
       pandoc
       pngpaste
       pianobar
       python3
+      quarto
+      rectangle
       ripgrep
-      skhd
       sqlite
+      stow
       tldr
       wtf
       xquartz
-      yabai
       yazi-unwrapped
       yt-dlp
       zoxide
