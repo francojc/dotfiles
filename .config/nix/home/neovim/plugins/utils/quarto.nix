@@ -13,28 +13,6 @@
   ];
 
   extraConfigLua = ''
-    require("quarto").setup({
-      debug = false,
-      closePreviewOnExit = true,
-      lspFeatures = {
-        enabled = true,
-        chunks = "curly",
-        languages = {
-          "r", "python", "bash", "html"
-        },
-        diagnostics = {
-          enabled = true,
-          triggers = { "BufWritePost" },
-        },
-        completion = {
-          enabled = true,
-        },
-        codeRunner = { 
-          enabled = false,
-          default_method = "slime",
-          never_run = { "yaml" },
-        },
-      },
-    })
+    require("quarto").setup()
   '';
 }

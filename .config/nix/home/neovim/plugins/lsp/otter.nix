@@ -1,5 +1,0 @@
-{
-  plugins.otter = {
-    enabled = true;
-  };
-}
