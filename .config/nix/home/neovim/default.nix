@@ -54,11 +54,13 @@ let
     ./plugins/utils/obsidian.nix
     # ./plugins/utils/oil.nix
     ./plugins/utils/slime.nix
+    ./plugins/utils/spectre.nix
     ./plugins/utils/todo-comments.nix
     # ./plugins/utils/ufo.nix
     ./plugins/utils/undotree.nix
     ./plugins/utils/whichkey.nix
     # ./plugins/utils/yaml-companion.nix
+    # ./plugins/utils/yazi.nix
   ];
 in
 {
