@@ -1,16 +1,16 @@
 # ~/.config/home/zsh.nix
 { config, pkgs, ... }:
-  let
-    aliasesFile = ./aliases.zsh;
-  in
+let
+  aliasesFile = ./aliases.zsh;
+in
 {
   programs.zsh = {
     enable = true;
-    
+
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    
+
     defaultKeymap = "viins";
 
     initExtra = ''
@@ -18,7 +18,7 @@
     '';
 
     # Other ZSH plugins
-    plugins = [];
+    plugins = [ ];
   };
 
   programs.fzf = {
@@ -37,8 +37,13 @@
   };
 
   programs.oh-my-posh = {
-    enable = true;
+    enable = false;
     enableZshIntegration = true;
     useTheme = "avit";
+  };
+
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
   };
 }

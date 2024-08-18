@@ -49,6 +49,7 @@
       rectangle
       ripgrep
       sqlite
+      starship
       stow
       tldr
       wtf
