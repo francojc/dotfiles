@@ -14,6 +14,7 @@
     brews = [
       "llm" # permission to install models
       "borders" # jankyborders
+      "gnu-sed" # spectre
     ];
     casks = [
       "aerospace" # have not tested this (possible replacement for yabai/skhd)
