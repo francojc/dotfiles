@@ -35,6 +35,7 @@
       duf
       gh
       gv
+      imagemagick
       lazydocker
       lazygit
       mdcat
