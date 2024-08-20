@@ -21,13 +21,13 @@
       "appcleaner"
       "balenaetcher"
       "bettermouse"
-      "bitwarden" # (only on nix linux)
       "calibre"
       "chromium"
       "docker"
       "dropbox"
       "espanso"
       "fantastical"
+      "firefox" # (only on nix linux)
       "google-drive"
       "jordanbaird-ice"
       "kap"
@@ -40,6 +40,9 @@
       "transmission"
       "zotero@beta"
     ];
-    masApps = { };
+    masApps = {
+      # need to add bitwarden here (safari extension)
+
+    };
   };
 }
