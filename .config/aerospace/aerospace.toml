@@ -45,7 +45,7 @@ key-mapping.preset = 'qwerty'
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = ['move-mouse window-lazy-center']
+# on-focus-changed = ['move-mouse window-lazy-center']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
@@ -112,7 +112,7 @@ alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace 1'
+# alt-1 = 'workspace 1' (conflict w/ accents)
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
@@ -125,12 +125,12 @@ alt-a = 'workspace A' # Apple Music
 alt-b = 'workspace B' # Browser
 alt-c = 'workspace C' # Calendar
 alt-d = 'workspace D' # Default
-alt-e = 'workspace E'
+# alt-e = 'workspace E' (conflict w/ accents)
 # F = fullscreen
 alt-g = 'workspace G'
 alt-i = 'workspace I'
 # R = R native pipe operator conflict
-alt-n = 'workspace N'
+# alt-n = 'workspace N' (conflict w/ accents)
 alt-o = 'workspace O' # Obsidian
 alt-p = 'workspace P' # Preview
 alt-q = 'workspace Q'
@@ -145,7 +145,7 @@ alt-y = 'workspace Y' # YouTube
 alt-z = 'workspace Z' # Zoom
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-shift-1 = 'move-node-to-workspace 1'
+# alt-shift-1 = 'move-node-to-workspace 1' (conflict w/ accents)
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
@@ -158,12 +158,12 @@ alt-shift-a = 'move-node-to-workspace A' # Apple Music
 alt-shift-b = 'move-node-to-workspace B' # Browser
 alt-shift-c = 'move-node-to-workspace C' # Calendar
 alt-shift-d = 'move-node-to-workspace D' # Default
-alt-shift-e = 'move-node-to-workspace E'
+# alt-shift-e = 'move-node-to-workspace E' (conflict w/ accents)
 alt-shift-f = 'move-node-to-workspace F'
 alt-shift-g = 'move-node-to-workspace G'
 alt-shift-i = 'move-node-to-workspace I'
 alt-shift-m = 'fullscreen' # Maximize window
-alt-shift-n = 'move-node-to-workspace N'
+# alt-shift-n = 'move-node-to-workspace N' (conflict w/ accents)
 alt-shift-o = 'move-node-to-workspace O' # Obsidian
 alt-shift-p = ['move-node-to-workspace P', 'workspace P'] # Preview
 alt-shift-q = 'move-node-to-workspace Q'
