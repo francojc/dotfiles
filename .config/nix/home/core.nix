@@ -52,7 +52,7 @@
     wtf
     xclip
     xquartz
-    yazai-unwrapped
+    yazi-unwrapped
     yt-dlp
     zoxide
     zoom-us

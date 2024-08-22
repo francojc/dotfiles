@@ -77,7 +77,7 @@
     # account have records for them. Otherwise Apple Store will refuse to
     # install them. For details, see https://github.com/mas-cli/mas
     masApps = {
-      Xcode = 497799835;
+      # Xcode = 497799835;
       IPA_Keyboard = 1461264628;
       AudioBookBinder = 413969927;
       iMovie = 408981434;

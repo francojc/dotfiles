@@ -1,8 +1,6 @@
 { pkgs, lib, ... }:
 
 {
-  services.nix-daemon.enable = true;
-  nkgs.config.allowUnfree = true;
   nix = {
     package = pkgs.nix;
     gc = {
@@ -14,4 +12,6 @@
       experimental-features = [ "nix-command" "flakes" ];
     };
   };
+  services.nix-daemon.enable = true;
+  nixpkgs.config.allowUnfree = true;
 }
