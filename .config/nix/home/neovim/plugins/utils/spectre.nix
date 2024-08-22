@@ -1,5 +1,0 @@
-{
-  plugins.spectre = {
-    enable = true;
-  };
-}

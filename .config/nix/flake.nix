@@ -1,45 +1,67 @@
-# ~/.config/nix/flake.nix
 {
-  description = "My Darwin, Hombrew, and Home configuration";
+  description = "Nix for macOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    home-manager.url = "github:nix-community/home-manager";
-    nixvim.url = "github:nix-community/nixvim";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+    # INFO: consider where to put this
+    # nixvim = {
+    #   url = "github:nix-community/nixvim";
+    # };
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, nixvim, ... }:
+  outputs =
+    inputs @ { self
+    , nixpkgs
+    , darwin
+    , home-manager
+      # , nixvim # INFO: add my config here before building
+    , ...
+    }:
     let
+      username = "francojc";
+      useremail = "francojc@wfu.edu";
       system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
-      overlays = import ./overlays.nix;
+      hostname = "MacBook-Airborne";
+
+      specialArgs =
+        inputs
+        // {
+          inherit username useremail hostname;
+        };
     in
     {
-      nixpkgs.overlaps = [ overlays ];
-      darwinConfigurations."MacBook-Airborne" = nix-darwin.lib.darwinSystem {
-        inherit system;
-        specialArgs = { inherit self; };
+      darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
+        inherit system specialArgs;
         modules = [
-          ./darwin/config.nix
-          ./user/config.nix
+          ./modules/nix-core.nix
+          ./modules/system.nix
+          ./modules/apps.nix
+          ./modules/host-users.nix
+
+          # home manager
           home-manager.darwinModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              verbose = true;
-              users.francojc = {
-                imports = [
-                  ./home/config.nix
-                  nixvim.homeManagerModules.nixvim
-                ];
-              };
+              extraSpecialArgs = specialArgs;
+              users.${username} = import ./home/default.nix;
             };
           }
         ];
       };
 
-      darwinPackages = self.darwinConfigurations."MacBook-Airborne".pkgs;
+      # nix code formatter
+      formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
     };
 }

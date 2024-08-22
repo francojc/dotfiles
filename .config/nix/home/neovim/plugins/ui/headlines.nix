@@ -1,5 +1,0 @@
-{
-  plugins.headlines = {
-    enable = true;
-  };
-}
