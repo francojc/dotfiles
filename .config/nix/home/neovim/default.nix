@@ -1,1 +1,13 @@
-# TODO: work on neovim configuration
+{ inputs, ... }:
+
+{
+  # imports = [
+  #   inputs.nixvim.homeManagerModules.nixvim
+  #   ./opts.nix
+  # ];
+  
+  programs.nixvim = {
+   enable = true;
+  };
+
+}

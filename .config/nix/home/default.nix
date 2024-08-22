@@ -1,11 +1,11 @@
-{ username, ... }:
+{ pkgs, lib, username, ... }:
 
 {
   # import sub modules
   imports = [
-    ./shell/default.nix
+    ./shell
     ./core.nix
-    # ./neovim/default.nix # TODO: fix neovim
+    ./neovim 
     ./git.nix
   ];
 

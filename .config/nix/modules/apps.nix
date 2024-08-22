@@ -19,8 +19,9 @@
   environment.systemPackages = with pkgs; [
     git
     just # use Justfile to simplify nix-darwin's commands
-    neovim
+    # neovim
   ];
+
   environment.variables.EDITOR = "nvim";
 
   # INFO: To make this work, homebrew need to be installed manually,

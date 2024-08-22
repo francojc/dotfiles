@@ -2,21 +2,22 @@
   description = "Nix for macOS configuration";
 
   inputs = {
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
       url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    # INFO: consider where to put this
-    # nixvim = {
-    #   url = "github:nix-community/nixvim";
-    # };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -24,7 +25,7 @@
     , nixpkgs
     , darwin
     , home-manager
-      # , nixvim # INFO: add my config here before building
+    , nixvim 
     , ...
     }:
     let
@@ -54,8 +55,14 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+	      verbose = true;
               extraSpecialArgs = specialArgs;
-              users.${username} = import ./home/default.nix;
+              users.${username} = {
+	        imports = [
+	          ./home
+		  nixvim.homeManagerModules.nixvim
+	        ];
+	      };
             };
           }
         ];
