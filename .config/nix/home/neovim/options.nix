@@ -4,6 +4,7 @@
     globals = {
       loaded_ruby_provider = 0;
       loaded_perl_provider = 0;
+      copilot_no_tab_map = 1;
     };
 
     opts = {
@@ -16,7 +17,7 @@
       spell = false; # set spell off by default
       spelllang = "en_us";
       # spellfile = "~/.config/nvim/spell/en.utf-8.add";
-      # spellfile = "~/.spell/en.utf-8.add"; # FIX: Not sure how to config spellfile
+      spellfile = "/Users/francojc/.spell/en.utf-8.add"; # FIX: Not sure how to config spellfile
 
       # Set tabs to 2 spaces
       tabstop = 2;

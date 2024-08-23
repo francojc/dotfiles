@@ -5,7 +5,7 @@
   imports = [
     ./shell
     ./core.nix
-    ./neovim 
+    ./neovim
     ./git.nix
   ];
 

@@ -1,3 +1,4 @@
+{ pkgs, ...}:
 {
   programs.nixvim = {
     opts.completeopt = [ "menuone" "noselect" "noinsert" ];
@@ -9,7 +10,12 @@
           enable_autosnippets = true;
           store_selection_keys = "<Tab>";
         };
-        fromVscode = [ ]; # TODO: add vscode snippets
+        fromVscode = [
+          {
+            lazyLoad = true;
+            paths = "${pkgs.vimPlugins.friendly-snippets}";
+          }
+        ];
       };
 
       cmp = {

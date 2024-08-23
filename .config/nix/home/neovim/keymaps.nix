@@ -14,6 +14,37 @@
       }
 
       {
+        mode = "i";
+        key = "<C-d>";
+        action = "<Plug>(copilot-accept-word)";
+        options = { desc = "Copilot: accept next word"; };
+      }
+      {
+        mode = "i";
+        key = "<C-f>";
+        action = "<Plug>(copilot-accept-line)";
+        options = { desc = "Copilot: accept next line"; };
+      }
+      {
+        mode = "i";
+        key = "<C-g>";
+        action = "<Cmd>lua copilot#Accept(1)<CR>";
+        options = { desc = "Copilot: accept suggestion"; };
+      }
+      {
+        mode = "i";
+        key = "<C-y>";
+        action = "<Plug>(copilot-next)";
+        options = { desc = "Copilot: next suggestion"; };
+      }
+      {
+        mode = "i";
+        key = "<C-e>";
+        action = "<Plug>(copilot-dismiss)";
+        options = { desc = "Copilot: dismiss suggestion"; };
+      }
+
+      {
         mode = "n";
         key = "<C-s>";
         action = "<Cmd>w!<CR>";
@@ -96,6 +127,27 @@
         options = { desc = "GitHub Copilot"; };
       }
       {
+        mode = "x";
+        key = "<leader>ae";
+        action = "<cmd>CopilotChatExplain<cr>";
+      }
+      {
+        mode = "x";
+        key = "<leader>af";
+        action = "<cmd>CopilotChatFix<cr>";
+      }
+      {
+        mode = "x";
+        key = "<leader>ad";
+        action = "<cmd>CopilotChatDocs<cr>";
+      }
+      {
+        mode = "x";
+        key = "<leader>ac";
+        action = "<cmd>CopilotChatCommit<cr>";
+      }
+
+      {
         mode = "n";
         key = "<leader>ac";
         action = "<Cmd>CodeCompanionActions<CR>";
@@ -162,11 +214,35 @@
       # Code
       {
         mode = "n";
+        key = "<C-c>";
+        action = "<Plug>SlimeParagraphSend<CR>";
+        options = { desc = "Send region to target"; };
+      }
+      {
+        mode = "v";
+        key = "<C-CR>";
+        action = "<Plug>SlimeRegionSend<CR>";
+        options = { desc = "Send region to target"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>ts";
+        action = "<Cmd>SlimeConfig<CR>";
+        options = { desc = "Open slime config"; };
+      }
+
+      {
+        mode = "n";
         key = "<leader>cr";
         action = ":IncRename ";
         options = { desc = "Rename symbol"; };
       }
-
+      {
+        mode = [ "n" "v" ];
+        key = "<leader>cf";
+        action = "<cmd>lua vim.lsp.buf.format()<cr>";
+        options = { silent = true; desc = "Code format"; };
+      }
       # Debug
       # (e)
 
@@ -175,7 +251,7 @@
         mode = "n";
         key = "<leader>ft";
         action = "<Cmd>NvimTreeToggle<CR>";
-        options = { desc = "Toggle Tree"; };
+        options = { desc = "Open Directory Viewer"; };
       }
       {
         mode = "n";
@@ -183,7 +259,20 @@
         action = "<Cmd>ene <bar> startinsert<CR>";
         options = { desc = "New File"; };
       }
+      {
+        mode = "n";
+        key = "<leader>fy";
+        action = "<Cmd>lua require('yazi').yazi()<CR>";
+        options = { desc = "Yazi"; };
+      }
       # Git
+      {
+        mode = "n";
+        key = "<leader>gg";
+        action = "<Cmd>LazyGit<CR>";
+        options = { desc = "LazyGit"; };
+      }
+
       # Obsidian
       {
         mode = "n";

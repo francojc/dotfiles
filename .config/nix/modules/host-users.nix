@@ -4,9 +4,7 @@
   ...
 } @ args:
 #############################################################
-#
 #  Host & Users configuration
-#
 #############################################################
 {
   networking.hostName = hostname;
@@ -18,6 +16,5 @@
     home = "/Users/${username}";
     description = username;
   };
-
   nix.settings.trusted-users = [username];
 }

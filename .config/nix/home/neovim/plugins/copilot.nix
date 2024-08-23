@@ -1,21 +1,13 @@
 {
   programs.nixvim = {
-    plugins.copilot-lua = {
+    plugins.copilot-vim = {
       enable = true;
-      panel.enabled = false;
-      filetypes = {
-        csv = false;
-        help = false;
-        "*" = true;
-      };
-      suggestion = {
-        enabled = true;
-        autoTrigger = true;
-        keymap = {
-          accept = "<C-g>";
-          acceptWord = "<C-d>";
-          acceptLine = "<C-f>";
-        };
+    };
+    plugins.copilot-chat = {
+      enable = true;
+      settings = {
+        model = "gpt-4";
+        temperature = 0.8;
       };
     };
   };

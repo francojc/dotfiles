@@ -17,6 +17,9 @@
    performance = {
     combinePlugins = {
       enable = true;
+      standalonePlugins = [
+
+        ];
     };
     byteCompileLua.enable = true;
    };
@@ -24,6 +27,6 @@
    viAlias = true;
    vimAlias = true;
 
-   # luaLoader.enable = true;
+   luaLoader.enable = true;
   };
 }
