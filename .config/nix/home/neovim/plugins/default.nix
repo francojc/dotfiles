@@ -58,6 +58,7 @@
         userDefaultOptions = {
           mode = "virtualtext";
           virtualtext = "■";
+          names = false;
           RGB = true;
           RRGGBB = true;
           RRGGBBAA = true;
