@@ -1,6 +1,4 @@
-{ inputs, ... }:
-
-{
+{inputs, ...}: {
   imports = [
     # inputs.nixvim.homeManagerModules.nixvim
     ./autocommands.nix
@@ -11,22 +9,21 @@
   ];
 
   programs.nixvim = {
-   enable = true;
-   defaultEditor = true;
+    enable = true;
+    defaultEditor = true;
 
-   performance = {
-    combinePlugins = {
-      enable = true;
-      standalonePlugins = [
-
+    performance = {
+      combinePlugins = {
+        enable = true;
+        standalonePlugins = [
         ];
+      };
+      byteCompileLua.enable = true;
     };
-    byteCompileLua.enable = true;
-   };
 
-   viAlias = true;
-   vimAlias = true;
+    viAlias = true;
+    vimAlias = true;
 
-   luaLoader.enable = true;
+    luaLoader.enable = true;
   };
 }

@@ -1,6 +1,9 @@
-{ pkgs, lib, username, ... }:
-
 {
+  pkgs,
+  lib,
+  username,
+  ...
+}: {
   # import sub modules
   imports = [
     ./shell

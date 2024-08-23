@@ -1,7 +1,6 @@
-{ pkgs, ...}:
-{
+{pkgs, ...}: {
   programs.nixvim = {
-    opts.completeopt = [ "menuone" "noselect" "noinsert" ];
+    opts.completeopt = ["menuone" "noselect" "noinsert"];
 
     plugins = {
       luasnip = {
@@ -23,7 +22,7 @@
         settings = {
           autoEnableSources = true;
           preselect = "None";
-          experimental = { ghost_text = false; };
+          experimental = {ghost_text = false;};
           performance = {
             debounce = 60;
             fetchingTimeout = 200;
@@ -40,17 +39,17 @@
               autocomplete = false;
             };
           };
-          formatting = { fields = [ "kind" "abbr" "menu" ]; };
+          formatting = {fields = ["kind" "abbr" "menu"];};
           sources = [
-            { name = "otter"; }
-            { name = "nvim_lsp"; }
+            {name = "otter";}
+            {name = "nvim_lsp";}
             # { name = "emoji"; }
             # { name = "buffer"; } # text within current buffer }
             # { name = "copilot"; }
-            { name = "path"; } # file system paths
-            { name = "luasnip"; } # snippets
-            { name = "nvim_lsp_signature_help"; }
-            { name = "treesitter"; }
+            {name = "path";} # file system paths
+            {name = "luasnip";} # snippets
+            {name = "nvim_lsp_signature_help";}
+            {name = "treesitter";}
           ];
 
           window = {
@@ -68,7 +67,8 @@
             "<C-d>" = "cmp.mapping.scroll_docs(-4)";
             "<C-f>" = "cmp.mapping.scroll_docs(4)";
             "<C-Space>" = "cmp.mapping.complete()";
-            "<Tab>" = # lua
+            "<Tab>" =
+              # lua
               ''
                 cmp.mapping(function(fallback)
                   if cmp.visible() then
@@ -80,7 +80,8 @@
                   end
                 end, { "i", "s" })
               '';
-            "<S-Tab>" = # lua
+            "<S-Tab>" =
+              # lua
               ''
                 cmp.mapping(function(fallback)
                   if cmp.visible() then
@@ -98,15 +99,15 @@
         };
       };
 
-      cmp-buffer = { enable = false; }; # text within current buffer
-      cmp-cmdline = { enable = true; }; # autocomplete for cmdline
-      cmp-emoji = { enable = false; }; # emoji
-      cmp_luasnip = { enable = true; }; # snippets
-      cmp-nvim-lsp = { enable = true; }; # lsp
-      cmp-nvim-lsp-signature-help = { enable = true; }; # signature help
-      cmp-path = { enable = true; }; # file system paths
-      cmp-treesitter = { enable = true; }; # treesitter
-      otter = { enable = true; }; # quarto completion
+      cmp-buffer = {enable = false;}; # text within current buffer
+      cmp-cmdline = {enable = true;}; # autocomplete for cmdline
+      cmp-emoji = {enable = false;}; # emoji
+      cmp_luasnip = {enable = true;}; # snippets
+      cmp-nvim-lsp = {enable = true;}; # lsp
+      cmp-nvim-lsp-signature-help = {enable = true;}; # signature help
+      cmp-path = {enable = true;}; # file system paths
+      cmp-treesitter = {enable = true;}; # treesitter
+      otter = {enable = true;}; # quarto completion
     };
 
     extraConfigLua = ''

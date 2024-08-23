@@ -20,7 +20,7 @@
           "mermaid"
           "query"
         ];
-        indent = { enable = true; };
+        indent = {enable = true;};
         highlight = {
           enable = true;
           additional_vim_regex_highlighting = false;
@@ -39,6 +39,5 @@
     };
 
     plugins.treesitter-context.enable = true;
-
   };
 }

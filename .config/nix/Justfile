@@ -9,8 +9,6 @@ hostname := "MacBook-Airborne"
 #
 ############################################################################
 
-#  TODO Feel free to remove this target if you don't need a proxy to speed up the build process
-
 darwin:
   nix build .#darwinConfigurations.{{hostname}}.system \
     --extra-experimental-features 'nix-command flakes'

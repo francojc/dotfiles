@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   programs = {
     zsh = {
       enable = true;
@@ -12,7 +10,7 @@
         ${builtins.readFile ./aliases.zsh}
       '';
       # Other ZSH plugins
-      plugins = [ ];
+      plugins = [];
     };
 
     direnv = {
@@ -40,7 +38,5 @@
       enable = true;
       enableZshIntegration = true;
     };
-
   };
-
 }

@@ -30,12 +30,12 @@
         enable = true;
         settings.current_line_blame = true;
         settings.signs = {
-          add = { text = "│"; };
-          change = { text = "│"; };
-          delete = { text = "_"; };
-          topdelete = { text = "‾"; };
-          changedelete = { text = "~"; };
-          untracked = { text = "?"; };
+          add = {text = "│";};
+          change = {text = "│";};
+          delete = {text = "_";};
+          topdelete = {text = "‾";};
+          changedelete = {text = "~";};
+          untracked = {text = "?";};
         };
       };
       lazygit = {
@@ -44,17 +44,17 @@
       mini = {
         enable = true;
         modules = {
-          ai = { };
-          surround = { };
-          indentscope = { };
-          icons = { };
+          ai = {};
+          surround = {};
+          indentscope = {};
+          icons = {};
         };
       };
       notify.enable = true;
       nvim-autopairs.enable = true;
       nvim-colorizer = {
         enable = true;
-        fileTypes = [ "*" ];
+        fileTypes = ["*"];
         userDefaultOptions = {
           mode = "virtualtext";
           virtualtext = "■";

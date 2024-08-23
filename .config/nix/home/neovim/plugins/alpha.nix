@@ -1,7 +1,6 @@
 {
   programs.nixvim = {
-    plugins.alpha =
-    let
+    plugins.alpha = let
       nixFlake = [
         "                                                     "
         " ███    ██ ███████  ██████  ██    ██ ██ ███    ███   "
@@ -11,8 +10,7 @@
         " ██   ████ ███████  ██████    ████   ██ ██      ██   "
         "                                                     "
       ];
-    in
-    {
+    in {
       enable = true;
       layout = [
         {
@@ -33,71 +31,69 @@
         }
         {
           type = "group";
-          val =
-            let
-              mkButton = shortcut: cmd: val: hl: {
-                type = "button";
-                inherit val;
-                opts = {
-                  inherit hl shortcut;
-                  keymap = [
-                    "n"
-                    shortcut
-                    cmd
-                    { }
-                  ];
-                  position = "center";
-                  cursor = 0;
-                  width = 40;
-                  align_shortcut = "right";
-                  hl_shortcut = "Keyword";
-                };
-              };
-            in
-            [
-              (
-                mkButton
-                  "q"
-                  "<CMD>qa<CR>"
-                  " "
-                  "String"
-              )
-              (
-                mkButton
+          val = let
+            mkButton = shortcut: cmd: val: hl: {
+              type = "button";
+              inherit val;
+              opts = {
+                inherit hl shortcut;
+                keymap = [
                   "n"
-                  "<CMD>ene <BAR> startinsert<CR>"
-                  " New File"
-                  "String"
-              )
-              (
-                mkButton
-                  "f"
-                  "<CMD>Telescope find_files<CR>"
-                  " Find File"
-                  "String"
-              )
-              (
-                mkButton
-                  "p"
-                  "<CMD>Telescope live_grep<CR>"
-                  " Find Pattern"
-                  "String"
-              )
-              (
-                mkButton
-                  "b"
-                  "<CMD>Telescope file_browser<CR>"
-                  " File Browser"
-                  "String"
-              )
-              (
-                mkButton
-                  "t"
-                  "<CMD>TodoTelescope<CR>"
-                  " Search Todos"
-                  "String"
-              )
-            ];
+                  shortcut
+                  cmd
+                  {}
+                ];
+                position = "center";
+                cursor = 0;
+                width = 40;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            };
+          in [
+            (
+              mkButton
+              "q"
+              "<CMD>qa<CR>"
+              " "
+              "String"
+            )
+            (
+              mkButton
+              "n"
+              "<CMD>ene <BAR> startinsert<CR>"
+              " New File"
+              "String"
+            )
+            (
+              mkButton
+              "f"
+              "<CMD>Telescope find_files<CR>"
+              " Find File"
+              "String"
+            )
+            (
+              mkButton
+              "p"
+              "<CMD>Telescope live_grep<CR>"
+              " Find Pattern"
+              "String"
+            )
+            (
+              mkButton
+              "b"
+              "<CMD>Telescope file_browser<CR>"
+              " File Browser"
+              "String"
+            )
+            (
+              mkButton
+              "t"
+              "<CMD>TodoTelescope<CR>"
+              " Search Todos"
+              "String"
+            )
+          ];
         }
         {
           type = "padding";

@@ -10,101 +10,110 @@
         mode = "i";
         key = "jj";
         action = "<Esc>";
-        options = { desc = "jj to esc"; silent = true; };
+        options = {
+          desc = "jj to esc";
+          silent = true;
+        };
       }
 
       {
         mode = "i";
         key = "<C-d>";
         action = "<Plug>(copilot-accept-word)";
-        options = { desc = "Copilot: accept next word"; };
+        options = {desc = "Copilot: accept next word";};
       }
       {
         mode = "i";
         key = "<C-f>";
         action = "<Plug>(copilot-accept-line)";
-        options = { desc = "Copilot: accept next line"; };
+        options = {desc = "Copilot: accept next line";};
       }
       {
         mode = "i";
         key = "<C-g>";
         action = "<Cmd>lua copilot#Accept(1)<CR>";
-        options = { desc = "Copilot: accept suggestion"; };
+        options = {desc = "Copilot: accept suggestion";};
       }
       {
         mode = "i";
         key = "<C-y>";
         action = "<Plug>(copilot-next)";
-        options = { desc = "Copilot: next suggestion"; };
+        options = {desc = "Copilot: next suggestion";};
       }
       {
         mode = "i";
         key = "<C-e>";
         action = "<Plug>(copilot-dismiss)";
-        options = { desc = "Copilot: dismiss suggestion"; };
+        options = {desc = "Copilot: dismiss suggestion";};
       }
 
       {
         mode = "n";
         key = "<C-s>";
         action = "<Cmd>w!<CR>";
-        options = { desc = "Save file!"; };
+        options = {desc = "Save file!";};
       }
 
       {
         mode = "n";
         key = "<C-a>";
         action = "<Cmd>wa!<CR>";
-        options = { desc = "Save all!"; };
+        options = {desc = "Save all!";};
       }
 
       {
         mode = "n";
         key = "<Esc>";
         action = "<Esc><Cmd>nohlsearch<CR>";
-        options = { desc = "Use <Esc> to remove highlighting"; };
+        options = {desc = "Use <Esc> to remove highlighting";};
       }
 
       {
         mode = "n";
         key = "j";
         action = "v:count == 0 ? 'gj' : 'j'";
-        options = { expr = true; desc = "Move down visual line"; };
+        options = {
+          expr = true;
+          desc = "Move down visual line";
+        };
       }
 
       {
         mode = "n";
         key = "<Tab>";
         action = "<cmd>BufferLineCycleNext<cr>";
-        options = { desc = "Cycle to next buffer"; };
+        options = {desc = "Cycle to next buffer";};
       }
 
       {
         mode = "n";
         key = "<S-Tab>";
         action = "<cmd>BufferLineCyclePrev<cr>";
-        options = { desc = "Cycle to previous buffer"; };
+        options = {desc = "Cycle to previous buffer";};
       }
 
       {
         mode = "n";
         key = "<S-l>";
         action = "<cmd>BufferLineCycleNext<cr>";
-        options = { desc = "Cycle to next buffer"; };
+        options = {desc = "Cycle to next buffer";};
       }
 
       {
         mode = "n";
         key = "<S-h>";
         action = "<cmd>BufferLineCyclePrev<cr>";
-        options = { desc = "Cycle to previous buffer"; };
+        options = {desc = "Cycle to previous buffer";};
       }
 
       {
         mode = "n";
         key = "k";
         action = "v:count == 0 ? 'gk' : 'k'";
-        options = { expr = true; desc = "Move up visual line"; };
+        options = {
+          expr = true;
+          desc = "Move up visual line";
+        };
       }
 
       {
@@ -124,7 +133,7 @@
         mode = "n";
         key = "<leader>ag";
         action = "<Cmd>CopilotChat<CR>";
-        options = { desc = "GitHub Copilot"; };
+        options = {desc = "GitHub Copilot";};
       }
       {
         mode = "x";
@@ -151,7 +160,7 @@
         mode = "n";
         key = "<leader>ac";
         action = "<Cmd>CodeCompanionActions<CR>";
-        options = { desc = "CodeCompanion Actions"; };
+        options = {desc = "CodeCompanion Actions";};
       }
 
       # Buffers
@@ -160,55 +169,55 @@
         mode = "n";
         key = "<leader>bn";
         action = "<cmd>tabnew<cr>";
-        options = { desc = "New buffer"; };
+        options = {desc = "New buffer";};
       }
       {
         mode = "n";
         key = "<leader>bd";
         action = "<cmd>bdelete<cr>";
-        options = { desc = "Delete buffer"; };
+        options = {desc = "Delete buffer";};
       }
 
       {
         mode = "n";
         key = "<leader>bb";
         action = "<cmd>e #<cr>";
-        options = { desc = "Switch to Other Buffer"; };
+        options = {desc = "Switch to Other Buffer";};
       }
 
       {
         mode = "n";
         key = "<leader>br";
         action = "<cmd>BufferLineCloseRight<cr>";
-        options = { desc = "Delete buffers to the right"; };
+        options = {desc = "Delete buffers to the right";};
       }
 
       {
         mode = "n";
         key = "<leader>bl";
         action = "<cmd>BufferLineCloseLeft<cr>";
-        options = { desc = "Delete buffers to the left"; };
+        options = {desc = "Delete buffers to the left";};
       }
 
       {
         mode = "n";
         key = "<leader>bo";
         action = "<cmd>BufferLineCloseOthers<cr>";
-        options = { desc = "Delete other buffers"; };
+        options = {desc = "Delete other buffers";};
       }
 
       {
         mode = "n";
         key = "<leader>bp";
         action = "<cmd>BufferLineTogglePin<cr>";
-        options = { desc = "Toggle pin"; };
+        options = {desc = "Toggle pin";};
       }
 
       {
         mode = "n";
         key = "<leader>bP";
         action = "<Cmd>BufferLineGroupClose ungrouped<CR>";
-        options = { desc = "Delete non-pinned buffers"; };
+        options = {desc = "Delete non-pinned buffers";};
       }
 
       # Code
@@ -216,32 +225,35 @@
         mode = "n";
         key = "<C-c>";
         action = "<Plug>SlimeParagraphSend<CR>";
-        options = { desc = "Send region to target"; };
+        options = {desc = "Send region to target";};
       }
       {
         mode = "v";
         key = "<C-CR>";
         action = "<Plug>SlimeRegionSend<CR>";
-        options = { desc = "Send region to target"; };
+        options = {desc = "Send region to target";};
       }
       {
         mode = "n";
         key = "<leader>ts";
         action = "<Cmd>SlimeConfig<CR>";
-        options = { desc = "Open slime config"; };
+        options = {desc = "Open slime config";};
       }
 
       {
         mode = "n";
         key = "<leader>cr";
         action = ":IncRename ";
-        options = { desc = "Rename symbol"; };
+        options = {desc = "Rename symbol";};
       }
       {
-        mode = [ "n" "v" ];
+        mode = ["n" "v"];
         key = "<leader>cf";
         action = "<cmd>lua vim.lsp.buf.format()<cr>";
-        options = { silent = true; desc = "Code format"; };
+        options = {
+          silent = true;
+          desc = "Code format";
+        };
       }
       # Debug
       # (e)
@@ -251,26 +263,26 @@
         mode = "n";
         key = "<leader>ft";
         action = "<Cmd>NvimTreeToggle<CR>";
-        options = { desc = "Open Directory Viewer"; };
+        options = {desc = "Open Directory Viewer";};
       }
       {
         mode = "n";
         key = "<leader>fn";
         action = "<Cmd>ene <bar> startinsert<CR>";
-        options = { desc = "New File"; };
+        options = {desc = "New File";};
       }
       {
         mode = "n";
         key = "<leader>fy";
         action = "<Cmd>lua require('yazi').yazi()<CR>";
-        options = { desc = "Yazi"; };
+        options = {desc = "Yazi";};
       }
       # Git
       {
         mode = "n";
         key = "<leader>gg";
         action = "<Cmd>LazyGit<CR>";
-        options = { desc = "LazyGit"; };
+        options = {desc = "LazyGit";};
       }
 
       # Obsidian
@@ -278,67 +290,67 @@
         mode = "n";
         key = "<leader>on";
         action = "<Cmd>ObsidianNew<CR>";
-        options = { desc = "New note"; };
+        options = {desc = "New note";};
       }
       {
         mode = "n";
         key = "<leader>oN";
         action = "<Cmd>ObsidianNewFromTemplate<CR>";
-        options = { desc = "New note from template"; };
+        options = {desc = "New note from template";};
       }
       {
         mode = "n";
         key = "<leader>ot";
         action = "<Cmd>ObsidianToday<CR>";
-        options = { desc = "Today's note"; };
+        options = {desc = "Today's note";};
       }
       {
         mode = "n";
         key = "<leader>os";
         action = "<Cmd>ObsidianSearch<CR>";
-        options = { desc = "Search notes"; };
+        options = {desc = "Search notes";};
       }
       {
         mode = "n";
         key = "<leader>oS";
         action = "<Cmd>ObsidianQuickSwitch<CR>";
-        options = { desc = "Quick switch between notes"; };
+        options = {desc = "Quick switch between notes";};
       }
       {
         mode = "n";
         key = "<leader>ot";
         action = "<Cmd>ObsidianTags<CR>";
-        options = { desc = "Search notes by tags/ list tags"; };
+        options = {desc = "Search notes by tags/ list tags";};
       }
       {
         mode = "n";
         key = "<leader>oi";
         action = "<Cmd>ObsidianPasteImg<CR>";
-        options = { desc = "Paste image from clipboard"; };
+        options = {desc = "Paste image from clipboard";};
       }
       {
         mode = "n";
         key = "<leader>or";
         action = "<Cmd>ObsidianRename<CR>";
-        options = { desc = "Rename note"; };
+        options = {desc = "Rename note";};
       }
       {
         mode = "n";
         key = "<leader>oo";
         action = "<Cmd>ObsidianTOC<CR>";
-        options = { desc = "Open note outline"; };
+        options = {desc = "Open note outline";};
       }
       {
         mode = "n";
         key = "<leader>ol";
         action = "<Cmd>ObsidianLink<CR>";
-        options = { desc = "Insert link to existing note"; };
+        options = {desc = "Insert link to existing note";};
       }
       {
         mode = "n";
         key = "<leader>oL";
         action = "<Cmd>ObsidianLinkNew<CR>";
-        options = { desc = "Insert link to new note from selection"; };
+        options = {desc = "Insert link to new note from selection";};
       }
 
       # Search
@@ -346,22 +358,22 @@
         mode = "n";
         key = "<leader>st";
         action = "<Cmd>TodoTelescope<CR>";
-        options = { desc = "Search Todos"; };
+        options = {desc = "Search Todos";};
       }
 
       # Terminal
       {
-        mode = [ "n" ];
+        mode = ["n"];
         key = "<leader>ts";
         action = "<Cmd>SlimeConfig<CR>";
-        options = { desc = "Toggle"; };
+        options = {desc = "Toggle";};
       }
 
       {
-        mode = [ "n" ];
+        mode = ["n"];
         key = "<leader>tt";
         action = "<Cmd>Lspsaga term_toggle<CR>";
-        options = { desc = "Term Toggle"; };
+        options = {desc = "Term Toggle";};
       }
 
       # Toggle
@@ -369,31 +381,31 @@
         mode = "n";
         key = "<leader>\\a";
         action = "<Cmd>CodeCompanionToggle<CR>";
-        options = { desc = "Toggle Code Companion"; };
+        options = {desc = "Toggle Code Companion";};
       }
       {
         mode = "n";
         key = "<leader>\\o";
         action = "<Cmd>Lspsaga outline<CR>";
-        options = { desc = "Toggle Outline"; };
+        options = {desc = "Toggle Outline";};
       }
       {
         mode = "n";
         key = "<leader>\\p";
         action = "<Cmd>Precognition toggle<CR>";
-        options = { desc = "Toggle Precognition"; };
+        options = {desc = "Toggle Precognition";};
       }
       {
         mode = "n";
         key = "<leader>\\s";
         action = "<Cmd>set spell!<CR>";
-        options = { desc = "Toggle Spell"; };
+        options = {desc = "Toggle Spell";};
       }
       {
         mode = "n";
         key = "<leader>\\r";
         action = "<Cmd>lua toggle_r_lsp()<CR>";
-        options = { desc = "Toggle R LSP"; };
+        options = {desc = "Toggle R LSP";};
       }
 
       # Windows
@@ -490,14 +502,14 @@
         mode = "v";
         key = "J";
         action = ":m '>+1<CR>gv=gv";
-        options = { desc = "Use move command when line is highlighted "; };
+        options = {desc = "Use move command when line is highlighted ";};
       }
 
       {
         mode = "v";
         key = "K";
         action = ":m '>-2<CR>gv=gv";
-        options = { desc = "Use move command when line is highlighted "; };
+        options = {desc = "Use move command when line is highlighted ";};
       }
 
       {
@@ -531,14 +543,14 @@
         mode = "n";
         key = "n";
         action = "nzzzv";
-        options = { desc = "Allow search terms to stay in the middle "; };
+        options = {desc = "Allow search terms to stay in the middle ";};
       }
 
       {
         mode = "n";
         key = "N";
         action = "Nzzzv";
-        options = { desc = "Allow search terms to stay in the middle "; };
+        options = {desc = "Allow search terms to stay in the middle ";};
       }
 
       # Paste stuff without saving the deleted word into the buffer
@@ -546,11 +558,11 @@
         mode = "x";
         key = "<leader>yp";
         action = ''"_dP'';
-        options = { desc = "Deletes to void register and paste over"; };
+        options = {desc = "Deletes to void register and paste over";};
       }
 
       {
-        mode = [ "n" "x" "o" ];
+        mode = ["n" "x" "o"];
         key = "s";
         action = "<cmd>lua require('flash').jump()<cr>";
         options = {
@@ -559,7 +571,7 @@
       }
 
       {
-        mode = [ "n" "x" "o" ];
+        mode = ["n" "x" "o"];
         key = "S";
         action = "<cmd>lua require('flash').treesitter()<cr>";
         options = {
@@ -577,7 +589,7 @@
       }
 
       {
-        mode = [ "x" "o" ];
+        mode = ["x" "o"];
         key = "R";
         action = "<cmd>lua require('flash').treesitter_search()<cr>";
         options = {

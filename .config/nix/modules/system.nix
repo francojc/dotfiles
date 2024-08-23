@@ -1,5 +1,6 @@
-{ pkgs, ... }:
-
+{pkgs, ...}:
+# TODO: work on finding and adding macOS configuration options
+#
 #  macOS's System configuration
 #
 #  All the configuration options are documented here:
@@ -7,7 +8,6 @@
 #  Incomplete list of macOS `defaults` commands :
 #    https://github.com/yannbertrand/macos-defaults
 {
-
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
     activationScripts.postUserActivation.text = ''
@@ -156,17 +156,13 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
-
   programs.zsh.enable = true;
-
   environment = {
     shells = [
       pkgs.zsh
     ];
-
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
-
   # Set your time zone.
   time.timeZone = "America/New_York";
 

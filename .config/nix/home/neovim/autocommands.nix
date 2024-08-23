@@ -1,7 +1,7 @@
 {
   programs.nixvim = {
     autoGroups = {
-      "personal" = { clear = true; };
+      "personal" = {clear = true;};
     };
 
     autoCmd = [

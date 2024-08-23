@@ -6,7 +6,7 @@
       theme = "auto";
       globalstatus = false;
       disabledFiletypes = {
-        statusline = [ "alpha" "codecompanion" "copilot-chat" ];
+        statusline = ["alpha" "codecompanion" "copilot-chat"];
       };
       sections = {
         lualine_a = [

@@ -1,19 +1,19 @@
 {
   programs.nixvim = {
     plugins = {
-      lsp-format = { enable = true; };
+      lsp-format = {enable = true;};
       lsp = {
         enable = true;
         servers = {
-          lua-ls = { enable = true; };
-          nil-ls = { enable = true; };
+          lua-ls = {enable = true;};
+          nil-ls = {enable = true;};
           marksman = {
             enable = true;
-            filetypes = [ "markdown" "quarto" ];
+            filetypes = ["markdown" "quarto"];
           };
-          pyright = { enable = false; };
-          yamlls = { enable = false; };
-          r-language-server = { enable = true; };
+          pyright = {enable = false;};
+          yamlls = {enable = false;};
+          r-language-server = {enable = true;};
         };
         keymaps = {
           silent = true;
