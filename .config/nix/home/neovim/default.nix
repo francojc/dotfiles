@@ -1,79 +1,32 @@
-{ config, pkgs, lib, ... }:
+{ inputs, ... }:
 
-let
-  autoCmd = import ./autocommands.nix;
-  keymaps = import ./keymaps.nix;
-  opts = import ./opts.nix;
-  pluginConfigs = map import [
-    # # Colorscheme
-    ./plugins/colorscheme/colorscheme.nix
-    ./plugins/colorscheme/colorizer.nix
-    # # Completion
-    ./plugins/completion/cmp.nix
-    ./plugins/completion/lspkind.nix
-    # # Git
-    ./plugins/git/gitsigns.nix
-    ./plugins/git/lazygit.nix
-    # # LSP
-    ./plugins/lsp/conform.nix
-    ./plugins/lsp/fidget.nix
-    # ./plugins/lsp/hlchunk.nix
-    ./plugins/lsp/lsp.nix
-    ./plugins/lsp/lspsaga.nix
-    ./plugins/lsp/none-ls.nix
-    ./plugins/lsp/inc-rename.nix
-    ./plugins/lsp/trouble.nix
-    # # Snippets
-    ./plugins/snippets/luasnip.nix
-    # # Statusline
-    ./plugins/statusline/lualine.nix
-    # # Treesitter
-    ./plugins/treesitter/treesitter-context.nix
-    ./plugins/treesitter/treesitter.nix
-    # # UI
-    ./plugins/ui/alpha.nix
-    ./plugins/ui/bufferline.nix
-    ./plugins/ui/dressing.nix
-    # # ./plugins/ui/headlines.nix
-    ./plugins/ui/nvim-notify.nix
-    ./plugins/ui/nvim-tree.nix
-    ./plugins/ui/precognition.nix
-    ./plugins/ui/telescope.nix
-    # # Utils
-    ./plugins/utils/codecompanion.nix
-    # ./plugins/utils/comment.nix
-    ./plugins/utils/copilot-chat.nix
-    ./plugins/utils/copilot.nix
-    ./plugins/utils/flash.nix
-    # ./plugins/utils/harpoon.nix
-    # ./plugins/utils/illuminate.nix
-    # ./plugins/utils/markdown.nix
-    # # ./plugins/utils/markview.nix
-    ./plugins/utils/mini.nix
-    ./plugins/utils/nvim-autopairs.nix
-    ./plugins/utils/obsidian.nix
-    # ./plugins/utils/oil.nix
-    ./plugins/utils/slime.nix
-    ./plugins/utils/spectre.nix
-    ./plugins/utils/todo-comments.nix
-    # ./plugins/utils/ufo.nix
-    ./plugins/utils/undotree.nix
-    ./plugins/utils/whichkey.nix
-    # ./plugins/utils/yaml-companion.nix
-    # ./plugins/utils/yazi.nix
-  ];
-in
 {
-  programs.nixvim = lib.mkMerge ([{
-    enable = true;
-    globals.mapleader = " ";
-    autoGroups = {
-      "personal" = {
-        clear = true;
-      };
+  imports = [
+    # inputs.nixvim.homeManagerModules.nixvim
+    ./autocommands.nix
+    ./completion.nix
+    ./keymaps.nix
+    ./options.nix
+    ./plugins
+  ];
+
+  programs.nixvim = {
+   enable = true;
+   defaultEditor = true;
+
+   performance = {
+    combinePlugins = {
+      enable = true;
+      standalonePlugins = [
+
+        ];
     };
-    inherit autoCmd;
-    inherit keymaps;
-    inherit opts;
-  }] ++ pluginConfigs);
+    byteCompileLua.enable = true;
+   };
+
+   viAlias = true;
+   vimAlias = true;
+
+   luaLoader.enable = true;
+  };
 }
