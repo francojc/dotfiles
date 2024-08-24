@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/env bash
 
 # Function to extract the doc_id from the file
 extract_doc_id() {

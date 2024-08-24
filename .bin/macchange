@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Path to store the original MAC address
 ORIGINAL_MAC_FILE="/tmp/original_mac_address"

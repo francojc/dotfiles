@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script updates the instructor's branch with the student's latest changes.
 # It takes the student's GitHub username as an argument.

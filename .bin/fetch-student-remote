@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script fetches the student's remote repository, creates a new branch, and checks out the new branch. It takes the clone URL as an argument. This argument is then used to clone the student's remote repository. In addition, the URL argument is parsed and the student's GitHub username is extracted and the name of the new branch is set to the student's username.
 # The script assumes that the current working directory is the relevant local repository.

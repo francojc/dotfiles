@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script monitors changes in the current directory and renders the
 # Quarto project when a change is detected. The script uses `ag` to monitor

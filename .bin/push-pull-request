@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script pushes the current branch to the remote repository and creates a pull request on the student's forked repository.
 # It takes a message for the pr request as an argument.

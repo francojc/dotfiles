@@ -23,11 +23,10 @@
         ];
 
         # Python packages
-        pythonPackages = with pkgs.python312; [
-          argparse
-          os
+        pythonPackages = with pkgs.python312Packages; [
           openai
           requests
+          json
         ];
 
         # R packages

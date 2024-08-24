@@ -1,4 +1,4 @@
-#!/Users/francojc/.bin/.venv/bin/python
+#!/usr/bin/env python
 
 import argparse
 import requests
@@ -31,7 +31,9 @@ def get_weather(location):
     base_url = "https://api.openweathermap.org/data/2.5/weather"
     exclude = "minutely,hourly,daily,alerts"
     units = "imperial"  # use "metric" for Celsius
-    complete_url = f"{base_url}?q={location}&exclude={exclude}&units={units}&appid={api_key}"
+    complete_url = (
+        f"{base_url}?q={location}&exclude={exclude}&units={units}&appid={api_key}"
+    )
     response = requests.get(complete_url)
     if response.status_code == 200:
         data = response.json()
@@ -44,15 +46,17 @@ def get_weather(location):
     else:
         return "Error fetching weather data"
 
+
 def main():
     parser = argparse.ArgumentParser(description="Get the current weather")
-    parser.add_argument('city', type=str, help="City name")
-    parser.add_argument('country', type=str, help="Country code")
+    parser.add_argument("city", type=str, help="City name")
+    parser.add_argument("country", type=str, help="Country code")
     args = parser.parse_args()
 
     location = f"{args.city},{args.country}"
 
     print(get_weather(location))
+
 
 if __name__ == "__main__":
     main()

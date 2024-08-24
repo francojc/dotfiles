@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check if account name was provided
 if [ -z "$1" ]; then
