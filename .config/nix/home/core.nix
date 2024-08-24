@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     abook
     atuin
@@ -7,6 +7,7 @@
     datasette
     drawio
     duf
+    entr
     eza
     fd
     file
@@ -39,6 +40,7 @@
     quarto
     rectangle
     ripgrep
+    silver-searcher
     sqlite
     starship
     stow
@@ -55,14 +57,4 @@
     zoxide
     zoom-us
   ];
-
-  # programs = {
-  #   # modern vim
-  #   neovim = {
-  #     enable = true;
-  #     defaultEditor = true;
-  #     vimAlias = true;
-  #   };
-  #
-  # };
 }
