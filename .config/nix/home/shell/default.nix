@@ -1,4 +1,4 @@
-{...}: {
+{ pkgs, ... }: {
   programs = {
     zsh = {
       enable = true;
@@ -10,9 +10,18 @@
         ${builtins.readFile ./aliases.zsh}
       '';
       # Other ZSH plugins
-      plugins = [];
+      plugins = [
+        # {
+        #   name = "zsh-users/zsh-autosuggestions";
+        #   src = pkgs.fetchFromGitHub {
+        #     owner = "zsh-users";
+        #     repo = "zsh-autosuggestions";
+        #     rev = "0.6.4";
+        #     sha256 = "....";
+        #   };
+        # }
+      ];
     };
-
     direnv = {
       enable = true;
       enableZshIntegration = true;
