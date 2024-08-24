@@ -6,7 +6,7 @@
       theme = "auto";
       globalstatus = false;
       disabledFiletypes = {
-        statusline = ["alpha" "codecompanion" "copilot-chat"];
+        statusline = [ "alpha" "NvimTree" "codecompanion" "copilot-chat" ];
       };
       sections = {
         lualine_a = [
@@ -37,21 +37,14 @@
         ];
         lualine_x = [
           {
-            name = "filetype";
-            extraConfig = {
-              icon_only = true;
-            };
+            name = "searchcount";
           }
         ];
         lualine_y = [
           {
-            name = "filename";
+            name = "filetype";
             extraConfig = {
-              symbols = {
-                modified = "";
-                readonly = "";
-                unnamed = "";
-              };
+              icon_only = true;
             };
             separator.left = "";
           }
