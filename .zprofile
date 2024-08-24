@@ -31,16 +31,10 @@ export VISUAL='nvim'
 export HOMEBREW_NO_ENV_HINTS=true
 export LUA_CPATH=""
 
-# --- GPG setup for Neomutt ---
-# export GPG_TTY=$(tty)
-
 # --- ZSH ---
 # ZSH plugins
 export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
 export ZVM_KEYTIMEOUT=1 # 1 second
-
-# --- NEOVIM R ---
-# export R_AUTO_START=true
 
 # --- SECRETS (from `pass`) ---
 source ~/.variables.env
