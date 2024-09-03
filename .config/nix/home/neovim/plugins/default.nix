@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   # Plugins: more config
   imports = [
@@ -23,38 +24,50 @@
       conform-nvim.enable = true;
       dressing.enable = true;
       fidget.enable = true;
-      flash = {
-        enable = true;
-      };
+      flash.enable = true;
       gitsigns = {
         enable = true;
         settings.current_line_blame = true;
         settings.signs = {
-          add = {text = "│";};
-          change = {text = "│";};
-          delete = {text = "_";};
-          topdelete = {text = "‾";};
-          changedelete = {text = "~";};
-          untracked = {text = "?";};
+          add = { text = "│"; };
+          change = { text = "│"; };
+          delete = { text = "_"; };
+          topdelete = { text = "‾"; };
+          changedelete = { text = "~"; };
+          untracked = { text = "?"; };
         };
       };
-      lazygit = {
+      image = {
         enable = true;
+        backend = "kitty";
+        integrations = {
+          markdown = {
+            filetypes = [ "markdown" "quarto" "vimwiki" ];
+          };
+        };
+      };
+      lazygit.enable = true;
+      markview = {
+        enable = false;
+        settings = {
+          mode = [ "n" "x" ];
+          hybrid_modes = [ "i" "r" ];
+        };
       };
       mini = {
         enable = true;
         modules = {
-          ai = {};
-          surround = {};
-          indentscope = {};
-          icons = {};
+          ai = { };
+          surround = { };
+          indentscope = { };
+          icons = { };
         };
       };
       notify.enable = true;
       nvim-autopairs.enable = true;
       nvim-colorizer = {
         enable = true;
-        fileTypes = ["*"];
+        fileTypes = [ "*" ];
         userDefaultOptions = {
           mode = "virtualtext";
           virtualtext = "■";
@@ -67,13 +80,29 @@
       nvim-tree.enable = true;
       spectre.enable = true;
       todo-comments.enable = true;
-      yazi = {
-        enable = true;
-      };
+      yazi.enable = true;
     };
+    # extraPlugins
+    extraPlugins = [
+      { plugin = pkgs.vimPlugins.quarto-nvim; }
+    ];
+
     # Lua config
     extraConfigLua = ''
+      -- Quarto setup
+      require("quarto").setup()
+      -- Yazi setup
       require("yazi").setup()
+
+      -- Toggle concellevel function
+      function toggle_conceallevel()
+        local current_level = vim.api.nvim_get_option('conceallevel')
+        if current_level == 0 then
+          vim.api.nvim_set_option('conceallevel', 1)
+        else
+          vim.api.nvim_set_option('conceallevel', 0)
+        end
+      end
     '';
   };
 }
