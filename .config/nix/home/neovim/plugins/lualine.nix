@@ -2,12 +2,20 @@
   programs.nixvim = {
     plugins.lualine = {
       enable = true;
-      iconsEnabled = true;
-      theme = "auto";
       globalstatus = false;
       disabledFiletypes = {
         statusline = [ "alpha" "NvimTree" "codecompanion" "copilot-chat" ];
       };
+      componentSeparators = {
+        left = "";
+        right = "";
+      };
+      sectionSeparators = {
+        left = "";
+        right = "";
+      };
+      iconsEnabled = true;
+      theme = "auto";
       sections = {
         lualine_a = [
           {
@@ -39,20 +47,18 @@
           {
             name = "searchcount";
           }
+          "selectioncount"
         ];
         lualine_y = [
           {
             name = "filetype";
-            extraConfig = {
-              icon_only = true;
-            };
-            separator.left = "";
           }
         ];
         lualine_z = [
           {
             name = "location";
           }
+          "progress"
         ];
       };
     };
