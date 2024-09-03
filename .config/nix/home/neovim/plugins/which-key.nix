@@ -6,55 +6,85 @@
         spec = [
           {
             __unkeyed-1 = "<leader>a";
-            desc = "Assistants";
+            mode = "n";
+            group = "Assistants";
+            icon = "";
           }
           {
-            __unkeyed-1 = "<leader>b";
-            desc = "Buffers";
+            __unkeyed-1 = "<leader>a";
+            mode = "v";
+            group = "Copilot";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>c";
-            desc = "Code";
+            mode = "v";
+            group = "CodeCompanion";
+            icon = " ";
+          }
+          {
+            __unkeyed-1 = "<leader>b";
+            group = "Buffers";
+            icon = " ";
+          }
+          {
+            __unkeyed-1 = "<leader>c";
+            group = "Code";
+            icon = " ";
           }
           {
             __unkeyed-1 = "<leader>d";
-            desc = "Debug";
+            group = "Debug";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>f";
-            desc = "Files";
+            group = "Files";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>g";
-            desc = "Git";
+            group = "Git";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>h";
-            desc = "Help";
+            group = "Help";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>o";
-            desc = "Obsidian";
+            group = "Obsidian";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>p";
-            desc = "Copy/Paste";
+            group = "Copy/Paste";
+            icon = "";
+          }
+          {
+            __unkeyed-1 = "<leader>q";
+            group = "Quarto";
+            icon = "⨁";
           }
           {
             __unkeyed-1 = "<leader>s";
-            desc = "Search";
+            group = "Search";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>t";
-            desc = "Terminal";
+            group = "Terminal";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>w";
-            desc = "Windows";
+            group = "Windows";
+            icon = "";
           }
           {
             __unkeyed-1 = "<leader>\\";
-            desc = "Toggle";
+            group = "Toggle";
           }
         ];
       };
