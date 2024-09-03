@@ -52,10 +52,10 @@
             desc = "Find text";
           };
         };
-        "<leader>fb" = {
+        "<leader>bs" = {
           action = "buffers";
           options = {
-            desc = "Buffers";
+            desc = "Buffers search";
           };
         };
         "<leader>gc" = {
@@ -100,13 +100,13 @@
             desc = "Workspace diagnostics";
           };
         };
-        "<leader>sh" = {
+        "<leader>ht" = {
           action = "help_tags";
           options = {
             desc = "Help pages";
           };
         };
-        "<leader>sH" = {
+        "<leader>sh" = {
           action = "highlights";
           options = {
             desc = "Search Highlight Groups";
@@ -130,7 +130,7 @@
             desc = "Jump to Mark";
           };
         };
-        "<leader>so" = {
+        "<leader>hv" = {
           action = "vim_options";
           options = {
             desc = "Options";
