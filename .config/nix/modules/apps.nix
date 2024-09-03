@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   ##########################################################################
   #
   #  Install all apps and packages here.
@@ -48,7 +48,7 @@
     ];
 
     casks = [
-      "aerospace" # have not tested this (possible replacement for yabai/skhd)
+      "aerospace"
       "appcleaner"
       "balenaetcher"
       "bettermouse"
@@ -56,26 +56,21 @@
       "chromium"
       "docker"
       "dropbox"
-      "espanso"
       "fantastical"
-      "firefox" # (only on nix linux)
       "google-drive"
-      "jordanbaird-ice"
       "kap"
       "mullvadvpn"
+      # "mpv"
       "obsidian" # (only on nix linux)
       "praat"
       "raycast"
       "sequel-ace"
+      "shortcat" # newest version not on nix (yet)
       "transcribe"
       "transmission"
       "zotero@beta"
     ];
 
-    # INFO: Applications to install from Mac App Store using mas.
-    # You need to install all these Apps manually first so that your apple
-    # account have records for them. Otherwise Apple Store will refuse to
-    # install them. For details, see https://github.com/mas-cli/mas
     masApps = {
       # Xcode = 497799835;
       IPA_Keyboard = 1461264628;
