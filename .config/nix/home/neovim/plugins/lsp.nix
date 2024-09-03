@@ -20,31 +20,31 @@
           lspBuf = {
             gd = {
               action = "definition";
-              desc = "Goto Definition";
+              desc = "LSP: Goto Definition";
             };
             gr = {
               action = "references";
-              desc = "Goto References";
+              desc = "LSP: Goto References";
             };
             gD = {
               action = "declaration";
-              desc = "Goto Declaration";
+              desc = "LSP: Goto Declaration";
             };
             gh = {
               action = "signature_help"; # added 08/02/2024
-              desc = "Signature Help";
+              desc = "LSP: Signature Help";
             };
             gI = {
               action = "implementation";
-              desc = "Goto Implementation";
+              desc = "LSP: Goto Implementation";
             };
             gT = {
               action = "type_definition";
-              desc = "Type Definition";
+              desc = "LSP: Type Definition";
             };
             K = {
               action = "hover";
-              desc = "Hover";
+              desc = "LSP: Hover";
             };
             "<leader>cw" = {
               action = "workspace_symbol";
@@ -62,11 +62,11 @@
             };
             "[d" = {
               action = "goto_next";
-              desc = "Next Diagnostic";
+              desc = "LSP: Next Diagnostic";
             };
             "]d" = {
               action = "goto_prev";
-              desc = "Previous Diagnostic";
+              desc = "LSP: Previous Diagnostic";
             };
           };
         };
