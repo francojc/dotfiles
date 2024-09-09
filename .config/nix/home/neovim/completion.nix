@@ -1,13 +1,14 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.nixvim = {
-    opts.completeopt = ["menuone" "noselect" "noinsert"];
+    opts.completeopt = [ "menuone" "noselect" "noinsert" ];
 
     plugins = {
       luasnip = {
         enable = true;
         settings = {
           enable_autosnippets = true;
-          store_selection_keys = "<Tab>";
+          history = true;
+          updateevents = "TextChanged,TextChangedI";
         };
         fromVscode = [
           {
@@ -21,45 +22,69 @@
         enable = true;
         settings = {
           autoEnableSources = true;
-          preselect = "None";
-          experimental = {ghost_text = false;};
-          performance = {
-            debounce = 60;
-            fetchingTimeout = 200;
-            maxViewEntries = 30;
+          experimental = { ghost_text = false; };
+          formatting = {
+            fields = [ "kind" "abbr" "menu" ];
+            format =
+              # lua
+              ''
+                function(_, vim_item)
+                  kind_icons = {
+                    Text = "󰊄",
+                    Spell = "󰊄",
+                    String = "󰊄",
+                    Method = "",
+                    Function = "󰡱",
+                    Constructor = "",
+                    Field = "",
+                    Variable = "󱀍",
+                    Class = "",
+                    Interface = "",
+                    Module = "󰕳",
+                    Property = "",
+                    Unit = "",
+                    Value = "",
+                    Enum = "",
+                    Keyword = "",
+                    Snippet = "",
+                    Color = "",
+                    File = "",
+                    Reference = "󰈇",
+                    Folder = "",
+                    EnumMember = "",
+                    Constant = "",
+                    Struct = "",
+                    Event = "",
+                    Operator = "",
+                    TypeParameter = "",
+                    }
+                  vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
+                  return vim_item
+                end
+              '';
           };
-          snippet = {
-            expand = ''
-              function(args)
-                require('luasnip').lsp_expand(args.body)
-              end
-            '';
-            completion = {
-              keyword_length = 3;
-              autocomplete = false;
-            };
-          };
-          formatting = {fields = ["kind" "abbr" "menu"];};
           sources = [
-            {name = "otter";}
-            {name = "nvim_lsp";}
-            # { name = "emoji"; }
-            # { name = "buffer"; } # text within current buffer }
-            # { name = "copilot"; }
-            {name = "path";} # file system paths
-            {name = "luasnip";} # snippets
-            {name = "nvim_lsp_signature_help";}
-            {name = "treesitter";}
+            {
+              name = "luasnip";
+              keywordLength = 3;
+            }
+            { name = "nvim_lsp"; }
+            { name = "nvim_lsp_document_symbol"; }
+            { name = "nvim_lsp_signature_help"; }
+            { name = "otter"; }
+            { name = "path"; }
+            { name = "treesitter"; }
           ];
-
+          preselect = "None";
+          snippet = {
+            expand = "luasnip";
+          };
           window = {
             completion = {
               border = "solid";
-              side_padding = 0;
             };
             documentation = {
               border = "solid";
-              side_padding = 0;
             };
           };
           mapping = {
@@ -86,28 +111,26 @@
                 cmp.mapping(function(fallback)
                   if cmp.visible() then
                     cmp.select_prev_item()
-                  elseif luasnip.jumpable(-1) then
+                 elseif luasnip.jumpable(-1) then
                     luasnip.jump(-1)
                   else
                     fallback()
                   end
                 end, { "i", "s" })
               '';
-            "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
-            "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})";
+            "<Down>" =
+              # lua
+              ''
+                cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'})
+              '';
+            "<Up>" =
+              # lua
+              ''
+                cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'})
+              '';
           };
         };
       };
-
-      cmp-buffer = {enable = false;}; # text within current buffer
-      cmp-cmdline = {enable = true;}; # autocomplete for cmdline
-      cmp-emoji = {enable = false;}; # emoji
-      cmp_luasnip = {enable = true;}; # snippets
-      cmp-nvim-lsp = {enable = true;}; # lsp
-      cmp-nvim-lsp-signature-help = {enable = true;}; # signature help
-      cmp-path = {enable = true;}; # file system paths
-      cmp-treesitter = {enable = true;}; # treesitter
-      otter = {enable = true;}; # quarto completion
     };
 
     extraConfigLua = ''
@@ -130,7 +153,7 @@
           Snippet = "",
           Color = "",
           File = "",
-          Reference = "",
+          Reference = "󰈇",
           Folder = "",
           EnumMember = "",
           Constant = "",

@@ -1,12 +1,5 @@
 { pkgs, ... }:
-# TODO: work on finding and adding macOS configuration options
-#
-#  macOS's System configuration
-#
-#  All the configuration options are documented here:
-#    https://daiderd.com/nix-darwin/manual/index.html#sec-options
-#  Incomplete list of macOS `defaults` commands :
-#    https://github.com/yannbertrand/macos-defaults
+# INFO: work on finding and adding macOS configuration options
 {
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
@@ -157,13 +150,17 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
-  programs.zsh.enable = true;
+
+  programs.zsh.enable = true; # enable zsh
+
   environment = {
     shells = [
       pkgs.zsh
     ];
+
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 

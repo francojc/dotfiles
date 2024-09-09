@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{ pkgs, ... }: {
   nix = {
     package = pkgs.nix;
     gc = {
@@ -11,7 +7,7 @@
     };
     settings = {
       auto-optimise-store = false;
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [ "nix-command" "flakes" ];
     };
   };
   services.nix-daemon.enable = true;

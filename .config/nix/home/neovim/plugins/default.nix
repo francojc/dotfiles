@@ -1,11 +1,12 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   # Plugins: more config
   imports = [
     ./alpha.nix
     ./bufferline.nix
     ./codecompanion.nix
+    ./conform.nix
     ./copilot.nix
+    ./fidget.nix
     ./lualine.nix
     ./lsp.nix
     ./lspsaga.nix
@@ -21,9 +22,7 @@
   programs.nixvim = {
     colorschemes.gruvbox.enable = true;
     plugins = {
-      conform-nvim.enable = true;
       dressing.enable = true;
-      fidget.enable = true;
       flash.enable = true;
       gitsigns = {
         enable = true;
@@ -63,7 +62,7 @@
           icons = { };
         };
       };
-      notify.enable = true;
+      notify.enable = false;
       nvim-autopairs.enable = true;
       nvim-colorizer = {
         enable = true;
@@ -77,22 +76,42 @@
           RRGGBBAA = true;
         };
       };
-      nvim-tree.enable = true;
+      nvim-tree = {
+        enable = true;
+        view = {
+          side = "right";
+        };
+      };
       spectre.enable = true;
       todo-comments.enable = true;
       yazi.enable = true;
     };
     # extraPlugins
     extraPlugins = [
-      { plugin = pkgs.vimPlugins.quarto-nvim; }
+      # pkgs.vimPlugins.neoformat
+      pkgs.vimPlugins.quarto-nvim
+
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "render-markdown";
+        src = pkgs.fetchFromGitHub {
+          owner = "MeanderingProgrammer";
+          repo = "render-markdown.nvim";
+          rev = "2f9d4f0be8784ed4fef5960eb7b80bf60c5fdf56";
+          hash = "sha256-VCGAkcUIynRTErcGlaMWd+uo2KN1f3suPpGEimAhWHM=";
+        };
+      })
     ];
 
     # Lua config
     extraConfigLua = ''
-      -- Quarto setup
-      require("quarto").setup()
+      -- Render markdown setup
+      require('render-markdown').setup({
+        file_types = { 'markdown', 'quarto' },
+      })
       -- Yazi setup
       require("yazi").setup()
+      -- Quarto setup
+      require("quarto").setup()
 
       -- Toggle concellevel function
       function toggle_conceallevel()

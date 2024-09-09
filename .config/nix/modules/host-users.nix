@@ -1,12 +1,4 @@
-{
-  username,
-  hostname,
-  ...
-} @ args:
-#############################################################
-#  Host & Users configuration
-#############################################################
-{
+{ username, hostname, ... }: {
   networking.hostName = hostname;
   networking.computerName = hostname;
   system.defaults.smb.NetBIOSName = hostname;
@@ -16,5 +8,5 @@
     home = "/Users/${username}";
     description = username;
   };
-  nix.settings.trusted-users = [username];
+  nix.settings.trusted-users = [ username ];
 }

@@ -15,6 +15,7 @@
     fzf
     gh
     ghostscript
+    glow
     gnupg
     gv
     home-manager
@@ -37,6 +38,7 @@
     pass
     pngpaste
     pianobar
+    poppler_utils
     qpdf
     quarto
     rectangle

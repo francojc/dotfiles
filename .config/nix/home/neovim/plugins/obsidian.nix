@@ -1,6 +1,7 @@
 {
   programs.nixvim = {
     plugins.obsidian = {
+      enable = true;
       settings = {
         ui.enable = false;
         completion = {

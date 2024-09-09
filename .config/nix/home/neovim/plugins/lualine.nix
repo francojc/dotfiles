@@ -4,7 +4,7 @@
       enable = true;
       globalstatus = false;
       disabledFiletypes = {
-        statusline = [ "alpha" "NvimTree" "codecompanion" "copilot-chat" ];
+        statusline = ["alpha" "NvimTree" "codecompanion" "copilot-chat"];
       };
       componentSeparators = {
         left = "";

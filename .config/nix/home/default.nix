@@ -1,10 +1,5 @@
-{
-  pkgs,
-  lib,
-  username,
-  ...
-}: {
-  # import sub modules
+{ username, ... }: {
+
   imports = [
     ./shell
     ./core.nix

@@ -7,14 +7,9 @@
           enable = true;
           settings = {
             grouped = true;
-            hiddent = {
-              file_browser = true;
-            };
           };
         };
-        fzf-native = {
-          enable = true;
-        };
+        fzf-native.enable = true;
         frecency = {
           enable = true;
           settings = {
@@ -23,6 +18,7 @@
             show_scores = false;
           };
         };
+        ui-select.enable = true;
       };
       settings = {
         defaults = {

@@ -2,17 +2,14 @@
   description = "Nix for macOS configuration";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable"; # main nixpkgs repo
-
     darwin = {
       url = "github:lnl7/nix-darwin"; # darwin repo
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager"; # home manager repo
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nixvim = {
       url = "github:nix-community/nixvim"; # nixvim repo
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,7 +40,7 @@
       darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
         inherit system specialArgs;
         modules = [
-          ./modules/nix-core.nix #
+          ./modules/nix-core.nix
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/host-users.nix
