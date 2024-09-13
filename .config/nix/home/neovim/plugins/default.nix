@@ -46,23 +46,17 @@
         };
       };
       lazygit.enable = true;
-      markview = {
-        enable = false;
-        settings = {
-          mode = [ "n" "x" ];
-          hybrid_modes = [ "i" "r" ];
-        };
-      };
       mini = {
         enable = true;
         modules = {
-          ai = { };
-          surround = { };
+          # ai = { };
+          # animate = { };
+          # surround = { };
           indentscope = { };
           icons = { };
         };
       };
-      notify.enable = false;
+      notify.enable = true;
       nvim-autopairs.enable = true;
       nvim-colorizer = {
         enable = true;
@@ -86,11 +80,11 @@
       todo-comments.enable = true;
       yazi.enable = true;
     };
+
     # extraPlugins
     extraPlugins = [
       # pkgs.vimPlugins.neoformat
       pkgs.vimPlugins.quarto-nvim
-
       (pkgs.vimUtils.buildVimPlugin {
         name = "render-markdown";
         src = pkgs.fetchFromGitHub {
