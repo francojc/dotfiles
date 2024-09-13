@@ -8,6 +8,7 @@
       defaultKeymap = "viins";
       initExtra = ''
         ${builtins.readFile ./aliases.zsh}
+        ${builtins.readFile ./zprofile.zsh}
       '';
       # Other ZSH plugins
       plugins = [ ];
