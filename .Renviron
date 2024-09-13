@@ -1,7 +1,0 @@
-# Set locale
-TZ='America/New_York'
-
-# Other configuration
-CANVAS_BASE_URL='https://wakeforest.instructure.com'
-QUALTRICS_BASE_URL='wakeforest.ca1.qualtrics.com'
-plotly_username='jcolef'
