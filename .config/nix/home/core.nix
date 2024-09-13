@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    abook
+    # abook
     atuin
     audacity
     bat
@@ -25,13 +25,14 @@
     kitty
     lazydocker
     lazygit
+    lynx
     m-cli
     mas
     mdcat
-    msmtp
+    # msmtp
     ncdu
     neofetch
-    neomutt
+    # neomutt
     nix-prefetch-git
     notmuch
     pandoc

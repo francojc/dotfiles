@@ -76,9 +76,9 @@ function cd() {
 }
 
 # Neomutt
-function nm() {
-    mailsync && neomutt
-  }
+# function nm() {
+#     mailsync && neomutt
+#   }
 
 # Setup qtree (Quick Tree) command
 # - first argument is the directory to list (default is current directory)
