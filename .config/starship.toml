@@ -17,6 +17,7 @@ $character"""
 
 [os]
 disabled = false
+style = "bright-white"
 
 [os.symbols]
 Macos = " "
