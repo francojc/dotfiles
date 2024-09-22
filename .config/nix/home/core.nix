@@ -1,6 +1,5 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    # abook
     atuin
     audacity
     bat
@@ -29,10 +28,8 @@
     m-cli
     mas
     mdcat
-    # msmtp
     ncdu
     neofetch
-    # neomutt
     nix-prefetch-git
     notmuch
     pandoc

@@ -26,9 +26,6 @@ alias path='echo -e ${PATH//:/\\n}'
  # Rerun last command with sudo
 alias please='sudo $(fc -ln -1)'
 
-# Taskwarrior aliases
-alias tt='taskwarrior-tui'
-
 # Homebrew aliases
 alias buu='brew update && brew upgrade && brew cleanup && brew doctor'
 alias bs='brew search'
@@ -74,11 +71,6 @@ alias on='cd /Users/francojc/Library/Mobile Documents/iCloud~md~obsidian/Documen
 function cd() {
     z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
-
-# Neomutt
-# function nm() {
-#     mailsync && neomutt
-#   }
 
 # Setup qtree (Quick Tree) command
 # - first argument is the directory to list (default is current directory)
