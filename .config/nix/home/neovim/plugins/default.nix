@@ -20,7 +20,12 @@
 
   # Plugins: basic config
   programs.nixvim = {
-    colorschemes.gruvbox.enable = true;
+    colorschemes.one = {
+      enable = true;
+      settings = {
+        allow_italics = true;
+      };
+    };
     plugins = {
       dressing.enable = true;
       flash.enable = true;
@@ -49,9 +54,6 @@
       mini = {
         enable = true;
         modules = {
-          # ai = { };
-          # animate = { };
-          # surround = { };
           indentscope = { };
           icons = { };
         };
@@ -108,7 +110,7 @@
       require("quarto").setup()
 
       -- Toggle concellevel function
-      function toggle_conceallevel()
+      function _G.toggle_conceallevel()
         local current_level = vim.api.nvim_get_option('conceallevel')
         if current_level == 0 then
           vim.api.nvim_set_option('conceallevel', 1)
@@ -116,6 +118,9 @@
           vim.api.nvim_set_option('conceallevel', 0)
         end
       end
+
+      -- keymap
+      vim.api.nvim_set_keymap('n', '<leader>\\c', 'toggle_conceallevel()<CR>', { noremap = true, silent = true })
     '';
   };
 }

@@ -31,7 +31,6 @@
     ncdu
     neofetch
     nix-prefetch-git
-    notmuch
     pandoc
     pass
     pngpaste
@@ -47,10 +46,9 @@
     stow
     tldr
     tree
-    urlscan
+    utm
     vim
     which
-    wtf
     xclip
     xquartz
     yazi-unwrapped

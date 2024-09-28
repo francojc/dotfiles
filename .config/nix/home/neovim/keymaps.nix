@@ -290,6 +290,12 @@
       # Obsidian
       {
         mode = "n";
+        key = "<leader>od";
+        action = "<Cmd>ObsidianDailies<CR>";
+        options = { desc = "Daily note"; };
+      }
+      {
+        mode = "n";
         key = "<leader>on";
         action = "<Cmd>ObsidianNew<CR>";
         options = { desc = "New note"; };

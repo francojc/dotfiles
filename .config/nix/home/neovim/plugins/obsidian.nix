@@ -21,7 +21,7 @@
         ];
         daily_notes = {
           template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Templates/Dailies.md";
-          folder = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Daily";
+          folder = "Daily";
         };
         mappings = {
           gf = {

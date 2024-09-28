@@ -23,6 +23,7 @@
     ];
 
     brews = [
+      "aicommits" # not on nixpkgs
       "llm" # permission to install models
       "borders" # jankyborders
       "gnu-sed" # spectre
@@ -31,9 +32,7 @@
     ];
 
     casks = [
-      "aerospace"
       "appcleaner"
-      "balenaetcher"
       "bettermouse"
       "calibre"
       "chromium"
@@ -43,14 +42,15 @@
       "google-drive"
       "kap"
       "mullvadvpn"
-      # "mpv"
       "obsidian" # (only on nix linux)
       "praat"
       "raycast"
+      "rio"
       "sequel-ace"
-      "shortcat" # newest version not on nix (yet)
       "transcribe"
       "transmission"
+      "visual-studio-code"
+      "zen-browser"
       "zotero@beta"
     ];
 
