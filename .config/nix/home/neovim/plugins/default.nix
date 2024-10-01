@@ -85,8 +85,29 @@
 
     # extraPlugins
     extraPlugins = [
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "aerial.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "stevearc";
+          repo = "aerial.nvim";
+          rev = "140f48fb068d21c02e753c63f7443649e55576f0";
+          hash = "sha256-7Sj7Z5blJ6Qk/99EV4EBv4vdK1dHDGFL3W
+RYLEnrRC0=";
+        };
+      })
+
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "dropbar.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "Bekaboo";
+          repo = "dropbar.nvim";
+          rev = "669e325489202ae4da5a951314bbf8dbb20e7cff";
+          hash = "sha256-3VdwHC4/ti6QCCrb6ciRDYxk6+EIgrcLN0vmQYn00RQ=";
+        };
+      })
       # pkgs.vimPlugins.neoformat
       pkgs.vimPlugins.quarto-nvim
+
       (pkgs.vimUtils.buildVimPlugin {
         name = "render-markdown";
         src = pkgs.fetchFromGitHub {
@@ -100,27 +121,29 @@
 
     # Lua config
     extraConfigLua = ''
+      -- Aerial setup
+      require("aerial").setup({
+        on_attach = function(bufnr)
+          -- jump forward and backward
+          vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+          vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+        end,
+        -- keymap to toggle the aerial window
+        vim.keymap.set("n", "<leader>\\o", "<cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
+      })
+
+      -- Dropbar setup
+      require("dropbar").setup()
+
+      -- Quarto setup
+      require("quarto").setup()
+
       -- Render markdown setup
       require('render-markdown').setup({
         file_types = { 'markdown', 'quarto' },
       })
       -- Yazi setup
       require("yazi").setup()
-      -- Quarto setup
-      require("quarto").setup()
-
-      -- Toggle concellevel function
-      function _G.toggle_conceallevel()
-        local current_level = vim.api.nvim_get_option('conceallevel')
-        if current_level == 0 then
-          vim.api.nvim_set_option('conceallevel', 1)
-        else
-          vim.api.nvim_set_option('conceallevel', 0)
-        end
-      end
-
-      -- keymap
-      vim.api.nvim_set_keymap('n', '<leader>\\c', 'toggle_conceallevel()<CR>', { noremap = true, silent = true })
     '';
   };
 }
