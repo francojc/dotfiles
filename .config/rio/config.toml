@@ -129,12 +129,12 @@ confirm-before-quit = false
 #
 # Example:
 [window]
+decorations = "Disabled"
 # width = 600
 # height = 400
 # mode = "windowed"
 # opacity = 0.5
 # blur = false
-decorations = "Disabled"
 
 # Renderer
 #
@@ -186,7 +186,7 @@ decorations = "Disabled"
 # You can also set family on root to overwrite all fonts
 [fonts]
 family = "MesloLGL Nerd Font"
-size = 16
+size = 15
 #
 # You can also specify extra fonts to load
 # [fonts]
@@ -253,10 +253,10 @@ size = 16
 # "color-automation" - Set a specific color for the tab whenever a specific program is running, or in a specific directory.
 #
 # Example:
-# [navigation]
-# mode = "BottomTab"
-# clickable = false
-# hide-if-single = false
+[navigation]
+mode = "Bookmark"
+# clickable = true
+hide-if-single = false
 # use-current-path = false
 # color-automation = [ ]
 

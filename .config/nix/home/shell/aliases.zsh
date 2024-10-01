@@ -24,14 +24,7 @@ alias mv='mv -iv'
 alias path='echo -e ${PATH//:/\\n}'
 
  # Rerun last command with sudo
-alias please='sudo $(fc -ln -1)'
-
-# Homebrew aliases
-alias buu='brew update && brew upgrade && brew cleanup && brew doctor'
-alias bs='brew search'
-alias bi='brew install'
-alias bic='brew install --cask'
-alias bc='brew cleanup'
+alias pls='sudo $(fc -ln -1)'
 
 # Git aliases
 alias gss='git status'
@@ -43,6 +36,7 @@ alias gpl='git pull'
 alias gf='git fetch'
 alias gl='git log --oneline --decorate --graph'
 alias gba='git branch -a'
+alias gco='git checkout'
 alias gd='git diff'
 alias gdf='git diff --name-only'
 alias gitit='gh browse > /dev/null 2>&1'
@@ -51,7 +45,7 @@ alias gitit='gh browse > /dev/null 2>&1'
 alias d='docker'
 alias dr='docker run'
 alias di='docker images -a'
-alias dps='docker ps -a'
+alias dc='docker ps -a'
 
 # Quarto aliases
 alias q='quarto'

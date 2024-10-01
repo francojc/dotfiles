@@ -1,5 +1,4 @@
 { pkgs, ... }:
-# INFO: work on finding and adding macOS configuration options
 {
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.

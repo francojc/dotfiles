@@ -18,6 +18,5 @@
         features = "side-by-side";
       };
     };
-    aliases = { };
   };
 }
