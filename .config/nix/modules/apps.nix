@@ -18,7 +18,7 @@
 
     taps = [
       "homebrew/services"
-      "nikitabobko/tap" # for aerospace
+      # "nikitabobko/tap" # for aerospace
       "FelixKratz/formulae" # for jankyborders
     ];
 
