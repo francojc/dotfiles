@@ -16,19 +16,19 @@
           yamllint.enable = true;
         };
         formatting = {
-          format_r.enable = true;
+          format_r.enable = false;
           nixpkgs_fmt.enable = true;
           black = {
             enable = true;
             settings = {
-              extra_args = ["--fast"];
+              extra_args = [ "--fast" ];
             };
           };
           prettier = {
             enable = true;
             disableTsServerFormatter = true;
             settings = {
-              extra_args = ["--no-semi" "--single-quote"];
+              extra_args = [ "--no-semi" "--single-quote" ];
             };
           };
           stylua.enable = true;
