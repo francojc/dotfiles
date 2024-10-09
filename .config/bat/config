@@ -1,5 +1,5 @@
 # bat config file
---theme="zenburn"
+--theme="gruvbox-dark"
 
 --italic-text=always
 
