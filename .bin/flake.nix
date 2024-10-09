@@ -26,7 +26,6 @@
         pythonPackages = with pkgs.python312Packages; [
           openai
           requests
-          json
         ];
 
         # R packages
