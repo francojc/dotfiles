@@ -3,7 +3,7 @@
 #
 # Default is `false`
 #
-# hide-cursor-when-typing = false
+hide-cursor-when-typing = true
 
 # Ignore theme selection foreground color
 #
@@ -59,7 +59,7 @@ padding-x = 5
 # Possible choices: 'both', 'left' and 'right'.
 #
 # Example:
-# option-as-alt = 'left'
+option-as-alt = 'both'
 
 # Line height
 #
@@ -67,7 +67,7 @@ padding-x = 5
 # Default is `1.0`
 #
 # Example:
-# line-height = 1.5
+line-height = 1.2
 
 # Startup directory
 #
@@ -132,7 +132,7 @@ confirm-before-quit = false
 decorations = "Disabled"
 # width = 600
 # height = 400
-# mode = "windowed"
+mode = "windowed"
 # opacity = 0.5
 # blur = false
 
@@ -186,7 +186,7 @@ decorations = "Disabled"
 # You can also set family on root to overwrite all fonts
 [fonts]
 family = "MesloLGL Nerd Font"
-size = 15
+size = 14
 #
 # You can also specify extra fonts to load
 # [fonts]
@@ -199,8 +199,6 @@ size = 15
 # so to reflect your changes, you will need to close and reopen Rio.
 #
 # Example:
-# [fonts]
-# size = 16
 #
 # [fonts.regular]
 # family = "cascadiamono"
@@ -317,7 +315,12 @@ hide-if-single = false
 # More information in: https://raphamorim.io/rio/docs/key-bindings#custom-key-bindings
 #
 # Example:
-# [bindings]
+[bindings]
+keys = [
+  { key = "=", with = "alt", action = "SplitHorizontally" },
+  { key = "-", with = "alt", action = "SplitVertically" },
+  { key = "w", with = "control | shift", action = "ClosePane" },
+]
 # keys = [
 #   { key = "q", with = "super", action = "Quit" },
 #   # Bytes[27, 91, 53, 126] is equivalent to "\x1b[5~"
