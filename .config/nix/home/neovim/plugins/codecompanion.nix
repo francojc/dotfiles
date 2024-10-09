@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.nixvim = {
     extraPlugins = with pkgs.vimUtils; [
       (buildVimPlugin {
@@ -38,7 +38,7 @@
               index = 6, -- Adjust this number based on your existing prompts
               default_prompt = true,
               modes = { 'n', 'v' },
-              mapping = '<LocalLeader>cg',
+              mapping = '<leader>cg',
               auto_submit = false,
               stop_context_insertion = true,
             },

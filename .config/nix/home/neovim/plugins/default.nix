@@ -20,10 +20,10 @@
 
   # Plugins: basic config
   programs.nixvim = {
-    colorschemes.one = {
+    colorschemes.gruvbox = {
       enable = true;
       settings = {
-        allow_italics = true;
+        contrast_dark = "hard";
       };
     };
     plugins = {

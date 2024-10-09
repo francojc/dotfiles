@@ -5,17 +5,14 @@
       maplocalleader = " ";
     };
 
+    # Remappings
     keymaps = [
       {
         mode = "i";
         key = "jj";
         action = "<Esc>";
-        options = {
-          desc = "jj to esc";
-          silent = true;
-        };
+        options = { desc = "jj to esc"; silent = true; };
       }
-
       {
         mode = "i";
         key = "<C-d>";
@@ -31,7 +28,7 @@
       {
         mode = "i";
         key = "<C-g>";
-        action = "<Cmd>lua copilot#Accept(1)<CR>";
+        action = "<Cmd>CopilotAccept<CR>";
         options = { desc = "Copilot: accept suggestion"; };
       }
       {
@@ -438,30 +435,6 @@
       }
       {
         mode = "n";
-        key = "<leader>\\c";
-        action = "<Cmd>toggle_conceallevel()<CR>";
-        options = { desc = "Toggle Conceal Level"; };
-      }
-      {
-        mode = "n";
-        key = "<leader>\\m";
-        action = "<Cmd>Markview toggle<CR>";
-        options = { desc = "Toggle Markview (non-active)"; };
-      }
-      {
-        mode = "n";
-        key = "<leader>\\o";
-        action = "<Cmd>Lspsaga outline<CR>";
-        options = { desc = "Toggle Outline"; };
-      }
-      {
-        mode = "n";
-        key = "<leader>\\p";
-        action = "<Cmd>Precognition toggle<CR>";
-        options = { desc = "Toggle Precognition (non-active)"; };
-      }
-      {
-        mode = "n";
         key = "<leader>\\r";
         action = "<Cmd>lua toggle_r_lsp()<CR>";
         options = { desc = "Toggle R LSP"; };
@@ -547,7 +520,7 @@
         action = "<C-W>j";
         options = {
           silent = true;
-          desc = "Move to window bellow";
+          desc = "Move to window below";
         };
       }
 

@@ -45,6 +45,7 @@
 
       # Enable mouse mode
       mouse = "a"; # Mouse
+      mousemoveevent = true;
 
       # Enable ignorecase + smartcase for better searching
       ignorecase = true;
