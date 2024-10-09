@@ -16,6 +16,7 @@
     ghostscript
     glow
     gnupg
+    gh
     gv
     home-manager
     htop
@@ -46,7 +47,6 @@
     stow
     tldr
     tree
-    utm
     vim
     which
     xclip
