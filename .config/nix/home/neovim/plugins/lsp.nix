@@ -2,18 +2,23 @@
   programs.nixvim = {
     plugins = {
       lsp-format = { enable = true; };
+      lsp-signature = { enable = true; };
+      lsp-status = { enable = true; };
+      lspkind = { enable = true; };
       lsp = {
         enable = true;
         servers = {
-          lua-ls = { enable = true; };
-          nil-ls = { enable = true; };
+          bashls.enable = true;
+          lua_ls.enable = true;
+          # nixd.enable = true;
+          nil_ls.enable = true;
           marksman = {
             enable = true;
             filetypes = [ "markdown" "quarto" ];
           };
-          pyright = { enable = false; };
-          yamlls = { enable = false; };
-          r-language-server = { enable = false; };
+          pyright.enable = false;
+          yamlls.enable = false;
+          r_language_server.enable = true;
         };
         keymaps = {
           silent = true;
@@ -80,7 +85,7 @@
         local function get_local_r_path()
           local handle = io.popen("nix develop --command which R 2>/dev/null")
           local result = handle:read("*a")
-         handle:close()
+            handle:close()
          return result:match("^%s*(.-)%s*$")  -- trim any leading/trailing whitespace
         end
 

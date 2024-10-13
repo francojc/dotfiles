@@ -4,10 +4,17 @@
       enable = true;
       settings = {
         options = {
-          separator_style = "thin"; # "thin" | "thick" | "slant" | "round" | "default"
-          modified_icon = "✎"; # pencil
+          separator_style = "thin";
+          show_buffer_icons = true;
           color_icons = false;
-          show_buffer_icons = false;
+          buffer_close_icon = ""; # square x
+          modified_icon = ""; # pencil
+          offsets = [
+            { filetype = "NvimTree"; }
+            { text = "File Explorer"; }
+            { highlight = "Directory"; }
+            { separator = true; }
+          ];
         };
       };
     };

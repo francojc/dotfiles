@@ -25,12 +25,7 @@
         action = "<Plug>(copilot-accept-line)";
         options = { desc = "Copilot: accept next line"; };
       }
-      {
-        mode = "i";
-        key = "<C-g>";
-        action = "<Cmd>CopilotAccept<CR>";
-        options = { desc = "Copilot: accept suggestion"; };
-      }
+      # Accept suggestion <TAB>
       {
         mode = "i";
         key = "<C-y>";
@@ -531,10 +526,18 @@
         action = "<cmd>quitall<cr><esc>";
         options = {
           silent = true;
-          desc = "Quit all";
+          desc = "Quit Neovim";
         };
       }
-
+      {
+        mode = "n";
+        key = "<leader>X";
+        action = "<cmd>%bd | quit<cr>";
+        options = {
+          silent = true;
+          desc = "Quit session";
+        };
+      }
       # Moving when in visual mode
       {
         mode = "v";

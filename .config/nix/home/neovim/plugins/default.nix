@@ -27,6 +27,7 @@
       };
     };
     plugins = {
+      auto-session.enable = true;
       dressing.enable = true;
       flash.enable = true;
       gitsigns = {
@@ -58,7 +59,12 @@
           icons = { };
         };
       };
-      notify.enable = true;
+      nix.enable = true;
+      notify = {
+        enable = true;
+        timeout = 3000;
+        topDown = false;
+      };
       nvim-autopairs.enable = true;
       nvim-colorizer = {
         enable = true;
@@ -74,12 +80,23 @@
       };
       nvim-tree = {
         enable = true;
-        view = {
-          side = "right";
+        view.side = "left";
+        hijackCursor = true;
+        modified.enable = true;
+        renderer = {
+          highlightGit = true;
+          rootFolderLabel = false;
+          icons = {
+            gitPlacement = "signcolumn";
+            modifiedPlacement = "signcolumn";
+          };
         };
       };
+      otter.enable = true;
       spectre.enable = true;
       todo-comments.enable = true;
+      trouble.enable = true;
+      web-devicons.enable = true;
       yazi.enable = true;
     };
 
@@ -97,6 +114,16 @@ RYLEnrRC0=";
       })
 
       (pkgs.vimUtils.buildVimPlugin {
+        name = "cmp-nvim-r";
+        src = pkgs.fetchFromGitHub {
+          owner = "jalvesaq";
+          repo = "cmp-nvim-r";
+          rev = "24f4d0e952332d8f6a420255a149815a7080849b";
+          hash = "sha256-mBQX1dtXI7gI6mtkiRrQgloSERkfQV16egv3cwD0aok=";
+        };
+      })
+
+      (pkgs.vimUtils.buildVimPlugin {
         name = "dropbar.nvim";
         src = pkgs.fetchFromGitHub {
           owner = "Bekaboo";
@@ -105,7 +132,7 @@ RYLEnrRC0=";
           hash = "sha256-3VdwHC4/ti6QCCrb6ciRDYxk6+EIgrcLN0vmQYn00RQ=";
         };
       })
-      # pkgs.vimPlugins.neoformat
+
       pkgs.vimPlugins.quarto-nvim
 
       (pkgs.vimUtils.buildVimPlugin {
@@ -132,8 +159,14 @@ RYLEnrRC0=";
         vim.keymap.set("n", "<leader>\\o", "<cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
       })
 
+      -- cmp-r setup
+      require("cmp_nvim_r").setup({
+        filetypes = { "r", "quarto", "rmd" },
+        quarto_intel = "~/.local/share/quarto/yaml-intelligence-resources.json"
+      })
+
       -- Dropbar setup
-      require("dropbar").setup()
+      require("dropbar").setup({ })
 
       -- Quarto setup
       require("quarto").setup()
@@ -142,6 +175,7 @@ RYLEnrRC0=";
       require('render-markdown').setup({
         file_types = { 'markdown', 'quarto' },
       })
+
       -- Yazi setup
       require("yazi").setup()
     '';

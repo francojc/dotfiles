@@ -2,64 +2,65 @@
   programs.nixvim = {
     plugins.lualine = {
       enable = true;
-      globalstatus = false;
-      disabledFiletypes = {
-        statusline = ["alpha" "NvimTree" "codecompanion" "copilot-chat"];
-      };
-      componentSeparators = {
-        left = "";
-        right = "";
-      };
-      sectionSeparators = {
-        left = "";
-        right = "";
-      };
-      iconsEnabled = true;
-      theme = "auto";
-      sections = {
-        lualine_a = [
-          {
-            name = "mode";
-            fmt = "string.lower";
-          }
-        ];
-        lualine_b = [
-          {
-            name = "branch";
-            icon = "";
-          }
-          "diff"
-        ];
-        lualine_c = [
-          {
-            name = "diagnostic";
-            extraConfig = {
-              symbols = {
-                error = " ";
-                warn = " ";
-                info = " ";
-                hint = "󰝶 ";
+      settings = {
+        options = {
+          disabled_filetypes = {
+            statusline = [ "aerial" "alpha" ];
+            winbar = [ "aerial" ];
+          };
+
+          globalstatus = true;
+          theme = "auto";
+          section_separators = {
+            left = "";
+            right = "";
+          };
+          component_separators = {
+            left = "";
+            right = "";
+          };
+        };
+
+        sections = {
+          lualine_a = [
+            {
+              __unkeyed-1 = {
+                __raw = ''
+                  function()
+                    local mode = vim.api.nvim_get_mode().mode
+                    return " " .. string.lower(mode) .. " "
+                  end
+                '';
               };
-            };
-          }
-        ];
-        lualine_x = [
-          {
-            name = "searchcount";
-          }
-          "selectioncount"
-        ];
-        lualine_y = [
-          {
-            name = "filetype";
-          }
-        ];
-        lualine_z = [
-          {
-            name = "location";
-          }
-          "progress"
-        ];
+            }
+
+          ];
+          lualine_b = [ "branch" "diff" ];
+          lualine_c = [
+            {
+              __unkeyed-1 = {
+                __raw = ''
+                  function()
+                    local reg = vim.fn.reg_recording()
+                    if reg == "" then
+                      return ""
+                    else
+                      return " " .. reg .. ""
+                    end
+                  end
+                '';
+              };
+            }
+          ];
+
+          lualine_x = [ "searchcount" ];
+          lualine_y = [
+            "diagnostics"
+          ];
+          lualine_z = [ "progress" ];
+        };
+        winbar = { };
+        inactive_winbar = { };
       };
     };
   };

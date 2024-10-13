@@ -16,14 +16,7 @@
     };
   };
 
-  outputs =
-    inputs @ { self
-    , nixpkgs
-    , darwin
-    , home-manager
-    , nixvim
-    , ...
-    }:
+  outputs = inputs @ { self, nixpkgs, darwin, home-manager, nixvim, ... }:
     let
       username = "francojc";
       useremail = "francojc@wfu.edu";

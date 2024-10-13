@@ -18,6 +18,8 @@
     gnupg
     gh
     gv
+    helix
+    helix-gpt
     home-manager
     htop
     imagemagick
@@ -32,6 +34,7 @@
     ncdu
     neofetch
     nix-prefetch-git
+    nodejs_22
     pandoc
     pass
     pngpaste

@@ -2,6 +2,7 @@
   programs.nixvim = {
     plugins.treesitter = {
       enable = true;
+      nixGrammars = true;
       languageRegister.markdown = "quarto";
       settings = {
         auto_install = true;

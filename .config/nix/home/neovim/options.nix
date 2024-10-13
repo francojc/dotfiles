@@ -3,7 +3,7 @@
     globals = {
       loaded_ruby_provider = 0;
       loaded_perl_provider = 0;
-      copilot_no_tab_map = 1;
+      # copilot_no_tab_map = 1;
     };
 
     opts = {
@@ -95,10 +95,11 @@
       fileencoding = "utf-8";
 
       # More space in the neovim command line for displaying messages
-      cmdheight = 1;
+      cmdheight = 0;
+      winbar = "";
 
       # We don't need to see things like INSERT anymore
-      showmode = true;
+      showmode = false;
     };
   };
 }
