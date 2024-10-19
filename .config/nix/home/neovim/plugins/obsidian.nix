@@ -1,5 +1,5 @@
 {
-  programs.nixvim = {
+ programs.nixvim = {
     plugins.obsidian = {
       enable = true;
       settings = {
@@ -16,11 +16,11 @@
         workspaces = [
           {
             name = "Notes";
-            path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes";
+            path = "~/Google Drive/My Drive/Notes/";
           }
         ];
         daily_notes = {
-          template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Templates/Dailies.md";
+          template = "~/Google Drive/My Drive/Notes/Assets/Templates/Daily.md";
           folder = "Daily";
         };
         mappings = {
@@ -38,7 +38,7 @@
           };
         };
         templates = {
-          subdir = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Templates";
+          subdir = "~/Google Drive/My Drive/Notes/Assets/Templates/";
           substitutions = {
             monday.__raw = ''
               function()

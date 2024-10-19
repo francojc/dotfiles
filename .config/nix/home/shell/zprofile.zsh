@@ -27,3 +27,4 @@ export ZVM_KEYTIMEOUT=1 # 1 second
 
 # --- SECRETS (from `pass`) ---
 source ~/.variables.env
+

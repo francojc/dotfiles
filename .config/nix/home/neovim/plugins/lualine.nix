@@ -28,7 +28,21 @@
                 __raw = ''
                   function()
                     local mode = vim.api.nvim_get_mode().mode
-                    return " " .. string.lower(mode) .. " "
+                    local mode_maps = {
+                      n = "normal";
+                      i = "insert";
+                      c = "command";
+                      V = "v-line";
+                      [""] = "v-block";
+                      v = "visual";
+                      R = "replace";
+                      s = "select";
+                      S = "select";
+                      [""] = "select";
+                      t = "terminal";
+                    }
+                    local mode_name = mode_maps[mode]
+                    return " " .. mode_name .. " "
                   end
                 '';
               };

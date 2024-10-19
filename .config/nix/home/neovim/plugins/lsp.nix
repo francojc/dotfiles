@@ -10,7 +10,6 @@
         servers = {
           bashls.enable = true;
           lua_ls.enable = true;
-          # nixd.enable = true;
           nil_ls.enable = true;
           marksman = {
             enable = true;
@@ -18,7 +17,7 @@
           };
           pyright.enable = false;
           yamlls.enable = false;
-          r_language_server.enable = true;
+          r_language_server.enable = false;
         };
         keymaps = {
           silent = true;

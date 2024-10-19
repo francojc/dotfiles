@@ -1,17 +1,22 @@
 {
   description = "Nix for macOS configuration";
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable"; # main nixpkgs repo
+    # Add nixpkgs stable 24.05
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # Add darwin
     darwin = {
-      url = "github:lnl7/nix-darwin"; # darwin repo
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Add home-manager
     home-manager = {
-      url = "github:nix-community/home-manager"; # home manager repo
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Add nixvim
     nixvim = {
-      url = "github:nix-community/nixvim"; # nixvim repo
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

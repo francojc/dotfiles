@@ -1,6 +1,7 @@
 # --- ALIASES ---
 # Nix aliases
-alias switch='darwin-rebuild switch --flake ~/.config/nix'
+# FIX: For some reason, darwin-rebuild will not follow the symlink at ~/.config/nix
+alias switch='darwin-rebuild switch --flake ~/.dotfiles/.config/nix'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -59,7 +60,7 @@ alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
 
 # Obsidian
-alias on='cd /Users/francojc/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes && nvim'
+alias on='cd ~/Google Drive/My Drive/Notes/ && nvim'
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory

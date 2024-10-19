@@ -2,31 +2,36 @@
 {
   system = {
     activationScripts.postUserActivation.text = ''
-      # activateSettings -u will reload the settings from the database and apply them to the current session,
-      # so we do not need to logout and login again to make the changes take effect.
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     '';
 
     defaults = {
-      menuExtraClock.Show24Hour = true; # show 24 hour clock
+      ActivityMonitor.IconType = 5;
+
+      menuExtraClock = {
+        Show24Hour = true; # show 24 hour clock
+        ShowAMPM = false; # no am/pm
+        ShowDate = 2; # no date
+      };
 
       # customize dock
       dock = {
         autohide = true;
+        expose-group-by-app = true;
+        orientation = "bottom";
         show-recents = false; # disable recent apps
-
-        # customize Hot Corners
-        wvous-tl-corner = 13; # top-left - Mission Control
-        wvous-tr-corner = 4; # top-right - Lock Screen
-        wvous-bl-corner = 2; # bottom-left - Application Windows
-        wvous-br-corner = 3; # bottom-right - Desktop
+        wvous-tl-corner = 5; # top-left - Start screen saver
+        wvous-tr-corner = 4; # top-right - Desktop
+        wvous-bl-corner = 2; # bottom-left - Mission Control
+        wvous-br-corner = 3; # bottom-right - Application windows
       };
 
       # customize finder
       finder = {
-        _FXShowPosixPathInTitle = true; # show full path in finder title
+        _FXShowPosixPathInTitle = false; # show full path in finder title
         AppleShowAllExtensions = true; # show all file extensions
         FXEnableExtensionChangeWarning = false; # disable warning when changing file extension
+        FXPreferredViewStyle = "Nlsv"; # list view
         QuitMenuItem = true; # enable quit menu item
         ShowPathbar = true; # show path bar
         ShowStatusBar = true; # show status bar
@@ -46,7 +51,6 @@
         # `defaults read NSGlobalDomain "xxx"`
         "com.apple.swipescrolldirection" = true; # enable natural scrolling(default to true)
         "com.apple.sound.beep.feedback" = 0; # disable beep sound when pressing volume up/down key
-        # AppleInterfaceStyle = "Auto"; # dark mode
         AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
         ApplePressAndHoldEnabled = true; # enable press and hold
         NSTableViewDefaultSizeMode = 2; # set sidebar icon size to small
@@ -132,19 +136,15 @@
     # the most important thing is to remap option key to alt key globally,
     # but it's not supported by macOS yet.
     keyboard = {
-      # INFO: not sure if enableKeyMapping is needed (wanted)?
-      enableKeyMapping = true; # enable key mapping so that we can use `option` as `control`
-
+      enableKeyMapping = true;
       remapCapsLockToControl = true; # remap caps lock to control
-      remapCapsLockToEscape = false; # remap caps lock to escape
-
-      # swap left command and left alt
-      # so it matches common keyboard layout: `ctrl | command | alt`
-      #
-      # disabled, caused only problems!
       swapLeftCommandAndLeftAlt = false;
     };
+
+    startup.chime = false; # no startup sound ;)
+
   };
+
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
@@ -169,8 +169,6 @@
       material-design-icons
       font-awesome
 
-      # nerdfonts
-      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/pkgs/data/fonts/nerdfonts/shas.nix
       (nerdfonts.override {
         fonts = [
           # symbols icon only

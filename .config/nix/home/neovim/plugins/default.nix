@@ -5,7 +5,6 @@
     ./bufferline.nix
     ./codecompanion.nix
     ./conform.nix
-    ./copilot.nix
     ./fidget.nix
     ./lualine.nix
     ./lsp.nix
@@ -28,6 +27,18 @@
     };
     plugins = {
       auto-session.enable = true;
+      copilot-vim = {
+        enable = true;
+      };
+      copilot-chat = {
+        enable = true;
+        settings = {
+          answer_header = "## Copilot ----";
+          question_header = "## Me ----";
+          model = "gpt-4o";
+          temperature = 0.3;
+        };
+      };
       dressing.enable = true;
       flash.enable = true;
       gitsigns = {

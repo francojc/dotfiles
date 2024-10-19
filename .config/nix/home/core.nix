@@ -1,10 +1,9 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     atuin
-    audacity
     bat
     datasette
-    drawio
     duf
     entr
     eza
@@ -24,7 +23,6 @@
     htop
     imagemagick
     jq
-    kitty
     lazydocker
     lazygit
     lynx
@@ -34,7 +32,6 @@
     ncdu
     neofetch
     nix-prefetch-git
-    nodejs_22
     pandoc
     pass
     pngpaste
@@ -42,7 +39,6 @@
     poppler_utils
     qpdf
     quarto
-    rectangle
     ripgrep
     silver-searcher
     sqlite
@@ -50,13 +46,11 @@
     stow
     tldr
     tree
-    vim
     which
     xclip
     xquartz
     yazi-unwrapped
     yt-dlp
     zoxide
-    zoom-us
   ];
 }

@@ -28,15 +28,21 @@
       # Accept suggestion <TAB>
       {
         mode = "i";
-        key = "<C-y>";
+        key = "<C-j>";
         action = "<Plug>(copilot-next)";
         options = { desc = "Copilot: next suggestion"; };
       }
       {
         mode = "i";
+        key = "<C-k>";
+        action = "<Plug>(copilot-previous)";
+        options = { desc = "Copilot: previous suggestion"; };
+      }
+      {
+        mode = "i";
         key = "<C-e>";
         action = "<Plug>(copilot-dismiss)";
-        options = { desc = "Copilot: dismiss suggestion"; };
+        options = { desc = "Copilot: escape suggestion"; };
       }
 
       {
@@ -424,7 +430,7 @@
       {
         mode = "n";
         key = "<leader>\\a";
-        action = "<Cmd>CodeCompanionToggle<CR>";
+        action = "<Cmd>CodeCompanionChat Toggle<CR>";
 
         options = { desc = "Toggle Code Companion"; };
       }
