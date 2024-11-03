@@ -6,15 +6,14 @@ allow_remote_control yes
 listen_on unix:/tmp/nicekitty
 
 # Fonts
-font_family      family="JetBrainsMono Nerd Font Mono"
-bold_font        auto
-italic_font      auto
-bold_italic_font auto
-
-font_size 14
+font_family      MesloLGL Nerd Font
+bold_font        MesloLGL Nerd Font Regular
+italic_font      MesloLGL Nerd Font Italic
+bold_italic_font MesloLGL Nerd Font Italic
+font_size 13.5
 disable_ligatures never
 
-modify_font cell_width 100%
+# modify_font cell_width 95%
 modify_font cell_height 1px
 # modify_font baseline 3
 
@@ -23,7 +22,7 @@ box_drawing_scale 0.001, 0.85, 1, 1.5
 text_composition_strategy 1.0 15
 
 # Cursor customization
-cursor red
+# cursor magenta
 # cursor_text_color #111111
 # cursor_shape block
 # cursor_shape_unfocused hollow
@@ -1793,6 +1792,6 @@ map kitty_mod+m toggle_layout stack
 
 
 # BEGIN_KITTY_THEME
-# Black Metal
+# Alabaster Dark
 include current-theme.conf
 # END_KITTY_THEME

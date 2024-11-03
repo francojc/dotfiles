@@ -5,19 +5,33 @@
       lsp-signature = { enable = true; };
       lsp-status = { enable = true; };
       lspkind = { enable = true; };
+
       lsp = {
         enable = true;
         servers = {
           bashls.enable = true;
           lua_ls.enable = true;
           nil_ls.enable = true;
+          nixd = {
+            enable = true;
+            cmd = [ "nixd" "--semantic-tokens=false" ];
+            settings = {
+              formatting = {
+                command = [ "alejandra" ];
+              };
+            };
+          };
           marksman = {
             enable = true;
             filetypes = [ "markdown" "quarto" ];
           };
           pyright.enable = false;
+          r_language_server = {
+            enable = true;
+            package = null;
+            filetypes = [ "r" "quarto" "rmd" ];
+          };
           yamlls.enable = false;
-          r_language_server.enable = false;
         };
         keymaps = {
           silent = true;
@@ -35,7 +49,7 @@
               desc = "LSP: Goto Declaration";
             };
             gh = {
-              action = "signature_help"; # added 08/02/2024
+              action = "signature_help";
               desc = "LSP: Signature Help";
             };
             gI = {

@@ -1,5 +1,5 @@
 {
- programs.nixvim = {
+  programs.nixvim = {
     plugins.obsidian = {
       enable = true;
       settings = {
@@ -9,8 +9,14 @@
           nvim_cmp = true;
         };
         attachments = {
-          img_folder = "Assets/Attachments";
+          img_folder = "~/Google Drive/My Drive/Notes/Assets/Attachments/";
         };
+        follow_url_func.__raw = ''
+          function(url)
+          -- Open the URL in the default browser
+             vim.fn.jobstart({"open", url})
+          end
+        '';
         notes_subdir = "Inbox";
         new_notes_location = "notes_subdir";
         workspaces = [
@@ -24,7 +30,7 @@
           folder = "Daily";
         };
         mappings = {
-          gf = {
+          "<leader>of" = {
             action = "require('obsidian').util.gf_passthrough";
             opts = {
               noremap = false;
@@ -32,7 +38,7 @@
               buffer = true;
             };
           };
-          "<leader>ch" = {
+          "<leader>oc" = {
             action = "require('obsidian').util.toggle_checkbox";
             opts.buffer = true;
           };

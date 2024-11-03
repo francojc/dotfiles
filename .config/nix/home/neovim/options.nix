@@ -3,19 +3,25 @@
     globals = {
       loaded_ruby_provider = 0;
       loaded_perl_provider = 0;
-      # copilot_no_tab_map = 1;
     };
-
+    extraConfigLua = "
+      vim.b.slime_cell_delimiter = '```';
+    ";
     opts = {
+
       # Enable relative line numbers
       number = true;
       relativenumber = true;
       clipboard = "unnamedplus";
 
+      completeopt = [ "menuone" "noselect" "noinsert" ];
+
+      sessionoptions = "blank,buffers,curdir,folds,tabpages,winsize,localoptions,terminal";
+
       # Spell
-      spell = false; # set spell off by default
+      spell = false;
       spelllang = "en_us";
-      spellfile = "/Users/francojc/.spell/en.utf-8.add"; # INFO: Not very portable, but works
+      spellfile = "/Users/francojc/.spell/en.utf-8.add";
 
       # Set tabs to 2 spaces
       tabstop = 2;
@@ -44,17 +50,17 @@
       splitright = true;
 
       # Enable mouse mode
-      mouse = "a"; # Mouse
+      mouse = "a";
       mousemoveevent = true;
 
       # Enable ignorecase + smartcase for better searching
       ignorecase = true;
-      smartcase = true; # Don't ignore case with capitals
+      smartcase = true;
       grepprg = "rg --vimgrep";
       grepformat = "%f:%l:%c:%m";
 
       # Decrease updatetime
-      updatetime = 50; # faster completion (4000ms default)
+      updatetime = 50;
 
       # Enable persistent undo history
       swapfile = false;
@@ -69,7 +75,7 @@
       signcolumn = "yes";
 
       # Enable cursor line highlight
-      cursorline = true; # Highlight the line where the cursor is located
+      cursorline = true;
       cursorlineopt = "number";
 
       # Set fold settings

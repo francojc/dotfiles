@@ -19,10 +19,49 @@
 
   # Plugins: basic config
   programs.nixvim = {
-    colorschemes.gruvbox = {
-      enable = true;
-      settings = {
-        contrast_dark = "hard";
+    colorschemes = {
+
+      base16 = {
+        enable = true;
+        colorscheme = {
+          base00 = "#000000";
+          base01 = "#121212";
+          base02 = "#222222";
+          base03 = "#888888";
+          base04 = "#999999";
+          base05 = "#c1c1c1";
+          base06 = "#999999";
+          base07 = "#c1c1c1";
+          base08 = "#5f8787";
+          base09 = "#aaaaaa";
+          base0A = "#a06666";
+          base0B = "#dd9999";
+          base0C = "#aaaaaa";
+          base0D = "#888888";
+          base0E = "#999999";
+          base0F = "#b58900";
+        };
+      };
+      gruvbox = {
+        enable = false;
+        settings = {
+          contrast_dark = "hard";
+        };
+      };
+      nord = {
+        enable = false;
+      };
+      one = {
+        enable = false;
+        settings = {
+          allow_italics = 1;
+        };
+      };
+      onedark = {
+        enable = false;
+      };
+      vscode = {
+        enable = false;
       };
     };
     plugins = {
@@ -40,7 +79,9 @@
         };
       };
       dressing.enable = true;
-      flash.enable = true;
+      flash = {
+        enable = true;
+      };
       gitsigns = {
         enable = true;
         settings.current_line_blame = true;
@@ -55,12 +96,14 @@
       };
       image = {
         enable = true;
-        backend = "kitty";
+        editorOnlyRenderWhenFocused = true;
         integrations = {
           markdown = {
-            filetypes = [ "markdown" "quarto" "vimwiki" ];
+            filetypes = [ "markdown" "quarto" "rmd" ];
+            clearInInsertMode = true;
           };
         };
+        maxHeightWindowPercentage = 20;
       };
       lazygit.enable = true;
       mini = {
@@ -107,6 +150,7 @@
       spectre.enable = true;
       todo-comments.enable = true;
       trouble.enable = true;
+      vim-surround.enable = true;
       web-devicons.enable = true;
       yazi.enable = true;
     };
@@ -184,7 +228,7 @@ RYLEnrRC0=";
 
       -- Render markdown setup
       require('render-markdown').setup({
-        file_types = { 'markdown', 'quarto' },
+        file_types = { 'markdown', 'quarto', 'rmd' },
       })
 
       -- Yazi setup

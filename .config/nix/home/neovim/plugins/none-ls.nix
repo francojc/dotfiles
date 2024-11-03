@@ -16,7 +16,6 @@
           yamllint.enable = true;
         };
         formatting = {
-          format_r.enable = false;
           nixpkgs_fmt.enable = true;
           black = {
             enable = true;

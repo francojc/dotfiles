@@ -3,7 +3,7 @@
     plugins.treesitter = {
       enable = true;
       nixGrammars = true;
-      languageRegister.markdown = "quarto";
+      languageRegister.markdown = [ "quarto" "rmd" ];
       settings = {
         auto_install = true;
         ensure_installed = [

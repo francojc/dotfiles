@@ -152,10 +152,7 @@
   programs.zsh.enable = true; # enable zsh
 
   environment = {
-    shells = [
-      pkgs.zsh
-    ];
-
+    shells = [ pkgs.zsh ];
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
 

@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     git
     just
+    nixd
   ];
 
   environment.variables.EDITOR = "nvim";
@@ -23,11 +24,13 @@
     ];
 
     brews = [
-      "llm" # permission to install models
       "borders" # jankyborders
-      "gnu-sed" # spectre
-      "wget" # download tool
       "curl" # no not install curl via nixpkgs, it's not working well on macOS!
+      "gnu-sed" # spectre
+      "llm" # permission to install models
+      "mas"
+      "sketchybar"
+      "wget" # download tool
     ];
 
     casks = [
@@ -35,10 +38,10 @@
       "bettermouse"
       "calibre"
       "chatgpt"
-      "chromium"
       "docker"
       "dropbox"
       "fantastical"
+      "google-chrome"
       "google-drive"
       "kap"
       "kitty"
@@ -50,6 +53,7 @@
       "sequel-ace"
       "transcribe"
       "transmission"
+      "wezterm@nightly"
       "zen-browser"
       "zoom"
       "zotero@beta"
