@@ -600,14 +600,6 @@
         options = { desc = "Allow search terms to stay in the middle "; };
       }
 
-      # Paste stuff without saving the deleted word into the buffer
-      {
-        mode = "x";
-        key = "<leader>yp";
-        action = ''"_dP'';
-        options = { desc = "Deletes to void register and paste over"; };
-      }
-
       {
         mode = [ "n" "x" "o" ];
         key = "s";
