@@ -8,14 +8,14 @@
       vim.b.slime_cell_delimiter = '```';
     ";
     opts = {
-
+      # Enable a single status line
+      laststatus = 3;
       # Enable relative line numbers
       number = true;
       relativenumber = true;
       clipboard = "unnamedplus";
 
       completeopt = [ "menuone" "noselect" "noinsert" ];
-
       sessionoptions = "blank,buffers,curdir,folds,tabpages,winsize,localoptions,terminal";
 
       # Spell
@@ -78,13 +78,21 @@
       cursorline = true;
       cursorlineopt = "number";
 
-      # Set fold settings
-      # These options were reccommended by nvim-ufo
-      # See: https://github.com/kevinhwang91/nvim-ufo#minimal-configuration
-      foldcolumn = "0";
-      foldlevel = 99;
-      foldlevelstart = 99;
-      foldenable = true;
+      # Fold settings
+      # Enhanced folding configuration for better usability
+      foldcolumn = "1"; # Show fold column with indicators
+      foldlevel = 99; # Start with all folds open
+      foldlevelstart = 99; # Start with all folds open when opening files
+      foldenable = true; # Enable folding
+      foldmethod = "indent"; # Use indentation for folding by default
+      foldminlines = 1; # Minimum lines for a fold
+      foldnestmax = 3; # Maximum fold nesting level
+      fillchars = {
+        fold = "·"; # Use centered dot for fold indicator
+        foldopen = "▾"; # Use triangle for open folds
+        foldclose = "▸"; # Use triangle for closed folds
+        foldsep = "│"; # Use vertical line for fold separator
+      };
 
       # Always keep 5 lines above/below cursor unless at start/end of file
       scrolloff = 5;
