@@ -19,6 +19,7 @@ local act = wezterm.action
 
 config.keys = {
   -- Send sequence
+  -- for R: assign and pipe
   { key = "-", mods = "ALT",        action = act.SendString(" <- ") },
   { key = "m", mods = "ALT",        action = act.SendString(" |>") },
   -- Manage panes
@@ -70,7 +71,23 @@ config.window_frame = {
   inactive_titlebar_bg = "#cccccc",
 }
 
-config.color_scheme = "Black Metal (base16)"
+local function get_appearance()
+  if wezterm.gui then
+    return wezterm.gui.get_appearance()
+  end
+  return "Dark"
+end
+
+local function scheme_for_appearance(appearance)
+  if appearance:find("Dark") then
+    return "Gruvbox dark, hard (base16)"
+  else
+    return "Gruvbox light, hard (base16)"
+  end
+end
+
+config.color_scheme = scheme_for_appearance(get_appearance())
+-- config.color_scheme = "Black Metal (base16)"
 
 config.colors = {
   cursor_bg = "#FF5A7B",
@@ -83,16 +100,16 @@ config.colors = {
     [20] = "#999999",
     [21] = "#999999",
   },
-  brights = {
-    "#888888",
-    "#5f8787",
-    "#dd9999",
-    "#a06666",
-    "#888888",
-    "#999999",
-    "#aaaaaa",
-    "#c1c1c1",
-  },
+  --   brights = {
+  --     "#888888",
+  --     "#5f8787",
+  --     "#dd9999",
+  --     "#a06666",
+  --     "#888888",
+  --     "#999999",
+  --     "#aaaaaa",
+  --     "#c1c1c1",
+  --   },
   tab_bar = {
     active_tab = {
       fg_color = "#000000",
