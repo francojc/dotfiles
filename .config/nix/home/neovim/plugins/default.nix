@@ -20,56 +20,38 @@
   # Plugins: basic config
   programs.nixvim = {
     colorschemes = {
-
-      base16 = {
-        enable = true;
-        colorscheme = "gruvbox-dark-hard";
-        # {
-        # base00 = "#000000";
-        # base01 = "#121212";
-        # base02 = "#222222";
-        # base03 = "#888888";
-        # base04 = "#999999";
-        # base05 = "#c1c1c1";
-        # base06 = "#999999";
-        # base07 = "#c1c1c1";
-        # base08 = "#5f8787";
-        # base09 = "#aaaaaa";
-        # base0A = "#a06666";
-        # base0B = "#dd9999";
-        # base0C = "#aaaaaa";
-        # base0D = "#888888";
-        # base0E = "#999999";
-        # base0F = "#b58900";
-        # };
-      };
       gruvbox = {
-        enable = false;
+        enable = true;
         settings = {
           contrast_dark = "hard";
+          contrast_light = "hard";
         };
-      };
-      nord = {
-        enable = false;
-      };
-      one = {
-        enable = false;
-        settings = {
-          allow_italics = 1;
-        };
-      };
-      onedark = {
-        enable = false;
-      };
-      vscode = {
-        enable = false;
       };
     };
     plugins = {
       auto-session.enable = true;
-      copilot-vim = {
+      avante = {
         enable = true;
+        settings = {
+          hints.enabled = true;
+          provider = "claude";
+          claude = {
+            endpoint = "https://api.anthropic.com";
+            max_tokens = 4096;
+            model = "claude-3-5-sonnet-latest";
+            temperature = 0.3;
+          };
+          windows = {
+            wrap = true;
+            sidebar_header = {
+              enabled = true;
+              align = "right";
+              rounded = false;
+            };
+          };
+        };
       };
+      copilot-vim = { enable = true; };
       copilot-chat = {
         enable = true;
         settings = {
@@ -97,11 +79,11 @@
       };
       image = {
         enable = true;
-        editorOnlyRenderWhenFocused = true;
         integrations = {
           markdown = {
             filetypes = [ "markdown" "quarto" "rmd" ];
             clearInInsertMode = true;
+            onlyRenderImageAtCursor = true;
           };
         };
         maxHeightWindowPercentage = 20;
@@ -229,11 +211,27 @@ RYLEnrRC0=";
 
       -- Render markdown setup
       require('render-markdown').setup({
-        file_types = { 'markdown', 'quarto', 'rmd' },
+        heading = {
+          position = "inline",
+        },
+        file_types = { 'markdown', 'quarto', 'rmd', 'avante' },
       })
 
       -- Yazi setup
       require("yazi").setup()
+
+      -- Special keymapings
+      -- Markdown
+      vim.keymap.set("v", "<leader>mb", "c**<C-r>\"**<Esc>", { desc = "Bold", silent = true })
+      vim.keymap.set("v", "<leader>mi", "c*<C-r>\"*<Esc>", { desc = "Italic", silent = true })
+      vim.keymap.set("v", "<leader>ml", "c[<C-r>\"](<C-r>+)<Esc>", { desc = "Add Link", silent = true })
+      vim.keymap.set("v", "<leader>mc", "c```\n<C-r>\"\n```<Esc>", { desc = "Code Block", silent = true })
+      vim.keymap.set("v", "<leader>mk", "c`<C-r>\"`<Esc>", { desc = "Inline Code", silent = true })
+      vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task Item", silent = true })
+      vim.keymap.set("v", "<leader>ms", "c~~<C-r>\"~~<Esc>", { desc = "Strikethrough", silent = true })
+      vim.keymap.set("n", "<leader>m1", "i# ", { desc = "H1", silent = true })
+      vim.keymap.set("n", "<leader>m2", "i## ", { desc = "H2", silent = true })
+      vim.keymap.set("n", "<leader>m3", "i### ", { desc = "H3", silent = true })
     '';
   };
 }
