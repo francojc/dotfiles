@@ -104,9 +104,9 @@ confirm-before-quit = false
 #
 # Whenever the key binding `OpenConfigEditor` is triggered it will
 # use the value of the editor along with the rio configuration path.
-# [editor]
-# program = "nvim"
-# args = []
+[editor]
+program = "nvim"
+args = []
 
 # Window configuration
 #
@@ -186,7 +186,7 @@ mode = "windowed"
 # You can also set family on root to overwrite all fonts
 [fonts]
 family = "MesloLGL Nerd Font"
-size = 14
+size = 13
 #
 # You can also specify extra fonts to load
 # [fonts]
@@ -317,8 +317,8 @@ hide-if-single = false
 # Example:
 [bindings]
 keys = [
-  { key = "=", with = "alt", action = "SplitHorizontally" },
-  { key = "-", with = "alt", action = "SplitVertically" },
+  { key = "|", with = "control | shift", action = "SplitRight" },
+  { key = "_", with = "control | shift", action = "SplitDown" },
   { key = "w", with = "control | shift", action = "ClosePane" },
 ]
 # keys = [
