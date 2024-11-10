@@ -9,7 +9,6 @@
             grouped = true;
           };
         };
-        fzf-native.enable = true;
         frecency = {
           enable = true;
           settings = {
@@ -18,6 +17,7 @@
             show_scores = false;
           };
         };
+        fzf-native.enable = true;
         ui-select.enable = true;
       };
       settings = {

@@ -25,7 +25,7 @@
             enable = true;
             filetypes = [ "markdown" "quarto" ];
           };
-          pyright.enable = false;
+          pyright.enable = true;
           r_language_server = {
             enable = true;
             package = null;
