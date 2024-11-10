@@ -1,0 +1,12 @@
+{
+  "YAML Header": {
+    "prefix": "---",
+    "body": [
+      "---",
+      "title: ${1:title}",
+      "date: ${2:\"`r Sys.Date()`\"}",
+      "format: ${4:html}",
+      "---"
+    ]
+  }
+}

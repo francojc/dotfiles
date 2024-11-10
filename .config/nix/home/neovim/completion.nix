@@ -19,6 +19,28 @@
         ];
       };
 
+      nvim-snippets = {
+        enable = true;
+        settings = {
+          friendly_snippets = true;
+          extended_filetypes = {
+            quarto = [
+              "markdown"
+            ];
+          };
+          global_snippets = [
+            "all"
+            "loremipsum"
+            "html"
+          ];
+          search_paths = [
+            {
+              __raw = "vim.fn.stdpath('config') .. '/snippets'";
+            }
+          ];
+        };
+      };
+
       cmp-nvim-lsp.enable = true;
       cmp-path.enable = true;
       cmp_luasnip.enable = true;
@@ -35,6 +57,7 @@
           };
           sources = [
             { name = "luasnip"; }
+            { name = "nvim-snippets"; }
             { name = "cmp-nvim-lsp"; }
             { name = "nvim_lsp"; }
             { name = "nvim_lsp_document_symbol"; }
