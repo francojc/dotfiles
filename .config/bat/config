@@ -1,7 +1,5 @@
 # bat config file
---theme="gruvbox-dark"
-
 --italic-text=always
-
 --style=numbers
+--theme="default"
 
