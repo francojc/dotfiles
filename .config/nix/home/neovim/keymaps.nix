@@ -25,6 +25,13 @@
         action = "<Plug>(copilot-accept-line)";
         options = { desc = "Copilot: accept next line"; };
       }
+      {
+        mode = "n";
+        key = "-";
+        action = "<Cmd>lua require('dropbar.api').pick()<CR>";
+        options = { desc = "Dropbar picker"; };
+      }
+
       # Accept suggestion <TAB>
       {
         mode = "i";
@@ -135,11 +142,6 @@
       }
       {
         mode = "x";
-        key = "<leader>ae";
-        action = "<cmd>CopilotChatExplain<cr>";
-      }
-      {
-        mode = "x";
         key = "<leader>af";
         action = "<cmd>CopilotChatFix<cr>";
       }
@@ -153,14 +155,17 @@
         key = "<leader>ac";
         action = "<cmd>CopilotChatCommit<cr>";
       }
-
       {
         mode = "n";
         key = "<leader>ac";
         action = "<Cmd>CodeCompanionActions<CR>";
         options = { desc = "CodeCompanion Actions"; };
       }
-
+      {
+        mode = "x";
+        key = "<leader>ax";
+        action = "<cmd>CopilotChatExplain<cr>";
+      }
       # Buffers
 
       {

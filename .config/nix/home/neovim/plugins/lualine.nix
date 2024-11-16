@@ -5,8 +5,8 @@
       settings = {
         options = {
           disabled_filetypes = {
-            statusline = [ "aerial" "alpha" ];
-            winbar = [ "aerial" ];
+            statusline = [ "aerial" "alpha" "avante" "nvim-tree" ];
+            winbar = [ "aerial" "alpha" "avante" "nvim-tree" "NvimTree" ];
           };
 
           globalstatus = true;
@@ -68,10 +68,21 @@
           ];
 
           lualine_x = [ "searchcount" ];
-          lualine_y = [
-            "diagnostics"
-          ];
+          lualine_y = [ "diagnostics" ];
           lualine_z = [ "progress" ];
+        };
+        tabline = {
+          lualine_c = [
+            {
+              __unkeyed-1 = "filename";
+              symbols = {
+                modified = "";
+                readonly = "";
+                unnamed = "";
+                newfile = "";
+              };
+            }
+          ];
         };
         winbar = { };
         inactive_winbar = { };

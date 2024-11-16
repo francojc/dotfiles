@@ -8,8 +8,6 @@
       vim.b.slime_cell_delimiter = '```';
     ";
     opts = {
-      # Enable a single status line
-      laststatus = 3;
       # Enable relative line numbers
       number = true;
       relativenumber = true;
@@ -80,7 +78,7 @@
 
       # Fold settings
       # Enhanced folding configuration for better usability
-      foldcolumn = "1"; # Show fold column with indicators
+      foldcolumn = "auto:1"; # Show fold column with indicators
       foldlevel = 99; # Start with all folds open
       foldlevelstart = 99; # Start with all folds open when opening files
       foldenable = true; # Enable folding
@@ -95,7 +93,7 @@
       };
 
       # Always keep 5 lines above/below cursor unless at start/end of file
-      scrolloff = 5;
+      scrolloff = 0;
       sidescrolloff = 5;
 
       # Place a column line
@@ -109,11 +107,9 @@
       fileencoding = "utf-8";
 
       # More space in the neovim command line for displaying messages
+      laststatus = 3;
       cmdheight = 0;
-      winbar = "";
-
-      # We don't need to see things like INSERT anymore
-      showmode = false;
+      showmode = false; # We don't need to see things like INSERT anymore
     };
   };
 }

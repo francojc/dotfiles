@@ -2,7 +2,7 @@
   # Plugins: more config
   imports = [
     ./alpha.nix
-    ./bufferline.nix
+    # ./bufferline.nix
     ./codecompanion.nix
     ./conform.nix
     ./fidget.nix
@@ -34,12 +34,15 @@
         enable = true;
         settings = {
           hints.enabled = true;
-          provider = "claude";
+          provider = "copilot";
           claude = {
             endpoint = "https://api.anthropic.com";
             max_tokens = 4096;
             model = "claude-3-5-sonnet-latest";
             temperature = 0.3;
+          };
+          copilot = {
+            model = "claude-3.5-sonnet";
           };
           windows = {
             wrap = true;

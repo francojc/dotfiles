@@ -11,10 +11,6 @@
     enable = true;
     defaultEditor = true;
     performance = {
-      #   combinePlugins = {
-      #     enable = true;
-      #     standalonePlugins = [ ];
-      #   };
       byteCompileLua.enable = true;
     };
     viAlias = true;

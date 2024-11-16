@@ -1,15 +1,8 @@
 {
   programs.nixvim = {
     plugins.bufferline = {
-      enable = true;
+      enable = false;
       settings = {
-        highlights = {
-          fill = { fg = "#252525"; bg = "#252525"; };
-          close_button = { fg = "#252525"; bg = "#252525"; };
-          background = { fg = "#888888"; bg = "#252525"; };
-          buffer_selected.bg = "#000000";
-        };
-
         options = {
           separator_style = "thin";
           show_buffer_icons = true;

@@ -52,8 +52,11 @@
         "com.apple.swipescrolldirection" = true; # enable natural scrolling(default to true)
         "com.apple.sound.beep.feedback" = 0; # disable beep sound when pressing volume up/down key
         AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
+        AppleInterfaceStyleSwitchesAutomatically = true; # enable auto mode
         ApplePressAndHoldEnabled = true; # enable press and hold
-        NSTableViewDefaultSizeMode = 2; # set sidebar icon size to small
+        NSTableViewDefaultSizeMode = 3; # set sidebar icon size to small
+        AppleShowAllExtensions = true; # show all file extensions
+        AppleSpacesSwitchOnActivate = false; # disable auto switch space
 
         # If you press and hold certain keyboard keys when in a text area, the key’s character begins to repeat.
         # This is very useful for vim users, they use `hjkl` to move cursor.
@@ -94,6 +97,7 @@
           _FXSortFoldersFirst = true;
           # When performing a search, search the current folder by default
           FXDefaultSearchScope = "SCcf";
+          FXEnableExtensionChangeWarning = false;
         };
         "com.apple.desktopservices" = {
           # Avoid creating .DS_Store files on network or USB volumes
@@ -103,12 +107,16 @@
         "com.apple.spaces" = {
           "spans-displays" = 0; # Display have separate spaces
         };
+        "com.apple.LaunchServices" = {
+          # Disable the 'Are you sure you want to open this application?' dialog
+          LSQuarantine = true;
+        };
         "com.apple.WindowManager" = {
           EnableStandardClickToShowDesktop = 0; # Click wallpaper to reveal desktop
           StandardHideDesktopIcons = 0; # Show items on desktop
           HideDesktop = 1; # Do not hide items on desktop & stage manager
           StageManagerHideWidgets = 0;
-          StandardHideWidgets = 0;
+          StandardHideWidgets = 1;
         };
         "com.apple.screensaver" = {
           # Require password immediately after sleep or screen saver begins

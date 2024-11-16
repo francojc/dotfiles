@@ -11,6 +11,7 @@
         sign = true;
         virtualText = true;
       };
+      symbolInWinbar.enable = false;
     };
   };
 }
