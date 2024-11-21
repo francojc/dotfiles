@@ -2,7 +2,7 @@
   # Plugins: more config
   imports = [
     ./alpha.nix
-    # ./bufferline.nix
+    ./bufferline.nix
     ./codecompanion.nix
     ./conform.nix
     ./fidget.nix
@@ -58,8 +58,9 @@
       copilot-chat = {
         enable = true;
         settings = {
-          answer_header = "## Copilot ----";
-          question_header = "## Me ----";
+          answer_header = "  ";
+          question_header = "  ";
+          separator = "───";
           model = "gpt-4o";
           temperature = 0.3;
         };
@@ -77,7 +78,7 @@
           delete = { text = "_"; };
           topdelete = { text = "‾"; };
           changedelete = { text = "~"; };
-          untracked = { text = "?"; };
+          untracked = { text = "┆"; };
         };
       };
       image = {
@@ -214,10 +215,14 @@ RYLEnrRC0=";
 
       -- Render markdown setup
       require('render-markdown').setup({
+        bullet = {
+          -- give a list of square bullets
+          icons = { '■', '□', '◆', '◇' },
+        },
         heading = {
           position = "inline",
         },
-        file_types = { 'markdown', 'quarto', 'rmd', 'avante' },
+        file_types = { 'markdown', 'quarto', 'rmd', 'avante', 'copilot-chat' },
       })
 
       -- Yazi setup
@@ -231,6 +236,7 @@ RYLEnrRC0=";
       vim.keymap.set("v", "<leader>mc", "c```\n<C-r>\"\n```<Esc>", { desc = "Code Block", silent = true })
       vim.keymap.set("v", "<leader>mk", "c`<C-r>\"`<Esc>", { desc = "Inline Code", silent = true })
       vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task Item", silent = true })
+      vim.keymap.set("n", "<leader>mu", "i- ", { desc = "Unordered list item", silent = true })
       vim.keymap.set("v", "<leader>ms", "c~~<C-r>\"~~<Esc>", { desc = "Strikethrough", silent = true })
       vim.keymap.set("n", "<leader>m1", "i# ", { desc = "H1", silent = true })
       vim.keymap.set("n", "<leader>m2", "i## ", { desc = "H2", silent = true })
