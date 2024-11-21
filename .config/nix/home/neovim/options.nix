@@ -78,7 +78,7 @@
 
       # Fold settings
       # Enhanced folding configuration for better usability
-      foldcolumn = "auto:1"; # Show fold column with indicators
+      # foldcolumn = "auto:1"; # Show fold column with indicators
       foldlevel = 99; # Start with all folds open
       foldlevelstart = 99; # Start with all folds open when opening files
       foldenable = true; # Enable folding

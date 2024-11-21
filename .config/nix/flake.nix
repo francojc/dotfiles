@@ -2,7 +2,7 @@
   description = "Nix for macOS configuration";
 
   inputs = {
-    # Add nixpkgs stable 24.05
+    # Add nixpkgs unstable
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     # Add darwin
     darwin = {
@@ -21,7 +21,7 @@
     };
   };
 
-  outputs = inputs @ { self, nixpkgs, darwin, home-manager, nixvim, ... }:
+  outputs = inputs @ { nixpkgs, darwin, home-manager, nixvim, ... }:
     let
       username = "francojc";
       useremail = "francojc@wfu.edu";

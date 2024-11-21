@@ -59,14 +59,54 @@ alias qrh='quarto render --no-clean --to html'
 alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
 
-# Obsidian
-alias on='cd ~/Google Drive/My Drive/Notes/ && nvim'
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory
 function cd() {
     z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
+
+# Obsidian
+function on() {
+    if [ -z "$1" ]; then
+        cd ~/Google\ Drive/My\ Drive/Notes/ && nvim
+    else
+        cd "$1" && nvim
+    fi
+}
+
+# Last command related aliases
+alias last='fc -ln -1'  # Print last command
+alias lastrun='fc -e -'  # Re-execute last command
+
+# Recall last command output
+function r() {
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+        echo "Usage: r [PATTERN] [-p]"
+        echo "Recall last command output and copy to clipboard"
+        echo
+        echo "Options:"
+        echo "  PATTERN     Filter output using pattern"
+        echo "  -p          Print to stdout instead of copying to clipboard"
+        echo "  --help, -h  Show this help message"
+        return 0
+    fi
+
+    if [ -z "$1" ]; then
+        if [ "$2" = "-p" ]; then
+            fc -ln -1  # Print to stdout with -p flag
+        else
+            fc -ln -1 | pbcopy
+        fi
+    else
+        if [ "$2" = "-p" ]; then
+            fc -ln -1 | grep "$1"  # Print to stdout with -p flag
+        else
+            fc -ln -1 | grep "$1" | pbcopy
+        fi
+    fi
+}
+
 
 # Setup qtree (Quick Tree) command
 # - first argument is the directory to list (default is current directory)

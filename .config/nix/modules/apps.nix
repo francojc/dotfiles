@@ -54,6 +54,7 @@
       "sequel-ace"
       "transcribe"
       "transmission"
+      "visual-studio-code"
       "wezterm@nightly"
       "zen-browser"
       "zoom"

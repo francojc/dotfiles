@@ -32,6 +32,7 @@
             "loremipsum"
             "html"
           ];
+
           search_paths = [
             {
               __raw = "vim.fn.stdpath('config') .. '/snippets'";

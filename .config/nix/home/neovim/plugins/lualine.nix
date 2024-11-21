@@ -72,17 +72,17 @@
           lualine_z = [ "progress" ];
         };
         tabline = {
-          lualine_c = [
-            {
-              __unkeyed-1 = "filename";
-              symbols = {
-                modified = "";
-                readonly = "";
-                unnamed = "";
-                newfile = "";
-              };
-            }
-          ];
+          # lualine_c = [
+          #   {
+          #     __unkeyed-1 = "filename";
+          #     symbols = {
+          #       modified = "";
+          #       readonly = "";
+          #       unnamed = "";
+          #       newfile = "";
+          #     };
+          #   }
+          # ];
         };
         winbar = { };
         inactive_winbar = { };

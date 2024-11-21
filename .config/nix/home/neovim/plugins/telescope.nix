@@ -138,10 +138,10 @@
             desc = "Resume";
           };
         };
-        "<leader>uC" = {
-          action = "colorscheme";
+        "<leader>ss" = {
+          action = "spell_suggest";
           options = {
-            desc = "Colorscheme preview";
+            desc = "Spelling suggestions";
           };
         };
       };
@@ -170,6 +170,11 @@
         options = {
           desc = "File browser";
         };
+      }
+      {
+        mode = "n";
+        key = "<leader>fF";
+        action = "<cmd>Telescope find_files find_command=rg,--hidden,--files<cr>";
       }
       {
         mode = "n";
