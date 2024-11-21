@@ -88,7 +88,7 @@ config.keys = {
 -----------------------------------------------------------
 config.font_size = 14
 config.font = wezterm.font("Hack Nerd Font", { weight = "Regular", italic = false })
-config.line_height = 1.1
+config.line_height = 1.2
 config.pane_select_font_size = 40
 
 -----------------------------------------------------------
