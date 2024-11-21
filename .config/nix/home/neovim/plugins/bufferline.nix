@@ -1,7 +1,7 @@
 {
   programs.nixvim = {
     plugins.bufferline = {
-      enable = false;
+      enable = true;
       settings = {
         options = {
           separator_style = "thin";
