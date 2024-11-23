@@ -1,5 +1,5 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i python312 -p "python312.withPackages(ps: with ps; [ openai ])"
+#!/usr/bin/env -S nix-shell --pure
+#!nix-shell -i python3 -p "python3.withPackages(ps: with ps; [ openai ])"
 
 import argparse
 import os
