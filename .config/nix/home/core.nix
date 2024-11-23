@@ -37,6 +37,7 @@
     pass
     pngpaste
     pianobar
+    pipx
     poppler_utils
     qpdf
     quarto

@@ -25,13 +25,10 @@
     ];
 
     brews = [
-      "aider"
       "borders" # jankyborders
       "curl" # no not install curl via nixpkgs, it's not working well on macOS!
       "gnu-sed" # spectre
-      "llm" # permission to install models
       "mas"
-      "sketchybar"
       "wget" # download tool
     ];
 
@@ -47,13 +44,11 @@
       "google-chrome"
       "google-drive"
       "kap"
-      # "kitty"
       "mullvadvpn"
       "obsidian"
       "praat"
       "raycast"
       "rectangle"
-      # "rio"
       "sequel-ace"
       "transcribe"
       "transmission"
