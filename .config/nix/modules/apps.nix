@@ -21,9 +21,11 @@
     taps = [
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
+      "nikitabobko/tap" # for aerospace
     ];
 
     brews = [
+      "aider"
       "borders" # jankyborders
       "curl" # no not install curl via nixpkgs, it's not working well on macOS!
       "gnu-sed" # spectre
@@ -34,6 +36,7 @@
     ];
 
     casks = [
+      "aerospace"
       "appcleaner"
       "bettermouse"
       # "calibre"
