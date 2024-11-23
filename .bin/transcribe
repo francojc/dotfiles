@@ -2,35 +2,54 @@
 
 import argparse
 import os
+from pathlib import Path
 from openai import OpenAI
 
-# import json
+def validate_file(file_path):
+    path = Path(file_path)
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    valid_extensions = {'.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm'}
+    if path.suffix.lower() not in valid_extensions:
+        raise ValueError(f"Unsupported file type. Supported types: {', '.join(valid_extensions)}")
+    
+    # 25MB in bytes
+    if path.stat().st_size > 25 * 1024 * 1024:
+        raise ValueError("File size exceeds 25MB limit")
 
-client = OpenAI()
+def main():
+    parser = argparse.ArgumentParser(
+        description="Transcribe an audio file using OpenAI (Whisper-1). File uploads are currently limited to 25 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm."
+    )
+    parser.add_argument("file_path", type=str, help="Path to the audio file")
+    args = parser.parse_args()
 
-# Load API key from environment variable
-api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
 
-# Set the API key
-client.api_key = api_key
+    client = OpenAI(api_key=api_key)
 
-# Pull the cli argument for the audio file path
-parser = argparse.ArgumentParser(
-    description="Transcribe an audio file using OpenAI (Whisper-1). File uploads are currently limited to 25 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm."
-)
-parser.add_argument("file_path", type=str, help="Path to the audio file")
-args = parser.parse_args()
+    try:
+        validate_file(args.file_path)
+        
+        with open(args.file_path, "rb") as audio_file:
+            transcript = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file,
+                response_format="text"
+            )
 
-# Load the audio file and transcribe it
-audio_file = open(args.file_path, "rb")
-transcript = client.audio.transcriptions.create(
-    model="whisper-1", file=audio_file, response_format="text"
-)
+        output_path = os.path.splitext(args.file_path)[0] + ".txt"
+        with open(output_path, "w") as file:
+            file.write(transcript)
+            
+        print(f"Transcription saved to: {output_path}")
 
-# Write the transcript to a text file
-file_path = os.path.splitext(args.file_path)[0] + ".txt"
-file = open(file_path, "w")
-file.write(transcript)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        exit(1)
 
-# Close the audio file
-audio_file.close()
+if __name__ == "__main__":
+    main()
