@@ -49,6 +49,9 @@ alias dr='docker run'
 alias di='docker images -a'
 alias dc='docker ps -a'
 
+# Neovim aliases
+alias v='nvim'
+
 # Quarto aliases
 alias q='quarto'
 alias qp='quarto preview'
