@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Get the mac address of the host computer
-# Written by Shreyas Siravara
 
 HOST="$1"
 ARGS=$#
@@ -13,7 +12,7 @@ then
 	exit 1
 fi
 
-ping -c 50 $HOST
+ping -c 50 "$HOST"
 
 #Find the host's mac address in your arp cache
 arp -a

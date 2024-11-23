@@ -2,20 +2,18 @@
 
 This repository contains a collection of scripts and tools that I have created to automate tasks, improve productivity, or just for fun. The scripts are written in Python, Bash, and other languages.
 
-<!--
-TODO: add a flake to replace the venv/ requirements and renv environment(s)
-
--->
-
 ```sh
 ~/.bin
+├── R
+│   └── Library
 ├── README.md
 ├── am
 ├── am-art.applescript
 ├── battery_status.sh
-├── bin.code-workspace
 ├── fetch-student-merge
 ├── fetch-student-remote
+├── flake.lock
+├── flake.nix
 ├── git-all-acp
 ├── google-drive-files.sh
 ├── imagey
@@ -25,16 +23,9 @@ TODO: add a flake to replace the venv/ requirements and renv environment(s)
 ├── preview_watch
 ├── push-pull-request
 ├── render_watch
-├── search_mutt.sh
-├── tmp.jpg
 ├── to_nvim.sh
 ├── transcribe
-├── venv
-│   ├── bin
-│   ├── include
-│   ├── lib
-│   └── pyvenv.cfg
 ├── weather
+├── weather.sh
 └── wifi_status.zsh
-
 ```

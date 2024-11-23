@@ -16,20 +16,18 @@
           gh
           git
           pandoc
-          python312
           quarto
           R
           radianWrapper
         ];
 
         # Python environment with packages
-        pythonEnv = pkgs.python312.withPackages (ps: with ps; [
-          openai
-          requests
-        ]);
+        python = pkgs.python312.withPackages pythonPackages;
 
         # Python packages
-        pythonPackages = with pkgs.python312Packages; [
+        pythonPackages = ps: with ps; [
+          ipython
+          jupyter
           openai
           requests
         ];
@@ -45,14 +43,15 @@
           tidyverse
         ];
 
-        allPackages = basePackages ++ rPackages ++ pythonPackages ++ [ pythonEnv ];
+        allPackages = basePackages ++ rPackages ++ [ python ];
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = allPackages;
           shellHook = ''
-            export R_LIBS_USER=$PWD/R/Library; mkdir -p $R_LIBS_USER;
-            export PYTHONPATH=${pythonEnv}/${pkgs.python312.sitePackages}
+            export R_LIBS_USER=$PWD/R/Library;
+            mkdir -p $R_LIBS_USER;
+            export PATH="$PATH:${python}/bin";
           '';
         };
       });
