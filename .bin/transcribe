@@ -6,7 +6,16 @@ from pathlib import Path
 from openai import OpenAI
 
 
-def validate_file(file_path):
+def validate_file(file_path: str) -> None:
+    """Validates if the audio file meets the requirements for OpenAI transcription.
+
+    Args:
+        file_path (str): Path to the audio file to be validated.
+
+    Raises:
+        FileNotFoundError: If the specified file does not exist.
+        ValueError: If the file type is not supported or file size exceeds limit.
+    """
     path = Path(file_path)
     if not path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
@@ -22,7 +31,23 @@ def validate_file(file_path):
         raise ValueError("File size exceeds 25MB limit")
 
 
-def main():
+def main() -> None:
+    """Main function to handle audio transcription workflow.
+
+    Processes command line arguments, validates the input file,
+    transcribes the audio using OpenAI's Whisper model, and saves
+    the transcription to a text file.
+
+    Environment Variables:
+        OPENAI_API_KEY: Required API key for OpenAI services.
+
+    Returns:
+        None
+
+    Exits:
+        0: Successful execution
+        1: Error occurred during execution
+    """
     parser = argparse.ArgumentParser(
         description="Transcribe an audio file using OpenAI (Whisper-1). File uploads are currently limited to 25 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm."
     )
