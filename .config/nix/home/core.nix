@@ -2,7 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    aider-chat
     atuin
     bat
     datasette
