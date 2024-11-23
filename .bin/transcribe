@@ -5,18 +5,22 @@ import os
 from pathlib import Path
 from openai import OpenAI
 
+
 def validate_file(file_path):
     path = Path(file_path)
     if not path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
-    
-    valid_extensions = {'.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm'}
+
+    valid_extensions = {".mp3", ".mp4", ".mpeg", ".mpga", ".m4a", ".wav", ".webm"}
     if path.suffix.lower() not in valid_extensions:
-        raise ValueError(f"Unsupported file type. Supported types: {', '.join(valid_extensions)}")
-    
+        raise ValueError(
+            f"Unsupported file type. Supported types: {', '.join(valid_extensions)}"
+        )
+
     # 25MB in bytes
     if path.stat().st_size > 25 * 1024 * 1024:
         raise ValueError("File size exceeds 25MB limit")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -33,23 +37,22 @@ def main():
 
     try:
         validate_file(args.file_path)
-        
+
         with open(args.file_path, "rb") as audio_file:
             transcript = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file,
-                response_format="text"
+                model="whisper-1", file=audio_file, response_format="text"
             )
 
         output_path = os.path.splitext(args.file_path)[0] + ".txt"
         with open(output_path, "w") as file:
             file.write(transcript)
-            
+
         print(f"Transcription saved to: {output_path}")
 
     except Exception as e:
         print(f"Error: {str(e)}")
         exit(1)
+
 
 if __name__ == "__main__":
     main()
