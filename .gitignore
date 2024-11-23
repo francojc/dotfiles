@@ -10,3 +10,4 @@ dotfiles.code-workspace
 /.config/github-copilot
 /_freeze
 .aider*
+.env
