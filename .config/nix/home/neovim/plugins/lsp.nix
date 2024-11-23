@@ -25,7 +25,19 @@
             enable = true;
             filetypes = [ "markdown" "quarto" ];
           };
-          pyright.enable = true;
+          pyright = {
+            enable = true;
+            settings = {
+              python = {
+                analysis = {
+                  autoSearchPaths = true;
+                  diagnosticMode = "workspace";
+                  useLibraryCodeForTypes = true;
+                  typeCheckingMode = "basic";
+                };
+              };
+            };
+          };
           r_language_server = {
             enable = true;
             package = null;

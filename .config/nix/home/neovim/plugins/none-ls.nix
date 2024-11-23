@@ -12,8 +12,10 @@
           statix.enable = true;
         };
         diagnostics = {
-          statix.enable = true;
-          yamllint.enable = true;
+          pylint.enable = true; # python linter
+          mypy.enable = true; # python type checker
+          statix.enable = true; # nix linter
+          yamllint.enable = true; # yaml linter
         };
         formatting = {
           nixpkgs_fmt.enable = true;
