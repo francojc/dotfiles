@@ -31,7 +31,7 @@
     plugins = {
       auto-session.enable = true;
       avante = {
-        enable = true;
+        enable = false;
         settings = {
           hints.enabled = true;
           provider = "copilot";
