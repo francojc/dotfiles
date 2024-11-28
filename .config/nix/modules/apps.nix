@@ -44,6 +44,7 @@
       "google-chrome"
       "google-drive"
       "kap"
+      "kitty"
       "mullvadvpn"
       "obsidian"
       "praat"
