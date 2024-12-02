@@ -1,4 +1,5 @@
-# bat config file
+# This is `bat`s configuration file.
+--theme="ansi"
 --italic-text=always
---style=numbers
+--style="numbers,changes,header"
 
