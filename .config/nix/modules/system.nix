@@ -160,7 +160,8 @@
   programs.zsh.enable = true; # enable zsh
 
   environment = {
-    shells = [ pkgs.zsh ];
+    # shells = [ pkgs.zsh ];
+    shells = [ pkgs.nushell ];
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
 

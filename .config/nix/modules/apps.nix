@@ -5,6 +5,11 @@
     git
     just
     nixd
+    nushell
+    carapace
+    direnv
+    vim
+    zoxide
   ];
 
   environment.variables.EDITOR = "nvim";
