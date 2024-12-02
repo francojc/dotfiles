@@ -53,6 +53,12 @@
             icon = "";
           }
           {
+            __unkeyed-1 = "<leader>l";
+            group = "LSP";
+            icon = "";
+          }
+
+          {
             __unkeyed-1 = "<leader>m";
             mode = [ "n" "v" ];
             group = "Markdown";

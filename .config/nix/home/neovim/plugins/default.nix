@@ -3,7 +3,7 @@
   imports = [
     ./alpha.nix
     ./bufferline.nix
-    ./codecompanion.nix
+    # ./codecompanion.nix
     ./conform.nix
     ./fidget.nix
     ./lualine.nix
@@ -12,7 +12,7 @@
     ./none-ls.nix
     ./obsidian.nix
     ./slime.nix
-    ./telescope.nix
+    # ./telescope.nix
     ./treesitter.nix
     ./which-key.nix
   ];
@@ -29,9 +29,14 @@
       };
     };
     plugins = {
-      auto-session.enable = true;
+      auto-session = {
+        enable = true;
+        settings = {
+          bypass_save_filetypes = [ "alpha" "NvimTree" "term" ];
+        };
+      };
       avante = {
-        enable = false;
+        enable = true;
         settings = {
           hints.enabled = true;
           provider = "copilot";
@@ -67,6 +72,9 @@
       };
       dressing.enable = true;
       flash = {
+        enable = true;
+      };
+      fzf-lua = {
         enable = true;
       };
       gitsigns = {
@@ -134,6 +142,19 @@
         };
       };
       otter.enable = true;
+      render-markdown = {
+        enable = true;
+        settings = {
+          bullet = {
+            icons = [ "■" "□" "◆" "◇" ];
+          };
+          heading = {
+            position = "inline";
+          };
+          file_types = [ "markdown" "quarto" "rmd" "avante" "copilot-chat" ];
+        };
+      };
+
       spectre.enable = true;
       todo-comments.enable = true;
       trouble.enable = true;
@@ -152,6 +173,16 @@
           rev = "140f48fb068d21c02e753c63f7443649e55576f0";
           hash = "sha256-7Sj7Z5blJ6Qk/99EV4EBv4vdK1dHDGFL3W
 RYLEnrRC0=";
+        };
+      })
+
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "aider.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "aweis89";
+          repo = "aider.nvim";
+          rev = "9de44fef7295ff9df60a803527e923815824fcd2";
+          hash = "sha256-ce0SNpfZ+5xe2VmGg56enSwaAAQrisK01PXHWXn6Ysw=";
         };
       })
 
@@ -175,17 +206,8 @@ RYLEnrRC0=";
         };
       })
 
-      pkgs.vimPlugins.quarto-nvim
 
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "render-markdown";
-        src = pkgs.fetchFromGitHub {
-          owner = "MeanderingProgrammer";
-          repo = "render-markdown.nvim";
-          rev = "2f9d4f0be8784ed4fef5960eb7b80bf60c5fdf56";
-          hash = "sha256-VCGAkcUIynRTErcGlaMWd+uo2KN1f3suPpGEimAhWHM=";
-        };
-      })
+      pkgs.vimPlugins.quarto-nvim
     ];
 
     # Lua config
@@ -201,6 +223,17 @@ RYLEnrRC0=";
         vim.keymap.set("n", "<leader>\\o", "<cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
       })
 
+      -- Aider setup
+      require("aider").setup({
+        fzf_action_key = "ctrl-x",
+        window = {
+          layout = "float",
+          width = 0.5,
+          height = 0.5,
+          border = "rounded",
+        }
+      })
+
       -- cmp-r setup
       require("cmp_nvim_r").setup({
         filetypes = { "r", "quarto", "rmd" },
@@ -213,20 +246,11 @@ RYLEnrRC0=";
       -- Quarto setup
       require("quarto").setup()
 
-      -- Render markdown setup
-      require('render-markdown').setup({
-        bullet = {
-          -- give a list of square bullets
-          icons = { '■', '□', '◆', '◇' },
-        },
-        heading = {
-          position = "inline",
-        },
-        file_types = { 'markdown', 'quarto', 'rmd', 'avante', 'copilot-chat' },
-      })
-
-      -- Yazi setup
-      require("yazi").setup()
+      -- Keymaps for navigating terminal windows
+      vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
+      vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j')
+      vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k')
+      vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
 
       -- Special keymapings
       -- Markdown

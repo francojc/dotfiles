@@ -121,19 +121,21 @@
         };
       }
 
-      {
-        mode = "n";
-        key = "<leader>q";
-        action = "+quit/session";
-      }
-
-      {
-        mode = "n";
-        key = "<leader>u";
-        action = "+ui";
-      }
-
       # Assistants
+
+      # -- Normal mode
+      {
+        mode = "n";
+        key = "<leader>aa";
+        action = "<Cmd>AiderToggle<CR>";
+        options = { desc = "Aider"; };
+      }
+      # {
+      #   mode = "n";
+      #   key = "<leader>ac";
+      #   action = "<Cmd>CodeCompanionActions<CR>";
+      #   options = { desc = "CodeCompanion Actions"; };
+      # }
       {
         mode = "n";
         key = "<leader>ag";
@@ -141,33 +143,45 @@
         options = { desc = "GitHub Copilot"; };
       }
       {
+        mode = "n";
+        key = "<leader>al";
+        action = "<Cmd>AiderLoad<CR>";
+        options = { desc = "Add file(s) to Aider"; };
+      }
+
+      # -- Visual mode
+      {
+        mode = [ "v" "n" ];
+        key = "<leader>aq";
+        action = "<cmd>AiderAsk<cr>";
+        options = { desc = "Ask Aider"; };
+      }
+      {
         mode = "x";
         key = "<leader>af";
         action = "<cmd>CopilotChatFix<cr>";
+        options = { desc = "Copilot fix"; };
       }
       {
         mode = "x";
         key = "<leader>ad";
         action = "<cmd>CopilotChatDocs<cr>";
+        options = { desc = "Copilot add documentation"; };
       }
       {
         mode = "x";
         key = "<leader>ac";
         action = "<cmd>CopilotChatCommit<cr>";
-      }
-      {
-        mode = "n";
-        key = "<leader>ac";
-        action = "<Cmd>CodeCompanionActions<CR>";
-        options = { desc = "CodeCompanion Actions"; };
+        options = { desc = "Copilot commit"; };
       }
       {
         mode = "x";
         key = "<leader>ax";
         action = "<cmd>CopilotChatExplain<cr>";
+        options = { desc = "Copilot explain"; };
       }
-      # Buffers
 
+      # Buffers
       {
         mode = "n";
         key = "<leader>bn";
@@ -282,6 +296,31 @@
         options = { desc = "Yazi"; };
       }
 
+      {
+        mode = "n";
+        key = "<leader>ff";
+        action = "<Cmd>lua require('fzf-lua').files()<CR>";
+        options = { desc = "Find files"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>fr";
+        action = "<Cmd>lua require('fzf-lua').oldfiles()<CR>";
+        options = { desc = "Find recent files"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>fb";
+        action = "<Cmd>lua require('fzf-lua').buffers()<CR>";
+        options = { desc = "Find buffer files"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>fs";
+        action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
+        options = { desc = "Find buffer symbols"; };
+      }
+
       # Git
       {
         mode = "n";
@@ -289,7 +328,37 @@
         action = "<Cmd>LazyGit<CR>";
         options = { desc = "LazyGit"; };
       }
-
+      {
+        mode = "n";
+        key = "<leader>gf";
+        action = "<Cmd>lua require('fzf-lua').git_files()<CR>";
+        options = { desc = "Git files"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>gs";
+        action = "<Cmd>lua require('fzf-lua').git_status()<CR>";
+        options = { desc = "Git files"; };
+      }
+      # LSP
+      {
+        mode = "n";
+        key = "<leader>la";
+        action = "<Cmd>lua require('fzf-lua').lsp_code_actions()<CR>";
+        options = { desc = "Show code actions"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>ld";
+        action = "<Cmd>lua require('fzf-lua').diagnostics_document()<CR>";
+        options = { desc = "Document diagnostics"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>lD";
+        action = "<Cmd>lua require('fzf-lua').diagnostics_workspace()<CR>";
+        options = { desc = "Workspace diagnostics"; };
+      }
       # Obsidian
       {
         mode = "n";
@@ -409,11 +478,32 @@
         action = "<Cmd>QuartoActivate<CR>";
         options = { desc = "Quarto: Start"; };
       }
+
       # Search
       {
         mode = "n";
+        key = "<leader>sg";
+        action = "<Cmd>lua require('fzf-lua').live_grep()<CR>";
+        options = { desc = "Live grep"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>sr";
+        action = "<Cmd>lua require('fzf-lua').registers()<CR>";
+        options = { desc = "Search registers"; };
+      }
+
+      {
+        mode = "n";
+        key = "<leader>ss";
+        action = "<Cmd>lua require('fzf-lua').spell_suggest()<CR>";
+        options = { desc = "Spell suggest"; };
+      }
+
+      {
+        mode = "n";
         key = "<leader>st";
-        action = "<Cmd>TodoTelescope<CR>";
+        action = "<Cmd>TodoFzfLua<CR>";
         options = { desc = "Search Todos"; };
       }
 
@@ -432,13 +522,13 @@
       }
 
       # Toggle
-      {
-        mode = "n";
-        key = "<leader>\\a";
-        action = "<Cmd>CodeCompanionChat Toggle<CR>";
-
-        options = { desc = "Toggle Code Companion"; };
-      }
+      # {
+      #   mode = "n";
+      #   key = "<leader>\\a";
+      #   action = "<Cmd>CodeCompanionChat Toggle<CR>";
+      #
+      #   options = { desc = "Toggle Code Companion"; };
+      # }
       {
         mode = "n";
         key = "<leader>\\r";

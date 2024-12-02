@@ -1,7 +1,7 @@
 {
   programs.nixvim = {
     plugins.telescope = {
-      enable = true;
+      enable = false;
       extensions = {
         file-browser = {
           enable = true;
