@@ -17,11 +17,13 @@
     nushell = {
       enable = true;
       extraConfig = ''
-          # -- Configuration for Nu shell --
-          $env.config = {
-            show_banner: false,
+        # -- Configuration for Nu shell --
+        $env.config = {
+          show_banner: false,
+          edit_mode: vi,
+        }
 
-          }
+        $env.PROMPT_INDICATOR_VI_NORMAL = '❮';
 
         alias .. = cd ..
         alias ... = cd ../..
@@ -29,6 +31,10 @@
       '';
       shellAliases = {
         # -- Shell aliases for Nu shell --
+        c = "clear";
+        v = "nvim";
+        cd = "z";
+
         # Open files in the default application
         nu-open = "open";
         open = "^open";
@@ -37,7 +43,8 @@
 
         # Files
         ls = "ls";
-        la = "ls -al";
+        la = "ls -a";
+        ll = "ls -l";
         lt = "eza --almost-all --icons=auto --long --tree --level=2 --ignore-glob='.git|.DS_Store'";
         fd = "fd --hidden --exclude '.git'";
         tree = "tree -C";
@@ -58,6 +65,18 @@
         gf = "git fetch";
         gba = "git branch --all";
         gsw = "git switch";
+        ghb = "gh browse";
+        ghc = "gh repo create";
+
+        # Quarto aliases
+        q = "quarto";
+        qp = "quarto preview";
+        qph = "quarto preview --to html";
+        qpp = "quarto preview --to pdf";
+        qrh = "quarto render --to html";
+        qrp = "quarto render --to pdf";
+        qpub = "quarto publish gh-pages";
+
       };
     };
 
