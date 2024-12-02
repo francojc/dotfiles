@@ -12,14 +12,15 @@ export PATH="/Users/francojc/.bin:$PATH" # custom scripts
 export PATH="/Users/francojc/.local/bin:$PATH" # pipx
 
 # --- ENVIRONMENT VARIABLES ---
-export USER=$(whoami)
-export HOSTNAME=$(hostname)
 export EDITOR='nvim'
-export PAGER='bat'
-export MANPAGER="less -R"
-export VISUAL='nvim'
 export HOMEBREW_NO_ENV_HINTS=true
+export HOSTNAME=$(hostname)
 export LUA_CPATH=""
+export MANPAGER="less -R"
+export PAGER='bat'
+export USER=$(whoami)
+export VISUAL='nvim'
+# export XDG_CONFIG_HOME="$HOME/.config"
 
 # --- ZSH ---
 # ZSH plugins

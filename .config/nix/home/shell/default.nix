@@ -1,4 +1,3 @@
-{ pkgs, ... }:
 {
   programs = {
     # Enable some useful shells
@@ -17,89 +16,56 @@
     };
     nushell = {
       enable = true;
-      environmentVariables = {
-        SHELL = "${pkgs.nushell}/bin/nu";
-        EDITOR = "nvim";
-        PAGER = "bat";
-        MANPAGER = "less -R";
-        VISUAL = "nvim";
-        HOMEBREW_NO_ENV_HINTS = "true";
-        LUA_CPATH = "";
-        USER = "francojc";
-        HOSTNAME = "MacBook-Airborne";
-        ZVM_VI_INSERT_ESCAPE_BINDKEY = "jj";
-        ZVM_KEYTIMEOUT = "1";
-      };
       extraConfig = ''
-        # Define carapace completer
-        def create_left_prompt [] {
-            starship prompt
-        }
+          # -- Configuration for Nu shell --
+          $env.config = {
+            show_banner: false,
 
-        # Path configuration
-        let path_dirs = [
-            "/opt/homebrew/bin"
-            "/usr/local/sbin"
-            "~/.bin"
-            "~/.local/bin"
-        ]
+          }
 
-        # Get existing PATH entries
-        let existing_path = if ($env | get -i PATH | is-empty) { [] } else { $env.PATH | split row (char esep) }
+        alias .. = cd ..
+        alias ... = cd ../..
 
-        # Combine and set PATH
-        let-env PATH = (
-            $path_dirs
-            | append $existing_path
-            | each { |it| if ($it | path exists) { $it | path expand } else { $it } }
-            | flatten
-            | uniq
-            | str join (char esep)
-        )
-
-        # Use carapace
-        let carapace_completer = {|spans|
-            carapace $spans.0 nushell $spans | from json
-        }
-
-        # Load Homebrew environment if it exists
-        if ("/opt/homebrew/bin/brew" | path exists) {
-          let brew_env = (^/opt/homebrew/bin/brew shellenv | lines | parse "{key}={value}")
-          let-env = ($brew_env | reduce -f $env { |it, acc| $acc | upsert $it.key $it.value })
-        }
-
-        # Load secrets from variables.env if it exists
-        if ("~/.variables.env" | path expand | path exists) {
-          let env_contents = (open ~/.variables.env
-            | lines
-            | parse "export {key}={value}"
-            | update value { |it| $it.value | str replace '"' "" }
-          )
-          let-env = ($env_contents | reduce -f $env { |it, acc| $acc | upsert $it.key $it.value })
-        }
-
-        # Configure completion behavior
-        $env.config = {
-         show_banner: false,
-         completions: {
-           case_sensitive: false
-           quick: true
-           partial: true
-           algorithm: "fuzzy"
-           external: {
-               enable: true
-               max_results: 100
-               completer: $carapace_completer # check 'carapace_completer'
-             }
-         }
-        }
       '';
+      shellAliases = {
+        # -- Shell aliases for Nu shell --
+        # Open files in the default application
+        nu-open = "open";
+        open = "^open";
+        # Nix-related aliases
+        switch = "darwin-rebuild switch --flake ~/.dotfiles/.config/nix";
+
+        # Files
+        ls = "ls";
+        la = "ls -al";
+        lt = "eza --almost-all --icons=auto --long --tree --level=2 --ignore-glob='.git|.DS_Store'";
+        fd = "fd --hidden --exclude '.git'";
+        tree = "tree -C";
+        cat = "bat";
+        less = "bat --paging=always";
+        more = "bat --paging=always";
+        cp = "cp -iv";
+        mv = "mv -iv";
+        rm = "rm -iv";
+
+        # Git aliases
+        gss = "git status";
+        ga = "git add";
+        gaa = "git add --all";
+        gc = "git commit --message";
+        gp = "git push";
+        gpl = "git pull";
+        gf = "git fetch";
+        gba = "git branch --all";
+        gsw = "git switch";
+      };
     };
 
     # Enable some useful tools
     atuin = {
       enable = true;
       enableZshIntegration = true;
+      enableNushellIntegration = true;
     };
     carapace = {
       enable = true;
@@ -128,7 +94,7 @@
     zoxide = {
       enable = true;
       enableZshIntegration = true;
-      # enableNushellIntegration = true;
+      enableNushellIntegration = true;
     };
   };
 }
