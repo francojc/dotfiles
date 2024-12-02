@@ -28,11 +28,11 @@ Ubuntu = "󰕈 "
 Alpine = " "
 
 [nix_shell]
-symbol = ""
+symbol = " "
 format = "[$symbol]($style)"
 
 [directory]
-format = "[ $path ]($style)"
+format = "[$path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -64,7 +64,7 @@ style = "yellow"
 # Prompt ----
 
 [character]
-success_symbol = "[❯](purple)"
+success_symbol = "[❯](blue)"
 error_symbol = "[❯](red)"
 vimcmd_symbol = "[❮](green)"
 
