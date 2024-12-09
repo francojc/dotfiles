@@ -12,6 +12,7 @@
         # Base packages
         basePackages = with pkgs; [
           bashInteractive
+          curl
           gettext
           gh
           git
@@ -50,8 +51,8 @@
           buildInputs = allPackages;
           shellHook = ''
             export R_LIBS_USER=$PWD/R/Library;
-            mkdir -p $R_LIBS_USER;
-            export PATH="$PATH:${python}/bin";
+            mkdir -p "$R_LIBS_USER";
+            export PATH=$PATH:${python}/bin;
           '';
         };
       });
