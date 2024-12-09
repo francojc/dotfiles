@@ -253,18 +253,32 @@ RYLEnrRC0=";
       vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
 
       -- Special keymapings
-      -- Markdown
+      -- Markdown --
+
+      -- Unordered list
+      vim.keymap.set("n", "<leader>mu", "i- ", { desc = "Unordered list item", silent = true })
+      vim.keymap.set("v", "<leader>mu", ":s/^/- /<CR>gv", { desc = "Unordered list item", silent = true })
+
+      -- Task list
+      vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task item", silent = true })
+      vim.keymap.set("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task jtem", silent = true })
+
+      -- Styled text
       vim.keymap.set("v", "<leader>mb", "c**<C-r>\"**<Esc>", { desc = "Bold", silent = true })
       vim.keymap.set("v", "<leader>mi", "c*<C-r>\"*<Esc>", { desc = "Italic", silent = true })
+      vim.keymap.set({"n", "v"}, "<leader>ms", "c~~<C-r>\"~~<Esc>", { desc = "Strikethrough", silent = true })
+
+      -- Links
       vim.keymap.set("v", "<leader>ml", "c[<C-r>\"](<C-r>+)<Esc>", { desc = "Add Link", silent = true })
+
+      -- Code blocks
       vim.keymap.set("v", "<leader>mc", "c```\n<C-r>\"\n```<Esc>", { desc = "Code Block", silent = true })
       vim.keymap.set("v", "<leader>mk", "c`<C-r>\"`<Esc>", { desc = "Inline Code", silent = true })
-      vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task Item", silent = true })
-      vim.keymap.set("n", "<leader>mu", "i- ", { desc = "Unordered list item", silent = true })
-      vim.keymap.set("v", "<leader>ms", "c~~<C-r>\"~~<Esc>", { desc = "Strikethrough", silent = true })
-      vim.keymap.set("n", "<leader>m1", "i# ", { desc = "H1", silent = true })
-      vim.keymap.set("n", "<leader>m2", "i## ", { desc = "H2", silent = true })
-      vim.keymap.set("n", "<leader>m3", "i### ", { desc = "H3", silent = true })
+
+      -- Headers
+      vim.keymap.set({"n", "v"}, "<leader>m1", "I# ", { desc = "H1", silent = true })
+      vim.keymap.set({"n", "v"}, "<leader>m2", "I## ", { desc = "H2", silent = true })
+      vim.keymap.set({"n", "v"}, "<leader>m3", "I### ", { desc = "H3", silent = true })
     '';
   };
 }
