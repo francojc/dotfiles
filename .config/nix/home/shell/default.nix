@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   programs = {
     # Enable some useful shells
@@ -17,17 +18,51 @@
     nushell = {
       enable = true;
       extraConfig = ''
-        # -- Configuration for Nu shell --
-        $env.config = {
-          show_banner: false,
-          edit_mode: vi,
+         # -- Configuration for Nu shell --
+         $env.config = {
+           show_banner: false,
+           edit_mode: vi,
+         }
+
+         # -- Configure path for Nu shell --
+         $env.PATH = ($env.PATH | split row ":"
+           | prepend "/usr/local/sbin"
+           | prepend "/nix/var/nix/profiles/default/bin"
+           | prepend "/run/current-system/sw/bin"
+           | prepend "/etc/profiles/per-user/francojc/bin"
+           | prepend "/Users/francojc/.nix-profile/bin"
+           | prepend "/opt/homebrew/sbin"
+           | prepend "/opt/homebrew/bin"
+           | prepend "/Users/francojc/.bin"
+           | prepend "/Users/francojc/.local/bin"
+           | uniq
+           )
+
+         $env.PROMPT_INDICATOR_VI_NORMAL = '❮ ';
+
+         $env.EDITOR = 'nvim'
+         $env.VISUAL = 'nvim'
+         $env.HOMEBREW_NO_ENV_HINTS = 'true'
+
+        open ~/.variables.env
+        | lines
+        | each { |line|
+            let parts = ($line | str replace "export " "" | split row "=" | take 2)
+            let key = ($parts.0 | str trim)
+            let value = ($parts.1 | str trim)
+            {$key: $value}
         }
+        | reduce -f {} { |it, acc| $acc | merge $it }
+        | load-env
 
-        $env.PROMPT_INDICATOR_VI_NORMAL = '❮';
+         alias .. = cd ..
+         alias ... = cd ../..
 
-        alias .. = cd ..
-        alias ... = cd ../..
+        plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
+        plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
+        plugin use polars
+        plugin use query
       '';
       shellAliases = {
         # -- Shell aliases for Nu shell --
@@ -60,6 +95,7 @@
         ga = "git add";
         gaa = "git add --all";
         gc = "git commit --message";
+        gl = "git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all";
         gp = "git push";
         gpl = "git pull";
         gf = "git fetch";
@@ -100,6 +136,7 @@
     eza = {
       enable = true;
       enableZshIntegration = true;
+      enableNushellIntegration = true;
     };
     fzf = {
       enable = true;
