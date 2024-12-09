@@ -26,7 +26,7 @@
     taps = [
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
-      "nikitabobko/tap" # for aerospace
+      # "nikitabobko/tap" # for aerospace
     ];
 
     brews = [
@@ -39,7 +39,7 @@
     ];
 
     casks = [
-      "aerospace"
+      # "aerospace"
       "appcleaner"
       "bettermouse"
       # "calibre"
@@ -55,12 +55,12 @@
       "obsidian"
       "praat"
       "raycast"
-      "rectangle"
+      # "rectangle"
       "sequel-ace"
       "transcribe"
       "transmission"
       "visual-studio-code"
-      "wezterm@nightly"
+      # "wezterm@nightly"
       "zen-browser"
       "zoom"
       "zotero@beta"
