@@ -31,6 +31,33 @@
         action = "<Cmd>lua require('dropbar.api').pick()<CR>";
         options = { desc = "Dropbar picker"; };
       }
+      # Lua
+      {
+        mode = "n";
+        key = "<leader><leader>r";
+        action = "<Cmd>source %<CR>";
+        options = { desc = "Source current file"; };
+      }
+      {
+        mode = "n";
+        key = "<leader>r";
+        action = ":.lua<CR>";
+        options = { desc = "Run current line (lua)"; };
+      }
+      {
+        mode = "v";
+        key = "<leader>r";
+        action = ":lua<CR>";
+        options = { desc = "Run selected lines (lua)"; };
+      }
+
+      # Yank
+      {
+        mode = "n";
+        key = "<leader>y";
+        action = "ggVGy";
+        options = { desc = "Yank buffer contents"; };
+      }
 
       # Accept suggestion <TAB>
       {
