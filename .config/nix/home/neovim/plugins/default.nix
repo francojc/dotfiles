@@ -3,7 +3,6 @@
   imports = [
     ./alpha.nix
     ./bufferline.nix
-    # ./codecompanion.nix
     ./conform.nix
     ./fidget.nix
     ./lualine.nix
@@ -12,7 +11,6 @@
     ./none-ls.nix
     ./obsidian.nix
     ./slime.nix
-    # ./telescope.nix
     ./treesitter.nix
     ./which-key.nix
   ];
@@ -36,7 +34,7 @@
         };
       };
       avante = {
-        enable = true;
+        enable = false;
         settings = {
           hints.enabled = true;
           provider = "copilot";
@@ -64,9 +62,10 @@
         enable = true;
         settings = {
           answer_header = "  ";
+          error_header = "  ";
           question_header = "  ";
           separator = "───";
-          model = "gpt-4o";
+          model = "claude-3.5-sonnet";
           temperature = 0.3;
         };
       };
@@ -187,16 +186,6 @@ RYLEnrRC0=";
       })
 
       (pkgs.vimUtils.buildVimPlugin {
-        name = "cmp-nvim-r";
-        src = pkgs.fetchFromGitHub {
-          owner = "jalvesaq";
-          repo = "cmp-nvim-r";
-          rev = "24f4d0e952332d8f6a420255a149815a7080849b";
-          hash = "sha256-mBQX1dtXI7gI6mtkiRrQgloSERkfQV16egv3cwD0aok=";
-        };
-      })
-
-      (pkgs.vimUtils.buildVimPlugin {
         name = "dropbar.nvim";
         src = pkgs.fetchFromGitHub {
           owner = "Bekaboo";
@@ -205,8 +194,6 @@ RYLEnrRC0=";
           hash = "sha256-3VdwHC4/ti6QCCrb6ciRDYxk6+EIgrcLN0vmQYn00RQ=";
         };
       })
-
-
       pkgs.vimPlugins.quarto-nvim
     ];
 
@@ -234,10 +221,10 @@ RYLEnrRC0=";
         }
       })
 
-      -- cmp-r setup
-      require("cmp_nvim_r").setup({
-        filetypes = { "r", "quarto", "rmd" },
-        quarto_intel = "~/.local/share/quarto/yaml-intelligence-resources.json"
+      -- cmp-pandoc setup
+      require("cmp_pandoc").setup({
+        -- @type: table of strings
+        filetypes = { "pandoc", "markdown", "rmd", "quarto" }
       })
 
       -- Dropbar setup

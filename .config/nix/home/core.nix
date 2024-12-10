@@ -18,6 +18,7 @@
     gnupg
     gh
     gv
+    haskellPackages.pandoc-crossref
     helix
     helix-gpt
     home-manager

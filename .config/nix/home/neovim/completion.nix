@@ -3,18 +3,22 @@
 {
   programs.nixvim = {
     plugins = {
+      cmp-nvim-lsp = { enable = true; };
+      cmp-nvim-lsp-document-symbol = { enable = true; };
+      cmp-nvim-lsp-signature-help = { enable = true; };
+      cmp-pandoc-nvim = { enable = true; };
+      friendly-snippets.enable = true;
+
       luasnip = {
         enable = true;
+        filetypeExtend = {
+          quarto = [ "markdown" ];
+        };
         settings = {
           enable_autosnippets = true;
-          history = true;
-          updateevents = "TextChanged,TextChangedI";
         };
         fromVscode = [
-          {
-            lazyLoad = true;
-            paths = "${pkgs.vimPlugins.friendly-snippets}";
-          }
+          { paths = "${pkgs.vimPlugins.friendly-snippets}"; }
         ];
       };
 
@@ -23,58 +27,29 @@
         settings = {
           friendly_snippets = true;
           extended_filetypes = {
-            quarto = [
-              "markdown"
-            ];
+            quarto = [ "markdown" ];
           };
           global_snippets = [
             "all"
             "loremipsum"
             "html"
+            "quarto"
           ];
 
           search_paths = [
             {
-              __raw = "vim.fn.stdpath('config') .. '/snippets'";
+              __raw = "vim.fn.stdpath('config') .. '/home/neovim/snippets'";
             }
           ];
         };
       };
 
-      cmp_luasnip.enable = true;
-      cmp-nvim-lsp.enable = true;
-      cmp-nvim-lsp-document-symbol.enable = true;
-      cmp-nvim-lsp-signature-help.enable = true;
-      cmp-path.enable = true;
-      cmp-pandoc-references.enable = true;
-
       cmp = {
         enable = true;
+        autoEnableSources = false;
         settings = {
-          # completion.autocomplete = false;
-          autoEnableSources = true;
           formatting = {
-            fields = [ "kind" "abbr" "menu" ];
-          };
-          sources = [
-            { name = "luasnip"; }
-            { name = "nvim-snippets"; }
-            { name = "cmp-nvim-lsp"; }
-            { name = "nvim_lsp"; }
-            { name = "nvim_lsp_document_symbol"; }
-            { name = "nvim_lsp_signature_help"; }
-            { name = "path"; }
-            { name = "treesitter"; }
-            { name = "pandoc_references"; }
-          ];
-          snippet.expand.__raw = ''
-            function(args)
-              require('luasnip').lsp_expand(args.body)
-            end
-          '';
-          window = {
-            completion.border = "solid";
-            documentation.border = "solid";
+            fields = [ "abbr" "kind" "menu" ];
           };
           mapping = {
             "<CR>" = "cmp.mapping.confirm({ select = true })";
@@ -85,6 +60,20 @@
             "<S-Tab>" = "cmp.mapping(function(fallback) if cmp.visible() then cmp.select_prev_item() elseif require('luasnip').jumpable(-1) then require('luasnip').jump(-1) else fallback() end end, { 'i', 's' })";
             "<Down>" = "cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' })";
             "<Up>" = "cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i' })";
+          };
+          snippet.expand = "function(args) require('luasnip').lsp_expand(args.body) end";
+          sources = [
+            { name = "cmp_pandoc"; }
+            { name = "luasnip"; }
+            { name = "nvim_lsp"; }
+            { name = "nvim_lsp_document_symbol"; }
+            { name = "nvim_lsp_signature_help"; }
+            { name = "path"; }
+            { name = "snippets"; }
+          ];
+          window = {
+            completion.border = "solid";
+            documentation.border = "solid";
           };
         };
       };
