@@ -3,10 +3,22 @@
 {
   programs.nixvim = {
     plugins = {
+
       friendly-snippets.enable = true;
+
       luasnip = {
         enable = true;
+        filetypeExtend = {
+          quarto = [ "markdown" ];
+        };
+        settings = {
+          enable_autosnippets = true;
+        };
+        fromVscode = [
+          { paths = "${pkgs.vimPlugins.friendly-snippets}"; }
+        ];
       };
+
       blink-cmp = {
         enable = true;
         settings = {
@@ -108,6 +120,15 @@
               "snippets"
               "buffer"
             ];
+            providers = {
+              snippets = {
+                opts = {
+                  extended_filetypes = {
+                    quarto = [ "markdown" ];
+                  };
+                };
+              };
+            };
           };
           signature = {
             enabled = true;
