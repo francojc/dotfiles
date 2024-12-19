@@ -17,7 +17,7 @@
       # customize dock
       dock = {
         autohide = true;
-        expose-group-by-app = true;
+        expose-group-apps = true;
         orientation = "bottom";
         show-recents = false; # disable recent apps
         wvous-tl-corner = 5; # top-left - Start screen saver
@@ -173,17 +173,10 @@
       # icon fonts
       material-design-icons
       font-awesome
-
-      (nerdfonts.override {
-        fonts = [
-          # symbols icon only
-          "NerdFontsSymbolsOnly"
-          # Characters
-          "Hack"
-          "JetBrainsMono"
-          "Meslo"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts.hack
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.meslo-lg
     ];
   };
 }

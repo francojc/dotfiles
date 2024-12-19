@@ -114,16 +114,18 @@
         topDown = false;
       };
       nvim-autopairs.enable = true;
-      nvim-colorizer = {
+      colorizer = {
         enable = true;
-        fileTypes = [ "*" ];
-        userDefaultOptions = {
-          mode = "virtualtext";
-          virtualtext = "■";
-          names = false;
-          RGB = true;
-          RRGGBB = true;
-          RRGGBBAA = true;
+        settings = {
+          filetypes = [ "*" ];
+          user_default_options = {
+            mode = "virtualtext";
+            virtualtext = "■";
+            names = false;
+            RGB = true;
+            RRGGBB = true;
+            RRGGBBAA = true;
+          };
         };
       };
       nvim-tree = {

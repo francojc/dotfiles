@@ -2,12 +2,14 @@
 
 {
   environment.systemPackages = with pkgs; [
+    carapace
+    curl
+    direnv
     git
     just
     nixd
+    nurl
     nushell
-    carapace
-    direnv
     vim
     zoxide
   ];
@@ -31,9 +33,10 @@
 
     brews = [
       "borders" # jankyborders
-      "curl" # no not install curl via nixpkgs, it's not working well on macOS!
+      # "curl" # no not install curl via nixpkgs, it's not working well on macOS!
       "gnu-sed" # spectre
       "mas"
+      "r" # for RStudio/ Positron
       "rename"
       "wget" # download tool
     ];
@@ -53,9 +56,11 @@
       "kitty"
       "mullvadvpn"
       "obsidian"
+      "positron"
       "praat"
       "raycast"
       # "rectangle"
+      "rstudio"
       "sequel-ace"
       "transcribe"
       "transmission"

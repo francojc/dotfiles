@@ -34,13 +34,12 @@
     ncdu
     neofetch
     nix-prefetch-git
-    nushellPlugins.polars
-    nushellPlugins.query
     pandoc
     pass
     pngpaste
     pianobar
     poppler_utils
+    pyright
     qpdf
     quarto
     ripgrep

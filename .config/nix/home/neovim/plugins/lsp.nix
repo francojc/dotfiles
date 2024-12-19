@@ -27,6 +27,8 @@
           };
           pyright = {
             enable = true;
+            autostart = false;
+            filetypes = [ "py" "python" "quarto" ];
             settings = {
               python = {
                 analysis = {
@@ -40,10 +42,11 @@
           };
           r_language_server = {
             enable = true;
+            autostart = false;
             package = null;
             filetypes = [ "r" "quarto" "rmd" ];
           };
-          yamlls.enable = false;
+          yamlls.enable = true;
         };
         keymaps = {
           silent = true;
@@ -103,37 +106,6 @@
       };
     };
 
-    extraConfigLua = ''
-      local lsp_active = false
-
-      function _G.toggle_r_lsp()
-        local function get_local_r_path()
-          local handle = io.popen("nix develop --command which R 2>/dev/null")
-          local result = handle:read("*a")
-            handle:close()
-         return result:match("^%s*(.-)%s*$")  -- trim any leading/trailing whitespace
-        end
-
-        local r_path = get_local_r_path()
-
-        if lsp_active then
-          -- Stop R LSP
-          vim.lsp.stop_client(vim.lsp.get_active_clients())
-          lsp_active = false
-          print("R LSP stopped")
-        else
-          -- Start R LSP
-          require('lspconfig').r_language_server.setup{
-            cmd = {
-              string.format("%s", r_path), "--slave", "-e", "languageserver::run()",
-            },
-            filetypes = { "r", "quarto" },
-            root_dir = require('lspconfig.util').root_pattern(".git", "DESCRIPTION"),
-          }
-          lsp_active = true
-          print("R LSP started")
-        end
-       end
-    '';
+    extraConfigLua = "local lsp_active = false\n\nfunction _G.toggle_r_lsp()\n  local function get_local_r_path()\n    local handle = io.popen(\"nix develop --command which R 2>/dev/null\")\n    local result = handle:read(\"*a\")\n      handle:close()\n   return result:match(\"^%s*(.-)%s*$\")  -- trim any leading/trailing whitespace\n  end\n\n  local r_path = get_local_r_path()\n\n  if lsp_active then\n    -- Stop R LSP\n    vim.lsp.stop_client(vim.lsp.get_active_clients())\n    lsp_active = false\n    print(\"R LSP stopped\")\n  else\n    -- Start R LSP\n    require('lspconfig').r_language_server.setup{\n      cmd = {\n        string.format(\"%s\", r_path), \"--slave\", \"-e\", \"languageserver::run()\",\n      },\n      filetypes = { \"r\", \"quarto\" },\n      root_dir = require('lspconfig.util').root_pattern(\".git\", \"DESCRIPTION\"),\n    }\n    lsp_active = true\n    print(\"R LSP started\")\n  end\n end\n";
   };
 }

@@ -44,8 +44,18 @@
         };
       };
 
-      cmp = {
+      blink-cmp = {
         enable = true;
+        settings = {
+          accept = {
+            auto_brackets.enabled = true;
+          };
+          keymap.preset = "default";
+        };
+      };
+
+      cmp = {
+        enable = false;
         autoEnableSources = false;
         settings = {
           formatting = {

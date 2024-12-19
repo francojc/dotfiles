@@ -57,12 +57,6 @@
 
          alias .. = cd ..
          alias ... = cd ../..
-
-        plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
-        plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
-
-        plugin use polars
-        plugin use query
       '';
       shellAliases = {
         # -- Shell aliases for Nu shell --
