@@ -3,17 +3,75 @@
 {
   programs.nixvim = {
     plugins = {
+      friendly-snippets.enable = true;
+      luasnip = {
+        enable = true;
+      };
       blink-cmp = {
         enable = true;
         settings = {
-          keymap.preset = "enter";
+          accept = {
+            auto_brackets = {
+              enabled = true;
+              semantic_token_resolution.enabled = true;
+            };
+          };
+          trigger = {
+            signature_help.enabled = true;
+          };
+          keymap = {
+            "<C-b>" = [
+              "scroll_documentation_up"
+              "fallback"
+            ];
+            "<C-e>" = [
+              "hide"
+            ];
+            "<C-f>" = [
+              "scroll_documentation_down"
+              "fallback"
+            ];
+            "<C-n>" = [
+              "select_next"
+              "fallback"
+            ];
+            "<C-p>" = [
+              "select_prev"
+              "fallback"
+            ];
+            "<C-space>" = [
+              "show"
+              "show_documentation"
+              "hide_documentation"
+            ];
+            "<C-y>" = [
+              "select_and_accept"
+            ];
+            "<Down>" = [
+              "select_next"
+              "fallback"
+            ];
+            "<S-Tab>" = [
+              "snippet_backward"
+              "fallback"
+            ];
+            "<Tab>" = [
+              "snippet_forward"
+              "fallback"
+            ];
+            "<Up>" = [
+              "select_prev"
+              "fallback"
+            ];
+
+          };
           completion = {
             documentation = {
               auto_show = true;
-              auto_show_delay_ms = 0;
+              auto_show_delay_ms = 500;
             };
             list = {
-              selection = "auto_insert";
+              selection = "manual";
             };
             menu = {
               draw = {
@@ -46,9 +104,13 @@
             completion.enabled_providers = [
               "lsp"
               "path"
+              "luasnip"
               "snippets"
               "buffer"
             ];
+          };
+          signature = {
+            enabled = true;
           };
         };
       };

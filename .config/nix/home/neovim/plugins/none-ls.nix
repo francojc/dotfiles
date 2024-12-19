@@ -1,6 +1,7 @@
 {
   programs.nixvim = {
-    plugins.none-ls = {
+    plugins = {
+      none-ls = {
       enable = true;
       enableLspFormat = true;
       settings = {
@@ -36,6 +37,8 @@
           yamlfmt.enable = true;
         };
       };
+      };
+      lsp-format.enable = true;
     };
   };
 }

@@ -6,7 +6,6 @@
     ./conform.nix
     ./fidget.nix
     ./lualine.nix
-    ./lsp.nix
     ./lspsaga.nix
     ./none-ls.nix
     ./obsidian.nix
@@ -148,11 +147,40 @@
         settings = {
           bullet = {
             icons = [ "■" "□" "◆" "◇" ];
+            right_pad = 1;
+          };
+          code = {
+            code = {
+              above = " ";
+              below = " ";
+              border = "think";
+              language_pad = 2;
+              position = "right";
+              right_pad = 2;
+              sign = false;
+              width = "block";
+            };
           };
           heading = {
+            border = true;
             position = "inline";
+            icons = [
+              "1| "
+              "2| "
+              "3| "
+              "4| "
+              "5| "
+              "6| "
+            ];
+            sign = false;
+            width = "full";
           };
+          render_modes = true;
+          signs.enabled = false;
           file_types = [ "markdown" "quarto" "rmd" "avante" "copilot-chat" ];
+          win_options = {
+            conceallevel.rendered = 0;
+          };
         };
       };
 
