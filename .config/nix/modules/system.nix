@@ -136,7 +136,6 @@
 
       loginwindow = {
         GuestEnabled = false; # disable guest user
-        SHOWFULLNAME = true; # show full name in login window
       };
     };
 
@@ -146,11 +145,8 @@
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToControl = true; # remap caps lock to control
-      swapLeftCommandAndLeftAlt = false;
     };
-
     startup.chime = false; # no startup sound ;)
-
   };
 
 
