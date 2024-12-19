@@ -1,13 +1,9 @@
 {
   programs.nixvim = {
     plugins = {
-      lsp-format = { enable = true; };
-      lsp-signature = { enable = true; };
-      lsp-status = { enable = true; };
-      lspkind = { enable = true; };
-
       lsp = {
         enable = true;
+        capabilities = "capabilities = require('blink.cmp').get_lsp_capabilities(nil, true)";
         servers = {
           bashls.enable = true;
           lua_ls.enable = true;

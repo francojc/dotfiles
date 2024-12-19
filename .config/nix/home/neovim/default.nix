@@ -3,6 +3,7 @@
     ./autocommands.nix
     ./completion.nix
     ./keymaps.nix
+    ./lsp.nix
     ./options.nix
     ./plugins
   ];
