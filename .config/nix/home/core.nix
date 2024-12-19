@@ -51,7 +51,7 @@
     tree
     which
     xclip
-    xquartz
+    # xquartz # pulls in xorg-server for some reason
     yazi-unwrapped
     yt-dlp
     zoxide

@@ -10,7 +10,7 @@
 
 ## Configuration Structure
 
-```bash
+```txt
 nix/
 ├── Justfile # a Justfile to simplify your nix-darwin workflow.
 ├── README.md # this file

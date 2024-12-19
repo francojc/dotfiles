@@ -44,21 +44,21 @@
           ./modules/host-users.nix
 
           # home manager
-          # home-manager.darwinModules.home-manager
-          # {
-          #   home-manager = {
-          #     useGlobalPkgs = true;
-          #     useUserPackages = true;
-          #     verbose = true;
-          #     extraSpecialArgs = specialArgs;
-          #     users.${username} = {
-          #       imports = [
-          #         ./home
-          #         nixvim.homeManagerModules.nixvim
-          #       ];
-          #     };
-          #   };
-          # }
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              verbose = true;
+              extraSpecialArgs = specialArgs;
+              users.${username} = {
+                imports = [
+                  ./home
+                  nixvim.homeManagerModules.nixvim
+                ];
+              };
+            };
+          }
         ];
       };
 

@@ -23,7 +23,7 @@
       };
 
       nvim-snippets = {
-        enable = true;
+        enable = false;
         settings = {
           friendly_snippets = true;
           extended_filetypes = {
@@ -44,18 +44,8 @@
         };
       };
 
-      blink-cmp = {
-        enable = true;
-        settings = {
-          accept = {
-            auto_brackets.enabled = true;
-          };
-          keymap.preset = "default";
-        };
-      };
-
       cmp = {
-        enable = false;
+        enable = true;
         autoEnableSources = false;
         settings = {
           formatting = {

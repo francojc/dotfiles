@@ -224,10 +224,10 @@ RYLEnrRC0=";
       })
 
       -- cmp-pandoc setup
-      require("cmp_pandoc").setup({
-        -- @type: table of strings
-        filetypes = { "pandoc", "markdown", "rmd", "quarto" }
-      })
+      -- require("cmp_pandoc").setup({
+      --   -- @type: table of strings
+      --   filetypes = { "pandoc", "markdown", "rmd", "quarto" }
+      -- })
 
       -- Dropbar setup
       require("dropbar").setup({ })

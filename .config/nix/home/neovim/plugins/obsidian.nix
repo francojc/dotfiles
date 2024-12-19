@@ -6,7 +6,7 @@
         ui.enable = false;
         completion = {
           min_chars = 2;
-          nvim_cmp = false;
+          nvim_cmp = true;
         };
         attachments = {
           img_folder = "~/Google Drive/My Drive/Notes/Assets/Attachments/";
