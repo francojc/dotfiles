@@ -28,7 +28,7 @@ Ubuntu = "󰕈 "
 Alpine = " "
 
 [nix_shell]
-symbol = " "
+symbol = " "
 format = "[$symbol]($style)"
 
 [directory]

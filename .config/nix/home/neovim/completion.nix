@@ -15,7 +15,8 @@
           enable_autosnippets = true;
         };
         fromVscode = [
-          { paths = "${pkgs.vimPlugins.friendly-snippets}"; }
+          { }
+          { paths = "./snippets"; }
         ];
       };
 
@@ -32,22 +33,22 @@
             signature_help.enabled = true;
           };
           keymap = {
-            "<C-b>" = [
+            "<C-u>" = [
               "scroll_documentation_up"
               "fallback"
             ];
             "<C-e>" = [
               "hide"
             ];
-            "<C-f>" = [
+            "<C-d>" = [
               "scroll_documentation_down"
               "fallback"
             ];
-            "<C-n>" = [
+            "<Tab>" = [
               "select_next"
               "fallback"
             ];
-            "<C-p>" = [
+            "<S-Tab>" = [
               "select_prev"
               "fallback"
             ];
@@ -59,20 +60,12 @@
             "<C-y>" = [
               "select_and_accept"
             ];
-            "<Down>" = [
-              "select_next"
-              "fallback"
-            ];
-            "<S-Tab>" = [
+            "<Left>" = [
               "snippet_backward"
               "fallback"
             ];
-            "<Tab>" = [
+            "<Right>" = [
               "snippet_forward"
-              "fallback"
-            ];
-            "<Up>" = [
-              "select_prev"
               "fallback"
             ];
 

@@ -153,7 +153,7 @@
             code = {
               above = " ";
               below = " ";
-              border = "think";
+              border = "thick";
               language_pad = 2;
               position = "right";
               right_pad = 2;
@@ -177,7 +177,7 @@
           };
           render_modes = true;
           signs.enabled = false;
-          file_types = [ "markdown" "quarto" "rmd" "avante" "copilot-chat" ];
+          file_types = [ "markdown" "quarto" "rmd" "copilot-chat" ];
           win_options = {
             conceallevel.rendered = 0;
           };
