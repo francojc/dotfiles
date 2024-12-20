@@ -18,10 +18,16 @@
   programs.nixvim = {
     colorschemes = {
       gruvbox = {
-        enable = true;
+        enable = false;
         settings = {
           contrast_dark = "hard";
           contrast_light = "hard";
+        };
+      };
+      onedark = {
+        enable = true;
+        settings = {
+          style = "warmer";
         };
       };
     };
