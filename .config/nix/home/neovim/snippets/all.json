@@ -1,7 +1,6 @@
 {
   "Say hello to the world": {
-    "prefix": ["hw", "hello"],
+    "prefix": ["hello"],
     "body": "Hello, ${1:world}!$0"
   }
 }
-
