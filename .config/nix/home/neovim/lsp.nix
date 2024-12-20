@@ -4,60 +4,38 @@
       lsp = {
         enable = true;
         capabilities = "capabilities = require('blink.cmp').get_lsp_capabilities(nil, true)";
-        servers = {
-          bashls.enable = true;
-          lua_ls.enable = true;
-          nil_ls.enable = true;
-          nixd = {
-            enable = true;
-            cmd = [ "nixd" "--semantic-tokens=false" ];
-            settings = {
-              formatting = {
-                command = [ "alejandra" ];
-              };
-            };
-          };
-          marksman = {
-            enable = true;
-            filetypes = [ "markdown" "quarto" ];
-          };
-          pyright = {
-            enable = true;
-            autostart = false;
-            filetypes = [ "py" "python" "quarto" ];
-            settings = {
-              python = {
-                analysis = {
-                  autoSearchPaths = true;
-                  diagnosticMode = "workspace";
-                  useLibraryCodeForTypes = true;
-                  typeCheckingMode = "basic";
-                };
-              };
-            };
-          };
-          r_language_server = {
-            enable = true;
-            autostart = false;
-            package = null;
-            filetypes = [ "r" "quarto" "rmd" ];
-          };
-          yamlls.enable = true;
-        };
         keymaps = {
           silent = true;
-          lspBuf = {
-            gd = {
-              action = "definition";
-              desc = "LSP: Goto Definition";
+          diagnostic = {
+            "[d" = {
+              action = "goto_next";
+              desc = "LSP: Next Diagnostic";
             };
-            gr = {
-              action = "references";
-              desc = "LSP: Goto References";
+            "]d" = {
+              action = "goto_prev";
+              desc = "LSP: Previous Diagnostic";
+            };
+            "<leader>cd" = {
+              action = "open_float";
+              desc = "Line Diagnostics";
+            };
+          };
+          lspBuf = {
+            "<leader>cr" = {
+              action = "rename";
+              desc = "Rename";
+            };
+            "<leader>cw" = {
+              action = "workspace_symbol";
+              desc = "Workspace Symbol";
             };
             gD = {
               action = "declaration";
               desc = "LSP: Goto Declaration";
+            };
+            gd = {
+              action = "definition";
+              desc = "LSP: Goto Definition";
             };
             gh = {
               action = "signature_help";
@@ -71,37 +49,89 @@
               action = "type_definition";
               desc = "LSP: Type Definition";
             };
+            gr = {
+              action = "references";
+              desc = "LSP: Goto References";
+            };
             K = {
               action = "hover";
               desc = "LSP: Hover";
             };
-            "<leader>cw" = {
-              action = "workspace_symbol";
-              desc = "Workspace Symbol";
-            };
-            "<leader>cr" = {
-              action = "rename";
-              desc = "Rename";
+          };
+        };
+        servers = {
+          bashls.enable = true;
+          lua_ls.enable = true;
+          marksman = {
+            enable = true;
+            filetypes = [ "markdown" "quarto" ];
+          };
+          nil_ls.enable = true;
+          nixd = {
+            enable = true;
+            cmd = [ "nixd" "--semantic-tokens=false" ];
+            settings = {
+              formatting = {
+                command = [ "alejandra" ];
+              };
             };
           };
-          diagnostic = {
-            "<leader>cd" = {
-              action = "open_float";
-              desc = "Line Diagnostics";
-            };
-            "[d" = {
-              action = "goto_next";
-              desc = "LSP: Next Diagnostic";
-            };
-            "]d" = {
-              action = "goto_prev";
-              desc = "LSP: Previous Diagnostic";
+          pyright = {
+            enable = true;
+            autostart = false;
+            filetypes = [ "py" "python" "quarto" ];
+            settings = {
+              python = {
+                analysis = {
+                  autoSearchPaths = true;
+                  diagnosticMode = "workspace";
+                  typeCheckingMode = "basic";
+                  useLibraryCodeForTypes = true;
+                };
+              };
             };
           };
+          r_language_server = {
+            enable = true;
+            autostart = false;
+            filetypes = [ "r" "quarto" "rmd" ];
+            package = null;
+          };
+          yamlls.enable = true;
         };
       };
     };
+    extraConfigLua = ''
+      local lsp_active = false
 
-    extraConfigLua = "local lsp_active = false\n\nfunction _G.toggle_r_lsp()\n  local function get_local_r_path()\n    local handle = io.popen(\"nix develop --command which R 2>/dev/null\")\n    local result = handle:read(\"*a\")\n      handle:close()\n   return result:match(\"^%s*(.-)%s*$\")  -- trim any leading/trailing whitespace\n  end\n\n  local r_path = get_local_r_path()\n\n  if lsp_active then\n    -- Stop R LSP\n    vim.lsp.stop_client(vim.lsp.get_active_clients())\n    lsp_active = false\n    print(\"R LSP stopped\")\n  else\n    -- Start R LSP\n    require('lspconfig').r_language_server.setup{\n      cmd = {\n        string.format(\"%s\", r_path), \"--slave\", \"-e\", \"languageserver::run()\",\n      },\n      filetypes = { \"r\", \"quarto\" },\n      root_dir = require('lspconfig.util').root_pattern(\".git\", \"DESCRIPTION\"),\n    }\n    lsp_active = true\n    print(\"R LSP started\")\n  end\n end\n";
+      function _G.toggle_r_lsp()
+        local function get_local_r_path()
+          local handle = io.popen("nix develop --command which R 2>/dev/null")
+          local result = handle:read("*a")
+          handle:close()
+          return result:match("^%s*(.-)%s*$")  -- trim any leading/trailing whitespace
+        end
+
+        local r_path = get_local_r_path()
+
+        if lsp_active then
+          -- Stop R LSP
+          vim.lsp.stop_client(vim.lsp.get_active_clients())
+          lsp_active = false
+          print("R LSP stopped")
+        else
+          -- Start R LSP
+          require('lspconfig').r_language_server.setup{
+            cmd = {
+              string.format("%s", r_path), "--slave", "-e", "languageserver::run()",
+            },
+            filetypes = { "r", "quarto" },
+            root_dir = require('lspconfig.util').root_pattern(".git", "DESCRIPTION"),
+          }
+          lsp_active = true
+          print("R LSP started")
+        end
+      end
+    '';
   };
 }
