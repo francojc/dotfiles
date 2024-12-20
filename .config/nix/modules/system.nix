@@ -135,7 +135,7 @@
       };
 
       loginwindow = {
-        GuestEnabled = false; # disable guest user
+        GuestEnabled = true; # disable guest user
       };
     };
 

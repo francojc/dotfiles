@@ -3,7 +3,6 @@
     plugins = {
       lsp = {
         enable = true;
-        capabilities = "capabilities = require('blink.cmp').get_lsp_capabilities(nil, true)";
         keymaps = {
           silent = true;
           diagnostic = {
@@ -37,7 +36,7 @@
               action = "definition";
               desc = "LSP: Goto Definition";
             };
-            gh = {
+            gs = {
               action = "signature_help";
               desc = "LSP: Signature Help";
             };
@@ -97,7 +96,10 @@
             filetypes = [ "r" "quarto" "rmd" ];
             package = null;
           };
-          yamlls.enable = true;
+          yamlls = {
+            enable = true;
+            autostart = false;
+          };
         };
       };
     };

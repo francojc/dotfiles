@@ -43,7 +43,7 @@
             "<C-e>" = "cmp.mapping.close()";
             "<C-f>" = "cmp.mapping.scroll_docs(4)";
             "<CR>" = "cmp.mapping.confirm({ select = true })";
-            "<Tab>" = "cmp.mapping(function(fallback)
+            "<Tab>" = ''cmp.mapping(function(fallback)
               if cmp.visible() then
                 cmp.select_next_item()
               elseif require('luasnip').locally_jumpable(1) then
@@ -51,9 +51,9 @@
               else
                 fallback()
               end
-            end, {'i', 's'})";
+            end, {'i', 's'})'';
 
-            "<S-Tab>" = "cmp.mapping(function(fallback)
+            "<S-Tab>" = ''cmp.mapping(function(fallback)
               if cmp.visible() then
                 cmp.select_prev_item()
               elseif require('luasnip').locally_jumpable(-1) then
@@ -61,7 +61,7 @@
               else
                 fallback()
               end
-            end, {'i', 's'})";
+            end, {'i', 's'})'';
           };
           snippet = {
             expand =
@@ -75,7 +75,7 @@
             [
               { name = "nvim_lsp_signature_help"; }
               { name = "nvim_lsp"; }
-              { name = "luasnip"; }
+              { name = "luasnip"; keyword_length = 3; }
               { name = "pandoc_references"; }
               { name = "path"; }
               { name = "buffer"; keyword_length = 5; }
