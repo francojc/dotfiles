@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   programs.nixvim = {
     plugins = {
@@ -39,7 +37,7 @@
           };
           mapping = {
             "<C-Space>" = "cmp.mapping.complete()";
-            "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+            "<C-b>" = "cmp.mapping.scroll_docs(-4)";
             "<C-e>" = "cmp.mapping.close()";
             "<C-f>" = "cmp.mapping.scroll_docs(4)";
             "<CR>" = "cmp.mapping.confirm({ select = true })";
@@ -73,10 +71,10 @@
           };
           sources =
             [
-              { name = "nvim_lsp_signature_help"; }
-              { name = "nvim_lsp"; }
               { name = "luasnip"; keyword_length = 3; }
-              { name = "pandoc_references"; }
+              { name = "nvim_lsp"; }
+              { name = "nvim_lsp_document_symbol"; }
+              { name = "nvim_lsp_signature_help"; }
               { name = "path"; }
               { name = "buffer"; keyword_length = 5; }
             ];

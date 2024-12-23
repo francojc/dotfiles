@@ -157,12 +157,6 @@
         action = "<Cmd>AiderToggle<CR>";
         options = { desc = "Aider"; };
       }
-      # {
-      #   mode = "n";
-      #   key = "<leader>ac";
-      #   action = "<Cmd>CodeCompanionActions<CR>";
-      #   options = { desc = "CodeCompanion Actions"; };
-      # }
       {
         mode = "n";
         key = "<leader>ag";

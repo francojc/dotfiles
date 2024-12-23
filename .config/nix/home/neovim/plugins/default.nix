@@ -62,6 +62,7 @@
           };
         };
       };
+      cmp-pandoc-nvim.enable = true;
       copilot-vim = { enable = true; };
       copilot-chat = {
         enable = true;
@@ -74,6 +75,7 @@
           temperature = 0.3;
         };
       };
+      diffview.enable = true;
       dressing.enable = true;
       flash = {
         enable = true;
@@ -192,6 +194,7 @@
 
       spectre.enable = true;
       todo-comments.enable = true;
+      toggleterm.enable = true;
       trouble.enable = true;
       vim-surround.enable = true;
       web-devicons.enable = true;
@@ -216,8 +219,8 @@ RYLEnrRC0=";
         src = pkgs.fetchFromGitHub {
           owner = "aweis89";
           repo = "aider.nvim";
-          rev = "9de44fef7295ff9df60a803527e923815824fcd2";
-          hash = "sha256-ce0SNpfZ+5xe2VmGg56enSwaAAQrisK01PXHWXn6Ysw=";
+          rev = "9c70158a8966d717f7a7b9d7d045e44662f0f2a1";
+          hash = "sha256-GBwgGI6wvu52hdwRoVkJEfaecSUSr+/qMYxYAy75Hv8=";
         };
       })
 
@@ -230,7 +233,9 @@ RYLEnrRC0=";
           hash = "sha256-3VdwHC4/ti6QCCrb6ciRDYxk6+EIgrcLN0vmQYn00RQ=";
         };
       })
+
       pkgs.vimPlugins.quarto-nvim
+
     ];
 
     # Lua config
@@ -248,23 +253,57 @@ RYLEnrRC0=";
 
       -- Aider setup
       require("aider").setup({
+        watch_files = true,
+        spawn_on_startup = false,
         fzf_action_key = "ctrl-x",
-        window = {
-          layout = "float",
-          width = 0.5,
-          height = 0.5,
-          border = "rounded",
-        }
+        notify = require("fidget").notify,
+        aider_args = {},
+        -- after_update_hook = function() require("diffview").open({'HEAD^'}) end,
+        model_picker_search = { "^anthropic/", "^openai/", "^gemini" },
+        focus_on_spawn = false,
+        auto_scroll = false,
+        dark_mode = false,
+        on_term_open = function()
+          local function tmap(key, val)
+            local opt = { buffer = 0 }
+            vim.keymap.set("t", key, val, opt)
+          end
+          -- exit insert mode
+          tmap("<Esc>", "<C-\\><C-n>")
+          tmap("jj", "<C-\\><C-n>")
+          -- enter command mode
+          tmap(":", "<C-\\><C-n>:")
+          -- scrolling up/down
+          tmap("<C-u>", "<C-\\><C-n><C-u>")
+          tmap("<C-d>", "<C-\\><C-n><C-d>")
+          -- remove line numbers
+          vim.wo.number = false
+          vim.wo.relativenumber = false
+        end,
+        win = {
+          direction = "vertical",
+        },
       })
 
       -- cmp-pandoc setup
-      -- require("cmp_pandoc").setup({
-      --   -- @type: table of strings
-      --   filetypes = { "pandoc", "markdown", "rmd", "quarto" }
-      -- })
+      require("cmp_pandoc").setup({
+        -- @type: table of strings
+        filetypes = { "markdown", "quarto", "rmd" },
+        bibliography =  {
+          documentation = true,
+          fields = {
+            "author",
+            "title",
+            "year"
+          },
+        },
+        crossref = {
+          documentation = true,
+        },
+      })
 
       -- Dropbar setup
-      require("dropbar").setup({ })
+      require("dropbar").setup()
 
       -- Quarto setup
       require("quarto").setup()

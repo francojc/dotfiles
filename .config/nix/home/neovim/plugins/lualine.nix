@@ -69,7 +69,14 @@
 
           lualine_x = [ "searchcount" ];
           lualine_y = [ "diagnostics" ];
-          lualine_z = [ "progress" ];
+          # lualine_z = [ "filetype" "progress" ];
+          lualine_z = [
+            {
+              __unkeyed-1 = "filetype";
+              colored = false;
+            }
+            "progress"
+          ];
         };
         tabline = {
           # lualine_c = [

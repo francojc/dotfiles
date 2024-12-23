@@ -102,6 +102,11 @@
           };
         };
       };
+      lspkind = {
+        enable = true;
+        cmp.enable = true;
+      };
+      lsp-format.enable = true;
     };
     extraConfigLua = ''
       local lsp_active = false

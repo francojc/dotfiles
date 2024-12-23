@@ -13,14 +13,8 @@
           {
             __unkeyed-1 = "<leader>a";
             mode = "v";
-            group = "Copilot";
+            group = "Assistants";
             icon = "";
-          }
-          {
-            __unkeyed-1 = "<leader>c";
-            mode = "v";
-            group = "CodeCompanion";
-            icon = " ";
           }
           {
             __unkeyed-1 = "<leader>b";
