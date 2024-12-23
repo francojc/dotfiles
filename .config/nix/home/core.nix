@@ -5,6 +5,7 @@
     atuin
     bat
     datasette
+    drawio
     duf
     entr
     eza
@@ -31,6 +32,7 @@
     m-cli
     mas
     mdcat
+    mpv-unwrapped
     ncdu
     neofetch
     nix-prefetch-git
@@ -38,6 +40,7 @@
     pass
     pngpaste
     pianobar
+    pipx
     poppler_utils
     pyright
     qpdf
