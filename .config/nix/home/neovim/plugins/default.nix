@@ -355,6 +355,66 @@ RYLEnrRC0=";
       vim.keymap.set({"n", "v"}, "<leader>m1", "I# ", { desc = "H1", silent = true })
       vim.keymap.set({"n", "v"}, "<leader>m2", "I## ", { desc = "H2", silent = true })
       vim.keymap.set({"n", "v"}, "<leader>m3", "I### ", { desc = "H3", silent = true })
+
+      -- Spell Language Functionality
+      local function get_project_root()
+        local current_file = vim.fn.expand('%:p')
+        if current_file == "" then
+          return nil
+        end
+        local path = vim.fn.fnamemodify(current_file, ':h')
+        while path ~= "" and path ~= "/" do
+          if vim.fn.isdirectory(path .. "/.git") == 1 or vim.fn.isdirectory(path .. "/.nvim_spell_lang") == 1 then
+            return path
+          end
+          path = vim.fn.fnamemodify(path, ':h')
+        end
+        return nil
+      end
+
+      local function load_spell_lang()
+        local project_root = get_project_root()
+        if not project_root then
+          return
+        end
+        local spell_lang_file = project_root .. "/.nvim_spell_lang"
+        if vim.fn.filereadable(spell_lang_file) == 1 then
+          local lang = vim.trim(vim.fn.readfile(spell_lang_file)[1])
+          vim.opt_local.spelllang = lang
+        else
+          vim.opt_local.spelllang = "en_us"
+        end
+      end
+
+      local function set_spell_lang(lang)
+        local project_root = get_project_root()
+        if not project_root then
+          return
+        end
+        local spell_lang_file = project_root .. "/.nvim_spell_lang"
+        vim.fn.writefile({lang}, spell_lang_file)
+        vim.opt_local.spelllang = lang
+      end
+
+      vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
+          load_spell_lang()
+        end,
+      })
+
+      vim.api.nvim_create_user_command("SpellLang", function()
+        vim.ui.select(
+          { "en_us", "es" },
+          {
+            prompt = "Select spell language:",
+          },
+          function(choice)
+            if choice then
+              set_spell_lang(choice)
+            end
+          end
+        )
+      end, {})
     '';
   };
 }
