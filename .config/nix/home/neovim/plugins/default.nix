@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   # Plugins: more config
   imports = [
     ./alpha.nix
@@ -35,7 +35,7 @@
       auto-session = {
         enable = true;
         settings = {
-          bypass_save_filetypes = [ "alpha" "NvimTree" "term" ];
+          bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
       avante = {
@@ -63,7 +63,7 @@
         };
       };
       cmp-pandoc-nvim.enable = true;
-      copilot-vim = { enable = true; };
+      copilot-vim = {enable = true;};
       copilot-chat = {
         enable = true;
         settings = {
@@ -87,31 +87,31 @@
         enable = true;
         settings.current_line_blame = true;
         settings.signs = {
-          add = { text = "│"; };
-          change = { text = "│"; };
-          delete = { text = "_"; };
-          topdelete = { text = "‾"; };
-          changedelete = { text = "~"; };
-          untracked = { text = "┆"; };
+          add = {text = "│";};
+          change = {text = "│";};
+          delete = {text = "_";};
+          topdelete = {text = "‾";};
+          changedelete = {text = "~";};
+          untracked = {text = "┆";};
         };
       };
       image = {
         enable = true;
         integrations = {
           markdown = {
-            filetypes = [ "markdown" "quarto" "rmd" ];
+            filetypes = ["markdown" "quarto" "rmd"];
             clearInInsertMode = true;
             onlyRenderImageAtCursor = true;
           };
         };
-        maxHeightWindowPercentage = 20;
+        maxHeightWindowPercentage = 25;
       };
       lazygit.enable = true;
       mini = {
         enable = true;
         modules = {
-          indentscope = { };
-          icons = { };
+          indentscope = {};
+          icons = {};
         };
       };
       nix.enable = true;
@@ -124,7 +124,7 @@
       colorizer = {
         enable = true;
         settings = {
-          filetypes = [ "*" ];
+          filetypes = ["*"];
           user_default_options = {
             mode = "virtualtext";
             virtualtext = "■";
@@ -154,7 +154,7 @@
         enable = true;
         settings = {
           bullet = {
-            icons = [ "■" "□" "◆" "◇" ];
+            icons = ["■" "□" "◆" "◇"];
             right_pad = 1;
           };
           code = {
@@ -185,7 +185,7 @@
           };
           render_modes = true;
           signs.enabled = false;
-          file_types = [ "markdown" "quarto" "rmd" "copilot-chat" ];
+          file_types = ["markdown" "quarto" "rmd" "copilot-chat"];
           win_options = {
             conceallevel.rendered = 0;
           };
@@ -204,15 +204,16 @@
     # extraPlugins
     extraPlugins = [
       (pkgs.vimUtils.buildVimPlugin {
-        name = "aerial.nvim";
-        src = pkgs.fetchFromGitHub {
-          owner = "stevearc";
-          repo = "aerial.nvim";
-          rev = "140f48fb068d21c02e753c63f7443649e55576f0";
-          hash = "sha256-7Sj7Z5blJ6Qk/99EV4EBv4vdK1dHDGFL3W
+          name = "aerial.nvim";
+          src =
+            pkgs.fetchFromGitHub {
+              owner = "stevearc";
+              repo = "aerial.nvim";
+              rev = "140f48fb068d21c02e753c63f7443649e55576f0";
+              hash = "sha256-7Sj7Z5blJ6Qk/99EV4EBv4vdK1dHDGFL3W
 RYLEnrRC0=";
-        };
-      })
+            };
+        })
 
       (pkgs.vimUtils.buildVimPlugin {
         name = "aider.nvim";
@@ -235,7 +236,6 @@ RYLEnrRC0=";
       })
 
       pkgs.vimPlugins.quarto-nvim
-
     ];
 
     # Lua config
@@ -306,7 +306,21 @@ RYLEnrRC0=";
       require("dropbar").setup()
 
       -- Quarto setup
-      require("quarto").setup()
+      require("quarto").setup({
+        debug = false,
+        closePreviewOnExit = true,
+        lspFeatures = {
+          enabled = true,
+          languages = { "r", "python", "bash", "html" },
+          diagnostics = {
+            enabled = true,
+            triggers = { "BufWritePost" },
+          },
+          completion = {
+          enabled = true,
+          },
+        },
+      })
 
       -- Keymaps for navigating terminal windows
       vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
