@@ -31,7 +31,8 @@
         group = "personal";
         callback.__raw = ''
           function()
-            vim.api.nvim_buf_set_keymap(0, 't', ':', '<C-\\><C-n>:i', { noremap = true, silent = true })
+            local bufnr = vim.api.nvim_get_current_buf()
+            vim.api.nvim_buf_set_keymap(bufnr, 't', ':', '<C-v>:', { noremap = true, silent = true })
           end
         '';
       }
