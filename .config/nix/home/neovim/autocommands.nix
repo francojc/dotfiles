@@ -25,6 +25,16 @@
           end
         '';
       }
+      {
+        event = "TermOpen";
+        desc = "Map colon to insert colon in terminal mode";
+        group = "personal";
+        callback.__raw = ''
+          function()
+            vim.api.nvim_buf_set_keymap(0, 't', ':', '<C-\\><C-n>:i', { noremap = true, silent = true })
+          end
+        '';
+      }
     ];
   };
 }
