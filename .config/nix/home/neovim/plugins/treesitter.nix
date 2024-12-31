@@ -3,26 +3,32 @@
     plugins.treesitter = {
       enable = true;
       nixGrammars = true;
-      languageRegister.markdown = [ "quarto" "rmd" ];
+      languageRegister.markdown = ["quarto" "rmd"];
       settings = {
         auto_install = true;
+        autopairs = true;
         ensure_installed = [
-          "r"
-          "python"
+          "bash"
+          "css"
+          "csv"
+          "dot"
+          "html"
+          "javascript"
+          "latex"
+          "lua"
           "markdown"
           "markdown_inline"
-          "bash"
-          "vim"
-          "latex"
-          "regex"
-          "html"
-          "css"
-          "dot"
-          "javascript"
           "mermaid"
+          "nix"
+          "python"
+          "r"
+          "regex"
           "query"
+          "toml"
+          "vim"
+          "yaml"
         ];
-        indent = { enable = true; };
+        folding = true;
         highlight = {
           enable = true;
           additional_vim_regex_highlighting = false;
@@ -36,8 +42,9 @@
             node_decremental = "<bs>";
           };
         };
+        indent = {enable = true;};
       };
-      folding = true;
+      nixvimInjections = true;
     };
 
     plugins.treesitter-context.enable = true;

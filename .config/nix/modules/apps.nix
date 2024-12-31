@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     carapace
     curl
@@ -28,7 +26,7 @@
     taps = [
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
-      # "nikitabobko/tap" # for aerospace
+      "nikitabobko/tap" # for aerospace
     ];
 
     brews = [
@@ -42,14 +40,16 @@
     ];
 
     casks = [
-      # "aerospace"
+      "aerospace"
       "appcleaner"
       "bettermouse"
       # "calibre"
       "chatgpt"
+      "clop"
       "docker"
       "dropbox"
       "fantastical"
+      "ghostty@tip"
       "google-chrome"
       "google-drive"
       "kap"

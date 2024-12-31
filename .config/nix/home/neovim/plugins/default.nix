@@ -194,7 +194,15 @@
 
       spectre.enable = true;
       todo-comments.enable = true;
-      toggleterm.enable = true;
+      toggleterm = {
+        enable = true;
+        settings = {
+          direction = "vertical";
+          size = 60;
+          insert_mappings = false;
+          terminal_mappings = false;
+        };
+      };
       trouble.enable = true;
       vim-surround.enable = true;
       web-devicons.enable = true;

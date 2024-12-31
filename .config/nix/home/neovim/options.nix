@@ -110,6 +110,8 @@
       laststatus = 3;
       cmdheight = 0;
       showmode = false; # We don't need to see things like INSERT anymore
+
+      pumheight = 0; # Use available space for completion menu
     };
   };
 }

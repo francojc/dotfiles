@@ -9,7 +9,7 @@ alias c='clear'
 
 alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"'
 alias la='ls --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
-alias lt='la --tree --level=2 --ignore-glob=".git|.DS_Store"'
+alias lt='la icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
 
 alias fd="fd --hidden --exclude '.git'"
 
@@ -35,7 +35,7 @@ alias gc='git commit -m'
 alias gp='git push'
 alias gpl='git pull'
 alias gf='git fetch'
-alias gl='git log --oneline --decorate --graph'
+alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 alias gba='git branch -a'
 alias gco='git checkout'
 alias gsw='git switch'
@@ -61,7 +61,6 @@ alias qr='quarto render'
 alias qrh='quarto render --no-clean --to html'
 alias qrp='quarto render --no-clean --to pdf'
 alias qpub='quarto publish gh-pages'
-
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory

@@ -1,4 +1,8 @@
 {
+  username,
+  hostname,
+  ...
+}: {
   programs.nixvim = {
     plugins = {
       lsp = {
@@ -59,26 +63,33 @@
           };
         };
         servers = {
-          bashls.enable = true;
+          bashls.enable = false;
           lua_ls.enable = true;
           marksman = {
             enable = true;
-            filetypes = [ "markdown" "quarto" ];
+            filetypes = ["markdown" "quarto"];
           };
           nil_ls.enable = true;
           nixd = {
             enable = true;
-            cmd = [ "nixd" "--semantic-tokens=false" ];
+            # cmd = [ "nixd" "--semantic-tokens=false" ];
+            extraOptions.offset_encoding = "utf-8"; # nixvim #2390
             settings = {
+              expr = "import <nixpkgs> {}";
               formatting = {
-                command = [ "alejandra" ];
+                command = ["alejandra"];
+              };
+              options = {
+                nixos.expr = "(builtins.getFlake \"/Users/${username}/.dotfiles/.config/nix\").nixosConfigurations.${hostname}.options";
+                home-manager.expr = "(builtins.getFlake \"/Users/${username}/.dotfiles/.config/nix\").homeConfigurations.${username}.options";
               };
             };
           };
+          nushell.enable = true;
           pyright = {
             enable = true;
             autostart = false;
-            filetypes = [ "py" "python" "quarto" ];
+            filetypes = ["py" "python" "quarto"];
             settings = {
               python = {
                 analysis = {
@@ -93,7 +104,7 @@
           r_language_server = {
             enable = true;
             autostart = false;
-            filetypes = [ "r" "quarto" "rmd" ];
+            filetypes = ["r" "quarto" "rmd"];
             package = null;
           };
           yamlls = {
@@ -106,7 +117,10 @@
         enable = true;
         cmp.enable = true;
       };
-      lsp-format.enable = true;
+      lsp-format = {
+        enable = true;
+        lspServersToEnable = "all";
+      };
     };
     extraConfigLua = ''
       local lsp_active = false
