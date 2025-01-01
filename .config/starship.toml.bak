@@ -1,0 +1,70 @@
+command_timeout = 1000
+
+# Info format ----
+format = """
+$os\
+$nix_shell\
+$directory\
+$rlang\
+$python\
+$quarto\
+$git_branch\
+$git_state\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+# Segment settings ----
+
+[os]
+disabled = false
+style = "bright-white"
+
+[os.symbols]
+Macos = " "
+Linux = " "
+Ubuntu = "󰕈 "
+Alpine = " "
+
+[nix_shell]
+symbol = " "
+format = "[$symbol]($style)"
+
+[directory]
+format = "[$path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[python]
+symbol = ""
+
+[rlang]
+symbol = " "
+
+[quarto]
+format = "[$symbol$version]($style) "
+
+[git_branch]
+symbol = " "
+
+[git_status]
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+style = "cyan"
+stashed = ""
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+# Prompt ----
+
+[character]
+success_symbol = "[❯](blue)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
+
