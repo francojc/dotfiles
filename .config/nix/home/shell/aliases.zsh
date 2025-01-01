@@ -5,10 +5,11 @@ alias switch='darwin-rebuild switch --flake ~/.dotfiles/.config/nix'
 
 alias ..='cd ..'
 alias ...='cd ../..'
+
 alias c='clear'
 
 alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"'
-alias la='ls --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
+alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
 alias lt='la icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
 
 alias fd="fd --hidden --exclude '.git'"

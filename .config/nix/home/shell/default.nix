@@ -15,7 +15,7 @@
       plugins = [];
     };
     nushell = {
-      enable = true;
+      enable = false;
       extraConfig = ''
           # -- Configuration for Nu shell --
           $env.config.show_banner = false
