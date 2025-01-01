@@ -25,17 +25,17 @@
           end
         '';
       }
-      {
-        event = "TermOpen";
-        desc = "Map colon to insert colon in terminal mode";
-        group = "personal";
-        callback.__raw = ''
-          function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            vim.api.nvim_buf_set_keymap(bufnr, 't', ':', '<C-v>:', { noremap = true, silent = true })
-          end
-        '';
-      }
+      # {
+      #   event = "TermOpen";
+      #   desc = "Map colon to insert colon in terminal mode";
+      #   group = "personal";
+      #   callback.__raw = ''
+      #     function()
+      #       local bufnr = vim.api.nvim_get_current_buf()
+      #       vim.api.nvim_buf_set_keymap(bufnr, 't', ':', '<C-v>:', { noremap = true, silent = true })
+      #     end
+      #   '';
+      # }
     ];
   };
 }

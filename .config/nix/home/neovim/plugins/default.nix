@@ -198,9 +198,8 @@
         enable = true;
         settings = {
           direction = "vertical";
-          size = 60;
-          insert_mappings = false;
-          terminal_mappings = false;
+          open_mapping = "[[<C-t>]]";
+          size = 50;
         };
       };
       trouble.enable = true;
@@ -211,38 +210,8 @@
 
     # extraPlugins
     extraPlugins = [
-      (pkgs.vimUtils.buildVimPlugin {
-          name = "aerial.nvim";
-          src =
-            pkgs.fetchFromGitHub {
-              owner = "stevearc";
-              repo = "aerial.nvim";
-              rev = "140f48fb068d21c02e753c63f7443649e55576f0";
-              hash = "sha256-7Sj7Z5blJ6Qk/99EV4EBv4vdK1dHDGFL3W
-RYLEnrRC0=";
-            };
-        })
-
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "aider.nvim";
-        src = pkgs.fetchFromGitHub {
-          owner = "aweis89";
-          repo = "aider.nvim";
-          rev = "9c70158a8966d717f7a7b9d7d045e44662f0f2a1";
-          hash = "sha256-GBwgGI6wvu52hdwRoVkJEfaecSUSr+/qMYxYAy75Hv8=";
-        };
-      })
-
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "dropbar.nvim";
-        src = pkgs.fetchFromGitHub {
-          owner = "Bekaboo";
-          repo = "dropbar.nvim";
-          rev = "669e325489202ae4da5a951314bbf8dbb20e7cff";
-          hash = "sha256-3VdwHC4/ti6QCCrb6ciRDYxk6+EIgrcLN0vmQYn00RQ=";
-        };
-      })
-
+      pkgs.vimPlugins.aerial-nvim
+      pkgs.vimPlugins.dropbar-nvim
       pkgs.vimPlugins.quarto-nvim
     ];
 
@@ -257,40 +226,6 @@ RYLEnrRC0=";
         end,
         -- keymap to toggle the aerial window
         vim.keymap.set("n", "<leader>\\o", "<cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
-      })
-
-      -- Aider setup
-      require("aider").setup({
-        watch_files = true,
-        spawn_on_startup = false,
-        fzf_action_key = "ctrl-x",
-        notify = require("fidget").notify,
-        aider_args = {},
-        -- after_update_hook = function() require("diffview").open({'HEAD^'}) end,
-        model_picker_search = { "^anthropic/", "^openai/", "^gemini" },
-        focus_on_spawn = false,
-        auto_scroll = false,
-        dark_mode = false,
-        on_term_open = function()
-          local function tmap(key, val)
-            local opt = { buffer = 0 }
-            vim.keymap.set("t", key, val, opt)
-          end
-          -- exit insert mode
-          tmap("<Esc>", "<C-\\><C-n>")
-          tmap("jj", "<C-\\><C-n>")
-          -- enter command mode
-          tmap(":", "<C-\\><C-n>:")
-          -- scrolling up/down
-          tmap("<C-u>", "<C-\\><C-n><C-u>")
-          tmap("<C-d>", "<C-\\><C-n><C-d>")
-          -- remove line numbers
-          vim.wo.number = false
-          vim.wo.relativenumber = false
-        end,
-        win = {
-          direction = "vertical",
-        },
       })
 
       -- cmp-pandoc setup
@@ -310,9 +245,6 @@ RYLEnrRC0=";
         },
       })
 
-      -- Dropbar setup
-      require("dropbar").setup()
-
       -- Quarto setup
       require("quarto").setup({
         debug = false,
@@ -330,11 +262,14 @@ RYLEnrRC0=";
         },
       })
 
-      -- Keymaps for navigating terminal windows
-      vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
-      vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j')
-      vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k')
-      vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
+      -- Keymaps for navigating Toggleterm terminal windows
+      vim.keymap.set('t', 'jj', [[<C-\><C-n>]])
+
+      --- Note: I only need to esc and change windows with
+      --- C-h and C-j as I only open ToggleTerm in vert and horz
+      vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]])
+      vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]])
+      vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]])
 
       -- Special keymapings
       -- Markdown --
@@ -345,7 +280,7 @@ RYLEnrRC0=";
 
       -- Task list
       vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task item", silent = true })
-      vim.keymap.set("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task jtem", silent = true })
+      vim.keymap.set("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task item", silent = true })
 
       -- Styled text
       vim.keymap.set("v", "<leader>mb", "c**<C-r>\"**<Esc>", { desc = "Bold", silent = true })
