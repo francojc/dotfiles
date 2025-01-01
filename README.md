@@ -29,6 +29,7 @@ Before restoring the dotfiles, ensure you have the following installed:
 
 4. **Bootstrap nix-darwin**:
    After installing Nix, you can bootstrap nix-darwin by running:
+
    ```bash
    nix build --impure --expr '<nix-darwin>' -o result
    ./result/bin/darwin-rebuild switch
@@ -49,6 +50,7 @@ Before restoring the dotfiles, ensure you have the following installed:
    ```
 
 3. Apply the configurations using the alias 'switch':
+
    ```bash
    switch
    ```
@@ -57,18 +59,6 @@ Before restoring the dotfiles, ensure you have the following installed:
 
 My Zsh and Neovim configurations are managed declaratively using Nix. Please refer to the Nix documentation for more details on how to set up your environment.
 
-## WezTerm Setup
-
-For terminal multiplexing, I use WezTerm. Ensure you have it installed and configured according to your preferences.
-
 ## Backup Existing Configurations
 
 Before applying the new configurations, it's a good idea to back up your existing dotfiles. You can do this by renaming them or moving them to a backup directory.
-
-## Customization
-
-After restoring the dotfiles, you may want to customize certain settings. Check the configuration files in the `.config/` subdirectory for any specific options.
-
-## Troubleshooting
-
-If you encounter any issues, please refer to the documentation for Nix, WezTerm, or any other tools you are using. Common issues may include missing dependencies or configuration conflicts.
