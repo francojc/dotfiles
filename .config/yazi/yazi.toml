@@ -10,7 +10,7 @@ ratio          = [ 2, 4, 3 ]
 sort_by        = "alphabetical"
 sort_sensitive = false
 sort_reverse 	 = false
-sort_dir_first = true
+sort_dir_first = false
 sort_translit  = false
 linemode       = "size"
 show_hidden    = true
@@ -195,7 +195,7 @@ previewers = [
 ]
 
 [input]
-cursor_blink = true
+cursor_blink = false
 
 # cd
 cd_title  = "Change directory:"
