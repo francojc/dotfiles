@@ -103,7 +103,7 @@
 
       {
         mode = "n";
-        key = "<C-a>";
+        key = "<C-S>";
         action = "<Cmd>wa!<CR>";
         options = {desc = "Save all!";};
       }
@@ -114,7 +114,6 @@
         action = "<Esc><Cmd>nohlsearch<CR>";
         options = {desc = "Use <Esc> to remove highlighting";};
       }
-
       {
         mode = "n";
         key = "j";
@@ -124,7 +123,6 @@
           desc = "Move down visual line";
         };
       }
-
       {
         mode = "n";
         key = "<Tab>";

@@ -13,7 +13,7 @@
       relativenumber = true;
       clipboard = "unnamedplus";
 
-      completeopt = [ "menuone" "noselect" "noinsert" ];
+      completeopt = ["menuone" "noselect" "noinsert"];
       sessionoptions = "blank,buffers,curdir,folds,tabpages,winsize,localoptions,terminal";
 
       # Spell
@@ -82,7 +82,8 @@
       foldlevel = 99; # Start with all folds open
       foldlevelstart = 99; # Start with all folds open when opening files
       foldenable = true; # Enable folding
-      foldmethod = "indent"; # Use indentation for folding by default
+      foldmethod = "expr"; # Use expression-based # Enable folding
+      foldexpr = "nvim_treesitter#foldexpr()"; # Use treesitter for folding
       foldminlines = 1; # Minimum lines for a fold
       foldnestmax = 3; # Maximum fold nesting level
       fillchars = {

@@ -14,7 +14,7 @@
         };
         fromVscode = [
           {}
-          { paths = [ (builtins.path { path = "${./.}/snippets"; }) ]; }
+          {paths = ./snippets;}
         ];
       };
 
@@ -24,8 +24,8 @@
         filetype = {
           markdown = {
             sources = [
-              {name = "nvim_lsp";}
               {name = "luasnip";}
+              {name = "nvim_lsp";}
               {name = "path";}
             ];
           };

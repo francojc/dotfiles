@@ -1,13 +1,7 @@
 {
   "Quarto Code Block": {
     "prefix": "qcode",
-    "body": [
-      "```${1:language}",
-      "#| label: ${2:label}",
-      "${0:code}",
-      "```"
-    ],
-    "description": "A Quarto code block with language
-specification"
+    "body": ["```${1:language}", "#| label: ${2:label}", "${0:code}", "```"],
+    "description": "A Quarto code block with language specification"
   }
 }
