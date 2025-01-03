@@ -1,10 +1,10 @@
-{ username, ... }: {
-
+{username, ...}: {
   imports = [
     ./core.nix
     ./git.nix
     ./neovim
     ./shell
+    ./vim.nix
   ];
 
   home = {
@@ -14,5 +14,4 @@
   };
 
   programs.home-manager.enable = true;
-
 }
