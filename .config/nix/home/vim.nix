@@ -1,9 +1,15 @@
-{
+{pkgs, ...}: {
   programs = {
     # Enable some useful shells
     vim = {
       enable = true;
-      extraconfig = ''
+      plugins = with pkgs.vimPlugins; [
+        # Add your favorite plugins here
+        copilot-vim # Copilot
+        mini-indentscope # Indentation scope
+        mini-files # File explorer
+      ];
+      extraConfig = ''
         set number              " Show line numbers
         set relativenumber      " Show relative line numbers
         set tabstop=4           " Tab width
@@ -28,6 +34,9 @@
         inoremap jj <Esc>
 
         colorscheme quiet       " Simple colorscheme
+
+        " Highlight on Yank
+        au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=200}
       '';
     };
   };
