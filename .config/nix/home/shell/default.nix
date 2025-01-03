@@ -13,6 +13,11 @@
       '';
       # Other ZSH plugins
       plugins = [];
+      shellAliases = {
+        ls = "eza --almost-all --icons=auto --dereference --no-quotes --ignore-glob='.DS_Store'";
+        ll = "ls --long --time-style=relative --ignore-glob='.git|.DS_Store'";
+        lt = "ll --tree --level=2 --ignore-glob='.git|.DS_Store'";
+      };
     };
     nushell = {
       enable = false;
@@ -67,8 +72,6 @@
           rm -fp $tmp
         }
       '';
-      shellAliases = {
-      };
     };
 
     # Enable some useful tools

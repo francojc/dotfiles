@@ -777,7 +777,7 @@
         mode = "n";
         key = "<leader>sl";
         action = "<Cmd>SpellLang<CR>";
-        options = { desc = "Select spell language"; };
+        options = {desc = "Select spell language";};
       }
     ];
   };

@@ -24,8 +24,12 @@
           contrast_light = "hard";
         };
       };
-      onedark = {
+      nightfox = {
         enable = true;
+        flavor = "nightfox";
+      };
+      onedark = {
+        enable = false;
         settings = {
           style = "warmer";
         };

@@ -14,19 +14,11 @@
           };
           diagnostics = {
             checkstyle.enable = true; # xml linter
-            mypy.enable = true; # python type checker
-            pylint.enable = true; # python linter
             statix.enable = true; # nix linter
             yamllint.enable = true; # yaml linter
           };
           formatting = {
             alejandra.enable = true;
-            black = {
-              enable = true;
-              settings = {
-                extra_args = ["--fast"];
-              };
-            };
             markdownlint.enable = true; # markdown linter
             prettier = {
               enable = true;

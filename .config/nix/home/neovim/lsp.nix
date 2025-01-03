@@ -72,7 +72,7 @@
           nil_ls.enable = true;
           nixd = {
             enable = true;
-            # cmd = [ "nixd" "--semantic-tokens=false" ];
+            cmd = ["nixd" "--semantic-tokens=false"];
             extraOptions.offset_encoding = "utf-8"; # nixvim #2390
             settings = {
               expr = "import <nixpkgs> {}";
@@ -85,11 +85,10 @@
               };
             };
           };
-          nushell.enable = true;
           pyright = {
             enable = true;
-            autostart = false;
-            filetypes = ["py" "python" "quarto"];
+            autostart = true;
+            filetypes = ["py" "python"];
             settings = {
               python = {
                 analysis = {
@@ -106,6 +105,9 @@
             autostart = false;
             filetypes = ["r" "quarto" "rmd"];
             package = null;
+          };
+          ruff = {
+            enable = true;
           };
           yamlls = {
             enable = true;

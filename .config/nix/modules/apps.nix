@@ -33,6 +33,7 @@
       "borders" # jankyborders
       # "curl" # no not install curl via nixpkgs, it's not working well on macOS!
       "gnu-sed" # spectre
+      "localai"
       "mas"
       # "r" # for RStudio/ Positron
       "rename"
