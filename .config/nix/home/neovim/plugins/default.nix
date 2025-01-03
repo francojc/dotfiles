@@ -3,8 +3,6 @@
   imports = [
     ./alpha.nix
     ./bufferline.nix
-    ./conform.nix
-    ./fidget.nix
     ./lualine.nix
     ./lspsaga.nix
     ./none-ls.nix
@@ -67,7 +65,8 @@
         };
       };
       cmp-pandoc-nvim.enable = true;
-      copilot-vim = {enable = true;};
+      conform-nvim.enable = true;
+      copilot-vim.enable = true;
       copilot-chat = {
         enable = true;
         settings = {
@@ -81,12 +80,15 @@
       };
       diffview.enable = true;
       dressing.enable = true;
-      flash = {
+      fidget = {
         enable = true;
+        progress = {
+          pollRate = 0;
+          suppressOnInsert = true;
+        };
       };
-      fzf-lua = {
-        enable = true;
-      };
+      flash.enable = true;
+      fzf-lua.enable = true;
       gitsigns = {
         enable = true;
         settings.current_line_blame = true;
@@ -99,6 +101,7 @@
           untracked = {text = "┆";};
         };
       };
+      grug-far.enable = true;
       image = {
         enable = true;
         integrations = {
@@ -195,8 +198,6 @@
           };
         };
       };
-
-      spectre.enable = true;
       todo-comments.enable = true;
       toggleterm = {
         enable = true;
