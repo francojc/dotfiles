@@ -14,7 +14,7 @@
         };
         fromVscode = [
           {}
-          {paths = [(builtins.path {path = ./snippets;})];}
+          { paths = [ (builtins.path { path = "${./.}/snippets"; }) ]; }
         ];
       };
 
