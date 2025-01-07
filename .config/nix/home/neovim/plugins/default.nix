@@ -15,22 +15,9 @@
   # Plugins: basic config
   programs.nixvim = {
     colorschemes = {
-      gruvbox = {
-        enable = false;
-        settings = {
-          contrast_dark = "hard";
-          contrast_light = "hard";
-        };
-      };
       nightfox = {
         enable = true;
         flavor = "nightfox";
-      };
-      onedark = {
-        enable = false;
-        settings = {
-          style = "warmer";
-        };
       };
     };
     plugins = {
@@ -40,31 +27,8 @@
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
-      avante = {
-        enable = false;
-        settings = {
-          hints.enabled = true;
-          provider = "copilot";
-          claude = {
-            endpoint = "https://api.anthropic.com";
-            max_tokens = 4096;
-            model = "claude-3-5-sonnet-latest";
-            temperature = 0.3;
-          };
-          copilot = {
-            model = "claude-3.5-sonnet";
-          };
-          windows = {
-            wrap = true;
-            sidebar_header = {
-              enabled = true;
-              align = "right";
-              rounded = false;
-            };
-          };
-        };
-      };
       cmp-pandoc-nvim.enable = true;
+      cmp-pandoc-references.enable = true;
       conform-nvim.enable = true;
       copilot-vim.enable = true;
       copilot-chat = {
@@ -124,8 +88,6 @@
       nix.enable = true;
       notify = {
         enable = true;
-        timeout = 3000;
-        topDown = false;
       };
       nvim-autopairs.enable = true;
       colorizer = {
@@ -157,47 +119,6 @@
         };
       };
       otter.enable = true;
-      render-markdown = {
-        enable = true;
-        settings = {
-          bullet = {
-            icons = ["■" "□" "◆" "◇"];
-            right_pad = 1;
-          };
-          code = {
-            code = {
-              above = " ";
-              below = " ";
-              border = "thick";
-              language_pad = 2;
-              position = "right";
-              right_pad = 2;
-              sign = false;
-              width = "block";
-            };
-          };
-          heading = {
-            border = true;
-            position = "inline";
-            icons = [
-              "1| "
-              "2| "
-              "3| "
-              "4| "
-              "5| "
-              "6| "
-            ];
-            sign = false;
-            width = "full";
-          };
-          render_modes = true;
-          signs.enabled = false;
-          file_types = ["markdown" "quarto" "rmd" "copilot-chat"];
-          win_options = {
-            conceallevel.rendered = 0;
-          };
-        };
-      };
       todo-comments.enable = true;
       toggleterm = {
         enable = true;

@@ -22,6 +22,12 @@
       },
       {
         "language": [
+          "r"
+        ],
+        "path": "./r.json"
+      },
+      {
+        "language": [
           "all"
         ],
         "path": "./all.json"
