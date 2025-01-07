@@ -3,12 +3,11 @@
 # UI
 cursor-color = #FF2557
 macos-titlebar-style = tabs
-unfocused-split-opacity = 0.50
 mouse-hide-while-typing = true
-font-size = 15
+font-size = 17
 
 # Theme
-theme = nightfox
+theme = dark:nightfox,light:dayfox
 # custom-shader = shaders/bloom.glsl
 
 # Enhancements
