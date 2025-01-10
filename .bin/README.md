@@ -3,13 +3,13 @@
 This repository contains a collection of scripts and tools that I have created to automate tasks, improve productivity, or just for fun. The scripts are written in Python, Bash, and other languages.
 
 ```sh
-~/.bin
+./.bin/
 ├── R
-│   └── Library
 ├── README.md
 ├── am
 ├── am-art.applescript
 ├── battery_status.sh
+├── create-color-wallpaper.sh
 ├── fetch-student-merge
 ├── fetch-student-remote
 ├── flake.lock
@@ -28,4 +28,6 @@ This repository contains a collection of scripts and tools that I have created t
 ├── weather
 ├── weather.sh
 └── wifi_status.zsh
+
+2 directories, 23 files
 ```
