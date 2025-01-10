@@ -17,6 +17,7 @@
         ls = "eza --almost-all --icons=auto --dereference --no-quotes --ignore-glob='.DS_Store'";
         ll = "ls --long --time-style=relative --ignore-glob='.git|.DS_Store'";
         lt = "ll --tree --level=2 --ignore-glob='.git|.DS_Store'";
+        lg = "lazygit";
       };
     };
     nushell = {
