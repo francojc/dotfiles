@@ -24,6 +24,7 @@
         filetype = {
           markdown = {
             sources = [
+              {name = "render-markdown";}
               {name = "cmp_pandoc";}
               {name = "pandoc_references";}
               {name = "luasnip";}

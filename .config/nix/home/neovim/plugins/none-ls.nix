@@ -22,10 +22,10 @@
             markdownlint.enable = true; # markdown linter
             prettier = {
               enable = true;
-              disableTsServerFormatter = true;
-              settings = {
-                extra_args = ["--no-semi" "--single-quote"];
-              };
+              # disableTsServerFormatter = true;
+              # settings = {
+              #   extra_args = ["--no-semi" "--single-quote"];
+              # };
             };
             tidy.enable = true; # html linter
             stylua.enable = true; # lua linter

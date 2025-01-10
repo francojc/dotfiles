@@ -5,8 +5,8 @@
       settings = {
         options = {
           disabled_filetypes = {
-            statusline = [ "aerial" "alpha" "avante" "nvim-tree" ];
-            winbar = [ "aerial" "alpha" "avante" "nvim-tree" "NvimTree" ];
+            statusline = ["aerial" "alpha" "avante" "nvim-tree"];
+            winbar = ["aerial" "alpha" "avante" "nvim-tree" "NvimTree"];
           };
 
           globalstatus = true;
@@ -42,14 +42,13 @@
                       t = "terminal";
                     }
                     local mode_name = mode_maps[mode]
-                    return " " .. mode_name .. " "
+                    return " " .. mode_name .. " "
                   end
                 '';
               };
             }
-
           ];
-          lualine_b = [ "branch" "diff" ];
+          lualine_b = ["branch" "diff"];
           lualine_c = [
             {
               __unkeyed-1 = {
@@ -67,9 +66,8 @@
             }
           ];
 
-          lualine_x = [ "searchcount" ];
-          lualine_y = [ "diagnostics" ];
-          # lualine_z = [ "filetype" "progress" ];
+          lualine_x = ["searchcount"];
+          lualine_y = ["diagnostics"];
           lualine_z = [
             {
               __unkeyed-1 = "filetype";
@@ -78,21 +76,9 @@
             "progress"
           ];
         };
-        tabline = {
-          # lualine_c = [
-          #   {
-          #     __unkeyed-1 = "filename";
-          #     symbols = {
-          #       modified = "";
-          #       readonly = "";
-          #       unnamed = "";
-          #       newfile = "";
-          #     };
-          #   }
-          # ];
-        };
-        winbar = { };
-        inactive_winbar = { };
+        tabline = {};
+        winbar = {};
+        inactive_winbar = {};
       };
     };
   };

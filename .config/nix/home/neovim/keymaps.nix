@@ -140,35 +140,21 @@
           desc = "Move up visual line";
         };
       }
+      {
+        mode = ["n" "v"];
+        key = "gl";
+        action = "g_";
+        options = {desc = "Move to last non-blank character";};
+      }
 
       # Assistants
 
       # -- Normal mode
       {
         mode = "n";
-        key = "<leader>aa";
-        action = "<Cmd>AiderToggle<CR>";
-        options = {desc = "Aider";};
-      }
-      {
-        mode = "n";
         key = "<leader>ag";
         action = "<Cmd>CopilotChat<CR>";
         options = {desc = "GitHub Copilot";};
-      }
-      {
-        mode = "n";
-        key = "<leader>al";
-        action = "<Cmd>AiderLoad<CR>";
-        options = {desc = "Add file(s) to Aider";};
-      }
-
-      # -- Visual mode
-      {
-        mode = ["v" "n"];
-        key = "<leader>aq";
-        action = "<cmd>AiderAsk<cr>";
-        options = {desc = "Ask Aider";};
       }
       {
         mode = "x";
@@ -561,7 +547,6 @@
         action = "<Cmd>ToggleTerm<CR>";
         options = {desc = "ToggleTerm";};
       }
-
       {
         mode = "n";
         key = "<leader>\\s";
@@ -570,6 +555,42 @@
       }
 
       # Windows
+      {
+        mode = "n";
+        key = "<leader>wh";
+        action = "<cmd>vertical resize +5<cr>";
+        options = {
+          silent = true;
+          desc = "Increase window width";
+        };
+      }
+      {
+        mode = "n";
+        key = "<leader>wj";
+        action = "<cmd>resize -5<cr>";
+        options = {
+          silent = true;
+          desc = "Decrease window height";
+        };
+      }
+      {
+        mode = "n";
+        key = "<leader>wh";
+        action = "<cmd>vertical resize +5<cr>";
+        options = {
+          silent = true;
+          desc = "Increase window width";
+        };
+      }
+      {
+        mode = "n";
+        key = "<leader>wk";
+        action = "<cmd>resize +5<cr>";
+        options = {
+          silent = true;
+          desc = "Increase window height";
+        };
+      }
       {
         mode = "n";
         key = "<leader>ww";

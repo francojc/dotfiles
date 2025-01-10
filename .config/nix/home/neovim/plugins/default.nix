@@ -44,25 +44,18 @@
       };
       diffview.enable = true;
       dressing.enable = true;
-      fidget = {
-        enable = true;
-        progress = {
-          pollRate = 0;
-          suppressOnInsert = true;
-        };
-      };
+      fidget.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
       gitsigns = {
         enable = true;
         settings.current_line_blame = true;
         settings.signs = {
-          add = {text = "│";};
-          change = {text = "│";};
-          delete = {text = "_";};
-          topdelete = {text = "‾";};
-          changedelete = {text = "~";};
-          untracked = {text = "┆";};
+          add = {text = "+";}; # Classic plus
+          change = {text = "⁞";}; # Circle with dot delete = {text = "✖";}; # Bold X
+          topdelete = {text = "⌄";}; # Down arrow
+          changedelete = {text = "≠";}; # Not equal
+          untracked = {text = "?";}; # Question mark
         };
       };
       grug-far.enable = true;
@@ -72,7 +65,7 @@
           markdown = {
             filetypes = ["markdown" "quarto" "rmd"];
             clearInInsertMode = true;
-            onlyRenderImageAtCursor = true;
+            onlyRenderImageAtCursor = false;
           };
         };
         maxHeightWindowPercentage = 25;
@@ -86,9 +79,7 @@
         };
       };
       nix.enable = true;
-      notify = {
-        enable = true;
-      };
+      notify.enable = true;
       nvim-autopairs.enable = true;
       colorizer = {
         enable = true;
@@ -119,6 +110,38 @@
         };
       };
       otter.enable = true;
+      quarto = {
+        enable = true;
+      };
+      render-markdown = {
+        enable = true;
+        settings = {
+          anti_conceal = {
+            enabled = true;
+          };
+          bullet = {
+            icons = [
+              "■ "
+              "□ "
+              "▪ "
+              "▫ "
+            ];
+          };
+          dash.enabled = false;
+          file_types = ["markdown" "quarto" "rmd"];
+          heading = {
+            icons = [
+              "# "
+              "## "
+              "### "
+              "#### "
+              "##### "
+              "###### "
+            ];
+          };
+          html.comment.conceal = false;
+        };
+      };
       todo-comments.enable = true;
       toggleterm = {
         enable = true;
@@ -138,7 +161,6 @@
     extraPlugins = [
       pkgs.vimPlugins.aerial-nvim
       pkgs.vimPlugins.dropbar-nvim
-      pkgs.vimPlugins.quarto-nvim
     ];
 
     # Lua config
@@ -171,22 +193,9 @@
         },
       })
 
-      -- Quarto setup
-      require("quarto").setup({
-        debug = false,
-        closePreviewOnExit = true,
-        lspFeatures = {
-          enabled = true,
-          languages = { "r", "python", "bash", "html" },
-          diagnostics = {
-            enabled = true,
-            triggers = { "BufWritePost" },
-          },
-          completion = {
-          enabled = true,
-          },
-        },
-      })
+      -- Yanking/ Pasting
+      -- Preserve the contents of the default register when pasting over a selection
+      vim.keymap.set("v", "p", '"_dP', { silent = true })
 
       -- Keymaps for navigating Toggleterm terminal windows
       vim.keymap.set('t', 'jj', [[<C-\><C-n>]])
@@ -203,6 +212,10 @@
       -- Unordered list
       vim.keymap.set("n", "<leader>mu", "i- ", { desc = "Unordered list item", silent = true })
       vim.keymap.set("v", "<leader>mu", ":s/^/- /<CR>gv", { desc = "Unordered list item", silent = true })
+
+      -- Ordered list
+      vim.keymap.set("n", "<leader>mo", "i1. ", { desc = "Ordered list item", silent = true })
+      vim.keymap.set("v", "<leader>mo", ":s/^/1. /<CR>gv", { desc = "Ordered list item", silent = true })
 
       -- Task list
       vim.keymap.set("n", "<leader>mt", "i- [ ] ", { desc = "Task item", silent = true })

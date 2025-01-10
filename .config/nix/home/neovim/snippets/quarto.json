@@ -3,5 +3,38 @@
     "prefix": "qcode",
     "body": ["```${1:language}", "#| label: ${2:label}", "${0:code}", "```"],
     "description": "A Quarto code block with language specification"
+  },
+  "Callout Block: Tip": {
+    "prefix": "qtip",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa hand-point-up >}} Tip**",
+      "",
+      "${0:tip}",
+      ":::"
+    ],
+    "description": "A Quarto tip callout block"
+  },
+  "Callout Block: Warning": {
+    "prefix": "qwarn",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa triangle-exclamation >}} Warning**",
+      "",
+      "${0:warning}",
+      ":::"
+    ],
+    "description": "A Quarto warning callout block"
+  },
+  "Callout Block: Dive Deeper": {
+    "prefix": "qdive",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa medal >}} Dive deeper**",
+      "",
+      "${0:dive}",
+      ":::"
+    ],
+    "description": "A Quarto dive deeper callout block"
   }
 }

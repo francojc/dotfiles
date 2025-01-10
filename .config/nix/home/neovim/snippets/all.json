@@ -1,17 +1,1 @@
-{
-  "Say hello to the world": {
-    "prefix": ["hello"],
-    "body": "Hello, ${1:world}!$0"
-  }
-
-  "Snippet name": {
-    "prefix": ["trigger1", "trigger2"],
-    "body": [
-      "line 1",
-      "line 2 ${1:placeholder}",
-      "line 3",
-      "${0:final cursor position}"
-    ],
-    "description": "Description of the snippet"
-  }
-}
+{}
