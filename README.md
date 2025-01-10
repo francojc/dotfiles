@@ -2,6 +2,9 @@
 
 This repository contains my personal dotfiles for configuring my development environment on macOS.
 
+> [!NOTE]
+> Before applying the new configurations, it's a good idea to back up your existing dotfiles. You can do this by renaming them or moving them to a backup directory.
+
 ## Prerequisites
 
 Before restoring the dotfiles, ensure you have the following installed:
@@ -49,16 +52,31 @@ Before restoring the dotfiles, ensure you have the following installed:
    cd ~/.dotfiles
    ```
 
-3. Apply the configurations using the alias 'switch':
+3. Edit the `flake.nix` hostname to match the system hostname:
+
+To find the hostname, run the following command:
+
+```bash
+hostname
+```
+
+Then edit edit this line:
+
+```nix
+hostname = "<your-hostname>";
+```
+
+4. Apply the configurations using the full path to the flake's directory:
 
    ```bash
-   switch
+   darwin-rebuild switch --flake ~/.dotfiles/nix/
    ```
 
-## Nix Configuration
+_Note:_ After a successful switch, you will be able to use the alias `switch` to apply the configurations in the future.
 
-My Zsh and Neovim configurations are managed declaratively using Nix. Please refer to the Nix documentation for more details on how to set up your environment.
+5. Use `stow` to symlink the configurations:
 
-## Backup Existing Configurations
-
-Before applying the new configurations, it's a good idea to back up your existing dotfiles. You can do this by renaming them or moving them to a backup directory.
+   ```bash
+   cd ~/.dotfiles
+   stow .
+   ```

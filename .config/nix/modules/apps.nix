@@ -66,7 +66,6 @@
       "transcribe"
       "transmission"
       "visual-studio-code"
-      # "wezterm@nightly"
       "zen-browser"
       "zoom"
       "zotero@beta"
