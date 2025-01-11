@@ -1,0 +1,47 @@
+# Models
+model: flash
+weak-model: haiku
+
+# Theme
+dark-mode: true
+
+# Main text colors
+user-input-color: "#b8bb26" # Gruvbox   green
+assistant-output-color: "#83a598" # Gruvbox  blue
+tool-output-color: "#ebdbb2" # Gruvbox   light/fg
+tool-error-color: "#fb4934" # Gruvbox r
+tool-warning-color: "#fe8019" # Gruvbox   orange
+
+# Completion menu colors (terminal-based)
+completion-menu-color: "#ebdbb2" #Gruvbox light/fg
+completion-menu-bg-color: "#282828" # Gruvbox  dark/bg
+completion-menu-current-color: "#fbf1c7" # Gruvbox light
+completion-menu-current-bg-color: "#504945" # Gruvbox dark-gray
+
+# Code theme for markdown syntax highlighting
+code-theme: "monokai"  # While not exactly Gruvbox, this dark theme works well with it
+
+# Editor Configuration
+editor: nvim
+
+# Git Settings
+auto-commits: true
+attribute-author: true
+attribute-committer: true
+attribute-commit-message-author: true
+attribute-commit-message-committer: true
+show-diffs: true  # Optional, but useful to review changes
+
+# Input Mode
+vim: true
+multiline: true  # Often useful with vim mode
+restore-chat-history: true  # Helps maintain context between sessions
+
+# Disable automatic linting/testing as requested
+auto-lint: false
+auto-test: false
+
+# Cache Settings
+cache-prompts: true
+# Optional: Keep cache warm for longer sessions
+cache-keepalive-pings: 12  # Will ping every 5 mins for  to 1 hour
