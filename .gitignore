@@ -9,7 +9,9 @@
 dotfiles.code-workspace
 /.config/github-copilot
 /_freeze
-.aider*
+.aider.tags*
+.aider.chat*
+.aider.input*
 .env
 .config/git/config
 .config/nvim/init.lua

@@ -6,4 +6,6 @@ README.md
 .config/direnv
 .aider*
 .mypy*
-
+.aider.tags*
+.aider.chat*
+.aider.input*
