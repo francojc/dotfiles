@@ -3,9 +3,8 @@
   imports = [
     ./alpha.nix
     ./bufferline.nix
-    ./lualine.nix
     ./lspsaga.nix
-    ./none-ls.nix
+    ./lualine.nix
     ./obsidian.nix
     ./slime.nix
     ./treesitter.nix
@@ -27,6 +26,14 @@
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
+      clipboard-image = {
+        enable = true;
+        clipboardPackage = pkgs.pngpaste;
+        default = {
+          imgDir = "images";
+          imgDirTxt = "images";
+        };
+      };
       cmp-pandoc-nvim.enable = true;
       cmp-pandoc-references.enable = true;
       conform-nvim.enable = true;
@@ -42,7 +49,7 @@
           temperature = 0.3;
         };
       };
-      diffview.enable = true;
+      diffview.enable = false;
       dressing.enable = true;
       fidget.enable = true;
       flash.enable = true;
@@ -61,11 +68,12 @@
       grug-far.enable = true;
       image = {
         enable = true;
+        editorOnlyRenderWhenFocused = true;
+        windowOverlapClearEnabled = true;
         integrations = {
           markdown = {
-            filetypes = ["markdown" "quarto" "rmd"];
             clearInInsertMode = true;
-            onlyRenderImageAtCursor = false;
+            filetypes = ["markdown" "quarto" "rmd"];
           };
         };
         maxHeightWindowPercentage = 25;
@@ -79,7 +87,7 @@
         };
       };
       nix.enable = true;
-      notify.enable = true;
+      notify.enable = false;
       nvim-autopairs.enable = true;
       colorizer = {
         enable = true;
@@ -110,9 +118,7 @@
         };
       };
       otter.enable = true;
-      quarto = {
-        enable = true;
-      };
+      quarto.enable = true;
       render-markdown = {
         enable = true;
         settings = {

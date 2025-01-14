@@ -17,6 +17,21 @@
         };
       }
       {
+        mode = "n";
+        key = "k";
+        action = "v:count == 0 ? 'gk' : 'k'";
+        options = {
+          expr = true;
+          desc = "Move up visual line";
+        };
+      }
+      {
+        mode = ["n" "v"];
+        key = "gl";
+        action = "g_";
+        options = {desc = "Move to last non-blank character";};
+      }
+      {
         mode = "i";
         key = "<C-d>";
         action = "<Plug>(copilot-accept-word)";
@@ -131,21 +146,6 @@
         options = {desc = "Cycle to previous buffer";};
       }
 
-      {
-        mode = "n";
-        key = "k";
-        action = "v:count == 0 ? 'gk' : 'k'";
-        options = {
-          expr = true;
-          desc = "Move up visual line";
-        };
-      }
-      {
-        mode = ["n" "v"];
-        key = "gl";
-        action = "g_";
-        options = {desc = "Move to last non-blank character";};
-      }
 
       # Assistants
 
@@ -184,12 +184,6 @@
       # Buffers
       {
         mode = "n";
-        key = "<leader>bn";
-        action = "<cmd>tabnew<cr>";
-        options = {desc = "New buffer";};
-      }
-      {
-        mode = "n";
         key = "<leader>bd";
         action = "<cmd>bdelete<cr>";
         options = {desc = "Delete buffer";};
@@ -204,16 +198,30 @@
 
       {
         mode = "n";
-        key = "<leader>br";
-        action = "<cmd>BufferLineCloseRight<cr>";
-        options = {desc = "Delete buffers to the right";};
+        key = "<leader>bh";
+        action = "<cmd>BufferLineCloseLeft<cr>";
+        options = {desc = "Delete buffers: left (h)";};
       }
 
       {
         mode = "n";
         key = "<leader>bl";
-        action = "<cmd>BufferLineCloseLeft<cr>";
-        options = {desc = "Delete buffers to the left";};
+        action = "<cmd>BufferLineCloseRight<cr>";
+        options = {desc = "Delete buffers: right (l)";};
+      }
+
+      {
+        mode = "n";
+        key = "<leader>bs";
+        action = "<cmd>BufferLineSortByDirectory<cr>";
+        options = {desc = "Sort buffers by directory";};
+      }
+
+      {
+        mode = "n";
+        key = "<leader>bS";
+        action = "<cmd>BufferLineSortByExtension<cr>";
+        options = {desc = "Sort buffers by extension";};
       }
 
       {

@@ -5,28 +5,15 @@
       nixGrammars = true;
       languageRegister.markdown = ["quarto" "rmd"];
       settings = {
-        auto_install = true;
+        auto_install = false;
         autopairs = true;
         ensure_installed = [
-          "bash"
           "css"
-          "csv"
-          "dot"
-          "html"
-          "javascript"
-          "latex"
-          "lua"
           "markdown"
           "markdown_inline"
-          "mermaid"
           "nix"
           "python"
           "r"
-          "regex"
-          "query"
-          "toml"
-          "vim"
-          "yaml"
         ];
         folding = true;
         highlight = {

@@ -34,7 +34,6 @@
       "borders" # jankyborders
       # "curl" # no not install curl via nixpkgs, it's not working well on macOS!
       "gnu-sed" # spectre
-      "localai"
       "mas"
       # "r" # for RStudio/ Positron
       "rename"
@@ -47,7 +46,7 @@
       "bettermouse"
       # "calibre"
       "chatgpt"
-      "clop"
+      # "clop"
       "docker"
       "dropbox"
       "fantastical"
@@ -56,12 +55,14 @@
       "google-drive"
       "kap"
       "kitty"
+      "lm-studio"
       "mullvadvpn"
       "obsidian"
-      "positron"
+      # "orion"
+      # "positron"
       "praat"
       "raycast"
-      # "rectangle"
+      "rectangle"
       "rstudio"
       "sequel-ace"
       "transcribe"

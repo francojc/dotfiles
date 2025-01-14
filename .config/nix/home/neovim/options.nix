@@ -58,7 +58,7 @@
       grepformat = "%f:%l:%c:%m";
 
       # Decrease updatetime
-      updatetime = 50;
+      updatetime = 250;
 
       # Enable persistent undo history
       swapfile = false;
@@ -101,7 +101,7 @@
       # colorcolumn = "80";
 
       # Reduce which-key timeout to 10ms
-      timeoutlen = 200;
+      timeoutlen = 300;
 
       # Set encoding type
       encoding = "utf-8";

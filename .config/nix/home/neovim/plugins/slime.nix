@@ -3,7 +3,6 @@
     plugins.vim-slime = {
       enable = true;
       settings = {
-        # target = "kitty";
         target = "neovim";
         preserve_curpos = 0;
         bracketed_paste = 1;

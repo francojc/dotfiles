@@ -1,7 +1,7 @@
 {
   username,
   hostname,
-  ...
+ ...
 }: {
   programs.nixvim = {
     plugins = {
@@ -63,10 +63,13 @@
           };
         };
         servers = {
-          bashls.enable = false;
-          lua_ls.enable = true;
+          lua_ls = {
+            enable = true;
+            autostart = false;
+          };
           marksman = {
             enable = true;
+            autostart = false;
             filetypes = ["markdown" "quarto"];
           };
           nil_ls.enable = true;
@@ -87,8 +90,8 @@
           };
           pyright = {
             enable = true;
-            autostart = true;
-            filetypes = ["py" "python"];
+            autostart = false;
+            filetypes = ["py" "python" "quarto"];
             settings = {
               python = {
                 analysis = {
@@ -108,6 +111,8 @@
           };
           ruff = {
             enable = true;
+            autostart = false;
+            filetypes = ["py" "python" "quarto"];
           };
           yamlls = {
             enable = true;
