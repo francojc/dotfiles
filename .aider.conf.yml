@@ -3,8 +3,6 @@ model: flash
 weak-model: haiku
 
 # Theme
-dark-mode: true
-
 # Main text colors
 user-input-color: "#b8bb26" # Gruvbox green
 assistant-output-color: "#83a598" # Gruvbox blue
@@ -30,12 +28,12 @@ attribute-author: true
 attribute-committer: true
 attribute-commit-message-author: true
 attribute-commit-message-committer: true
-show-diffs: true  # Optional, but useful to review changes
+show-diffs: false  # Optional, but useful to review changes
 
 # Input Mode
 vim: true
-multiline: true  # Often useful with vim mode
-restore-chat-history: true  # Helps maintain context between sessions
+multiline: false  # Often useful with vim mode
+restore-chat-history: false  # Helps maintain context between sessions
 
 # Disable automatic linting/testing as requested
 auto-lint: false
