@@ -50,7 +50,7 @@ export_keys() {
     local temp_dir=$(mktemp -d)
 
     # Get the key ID used by pass
-    PASS_KEY=$(sed -n 's/^gpg-id:\s*//p' ~/.password-store/.gpg-id)
+    PASS_KEY=$(cat ~/.password-store/.gpg-id)
     if [ -z "$PASS_KEY" ]; then
         echo "No pass GPG ID found. Is pass initialized?"
         rm -rf "$temp_dir"
