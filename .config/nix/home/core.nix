@@ -9,10 +9,12 @@
     duf
     entr
     eza
+    fastfetch
     fd
     ffmpeg
     file
     fzf
+    gdal
     gh
     ghostscript
     glow
@@ -34,7 +36,6 @@
     mdcat
     mpv-unwrapped
     ncdu
-    neofetch
     nix-prefetch-git
     pandoc
     pass
@@ -42,7 +43,6 @@
     pianobar
     pipx
     poppler_utils
-    pyright
     qpdf
     quarto
     ripgrep
@@ -54,7 +54,6 @@
     tree
     which
     xclip
-    # xquartz # pulls in xorg-server for some reason
     yazi-unwrapped
     yt-dlp
     zoxide

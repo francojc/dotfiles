@@ -367,6 +367,9 @@
         action = "<Cmd>lua require('fzf-lua').diagnostics_workspace()<CR>";
         options = {desc = "Workspace diagnostics";};
       }
+
+      # Markdown
+
       # Obsidian
       {
         mode = "n";
@@ -440,6 +443,14 @@
         key = "<leader>oL";
         action = "<Cmd>ObsidianLinkNew<CR>";
         options = {desc = "Insert link to new note from selection";};
+      }
+
+      # Copy/ Paste
+      {
+        mode = "n";
+        key = "<leader>pi";
+        action = "<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<CR>";
+        options = {desc = "Paste image from system clipboard";};
       }
 
       # Quarto
@@ -536,24 +547,30 @@
       }
 
       # Toggle
-      # {
-      #   mode = "n";
-      #   key = "<leader>\\a";
-      #   action = "<Cmd>CodeCompanionChat Toggle<CR>";
-      #
-      #   options = { desc = "Toggle Code Companion"; };
-      # }
-      # {
-      #   mode = "n";
-      #   key = "<leader>\\r";
-      #   action = "<Cmd>lua toggle_r_lsp()<CR>";
-      #   options = {desc = "Toggle R LSP";};
-      # }
+
+      {
+        mode = "n";
+        key = "<leader>\\o";
+        action = "<Cmd>AerialToggle!<CR>";
+        options = {desc = "Toggle Aerial";};
+      }
+      {
+        mode = "n";
+        key = "<leader>\\p";
+        action = "<Cmd>LspStart ruff<CR>";
+        options = {desc = "Toggle Python (ruff)";};
+      }
       {
         mode = "n";
         key = "<leader>\\t";
         action = "<Cmd>ToggleTerm<CR>";
         options = {desc = "ToggleTerm";};
+      }
+      {
+        mode = "n";
+        key = "<leader>\\r";
+        action = "<Cmd>LspStart r_language_server<CR>";
+        options = {desc = "Toggle R language server";};
       }
       {
         mode = "n";
