@@ -20,18 +20,11 @@
       };
     };
     plugins = {
+      aerial.enable = true;
       auto-session = {
         enable = true;
         settings = {
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
-        };
-      };
-      clipboard-image = {
-        enable = true;
-        clipboardPackage = pkgs.pngpaste;
-        default = {
-          imgDir = "images";
-          imgDirTxt = "images";
         };
       };
       cmp-pandoc-nvim.enable = true;
@@ -51,6 +44,13 @@
       };
       diffview.enable = false;
       dressing.enable = true;
+      dropbar = {
+        enable = true;
+        settings = {
+          bar.enable = true;
+          sources.terminal.name = "Term";
+        };
+      };
       fidget.enable = true;
       flash.enable = true;
       fzf-lua.enable = true;
@@ -72,11 +72,10 @@
         windowOverlapClearEnabled = true;
         integrations = {
           markdown = {
-            clearInInsertMode = true;
             filetypes = ["markdown" "quarto" "rmd"];
           };
         };
-        maxHeightWindowPercentage = 25;
+        maxHeightWindowPercentage = 30;
       };
       lazygit.enable = true;
       mini = {
@@ -146,6 +145,7 @@
             ];
           };
           html.comment.conceal = false;
+          render_modes = [ "n" "c" "t" ];
         };
       };
       todo-comments.enable = true;
@@ -165,23 +165,19 @@
 
     # extraPlugins
     extraPlugins = [
-      pkgs.vimPlugins.aerial-nvim
-      pkgs.vimPlugins.dropbar-nvim
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "img-clip.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "HakonHarnes";
+          repo = "img-clip.nvim";
+          rev = "5ff183655ad98b5fc50c55c66540375bbd62438c";
+          hash = "sha256-Q4v4E8Iay6rXvtUsM5ULo1cnBYduzTw42kIgJlodq5U=";
+        };
+      })
     ];
 
     # Lua config
     extraConfigLua = ''
-      -- Aerial setup
-      require("aerial").setup({
-        on_attach = function(bufnr)
-          -- jump forward and backward
-          vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-          vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-        end,
-        -- keymap to toggle the aerial window
-        vim.keymap.set("n", "<leader>\\o", "<cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
-      })
-
       -- cmp-pandoc setup
       require("cmp_pandoc").setup({
         -- @type: table of strings
@@ -196,6 +192,58 @@
         },
         crossref = {
           documentation = true,
+        },
+      })
+
+      -- Dropbar configuration
+       local dropbar = require('dropbar')
+       dropbar.setup({
+         bar = {
+           sources = function(buf, _)
+             local sources = require('dropbar.sources')
+             local utils = require('dropbar.utils')
+
+             -- Exclude NvimTree and alpha buffers
+             local excluded_filetypes = { "NvimTree", "alpha", "aerial" }
+             if vim.tbl_contains(excluded_filetypes, vim.bo[buf].ft) then
+               return {} -- Return an empty table to disable dropbar
+             end
+
+             if vim.bo[buf].ft == 'markdown' then
+               return {
+                 sources.path,
+                 sources.markdown,
+               }
+             end
+             if vim.bo[buf].buftype == 'terminal' then
+               return {
+                 sources.terminal,
+               }
+             end
+             return {
+               sources.path,
+               utils.source.fallback({
+                 sources.lsp,
+                 sources.treesitter,
+               }),
+             }
+           end,
+         },
+       })
+
+      -- img-clip nvim setup
+      -- WARN: this config does not seem to have an effect (using keymaps instead)
+      require('img-clip').setup({
+        default = {
+          dir_path = "images",
+          relative_to_current_file = true,
+        },
+        filetypes = {
+          quarto = {
+            download_images = false,
+            template = "![$CURSOR]($FILE_PATH)",
+            url_encode_path = true
+          }
         },
       })
 

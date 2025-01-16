@@ -51,7 +51,6 @@
             group = "LSP";
             icon = "";
           }
-
           {
             __unkeyed-1 = "<leader>m";
             mode = [ "n" "v" ];
@@ -75,6 +74,7 @@
           }
           {
             __unkeyed-1 = "<leader>s";
+
             group = "Search";
             icon = "";
           }
