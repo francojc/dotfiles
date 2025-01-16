@@ -6,13 +6,18 @@ macos-titlebar-style = tabs
 mouse-hide-while-typing = true
 font-size = 17
 
+# Tabs and windows
+window-new-tab-position = end
+macos-window-shadow = false
+
 # Theme
-theme = dark:nightfox,light:dayfox
-# custom-shader = shaders/bloom.glsl
+# theme = dark:nightfox,light:dayfox
+theme = nightfox
 
 # Enhancements
 confirm-close-surface = true
-copy-on-select = true
+copy-on-select = clipboard
+clipboard-write = allow
 clipboard-trim-trailing-spaces = true
 shell-integration = zsh
 shell-integration-features = no-cursor,no-sudo,no-title
