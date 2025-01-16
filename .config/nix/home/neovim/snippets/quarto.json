@@ -36,5 +36,14 @@
       ":::"
     ],
     "description": "A Quarto dive deeper callout block"
+  },
+  "Aider call": {
+    "prefix": "qaider",
+    "body": [
+      "<!--",
+      "-- ${0:prompt}",
+      "-->"
+    ],
+    "description": "Aider call"
   }
 }
