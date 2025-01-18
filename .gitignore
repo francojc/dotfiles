@@ -13,7 +13,3 @@ dotfiles.code-workspace
 .aider.chat*
 .aider.input*
 .env
-.config/git/config
-.config/nvim/init.lua
-.config/nvim/queries/nix/injections.scm
-.config/gh/
