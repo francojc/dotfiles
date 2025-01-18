@@ -3,7 +3,6 @@
     autoGroups = {
       "personal" = {clear = true;};
     };
-
     autoCmd = [
       {
         event = "TextYankPost";
@@ -11,7 +10,7 @@
         group = "personal";
         callback.__raw = ''
           function()
-            vim.highlight.on_yank()
+            vim.highlight.on_yank({timeout = 500})
           end
         '';
       }
@@ -25,17 +24,6 @@
           end
         '';
       }
-      # {
-      #   event = "TermOpen";
-      #   desc = "Map colon to insert colon in terminal mode";
-      #   group = "personal";
-      #   callback.__raw = ''
-      #     function()
-      #       local bufnr = vim.api.nvim_get_current_buf()
-      #       vim.api.nvim_buf_set_keymap(bufnr, 't', ':', '<C-v>:', { noremap = true, silent = true })
-      #     end
-      #   '';
-      # }
     ];
   };
 }
