@@ -1,3 +1,4 @@
+{ username, ... }:
 {
   programs = {
     # Enable some useful shells
@@ -9,7 +10,7 @@
       defaultKeymap = "viins";
       initExtra = ''
         ${builtins.readFile ./aliases.zsh}
-        ${builtins.readFile ./zprofile.zsh}
+        ${import ./zprofile.nix { inherit username; }}
       '';
       # Other ZSH plugins
       plugins = [];
@@ -33,14 +34,12 @@
             | prepend "/usr/local/sbin"
             | prepend "/nix/var/nix/profiles/default/bin"
             | prepend "/run/current-system/sw/bin"
-            | prepend "/etc/profiles/per-user/francojc/bin"
-            | prepend "/Users/francojc/.nix-profile/bin"
+            | prepend "/etc/profiles/per-user/${username}/bin"
+            | prepend "/Users/${username}/.nix-profile/bin"
             | prepend "/opt/homebrew/sbin"
             | prepend "/opt/homebrew/bin"
-            | prepend "/Users/francojc/.bin"
-            | prepend "/Users/francojc/.local/bin"
-            | uniq
-            )
+            | prepend "/Users/${username}/.bin"
+            | prepend "/Users/${username}/.local/bin" | uniq)
 
           $env.PROMPT_INDICATOR_VI_NORMAL = '❮ ';
 

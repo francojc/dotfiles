@@ -5,8 +5,6 @@ continuation_prompt = "[▸▹ ](dimmed white)"
 
 format = """($os$nix_shell$container$fill$cmd_duration$time\n)\
 $hostname\
-$localip\
-$shlvl\
 $shell\
 $env_var\
 $jobs\

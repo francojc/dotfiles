@@ -23,34 +23,39 @@
 
   outputs = inputs @ { nixpkgs, darwin, home-manager, nixvim, ... }:
     let
-      username = "francojc";
-      useremail = "francojc@wfu.edu";
-      system = "aarch64-darwin";
-      hostname = "MacBook-Airborne";
-
-      specialArgs =
-        inputs
-        // {
+      # Machine configurations
+      systems = {
+        "Macbook-Airborne" = {
+          username = "francojc";
+          useremail = "francojc@wfu.edu";
+          system = "aarch64-darwin";
+        };
+        "Mac-Minicore" = {
+          username = "jeridf";
+          useremail = "francojc@wfu.edu";
+          system = "aarch64-darwin";
+        };
+      };
+      mkDarwinConfig = hostname: {username, useremail, system}: darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = inputs // {
           inherit username useremail hostname;
         };
-    in
-    {
-      darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
-        inherit system specialArgs;
         modules = [
           ./modules/nix-core.nix
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/host-users.nix
 
-          # home manager
           home-manager.darwinModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
               verbose = true;
-              extraSpecialArgs = specialArgs;
+              extraSpecialArgs = inputs // {
+                inherit username useremail hostname;
+              };
               users.${username} = {
                 imports = [
                   ./home
@@ -61,8 +66,9 @@
           }
         ];
       };
-
-      # nix code formatter
-      formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+    in
+    {
+      darwinConfigurations = builtins.mapAttrs mkDarwinConfig systems;      # nix code formatter
+      formatter."aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin".alejandra;
     };
 }

@@ -8,8 +8,8 @@ fi
 
 # --- PATH ---
 export PATH="/usr/local/sbin:$PATH"
-export PATH="/Users/francojc/.bin:$PATH" # custom scripts
-export PATH="/Users/francojc/.local/bin:$PATH" # pipx
+export PATH="/Users/jeridf/.bin:$PATH" # custom scripts
+export PATH="/Users/jeridf/.local/bin:$PATH" # pipx
 
 # --- ENVIRONMENT VARIABLES ---
 export EDITOR='nvim'

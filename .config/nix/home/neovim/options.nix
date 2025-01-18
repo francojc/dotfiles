@@ -1,3 +1,4 @@
+{ username, ...}:
 {
   programs.nixvim = {
     globals = {
@@ -19,7 +20,7 @@
       # Spell
       spell = false;
       spelllang = "en_us";
-      spellfile = "/Users/francojc/.spell/en.utf-8.add";
+      spellfile = "/Users/${username}/.spell/en.utf-8.add";
 
       # Set tabs to 2 spaces
       tabstop = 2;
