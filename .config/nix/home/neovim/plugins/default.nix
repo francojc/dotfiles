@@ -10,7 +10,6 @@
     ./treesitter.nix
     ./which-key.nix
   ];
-
   # Plugins: basic config
   programs.nixvim = {
     colorschemes = {
@@ -83,11 +82,12 @@
         modules = {
           indentscope = {};
           icons = {};
+          pairs = {};
+          surround = {};
         };
       };
       nix.enable = true;
       notify.enable = false;
-      nvim-autopairs.enable = true;
       colorizer = {
         enable = true;
         settings = {
@@ -159,7 +159,6 @@
         };
       };
       trouble.enable = true;
-      vim-surround.enable = true;
       web-devicons.enable = true;
       yazi.enable = true;
     };
