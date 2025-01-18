@@ -2,6 +2,10 @@
 model: flash
 weak-model: haiku
 
+alias:
+  - "llama-instruct:lm_studio/llama-3.2-3b-instruct"
+  - "mistral-instruct:lm_studio/mistral-nemo-2407-instruct"
+
 # Theme
 # Main text colors
 user-input-color: "#b8bb26" # Gruvbox green
