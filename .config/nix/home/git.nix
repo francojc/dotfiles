@@ -1,4 +1,4 @@
-{ lib, username, useremail, ... }:
+{ lib, useremail, ... }:
 {
   home.activation.removeExistingGitconfig = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
     rm -f ~/.gitconfig
@@ -6,7 +6,7 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = username;
+    userName = "francojc";
     userEmail = useremail;
     extraConfig = {
       init.defaultBranch = "main";
