@@ -1,7 +1,7 @@
 # --- ALIASES ---
 # Nix aliases
-# FIX: For some reason, darwin-rebuild will not follow the symlink at ~/.config/nix
-alias switch='darwin-rebuild switch --flake ~/.dotfiles/.config/nix'
+# -- Uses hostname to determine the flake to switch to
+alias switch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
 alias ..='cd ..'
 alias ...='cd ../..'

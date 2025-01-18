@@ -27,26 +27,20 @@
     taps = [
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
-      "nikitabobko/tap" # for aerospace
     ];
 
     brews = [
       "borders" # jankyborders
-      # "curl" # no not install curl via nixpkgs, it's not working well on macOS!
-      "gnu-sed" # spectre
       "mas"
-      # "r" # for RStudio/ Positron
       "rename"
       "wget" # download tool
     ];
 
     casks = [
-      "aerospace"
       "appcleaner"
       "bettermouse"
       # "calibre"
-      "chatgpt"
-      # "clop"
+      # "chatgpt"
       "docker"
       "dropbox"
       "fantastical"
@@ -58,8 +52,6 @@
       "lm-studio"
       "mullvadvpn"
       "obsidian"
-      # "orion"
-      # "positron"
       "praat"
       "raycast"
       "rectangle"
@@ -91,7 +83,6 @@
       Triode = 1450027401;
       Vimari = 1480933944;
       Vinegar_for_Safari = 1591303229;
-      # Xcode = 497799835;
     };
   };
 }
