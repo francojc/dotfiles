@@ -152,6 +152,7 @@
       toggleterm = {
         enable = true;
         settings = {
+          auto_scroll = true;
           direction = "vertical";
           open_mapping = "[[<C-t>]]";
           size = 50;
