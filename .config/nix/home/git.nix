@@ -12,6 +12,7 @@
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
       pull.rebase = true;
+      credential.helper = "osxkeychain";
     };
     delta = {
       enable = true;
