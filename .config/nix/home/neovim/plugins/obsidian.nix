@@ -9,7 +9,7 @@
           nvim_cmp = false;
         };
         attachments = {
-          img_folder = "~/Google Drive/My Drive/Notes/Assets/Attachments/";
+          img_folder = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Attachments/";
         };
         follow_url_func.__raw = ''
           function(url)
@@ -22,11 +22,11 @@
         workspaces = [
           {
             name = "Notes";
-            path = "~/Google Drive/My Drive/Notes/";
+            path = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/";
           }
         ];
         daily_notes = {
-          template = "~/Google Drive/My Drive/Notes/Assets/Templates/Daily.md";
+          template = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Templates/Daily.md";
           folder = "Daily";
         };
         mappings = {
@@ -44,7 +44,7 @@
           };
         };
         templates = {
-          subdir = "~/Google Drive/My Drive/Notes/Assets/Templates/";
+          subdir = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Templates/";
           substitutions = {
             monday.__raw = ''
               function()

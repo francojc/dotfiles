@@ -2,7 +2,7 @@
   imports = [
     ./core.nix
     ./git.nix
-    ./neovim
+    ./neovim/default.nix
     ./shell
     ./vim.nix
   ];
