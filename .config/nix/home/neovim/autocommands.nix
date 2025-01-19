@@ -10,7 +10,7 @@
         group = "personal";
         callback.__raw = ''
           function()
-            vim.highlight.on_yank({timeout = 500})
+            vim.highlight.on_yank()
           end
         '';
       }
