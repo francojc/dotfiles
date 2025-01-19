@@ -1,3 +1,5 @@
+# Refactor this file to reduce duplication and improve readability AI!
+
 # FZF Base Configuration
 export FZF_DEFAULT_COMMAND="rg --files"
 
