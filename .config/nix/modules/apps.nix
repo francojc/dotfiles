@@ -39,7 +39,6 @@
     casks = [
       "appcleaner"
       "bettermouse"
-      # "calibre"
       "chatgpt"
       "docker"
       "dropbox"
@@ -62,17 +61,17 @@
       "zen-browser"
       "zoom"
       "zotero@beta"
+      # "calibre"
     ];
 
     masApps = {
+      # GarageBand = 682658836;
+      # iMovie = 408981434;
       Adblock_Plus = 1432731683;
       AudioBookBinder = 413969927;
       Bitwarden = 1352778147;
       Dark_Reader_for_Safari = 1438243180;
-      # GarageBand = 682658836;
-      # iMovie = 408981434;
       IPA_Keyboard = 1461264628;
-      iPreview = 1519213509;
       JustFocus = 1142151959;
       Kagi_for_Safari = 1622835804;
       Keynote = 409183694;
@@ -82,6 +81,7 @@
       Triode = 1450027401;
       Vimari = 1480933944;
       Vinegar_for_Safari = 1591303229;
+      iPreview = 1519213509;
     };
   };
 }
