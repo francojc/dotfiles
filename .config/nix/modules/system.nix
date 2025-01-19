@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-  # Clean up and organize this nix file such that it is more readable and maintainable. Do not create any new files AI!
   system = {
     activationScripts.postUserActivation.text = ''
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
@@ -10,163 +9,133 @@
       ActivityMonitor.IconType = 5;
 
       menuExtraClock = {
-        Show24Hour = true; # show 24 hour clock
-        ShowAMPM = false; # no am/pm
-        ShowDate = 2; # no date
+        Show24Hour = true;
+        ShowAMPM = false;
+        ShowDate = 2;
       };
 
-      # customize dock
       dock = {
         autohide = true;
         expose-group-apps = true;
         orientation = "bottom";
-        show-recents = false; # disable recent apps
-        wvous-tl-corner = 5; # top-left - Start screen saver
-        wvous-tr-corner = 4; # top-right - Desktop
-        wvous-bl-corner = 2; # bottom-left - Mission Control
-        wvous-br-corner = 3; # bottom-right - Application windows
+        show-recents = false;
+        wvous-bl-corner = 2;
+        wvous-br-corner = 3;
+        wvous-tl-corner = 5;
+        wvous-tr-corner = 4;
       };
 
-      # customize finder
       finder = {
-        _FXShowPosixPathInTitle = false; # show full path in finder title
-        AppleShowAllExtensions = true; # show all file extensions
-        FXEnableExtensionChangeWarning = false; # disable warning when changing file extension
-        FXPreferredViewStyle = "Nlsv"; # list view
-        QuitMenuItem = true; # enable quit menu item
-        ShowPathbar = true; # show path bar
-        ShowStatusBar = true; # show status bar
+        _FXShowPosixPathInTitle = false;
+        AppleShowAllExtensions = true;
+        FXEnableExtensionChangeWarning = false;
+        FXPreferredViewStyle = "Nlsv";
+        QuitMenuItem = true;
+        ShowPathbar = true;
+        ShowStatusBar = true;
       };
 
-      # customize trackpad
       trackpad = {
-        Clicking = true; # enable tap to click
-        TrackpadRightClick = true; # enable two finger right click
-        TrackpadThreeFingerDrag = true; # enable three finger drag
+        Clicking = true;
+        TrackpadRightClick = true;
+        TrackpadThreeFingerDrag = true;
       };
 
-      # customize settings that not supported by nix-darwin directly
-      # Incomplete list of macOS `defaults` commands :
-      #   https://github.com/yannbertrand/macos-defaults
       NSGlobalDomain = {
-        # `defaults read NSGlobalDomain "xxx"`
-        "com.apple.swipescrolldirection" = true; # enable natural scrolling(default to true)
-        "com.apple.sound.beep.feedback" = 0; # disable beep sound when pressing volume up/down key
-        AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
-        AppleInterfaceStyleSwitchesAutomatically = true; # enable auto mode
-        ApplePressAndHoldEnabled = false; # enable press and hold
-        NSTableViewDefaultSizeMode = 3; # set sidebar icon size to small
-        AppleShowAllExtensions = true; # show all file extensions
-        AppleSpacesSwitchOnActivate = false; # disable auto switch space
-
-        # If you press and hold certain keyboard keys when in a text area, the key’s character begins to repeat.
-        # This is very useful for vim users, they use `hjkl` to move cursor.
-        # sets how long it takes before it starts repeating.
-        InitialKeyRepeat = 10; # normal minimum is 15 (225 ms)
-        # sets how fast it repeats once it starts.
-        KeyRepeat = 1; # normal minimum is 2 (30 ms)
-
-        NSAutomaticCapitalizationEnabled = false; # disable auto capitalization
-        NSAutomaticDashSubstitutionEnabled = false; # disable auto dash substitution
-        NSAutomaticPeriodSubstitutionEnabled = false; # disable auto period substitution
-        NSAutomaticQuoteSubstitutionEnabled = false; # disable auto quote substitution
-        NSAutomaticSpellingCorrectionEnabled = false; # disable auto spelling correction
-        NSNavPanelExpandedStateForSaveMode = true; # expand save panel by default
+        AppleInterfaceStyleSwitchesAutomatically = true;
+        AppleKeyboardUIMode = 3;
+        ApplePressAndHoldEnabled = false;
+        AppleShowAllExtensions = true;
+        AppleSpacesSwitchOnActivate = false;
+        InitialKeyRepeat = 10;
+        KeyRepeat = 1;
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = false;
+        NSAutomaticPeriodSubstitutionEnabled = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = false;
+        NSTableViewDefaultSizeMode = 3;
+        NSNavPanelExpandedStateForSaveMode = true;
         NSNavPanelExpandedStateForSaveMode2 = true;
+        "com.apple.sound.beep.feedback" = 0;
+        "com.apple.swipescrolldirection" = true;
       };
 
-      # Customize settings that not supported by nix-darwin directly
-      # see the source code of this project to get more undocumented options:
-      #    https://github.com/rgcr/m-cli
-      #
-      # All custom entries can be found by running `defaults read` command.
-      # or `defaults read xxx` to read a specific domain.
+      loginwindow = {
+        GuestEnabled = true;
+      };
+
       CustomUserPreferences = {
         ".GlobalPreferences" = {
-          # automatically switch to a new space when switching to the application
           AppleSpacesSwitchOnActivate = true;
         };
         NSGlobalDomain = {
-          # Add a context menu item for showing the Web Inspector in web views
           WebKitDeveloperExtras = true;
         };
+        "com.apple.AdLib" = {
+          allowApplePersonalizedAdvertising = false;
+        };
+        "com.apple.desktopservices" = {
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
         "com.apple.finder" = {
+          FXDefaultSearchScope = "SCcf";
+          FXEnableExtensionChangeWarning = false;
           ShowExternalHardDrivesOnDesktop = false;
           ShowHardDrivesOnDesktop = false;
           ShowMountedServersOnDesktop = true;
           ShowRemovableMediaOnDesktop = true;
           _FXSortFoldersFirst = true;
-          # When performing a search, search the current folder by default
-          FXDefaultSearchScope = "SCcf";
-          FXEnableExtensionChangeWarning = false;
         };
-        "com.apple.desktopservices" = {
-          # Avoid creating .DS_Store files on network or USB volumes
-          DSDontWriteNetworkStores = true;
-          DSDontWriteUSBStores = true;
-        };
-        "com.apple.spaces" = {
-          "spans-displays" = 0; # Display have separate spaces
+        "com.apple.ImageCapture" = {
+          disableHotPlug = true;
         };
         "com.apple.LaunchServices" = {
-          # Disable the 'Are you sure you want to open this application?' dialog
           LSQuarantine = true;
         };
-        "com.apple.WindowManager" = {
-          EnableStandardClickToShowDesktop = 0; # Click wallpaper to reveal desktop
-          StandardHideDesktopIcons = 0; # Show items on desktop
-          HideDesktop = 1; # Do not hide items on desktop & stage manager
-          StageManagerHideWidgets = 0;
-          StandardHideWidgets = 1;
-        };
         "com.apple.screensaver" = {
-          # Require password immediately after sleep or screen saver begins
           askForPassword = 0;
           askForPasswordDelay = 0;
         };
-        "com.apple.screencapture" = {
+         "com.apple.screencapture" = {
+          disable-shadow = true;
           location = "~/Downloads";
           type = "png";
-          disable-shadow = true;
         };
-        "com.apple.AdLib" = {
-          allowApplePersonalizedAdvertising = false;
+        "com.apple.spaces" = {
+          "spans-displays" = 0;
         };
-        # Prevent Photos from opening automatically when devices are plugged in
-        "com.apple.ImageCapture".disableHotPlug = true;
-      };
-
-      loginwindow = {
-        GuestEnabled = true; # disable guest user
+        "com.apple.WindowManager" = {
+          EnableStandardClickToShowDesktop = 0;
+          HideDesktop = 1;
+          StageManagerHideWidgets = 0;
+          StandardHideDesktopIcons = 0;
+          StandardHideWidgets = 1;
+        };
       };
     };
 
-    # Remap the caps lock key to control
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToControl = true; # remap caps lock to control
+      remapCapsLockToControl = true;
     };
-    startup.chime = false; # no startup sound ;)
+    startup.chime = false;
   };
 
-
-  # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
 
-  programs.zsh.enable = true; # enable zsh
+  programs.zsh.enable = true;
 
   environment = {
     shells = [ pkgs.zsh ];
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
 
-  # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # Fonts
   fonts = {
     packages = with pkgs; [
-      # icon fonts
       material-design-icons
       font-awesome
       nerd-fonts.symbols-only
