@@ -15,7 +15,14 @@ set_fzf_colors() {
 }
 
 # Base FZF Options
-base_fzf_opts="--height 40% --layout=reverse --border --prompt='Search: ' $(set_fzf_colors) --bind 'ctrl-p:up,ctrl-n:down'"
+base_fzf_opts="
+    --height 60%
+    --layout=reverse
+    --border
+    --prompt='Search: ' $(set_fzf_colors)
+    --bind 'ctrl-p:up,ctrl-n:down'
+    --preview 'bat -n --color=always {}'
+"
 
 # Common options for preview and reload
 common_opts="
