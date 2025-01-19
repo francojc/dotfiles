@@ -33,14 +33,14 @@
       "borders" # jankyborders
       "mas"
       "rename"
-      "wget" # download tool
+      "wget"
     ];
 
     casks = [
       "appcleaner"
       "bettermouse"
       # "calibre"
-      # "chatgpt"
+      "chatgpt"
       "docker"
       "dropbox"
       "fantastical"
@@ -48,7 +48,6 @@
       "google-chrome"
       "google-drive"
       "kap"
-      "kitty"
       "lm-studio"
       "mullvadvpn"
       "obsidian"

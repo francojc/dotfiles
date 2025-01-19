@@ -28,6 +28,7 @@
     htop
     imagemagick
     jq
+    kitty
     lazydocker
     lazygit
     lynx
