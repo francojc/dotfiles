@@ -10,6 +10,7 @@
       defaultKeymap = "viins";
       initExtra = ''
         ${builtins.readFile ./aliases.zsh}
+        ${builtins.readFile ./fzf.zsh}
       '';
       profileExtra = ''
         # zprofile
