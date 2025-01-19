@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+# Refactor this nix file so that it is more modular and easier to read and maintain AI!
   system = {
     activationScripts.postUserActivation.text = ''
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
@@ -53,7 +54,7 @@
         "com.apple.sound.beep.feedback" = 0; # disable beep sound when pressing volume up/down key
         AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
         AppleInterfaceStyleSwitchesAutomatically = true; # enable auto mode
-        ApplePressAndHoldEnabled = true; # enable press and hold
+        ApplePressAndHoldEnabled = false; # enable press and hold
         NSTableViewDefaultSizeMode = 3; # set sidebar icon size to small
         AppleShowAllExtensions = true; # show all file extensions
         AppleSpacesSwitchOnActivate = false; # disable auto switch space
@@ -61,9 +62,9 @@
         # If you press and hold certain keyboard keys when in a text area, the key’s character begins to repeat.
         # This is very useful for vim users, they use `hjkl` to move cursor.
         # sets how long it takes before it starts repeating.
-        InitialKeyRepeat = 15; # normal minimum is 15 (225 ms), maximum is 120 (1800 ms)
+        InitialKeyRepeat = 10; # normal minimum is 15 (225 ms)
         # sets how fast it repeats once it starts.
-        KeyRepeat = 1; # normal minimum is 2 (30 ms), maximum is 120 (1800 ms)
+        KeyRepeat = 1; # normal minimum is 2 (30 ms)
 
         NSAutomaticCapitalizationEnabled = false; # disable auto capitalization
         NSAutomaticDashSubstitutionEnabled = false; # disable auto dash substitution
@@ -124,8 +125,9 @@
           askForPasswordDelay = 0;
         };
         "com.apple.screencapture" = {
-          location = "~/Desktop"; # save screenshots to the desktop
+          location = "~/Downloads";
           type = "png";
+          disable-shadow = true;
         };
         "com.apple.AdLib" = {
           allowApplePersonalizedAdvertising = false;
