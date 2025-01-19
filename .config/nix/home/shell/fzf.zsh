@@ -1,31 +1,21 @@
-# Refactor this file to reduce duplication and improve readability AI!
-
 # FZF Base Configuration
 export FZF_DEFAULT_COMMAND="rg --files"
 
 # Gruvbox Dark Color Theme
-fg="#ebdbb2"        # Light 1
-bg="#282828"        # Dark 0
-bg_highlight="#504945"  # Dark 2
-yellow="#fabd2f"    # Bright Yellow
-blue="#83a598"      # Bright Blue
-aqua="#8ec07c"      # Bright Aqua
-purple="#d3869b"    # Bright Purple
-orange="#fe8019"    # Bright Orange
-
-# Function to set color options
 set_fzf_colors() {
+    local fg="#ebdbb2"        # Light 1
+    local bg="#282828"        # Dark 0
+    local bg_highlight="#504945"  # Dark 2
+    local yellow="#fabd2f"    # Bright Yellow
+    local blue="#83a598"      # Bright Blue
+    local aqua="#8ec07c"      # Bright Aqua
+    local purple="#d3869b"    # Bright Purple
+    local orange="#fe8019"    # Bright Orange
     echo "--color=fg:$fg,bg:$bg,hl:$yellow,fg+:$fg,bg+:$bg_highlight,hl+:$orange,info:$blue,prompt:$aqua,pointer:$aqua,marker:$aqua,spinner:$yellow,header:$purple"
 }
 
-# Set FZF_DEFAULT_OPTS with base configuration and colors
-FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --prompt='Search: ' $(set_fzf_colors)"
-
-# Add key bindings
-FZF_DEFAULT_OPTS+=" --bind 'ctrl-p:up,ctrl-n:down'"
-
-# Export the final FZF_DEFAULT_OPTS
-export FZF_DEFAULT_OPTS
+# Base FZF Options
+base_fzf_opts="--height 40% --layout=reverse --border --prompt='Search: ' $(set_fzf_colors) --bind 'ctrl-p:up,ctrl-n:down'"
 
 # Common options for preview and reload
 common_opts="
@@ -54,4 +44,7 @@ export FZF_ALT_C_OPTS="
     --preview 'tree -C {}'
     --bind 'ctrl-g:reload:rg --files --no-ignore'
 "
+
+# Export the final FZF_DEFAULT_OPTS
+export FZF_DEFAULT_OPTS="$base_fzf_opts"
 
