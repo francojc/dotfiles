@@ -8,12 +8,12 @@ in
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     '';
     imports = [
-      ./defaults.nix
-      ./trackpad.nix
-      ./finder.nix
-      ./keyboard.nix
-      ./custom-user-preferences.nix
-      ./loginwindow.nix
+      ./system/defaults.nix
+      ./system/trackpad.nix
+      ./system/finder.nix
+      ./system/keyboard.nix
+      ./system/custom-user-preferences.nix
+      ./system/loginwindow.nix
     ];
     startup.chime = false; # no startup sound ;)
   };
