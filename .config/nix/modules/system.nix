@@ -21,8 +21,8 @@
         orientation = "bottom";
         persistent-apps = [
           "/Applications/Zen Browser.app"
-          "/Applications/Activity Monitor.app"
-          "~/Applications/Home Manager Apps/kitty.app"
+          "/Users/${username}/Applications/Home Manager Apps/kitty.app"
+          "/System/Applications/Utilities/Screen Sharing.app"
         ];
         persistent-others = [
           "/Users/${username}/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Teaching/Courses/Current/"
