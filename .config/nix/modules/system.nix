@@ -60,7 +60,7 @@
         ApplePressAndHoldEnabled = false;
         AppleShowAllExtensions = true;
         AppleSpacesSwitchOnActivate = false;
-        InitialKeyRepeat = 10;
+        InitialKeyRepeat = 13;
         KeyRepeat = 1;
         NSAutomaticCapitalizationEnabled = false;
         NSAutomaticDashSubstitutionEnabled = false;
