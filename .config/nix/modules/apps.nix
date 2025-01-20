@@ -81,6 +81,7 @@
       Triode = 1450027401;
       Vimari = 1480933944;
       Vinegar_for_Safari = 1591303229;
+      VoiceType = 6736525125;
       iPreview = 1519213509;
     };
   };
