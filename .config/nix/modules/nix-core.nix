@@ -12,5 +12,6 @@
   };
   nixpkgs.config.allowUnfree = true;
   services.nix-daemon.enable = true;
+  services.tailscale.enable = true;
   system.stateVersion = 5;
 }
