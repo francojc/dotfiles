@@ -5,6 +5,7 @@ weak-model: haiku
 alias:
   - "llama-instruct:lm_studio/llama-3.2-3b-instruct"
   - "mistral-instruct:lm_studio/mistral-nemo-2407-instruct"
+  - "o1:openai/o1-2024-12-17"
 
 # Theme
 # Main text colors
