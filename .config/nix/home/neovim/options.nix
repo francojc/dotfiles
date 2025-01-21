@@ -5,9 +5,12 @@
       loaded_ruby_provider = 0;
       loaded_perl_provider = 0;
     };
-    extraConfigLua = "
+    extraConfigLua = ''
       vim.b.slime_cell_delimiter = '```';
-    ";
+    '';
+    extraConfigVim = ''
+      highlight WinSeparator guifg=#FABD2F
+    '';
     opts = {
       # Enable relative line numbers
       number = true;
@@ -88,6 +91,7 @@
       foldminlines = 1; # Minimum lines for a fold
       foldnestmax = 3; # Maximum fold nesting level
       fillchars = {
+        vert = "│"; # Use vertical line for fold column
         fold = "·"; # Use centered dot for fold indicator
         foldopen = "▾"; # Use triangle for open folds
         foldclose = "▸"; # Use triangle for closed folds
