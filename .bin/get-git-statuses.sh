@@ -17,7 +17,8 @@ do
         echo "Directory: $dir"
         # Get the git status
         git -C $dir status
-        echo "-----------------------------------\n\n"
+        echo "-----------------------------------"
+        echo ""
     fi
 done
 
