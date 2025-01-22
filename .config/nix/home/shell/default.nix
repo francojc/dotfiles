@@ -25,6 +25,7 @@
         export PATH="/usr/local/sbin:$PATH"
         export PATH="/Users/${username}/.bin:$PATH" # custom scripts
         export PATH="/Users/${username}/.local/bin:$PATH" # pipx
+        export PATH="/Users/${username}/.lmstudio/bin/:$PATH" # lmstudio
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
