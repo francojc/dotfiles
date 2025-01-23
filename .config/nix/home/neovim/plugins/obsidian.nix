@@ -8,8 +8,9 @@
           min_chars = 2;
           nvim_cmp = false;
         };
+        # 'Mobile Documents/iCloud~md~obsidian/Documents/Notes'
         attachments = {
-          img_folder = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Attachments/";
+          img_folder = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Attachments/";
         };
         follow_url_func.__raw = ''
           function(url)
@@ -22,11 +23,11 @@
         workspaces = [
           {
             name = "Notes";
-            path = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/";
+            path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/";
           }
         ];
         daily_notes = {
-          template = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Templates/Daily.md";
+          template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Templates/Daily.md";
           folder = "Daily";
         };
         mappings = {
@@ -44,7 +45,7 @@
           };
         };
         templates = {
-          subdir = "~/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Notes/Assets/Templates/";
+          subdir = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Templates/";
           substitutions = {
             monday.__raw = ''
               function()
