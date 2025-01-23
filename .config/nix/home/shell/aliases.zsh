@@ -76,7 +76,7 @@ function cd() {
 # Obsidian
 function on() {
     if [ -z "$1" ]; then
-        cd ~/Google\ Drive/My\ Drive/Notes/ && nvim
+        cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Notes/ && nvim
     else
         cd "$1" && nvim
     fi
