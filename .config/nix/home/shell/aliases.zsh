@@ -3,6 +3,7 @@
 # -- Uses hostname to determine the flake to switch to
 alias switch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
+# Directory navigation
 alias ..='cd ..'
 alias ...='cd ../..'
 
@@ -12,21 +13,24 @@ alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=
 alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
 alias lt='la icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
 
+# Use fd instead of find
 alias fd="fd --hidden --exclude '.git'"
 
 alias tree='tree -C'
 alias cat='bat' # use bat instead of cat
 alias df='duf' # use duf instead of df
 
-# more verbose and interactive copy/move
+# More verbose and interactive copy/move
 alias cp='cp -iv'
 alias mv='mv -iv'
 
 # Better path display
 alias path='echo -e ${PATH//:/\\n}'
 
- # Rerun last command with sudo
-alias pls='sudo $(fc -ln -1)'
+# SSH aliases
+
+alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore.tail5650e0.ts.net'
+alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne.tail5650e0.ts.net'
 
 # Git aliases
 alias gss='git status'
