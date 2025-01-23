@@ -44,7 +44,7 @@
       "fantastical"
       "ghostty@tip"
       "google-chrome"
-      # "google-drive"
+      "google-drive"
       "kap"
       "lm-studio"
       "mullvadvpn"
