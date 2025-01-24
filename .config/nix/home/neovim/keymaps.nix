@@ -247,6 +247,15 @@
 
       # Code
       {
+        mode = "x";  # Visual mode
+        key = "<leader>cn";
+        action = ":s/\\s\\+/ /g<CR>";
+        options = {
+          desc = "Normalize whitespace in selection";
+          silent = true;
+        };
+      }
+      {
         mode = "n";
         key = "<C-c>";
         action = "<Plug>SlimeParagraphSend<CR>";
