@@ -25,7 +25,8 @@
           "/System/Applications/Utilities/Screen Sharing.app"
         ];
         persistent-others = [
-          "/Users/${username}/Library/CloudStorage/GoogleDrive-francojc@wfu.edu/My Drive/Teaching/Courses/Current/"
+          "/Users/${username}/"
+          "/Users/${username}/.dotfiles"
           "/Users/${username}/Downloads/"
         ];
         show-recents = false;
