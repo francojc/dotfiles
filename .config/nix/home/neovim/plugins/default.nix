@@ -65,7 +65,6 @@
         };
       };
       grug-far.enable = true;
-      # Is there a way to create a autocommand/keymap to toggle the 'image' plugin on/off AI?
       image = {
         enable = true;
         editorOnlyRenderWhenFocused = true;
@@ -370,7 +369,7 @@
       end
 
       -- Add a keymap to toggle the image plugin
-      vim.keymap.set('n', '<leader>ti', toggle_image_plugin, { desc = "Toggle image plugin", silent = true })
+      vim.keymap.set('n', '<leader>\\i', toggle_image_plugin, { desc = "Toggle image plugin", silent = true })
     '';
   };
 }
