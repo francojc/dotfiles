@@ -46,6 +46,7 @@
       "google-chrome"
       "google-drive"
       "kap"
+      "keycastr"
       "lm-studio"
       "mullvadvpn"
       "obsidian"
