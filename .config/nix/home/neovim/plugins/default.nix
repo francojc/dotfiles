@@ -65,6 +65,7 @@
         };
       };
       grug-far.enable = true;
+      # Is there a way to create a autocommand/keymap to toggle the 'image' plugin on/off AI?
       image = {
         enable = true;
         editorOnlyRenderWhenFocused = true;
