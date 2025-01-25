@@ -353,13 +353,11 @@
       end, {})
 
       -- Image plugin toggle function
-      -- This function throws an error related the 'stop' method. Fix it AI!
       local image_enabled = true
       local function toggle_image_plugin()
         local image = require('image')
         if image_enabled then
           image.clear()
-          image.stop()
           image_enabled = false
           vim.notify("Image plugin disabled")
         else
