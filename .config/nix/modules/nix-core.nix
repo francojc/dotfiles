@@ -11,7 +11,13 @@
     };
   };
   nixpkgs.config.allowUnfree = true;
-  services.nix-daemon.enable = true;
-  services.tailscale.enable = true;
-  system.stateVersion = 5;
+  system = {
+    # autoUpgrade.enable = true;
+    # autoUpgrade.dates = "weekly";
+    stateVersion = 5;
+  };
+  services = {
+    nix-daemon.enable = true;
+    tailscale.enable = true;
+  };
 }

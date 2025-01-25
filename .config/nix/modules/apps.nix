@@ -32,6 +32,7 @@
     brews = [
       "borders" # jankyborders
       "mas"
+      "podman"
       "rename"
       "wget"
     ];
@@ -50,11 +51,13 @@
       "lm-studio"
       "mullvadvpn"
       "obsidian"
+      "podman-desktop"
       "praat"
       "raycast"
       "rectangle"
       "rstudio"
       "sequel-ace"
+      "superkey"
       "transcribe"
       "transmission"
       "visual-studio-code"
