@@ -353,6 +353,7 @@
       end, {})
 
       -- Image plugin toggle function
+      -- This function throws an error related the 'stop' method. Fix it AI!
       local image_enabled = true
       local function toggle_image_plugin()
         local image = require('image')
