@@ -352,6 +352,25 @@
           end
         )
       end, {})
+
+      -- Image plugin toggle function
+      local image_enabled = true
+      local function toggle_image_plugin()
+        local image = require('image')
+        if image_enabled then
+          image.clear()
+          image.stop()
+          image_enabled = false
+          vim.notify("Image plugin disabled")
+        else
+          image.setup()
+          image_enabled = true
+          vim.notify("Image plugin enabled")
+        end
+      end
+
+      -- Add a keymap to toggle the image plugin
+      vim.keymap.set('n', '<leader>ti', toggle_image_plugin, { desc = "Toggle image plugin", silent = true })
     '';
   };
 }
