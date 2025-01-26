@@ -48,7 +48,6 @@
       "google-drive"
       "kap"
       "keycastr"
-      "little-snitch"
       "lm-studio"
       "mullvadvpn"
       "obsidian"
