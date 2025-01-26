@@ -58,7 +58,7 @@
               };
               users.${username} = {
                 imports = [
-                  ./home
+                  ./home/default.nix
                   nixvim.homeManagerModules.nixvim
                 ];
               };
