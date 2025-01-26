@@ -48,6 +48,7 @@
       "google-drive"
       "kap"
       "keycastr"
+      "little-snitch"
       "lm-studio"
       "mullvadvpn"
       "obsidian"
@@ -76,7 +77,7 @@
       Dark_Reader_for_Safari = 1438243180;
       IPA_Keyboard = 1461264628;
       JustFocus = 1142151959;
-      LittleSnitchMini = 1629008763;
+      # LittleSnitchMini = 1629008763;
       Kagi_for_Safari = 1622835804;
       Keynote = 409183694;
       Numbers = 409203825;
