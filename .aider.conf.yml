@@ -1,13 +1,17 @@
-# Models
-model: flash
-weak-model: haiku
 
+# Aliases
 alias:
   - "llama-instruct:lm_studio/llama-3.2-3b-instruct"
   - "mistral-instruct:lm_studio/mistral-nemo-2407-instruct"
   - "o1:openai/o1-2024-12-17"
   - "r1:deepseek/deepseek-reasoner"
   - "v3:deepseek/deepseek-chat"
+
+# Models
+model: r1
+editor-model: sonnet #
+weak-model: v3 # git commit messages
+architect: true
 
 # Theme
 # Main text colors

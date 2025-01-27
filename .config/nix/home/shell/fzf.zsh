@@ -12,7 +12,7 @@ set_fzf_colors() {
     local purple="#c296eb"    # Lavender highlight
     local orange="#ff9052"    # Warm coral
     local pink="#d3869b"      # Blush pink
-    
+
     echo "--color=fg:$fg,bg:$bg,hl:$pink,fg+:$fg,bg+:$bg_highlight,hl+:$orange,info:$blue,prompt:$aqua,pointer:$purple,marker:$yellow,spinner:$yellow,header:$blue"
 }
 
