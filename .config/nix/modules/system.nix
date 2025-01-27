@@ -74,7 +74,7 @@
       };
 
       loginwindow = {
-        GuestEnabled = true;
+        GuestEnabled = false;
       };
 
       CustomUserPreferences = {
@@ -128,7 +128,7 @@
         "com.apple.spaces"."spans-displays" = 0;
         "com.apple.WindowManager" = {
           EnableStandardClickToShowDesktop = 0;
-          HideDesktop = 1;
+          HideDesktop = 0;
           StageManagerHideWidgets = 0;
           StandardHideDesktopIcons = 0;
           StandardHideWidgets = 1;
