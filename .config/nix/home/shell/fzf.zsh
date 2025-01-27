@@ -1,17 +1,19 @@
 # FZF Base Configuration
 export FZF_DEFAULT_COMMAND="rg --files"
 
-# Gruvbox Dark Color Theme
+# Nightfox-inspired Color Theme
 set_fzf_colors() {
-    local fg="#ebdbb2"        # Light 1
-    local bg="#282828"        # Dark 0
-    local bg_highlight="#504945"  # Dark 2
-    local yellow="#fabd2f"    # Bright Yellow
-    local blue="#83a598"      # Bright Blue
-    local aqua="#8ec07c"      # Bright Aqua
-    local purple="#d3869b"    # Bright Purple
-    local orange="#fe8019"    # Bright Orange
-    echo "--color=fg:$fg,bg:$bg,hl:$yellow,fg+:$fg,bg+:$bg_highlight,hl+:$orange,info:$blue,prompt:$aqua,pointer:$aqua,marker:$aqua,spinner:$yellow,header:$purple"
+    local fg="#cdcecf"        # Light grey text
+    local bg="#192330"        # Deep navy base
+    local bg_highlight="#1d2a3f"  # Slightly lighter navy
+    local yellow="#e0c080"    # Muted gold
+    local blue="#719cd6"      # Soft periwinkle
+    local aqua="#7bd9ca"      # Teal accent
+    local purple="#c296eb"    # Lavender highlight
+    local orange="#ff9052"    # Warm coral
+    local pink="#d3869b"      # Blush pink
+    
+    echo "--color=fg:$fg,bg:$bg,hl:$pink,fg+:$fg,bg+:$bg_highlight,hl+:$orange,info:$blue,prompt:$aqua,pointer:$purple,marker:$yellow,spinner:$yellow,header:$blue"
 }
 
 # Base FZF Options
