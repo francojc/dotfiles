@@ -384,7 +384,7 @@
         mode = "n";
         key = "<leader>od";
         action = "<Cmd>ObsidianDailies<CR>";
-        options = {desc = "Daily note";};
+        options = {desc = "Daily notes";};
       }
       {
         mode = "n";
