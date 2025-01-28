@@ -10,7 +10,9 @@
       experimental-features = [ "nix-command" "flakes" ];
     };
   };
+
   nixpkgs.config.allowUnfree = true;
+
   system = {
     # autoUpgrade.enable = true;
     # autoUpgrade.dates = "weekly";
