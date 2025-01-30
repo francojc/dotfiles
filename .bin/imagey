@@ -7,7 +7,6 @@ from openai import OpenAI
 
 client = OpenAI()
 
-
 def main(model_gen, prompt_gen, size_gen, quality_gen, n_gen, name_gen):
 
     response = client.images.generate(
