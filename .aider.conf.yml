@@ -8,9 +8,11 @@ alias:
   - "v3:openrouter/deepseek/deepseek-chat"
 
 # Models
-model: r1
+# model: r1
+model: sonnet
 editor-model: sonnet #
-weak-model: v3 # git commit messages
+# weak-model: v3 # git commit messages
+weak-model: sonnet # git commit messages
 architect: true
 
 # Theme
