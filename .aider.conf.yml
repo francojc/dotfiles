@@ -10,11 +10,9 @@ alias:
   # - "v3:deepseek/deepseek-chat"
 
 # Models
-# model: r1
-model: sonnet
+model: flash
 editor-model: sonnet #
-# weak-model: v3 # git commit messages
-weak-model: sonnet # git commit messages
+weak-model: haiku # git commit messages
 architect: true
 
 # Theme

@@ -28,9 +28,6 @@
       };
       cmp-pandoc-nvim.enable = true;
       cmp-pandoc-references.enable = true;
-      codecompanion = {
-        enable = true;
-      };
       conform-nvim.enable = true;
       copilot-vim.enable = true;
       copilot-chat = {
