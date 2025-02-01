@@ -14,7 +14,7 @@ class ChatBot:
         self.current_message = ""
 
         # Curses setup
-        curses.init_color(1, 500, 500, 500)  # Gray background
+        curses.init_color(curses.COLOR_CYAN, 500, 0, 0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
         self.win = curses.newwin(curses.LINES, curses.COLS)
 
