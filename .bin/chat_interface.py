@@ -95,6 +95,22 @@ class ChatBot:
 
         self.win.refresh()
 
+    def send_message(self, message: str) -> str:
+        """Send a message to Ollama and return the response."""
+        try:
+            url = 'http://localhost:11434/api/chat'
+            data = {
+                "model": self.models[self.selected_model_index],
+                "messages": [{"role": "user", "content": message}]
+            }
+            response = requests.post(url, json=data)
+            if response.status_code == 200:
+                return response.json()['message']['content']
+            else:
+                return f"Error: Failed to get response (Status {response.status_code})"
+        except requests.exceptions.RequestException as e:
+            return f"Error: Could not connect to Ollama service: {str(e)}"
+
     def handle_input(self):
         c = self.win.getch()
 
@@ -120,10 +136,19 @@ class ChatBot:
                 return
             elif c == ord('\n'):
                 if self.current_message.strip():
+                    # Add user message to chat history
                     self.chat_history.append({
                         "sender": "user",
                         "text": self.current_message
                     })
+                    
+                    # Get bot response
+                    response = self.send_message(self.current_message)
+                    self.chat_history.append({
+                        "sender": "bot",
+                        "text": response
+                    })
+                    
                     self.current_message = ""
             elif c == curses.KEY_BACKSPACE or c == 127:
                 self.current_message = self.current_message[:-1]
