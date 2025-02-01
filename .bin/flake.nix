@@ -45,7 +45,6 @@
           knitr
           languageserver
           rmarkdown
-          # Project
           tidyverse
         ];
 
