@@ -27,15 +27,10 @@
 
         # Python packages
         pythonPackages = ps: with ps; [
-          "ipython"
-          "jupyter"
-          "openai"
-          "requests"
-          "curses"
-          "json"
-          "os"
-          "sys"
-          "typing"
+          ipython
+          jupyter
+          openai
+          requests
         ];
 
         # R packages
