@@ -28,7 +28,6 @@
     datasette
     drawio
     fastfetch
-    glow
     gnupg
     haskellPackages.pandoc-crossref
     helix-gpt

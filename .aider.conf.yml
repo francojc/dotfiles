@@ -1,18 +1,14 @@
 # Aliases
 alias:
-  - "llama-instruct:lm_studio/llama-3.2-3b-instruct"
-  - "mistral-instruct:lm_studio/mistral-nemo-2407-instruct"
-  - "o1:openai/o1-2024-12-17"
-  - "r1:openrouter/deepseek/deepseek-r1"
-  - "v3:openrouter/deepseek/deepseek-chat"
-  # - "r1:deepseek/deepseek-reasoner"
-  # - "v3:deepseek/deepseek-chat"
+  - "r1:deepseek/deepseek-reasoner"
+  - "v3:deepseek/deepseek-chat"
   - "r1l:ollama_chat/deepseek-r1:14b"
   - "mistral-small:ollama_chat/mistral-small:latest"
+  - "phi4:ollama_chat/phi4:latest"
 
 # Models
 model: r1l # deepseek-reasoner
-editor-model: mistral-small # mistral-small
+editor-model: phi4 # phi4
 weak-model: haiku # git commit messages
 architect: false
 
