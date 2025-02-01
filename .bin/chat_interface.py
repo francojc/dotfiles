@@ -84,7 +84,22 @@ class ChatBot:
         # Chat history
         start_y = 2
         current_y = start_y
+        
+        # Add boundary checking
+        def safe_addstr(y, x, text, *args):
+            if y >= input_start_y:
+                return
+            try:
+                if x + len(text) > curses.COLS:
+                    text = text[:curses.COLS - x - 1]
+                self.win.addstr(y, x, text, *args)
+            except curses.error:
+                pass
+
         for message in self.chat_history:
+            if current_y >= input_start_y - 1:
+                break
+                
             sender = message["sender"]
             text = message["text"]
             prefix = "You: " if sender == "user" else "Bot: "
@@ -93,37 +108,39 @@ class ChatBot:
             # Word wrap the message
             wrapped_text = text.split('\n')
             for line in wrapped_text:
-                while len(line) > curses.COLS - 10:  # -10 for margin and prefix
+                while len(line) > curses.COLS - 10 and current_y < input_start_y - 1:  
                     split_point = curses.COLS - 10
-                    self.win.addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
-                    self.win.addstr(current_y, 7, line[:split_point], color)
+                    safe_addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
+                    safe_addstr(current_y, 7, line[:split_point], color)
                     line = line[split_point:]
                     current_y += 1
-                self.win.addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
-                self.win.addstr(current_y, 7, line, color)
-                current_y += 1
+                if current_y < input_start_y - 1:
+                    safe_addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
+                    safe_addstr(current_y, 7, line, color)
+                    current_y += 1
 
-            if self.is_processing and message == self.chat_history[-1]:
+            if self.is_processing and message == self.chat_history[-1] and current_y < input_start_y - 1:
                 spinner = self.spinner_frames[self.spinner_index]
-                self.win.addstr(current_y, 2, f"Bot: {spinner} thinking...", curses.color_pair(3))
+                safe_addstr(current_y, 2, f"Bot: {spinner} thinking...", curses.color_pair(3))
 
         # Input area separator
-        self.win.addstr(input_start_y - 1, 2, "─" * (curses.COLS - 4))
+        safe_addstr(input_start_y - 1, 2, "─" * (curses.COLS - 4))
 
         # Multi-line input area
         input_y = input_start_y
-        self.win.addstr(input_y, 2, "Message: ")
+        safe_addstr(input_y, 2, "Message: ")
         wrapped_input = self.current_message
         max_width = curses.COLS - 11  # -11 for "Message: " and margin
-        while len(wrapped_input) > max_width:
-            self.win.addstr(input_y, 11, wrapped_input[:max_width])
+        
+        while len(wrapped_input) > max_width and input_y < curses.LINES - 1:
+            safe_addstr(input_y, 11, wrapped_input[:max_width])
             wrapped_input = wrapped_input[max_width:]
             input_y += 1
-        self.win.addstr(input_y, 11, wrapped_input)
+        if input_y < curses.LINES - 1:
+            safe_addstr(input_y, 11, wrapped_input)
 
         # Commands help
-        self.win.addstr(curses.LINES - 1, 2, "ESC - Exit | Enter - Send message",
-                       curses.color_pair(4))
+        safe_addstr(curses.LINES - 1, 2, "ESC - Exit | Enter - Send message", curses.color_pair(4))
 
         self.win.refresh()
 
