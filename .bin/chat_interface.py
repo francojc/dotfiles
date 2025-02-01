@@ -84,7 +84,7 @@ class ChatBot:
         # Chat history
         start_y = 2
         current_y = start_y
-        
+
         # Add boundary checking
         def safe_addstr(y, x, text, *args):
             if y >= input_start_y:
@@ -99,7 +99,7 @@ class ChatBot:
         for message in self.chat_history:
             if current_y >= input_start_y - 1:
                 break
-                
+
             sender = message["sender"]
             text = message["text"]
             prefix = "You: " if sender == "user" else "Bot: "
@@ -108,7 +108,7 @@ class ChatBot:
             # Word wrap the message
             wrapped_text = text.split('\n')
             for line in wrapped_text:
-                while len(line) > curses.COLS - 10 and current_y < input_start_y - 1:  
+                while len(line) > curses.COLS - 10 and current_y < input_start_y - 1:
                     split_point = curses.COLS - 10
                     safe_addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
                     safe_addstr(current_y, 7, line[:split_point], color)
@@ -131,7 +131,7 @@ class ChatBot:
         safe_addstr(input_y, 2, "Message: ")
         wrapped_input = self.current_message
         max_width = curses.COLS - 11  # -11 for "Message: " and margin
-        
+
         while len(wrapped_input) > max_width and input_y < curses.LINES - 1:
             safe_addstr(input_y, 11, wrapped_input[:max_width])
             wrapped_input = wrapped_input[max_width:]
@@ -203,17 +203,17 @@ class ChatBot:
                     })
                     user_message = self.current_message
                     self.current_message = ""
-                    
+
                     # Show processing status
                     self.is_processing = True
-                    
+
                     # Start processing response
                     def update_spinner():
                         while self.is_processing:
                             self.spinner_index = (self.spinner_index + 1) % len(self.spinner_frames)
                             self.display_chat()
                             curses.napms(100)  # 100ms delay between spinner frames
-                    
+
                     # Get bot response
                     try:
                         response = self.send_message(user_message)
