@@ -8,6 +8,8 @@ alias:
   - "v3:openrouter/deepseek/deepseek-chat"
   # - "r1:deepseek/deepseek-reasoner"
   # - "v3:deepseek/deepseek-chat"
+  # - "r1l:ollama_chat/deepseek-r1:14b"
+  # - "mistral-small:ollama_chat/mistral-small:latest"
 
 # Models
 model: flash
