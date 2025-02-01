@@ -3,6 +3,7 @@ from curses import wrapper
 import json
 import os
 import sys
+import requests
 from typing import List, Dict
 
 class ChatBot:
@@ -27,13 +28,18 @@ class ChatBot:
         self.win.keypad(1)  # Enable keypad mode
 
     def get_models(self):
-        models_dir = os.path.expanduser("~/.ollama/models")
-        if not os.path.exists(models_dir):
-            return []
-
-        self.models = [f for f in os.listdir(models_dir) if os.path.isdir(os.path.join(models_dir, f))]
+        try:
+            response = requests.get('http://localhost:11434/api/tags')
+            if response.status_code == 200:
+                models_data = response.json()
+                self.models = [model['name'] for model in models_data['models']]
+            else:
+                self.models = ["Error: Couldn't connect to Ollama"]
+        except requests.exceptions.RequestException:
+            self.models = ["Error: Ollama service not running"]
+        
         if not self.models:
-            self.models.append("none")  # Fallback
+            self.models = ["No models found"]
 
     def display_menu(self):
         self.win.clear()
