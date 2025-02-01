@@ -41,7 +41,7 @@
           temperature = 0.3;
         };
       };
-      diffview.enable = false;
+      diffview.enable = true;
       dressing.enable = true;
       dropbar = {
         enable = true;
