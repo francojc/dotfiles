@@ -14,6 +14,10 @@ class ChatBot:
         self.chat_history: List[Dict[str, str]] = []
         self.current_message = ""
         self.mode = "menu"  # Add mode tracking: "menu" or "chat"
+        self.input_buffer_lines = 3  # Space for multiple lines of input
+        self.is_processing = False   # Flag for showing processing status
+        self.spinner_frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+        self.spinner_index = 0
 
         # Curses setup
         curses.start_color()
@@ -73,21 +77,49 @@ class ChatBot:
         header = f"🤖 Chat with {selected_model}"
         self.win.addstr(0, (curses.COLS - len(header)) // 2, header, curses.color_pair(1))
 
+        # Calculate available height for chat history
+        input_start_y = curses.LINES - (self.input_buffer_lines + 2)  # +2 for borders/help
+        chat_height = input_start_y - 2  # -2 for header
+
         # Chat history
         start_y = 2
-        for i, message in enumerate(self.chat_history):
+        current_y = start_y
+        for message in self.chat_history:
             sender = message["sender"]
             text = message["text"]
             prefix = "You: " if sender == "user" else "Bot: "
             color = curses.color_pair(2) if sender == "user" else curses.color_pair(3)
 
-            self.win.addstr(start_y + i, 2, prefix, color)
-            self.win.addstr(start_y + i, len(prefix) + 2, text)
+            # Word wrap the message
+            wrapped_text = text.split('\n')
+            for line in wrapped_text:
+                while len(line) > curses.COLS - 10:  # -10 for margin and prefix
+                    split_point = curses.COLS - 10
+                    self.win.addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
+                    self.win.addstr(current_y, 7, line[:split_point], color)
+                    line = line[split_point:]
+                    current_y += 1
+                self.win.addstr(current_y, 2, prefix if line == wrapped_text[0] else "     ")
+                self.win.addstr(current_y, 7, line, color)
+                current_y += 1
 
-        # Input area
-        input_y = curses.LINES - 3
-        self.win.addstr(input_y - 1, 2, "─" * (curses.COLS - 4))  # Separator line
-        self.win.addstr(input_y, 2, "Message: " + self.current_message)
+            if self.is_processing and message == self.chat_history[-1]:
+                spinner = self.spinner_frames[self.spinner_index]
+                self.win.addstr(current_y, 2, f"Bot: {spinner} thinking...", curses.color_pair(3))
+
+        # Input area separator
+        self.win.addstr(input_start_y - 1, 2, "─" * (curses.COLS - 4))
+
+        # Multi-line input area
+        input_y = input_start_y
+        self.win.addstr(input_y, 2, "Message: ")
+        wrapped_input = self.current_message
+        max_width = curses.COLS - 11  # -11 for "Message: " and margin
+        while len(wrapped_input) > max_width:
+            self.win.addstr(input_y, 11, wrapped_input[:max_width])
+            wrapped_input = wrapped_input[max_width:]
+            input_y += 1
+        self.win.addstr(input_y, 11, wrapped_input)
 
         # Commands help
         self.win.addstr(curses.LINES - 1, 2, "ESC - Exit | Enter - Send message",
@@ -147,20 +179,34 @@ class ChatBot:
                 return
             elif c == ord('\n'):
                 if self.current_message.strip():
-                    # Add user message to chat history
+                    # Add user message to chat history immediately
                     self.chat_history.append({
                         "sender": "user",
                         "text": self.current_message
                     })
+                    user_message = self.current_message
+                    self.current_message = ""
+                    
+                    # Show processing status
+                    self.is_processing = True
+                    
+                    # Start processing response
+                    def update_spinner():
+                        while self.is_processing:
+                            self.spinner_index = (self.spinner_index + 1) % len(self.spinner_frames)
+                            self.display_chat()
+                            curses.napms(100)  # 100ms delay between spinner frames
                     
                     # Get bot response
-                    response = self.send_message(self.current_message)
-                    self.chat_history.append({
-                        "sender": "bot",
-                        "text": response
-                    })
-                    
-                    self.current_message = ""
+                    try:
+                        response = self.send_message(user_message)
+                        self.chat_history.append({
+                            "sender": "bot",
+                            "text": response
+                        })
+                    finally:
+                        self.is_processing = False
+                        self.display_chat()
             elif c == curses.KEY_BACKSPACE or c == 127:
                 self.current_message = self.current_message[:-1]
             else:
