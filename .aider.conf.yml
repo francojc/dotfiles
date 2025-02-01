@@ -8,12 +8,12 @@ alias:
   - "v3:openrouter/deepseek/deepseek-chat"
   # - "r1:deepseek/deepseek-reasoner"
   # - "v3:deepseek/deepseek-chat"
-  # - "r1l:ollama_chat/deepseek-r1:14b"
-  # - "mistral-small:ollama_chat/mistral-small:latest"
+  - "r1l:ollama_chat/deepseek-r1:14b"
+  - "mistral-small:ollama_chat/mistral-small:latest"
 
 # Models
-model: flash
-editor-model: sonnet #
+model: r1l # deepseek-reasoner
+editor-model: mistral-small # mistral-small
 weak-model: haiku # git commit messages
 architect: true
 
