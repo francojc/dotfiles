@@ -1,4 +1,3 @@
-
 # Aliases
 alias:
   - "llama-instruct:lm_studio/llama-3.2-3b-instruct"
@@ -15,7 +14,7 @@ alias:
 model: r1l # deepseek-reasoner
 editor-model: mistral-small # mistral-small
 weak-model: haiku # git commit messages
-architect: true
+architect: false
 
 # Theme
 # Main text colors

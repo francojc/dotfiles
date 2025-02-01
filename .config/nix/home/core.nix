@@ -8,7 +8,6 @@
     eza
     fd
     fzf
-    helix
     kitty
     starship
 

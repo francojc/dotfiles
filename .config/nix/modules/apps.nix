@@ -31,6 +31,7 @@
 
     brews = [
       "borders" # jankyborders
+      "helix"
       "mas"
       "ollama"
       "podman"

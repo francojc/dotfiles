@@ -3,6 +3,13 @@
 # -- Uses hostname to determine the flake to switch to
 alias switch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
+# Aider-chat aliases
+alias aider-proj-high='aider --model r1 --editor-model v3 --architect --watch-files'
+alias aider-proj-local='aider --model r1l --editor-model mistral-small --architect --watch-files'
+alias aider-helper-high='aider --model sonnet --no-git --watch-files'
+alias aider-helper-mid='aider --model v3 --no-git --watch-files'
+alias aider-helper-local='aider --model mistral-small --no-git --watch-files'
+
 # Directory navigation
 alias ..='cd ..'
 alias ...='cd ../..'

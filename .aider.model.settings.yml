@@ -1,0 +1,6 @@
+- name: ollama_chat/deepseek-r1:14b
+  extra_params:
+    num_ctx: 8192
+- name: ollama_chat/mistral-small:latest
+  extra_params:
+    num_ctx: 8192
