@@ -103,13 +103,24 @@ class ChatBot:
                 "model": self.models[self.selected_model_index],
                 "messages": [{"role": "user", "content": message}]
             }
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, stream=True)
             if response.status_code == 200:
-                return response.json()['message']['content']
+                # Handle streaming response
+                full_response = ""
+                for line in response.iter_lines():
+                    if line:
+                        json_response = json.loads(line)
+                        if 'message' in json_response:
+                            content = json_response['message'].get('content', '')
+                            if content:
+                                full_response += content
+                return full_response
             else:
                 return f"Error: Failed to get response (Status {response.status_code})"
         except requests.exceptions.RequestException as e:
             return f"Error: Could not connect to Ollama service: {str(e)}"
+        except json.JSONDecodeError as e:
+            return f"Error: Invalid response from Ollama: {str(e)}"
 
     def handle_input(self):
         c = self.win.getch()
