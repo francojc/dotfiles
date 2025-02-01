@@ -2,61 +2,73 @@
 
 {
   home.packages = with pkgs; [
+    # Terminal Enhancements
     atuin
     bat
-    datasette
-    drawio
+    eza
+    fd
+    fzf
+    helix
+    kitty
+    starship
+
+    # File Management
     duf
     entr
-    eza
-    fastfetch
-    fd
+    ncdu
+    tree
+    yazi-unwrapped
+
+    # Multimedia Tools
     ffmpeg
-    file
-    fzf
-    gdal
-    gh
-    ghostscript
+    mpv-unwrapped
+    pianobar
+    yt-dlp
+
+    # Development Tools
+    datasette
+    drawio
+    fastfetch
     glow
     gnupg
-    gh
-    gv
     haskellPackages.pandoc-crossref
-    helix
     helix-gpt
-    home-manager
-    htop
-    imagemagick
     jq
-    kitty
     lazydocker
     lazygit
-    lynx
-    m-cli
-    mas
-    mdcat
-    mpv-unwrapped
-    ncdu
-    nix-prefetch-git
-    pandoc
     pass
-    pngpaste
-    pianobar
     pipx
-    poppler_utils
-    qpdf
     quarto
     ripgrep
     silver-searcher
+
+    # System Utilities
+    file
+    ghostscript
+    gv
+    home-manager
+    htop
+    imagemagick
+    nix-prefetch-git
+    poppler_utils
+    qpdf
     sqlite
-    starship
     stow
     tldr
-    tree
     which
     xclip
-    yazi-unwrapped
-    yt-dlp
+
+    # Version Control and Git Tools
+    gh
+    git
+    lazygit
+
+    # Networking and Communication
+    m-cli
+    mas
+    mdcat
+    pngpaste
     zoxide
+
   ];
 }
