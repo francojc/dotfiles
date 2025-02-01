@@ -32,6 +32,7 @@
     brews = [
       "borders" # jankyborders
       "mas"
+      "ollama"
       "podman"
       "rename"
       "wget"
