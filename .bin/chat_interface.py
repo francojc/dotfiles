@@ -37,17 +37,17 @@ class ChatBot:
                 self.models = ["Error: Couldn't connect to Ollama"]
         except requests.exceptions.RequestException:
             self.models = ["Error: Ollama service not running"]
-        
+
         if not self.models:
             self.models = ["No models found"]
 
     def display_menu(self):
         self.win.clear()
-        
+
         # Header
         header = "🤖 Ollama Chat Interface"
         self.win.addstr(0, (curses.COLS - len(header)) // 2, header, curses.color_pair(1))
-        
+
         # Model selection area
         self.win.addstr(2, 2, "Available Models:", curses.color_pair(4))
         for i, model in enumerate(self.models):
@@ -67,7 +67,7 @@ class ChatBot:
 
     def display_chat(self):
         self.win.clear()
-        
+
         # Header
         selected_model = self.models[self.selected_model_index]
         header = f"🤖 Chat with {selected_model}"
@@ -80,7 +80,7 @@ class ChatBot:
             text = message["text"]
             prefix = "You: " if sender == "user" else "Bot: "
             color = curses.color_pair(2) if sender == "user" else curses.color_pair(3)
-            
+
             self.win.addstr(start_y + i, 2, prefix, color)
             self.win.addstr(start_y + i, len(prefix) + 2, text)
 
@@ -88,16 +88,16 @@ class ChatBot:
         input_y = curses.LINES - 3
         self.win.addstr(input_y - 1, 2, "─" * (curses.COLS - 4))  # Separator line
         self.win.addstr(input_y, 2, "Message: " + self.current_message)
-        
+
         # Commands help
-        self.win.addstr(curses.LINES - 1, 2, "ESC - Exit | Enter - Send message", 
+        self.win.addstr(curses.LINES - 1, 2, "ESC - Exit | Enter - Send message",
                        curses.color_pair(4))
 
         self.win.refresh()
 
     def handle_input(self):
         c = self.win.getch()
-        
+
         if self.mode == "menu":
             if c == curses.KEY_UP:
                 self.selected_model_index = (self.selected_model_index - 1) % len(self.models)
@@ -108,12 +108,12 @@ class ChatBot:
                 if selected_model != "none":
                     self.mode = "chat"
                     self.chat_history.append({
-                        "sender": "bot", 
+                        "sender": "bot",
                         "text": f"Connected to {selected_model}. Start chatting!"
                     })
             elif c == 27:  # ESC
                 sys.exit(0)
-        
+
         elif self.mode == "chat":
             if c == 27:  # ESC
                 self.mode = "menu"
