@@ -52,6 +52,7 @@
     qpdf
     sqlite
     stow
+    searxng
     tldr
     which
     xclip
