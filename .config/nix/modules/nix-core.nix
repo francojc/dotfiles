@@ -14,12 +14,11 @@
   nixpkgs.config.allowUnfree = true;
 
   system = {
-    # autoUpgrade.enable = true;
-    # autoUpgrade.dates = "weekly";
     stateVersion = 5;
   };
   services = {
     nix-daemon.enable = true;
+    # searx.enable = true;
     tailscale.enable = true;
   };
 }
