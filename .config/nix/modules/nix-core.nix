@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, config, ... }: {
   nix = {
     gc = {
       automatic = true;
@@ -18,7 +18,6 @@
   };
   services = {
     nix-daemon.enable = true;
-    # SearXNG configuration removed - not available on macOS
     tailscale.enable = true;
   };
 }

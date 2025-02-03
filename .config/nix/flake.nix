@@ -43,7 +43,6 @@
         };
         pkgs = import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
         };
         modules = [
           ./modules/nix-core.nix
