@@ -18,7 +18,16 @@
   };
   services = {
     nix-daemon.enable = true;
-    searx.enable = true;
+    searxng = {
+      enable = true;
+      settings = {
+        general = {
+          debug = false;
+          instance_name = "My SearXNG";
+          secret_key = "@REPLACE_ME_WITH_A_SECRET_KEY@";  # Generate with: openssl rand -hex 32
+        };
+      };
+    };
     tailscale.enable = true;
   };
 }
