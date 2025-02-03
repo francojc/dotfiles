@@ -34,16 +34,14 @@ editor: nvim
 
 # Git Settings
 auto-commits: true
-attribute-author: true
-attribute-committer: true
-attribute-commit-message-author: true
-attribute-commit-message-committer: true
+no-attribute-author: true
+no-attribute-committer: true
 show-diffs: false  # Optional, but useful to review changes
 
 # Input Mode
 vim: true
-multiline: false  # Often useful with vim mode
-restore-chat-history: false  # Helps maintain context between sessions
+multiline: true  # Often useful with vim mode
+restore-chat-history: true  # Helps maintain context between sessions
 
 # Disable automatic linting/testing as requested
 auto-lint: false

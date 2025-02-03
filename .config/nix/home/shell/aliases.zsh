@@ -1,7 +1,7 @@
 # --- ALIASES ---
 # Nix aliases
 # -- Uses hostname to determine the flake to switch to
-alias switch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname) --impure'
+alias switch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
 # Aider-chat aliases
 alias aider-proj-high='aider --model r1 --editor-model v3 --architect --watch-files'
