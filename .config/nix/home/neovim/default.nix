@@ -14,8 +14,6 @@
     performance = {
       byteCompileLua.enable = true;
     };
-    viAlias = true;
-    vimAlias = false;
     luaLoader.enable = true;
   };
 }
