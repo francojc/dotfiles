@@ -9,7 +9,7 @@ alias:
 # Models
 model: r1l # deepseek-reasoner
 editor-model: phi4 # phi4
-weak-model: haiku # git commit messages
+weak-model: phi4 # git commit messages
 architect: false
 
 # Theme
