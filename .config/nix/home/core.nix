@@ -8,6 +8,7 @@
     eza
     fd
     fzf
+    glances
     kitty
     starship
 
