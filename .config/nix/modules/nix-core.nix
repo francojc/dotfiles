@@ -18,16 +18,7 @@
   };
   services = {
     nix-daemon.enable = true;
-    searxng = {
-      enable = true;
-      settings = {
-        general = {
-          debug = false;
-          instance_name = "My SearXNG";
-          secret_key = "7a1937f3e3a6205382ec7427e3439e0533b7902962c5769fe641148a6aebcf25";  # Generate with: openssl rand -hex 32
-        };
-      };
-    };
+    # SearXNG configuration removed - not available on macOS
     tailscale.enable = true;
   };
 }
