@@ -47,6 +47,9 @@
           ./modules/apps.nix
           ./modules/host-users.nix
 
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
           home-manager.darwinModules.home-manager
           {
             home-manager = {
