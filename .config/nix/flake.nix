@@ -41,15 +41,15 @@
         specialArgs = inputs // {
           inherit username useremail hostname;
         };
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
         modules = [
           ./modules/nix-core.nix
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/host-users.nix
-
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
           home-manager.darwinModules.home-manager
           {
             home-manager = {
