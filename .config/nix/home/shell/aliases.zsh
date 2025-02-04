@@ -11,7 +11,7 @@ alias aider-helper-high='aider --model sonnet --no-git --watch-files'
 alias aider-helper-mid='aider --model v3 --no-git --watch-files'
 alias aider-helper-local='aider --model phi4 --no-git --watch-files'
 
-alias aider-commit='aider --commit --model phi4 --weak-model phi4 --no-gitignore'
+alias aider-commit='aider --commit --weak-model haiku --no-gitignore'
 
 # Directory navigation
 alias ..='cd ..'
