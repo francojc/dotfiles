@@ -7,6 +7,7 @@
     ./lualine.nix
     ./obsidian.nix
     ./slime.nix
+    ./snacks.nix
     ./treesitter.nix
     ./which-key.nix
   ];
@@ -52,7 +53,7 @@
       };
       fidget.enable = true;
       flash.enable = true;
-      fzf-lua.enable = true;
+      # fzf-lua.enable = true;
       gitsigns = {
         enable = true;
         settings.current_line_blame = true;

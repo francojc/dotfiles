@@ -313,10 +313,12 @@
         options = {desc = "Yazi";};
       }
 
+
+
       {
         mode = "n";
         key = "<leader>ff";
-        action = "<Cmd>lua require('fzf-lua').files()<CR>";
+        action.__raw = "Snacks.picker.files";
         options = {desc = "Find files";};
       }
       {
@@ -337,6 +339,38 @@
         action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
         options = {desc = "Find buffer symbols";};
       }
+
+      ## old
+
+
+      # {
+      #   mode = "n";
+      #   key = "<leader>ff";
+      #   action = "<Cmd>lua require('fzf-lua').files()<CR>";
+      #   options = {desc = "Find files";};
+      # }
+      # {
+      #   mode = "n";
+      #   key = "<leader>fr";
+      #   action = "<Cmd>lua require('fzf-lua').oldfiles()<CR>";
+      #   options = {desc = "Find recent files";};
+      # }
+      # {
+      #   mode = "n";
+      #   key = "<leader>fb";
+      #   action = "<Cmd>lua require('fzf-lua').buffers()<CR>";
+      #   options = {desc = "Find buffer files";};
+      # }
+      # {
+      #   mode = "n";
+      #   key = "<leader>fs";
+      #   action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
+      #   options = {desc = "Find buffer symbols";};
+      # }
+
+
+
+
 
       # Git
       {
