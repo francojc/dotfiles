@@ -6,7 +6,15 @@
     };
 
     # Remappings
+
+
+
+
+
     keymaps = [
+
+
+
       {
         mode = "i";
         key = "jj";
@@ -277,8 +285,8 @@
       {
         mode = "n";
         key = "<leader>ca";
-        action = "<Cmd>Lspsaga code_action<CR>";
-        options = {desc = "Code action";};
+        action = "<Cmd>lua require('fzf-lua').lsp_code_actions()<CR>";
+        options = {desc = "Show code actions";};
       }
 
       {
@@ -290,6 +298,7 @@
           desc = "Code format";
         };
       }
+
       # Debug
       # (e)
 
@@ -313,12 +322,10 @@
         options = {desc = "Yazi";};
       }
 
-
-
       {
         mode = "n";
         key = "<leader>ff";
-        action.__raw = "Snacks.picker.files";
+        action = "<Cmd>lua require('fzf-lua').files()<CR>";
         options = {desc = "Find files";};
       }
       {
@@ -339,38 +346,6 @@
         action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
         options = {desc = "Find buffer symbols";};
       }
-
-      ## old
-
-
-      # {
-      #   mode = "n";
-      #   key = "<leader>ff";
-      #   action = "<Cmd>lua require('fzf-lua').files()<CR>";
-      #   options = {desc = "Find files";};
-      # }
-      # {
-      #   mode = "n";
-      #   key = "<leader>fr";
-      #   action = "<Cmd>lua require('fzf-lua').oldfiles()<CR>";
-      #   options = {desc = "Find recent files";};
-      # }
-      # {
-      #   mode = "n";
-      #   key = "<leader>fb";
-      #   action = "<Cmd>lua require('fzf-lua').buffers()<CR>";
-      #   options = {desc = "Find buffer files";};
-      # }
-      # {
-      #   mode = "n";
-      #   key = "<leader>fs";
-      #   action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
-      #   options = {desc = "Find buffer symbols";};
-      # }
-
-
-
-
 
       # Git
       {
@@ -394,12 +369,6 @@
       # LSP
       {
         mode = "n";
-        key = "<leader>la";
-        action = "<Cmd>lua require('fzf-lua').lsp_code_actions()<CR>";
-        options = {desc = "Show code actions";};
-      }
-      {
-        mode = "n";
         key = "<leader>ld";
         action = "<Cmd>lua require('fzf-lua').diagnostics_document()<CR>";
         options = {desc = "Document diagnostics";};
@@ -410,6 +379,23 @@
         action = "<Cmd>lua require('fzf-lua').diagnostics_workspace()<CR>";
         options = {desc = "Workspace diagnostics";};
       }
+
+      # Help
+
+      {
+        mode = "n";
+        key = "<leader>hk";
+        action = "<Cmd>lua require('fzf-lua').keymaps()<CR>";
+        options.desc = "Help keymaps";
+      }
+      {
+        mode = "n";
+        key = "<leader>hc";
+        action = "<Cmd>lua require('fzf-lua').commands()<CR>";
+        options.desc = "Help Neovim commands";
+      }
+
+
 
       # Markdown
 
@@ -554,6 +540,7 @@
         action = "<Cmd>lua require('fzf-lua').live_grep()<CR>";
         options = {desc = "Live grep";};
       }
+
       {
         mode = "n";
         key = "<leader>sr";
