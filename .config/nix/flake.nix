@@ -44,10 +44,10 @@
         specialArgs = inputs // {
           inherit username useremail hostname;
         };
-        # pkgs = import nixpkgs {
-        #   inherit system;
-        #   config.allowUnfree = true;
-        # };
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
         modules = [
           ./modules/nix-core.nix
           ./modules/system.nix
