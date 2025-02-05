@@ -5,7 +5,7 @@
       enable = true;
       plugins = with pkgs.vimPlugins; [
         # Add your favorite plugins here
-        # copilot-vim # Copilot
+        copilot-vim # Copilot
         mini-indentscope # Indentation scope
         mini-files # File explorer
       ];

@@ -3,10 +3,9 @@
 
   inputs = {
     # Add nixpkgs unstable
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # Just before the error
-    # nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
-    # nixpkgs.url = "github:numtide/nixpkgs-unfree/nixos-unstable";
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    };
     # Add darwin
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -20,7 +19,8 @@
     # Add nixvim
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # BUG: This should be fixed in the nixvim flake 🤞🏻
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
