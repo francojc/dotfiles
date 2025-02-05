@@ -3,9 +3,9 @@
 
   inputs = {
     # Add nixpkgs unstable
-    # nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     # Just before the error
-    nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
+    # nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
     # nixpkgs.url = "github:numtide/nixpkgs-unfree/nixos-unstable";
     # Add darwin
     darwin = {
