@@ -5,6 +5,7 @@ alias:
   - "r1l:ollama_chat/deepseek-r1:14b"
   - "mistral-small:ollama_chat/mistral-small:latest"
   - "phi4:ollama_chat/phi4:latest"
+  - "llama3.2:ollama_chat/llama3.2:latest"
 
 # Models
 model: r1l # deepseek-reasoner

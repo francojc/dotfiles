@@ -12,7 +12,7 @@ alias aider-helper-high='aider --model sonnet --no-git --watch-files'
 alias aider-helper-mid='aider --model v3 --no-git --watch-files'
 alias aider-helper-local='aider --model phi4 --no-git --watch-files'
 
-alias aider-commit='aider --commit --weak-model phi4 --no-gitignore'
+alias aider-commit='aider --commit --weak-model llama3.2 --no-gitignore'
 
 # Directory navigation
 alias ..='cd ..'
@@ -40,7 +40,7 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # SSH aliases
 
-alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore.tail5650e0.ts.net'
+alias minicore='TERM=xterm-256color ssh jeridfmac-minicore.tail5650e0.ts.net'
 alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne.tail5650e0.ts.net'
 
 # Git aliases
