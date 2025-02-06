@@ -6,6 +6,7 @@ alias:
   - "mistral-small:ollama_chat/mistral-small:latest"
   - "phi4:ollama_chat/phi4:latest"
   - "llama3.2:ollama_chat/llama3.2:latest"
+  - "s1:ollama_chat/hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M"
 
 # Models
 model: r1l # deepseek-reasoner
