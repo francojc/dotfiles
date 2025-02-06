@@ -4,7 +4,7 @@
 declare -A model_aliases=(
     ["mistral-small"]="mistral-small:22b-instruct-2409-q3_K_S"
     ["qwen-r1"]="deepseek-r1:14b"
-    ["s1"] = "hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M"
+    ["s1"]="hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M"
 )
 
 # Function to display help information
