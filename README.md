@@ -27,15 +27,29 @@ Before restoring the dotfiles, ensure you have the following installed:
    Use the following command to install Nix using the Determinate Systems installer for macOS (multi-user install):
 
    ```bash
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+   ```
+   Check that your installation was successful by running:
+
+   ```bash
+   nix --version
    ```
 
 4. **Bootstrap nix-darwin**:
-   After installing Nix, you can bootstrap nix-darwin by running:
+   After installing Nix, you can bootstrap nix-darwin by running the following commands:
 
    ```bash
-   nix build --impure --expr '<nix-darwin>' -o result
-   ./result/bin/darwin-rebuild switch
+   mkdir -p ~/.config/nix/
+   cd ~/.config/nix/
+   nix  flake init -t nix-darwin
+   sed -i '' "s/simple/$(scutil --get LocalHostName)/" flake.nix
+   nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix
+   ```
+
+   Check to see that the installation was successful by running:
+
+   ```bash
+   type darwin-rebuild
    ```
 
 ## Restoring Dotfiles
@@ -43,7 +57,7 @@ Before restoring the dotfiles, ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
+   git clone --depth 1 https://github.com/francojc/dotfiles.git ~/.dotfiles
    ```
 
 2. Navigate to the dotfiles directory:
@@ -52,27 +66,28 @@ Before restoring the dotfiles, ensure you have the following installed:
    cd ~/.dotfiles
    ```
 
-3. Edit the `flake.nix` hostname to match the system hostname:
-
-To find the hostname, run the following command:
-
-```bash
-hostname
-```
-
-Then edit edit this line:
-
-```nix
-hostname = "<your-hostname>";
-```
-
-4. Apply the configurations using the full path to the flake's directory:
+3. Remove any existing files that may conflict with the configurations:
 
    ```bash
-   darwin-rebuild switch --flake ~/.dotfiles/nix/
+   rm -rf ~/.zshrc ~/.zshenv ~/.zsh ~/.config/nix
    ```
 
-_Note:_ After a successful switch, you will be able to use the alias `switch` to apply the configurations in the future.
+4. Make sure the `flake.nix` hostname to match the system hostname:
+
+   To find the hostname, run the following command:
+
+   ```bash
+   hostname
+   ```
+
+5. Apply the configurations using the full path to the flake's directory:
+
+   <!-- WARN: the NIXPKGS_ALLOW_UNFREE=1 is a temporary workaround to allow the installation of unfree packages. -->
+   ```bash
+   NIXPKGS_ALLOW_UNFREE=1 darwin-rebuild switch --flake ~/.dotfiles/.config/nix/#<yourhostname> --impure
+   ```
+
+   _Note:_ After a successful switch, you will be able to use the alias `switch` to apply the configurations in the future.
 
 5. Use `stow` to symlink the configurations:
 

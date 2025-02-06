@@ -64,6 +64,7 @@
     lazygit
 
     # Networking and Communication
+    aerc
     m-cli
     mas
     mdcat
