@@ -4,17 +4,8 @@
       mapleader = " ";
       maplocalleader = " ";
     };
-
     # Remappings
-
-
-
-
-
     keymaps = [
-
-
-
       {
         mode = "i";
         key = "jj";
