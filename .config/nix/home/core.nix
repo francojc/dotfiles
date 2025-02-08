@@ -23,6 +23,7 @@
     ffmpeg
     mpv-unwrapped
     pianobar
+    sttr
     yt-dlp
 
     # Development Tools
