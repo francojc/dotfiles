@@ -32,6 +32,7 @@
     brews = [
       "borders" # jankyborders
       "helix"
+      "huggingface-cli"
       "mas"
       "ollama"
       "podman"
