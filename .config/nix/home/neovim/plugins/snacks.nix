@@ -9,6 +9,7 @@
           enable = true;
           layout = "vertical";
         };
+        explorer.enable = true;
       };
     };
   };
