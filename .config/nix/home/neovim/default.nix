@@ -6,6 +6,7 @@
     ./lsp.nix
     ./options.nix
     ./plugins/default.nix
+    ./snippets.nix
   ];
 
   programs.nixvim = {
