@@ -20,7 +20,23 @@
               };
             };
           };
-          keymap.preset = "super-tab";
+          keymap = {
+            preset = "default";
+            "<Enter>" = [
+              "select_and_accept"
+            ];
+            "<Tab>" = [
+              "select_next"
+              "snippet_forward"
+              "fallback"
+            ];
+            "<S-Tab>" = [
+              "select_prev"
+              "snippet_backward"
+              "fallback"
+            ];
+            cmdline.preset = "enter";
+          };
           signature.enabled = true;
           snippets = {
             preset = "luasnip";
