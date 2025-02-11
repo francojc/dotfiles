@@ -6,8 +6,9 @@
         ui.enable = false;
         completion = {
           min_chars = 2;
-          nvim_cmp = false ; # Use nvim-cmp
+          nvim_cmp = true ; # Use nvim-cmp
         };
+        picker.name = "fzf-lua";
         # 'Mobile Documents/iCloud~md~obsidian/Documents/Notes'
         attachments = {
           img_folder = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Attachments/";

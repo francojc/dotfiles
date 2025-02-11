@@ -1,4 +1,4 @@
-# just is a command runner, Justfile is very similar to Makefile, but simpler.
+# Justfile for nix-darwin
 
 hostname := "Mac-Minicore"
 
@@ -25,7 +25,6 @@ darwin-debug:
 #  nix related commands
 #
 ############################################################################
-
 
 update:
   nix flake update
