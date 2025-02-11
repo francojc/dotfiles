@@ -6,7 +6,7 @@
         ui.enable = false;
         completion = {
           min_chars = 2;
-          nvim_cmp = true; # Use nvim-cmp
+          nvim_cmp = false ; # Use nvim-cmp
         };
         # 'Mobile Documents/iCloud~md~obsidian/Documents/Notes'
         attachments = {

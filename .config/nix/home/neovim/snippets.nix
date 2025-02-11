@@ -18,8 +18,7 @@
         ];
       };
     };
-  };
-  extraConfigLua = ''
+    extraConfigLua = ''
       luasnip = require("luasnip")
       kind_icons = {
         Text = "󰊄",
@@ -48,5 +47,6 @@
         Operator = "",
         TypeParameter = "",
       }
-  '';
+    '';
+  };
 }

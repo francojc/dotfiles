@@ -1,14 +1,51 @@
 {
   programs.nixvim = {
     plugins = {
-      blink=-cmp = {
+      blink-cmp = {
         enable = true;
+        settings = {
+          appearance = {
+            use_nvim_cmp_as_default = true;
+          };
+          completion = {
+            accept.auto_brackets.enabled = true;
+            documentation = {
+              auto_show = true;
+              auto_show_delay_ms = 500;
+              treesitter_highlighting = true;
+            };
+            list = {
+              selection = {
+                preselect = true;
+              };
+            };
+          };
+          keymap.preset = "super-tab";
+          signature.enabled = true;
+          snippets = {
+            preset = "luasnip";
+            expand.__raw = ''
+              function(snippet) require('luasnip').lsp_expand(snippet) end
+            '';
+            active.__raw = ''
+              function(filter)
+                if filter and filter.direction then
+                  return require('luasnip').jumpable(filter.direction)
+                end
+                return require('luasnip').in_snippet()
+              end
+            '';
+            jump.__raw = ''
+              function(direction) require('luasnip').jump(direction) end
+            '';
+          };
+          sources = {
+            # Add sources manually
+          };
+        };
       };
 
-
-
-
-
+      blink-compat.enable = true;
 
       cmp = {
         enable = false;
