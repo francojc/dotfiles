@@ -6,6 +6,33 @@
         settings = {
           appearance = {
             use_nvim_cmp_as_default = true;
+            kind_icons = {
+              Text = "󰊄";
+              Method = "";
+              Function = "󰡱";
+              Constructor = "";
+              Field = "";
+              Variable = "󱀍";
+              Class = "";
+              Interface = "";
+              Module = "󰕳";
+              Property = "";
+              Unit = "";
+              Value = "";
+              Enum = "";
+              Keyword = "";
+              Snippet = "";
+              Color = "";
+              File = "";
+              Reference = "";
+              Folder = "";
+              EnumMember = "";
+              Constant = "";
+              Struct = "";
+              Event = "";
+              Operator = "";
+              TypeParameter = "";
+            };
           };
           completion = {
             accept.auto_brackets.enabled = true;
@@ -26,62 +53,80 @@
                   return ctx.mode ~= 'cmdline' or not vim.tbl_contains({'/', '?'}, vim.fn.getcmdtype())
                 end
               '';
-            };
+              draw = {
+                gap = 2;
+                treesitter = ["lsp"];
+                columns = [
+                    {
+                      __unkeyed-1 = "label";
+                      __unkeyed-2 = "label_description";
+                      gap = 1;
+                    }
+                    {
+                      __unkeyed-1 = "kind_icon";
+                      __unkeyed-2 = "kind";
+                      gap = 1;
+                    }
+                  ];
+                };
+              };
           };
           keymap = {
-            "<Enter>" = [
-              "select_and_accept"
-              "fallback"
-            ];
-            "<Tab>" = [
-              "select_next"
-              "snippet_forward"
-              "fallback"
-            ];
-            "<S-Tab>" = [
-              "select_prev"
-              "snippet_backward"
-              "fallback"
-            ];
-            "<C-f>" = [
-              "scroll_documentation_up"
-              "fallback"
-            ];
-            "<C-b>" = [
-              "scroll_documentation_down"
-              "fallback"
-            ];
-            "<C-e>" = [
-              "hide"
-            ];
+            preset = "enter";
+            # "<Enter>" = [
+            #   "select_and_accept"
+            #   "fallback"
+            # ];
+            # "<Tab>" = [
+            #   "select_next"
+            #   "snippet_forward"
+            #   "fallback"
+            # ];
+            # "<S-Tab>" = [
+            #   "select_prev"
+            #   "snippet_backward"
+            #   "fallback"
+            # ];
+            # "<C-f>" = [
+            #   "scroll_documentation_up"
+            #   "fallback"
+            # ];
+            # "<C-b>" = [
+            #   "scroll_documentation_down"
+            #   "fallback"
+            # ];
+            # "<C-e>" = [
+            #   "hide"
+            # ];
             cmdline = {
-              "<Enter>" = [
-                "select_and_accept"
-                "fallback"
-              ];
-              "<Tab>" = [
-                "select_next"
-                "snippet_forward"
-                "fallback"
-              ];
-              "<S-Tab>" = [
-                "select_prev"
-                "snippet_backward"
-                "fallback"
-             ];
-              "<C-f>" = [
-                "scroll_documentation_up"
-                "fallback"
-              ];
-              "<C-b>" = [
-                "scroll_documentation_down"
-                "fallback"
-              ];
-              "<C-e>" = [
-                "hide"
-              ];
+            #   "<Enter>" = [
+            #     "select_and_accept"
+            #     "fallback"
+            #   ];
+            #   "<Tab>" = [
+            #     "select_next"
+            #     "snippet_forward"
+            #     "fallback"
+            #   ];
+            #   "<S-Tab>" = [
+            #     "select_prev"
+            #     "snippet_backward"
+            #     "fallback"
+            #  ];
+            #   "<C-f>" = [
+            #     "scroll_documentation_up"
+            #     "fallback"
+            #   ];
+            #   "<C-b>" = [
+            #     "scroll_documentation_down"
+            #     "fallback"
+            #   ];
+            #   "<C-e>" = [
+            #     "hide"
+            #   ];
+            # };
+              preset = "enter";
             };
-            cmdline.preset = "enter";
           };
           signature.enabled = true;
           snippets = {
@@ -109,7 +154,9 @@
                 return 0
               end
             '';
-            # Add sources manually
+            per_filetype = {
+              "markdown" = ["lsp" "path" "snippets"];
+            };
           };
         };
       };
