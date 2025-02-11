@@ -32,6 +32,12 @@
       }
       {
         mode = "i";
+        key = "<C-e>";
+        action = "<Plug>(copilot-dismiss)";
+        options = {desc = "Copilot: dismiss suggestion";};
+      }
+      {
+        mode = "i";
         key = "<C-d>";
         action = "<Plug>(copilot-accept-word)";
         options = {desc = "Copilot: accept next word";};

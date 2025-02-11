@@ -19,11 +19,18 @@
                 preselect = true;
               };
             };
+            menu = {
+             auto_show.__raw = ''
+                function(ctx)
+                  return ctx.mode ~= 'cmdline' or not vim.tbl_contains({'/', '?'}, vim.fn.getcmdtype())
+                end
+              '';
+            };
           };
           keymap = {
-            preset = "default";
             "<Enter>" = [
               "select_and_accept"
+              "fallback"
             ];
             "<Tab>" = [
               "select_next"
@@ -35,6 +42,44 @@
               "snippet_backward"
               "fallback"
             ];
+            "<C-f>" = [
+              "scroll_documentation_up"
+              "fallback"
+            ];
+            "<C-b>" = [
+              "scroll_documentation_down"
+              "fallback"
+            ];
+            "<C-e>" = [
+              "hide"
+            ];
+            cmdline = {
+              "<Enter>" = [
+                "select_and_accept"
+                "fallback"
+              ];
+              "<Tab>" = [
+                "select_next"
+                "snippet_forward"
+                "fallback"
+              ];
+              "<S-Tab>" = [
+                "select_prev"
+                "snippet_backward"
+                "fallback"
+              ];
+              "<C-f>" = [
+                "scroll_documentation_up"
+                "fallback"
+              ];
+              "<C-b>" = [
+                "scroll_documentation_down"
+                "fallback"
+              ];
+              "<C-e>" = [
+                "hide"
+              ];
+            };
             cmdline.preset = "enter";
           };
           signature.enabled = true;
@@ -56,6 +101,13 @@
             '';
           };
           sources = {
+            min_keyword_length.__raw = ''
+              function(ctx)
+                if ctx.mode == 'cmdline' and string.find(ctx.line, ' ') == nil then return 3
+                end
+                return 0
+              end
+            '';
             # Add sources manually
           };
         };
