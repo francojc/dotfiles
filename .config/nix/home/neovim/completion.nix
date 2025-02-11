@@ -67,7 +67,7 @@
                 "select_prev"
                 "snippet_backward"
                 "fallback"
-              ];
+             ];
               "<C-f>" = [
                 "scroll_documentation_up"
                 "fallback"
