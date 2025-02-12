@@ -9,6 +9,7 @@
     nixd
     nurl
     nushell
+    smartcat
     vim
     zoxide
   ];
@@ -35,7 +36,6 @@
       "huggingface-cli"
       "mas"
       "ollama"
-      "podman"
       "rename"
       "wget"
     ];
@@ -43,10 +43,8 @@
     casks = [
       "appcleaner"
       "bettermouse"
-      "chatgpt"
       "docker"
       "dropbox"
-      "fantastical"
       "ghostty@tip"
       "google-chrome"
       "google-drive"
@@ -54,9 +52,9 @@
       "keycastr"
       "mullvadvpn"
       "obsidian"
-      "podman-desktop"
       "raycast"
       "rectangle"
+      "rocket"
       "sequel-ace"
       "superkey"
       "transcribe"
@@ -65,7 +63,6 @@
       "zen-browser"
       "zoom"
       "zotero@beta"
-      # "calibre"
     ];
 
     masApps = {

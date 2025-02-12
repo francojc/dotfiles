@@ -17,7 +17,7 @@
     stateVersion = 5;
   };
   services = {
-    nix-daemon.enable = true;
+    # nix-daemon.enable = true;
     tailscale.enable = true;
   };
 }
