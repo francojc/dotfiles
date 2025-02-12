@@ -8,15 +8,8 @@ content = "You are an extremely skilled programmer with a keen eye for detail an
 
 [[messages]]
 role = "user"
-content = """
-change [ ] to [-->]- [ ] Finish grading Tarea 3 and 4 (return to students)
-- [ ] Continue Lesson 11 development. Flesh out outline (informative lesson, for now)
-- [ ] Review chapter 3 materials for SPA 212
-"""
+content = "say hello"
 
 [[messages]]
 role = "assistant"
-content = """
-- [-->] Finish grading Tarea 3 and 4 (return to students)
-- [-->] Continue Lesson 11 development. Flesh out outline (informative lesson, for now)
-- [-->] Review chapter 3 materials for SPA 212"""
+content = "Hello! How can I assist you today?"
