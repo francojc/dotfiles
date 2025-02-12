@@ -90,7 +90,7 @@
           surround = {};
         };
       };
-      nix.enable = true;
+      nix.enable = false;
       notify.enable = false;
       colorizer = {
         enable = true;
