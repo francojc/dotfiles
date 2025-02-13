@@ -36,6 +36,7 @@
     jq
     lazydocker
     lazygit
+    pandoc
     pass
     pipx
     quarto
