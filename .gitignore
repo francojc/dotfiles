@@ -16,3 +16,5 @@
 .httr-oauth
 .quarto
 _freeze
+
+conversation.toml
