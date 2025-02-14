@@ -18,3 +18,5 @@
 _freeze
 
 conversation.toml
+**/pianobar/state
+.config/pianobar/state
