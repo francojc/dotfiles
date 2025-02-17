@@ -12,7 +12,7 @@ alias aider-helper-high='aider --model sonnet --no-git --watch-files'
 alias aider-helper-mid='aider --model v3 --no-git --watch-files'
 alias aider-helper-local='aider --model phi4 --no-git --watch-files'
 
-alias aider-commit='aider --commit --weak-model llama3.2 --no-gitignore'
+alias aider-commit='aider --commit --no-gitignore'
 
 # Directory navigation
 alias ..='cd ..'

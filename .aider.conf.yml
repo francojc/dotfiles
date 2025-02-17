@@ -5,11 +5,12 @@ alias:
   - "v3:deepseek/deepseek-chat"
   - "phi4:ollama_chat/phi4:14b-q8_0"
   - "llama3.2:ollama_chat/llama3.2:latest"
+  - "haiku:openrouter/anthropic/claude-3-5-haiku-20241022"
 
 # Models
 model: lr1 # reasoner
 editor-model: phi4 # chat
-weak-model: llama3.2 # git commit messages
+weak-model: haiku # git commit messages
 architect: false
 
 # Theme
