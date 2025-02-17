@@ -346,6 +346,13 @@
 
       # Git
       {
+        mode = [ "n" "v" ];
+        key = "<leader>gb";
+        action = "<Cmd> Snacks.gitbrowse.open()<CR>";
+        options.desc = "Open gitbrowse";
+      }
+
+      {
         mode = "n";
         key = "<leader>gg";
         action = "<Cmd>LazyGit<CR>";

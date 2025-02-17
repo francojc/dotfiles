@@ -7,7 +7,7 @@
     ./lualine.nix
     ./obsidian.nix
     ./slime.nix
-    # ./snacks.nix
+    ./snacks.nix
     ./treesitter.nix
     ./which-key.nix
   ];
