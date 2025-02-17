@@ -1,16 +1,14 @@
 # Aliases
 alias:
-  - "llama3.2:ollama_chat/llama3.2:latest"
-  - "mistral-small:ollama_chat/mistral-small:latest"
-  - "phi4:ollama_chat/phi4:latest"
   - "r1:deepseek/deepseek-reasoner"
-  - "r1l:ollama_chat/deepseek-r1:32b"
-  - "s1:ollama_chat/hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M"
+  - "lr1:ollama_chat/deepseek-r1:14b-qwen-distill-q8_0"
   - "v3:deepseek/deepseek-chat"
+  - "phi4:ollama_chat/phi4:14b-q8_0"
+  - "llama3.2:ollama_chat/llama3.2:latest"
 
 # Models
-model: r1l # deepseek-reasoner
-editor-model: phi4 # phi4
+model: lr1 # reasoner
+editor-model: phi4 # chat
 weak-model: llama3.2 # git commit messages
 architect: false
 
