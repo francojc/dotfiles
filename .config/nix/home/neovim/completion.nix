@@ -73,60 +73,6 @@
           };
           keymap = {
             preset = "enter";
-            # "<Enter>" = [
-            #   "select_and_accept"
-            #   "fallback"
-            # ];
-            # "<Tab>" = [
-            #   "select_next"
-            #   "snippet_forward"
-            #   "fallback"
-            # ];
-            # "<S-Tab>" = [
-            #   "select_prev"
-            #   "snippet_backward"
-            #   "fallback"
-            # ];
-            # "<C-f>" = [
-            #   "scroll_documentation_up"
-            #   "fallback"
-            # ];
-            # "<C-b>" = [
-            #   "scroll_documentation_down"
-            #   "fallback"
-            # ];
-            # "<C-e>" = [
-            #   "hide"
-            # ];
-            cmdline = {
-            #   "<Enter>" = [
-            #     "select_and_accept"
-            #     "fallback"
-            #   ];
-            #   "<Tab>" = [
-            #     "select_next"
-            #     "snippet_forward"
-            #     "fallback"
-            #   ];
-            #   "<S-Tab>" = [
-            #     "select_prev"
-            #     "snippet_backward"
-            #     "fallback"
-            #  ];
-            #   "<C-f>" = [
-            #     "scroll_documentation_up"
-            #     "fallback"
-            #   ];
-            #   "<C-b>" = [
-            #     "scroll_documentation_down"
-            #     "fallback"
-            #   ];
-            #   "<C-e>" = [
-            #     "hide"
-            #   ];
-            # };
-              preset = "enter";
-            };
           };
           signature.enabled = true;
           snippets = {
