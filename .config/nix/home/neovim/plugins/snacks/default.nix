@@ -7,6 +7,7 @@
     };
     imports = [
       ./snacks-bufdelete.nix
+      ./snacks-explorer.nix
       ./snacks-git.nix
       ./snacks-notifier.nix
     ];
