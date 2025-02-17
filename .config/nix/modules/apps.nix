@@ -9,7 +9,6 @@
     nixd
     nurl
     nushell
-    smartcat
     vim
     zoxide
   ];
@@ -55,8 +54,6 @@
       "raycast"
       "rectangle"
       "rocket"
-      "sequel-ace"
-      "superkey"
       "transcribe"
       "transmission"
       "visual-studio-code"
@@ -75,7 +72,7 @@
       IPA_Keyboard = 1461264628;
       JustFocus = 1142151959;
       # LittleSnitchMini = 1629008763;
-      Kagi_for_Safari = 1622835804;
+      # Kagi_for_Safari = 1622835804;
       Keynote = 409183694;
       Numbers = 409203825;
       Pages = 409201541;
@@ -83,7 +80,7 @@
       Triode = 1450027401;
       Vimari = 1480933944;
       Vinegar_for_Safari = 1591303229;
-      VoiceType = 6736525125;
+      # VoiceType = 6736525125;
       iPreview = 1519213509;
     };
   };
