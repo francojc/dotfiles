@@ -6,6 +6,7 @@
       package = pkgs.vimPlugins.snacks-nvim;
     };
     imports = [
+      ./snacks-bufdelete.nix
       ./snacks-git.nix
       ./snacks-notifier.nix
     ];

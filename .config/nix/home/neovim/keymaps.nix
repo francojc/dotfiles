@@ -190,10 +190,16 @@
       {
         mode = "n";
         key = "<leader>bd";
+        action = "<cmd>lua Snacks.bufdelete.delete()<cr>";
+        options.desc = "Delete buffer";
+      }
+
+      {
+        mode = "n";
+        key = "<leader>bD";
         action = "<cmd>bdelete<cr>";
         options = {desc = "Delete buffer";};
       }
-
       {
         mode = "n";
         key = "<leader>bb";
