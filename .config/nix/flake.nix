@@ -16,7 +16,7 @@
     nixvim = {
       url = "github:nix-community/nixvim";
       # BUG: This should be fixed in the nixvim flake 🤞🏻
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
