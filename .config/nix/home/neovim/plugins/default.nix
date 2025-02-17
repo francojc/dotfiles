@@ -106,7 +106,7 @@
         };
       };
       nvim-tree = {
-        enable = true;
+        enable = false;
         view.side = "left";
         hijackCursor = true;
         modified.enable = true;
