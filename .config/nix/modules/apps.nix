@@ -36,6 +36,7 @@
       "mas"
       "ollama"
       "rename"
+      "speedtest-cli"
       "wget"
     ];
 
