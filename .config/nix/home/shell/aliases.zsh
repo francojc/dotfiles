@@ -6,7 +6,7 @@ alias switch='NIXPKGS_ALLOW_UNFREE=1 darwin-rebuild switch --flake $(realpath ~/
 
 # Aider-chat aliases
 alias aider-proj-high='aider --model r1 --editor-model v3 --architect --watch-files'
-alias aider-proj-local='aider --model r1l --editor-model phi4 --architect --watch-files'
+alias aider-proj-local='aider --model lr1 --editor-model phi4 --architect --watch-files'
 
 alias aider-helper-high='aider --model sonnet --no-git --watch-files'
 alias aider-helper-mid='aider --model v3 --no-git --watch-files'
