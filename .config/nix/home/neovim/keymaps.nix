@@ -348,7 +348,7 @@
       {
         mode = [ "n" "v" ];
         key = "<leader>gb";
-        action = "<Cmd> Snacks.gitbrowse.open()<CR>";
+        action = "<Cmd>lua Snacks.gitbrowse.open()<CR>";
         options.desc = "Open gitbrowse";
       }
 
