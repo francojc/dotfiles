@@ -303,6 +303,12 @@
       {
         mode = "n";
         key = "<leader>ft";
+        action = "<Cmd>lua Snacks.explorer()<CR>";
+        options.desc = "Open Directory Viewer";
+      }
+      {
+        mode = "n";
+        key = "<leader>fT";
         action = "<Cmd>NvimTreeToggle<CR>";
         options = {desc = "Open Directory Viewer";};
       }

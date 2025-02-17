@@ -4,7 +4,12 @@
       picker = {
         enabled = true;
         sources = {
-          explorer = {};
+          explorer = { };
+        };
+        win = {
+          input = {
+            keys = { };
+          };
         };
       };
     };
