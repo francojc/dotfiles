@@ -145,7 +145,7 @@
 
   security.pam.enableSudoTouchIdAuth = true;
 
-  nix.enable = false;
+  nix.enable = true;
   programs.zsh.enable = true;
 
   environment = {
