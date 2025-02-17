@@ -10,6 +10,7 @@
       ./snacks-explorer.nix
       ./snacks-git.nix
       ./snacks-notifier.nix
+      ./snacks-picker.nix
     ];
   };
 }
