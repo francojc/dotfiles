@@ -13,10 +13,6 @@ grammar = "markdown"
 block-comment-tokens = { start = "<!--", end = "-->" }
 language-servers = [ "r", "gpt" ]
 
-[language-server.gpt]
-command = "helix-gpt"
-args = ["--handler", "copilot"]
-
 [[language]]
 name = "python"
 language-servers = [ "pyright", "gpt" ]
