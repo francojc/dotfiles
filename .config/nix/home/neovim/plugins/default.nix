@@ -54,7 +54,7 @@
       fidget.enable = true;
       flash.enable = true;
       fzf-lua = {
-        enable = false;
+        enable = true;
         profile = "fzf-native";
       };
       gitsigns = {
@@ -70,7 +70,7 @@
       };
       grug-far.enable = true;
       image = {
-        enable = false;
+        enable = true;
         editorOnlyRenderWhenFocused = true;
         windowOverlapClearEnabled = true;
         integrations = {
@@ -106,7 +106,7 @@
         };
       };
       nvim-tree = {
-        enable = false;
+        enable = true;
         view.side = "left";
         hijackCursor = true;
         modified.enable = true;
@@ -236,19 +236,19 @@
 
       -- img-clip nvim setup
       -- WARN: this config does not seem to have an effect (using keymaps instead)
-      -- require('img-clip').setup({
-      --   default = {
-      --     dir_path = "images",
-      --     relative_to_current_file = true,
-      --   },
-      --   filetypes = {
-      --     quarto = {
-      --       download_images = false,
-      --       template = "![$CURSOR]($FILE_PATH)",
-      --       url_encode_path = true
-      --     }
-      --   },
-      -- })
+      require('img-clip').setup({
+        default = {
+          dir_path = "images",
+          relative_to_current_file = true,
+        },
+        filetypes = {
+          quarto = {
+            download_images = false,
+            template = "![$CURSOR]($FILE_PATH)",
+            url_encode_path = true
+          }
+        },
+      })
 
       -- Yanking/ Pasting
       -- Preserve the contents of the default register when pasting over a selection
