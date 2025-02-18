@@ -5,11 +5,10 @@
 alias switch='NIXPKGS_ALLOW_UNFREE=1 darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname) --impure'
 
 # Aider-chat aliases
-alias aider-proj-high='aider --model r1 --editor-model v3 --architect --watch-files'
+alias aider-proj='aider --model gemini/gemini-2.0-flash-thinking-exp --editor-model gemini/gemini-pro --architect --watch-files'
 alias aider-proj-local='aider --model lr1 --editor-model phi4 --architect --watch-files'
 
-alias aider-helper-high='aider --model sonnet --no-git --watch-files'
-alias aider-helper-mid='aider --model v3 --no-git --watch-files'
+alias aider-helper='aider --model gemini/gemini-2.0-flash-exp --no-git --watch-files'
 alias aider-helper-local='aider --model phi4 --no-git --watch-files'
 
 alias aider-commit='aider --commit --no-gitignore'
