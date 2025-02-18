@@ -3,7 +3,7 @@
    programs.nixvim = {
      plugins.snacks = {
        enable = true;
-       # package = pkgs.vimPlugins.snacks-nvim;
+       package = pkgs.vimPlugins.snacks-nvim;
        settings = {
          bufdelete.enabled = true;
          explorer = {
@@ -11,7 +11,7 @@
            replace_netrw = true;
          };
          git.enabled = true;
-         gitbrowser.enabled = true;
+         gitbrowse.enabled = true;
          image.enabled = true;
          input.enabled = true;
          notifier.enabled = true;
@@ -19,6 +19,7 @@
            enabled = true;
            layout = "vertical";
          };
+         toggle.enabled = true;
        };
      };
    };
