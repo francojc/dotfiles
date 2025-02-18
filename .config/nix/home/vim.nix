@@ -23,7 +23,6 @@
 
         syntax on               " Syntax highlighting
         set mouse=a             " Enable mouse support
-
         " Switch between splits
         map <C-j> <C-W>j
         map <C-k> <C-W>k
