@@ -91,6 +91,7 @@
         };
       };
       nix.enable = true;
+      notify.enable = true;
       colorizer = {
         enable = true;
         settings = {
@@ -243,7 +244,7 @@
         },
         filetypes = {
           quarto = {
-            download_images = false,
+            download_images = true,
             template = "![$CURSOR]($FILE_PATH)",
             url_encode_path = true
           }
