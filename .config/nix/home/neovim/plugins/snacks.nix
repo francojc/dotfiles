@@ -7,33 +7,15 @@
 
        # Consolidate all settings into one place
        settings = {
-         bufdelete = {
-           enabled = true;
-         };
-         explorer = {
-           enabled = true;
-         };
-         git = {
-           enabled = true;
-         };
-         gitbrowser = {
-           enabled = true;
-         };
-         notifier = {
-           enabled = true;
-           style = "minimal";
-           timeout = 3000;
-         };
+         bufdelete.enable = true;
+         explorer.enable = true;
+         git.enable = true;
+         gitbrowser.enable = true;
+         image.enable = true;
+         notifier.enable = true;
          picker = {
-           enabled = true;
-           sources = {
-             explorer = {};
-           };
-           win = {
-             input = {
-               keys = {};
-             };
-           };
+           enable = true;
+           layout = "vertical";
          };
        };
      };
