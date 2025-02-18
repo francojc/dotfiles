@@ -3,18 +3,20 @@
    programs.nixvim = {
      plugins.snacks = {
        enable = true;
-       package = pkgs.vimPlugins.snacks-nvim;
-
-       # Consolidate all settings into one place
+       # package = pkgs.vimPlugins.snacks-nvim;
        settings = {
-         bufdelete.enable = true;
-         explorer.enable = true;
-         git.enable = true;
-         gitbrowser.enable = true;
-         image.enable = true;
-         notifier.enable = true;
+         bufdelete.enabled = true;
+         explorer = {
+           enabled = true;
+           replace_netrw = true;
+         };
+         git.enabled = true;
+         gitbrowser.enabled = true;
+         image.enabled = true;
+         input.enabled = true;
+         notifier.enabled = true;
          picker = {
-           enable = true;
+           enabled = true;
            layout = "vertical";
          };
        };
