@@ -8,9 +8,9 @@ alias:
   - "haiku:openrouter/anthropic/claude-3-5-haiku-20241022"
 
 # Models
-model: lr1 # reasoner
-editor-model: phi4 # chat
-weak-model: haiku # git commit messages
+model: gemini/gemini-2.0-flash-thinking-exp # reasoner
+editor-model: gemini/gemini-2.0-flash # chat
+weak-model: gemini/gemini-2.0-flash # git commit messages
 architect: false
 
 # Theme
