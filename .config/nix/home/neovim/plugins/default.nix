@@ -11,8 +11,8 @@
     ./which-key.nix
   ];
   programs.nixvim = {
-    # I would like to enable a colorscheme which is not included in the Nixvim colorschemes. Rather it is found here: https://github.com/vague2k/vague.nvim. How can I add this custom colorscheme to my Nixvim configuration AI?
     colorschemes = {
+      # see below for vague.nvim
       nightfox = {
         enable = false;
         flavor = "nightfox";
