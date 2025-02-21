@@ -41,7 +41,7 @@
           model = "claude-3.5-sonnet";
           temperature = 0.3;
         };
-      };
+     };
       diffview.enable = true;
       dressing.enable = true;
       dropbar = {
