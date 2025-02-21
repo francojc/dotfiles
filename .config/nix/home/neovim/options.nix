@@ -35,7 +35,6 @@
       smartindent = true;
       shiftwidth = 2;
 
-      # Enable smart indenting (see https://stackoverflow.com/questions/1204149/smart-wrap-in-vim)
       breakindent = true;
       linebreak = true;
       showbreak = "↳";
@@ -114,7 +113,7 @@
 
       # More space in the neovim command line for displaying messages
       laststatus = 3;
-      cmdheight = 0;
+      cmdheight = 1;
       showmode = false; # We don't need to see things like INSERT anymore
 
       pumheight = 0; # Use available space for completion menu

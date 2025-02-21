@@ -1,5 +1,4 @@
 {pkgs, ...}: {
-  # Plugins: more config
   imports = [
     ./alpha.nix
     ./bufferline.nix
@@ -11,11 +10,11 @@
     ./treesitter.nix
     ./which-key.nix
   ];
-  # Plugins: basic config
   programs.nixvim = {
+    # I would like to enable a colorscheme which is not included in the Nixvim colorschemes. Rather it is found here: https://github.com/vague2k/vague.nvim. How can I add this custom colorscheme to my Nixvim configuration AI?
     colorschemes = {
       nightfox = {
-        enable = true;
+        enable = false;
         flavor = "nightfox";
       };
     };
@@ -167,8 +166,20 @@
       yazi.enable = true;
     };
 
-    # extraPlugins
+    # extraPlugin
+
     extraPlugins = [
+      # vague.nvim
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "vague.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "vague2k";
+          repo = "vague.nvim";
+      rev = "ce5d6c99c8a4545f2133a8be93d54ce424ab857a";
+      hash = "sha256-9CAsNvxZM0Kc6wTzRChy2aLVemiutMh9vHsuxkhrhfk=";
+        };
+      })
+
       # img-clip.nvim
       (pkgs.vimUtils.buildVimPlugin {
         name = "img-clip.nvim";
@@ -253,6 +264,10 @@
           }
         },
       })
+
+      -- vague.nvim colorscheme setup
+      require('vague').setup({})
+      vim.cmd.colorscheme("vague")
 
       -- Yanking/ Pasting
       -- Preserve the contents of the default register when pasting over a selection
