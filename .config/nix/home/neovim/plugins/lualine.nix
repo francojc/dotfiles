@@ -5,8 +5,8 @@
       settings = {
         options = {
           disabled_filetypes = {
-            statusline = ["aerial" "alpha" "avante" "nvim-tree"];
-            winbar = ["aerial" "alpha" "avante" "nvim-tree" "NvimTree"];
+            statusline = ["aerial" "alpha" "nvim-tree"];
+            winbar = ["aerial" "alpha" "nvim-tree" "NvimTree"];
           };
 
           globalstatus = true;

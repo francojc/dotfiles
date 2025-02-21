@@ -14,8 +14,9 @@
   # Plugins: basic config
   programs.nixvim = {
     colorschemes = {
-      gruvbox = {
+      nightfox = {
         enable = true;
+        flavor = "nightfox";
       };
     };
     plugins = {
