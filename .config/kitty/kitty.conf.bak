@@ -13,7 +13,7 @@ bold_font        auto
 italic_font      auto
 bold_italic_font auto
 
-font_size 16
+font_size 14
 
 ## Advanced Font Rendering
 modify_font cell_width 100%
@@ -36,13 +36,13 @@ include themes/OneDark.conf
 background_opacity 1.0
 
 ## Cursor Styling
-cursor red
+# cursor red
 cursor_shape block
 cursor_blink_interval -1
 cursor_trail 6
 
 ## Color and Border Settings
-active_border_color #eeeeee
+# active_border_color #eeeeee
 inactive_text_alpha .55
 
 # User Experience ----------------------------------------
@@ -145,3 +145,7 @@ map kitty_mod+q discard_event
 map cmd+, edit_config_file
 map ctrl+cmd+, load_config_file
 
+# BEGIN_KITTY_THEME
+# Nord
+include current-theme.conf
+# END_KITTY_THEME

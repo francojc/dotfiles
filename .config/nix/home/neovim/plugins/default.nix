@@ -14,9 +14,8 @@
   # Plugins: basic config
   programs.nixvim = {
     colorschemes = {
-      nightfox = {
+      gruvbox = {
         enable = true;
-        flavor = "nightfox";
       };
     };
     plugins = {
@@ -169,6 +168,7 @@
 
     # extraPlugins
     extraPlugins = [
+      # img-clip.nvim
       (pkgs.vimUtils.buildVimPlugin {
         name = "img-clip.nvim";
         src = pkgs.fetchFromGitHub {
@@ -178,6 +178,8 @@
           hash = "sha256-Q4v4E8Iay6rXvtUsM5ULo1cnBYduzTw42kIgJlodq5U=";
         };
       })
+
+
     ];
 
     # Lua config
