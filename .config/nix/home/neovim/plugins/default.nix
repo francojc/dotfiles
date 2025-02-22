@@ -13,10 +13,6 @@
   programs.nixvim = {
     colorschemes = {
       # see below for vague.nvim
-      nightfox = {
-        enable = false;
-        flavor = "nightfox";
-      };
     };
     plugins = {
       aerial.enable = true;
@@ -87,7 +83,8 @@
         };
       };
       nix.enable = true;
-      notify.enable = true;
+      # noice.enable = true;
+      # notify.enable = true;
       colorizer = {
         enable = true;
         settings = {
@@ -102,20 +99,20 @@
           };
         };
       };
-      nvim-tree = {
-        enable = true;
-        view.side = "left";
-        hijackCursor = true;
-        modified.enable = true;
-        renderer = {
-          highlightGit = true;
-          rootFolderLabel = false;
-          icons = {
-            gitPlacement = "signcolumn";
-            modifiedPlacement = "signcolumn";
-          };
-        };
-      };
+      # nvim-tree = {
+      #   enable = true;
+      #   view.side = "left";
+      #   hijackCursor = true;
+      #   modified.enable = true;
+      #   renderer = {
+      #     highlightGit = true;
+      #     rootFolderLabel = false;
+      #     icons = {
+      #       gitPlacement = "signcolumn";
+      #       modifiedPlacement = "signcolumn";
+      #     };
+      #   };
+      # };
       otter.enable = true;
       quarto.enable = true;
       render-markdown = {
