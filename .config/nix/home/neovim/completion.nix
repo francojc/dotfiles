@@ -118,8 +118,6 @@
           markdown = {
             sources = [
               {name = "render-markdown";}
-              {name = "cmp_pandoc";}
-              {name = "pandoc_references";}
               {name = "luasnip";}
               {name = "nvim_lsp";}
               {name = "path";}
@@ -178,8 +176,6 @@
               name = "luasnip";
               keyword_length = 1;
             }
-            {name = "cmp_pandoc";}
-            {name = "pandoc_references";}
             {name = "nvim_lsp";}
             {name = "nvim_lsp_document_symbol";}
             {name = "nvim_lsp_signature_help";}

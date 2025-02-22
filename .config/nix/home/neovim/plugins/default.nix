@@ -26,8 +26,6 @@
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
-      cmp-pandoc-nvim.enable = true;
-      cmp-pandoc-references.enable = true;
       conform-nvim.enable = true;
       copilot-vim.enable = true;
       copilot-chat = {
@@ -42,7 +40,6 @@
         };
      };
       diffview.enable = true;
-      dressing.enable = true;
       dropbar = {
         enable = true;
         settings = {
@@ -50,7 +47,7 @@
           sources.terminal.name = "Term";
         };
       };
-      fidget.enable = true;
+      # fidget.enable = true;
       flash.enable = true;
       fzf-lua = {
         enable = true;
@@ -196,23 +193,6 @@
 
     # Lua config
     extraConfigLua = ''
-      -- cmp-pandoc setup
-      require("cmp_pandoc").setup({
-        -- @type: table of strings
-        filetypes = { "markdown", "quarto", "rmd" },
-        bibliography =  {
-          documentation = true,
-          fields = {
-            "author",
-            "title",
-            "year"
-          },
-        },
-        crossref = {
-          documentation = true,
-        },
-      })
-
       -- Dropbar configuration
        local dropbar = require('dropbar')
        dropbar.setup({
