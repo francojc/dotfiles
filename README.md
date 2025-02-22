@@ -83,6 +83,7 @@ Before restoring the dotfiles, ensure you have the following installed:
 5. Apply the configurations using the full path to the flake's directory:
 
    <!-- WARN: the NIXPKGS_ALLOW_UNFREE=1 is a temporary workaround to allow the installation of unfree packages. -->
+
    ```bash
    NIXPKGS_ALLOW_UNFREE=1 darwin-rebuild switch --flake ~/.dotfiles/.config/nix/#<yourhostname> --impure
    ```
