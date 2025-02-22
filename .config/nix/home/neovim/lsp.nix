@@ -1,7 +1,7 @@
 {
   username,
   hostname,
- ...
+  ...
 }: {
   programs.nixvim = {
     plugins = {
@@ -69,14 +69,15 @@
           };
           marksman = {
             enable = true;
-            autostart = false;
+            autostart = true;
             filetypes = ["markdown" "quarto"];
           };
           nil_ls.enable = true;
           nixd = {
             enable = true;
-            cmd = ["nixd" "--semantic-tokens=false"];
-            extraOptions.offset_encoding = "utf-8"; # nixvim #2390
+            # cmd = ["nixd" "--semantic-tokens=false"];
+            cmd = ["nixd"];
+            # extraOptions.offset_encoding = "utf-8"; # nixvim #2390
             settings = {
               expr = "import <nixpkgs> {}";
               formatting = {

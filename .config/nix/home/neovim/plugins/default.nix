@@ -24,7 +24,15 @@
       };
       conform-nvim = {
         enable = true;
-
+        settings = {
+          default_format_opts = {
+            lsp_format = "last";
+          };
+          formatters = {};
+          formatters_by_ft = {
+            "_" = ["trim_whitespace" "squeeze_blanks"];
+          };
+        };
       };
       copilot-vim.enable = true;
       copilot-chat = {
@@ -37,7 +45,7 @@
           model = "claude-3.5-sonnet";
           temperature = 0.3;
         };
-     };
+      };
       diffview.enable = true;
       dropbar = {
         enable = true;
@@ -46,7 +54,7 @@
           sources.terminal.name = "Term";
         };
       };
-      # fidget.enable = true;
+      fidget.enable = true;
       flash.enable = true;
       fzf-lua = {
         enable = true;
@@ -86,8 +94,7 @@
         };
       };
       nix.enable = true;
-      # noice.enable = true;
-      # notify.enable = true;
+      notify.enable = true;
       colorizer = {
         enable = true;
         settings = {
@@ -145,7 +152,7 @@
             ];
           };
           html.comment.conceal = false;
-          render_modes = [ "n" "c" "t" ];
+          render_modes = ["n" "c" "t"];
         };
       };
       todo-comments.enable = true;
@@ -172,8 +179,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "vague2k";
           repo = "vague.nvim";
-      rev = "ce5d6c99c8a4545f2133a8be93d54ce424ab857a";
-      hash = "sha256-9CAsNvxZM0Kc6wTzRChy2aLVemiutMh9vHsuxkhrhfk=";
+          rev = "ce5d6c99c8a4545f2133a8be93d54ce424ab857a";
+          hash = "sha256-9CAsNvxZM0Kc6wTzRChy2aLVemiutMh9vHsuxkhrhfk=";
         };
       })
 
@@ -187,8 +194,6 @@
           hash = "sha256-Q4v4E8Iay6rXvtUsM5ULo1cnBYduzTw42kIgJlodq5U=";
         };
       })
-
-
     ];
 
     # Lua config

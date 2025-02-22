@@ -1,21 +1,24 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
+    alejandra
     age
     carapace
+    codespell
     curl
     direnv
     git
     just
+    marksman
     nixd
     nurl
     nushell
+    stylua
     vim
     zoxide
   ];
 
   environment.variables.EDITOR = "nvim";
 
-  # see https://brew.sh
   homebrew = {
     enable = true;
     onActivation = {

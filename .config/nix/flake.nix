@@ -19,26 +19,38 @@
     };
   };
 
-  outputs = inputs @ { nixpkgs, darwin, home-manager, nixvim, ... }:
-    let
-      # Machine configurations
-      systems = {
-        "Macbook-Airborne" = {
-          username = "francojc";
-          useremail = "francojc@wfu.edu";
-          system = "aarch64-darwin";
-        };
-        "Mac-Minicore" = {
-          username = "jeridf";
-          useremail = "francojc@wfu.edu";
-          system = "aarch64-darwin";
-        };
+  outputs = inputs @ {
+    nixpkgs,
+    darwin,
+    home-manager,
+    nixvim,
+    ...
+  }: let
+    # Machine configurations
+    systems = {
+      "Macbook-Airborne" = {
+        username = "francojc";
+        useremail = "francojc@wfu.edu";
+        system = "aarch64-darwin";
       };
-      mkDarwinConfig = hostname: {username, useremail, system}: darwin.lib.darwinSystem {
+      "Mac-Minicore" = {
+        username = "jeridf";
+        useremail = "francojc@wfu.edu";
+        system = "aarch64-darwin";
+      };
+    };
+    mkDarwinConfig = hostname: {
+      username,
+      useremail,
+      system,
+    }:
+      darwin.lib.darwinSystem {
         inherit system;
-        specialArgs = inputs // {
-          inherit username useremail hostname;
-        };
+        specialArgs =
+          inputs
+          // {
+            inherit username useremail hostname;
+          };
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
@@ -54,9 +66,11 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               verbose = true;
-              extraSpecialArgs = inputs // {
-                inherit username useremail hostname;
-              };
+              extraSpecialArgs =
+                inputs
+                // {
+                  inherit username useremail hostname;
+                };
               users.${username} = {
                 imports = [
                   ./home/default.nix
@@ -67,9 +81,8 @@
           }
         ];
       };
-    in
-    {
-      darwinConfigurations = builtins.mapAttrs mkDarwinConfig systems;      # nix code formatter
-      formatter."aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin".alejandra;
-    };
+  in {
+    darwinConfigurations = builtins.mapAttrs mkDarwinConfig systems; # nix code formatter
+    formatter."aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin".alejandra;
+  };
 }

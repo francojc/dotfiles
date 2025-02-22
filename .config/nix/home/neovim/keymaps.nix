@@ -150,7 +150,6 @@
         options = {desc = "Cycle to previous buffer";};
       }
 
-
       # Assistants
 
       # -- Normal mode
@@ -251,7 +250,7 @@
 
       # Code
       {
-        mode = "x";  # Visual mode
+        mode = "x"; # Visual mode
         key = "<leader>cn";
         action = ":s/\\s\\+/ /g<CR>";
         options = {
@@ -288,7 +287,7 @@
       {
         mode = ["n" "v"];
         key = "<leader>cf";
-        action = "<cmd>lua vim.lsp.buf.format()<cr>";
+        action = "<cmd>lua require('conform').format()<cr>";
         options = {
           silent = true;
           desc = "Code format";
@@ -346,7 +345,7 @@
 
       # Git
       {
-        mode = [ "n" "v" ];
+        mode = ["n" "v"];
         key = "<leader>gb";
         action = "<Cmd>lua Snacks.gitbrowse.open()<CR>";
         options.desc = "Open gitbrowse";
@@ -398,8 +397,6 @@
         action = "<Cmd>lua require('fzf-lua').commands()<CR>";
         options.desc = "Help Neovim commands";
       }
-
-
 
       # Markdown
 

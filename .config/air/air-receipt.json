@@ -1,0 +1,1 @@
+{"binaries":["air"],"binary_aliases":{},"cdylibs":[],"cstaticlibs":[],"install_layout":"flat","install_prefix":"/Users/francojc/.local/bin","modify_path":true,"provider":{"source":"cargo-dist","version":"0.28.0"},"source":{"app_name":"air","name":"air","owner":"posit-dev","release_type":"github"},"version":"0.4.0"}

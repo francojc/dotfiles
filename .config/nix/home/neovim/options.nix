@@ -1,5 +1,4 @@
-{ username, ...}:
-{
+{username, ...}: {
   programs.nixvim = {
     globals = {
       loaded_ruby_provider = 0;
@@ -98,7 +97,7 @@
       };
 
       # Always keep 5 lines above/below cursor unless at start/end of file
-      scrolloff = 0;
+      scrolloff = 3;
       sidescrolloff = 5;
 
       # Place a column line
