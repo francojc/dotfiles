@@ -22,7 +22,10 @@
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
-      conform-nvim.enable = true;
+      conform-nvim = {
+        enable = true;
+
+      };
       copilot-vim.enable = true;
       copilot-chat = {
         enable = true;

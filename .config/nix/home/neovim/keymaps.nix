@@ -6,15 +6,15 @@
     };
     # Remappings
     keymaps = [
-      # {
-      #   mode = "i";
-      #   key = "jj";
-      #   action = "<Esc>";
-      #   options = {
-      #     desc = "jj to esc";
-      #     silent = true;
-      #   };
-      # }
+      {
+        mode = "i";
+        key = "jj";
+        action = "<Esc>";
+        options = {
+          desc = "jj to esc";
+          silent = true;
+        };
+      }
       {
         mode = "n";
         key = "k";
@@ -100,10 +100,9 @@
         action = "<Cmd>w!<CR>";
         options = {desc = "Save file!";};
       }
-
       {
         mode = "n";
-        key = "<C-S>";
+        key = "<C-a>";
         action = "<Cmd>wa!<CR>";
         options = {desc = "Save all!";};
       }
