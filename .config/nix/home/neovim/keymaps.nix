@@ -342,7 +342,6 @@
         action = "<Cmd>lua require('fzf-lua').treesitter()<CR>";
         options = {desc = "Find buffer symbols";};
       }
-
       # Git
       {
         mode = ["n" "v"];
