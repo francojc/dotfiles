@@ -48,7 +48,7 @@
               };
             };
             menu = {
-             auto_show.__raw = ''
+              auto_show.__raw = ''
                 function(ctx)
                   return ctx.mode ~= 'cmdline' or not vim.tbl_contains({'/', '?'}, vim.fn.getcmdtype())
                 end
@@ -57,22 +57,29 @@
                 gap = 2;
                 treesitter = ["lsp"];
                 columns = [
-                    {
-                      __unkeyed-1 = "label";
-                      __unkeyed-2 = "label_description";
-                      gap = 1;
-                    }
-                    {
-                      __unkeyed-1 = "kind_icon";
-                      __unkeyed-2 = "kind";
-                      gap = 1;
-                    }
-                  ];
-                };
+                  {
+                    __unkeyed-1 = "label";
+                    __unkeyed-2 = "label_description";
+                    gap = 1;
+                  }
+                  {
+                    __unkeyed-1 = "kind_icon";
+                    __unkeyed-2 = "kind";
+                    gap = 1;
+                  }
+                ];
               };
+            };
           };
           keymap = {
-            preset = "enter";
+            # preset = "enter";
+            "<C-space>" = ["show" "show_signature" "hide_signature" "fallback"];
+            "<C-e>" = ["hide"];
+            "<CR>" = ["accept" "fallback"];
+            "<Tab>" = ["snippet_forward" "fallback"];
+            "<S-Tab>" = ["snippet_backward" "fallback"];
+            "<C-j>" = ["select_next" "fallback"];
+            "<C-k>" = ["select_prev" "fallback"];
           };
           signature.enabled = true;
           snippets = {
@@ -203,6 +210,5 @@
         };
       };
     };
-
   };
 }
