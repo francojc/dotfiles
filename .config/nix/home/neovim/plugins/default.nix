@@ -84,13 +84,14 @@
         maxHeightWindowPercentage = 30;
       };
       lazygit.enable = true;
+      leap.enable = true;
       mini = {
         enable = true;
         modules = {
           indentscope = {};
           icons = {};
           pairs = {};
-          surround = {};
+          # surround = {};
         };
       };
       nix.enable = true;

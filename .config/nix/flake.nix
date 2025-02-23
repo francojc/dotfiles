@@ -1,6 +1,5 @@
 {
   description = "Nix for macOS configuration";
-
   inputs = {
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixpkgs-unstable";
