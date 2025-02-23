@@ -265,7 +265,7 @@
       --- Note: I only need to esc and change windows with
       --- C-h and C-j as I only open ToggleTerm in vert and horz
       vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]])
-      vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]])
+      -- vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]])
       vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]])
 
       -- Special keymapings

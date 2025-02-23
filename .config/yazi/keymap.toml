@@ -1,5 +1,15 @@
 # change 'Ctrl + a' to 'Ctrl + Shift + a'?
 [[manager.prepend_keymap]]
+on = [ "<C-j>" ]
+run = "arrow 1"
+desc = "Move cursor down"
+
+[[manager.prepend_keymap]]
+on = [ "<C-k>" ]
+run = "arrow -1"
+desc = "Move cursor up"
+
+[[manager.prepend_keymap]]
 on = [ "<C-s>" ]
 run = 'shell "$SHELL" --block --confirm'
 desc = "Open shell here"
