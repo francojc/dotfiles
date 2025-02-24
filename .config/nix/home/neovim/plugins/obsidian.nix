@@ -43,6 +43,7 @@
           "<leader>oc" = {
             action = "require('obsidian').util.toggle_checkbox";
             opts.buffer = true;
+            opts.desc = "Toggle checkbox";
           };
         };
         templates = {
