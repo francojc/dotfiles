@@ -107,9 +107,11 @@
                 return 0
               end
             '';
-            per_filetype = {
-              "markdown" = ["lsp" "path" "snippets"];
-            };
+            # per_filetype = {
+            #   "markdown" = ["lsp" "path" "snippets"];
+            #   "quarto" = ["lsp" "path" "snippets"];
+            # };
+            default = ["lsp" "path" "snippets"];
           };
         };
       };
