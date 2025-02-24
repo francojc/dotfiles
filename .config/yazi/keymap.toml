@@ -1,4 +1,4 @@
-# change 'Ctrl + a' to 'Ctrl + Shift + a'?
+# Manager keymaps ----------------------------------------------
 [[manager.prepend_keymap]]
 on = [ "<C-j>" ]
 run = "arrow 1"
@@ -24,6 +24,7 @@ on = [ "<C-y>" ]
 run = 'seek -5'
 desc = "Seek up 5 lines"
 
+# Input keymaps ----------------------------------------------
 [[input.prepend_keymap]]
 on   = [ "<Esc>" ]
 run  = "close"
