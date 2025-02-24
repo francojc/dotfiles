@@ -6,7 +6,7 @@
         ui.enable = false;
         completion = {
           min_chars = 2;
-          nvim_cmp = false ; # Use nvim-cmp
+          nvim_cmp = false; # Use nvim-cmp
         };
         picker.name = "fzf-lua";
         # 'Mobile Documents/iCloud~md~obsidian/Documents/Notes'
@@ -32,7 +32,7 @@
           folder = "Daily";
         };
         mappings = {
-          "<leader>of" = {
+          "gf" = {
             action = "require('obsidian').util.gf_passthrough";
             opts = {
               noremap = false;
