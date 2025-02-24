@@ -62,7 +62,7 @@
       }
       {
         mode = "n";
-        key = "<C-\-";
+        key = "-";
         action = "<Cmd>lua require('dropbar.api').pick()<CR>";
         options = {desc = "Dropbar picker";};
       }
