@@ -1,5 +1,8 @@
-{ pkgs, username, ... }:
 {
+  pkgs,
+  username,
+  ...
+}: {
   system = {
     activationScripts.postUserActivation.text = ''
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
@@ -120,7 +123,7 @@
           askForPassword = true;
           askForPasswordDelay = 300; # seconds (5 minutes)
         };
-         "com.apple.screencapture" = {
+        "com.apple.screencapture" = {
           disable-shadow = true;
           location = "~/Downloads";
           type = "png";
@@ -143,13 +146,13 @@
     startup.chime = false;
   };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   nix.enable = false;
   programs.zsh.enable = true;
 
   environment = {
-    shells = [ pkgs.zsh ];
+    shells = [pkgs.zsh];
     variables.HOMBREW_NO_ANALYTICS = "1";
   };
 
