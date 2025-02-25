@@ -67,7 +67,7 @@
     ];
 
     masApps = {
-      # GarageBand = 682658836;
+      GarageBand = 682658836;
       # iMovie = 408981434;
       Adblock_Plus = 1432731683;
       AudioBookBinder = 413969927;
