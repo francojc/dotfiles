@@ -38,6 +38,7 @@
       "huggingface-cli"
       "mas"
       "ollama"
+      "python@3.11"
       "rename"
       "speedtest-cli"
       "wget"

@@ -6,7 +6,8 @@ alias:
   - "phi4:ollama_chat/phi4:14b-q8_0"
   - "llama3.2:ollama_chat/llama3.2:latest"
   - "haiku:openrouter/anthropic/claude-3-5-haiku-20241022"
-
+  - "sonnet-3.7:anthropic/claude-3-7-sonnet-20250219"
+  - "haiku-3.5:anthropic/claude-3-5-haiku-20241022"
 # Models
 model: gemini/gemini-2.0-flash-thinking-exp # reasoner
 editor-model: gemini/gemini-2.0-flash # chat
