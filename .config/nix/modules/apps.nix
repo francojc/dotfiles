@@ -13,6 +13,7 @@
     nurl
     nushell
     stylua
+    superfile
     vim
     zoxide
   ];
