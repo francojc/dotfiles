@@ -56,6 +56,7 @@
       "kap"
       "keycastr"
       "mullvadvpn"
+      "msty"
       "obsidian"
       "raycast"
       "rectangle"
