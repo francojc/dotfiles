@@ -48,7 +48,7 @@ response=$(curl -s --write-out '%{http_code}' \
   https://api.openai.com/v1/audio/transcriptions)
 
 # Separate HTTP status code and content
-http_code=${response: -3}
+http_code=$(echo "$response" | tail -c 3)
 content=$(echo "$response" | head -c -3)
 
 # Check for errors
@@ -58,5 +58,5 @@ if [[ $http_code -ne 200 ]]; then
 fi
 
 # Save successful response
-echo "$response" > "$output_file"
+echo "$content" > "$output_file"
 echo "Transcript saved to: $output_file"
