@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # Description: This script is used to convert text to speech using the Eleven Labs API
 # Usage: ./text2speech.sh -t "text to convert" [-k apiKey] [-r speech_rate] [-o output_file] [-v voice] [-h]
 # Note: if not given, <apiKey> will be read from the environment variable ELEVENLABS_API_KEY
