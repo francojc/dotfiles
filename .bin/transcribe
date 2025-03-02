@@ -48,13 +48,19 @@ response=$(curl -s --write-out '%{http_code}' \
   https://api.openai.com/v1/audio/transcriptions)
 
 # Separate HTTP status code and content
-http_code=$(echo "$response" | tail -c 3)
-content=$(echo "$response" | head -c -3)
+mapfile -t response_parts < <(printf "%s" "$response" | tail -c 4)  # Get last 3 digits + newline
+http_code=$(printf "%s" "${response_parts[0]}" | tr -d '\n')
+content=$(printf "%s" "$response" | head -c -${#http_code})
 
 # Check for errors
 if [[ $http_code -ne 200 ]]; then
-  error_message=$(echo "$content" | jq -r '.error.message')
-  echo "API Error (HTTP $http_code): $error_message" >&2
+  # Try to extract JSON error message, fallback to raw output
+  if error_message=$(echo "$content" | jq -r '.error.message' 2>/dev/null); then
+    echo "API Error (HTTP $http_code): $error_message" >&2
+  else
+    echo "API Error (HTTP $http_code): Received non-JSON response" >&2
+    echo "Raw response: '$content'" >&2
+  fi
   exit 1
 fi
 
