@@ -6,28 +6,40 @@
 
 set -euo pipefail
 
+# Function to display help message
+show_help() {
+  echo "Usage: $0 [-h] -f FILE_PATH"
+  echo "Transcribe an audio file using OpenAI Whisper-1"
+  echo "Supported formats: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+  exit 0
+}
+
 # Validate dependencies
-command -v curl >/dev/null 2>&1 || { echo "Error: curl is required"; exit 1; }
-command -v jq >/dev/null 2>&1 || { echo "Error: jq is required"; exit 1; }
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
+
+# Check API key
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+  echo "Error: OPENAI_API_KEY environment variable required" >&2
+  exit 1
+fi
 
 # Parse arguments
 while getopts ":hf:" opt; do
   case $opt in
-    h)
-      echo "Usage: $0 [-h] -f FILE_PATH"
-      echo "Transcribe an audio file using OpenAI Whisper-1"
-      echo "Supported formats: mp3, mp4, mpeg, mpga, m4a, wav, webm"
-      exit 0
-      ;;
-    f)
-      file_path="$OPTARG"
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
+    h) show_help ;;
+    f) file_path="$OPTARG" ;;
+    \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
+    :) echo "Option -$OPTARG requires an argument" >&2; exit 1 ;;
   esac
 done
+
+# Check if file path was provided
+if [[ -z "${file_path:-}" ]]; then
+  echo "Error: File path (-f) is required" >&2
+  echo "Use -h for usage information" >&2
+  exit 1
+fi
 
 # Validate file exists
 if [[ ! -f "$file_path" ]]; then
