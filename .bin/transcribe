@@ -1,36 +1,61 @@
-#!/usr/bin/env python
+#!/usr/bin/env bash
 
-import argparse
-import os
-from openai import OpenAI
+set -euo pipefail
 
-# import json
+# Validate dependencies
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required"; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required"; exit 1; }
 
-client = OpenAI()
+# Parse arguments
+while getopts ":hf:" opt; do
+  case $opt in
+    h)
+      echo "Usage: $0 [-h] -f FILE_PATH"
+      echo "Transcribe an audio file using OpenAI Whisper-1 (max 25MB)"
+      echo "Supported formats: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+      exit 0
+      ;;
+    f)
+      file_path="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
 
-# Load API key from environment variable
-api_key = os.getenv("OPENAI_API_KEY")
+# Validate file exists
+if [[ ! -f "$file_path" ]]; then
+  echo "Error: File not found: $file_path" >&2
+  exit 1
+fi
 
-# Set the API key
-client.api_key = api_key
+# Validate file size (25MB max)
+max_size=$((25 * 1024 * 1024))
+file_size=$(stat -f%z "$file_path")
+if (( file_size > max_size )); then
+  echo "Error: File size exceeds 25MB limit" >&2
+  exit 1
+fi
 
-# Pull the cli argument for the audio file path
-parser = argparse.ArgumentParser(
-    description="Transcribe an audio file using OpenAI (Whisper-1). File uploads are currently limited to 25 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm."
-)
-parser.add_argument("file_path", type=str, help="Path to the audio file")
-args = parser.parse_args()
+# Generate output filename
+output_file="${file_path%.*}.txt"
 
-# Load the audio file and transcribe it
-audio_file = open(args.file_path, "rb")
-transcript = client.audio.transcriptions.create(
-    model="whisper-1", file=audio_file, response_format="text"
-)
+# Call OpenAI API
+response=$(curl -s https://api.openai.com/v1/audio/transcriptions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F file="@$file_path" \
+  -F model="whisper-1" \
+  -F response_format="text")
 
-# Write the transcript to a text file
-file_path = os.path.splitext(args.file_path)[0] + ".txt"
-file = open(file_path, "w")
-file.write(transcript)
+# Check for API errors
+if [[ $(jq -r '.error.message' <<< "$response" 2>/dev/null) != "null" ]]; then
+  echo "API Error: $(jq -r '.error.message' <<< "$response")" >&2
+  exit 1
+fi
 
-# Close the audio file
-audio_file.close()
+# Save response
+echo "$response" > "$output_file"
+echo "Transcript saved to: $output_file"
