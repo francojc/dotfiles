@@ -53,10 +53,11 @@ content=$(echo "$response" | head -c -3)
 
 # Check for errors
 if [[ $http_code -ne 200 ]]; then
-  echo "API Error (HTTP $http_code): $(echo "$content" | jq -r '.error.message')" >&2
+  error_message=$(echo "$content" | jq -r '.error.message')
+  echo "API Error (HTTP $http_code): $error_message" >&2
   exit 1
 fi
 
-# Save successful response
+# Save successful response (plain text)
 echo "$content" > "$output_file"
 echo "Transcript saved to: $output_file"
