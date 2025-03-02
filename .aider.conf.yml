@@ -10,10 +10,10 @@ alias:
   - "haiku-3.5:anthropic/claude-3-5-haiku-20241022"
 
 # Models
-model: gemini/gemini-2.0-flash-thinking-exp # reasoner
-editor-model: gemini/gemini-2.0-flash # chat
+model: openrouter/deepseek/deepseek-r1 # reasoner
+editor-model: openrouter/deepseek/deepseek-chat # editor
 weak-model: gemini/gemini-2.0-flash # git commit messages
-architect: false
+architect: true
 
 # Theme
 # Main text colors
