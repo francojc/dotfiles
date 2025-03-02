@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# extracty: Extract text from images using OpenAI GPT-4o-mini vision model
+# Usage: extracty IMAGE_FILE
+
+set -euo pipefail
+
+# Validate dependencies
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
+command -v base64 >/dev/null 2>&1 || { echo "Error: base64 is required" >&2; exit 1; }
+
+# Validate arguments
+if [[ $# -ne 1 ]] || [[ ! -f "$1" ]]; then
+    echo "Usage: $0 IMAGE_FILE" >&2
+    exit 1
+fi
+
+# Check API key
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+    echo "Error: OPENAI_API_KEY environment variable required" >&2
+    exit 1
+fi
+
+# Base64 encode image
+IMAGE_B64=$(base64 -i "$1")
+
+# Make API request and process response
+curl -sS https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "$(jq -n \
+    --arg model "gpt-4o-mini" \
+    --arg content "Return ONLY the extracted text in markdown format, preserving original formatting, layout, and structure. Include no commentary or explanations." \
+    --arg image "data:image/jpeg;base64,$IMAGE_B64" \
+    '{
+        model: $model,
+        messages: [
+            {
+                role: "user", 
+                content: [
+                    {type: "text", text: $content},
+                    {type: "image_url", image_url: {url: $image}}
+                ]
+            }
+        ],
+        temperature: 0.0
+    }')" | jq -r '.choices[0].message.content'
