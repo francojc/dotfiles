@@ -37,7 +37,7 @@ fi
 
 # Validate file size (25MB max)
 max_size=$((25 * 1024 * 1024))
-file_size=$(stat -f%z "$file_path")
+file_size=$(stat -f %z "$file_path")
 if (( file_size > max_size )); then
   echo "Error: File size exceeds 25MB limit" >&2
   exit 1
