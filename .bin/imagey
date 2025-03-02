@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# imagey: Generate images using OpenAI's DALL-E API
+# Generate images using OpenAI's DALL-E API
 # Usage: imagey <prompt> <name> [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER]
 # Example: imagey "a painting of a sunset over a mountain" "sunset_mountain" --model "dall-e-3" --size "1024x1024" --quality "standard" --n 1
 

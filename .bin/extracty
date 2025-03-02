@@ -37,7 +37,7 @@ curl -sS https://api.openai.com/v1/chat/completions \
         model: $model,
         messages: [
             {
-                role: "user", 
+                role: "user",
                 content: [
                     {type: "text", text: $content},
                     {type: "image_url", image_url: {url: $image}}

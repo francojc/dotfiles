@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # Description: This script is used to convert text to speech using the Eleven Labs API
-# Usage: ./text2speech.sh -t "text to convert" [-k apiKey] [-r speech_rate] [-o output_file] [-v voice] [-h]
+# Usage: ./speechy -t "text to convert" [-k apiKey] [-r speech_rate] [-o output_file] [-v voice] [-h]
 # Note: if not given, <apiKey> will be read from the environment variable ELEVENLABS_API_KEY
 # Speech rate can be between 0.5 (slower) and 2.0 (faster). Default is 1.0
-# Example: ./text2speech.sh -t "Hello world, this is a test" -k your_api_key -r 1.5 -o my_speech.mp3 -v male
+# Example: ./speechy -t "Hello world, this is a test" -k your_api_key -r 1.5 -o my_speech.mp3 -v male
 
 # Function to display help message
 show_help() {
