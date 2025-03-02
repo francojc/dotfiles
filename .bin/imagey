@@ -1,79 +1,89 @@
-#!/usr/bin/env python
+#!/usr/bin/env bash
 
-import argparse
-import requests
-import os
-from openai import OpenAI
+# Source environment variables
+source "$(dirname "$0")/.envrc"
 
-client = OpenAI()
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --model)
+            MODEL="$2"
+            shift 2
+            ;;
+        --size)
+            SIZE="$2"
+            shift 2
+            ;;
+        --quality)
+            QUALITY="$2"
+            shift 2
+            ;;
+        --n)
+            N="$2"
+            shift 2
+            ;;
+        *)
+            if [[ -z "$PROMPT" ]]; then
+                PROMPT="$1"
+            else
+                NAME="$1"
+            fi
+            shift
+            ;;
+    esac
+done
 
-def main(model_gen, prompt_gen, size_gen, quality_gen, n_gen, name_gen):
+# Set defaults
+MODEL=${MODEL:-"dall-e-3"}
+SIZE=${SIZE:-"1024x1024"}
+QUALITY=${QUALITY:-"standard"}
+N=${N:-1}
 
-    response = client.images.generate(
-        model=model_gen, prompt=prompt_gen, size=size_gen, quality=quality_gen, n=n_gen
-    )
+# Validate required arguments
+if [[ -z "$PROMPT" || -z "$NAME" ]]; then
+    echo "Usage: imagey <prompt> <name> [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER]"
+    exit 1
+fi
 
-    # Retrieve the image URL
-    image_url = response.data[0].url
+# Create images directory if it doesn't exist
+mkdir -p images
 
-    # Download the image
-    r = requests.get(image_url)
+# Generate filename
+FILENAME="images/${NAME// /_}.jpg"
 
-    # Check if images/ directory exists
-    if not os.path.exists("images/"):
-        os.mkdir("images/")
+# Make API request
+response=$(curl -s -X POST "https://api.openai.com/v1/images/generations" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d "$(jq -n \
+        --arg model "$MODEL" \
+        --arg prompt "$PROMPT" \
+        --arg size "$SIZE" \
+        --arg quality "$QUALITY" \
+        --argjson n "$N" \
+        '{
+            model: $model,
+            prompt: $prompt,
+            size: $size,
+            quality: $quality,
+            n: $n
+        }')")
 
-    # Create file name from prompt
-    file_name = name_gen.replace(" ", "_")
-    file_name += ".jpg"
+# Extract URL from response
+url=$(echo "$response" | jq -r '.data[0].url')
 
-    # Create full path
-    file_path = "images/" + file_name
+if [[ "$url" == "null" || -z "$url" ]]; then
+    echo "Error generating image:"
+    echo "$response" | jq .
+    exit 1
+fi
 
-    # Check if the image was downloaded successfully
-    if r.status_code == 200:
-        # Save the image to a file
-        with open(file_path, "wb") as f:
-            f.write(r.content)
-    else:
-        print("Error downloading image")
+# Download image
+curl -s -o "$FILENAME" "$url"
 
+if [[ $? -ne 0 ]]; then
+    echo "Error downloading image from $url"
+    exit 1
+fi
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate and download images using OpenAI."
-    )
-    parser.add_argument("prompt", type=str, help="The prompt for image generation.")
-    parser.add_argument("name", type=str, help="The name of the generated image.")
-    parser.add_argument(
-        "--model",
-        default="dall-e-3",
-        type=str,
-        help="The model to use for image generation. Default is 'dall-e-3'.",
-    )
-    parser.add_argument(
-        "--size",
-        default="1024x1024",
-        type=str,
-        help="The size of the generated image. Default is '1024x1024'.",
-    )
-    parser.add_argument(
-        "--quality",
-        default="standard",
-        type=str,
-        help="The quality of the generated image. Default is 'standard'.",
-    )
-    parser.add_argument(
-        "--n",
-        default=1,
-        type=int,
-        help="The number of images to generate. Default is 1.",
-    )
-
-    args = parser.parse_args()
-
-    try:
-        main(args.model, args.prompt, args.size, args.quality, args.n, args.name)
-    except Exception as e:
-        print("Error:", str(e))
-        parser.print_help()
+echo "Image saved to: $FILENAME"
