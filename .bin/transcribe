@@ -38,8 +38,8 @@ fi
 # Generate output filename
 output_file="${file_path%.*}.txt"
 
-# Call OpenAI API with better error handling
-response=$(curl -s --write-out '%{http_code}' \
+# Call OpenAI API with better output handling
+response=$(curl -s --write-out "\n%{http_code}" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F file="@$file_path" \
@@ -48,9 +48,8 @@ response=$(curl -s --write-out '%{http_code}' \
   https://api.openai.com/v1/audio/transcriptions)
 
 # Separate HTTP status code and content
-mapfile -t response_parts < <(printf "%s" "$response" | tail -c 4)  # Get last 3 digits + newline
-http_code=$(printf "%s" "${response_parts[0]}" | tr -d '\n')
-content=$(printf "%s" "$response" | head -c -${#http_code})
+http_code=$(echo "$response" | tail -n 1)  # Last line is HTTP code
+content=$(echo "$response" | head -n -1)   # All except last line
 
 # Check for errors
 if [[ $http_code -ne 200 ]]; then
