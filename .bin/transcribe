@@ -38,20 +38,25 @@ fi
 # Generate output filename
 output_file="${file_path%.*}.txt"
 
-# Call OpenAI API
-response=$(curl -s https://api.openai.com/v1/audio/transcriptions \
+# Call OpenAI API with better error handling
+response=$(curl -s --write-out '%{http_code}' \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F file="@$file_path" \
   -F model="whisper-1" \
-  -F response_format="text")
+  -F response_format="text" \
+  https://api.openai.com/v1/audio/transcriptions)
 
-# Check for API errors
-if [[ $(jq -r '.error.message' <<< "$response" 2>/dev/null) != "null" ]]; then
-  echo "API Error: $(jq -r '.error.message' <<< "$response")" >&2
+# Separate HTTP status code and content
+http_code=${response: -3}
+content=$(echo "$response" | head -c -3)
+
+# Check for errors
+if [[ $http_code -ne 200 ]]; then
+  echo "API Error (HTTP $http_code): $(echo "$content" | jq -r '.error.message')" >&2
   exit 1
 fi
 
-# Save response
+# Save successful response
 echo "$response" > "$output_file"
 echo "Transcript saved to: $output_file"
