@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# transcribe: Transcribe an audio file using OpenAI's Whisper
+# Usage: transcribe -f FILE_PATH
+# Example: transcribe -f "audio.mp3"
+
 set -euo pipefail
 
 # Validate dependencies
