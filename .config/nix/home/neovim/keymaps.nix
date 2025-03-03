@@ -6,15 +6,15 @@
     };
     # Remappings
     keymaps = [
-      # {
-      #   mode = "i";
-      #   key = "jj";
-      #   action = "<Esc>";
-      #   options = {
-      #     desc = "jj to esc";
-      #     silent = true;
-      #   };
-      # }
+      {
+        mode = "i";
+        key = "jj";
+        action = "<Esc>";
+        options = {
+          desc = "jj to esc";
+          silent = true;
+        };
+      }
       {
         mode = "n";
         key = "k";
