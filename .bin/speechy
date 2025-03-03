@@ -21,8 +21,8 @@ show_help() {
     echo "  -h, --help     Display this help message"
     echo
     echo "Examples:"
-    echo "  $0 -t \"Hello world\""
-    echo "  $0 -t \"Hello world\" -k your_api_key -r 1.5 -o my_speech.mp3 -v male"
+    echo "  speechy -t \"Hello world\""
+    echo "  speechy -t \"Hello world\" -k your_api_key -r 1.5 -o my_speech.mp3 -v male"
     exit 0
 }
 
