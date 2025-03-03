@@ -96,21 +96,26 @@ response=$(curl -s --write-out "\n%{http_code}" \
      -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
      -H "xi-api-key: $api_key" \
      -H "Content-Type: application/json" \
+     -H "accept: audio/mpeg" \
      -d "{
         \"text\": \"$text\",
-        \"model_id\": \"eleven_flash_v2_5\"
+        \"model_id\": \"eleven_turbo_v2\",
+        \"voice_settings\": {
+            \"stability\": 0.5,
+            \"similarity_boost\": 0.8
+        }
       }" -o "$output_file")
 
-# Get HTTP status code
+# Get HTTP status code and response body
 http_code=$(echo "$response" | tail -n 1)
 
 # Check for errors
 if [[ $http_code -ne 200 ]]; then
-    echo "API Error (HTTP $http_code): Failed to generate speech" >&2
-    # Remove empty output file if it exists
-    if [[ -f "$output_file" && ! -s "$output_file" ]]; then
-        rm "$output_file"
-    fi
+    # Try to get error message from response body
+    error_msg=$(jq -r '.detail.message // .detail' "$output_file" 2>/dev/null || echo "Unknown error")
+    echo "API Error (HTTP $http_code): $error_msg" >&2
+    # Remove output file if it exists
+    [[ -f "$output_file" ]] && rm "$output_file"
     exit 1
 fi
 
