@@ -35,6 +35,9 @@ code-theme: "monokai"  # While not exactly Gruvbox, this dark theme works well w
 # Editor Configuration
 editor: nvim
 
+# Streaming
+stream: false
+
 # Git Settings
 auto-commits: true
 no-attribute-author: true
