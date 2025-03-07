@@ -82,9 +82,18 @@ function cd() {
 }
 
 # Obsidian
+# Notes
 function on() {
     if [ -z "$1" ]; then
         cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Notes/ && nvim
+    else
+        cd "$1" && nvim
+    fi
+}
+# Personal
+function op() {
+    if [ -z "$1" ]; then
+        cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Personal/ && nvim
     else
         cd "$1" && nvim
     fi
