@@ -14,7 +14,7 @@
       menuExtraClock = {
         Show24Hour = true;
         ShowAMPM = false;
-        ShowDate = 2;
+        ShowDate = 1;
       };
 
       dock = {
@@ -24,12 +24,11 @@
         orientation = "bottom";
         persistent-apps = [
           "/Applications/Zen Browser.app"
-          "/Users/${username}/Applications/Home Manager Apps/kitty.app"
+          "/Applications/Ghostty.app"
           "/System/Applications/Utilities/Screen Sharing.app"
         ];
         persistent-others = [
           "/Users/${username}/"
-          "/Users/${username}/.dotfiles"
           "/Users/${username}/Downloads/"
         ];
         show-recents = false;

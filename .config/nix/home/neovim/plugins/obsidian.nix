@@ -11,7 +11,7 @@
         picker.name = "fzf-lua";
         # 'Mobile Documents/iCloud~md~obsidian/Documents/Notes'
         attachments = {
-          img_folder = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Attachments/";
+          img_folder = "Assets/Attachments/";
         };
         follow_url_func.__raw = ''
           function(url)
@@ -26,9 +26,13 @@
             name = "Notes";
             path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/";
           }
+          {
+            name = "Personal";
+            path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal";
+          }
         ];
         daily_notes = {
-          template = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Templates/Daily.md";
+          template = "Assets/Templates/Daily.md";
           folder = "Daily";
         };
         mappings = {
@@ -47,7 +51,7 @@
           };
         };
         templates = {
-          subdir = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Assets/Templates/";
+          subdir = "Assets/Templates/";
           substitutions = {
             monday.__raw = ''
               function()
