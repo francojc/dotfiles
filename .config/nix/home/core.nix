@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     # Terminal Enhancements
     atuin
@@ -9,7 +7,7 @@
     fd
     fzf
     glances
-    kitty
+    # kitty
     starship
 
     # File Management
@@ -72,6 +70,5 @@
     mdcat
     pngpaste
     zoxide
-
   ];
 }
