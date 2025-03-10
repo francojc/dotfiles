@@ -5,6 +5,7 @@
     brave
     carapace
     codespell
+    claude-code
     curl
     direnv
     git
