@@ -50,6 +50,7 @@
     casks = [
       "appcleaner"
       "bettermouse"
+      "claude"
       "docker"
       "dropbox"
       "ghostty@tip"
