@@ -32,7 +32,7 @@ EMAILBOOK_DIR = os.path.expanduser('~/.local/share/emailbook')
 EMAILBOOK_FILE = os.path.join(EMAILBOOK_DIR, 'emails')
 
 # Your university's domain
-DOMAIN = 'university.edu'  # Replace with your actual university domain
+DOMAIN = 'wfu.edu'  # Replace with your actual university domain
 
 def get_google_directory_service():
     """
