@@ -13,17 +13,14 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}Setting up Google Directory to Emailbook integration...${NC}"
 
-# Check if the required packages are installed, but do not attempt to install them. Only provide a message and exit AI!
-
-# Check if pip3 is installed
-if ! command -v pip3 &> /dev/null; then
-    echo -e "${RED}Error: pip3 is not installed. Please install Python 3 and pip first.${NC}"
+# Check if the required packages are installed, but do not attempt to install them. Only provide a message and exit
+echo -e "\n${YELLOW}Checking for required Python packages...${NC}"
+if ! python3 -c "import googleapiclient, google_auth_httplib2, google_auth_oauthlib" 2>/dev/null; then
+    echo -e "${RED}Error: Required Python packages not found. Please enter the nix development shell first with:${NC}"
+    echo -e "${RED}nix develop .bin -c bash${NC}"
+    echo -e "${RED}Then re-run this setup script from within the nix shell.${NC}"
     exit 1
 fi
-
-# Install required Python packages
-echo -e "\n${YELLOW}Installing required Python packages...${NC}"
-pip3 install --user google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
 # Create config directory
 mkdir -p ~/.config
