@@ -28,6 +28,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # Configuration
+
+# Why is the 'credentials_file' path relative not working for me AI?
+
 CONFIG = {
     "credentials_file": "~/.config/aerc/google-aerc-credentials.json",  # OAuth client credentials
     "token_file": "~/.config/aerc/token.pickle",  # To store your access token
@@ -39,10 +42,11 @@ CONFIG = {
 def authenticate():
     """Authenticate with Google API using OAuth."""
     creds = None
+    token_path = os.path.expanduser(CONFIG["token_file"])
 
     # Check if we have a token file already
-    if os.path.exists(CONFIG["token_file"]):
-        with open(CONFIG["token_file"], 'rb') as token:
+    if os.path.exists(token_path):
+        with open(token_path, 'rb') as token:
             creds = pickle.load(token)
 
     # If credentials don't exist or are invalid, authenticate
@@ -50,12 +54,13 @@ def authenticate():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
+            credentials_path = os.path.expanduser(CONFIG["credentials_file"])
             flow = InstalledAppFlow.from_client_secrets_file(
-                CONFIG["credentials_file"], CONFIG["scopes"])
+                credentials_path, CONFIG["scopes"])
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open(CONFIG["token_file"], 'wb') as token:
+        with open(token_path, 'wb') as token:
             pickle.dump(creds, token)
 
     return build('people', 'v1', credentials=creds)
@@ -136,13 +141,16 @@ def convert_to_emailbook_format(contacts):
         if not full_name and email:
             full_name = email.split('@')[0]
 
+        # Create entry/ add to list
+        entry = f"{full_name} <{email}>"
         emailbook_entries.append(entry)
 
     return emailbook_entries
 
 def save_to_file(entries, output_file):
     """Save entries to emailbook file."""
-    with open(output_file, 'w') as f:
+    output_path = os.path.expanduser(output_file)
+    with open(output_path, 'w') as f:
         for entry in entries:
             f.write(f"{entry}\n")
 
