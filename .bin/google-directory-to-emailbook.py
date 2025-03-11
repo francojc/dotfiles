@@ -9,6 +9,12 @@ Requirements:
 - Google API Client: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 - University Google Workspace account with proper API access
 
+Critical requirements:
+- Must authenticate with a Google Workspace ADMIN account (@your-domain.edu)
+- Account must have 'User Management' privileges in Admin Console
+- Admin SDK API must be enabled: https://console.cloud.google.com/apis/library/admin.googleapis.com
+- OAuth consent screen must be configured: https://console.cloud.google.com/apis/credentials/consent
+
 Set up instructions:
 1. Enable the Admin SDK API in the Google Cloud Console
 2. Create OAuth credentials (Desktop application) and download the JSON file
@@ -53,12 +59,31 @@ def get_google_directory_service():
         else:
             if not os.path.exists(CREDENTIALS_FILE):
                 raise FileNotFoundError(
-                    f"Credentials file not found at {CREDENTIALS_FILE}. "
-                    "Please download OAuth credentials from Google Cloud Console."
+                    f"Credentials file not found at {CREDENTIALS_FILE}\n"
+                    "1. Go to https://console.cloud.google.com/apis/credentials\n"
+                    "2. Create OAuth 2.0 Client IDs credentials\n"
+                    "3. Download as JSON and place in above path"
                 )
 
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-            creds = flow.run_local_server(port=0)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                CREDENTIALS_FILE, 
+                SCOPES,
+                redirect_uri='urn:ietf:wg:oauth:2.0:oob'  # Use out-of-band flow
+            )
+            creds = flow.run_console()  # Better for headless/server environments
+
+        # Verify admin privileges
+        admin_service = build('admin', 'directory_v1', credentials=creds)
+        try:
+            admin_service.users().get(userKey=creds.id_token.get('email')).execute()
+        except Exception as e:
+            raise PermissionError(
+                f"Account {creds.id_token.get('email')} lacks admin privileges\n"
+                "Required steps:\n"
+                "1. Use a Google Workspace ADMIN account\n"
+                "2. Ensure account has 'User Management' privileges\n"
+                "3. Ensure Admin SDK is enabled: https://console.cloud.google.com/apis/library/admin.googleapis.com"
+            ) from e
 
         # Save the credentials for the next run
         with open(TOKEN_FILE, 'wb') as token:

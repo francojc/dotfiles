@@ -216,6 +216,8 @@ read DOMAIN
 # Update the domain in the script
 if [ -n "$DOMAIN" ]; then
     sed -i "s/DOMAIN = 'university.edu'/DOMAIN = '$DOMAIN'/" "$SCRIPT_PATH"
+    # Add domain to credentials check
+    sed -i "s/creds.id_token.get('email')/creds.id_token.get('email').lower().endswith('@${DOMAIN}')/" "$SCRIPT_PATH"
     echo -e "${GREEN}Domain updated to $DOMAIN${NC}"
 fi
 
@@ -276,12 +278,14 @@ fi
 echo -e "\n${YELLOW}==== NEXT STEPS =====${NC}"
 echo -e "1. Go to the Google Cloud Console (https://console.cloud.google.com/)"
 echo -e "2. Create a new project for your university contacts"
-echo -e "3. Enable the Admin SDK API"
-echo -e "4. Create OAuth credentials (Desktop application type)"
-echo -e "5. Download the JSON credentials file"
-echo -e "6. Save the file as: ${GREEN}~/.config/google-directory-credentials.json${NC}"
-echo -e "7. Run the script once to authenticate: ${GREEN}$SCRIPT_PATH${NC}"
-echo -e "   (This will open a browser window for OAuth authentication)"
+echo -e "3. Enable the Admin SDK API: ${GREEN}https://console.cloud.google.com/apis/library/admin.googleapis.com${NC}"
+echo -e "4. Configure OAuth consent screen: ${GREEN}https://console.cloud.google.com/apis/credentials/consent${NC}"
+echo -e "5. Create OAuth credentials (Desktop application type)"
+echo -e "6. Download the JSON credentials file"
+echo -e "7. Save the file as: ${GREEN}~/.config/google-directory-credentials.json${NC}"
+echo -e "8. Run the script once to authenticate: ${GREEN}$SCRIPT_PATH${NC}"
+echo -e "   (This will prompt for an authorization code)"
+echo -e "\n${YELLOW}IMPORTANT: You must use a Google Workspace ADMIN account with User Management privileges${NC}"
 echo -e "\n${GREEN}After completion, your contacts will be available at:${NC}"
 echo -e "${GREEN}~/.local/share/emailbook/emails${NC}"
 echo -e "\n${YELLOW}To configure emailbook with your email client, follow the instructions at:${NC}"
