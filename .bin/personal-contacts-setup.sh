@@ -15,7 +15,7 @@ echo -e "${GREEN}Setting up Google Directory to Emailbook integration...${NC}"
 
 # Check if the required packages are installed, but do not attempt to install them. Only provide a message and exit
 echo -e "\n${YELLOW}Checking for required Python packages...${NC}"
-if ! python3 -c "import googleapiclient, google_auth_httplib2, google_auth_oauthlib" 2>/dev/null; then
+if ! python3 -c "import googleapiclient, google.auth, google_auth_oauthlib" 2>/dev/null; then
     echo -e "${RED}Error: Required Python packages not found. Please enter the nix development shell first with:${NC}"
     echo -e "${RED}nix develop .bin -c bash${NC}"
     echo -e "${RED}Then re-run this setup script from within the nix shell.${NC}"
@@ -26,14 +26,13 @@ fi
 mkdir -p ~/.config
 mkdir -p ~/.local/share/emailbook
 
-# Check for the converter script
-SCRIPT_PATH="$HOME/.bin/personal-contacts-converter.py"
+# Check for the fetcher script
+SCRIPT_PATH="$HOME/.bin/personal-contacts-fetcher.py"
 if [ ! -f "$SCRIPT_PATH" ]; then
-    echo -e "\n${YELLOW}Installing the converter script...${NC}"
-    mkdir -p ~/.local/bin
-
-    # Copy the script content to the destination
-    cat > "$SCRIPT_PATH" << 'EOF'
+    echo -e "\n${YELLOW}The contacts fetcher script was not found at $SCRIPT_PATH${NC}"
+    echo -e "${RED}Please ensure personal-contacts-fetcher.py exists in your .bin directory${NC}"
+    exit 1
+fi
 #!/usr/bin/env python3
 """
 Google Directory API to Emailbook Converter
@@ -209,17 +208,6 @@ EOF
     echo -e "${GREEN}Converter script installed at $SCRIPT_PATH${NC}"
 fi
 
-# Prompt for domain update
-echo -e "\n${YELLOW}What is your university's domain? (e.g., wfu.edu)${NC}"
-read DOMAIN
-
-# Update the domain in the script
-if [ -n "$DOMAIN" ]; then
-    sed -i "s/DOMAIN = 'university.edu'/DOMAIN = '$DOMAIN'/" "$SCRIPT_PATH"
-    # Add domain to credentials check
-    sed -i "s/creds.id_token.get('email')/creds.id_token.get('email').lower().endswith('@${DOMAIN}')/" "$SCRIPT_PATH"
-    echo -e "${GREEN}Domain updated to $DOMAIN${NC}"
-fi
 
 # Set up cron job
 echo -e "\n${YELLOW}How often would you like to update contacts?${NC}"
@@ -229,7 +217,7 @@ echo "3) Monthly"
 echo "4) No cron job (manual updates only)"
 read -p "Enter your choice (1-4): " CRON_CHOICE
 
-CRON_CMD="$SCRIPT_PATH > ~/.local/share/emailbook/update.log 2>&1"
+CRON_CMD="$SCRIPT_PATH --output ~/.emailbook.txt > ~/.emailbook.log 2>&1"
 
 case $CRON_CHOICE in
     1)
@@ -275,22 +263,15 @@ if [ -n "$CRON_SCHEDULE" ]; then
 fi
 
 # Instructions for OAuth credentials
-echo -e "\n${YELLOW}==== NEXT STEPS =====${NC}"
+echo -e "\n${YELLOW}==== NEXT STEPS ====${NC}"
 echo -e "1. Go to the Google Cloud Console (https://console.cloud.google.com/)"
-echo -e "2. Create a new project for your university contacts"
-echo -e "3. Enable both People API ${YELLOW}AND${NC} Admin SDK:"
-echo -e "   - People API: ${GREEN}https://console.cloud.google.com/apis/library/people.googleapis.com${NC}"
-echo -e "   - Admin SDK: ${GREEN}https://console.cloud.google.com/apis/library/admin.googleapis.com${NC}"
+echo -e "2. Create a new project for personal contacts sync"
+echo -e "3. Enable the People API: ${GREEN}https://console.cloud.google.com/apis/library/people.googleapis.com${NC}"
 echo -e "4. Configure OAuth consent screen: ${GREEN}https://console.cloud.google.com/apis/credentials/consent${NC}"
 echo -e "5. Create OAuth credentials (Desktop application type)"
 echo -e "6. Download the JSON credentials file"
-echo -e "7. Save the file as: ${GREEN}~/.config/google-directory-credentials.json${NC}"
+echo -e "7. Save the file as: ${GREEN}~/.config/aerc/google-aerc-credentials.json${NC}"
 echo -e "8. Run the script once to authenticate: ${GREEN}$SCRIPT_PATH${NC}"
-echo -e "   (This will prompt for an authorization code)"
-echo -e "\n${YELLOW}IMPORTANT: You must use a Google account with your university email (@${DOMAIN})${NC}"
-echo -e "\n${GREEN}After completion, your contacts will be available at:${NC}"
-echo -e "${GREEN}~/.local/share/emailbook/emails${NC}"
-echo -e "\n${YELLOW}To configure emailbook with your email client, follow the instructions at:${NC}"
-echo -e "${GREEN}https://sr.ht/~maxgyver83/emailbook/${NC}"
+echo -e "\n${GREEN}Contacts will be saved to: ~/.emailbook.txt${NC}"
 
 echo -e "\n${GREEN}Setup complete!${NC}"
