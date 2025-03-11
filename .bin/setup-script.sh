@@ -13,8 +13,7 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}Setting up Google Directory to Emailbook integration...${NC}"
 
-# Modify this setup to confirm the required packages are added to the nix shell (in .bin/flake.nix). Also, add the python packages below to the flake.nix file in the appropriate location to ensure they are installed in the nix shell
-
+# Check if the required packages are installed, but do not attempt to install them. Only provide a message and exit AI!
 
 # Check if pip3 is installed
 if ! command -v pip3 &> /dev/null; then
