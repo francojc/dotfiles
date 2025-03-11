@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 """
-Google Directory API to Emailbook Converter
+Google People API to Emailbook Converter
 
-This script fetches contacts from a Google Workspace Directory and converts them
+This script fetches contacts from a Google Workspace Directory using the People API and converts them
 to emailbook format (https://sr.ht/~maxgyver83/emailbook/).
 
 Requirements:
 - Google API Client: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
-- University Google Workspace account with proper API access
-
-Critical requirements:
-- Must authenticate with a Google Workspace ADMIN account (@your-domain.edu)
-- Account must have 'User Management' privileges in Admin Console
-- Admin SDK API must be enabled: https://console.cloud.google.com/apis/library/admin.googleapis.com
-- OAuth consent screen must be configured: https://console.cloud.google.com/apis/credentials/consent
+- University Google Workspace account (regular member, no admin privileges required)
 
 Set up instructions:
-1. Enable the Admin SDK API in the Google Cloud Console
+1. Enable the People API in the Google Cloud Console: https://console.cloud.google.com/apis/library/people.googleapis.com
 2. Create OAuth credentials (Desktop application) and download the JSON file
 3. Place the credentials file at ~/.config/google-directory-credentials.json
 4. Run this script once to authenticate and save the token
@@ -31,7 +25,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # Configuration
-SCOPES = ['https://www.googleapis.com/auth/admin.directory.user.readonly']
+SCOPES = ['https://www.googleapis.com/auth/contacts.readonly']
 TOKEN_FILE = os.path.expanduser('~/.config/google-directory-token.pickle')
 CREDENTIALS_FILE = os.path.expanduser('~/.config/google-directory-credentials.json')
 EMAILBOOK_DIR = os.path.expanduser('~/.local/share/emailbook')
@@ -40,9 +34,9 @@ EMAILBOOK_FILE = os.path.join(EMAILBOOK_DIR, 'emails')
 # Your university's domain
 DOMAIN = 'wfu.edu'  # Replace with your actual university domain
 
-def get_google_directory_service():
+def get_people_service():
     """
-    Authenticate with Google and return a service object for the Directory API.
+    Authenticate with Google and return a service object for the People API.
     Handles token refresh and initial authentication flow.
     """
     creds = None
@@ -72,45 +66,37 @@ def get_google_directory_service():
             )
             creds = flow.run_console()  # Better for headless/server environments
 
-        # Verify admin privileges
-        admin_service = build('admin', 'directory_v1', credentials=creds)
-        try:
-            admin_service.users().get(userKey=creds.id_token.get('email').lower().endswith('@wfu.edu')).execute()
-        except Exception as e:
+        # Verify domain membership
+        if creds.id_token and not creds.id_token.get('email', '').lower().endswith(f'@{DOMAIN}'):
             raise PermissionError(
-                f"Account {creds.id_token.get('email').lower().endswith('@wfu.edu')} lacks admin privileges\n"
-                "Required steps:\n"
-                "1. Use a Google Workspace ADMIN account\n"
-                "2. Ensure account has 'User Management' privileges\n"
-                "3. Ensure Admin SDK is enabled: https://console.cloud.google.com/apis/library/admin.googleapis.com"
-            ) from e
+                f"Account must be part of {DOMAIN} organization.\n"
+                f"Logged in as: {creds.id_token.get('email', 'unknown')}"
+            )
 
         # Save the credentials for the next run
         with open(TOKEN_FILE, 'wb') as token:
             pickle.dump(creds, token)
 
     # Build and return the service
-    service = build('admin', 'directory_v1', credentials=creds)
+    service = build('people', 'v1', credentials=creds)
     return service
 
-def fetch_directory_contacts(service, domain=DOMAIN, max_results=500):
+def fetch_directory_contacts(service):
     """
-    Fetch contacts from the Google Directory API.
+    Fetch contacts from the Google People API.
 
     Args:
-        service: Google API service object
-        domain: Domain to fetch users from
-        max_results: Maximum number of results to return per page
+        service: Google People API service object
 
     Returns:
-        List of user dictionaries with name and email information
+        List of people resources with name and email information
     """
     # Validate domain format first
-    if not domain or domain == 'university.edu':
+    if not DOMAIN or DOMAIN == 'university.edu':
         raise ValueError("Domain not configured. Please run the setup script again.")
     
-    if '.' not in domain:
-        raise ValueError(f"Invalid domain format: {domain}. Use fully qualified domain like 'example.com'")
+    if '.' not in DOMAIN:
+        raise ValueError(f"Invalid domain format: {DOMAIN}. Use fully qualified domain like 'example.com'")
 
     contacts = []
     page_token = None
@@ -118,16 +104,15 @@ def fetch_directory_contacts(service, domain=DOMAIN, max_results=500):
     try:
         # Keep fetching pages of results until there are no more
         while True:
-            results = service.users().list(
-                domain=domain,
-                maxResults=max_results,
-                pageToken=page_token,
-                orderBy='email',
-                fields='users(name,primaryEmail,emails),nextPageToken'
+            results = service.people().listDirectoryPeople(
+                readMask='names,emailAddresses',
+                sources=['DIRECTORY_SOURCE_TYPE_DOMAIN_PROFILE'],
+                pageSize=1000,
+                pageToken=page_token
             ).execute()
             
-            users = results.get('users', [])
-            contacts.extend(users)
+            people = results.get('people', [])
+            contacts.extend(people)
             
             page_token = results.get('nextPageToken')
             if not page_token:
@@ -135,9 +120,10 @@ def fetch_directory_contacts(service, domain=DOMAIN, max_results=500):
     except Exception as e:
         raise RuntimeError(
             f"Failed to fetch directory contacts. Ensure:\n"
-            f"1. You're using a Google Workspace admin account\n"
-            f"2. The Admin SDK API is enabled\n"
-            f"3. Domain '{domain}' exists in your Google Workspace\n"
+            f"1. Your organization shares directory information\n"
+            f"2. You're using a {DOMAIN} account\n"
+            f"3. People API is enabled\n"
+            f"4. contacts.readonly scope is authorized\n"
             f"Original error: {str(e)}"
         ) from e
 
@@ -153,7 +139,7 @@ def write_emailbook_format(contacts, output_file):
     ...
 
     Args:
-        contacts: List of contact dictionaries
+        contacts: List of people resources from People API
         output_file: Path to output file
     """
     # Make sure the directory exists
@@ -161,32 +147,38 @@ def write_emailbook_format(contacts, output_file):
 
     with open(output_file, 'w', encoding='utf-8') as f:
         for contact in contacts:
-            name = contact.get('name', {})
-            full_name = f"{name.get('givenName', '')} {name.get('familyName', '')}".strip()
-
+            # Get name from the names field (array of name objects)
+            names = contact.get('names', [])
+            full_name = ""
+            if names:
+                display_name = names[0].get('displayName', '')
+                if display_name:
+                    full_name = display_name
+            
+            # Get email addresses
+            email_addresses = contact.get('emailAddresses', [])
+            
             # Use email address as name if no name is provided
-            if not full_name and 'primaryEmail' in contact:
-                full_name = contact['primaryEmail'].split('@')[0]
-
-            # Write the primary email
-            if 'primaryEmail' in contact:
-                f.write(f"{full_name} <{contact['primaryEmail']}>\n")
-
-            # Write any additional email addresses
-            if 'emails' in contact:
-                for email_obj in contact['emails']:
-                    email = email_obj.get('address', '')
-                    # Skip the primary email as we already wrote it
-                    if email and email != contact.get('primaryEmail', ''):
-                        f.write(f"{full_name} <{email}>\n")
+            if not full_name and email_addresses:
+                full_name = email_addresses[0].get('value', '').split('@')[0]
+            
+            # Skip contacts without names or emails
+            if not full_name or not email_addresses:
+                continue
+                
+            # Write all email addresses
+            for email_obj in email_addresses:
+                email = email_obj.get('value', '')
+                if email:
+                    f.write(f"{full_name} <{email}>\n")
 
 def main():
     """Main function to fetch and convert contacts."""
-    print(f"Connecting to Google Directory API for domain {DOMAIN}...")
+    print(f"Connecting to Google People API for domain {DOMAIN}...")
 
     try:
-        # Authenticate and get the directory service
-        service = get_google_directory_service()
+        # Authenticate and get the People API service
+        service = get_people_service()
 
         # Fetch contacts from the directory
         print("Fetching contacts from directory...")
