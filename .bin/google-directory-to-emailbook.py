@@ -75,10 +75,10 @@ def get_google_directory_service():
         # Verify admin privileges
         admin_service = build('admin', 'directory_v1', credentials=creds)
         try:
-            admin_service.users().get(userKey=creds.id_token.get('email')).execute()
+            admin_service.users().get(userKey=creds.id_token.get('email').lower().endswith('@wfu.edu')).execute()
         except Exception as e:
             raise PermissionError(
-                f"Account {creds.id_token.get('email')} lacks admin privileges\n"
+                f"Account {creds.id_token.get('email').lower().endswith('@wfu.edu')} lacks admin privileges\n"
                 "Required steps:\n"
                 "1. Use a Google Workspace ADMIN account\n"
                 "2. Ensure account has 'User Management' privileges\n"
