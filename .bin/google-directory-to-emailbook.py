@@ -25,7 +25,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # Configuration
-SCOPES = ['https://www.googleapis.com/auth/contacts.readonly']
+SCOPES = ['https://www.googleapis.com/auth/directory.readonly']
 TOKEN_FILE = os.path.expanduser('~/.config/google-directory-token.pickle')
 CREDENTIALS_FILE = os.path.expanduser('~/.config/google-directory-credentials.json')
 EMAILBOOK_DIR = os.path.expanduser('~/.local/share/emailbook')
@@ -64,7 +64,12 @@ def get_people_service():
                 SCOPES,
                 redirect_uri='urn:ietf:wg:oauth:2.0:oob'  # Use out-of-band flow
             )
-            creds = flow.run_console()  # Better for headless/server environments
+            creds = flow.run_local_server(
+                port=0,
+                authorization_prompt_message='Please visit this URL to authorize access: {url}',
+                success_message='Authentication complete! You may close this window.',
+                open_browser=False
+            )
 
         # Verify domain membership
         if creds.id_token and not creds.id_token.get('email', '').lower().endswith(f'@{DOMAIN}'):
@@ -78,7 +83,13 @@ def get_people_service():
             pickle.dump(creds, token)
 
     # Build and return the service
-    service = build('people', 'v1', credentials=creds)
+    service = build(
+        'people', 
+        'v1', 
+        credentials=creds,
+        # Add discovery service URL for directory access
+        discoveryServiceUrl='https://people.googleapis.com/$discovery/rest?version=v1'
+    )
     return service
 
 def fetch_directory_contacts(service):
