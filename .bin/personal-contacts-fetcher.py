@@ -29,8 +29,8 @@ from google.auth.transport.requests import Request
 
 # Configuration
 CONFIG = {
-    "credentials_file": "../.config/aerc/google-aerc-credentials.json",  # OAuth client credentials
-    "token_file": "../.config/aerc/token.pickle",  # To store your access token
+    "credentials_file": "~/.config/aerc/google-aerc-credentials.json",  # OAuth client credentials
+    "token_file": "~/.config/aerc/token.pickle",  # To store your access token
     "output_file": "~/.emailbook.txt",  # Where to save the emailbook file
     "scopes": ["https://www.googleapis.com/auth/contacts.readonly",
                "https://www.googleapis.com/auth/directory.readonly"]

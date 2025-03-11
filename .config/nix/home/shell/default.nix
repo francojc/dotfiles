@@ -1,5 +1,4 @@
-{ username, ... }:
-{
+{username, ...}: {
   programs = {
     # Enable some useful shells
     zsh = {

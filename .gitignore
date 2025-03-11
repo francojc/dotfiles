@@ -20,4 +20,5 @@ _freeze
 conversation.toml
 .config/pianobar/state
 Claude.md
-.config/google-directory-credentials.json
+.config/aerc/accounts.conf
+.config/aerc/google-aerc-credentials.json
