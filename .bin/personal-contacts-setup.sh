@@ -27,7 +27,7 @@ mkdir -p ~/.config
 mkdir -p ~/.local/share/emailbook
 
 # Check for the converter script
-SCRIPT_PATH="$HOME/.bin/google-directory-to-emailbook.py"
+SCRIPT_PATH="$HOME/.bin/personal-contacts-converter.py"
 if [ ! -f "$SCRIPT_PATH" ]; then
     echo -e "\n${YELLOW}Installing the converter script...${NC}"
     mkdir -p ~/.local/bin
