@@ -215,7 +215,7 @@ read DOMAIN
 
 # Update the domain in the script
 if [ -n "$DOMAIN" ]; then
-    sed -i "s/DOMAIN = 'wfu.edu'/DOMAIN = '$DOMAIN'/" "$SCRIPT_PATH"
+    sed -i "s/DOMAIN = 'university.edu'/DOMAIN = '$DOMAIN'/" "$SCRIPT_PATH"
     echo -e "${GREEN}Domain updated to $DOMAIN${NC}"
 fi
 

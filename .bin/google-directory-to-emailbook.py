@@ -80,25 +80,41 @@ def fetch_directory_contacts(service, domain=DOMAIN, max_results=500):
     Returns:
         List of user dictionaries with name and email information
     """
+    # Validate domain format first
+    if not domain or domain == 'university.edu':
+        raise ValueError("Domain not configured. Please run the setup script again.")
+    
+    if '.' not in domain:
+        raise ValueError(f"Invalid domain format: {domain}. Use fully qualified domain like 'example.com'")
+
     contacts = []
     page_token = None
-
-    # Keep fetching pages of results until there are no more
-    while True:
-        results = service.users().list(
-            domain=domain,
-            maxResults=max_results,
-            pageToken=page_token,
-            orderBy='email',
-            fields='users(name,primaryEmail,emails),nextPageToken'
-        ).execute()
-
-        users = results.get('users', [])
-        contacts.extend(users)
-
-        page_token = results.get('nextPageToken')
-        if not page_token:
-            break
+    
+    try:
+        # Keep fetching pages of results until there are no more
+        while True:
+            results = service.users().list(
+                domain=domain,
+                maxResults=max_results,
+                pageToken=page_token,
+                orderBy='email',
+                fields='users(name,primaryEmail,emails),nextPageToken'
+            ).execute()
+            
+            users = results.get('users', [])
+            contacts.extend(users)
+            
+            page_token = results.get('nextPageToken')
+            if not page_token:
+                break
+    except Exception as e:
+        raise RuntimeError(
+            f"Failed to fetch directory contacts. Ensure:\n"
+            f"1. You're using a Google Workspace admin account\n"
+            f"2. The Admin SDK API is enabled\n"
+            f"3. Domain '{domain}' exists in your Google Workspace\n"
+            f"Original error: {str(e)}"
+        ) from e
 
     return contacts
 
