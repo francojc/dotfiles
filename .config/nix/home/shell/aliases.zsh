@@ -11,6 +11,10 @@ alias aider-helper='aider --model gemini/gemini-2.0-flash-exp --no-git --watch-f
 alias aider-helper-local='aider --model phi4 --no-git --watch-files'
 alias aider-commit='aider --commit --no-gitignore'
 
+# Aerc (mail)
+
+alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
+
 # Directory navigation
 alias ..='cd ..'
 alias ...='cd ../..'
