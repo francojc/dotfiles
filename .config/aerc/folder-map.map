@@ -3,10 +3,10 @@ Drafts-old = Drafts
 Sent-old = Sent
 Trash-old = Trash
 
-Inbox = INBOX
-Starred = [Gmail]/Starred
-Archive = [Gmail]/All Mail
-Sent = [Gmail]/Sent Mail
-Drafts = [Gmail]/Drafts
-Spam = [Gmail]/Spam
-Trash = [Gmail]/Trash
+  Inbox = INBOX
+  Starred = [Gmail]/Starred
+  Archive = [Gmail]/All Mail
+  Sent = [Gmail]/Sent Mail
+  Drafts = [Gmail]/Drafts
+  Spam = [Gmail]/Spam
+  Trash = [Gmail]/Trash

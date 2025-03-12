@@ -9,7 +9,10 @@
     curl
     direnv
     git
+    glow
+    html-tidy
     just
+    lynx
     marksman
     nixd
     nurl
@@ -17,6 +20,8 @@
     stylua
     superfile
     vim
+    viu
+    w3m
     zoxide
   ];
 
