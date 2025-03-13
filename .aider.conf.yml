@@ -1,6 +1,6 @@
 # Aliases
 alias:
-  - "deepseek-reasoner:openrouter/deepseek/deepseek-r1-zero"
+  - "deepseek-reasoner:openrouter/deepseek/deepseek-r1"
   - "gemini-reasoner:gemini/gemini-2.0-flash-thinking-exp"
   - "deepseek-chat:deepseek/deepseek-chat"
   - "gemma:gemini/gemma-3-27b-it"
