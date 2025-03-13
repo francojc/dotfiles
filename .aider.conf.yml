@@ -1,17 +1,20 @@
 # Aliases
 alias:
-  - "deepseek-reasoner:deepseek/deepseek-reasoner"
+  - "deepseek-reasoner:openrouter/deepseek/deepseek-r1-zero"
   - "gemini-reasoner:gemini/gemini-2.0-flash-thinking-exp"
   - "deepseek-chat:deepseek/deepseek-chat"
-  - "gemma:openrouter/google/gemma-3-27b-it"
+  - "gemma:gemini/gemma-3-27b-it"
   - "sonnet:anthropic/claude-3-7-sonnet-20250219"
   - "haiku:anthropic/claude-3-5-haiku-20241022"
 
 # Models
 model: deepseek-reasoner # reasoner
-editor-model: sonnet # editor
+editor-model: gemma # editor
 weak-model: gemma # git commit messages
+
 architect: false
+reasoning-effort: low
+thinking-tokens: 1024
 
 # Theme
 # Main text colors
