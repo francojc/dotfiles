@@ -10,7 +10,7 @@ alias:
 # Models
 model: deepseek-reasoner # reasoner
 editor-model: gemma # editor
-weak-model: gemma-local # git commit messages
+weak-model: gemma # git commit messages
 
 architect: false
 reasoning-effort: low
