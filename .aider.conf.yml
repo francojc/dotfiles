@@ -6,11 +6,12 @@ alias:
   - "gemma:gemini/gemma-3-27b-it"
   - "sonnet:anthropic/claude-3-7-sonnet-20250219"
   - "haiku:anthropic/claude-3-5-haiku-20241022"
+  - "gemma-local:ollama_chat/gemma3:12b"
 
 # Models
 model: deepseek-reasoner # reasoner
 editor-model: gemma # editor
-weak-model: gemma # git commit messages
+weak-model: gemma-local # git commit messages
 
 architect: false
 reasoning-effort: low
