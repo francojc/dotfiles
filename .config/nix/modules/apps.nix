@@ -90,7 +90,7 @@
       Keynote = 409183694;
       Numbers = 409203825;
       Pages = 409201541;
-      Suggester = 1106482294;
+      # Suggester = 1106482294;
       Triode = 1450027401;
       # Vimari = 1480933944;
       # Vinegar_for_Safari = 1591303229;

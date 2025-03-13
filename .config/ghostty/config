@@ -4,7 +4,7 @@
 cursor-color = #FF2557
 macos-titlebar-style = tabs
 mouse-hide-while-typing = true
-font-size = 15
+font-size = 14
 unfocused-split-opacity = 0.5
 split-divider-color = #7B7252
 window-padding-x = 9

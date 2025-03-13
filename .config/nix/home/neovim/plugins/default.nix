@@ -161,9 +161,9 @@
         enable = true;
         settings = {
           auto_scroll = true;
-          direction = "vertical";
+          direction = "horizontal";
           open_mapping = "[[<C-t>]]";
-          size = 50;
+          size = 10;
         };
       };
       trouble.enable = true;
