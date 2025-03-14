@@ -10,7 +10,6 @@
     direnv
     git
     glow
-    html-tidy
     just
     lynx
     marksman
@@ -18,7 +17,6 @@
     nurl
     nushell
     stylua
-    superfile
     vim
     viu
     w3m
@@ -63,7 +61,6 @@
       "kap"
       "keycastr"
       "mullvadvpn"
-      "msty"
       "obsidian"
       "raycast"
       "rectangle"
