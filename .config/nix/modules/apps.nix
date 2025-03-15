@@ -16,6 +16,7 @@
     nixd
     nurl
     nushell
+    oterm
     stylua
     vim
     viu
