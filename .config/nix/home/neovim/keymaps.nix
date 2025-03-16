@@ -592,9 +592,15 @@
       }
       {
         mode = "n";
-        key = "<leader>\\t";
-        action = "<Cmd>ToggleTerm<CR>";
-        options = {desc = "ToggleTerm";};
+        key = "<leader>\\tv";
+        action = "<Cmd>ToggleTerm direction=vertical size=50<CR>";
+        options = {desc = "ToggleTerm vertical";};
+      }
+      {
+        mode = "n";
+        key = "<leader>\\th";
+        action = "<Cmd>ToggleTerm direction=horizontal size=15<CR>";
+        options = {desc = "ToggleTerm horizontal";};
       }
       {
         mode = "n";
