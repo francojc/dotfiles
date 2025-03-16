@@ -44,6 +44,7 @@
       "helix"
       "huggingface-cli"
       "mas"
+      "npm"
       "ollama"
       "python@3.11"
       "rename"
