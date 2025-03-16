@@ -18,7 +18,7 @@ weak-model: flash # git commit messages
 
 architect: false
 reasoning-effort: low
-thinking-tokens: 1024
+thinking-tokens: 512
 
 # Theme
 # Main text colors
@@ -54,10 +54,9 @@ show-diffs: false  # Optional, but useful to review changes
 vim: true
 multiline: false  # Often useful with vim mode
 restore-chat-history: false  # Helps maintain context between sessions
-auto-lint: true # Enable automatic linting
 
 # Disable automatic linting/testing as requested
-auto-lint: false
+auto-lint: true
 auto-test: false
 
 # Cache Settings
