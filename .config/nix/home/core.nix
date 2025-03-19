@@ -39,6 +39,7 @@
     pipx
     quarto
     ripgrep
+    tesseract # OCR
     silver-searcher
 
     # System Utilities
