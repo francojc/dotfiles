@@ -66,6 +66,7 @@
       "keycastr"
       "mullvadvpn"
       "obsidian"
+      "onyx"
       "raycast"
       "rectangle"
       "rocket"
