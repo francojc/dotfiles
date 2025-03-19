@@ -53,8 +53,10 @@
     ];
 
     casks = [
+      "aldente"
       "appcleaner"
       "bettermouse"
+      "betterdisplay"
       "claude"
       "docker"
       "dropbox"

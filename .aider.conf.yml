@@ -7,18 +7,20 @@ alias:
   - "sonnet:anthropic/claude-3-7-sonnet-20250219"
   - "flash:gemini/gemini-2.0-flash"
   - "gemma-local:ollama_chat/gemma3:12b"
+  - "mistral-small-3.1:openrouter/mistralai/mistral-small-3.1-24b-instruct"
 
-# Conventions
-read: [CONVENTIONS.md, README.md]
+# Conventions/ project description
+read: [~/.conventions.md, README.md]
 
 # Models
 model: deepseek-reasoner # reasoner
-editor-model: gemma # editor
+editor-model: mistral-small-3.1 # editor
 weak-model: flash # git commit messages
 
+edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
 reasoning-effort: low
-thinking-tokens: 512
+thinking-tokens: 1024
 
 # Theme
 # Main text colors
