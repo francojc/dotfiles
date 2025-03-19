@@ -83,6 +83,11 @@ function cd() {
     z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
+# Make and change to a directory
+function mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
 # Obsidian
 # Notes
 function on() {

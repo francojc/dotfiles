@@ -4,10 +4,12 @@
     atuin
     bat
     eza
+    claude-code
     fd
     fzf
     glances
     # kitty
+    papis
     starship
 
     # File Management
