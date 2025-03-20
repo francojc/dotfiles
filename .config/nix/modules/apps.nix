@@ -20,7 +20,6 @@
     vim
     viu
     w3m
-    zoxide
   ];
 
   environment.variables.EDITOR = "nvim";
@@ -36,23 +35,22 @@
     taps = [
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
+      "nao1215/tap" # for sqly
     ];
 
     brews = [
       "borders" # jankyborders
-      "helix"
       "huggingface-cli"
-      "mas"
       "npm"
       "ollama"
       "python@3.11"
       "rename"
       "speedtest-cli"
+      "sqly"
       "wget"
     ];
 
     casks = [
-      "aldente"
       "appcleaner"
       "bettermouse"
       "betterdisplay"
@@ -65,7 +63,6 @@
       "keycastr"
       "mullvadvpn"
       "obsidian"
-      "onyx"
       "raycast"
       "rectangle"
       "rocket"

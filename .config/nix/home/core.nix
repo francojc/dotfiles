@@ -1,77 +1,62 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # Terminal Enhancements
+    aerc
     atuin
     bat
-    eza
     claude-code
-    fd
-    fzf
-    glances
-    # kitty
-    papis
-    starship
-
-    # File Management
-    duf
-    entr
-    ncdu
-    tree
-    yazi-unwrapped
-
-    # Multimedia Tools
-    ffmpeg
-    mpv-unwrapped
-    pianobar
-    sttr
-    yt-dlp
-
-    # Development Tools
     datasette
     drawio
+    duf
+    entr
+    eza
     fastfetch
-    gnupg
-    haskellPackages.pandoc-crossref
-    helix-gpt
-    jq
-    lazydocker
-    lazygit
-    pandoc
-    pass
-    pipx
-    quarto
-    ripgrep
-    tesseract # OCR
-    silver-searcher
-
-    # System Utilities
+    fd
+    ffmpeg
     file
+    fzf
+    gh
     ghostscript
+    git
+    gnupg
     gv
+    haskellPackages.pandoc-crossref
+    helix
+    helix-gpt
     home-manager
     htop
     imagemagick
-    nix-prefetch-git
-    poppler_utils
-    qpdf
-    sqlite
-    stow
-    searxng
-    tldr
-    which
-    xclip
-
-    # Version Control and Git Tools
-    gh
-    git
+    jq
+    kitty
+    lazydocker
     lazygit
-
-    # Networking and Communication
-    aerc
     m-cli
     mas
     mdcat
+    mpv-unwrapped
+    ncdu
+    nix-prefetch-git
+    pandoc
+    papis
+    pass
+    pianobar
+    pipx
     pngpaste
+    poppler_utils
+    qpdf
+    quarto
+    ripgrep
+    searxng
+    silver-searcher
+    sqlite
+    starship
+    stow
+    sttr # string transformation
+    tesseract # OCR
+    tldr
+    tree
+    which
+    yazi-unwrapped
+    yt-dlp
     zoxide
   ];
 }
