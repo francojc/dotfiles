@@ -51,10 +51,10 @@
     starship
     stow
     sttr # string transformation
-    tesseract # OCR
     tldr
     tree
     which
+    wiper
     yazi-unwrapped
     yt-dlp
     zoxide

@@ -36,16 +36,19 @@
       "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
       "nao1215/tap" # for sqly
+      "pomdtr/tap" # for sunbeam
     ];
 
     brews = [
       "borders" # jankyborders
+      "dstask"
       "huggingface-cli"
       "npm"
       "ollama"
       "python@3.11"
       "rename"
       "speedtest-cli"
+      "sunbeam"
       "sqly"
       "wget"
     ];
