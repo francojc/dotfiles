@@ -26,7 +26,6 @@
     htop
     imagemagick
     jq
-    kitty
     lazydocker
     lazygit
     m-cli
