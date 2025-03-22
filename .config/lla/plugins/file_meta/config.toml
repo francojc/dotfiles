@@ -1,0 +1,10 @@
+[colors]
+size = "bright_cyan"
+info = "bright_blue"
+modified = "bright_green"
+accessed = "bright_blue"
+success = "bright_green"
+ownership = "bright_magenta"
+created = "bright_yellow"
+permissions = "bright_red"
+name = "bright_yellow"

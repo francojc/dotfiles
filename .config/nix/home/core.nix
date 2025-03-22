@@ -3,6 +3,7 @@
     aerc
     atuin
     bat
+    carl
     claude-code
     datasette
     drawio

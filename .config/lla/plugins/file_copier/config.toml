@@ -1,0 +1,5 @@
+[colors]
+success = "bright_green"
+error = "bright_red"
+info = "bright_blue"
+path = "bright_yellow"
