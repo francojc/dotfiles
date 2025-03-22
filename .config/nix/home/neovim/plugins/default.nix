@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   imports = [
     ./alpha.nix
-    ./avante.nix
     ./bufferline.nix
     ./lspsaga.nix
     ./lualine.nix
@@ -22,6 +21,9 @@
         settings = {
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
+      };
+      avante = {
+        enable = true;
       };
       conform-nvim = {
         enable = true;
@@ -111,20 +113,20 @@
           };
         };
       };
-      # nvim-tree = {
-      #   enable = true;
-      #   view.side = "left";
-      #   hijackCursor = true;
-      #   modified.enable = true;
-      #   renderer = {
-      #     highlightGit = true;
-      #     rootFolderLabel = false;
-      #     icons = {
-      #       gitPlacement = "signcolumn";
-      #       modifiedPlacement = "signcolumn";
-      #     };
-      #   };
-      # };
+      nvim-tree = {
+        enable = true;
+        view.side = "left";
+        hijackCursor = true;
+        modified.enable = true;
+        renderer = {
+          highlightGit = true;
+          rootFolderLabel = false;
+          icons = {
+            gitPlacement = "signcolumn";
+            modifiedPlacement = "signcolumn";
+          };
+        };
+      };
       otter.enable = true;
       quarto.enable = true;
       render-markdown = {
@@ -142,7 +144,7 @@
             ];
           };
           dash.enabled = false;
-          file_types = ["markdown" "quarto" "rmd"];
+          file_types = ["markdown" "quarto" "rmd" "Avante"];
           heading = {
             icons = [
               "# "
