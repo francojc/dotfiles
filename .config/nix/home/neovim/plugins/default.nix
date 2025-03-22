@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./alpha.nix
+    ./avante.nix
     ./bufferline.nix
     ./lspsaga.nix
     ./lualine.nix
