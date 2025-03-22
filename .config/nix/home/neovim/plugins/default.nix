@@ -83,14 +83,14 @@
       image = {
         enable = true;
         settings = {
+          editor_only_render_when_focused = true;
           integrations = {
-            editor_only_render_when_focused = true;
             markdown = {
               filetypes = ["markdown" "quarto" "rmd"];
             };
-            max_height_window_percentage = 30;
-            window_overlap_clear_enabled = true;
           };
+          max_height_window_percentage = 30;
+          window_overlap_clear_enabled = true;
         };
       };
       lazygit.enable = true;

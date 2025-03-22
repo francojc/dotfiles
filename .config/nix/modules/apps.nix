@@ -10,6 +10,7 @@
     git
     glow
     just
+    lla
     lynx
     marksman
     nixd
