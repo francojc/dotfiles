@@ -62,6 +62,11 @@
       fzf-lua = {
         enable = true;
         profile = "fzf-native";
+        settings = {
+          oldfiles = {
+            cwd_only = true;
+          };
+        };
       };
       gitsigns = {
         enable = true;
