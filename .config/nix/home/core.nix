@@ -27,6 +27,7 @@
     htop
     imagemagick
     jq
+    khal
     lazydocker
     lazygit
     m-cli
@@ -53,6 +54,7 @@
     sttr # string transformation
     tldr
     tree
+    vdirsyncer
     which
     wiper
     yazi-unwrapped
