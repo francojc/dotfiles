@@ -25,6 +25,9 @@
       avante = {
         enable = true;
       };
+      codecompanion = {
+        enable = true;
+      };
       conform-nvim = {
         enable = true;
         settings = {
