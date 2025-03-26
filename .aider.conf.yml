@@ -8,19 +8,20 @@ alias:
   - "flash:gemini/gemini-2.0-flash"
   - "gemma-local:ollama_chat/gemma3:12b"
   - "mistral-small-3.1:openrouter/mistralai/mistral-small-3.1-24b-instruct"
+  - "gemini-2.5:openrouter/google/gemini-2.5-pro-exp-03-25:free"
 
 # Conventions/ project description
 read: [~/.conventions.md, README.md]
 
 # Models
-model: deepseek-reasoner # reasoner
+model: gemini-2.5 # reasoner
 editor-model: mistral-small-3.1 # editor
 weak-model: flash # git commit messages
 
 edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
-reasoning-effort: low
-thinking-tokens: 1024
+# reasoning-effort: low
+# thinking-tokens: 1024
 
 # Theme
 # Main text colors
