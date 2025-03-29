@@ -30,6 +30,8 @@
         action = "g_";
         options = {desc = "Move to last non-blank character";};
       }
+      # Note: Potential conflict for <C-j>/<C-k> in insert mode
+      # Copilot uses them, completion might use them (see completion.nix)
       {
         mode = "i";
         key = "<C-e>";
@@ -277,11 +279,13 @@
         options = {desc = "Quarto: Send cell";};
       }
 
+      # Neovim 0.11: Default mapping 'gra' (Normal/Visual) for code action.
+      # This uses fzf-lua for selection. Keep if preferred over default UI.
       {
         mode = "n";
         key = "<leader>ca";
         action = "<Cmd>lua require('fzf-lua').lsp_code_actions()<CR>";
-        options = {desc = "Show code actions";};
+        options = {desc = "Show code actions (fzf)";};
       }
 
       {
@@ -369,17 +373,19 @@
         options = {desc = "Git files";};
       }
       # LSP
+      # Neovim 0.11: Default mappings [d and ]d navigate diagnostics.
+      # These use fzf-lua. Keep if preferred over default navigation.
       {
         mode = "n";
         key = "<leader>ld";
         action = "<Cmd>lua require('fzf-lua').diagnostics_document()<CR>";
-        options = {desc = "Document diagnostics";};
+        options = {desc = "Document diagnostics (fzf)";};
       }
       {
         mode = "n";
         key = "<leader>lD";
         action = "<Cmd>lua require('fzf-lua').diagnostics_workspace()<CR>";
-        options = {desc = "Workspace diagnostics";};
+        options = {desc = "Workspace diagnostics (fzf)";};
       }
 
       # Help
@@ -587,8 +593,8 @@
       {
         mode = "n";
         key = "<leader>\\p";
-        action = "<Cmd>LspStart ruff<CR>";
-        options = {desc = "Toggle Python (ruff)";};
+        action = "<Cmd>LspStart ruff pyright<CR>"; # Start both python LSPs
+        options = {desc = "Toggle Python LSPs (ruff, pyright)";};
       }
       {
         mode = "n";
@@ -605,7 +611,8 @@
       {
         mode = "n";
         key = "<leader>\\r";
-        action = "<Cmd>LspStart r_language_server<CR>";
+        # Use the custom toggle function defined in lsp.nix
+        action = "<Cmd>lua _G.toggle_r_lsp()<CR>";
         options = {desc = "Toggle R language server";};
       }
       {
@@ -636,11 +643,11 @@
       }
       {
         mode = "n";
-        key = "<leader>wh";
-        action = "<cmd>vertical resize +5<cr>";
+        key = "<leader>wl"; # Changed from wh to avoid conflict
+        action = "<cmd>vertical resize -5<cr>"; # Changed from +5 to -5
         options = {
           silent = true;
-          desc = "Increase window width";
+          desc = "Decrease window width"; # Changed description
         };
       }
       {

@@ -1,4 +1,8 @@
-{username, ...}: {
+{
+  config,
+  username,
+  ...
+}: {
   programs.nixvim = {
     globals = {
       loaded_ruby_provider = 0;
@@ -6,6 +10,17 @@
     };
     extraConfigLua = ''
       vim.b.slime_cell_delimiter = '```';
+
+      -- Neovim 0.11: Configure diagnostics display.
+      -- Virtual text is now opt-in. You can use:
+      -- virtual_text = true, -- Enable virtual text globally (like < 0.11)
+      -- virtual_text = { current_line = true }, -- Enable only for current line
+      -- virtual_lines = true, -- Enable the new virtual lines feature
+      -- Or combine them, e.g., virtual_text = true, virtual_lines = { current_line = true }
+      vim.diagnostic.config({
+        virtual_text = { current_line = true }, -- Example: virtual text on current line only
+        -- virtual_lines = true, -- Uncomment to enable virtual lines instead/additionally
+      })
     '';
     extraConfigVim = ''
       highlight WinSeparator guifg=#FABD2F
@@ -22,7 +37,7 @@
       # Spell
       spell = false;
       spelllang = "en_us";
-      spellfile = "/Users/${username}/.spell/en.utf-8.add";
+      spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
 
       # Set tabs to 2 spaces
       tabstop = 2;
@@ -116,6 +131,9 @@
       showmode = false; # We don't need to see things like INSERT anymore
 
       pumheight = 0; # Use available space for completion menu
+
+      # Neovim 0.11: Set default border for floating windows (LSP hover, etc.)
+      winborder = "rounded"; # Options: none, single, double, rounded, solid, shadow
     };
   };
 }

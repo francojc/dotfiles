@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }: {
   imports = [
@@ -16,7 +15,7 @@
   ];
   programs.nixvim = {
     colorschemes = {
-      # see below for vague.nvim
+      # vague.nvim is configured via extraConfigLua below
     };
     plugins = {
       aerial.enable = true;
@@ -34,18 +33,26 @@
       };
       conform-nvim = {
         enable = true;
+        # Ensure formatters are available (e.g., via nixpkgs) if relying on lsp_format = "last"
+        # Or define specific formatters here.
         settings = {
           default_format_opts = {
-            lsp_format = "last";
+            lsp_format = "last"; # Use LSP formatter if available, run others after
           };
-          formatters = {};
+          formatters = {}; # Define non-LSP formatters if needed
           formatters_by_ft = {
+            # Example: Python formatting using black and isort
+            # python = { "black", "isort" };
+            # Example: Nix formatting using alejandra
+            # nix = { "alejandra" };
+            # General formatters for all filetypes
             "_" = ["trim_whitespace" "squeeze_blanks"];
           };
         };
       };
       copilot-vim = {
         enable = true;
+        # Consider managing node via Nix instead of hardcoding brew path
         settings.node_command = "/opt/homebrew/bin/node";
       };
       copilot-chat = {
@@ -346,31 +353,36 @@
           local lang = vim.trim(vim.fn.readfile(spell_lang_file)[1])
           vim.opt_local.spelllang = lang
         else
-          vim.opt_local.spelllang = "en_us"
+          vim.opt_local.spelllang = "en_us" -- Default if file doesn't exist
         end
       end
 
       local function set_spell_lang(lang)
         local project_root = get_project_root()
         if not project_root then
+          vim.notify("Could not determine project root to save spell language.", vim.log.levels.WARN)
           return
         end
         local spell_lang_file = project_root .. "/.nvim_spell_lang"
         vim.fn.writefile({lang}, spell_lang_file)
         vim.opt_local.spelllang = lang
+        vim.notify("Set spell language to: " .. lang .. " for project " .. project_root)
       end
 
       vim.api.nvim_create_autocmd("BufEnter", {
+        group = vim.api.nvim_create_augroup("UserSpellLang", { clear = true }),
+        pattern = "*",
         callback = function()
-          load_spell_lang()
+          -- Defer loading slightly to ensure filetype is set
+          vim.schedule(load_spell_lang)
         end,
       })
 
       vim.api.nvim_create_user_command("SpellLang", function()
         vim.ui.select(
-          { "en_us", "es" },
+          { "en_us", "es" }, -- Add more languages as needed
           {
-            prompt = "Select spell language:",
+            prompt = "Select spell language for this project:",
           },
           function(choice)
             if choice then
@@ -383,20 +395,29 @@
       -- Image plugin toggle function
       local image_enabled = true
       local function toggle_image_plugin()
-        local image = require('image')
+        local image_status, image = pcall(require, 'image')
+        if not image_status then
+          vim.notify("image.nvim plugin not available", vim.log.levels.WARN)
+          return
+        end
+
         if image_enabled then
           image.clear()
+          -- You might need a more specific way to disable it if setup() isn't the only enabler
           image_enabled = false
-          vim.notify("Image plugin disabled")
+          vim.notify("Image plugin rendering disabled")
         else
-          image.setup()
+          -- Re-running setup might not be the intended way to re-enable rendering.
+          -- Check image.nvim docs for the correct way to toggle rendering on/off.
+          -- For now, just setting the flag and notifying.
+          -- image.setup() -- This might re-apply the full config, maybe not desired.
           image_enabled = true
-          vim.notify("Image plugin enabled")
+          vim.notify("Image plugin rendering enabled (may require buffer reload)")
         end
       end
 
       -- Add a keymap to toggle the image plugin
-      vim.keymap.set('n', '<leader>\\i', toggle_image_plugin, { desc = "Toggle image plugin", silent = true })
+      vim.keymap.set('n', '<leader>\\i', toggle_image_plugin, { desc = "Toggle image plugin rendering", silent = true })
     '';
   };
 }
