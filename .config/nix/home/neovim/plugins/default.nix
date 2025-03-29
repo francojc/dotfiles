@@ -40,7 +40,10 @@
           };
         };
       };
-      copilot-vim.enable = true;
+      copilot-vim = {
+        enable = true;
+        settings.node_command = pkgs.nodejs_22
+      };
       copilot-chat = {
         enable = true;
         settings = {
