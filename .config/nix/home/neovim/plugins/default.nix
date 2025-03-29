@@ -190,7 +190,7 @@
           auto_scroll = true;
           direction = "horizontal";
           open_mapping = "[[<C-t>]]";
-          size = 10;
+          size = 15;
         };
       };
       trouble.enable = true;
