@@ -12,9 +12,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nvf = {
+      url = "github:notashelf/nvf";
     };
   };
 
@@ -22,7 +21,7 @@
     nixpkgs,
     darwin,
     home-manager,
-    nixvim,
+    nvf,
     ...
   }: let
     # Machine configurations
@@ -73,7 +72,7 @@
               users.${username} = {
                 imports = [
                   ./home/default.nix
-                  nixvim.homeManagerModules.nixvim
+                  nvf.homeManagerModules.default
                 ];
               };
             };
