@@ -36,6 +36,7 @@
     mpv-unwrapped
     ncdu
     nix-prefetch-git
+    nodejs_22
     pandoc
     papis
     pass
