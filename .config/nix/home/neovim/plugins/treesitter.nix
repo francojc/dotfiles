@@ -5,7 +5,7 @@
       nixGrammars = true;
       languageRegister.markdown = ["quarto" "rmd"];
       settings = {
-        auto_install = false;
+        auto_install = true;
         autopairs = true;
         ensure_installed = [
           "css"

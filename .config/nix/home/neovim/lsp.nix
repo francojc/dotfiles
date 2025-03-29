@@ -76,6 +76,10 @@
           };
         };
         servers = {
+          bashls = {
+            enable = true;
+            autostart = false;
+          };
           lua_ls = {
             enable = true;
             autostart = false;
@@ -85,7 +89,10 @@
             autostart = true;
             filetypes = ["markdown" "quarto"];
           };
-          nil_ls.enable = true;
+          nil_ls = {
+            enable = true;
+            autostart = false;
+          };
           nixd = {
             enable = true;
             # cmd = ["nixd" "--semantic-tokens=false"];
