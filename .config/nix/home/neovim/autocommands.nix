@@ -4,6 +4,8 @@
       "personal" = {clear = true;};
     };
     autoCmd = [
+
+      # Highlight yanked text
       {
         event = "TextYankPost";
         desc = "Highlight yanked text";
@@ -12,8 +14,24 @@
           function()
             vim.highlight.on_yank()
           end
-        '';
+          '';
       }
+
+      # Nvim .11 completions
+      {
+        event = "LspAttach";
+        desc = "Nvim default LSP completion";
+        callback.__raw = ''
+              function(ev)
+                local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                if client.supports_method("textDocument/completion") then
+                  vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+                end
+              end
+              '';
+      }
+
+      # Remove trailing whitespace
       {
         event = "BufWritePre";
         desc = "Remove trailing whitespace on save";
@@ -22,7 +40,7 @@
           function()
             vim.cmd('%s/\\s\\+$//e')
           end
-        '';
+          '';
       }
     ];
   };
