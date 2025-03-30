@@ -62,7 +62,7 @@
           error_header = "  ";
           question_header = "  ";
           separator = "───";
-          model = "claude-3.5-sonnet";
+          model = "claude-3.7-sonnet";
           temperature = 0.2;
         };
       };
@@ -183,7 +183,9 @@
           render_modes = ["n" "c" "t"];
         };
       };
+
       todo-comments.enable = true;
+
       toggleterm = {
         enable = true;
         settings = {
@@ -193,6 +195,7 @@
           size = 15;
         };
       };
+
       trouble.enable = true;
       web-devicons.enable = true;
       yazi.enable = true;
