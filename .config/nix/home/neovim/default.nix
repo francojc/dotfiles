@@ -70,7 +70,7 @@ in {
 
         autocomplete = {
           nvim-cmp = {
-            enable = true;
+            enable = false;
           };
 
           blink-cmp = {
