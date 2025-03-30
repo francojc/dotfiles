@@ -115,7 +115,6 @@ in {
         diagnostics = {
           nvim-lint = {
             enable = false;
-            lint_after_save = true;
           };
         };
 
