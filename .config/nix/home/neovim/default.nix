@@ -11,6 +11,8 @@ in {
     settings = {
       vim = {
         enableLuaLoader = true;
+        preventJunkFiles = true;
+        vimAlias = false;
 
         # Autocommands ---------------------------------------------
         autocmds = [
@@ -86,8 +88,27 @@ in {
 
         # Dashboards -------------------------------------------------
         dashboard = {
-          startify = {
+          dashboard-nvim = {
             enable = true;
+            setupOpts = {
+              # adapted from nvf logo (https://github.com/NotAShelf/nvf)
+              # under CC-BY (https://creativecommons.org/licenses/by/4.0/)
+              config.header = [
+                "   🭇🭄🭏🬼          🬿    "
+                "  🭊🭁██🭌🬿         █🭏🬼  "
+                "  🭥🭒████🭏🬼       ██🭌🬿 "
+                "λ  🭢🭕████🭌🬿      ████🭏"
+                "VλV  🭥🭒████🭏🬼    █████"
+                "λVλVλ 🭢🭕████🭌🬿   █████"
+                "VλV󱄅    🭥🭒████🭏🬼 🭕████"
+                "λVλVλ    🭢🭕████🭌🬿 🭥🭒██"
+                "V󱄅 λV      🭥🭒████🭏🬼🭢🭕🭠"
+                "λVλVλ       🭢🭕████🭌🬿  "
+                "  VλV         🭥🭒██🭝🭚  "
+                "    λ          🭢🭕🭠🭗   "
+                ""
+              ];
+            };
           };
         };
 
@@ -269,6 +290,12 @@ in {
             action = "<Cmd>lua require('fzf-lua').help_tags()<Cr>";
             desc = "Find help tags";
           }
+          {
+            mode = "n";
+            key = "<leader>fr";
+            action = "<Cmd>lua require('fzf-lua').oldfiles()<Cr>";
+            desc = "Find recent files";
+          }
 
           # Terminal -----
           {
@@ -319,26 +346,42 @@ in {
             action = "<C-\\><C-n>";
             desc = "Esc from terminal";
           }
-
-          # -- Keymaps for navigating Toggleterm terminal windows
-          # vim.keymap.set('t', 'jj', [[<C-\><C-n>]])
-          #
-          # --- Note: I only need to esc and change windows with
-          # --- C-h and C-j as I only open ToggleTerm in vert and horz
-          # vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]])
-          # -- vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]])
-          # vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]])
         ];
 
         # LSP --------------------------------------------------------
         languages = {
           enableLSP = true;
-          # enableFormat = true;
-          # enableTreesitter = true;
-          # enableExtraDiagnostics = true;
+          enableFormat = true;
+          enableDAP = true;
+          enableTreesitter = true;
+          enableExtraDiagnostics = true;
+
           nix.enable = true;
-          markdown.enable = true;
           lua.enable = true;
+          markdown = {
+            enable = true;
+            extensions.render-markdown-nvim = {
+              enable = true;
+              setupOpts = {
+                bullet = {
+                  enabled = true;
+                  icons = ["■ " "□ " "▪ " "▫ "];
+                };
+                completions = {
+                  lsp.enabled = true;
+                };
+                dash.enabled = false;
+                file_types = ["markdown" "quarto" "CodeCompanion"];
+                heading = {
+                  icons = ["# " "## " "### " "#### " "##### " "###### "];
+                };
+                html.comment.conceal = false;
+                latex.enabled = false;
+              };
+            };
+            lsp.enable = true;
+            treesitter.enable = true;
+          };
           bash.enable = true;
           css.enable = true;
           html.enable = true;
@@ -398,7 +441,7 @@ in {
         # Snippets -----------------------------------------------
         snippets = {
           luasnip = {
-            enable = false;
+            enable = true;
             setupOpts = {
               enable_autosnippets = true;
             };
@@ -442,10 +485,11 @@ in {
 
         # Visuals -----------------------------------------------
         visuals = {
-          nvim-web-devicons.enable = true;
-          nvim-cursorline.enable = true;
           fidget-nvim.enable = true;
           highlight-undo.enable = true;
+          nvim-cursorline.enable = true;
+          nvim-scrollbar.enable = true;
+          nvim-web-devicons.enable = true;
         };
 
         # Plugins -----------------------------------------------
@@ -473,17 +517,20 @@ in {
         };
 
         # Extra plugins ------------------------------------------
-        extraPlugins = {
+        extraPlugins = with pkgs.vimPlugins; {
           # Slime
-          slime.package = pkgs.vimPlugins.vim-slime;
-          slime.setup = "
-            vim.g.slime_target = 'neovim'
-            vim.g.slime_bracketed_paste = 1
-           ";
+          slime = {
+            package = vim-slime;
+            setup = "
+              vim.g.slime_target = 'neovim'
+              vim.g.slime_bracketed_paste = 1
+              ";
+          };
 
           # Nightfox
-          nightfox.package = pkgs.vimPlugins.nightfox-nvim;
-          nightfox.setup = "
+          nightfox = {
+            package = nightfox-nvim;
+            setup = "
             require('nightfox').setup({
               options = {
                 styles = {
@@ -491,37 +538,39 @@ in {
                  },
               },
             })
-          ";
+            vim.cmd('colorscheme nightfox')
+            ";
+          };
 
           # Render Markdown
-          render-markdown.package = pkgs.vimPlugins.render-markdown-nvim;
-          render-markdown.setup = "
-            require('render-markdown').setup({
-              bullet = {
-                enabled = true,
-                icons = { '■ ', '□ ', '▪ ', '▫ ' },
+          # render-markdown = {
+          #   package = render-markdown-nvim;
+          #   setup = "
+          #   require('render-markdown').setup({
+          #     bullet = {
+          #       enabled = true,
+          #       icons = { '■ ', '□ ', '▪ ', '▫ ' },
+          #     },
+          #     completions = { lsp = { enabled = true } },
+          #     dash = { enabled = false },
+          #     file_types = { 'markdown', 'quarto', 'CodeCompanion' },
+          #     heading = {
+          #       icons = { '# ', '## ', '### ', '#### ', '##### ', '###### ' },
+          #     },
+          #     html = {
+          #       comment = {
+          #         conceal = false,
+          #       },
+          #     },
+          #     latex = {
+          #       enabled = false,
+          #     },
+          #   })
+          #   ";
+          # };
 
-              },
-              completions = { lsp = { enabled = true } },
-              dash = { enabled = false },
-              file_types = { 'markdown', 'quarto', 'CodeCompanion' },
-              heading = {
-                icons = { '# ', '## ', '### ', '#### ', '##### ', '###### ' },
-              },
-              html = {
-                comment = {
-                  conceal = false,
-                },
-              },
-              latex = {
-                enabled = false,
-              },
-            })
-          ";
+          #
         };
-        luaConfigRC.theme = ''
-          vim.cmd('colorscheme nightfox')
-        '';
       };
     };
   };
