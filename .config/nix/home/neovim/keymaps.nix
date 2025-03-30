@@ -23,7 +23,7 @@
           expr = true;
           desc = "Move up visual line";
         };
-      }
+     }
       {
         mode = ["n" "v"];
         key = "gl";

@@ -15,6 +15,23 @@
     settings = {
       vim = {
         enableLuaLoader = true;
+
+        autocmds = [
+          {
+            enable = false;
+            event = "TextYankPost";
+            desc = "Highlight yanked text";
+            group = "personal";
+            callback = ":lua
+              function()
+                vim.highlight.on_yank()
+              end
+            ";
+          }
+        ];
+
+        autopairs.nvim-autopairs.enable = true;
+
         assistant = {
           codecompanion-nvim = {
             enable = true;
@@ -55,6 +72,9 @@
         ];
         languages = {
           enableFormat = true;
+          enableTreesitter = true;
+          nix.enable = true;
+          bash.enable = true;
         };
         options = {
           breakindent = true;
