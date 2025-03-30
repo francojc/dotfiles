@@ -1,4 +1,9 @@
-{lib, ...}: let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   inherit (lib.generators) mkLuaInline;
 in {
   programs.nvf = {
@@ -60,6 +65,29 @@ in {
           };
         };
 
+        # Autocompletion ------------------------------------------
+
+        autocomplete = {
+          blink-cmp = {
+            enable = true;
+            friendly-snippets.enable = true;
+            setupOpts = {
+              keymap = {
+                "<C-space>" = ["show" "show_signature" "hide_signature" "fallback"];
+                "<C-e>" = ["hide"];
+                "<CR>" = ["accept" "fallback"];
+                "<Tab>" = ["snippet_forward" "fallback"];
+                "<S-Tab>" = ["snippet_backward" "fallback"];
+                "<C-j>" = ["select_next" "fallback"];
+                "<C-k>" = ["select_prev" "fallback"];
+              };
+              sources = {
+                default = ["path" "snippets"];
+              };
+            };
+          };
+        };
+
         # Binds ------------------------------------------------------
         binds = {
           whichKey = {
@@ -113,7 +141,7 @@ in {
                 css = ["prettier"];
                 html = ["prettier"];
                 nix = ["alejandra"];
-                "_" = ["trim_whitespace" "squeeze_blanks"];
+                "*" = ["trim_whitespace" "squeeze_blanks"];
               };
             };
           };
@@ -282,18 +310,44 @@ in {
         # Options ---------------------------------------------------
         options = {
           breakindent = true;
+          clipboard = "unnamedplus";
           expandtab = true;
           linebreak = true;
+          scrolloff = 3;
           shiftwidth = 2;
           showbreak = "↳";
           showmode = false;
+          sidescrolloff = 5;
           tabstop = 2;
           winborder = "rounded";
+          pumheight = 0;
+          spell = false;
+          spelllang = "en_us";
+          spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
+          smartindent = true;
+          ignorecase = true;
+          smartcase = true;
+          swapfile = false;
+          backup = false;
+          undofile = true;
+          signcolumn = "yes";
+          cursorline = true;
+          cursorlineopt = "number";
         };
 
         statusline = {
           lualine = {
             enable = true;
+          };
+        };
+
+        # Snippets -----------------------------------------------
+        snippets = {
+          luasnip = {
+            enable = true;
+            setupOpts = {
+              enable_autosnippets = true;
+            };
           };
         };
 
@@ -329,8 +383,8 @@ in {
         # Themes ---------------------------------------------------
         theme = {
           enable = true;
-          name = "gruvbox";
-          style = "dark";
+          name = "tokyonight";
+          style = "night";
         };
 
         # Visuals -----------------------------------------------
@@ -353,6 +407,15 @@ in {
           icons.enable = true;
           indentscope.enable = true;
           surround.enable = true;
+        };
+
+        # Extra plugins ------------------------------------------
+        extraPlugins = {
+          render-markdown.package = pkgs.vimPlugins.render-markdown-nvim;
+          render-markdown.setup = "
+              require('render-markdown').setup({})
+
+            ";
         };
       };
     };

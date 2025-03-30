@@ -1,8 +1,4 @@
-{
-  config,
-  username,
-  ...
-}: {
+{config, ...}: {
   programs.nixvim = {
     globals = {
       loaded_ruby_provider = 0;
