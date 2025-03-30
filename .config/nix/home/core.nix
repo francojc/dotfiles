@@ -3,7 +3,6 @@
     aerc
     atuin
     bat
-    carl
     claude-code
     datasette
     drawio
@@ -28,7 +27,6 @@
     khal
     lazydocker
     lazygit
-    m-cli
     mas
     mdcat
     mpv-unwrapped
@@ -36,7 +34,6 @@
     nix-prefetch-git
     nodejs_22
     pandoc
-    papis
     pass
     pianobar
     pipx
@@ -50,7 +47,6 @@
     sqlite
     starship
     stow
-    sttr # string transformation
     tldr
     tree
     vdirsyncer
