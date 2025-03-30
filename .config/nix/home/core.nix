@@ -21,8 +21,6 @@
     gnupg
     gv
     haskellPackages.pandoc-crossref
-    helix
-    helix-gpt
     home-manager
     htop
     imagemagick
