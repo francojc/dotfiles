@@ -18,17 +18,7 @@
               end
             ";
           }
-          {
-            enable = true;
-            event = ["BufEnter"];
-            pattern = ["*"];
-            command = ":Copilot suggestions<CR>";
-            once = true;
-            desc = "Enable Copilot suggestions";
-          }
         ];
-
-        autopairs.nvim-autopairs.enable = true;
 
         # Assistant -------------------------------------------------
         assistant = {
@@ -48,10 +38,20 @@
                 dismiss = "<C-e>";
               };
             };
+            setupOpts = {
+              suggestion = {
+                auto_trigger = true;
+              };
+            };
           };
         };
 
         # Dashboards -------------------------------------------------
+        dashboard = {
+          startify = {
+            enable = true;
+          };
+        };
 
         # Diagnostics ------------------------------------------------
         diagnostics = {
@@ -61,13 +61,34 @@
           };
         };
 
-        fzf-lua = {
-          enable = true;
-          profile = "fzf-native";
+        # Filetree ---------------------------------------------------
+
+        # Formatters -------------------------------------------------
+        formatter = {
+          conform-nvim = {
+            enable = true;
+            setupOpts = {
+              format_on_save = {
+                lsp_format = "fallback";
+                timeout_ms = 500;
+              };
+              formatters_by_ft = {
+                python = ["black"];
+                r = ["styler"];
+                lua = ["stylua"];
+                bash = ["shfmt"];
+                javascript = ["prettier"];
+                css = ["prettier"];
+                html = ["prettier"];
+                nix = ["alejandra"];
+              };
+            };
+          };
         };
 
         # Keymaps -----------------------------------------------------
         keymaps = [
+          # General -----
           {
             mode = "i";
             key = "jj";
@@ -81,6 +102,7 @@
             action = "<Esc><Cmd>nohlsearch<CR>";
             desc = "Clear search highlight";
           }
+          # Movement -----
           {
             mode = "n";
             key = "j";
@@ -119,6 +141,8 @@
             action = "<C-w>l";
             desc = "Move to right window";
           }
+          # Files -----
+          # ...
         ];
 
         # LSP --------------------------------------------------------
@@ -184,7 +208,20 @@
           nvim-cursorline.enable = true;
           fidget-nvim.enable = true;
           highlight-undo.enable = true;
-          indent-blankline.enable = true;
+        };
+
+        # Plugins -----------------------------------------------
+        autopairs.nvim-autopairs.enable = true;
+
+        fzf-lua = {
+          enable = true;
+          profile = "fzf-native";
+        };
+
+        mini = {
+          icons.enable = true;
+          indentscope.enable = true;
+          surround.enable = true;
         };
       };
     };
