@@ -17,7 +17,7 @@ in {
         # Autocommands ---------------------------------------------
         autocmds = [
           {
-            enable = true;
+            enable = false;
             event = ["TextYankPost"];
             desc = "Highlight yanked text";
             callback = mkLuaInline ''
@@ -27,7 +27,7 @@ in {
             '';
           }
           {
-            enable = true;
+            enable = false;
             event = ["LspAttach"];
             desc = "Nvim default LSP completion";
             callback = mkLuaInline ''
@@ -44,13 +44,13 @@ in {
         # Assistant -------------------------------------------------
         assistant = {
           codecompanion-nvim = {
-            enable = true;
+            enable = false;
             # setup codecompanion with:
             # - copilot w/ sonnet
             # - gemini pro 2.5
           };
           copilot = {
-            enable = true;
+            enable = false;
             mappings = {
               suggestion = {
                 acceptLine = "<C-f>";
@@ -69,10 +69,9 @@ in {
         };
 
         # Autocompletion ------------------------------------------
-
         autocomplete = {
           nvim-cmp = {
-            enable = true;
+            enable = false;
           };
         };
 
@@ -89,7 +88,7 @@ in {
         # Dashboards -------------------------------------------------
         dashboard = {
           dashboard-nvim = {
-            enable = true;
+            enable = false;
             setupOpts = {
               # adapted from nvf logo (https://github.com/NotAShelf/nvf)
               # under CC-BY (https://creativecommons.org/licenses/by/4.0/)
@@ -115,7 +114,7 @@ in {
         # Diagnostics ------------------------------------------------
         diagnostics = {
           nvim-lint = {
-            enable = true;
+            enable = false;
             lint_after_save = true;
           };
         };
@@ -123,14 +122,14 @@ in {
         # Filetree ---------------------------------------------------
         filetree = {
           neo-tree = {
-            enable = true;
+            enable = false;
           };
         };
 
         # Formatters -------------------------------------------------
         formatter = {
           conform-nvim = {
-            enable = true;
+            enable = false;
             setupOpts = {
               format_on_save = {
                 lsp_format = "fallback";
@@ -153,8 +152,8 @@ in {
 
         # Git --------------------------------------------------------
         git = {
-          enable = true;
-          gitsigns.enable = true;
+          enable = false;
+          gitsigns.enable = false;
         };
 
         # Keymaps -----------------------------------------------------
@@ -350,9 +349,8 @@ in {
 
         # LSP --------------------------------------------------------
         languages = {
-          enableLSP = true;
-          enableFormat = true;
-          enableDAP = true;
+          enableLSP = false;
+          enableFormat = false;
           enableTreesitter = true;
           enableExtraDiagnostics = true;
 
@@ -389,12 +387,12 @@ in {
 
         # Notes ------------------------------------------------------
         notes = {
-          todo-comments.enable = true;
+          todo-comments.enable = false;
         };
 
         # Notfications -----------------------------------------------
         notify = {
-          nvim-notify.enable = true;
+          nvim-notify.enable = false;
         };
 
         # Options ---------------------------------------------------
@@ -418,7 +416,6 @@ in {
           spell = false;
           spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
           spelllang = "en_us";
-          swapfile = false;
           tabstop = 2;
           undofile = true;
           winborder = "rounded";
@@ -427,7 +424,6 @@ in {
         statusline = {
           lualine = {
             enable = true;
-            theme = "auto";
           };
         };
 
@@ -439,7 +435,7 @@ in {
         # Snippets -----------------------------------------------
         snippets = {
           luasnip = {
-            enable = true;
+            enable = false;
             setupOpts = {
               enable_autosnippets = true;
             };
@@ -449,14 +445,14 @@ in {
         # Tabline -------------------------------------------------
         tabline = {
           nvimBufferline = {
-            enable = true;
+            enable = false;
           };
         };
 
         # Terminal -----------------------------------------------
         terminal = {
           toggleterm = {
-            enable = true;
+            enable = false;
             lazygit = {
               enable = true;
               direction = "float";
@@ -477,15 +473,15 @@ in {
 
         # UI ---------------------------------------------------
         ui = {
-          borders.enable = true;
-          colorizer.enable = true;
+          borders.enable = false;
+          colorizer.enable = false;
         };
 
         # Utility -----------------------------------------------
         utility = {
           images = {
             image-nvim = {
-              enable = true;
+              enable = false;
               setupOpts = {
                 backend = "kitty";
                 integrations = {
@@ -499,7 +495,7 @@ in {
           };
           outline = {
             aerial-nvim = {
-              enable = true;
+              enable = false;
               mappings.toggle = "<leader>\\o";
             };
           };
@@ -507,15 +503,15 @@ in {
 
         # Visuals -----------------------------------------------
         visuals = {
-          fidget-nvim.enable = true;
-          highlight-undo.enable = true;
-          nvim-cursorline.enable = true;
-          nvim-scrollbar.enable = true;
-          nvim-web-devicons.enable = true;
+          fidget-nvim.enable = false;
+          highlight-undo.enable = false;
+          nvim-cursorline.enable = false;
+          nvim-scrollbar.enable = false;
+          nvim-web-devicons.enable = false;
         };
 
         # Plugins -----------------------------------------------
-        autopairs.nvim-autopairs.enable = true;
+        autopairs.nvim-autopairs.enable = false;
 
         fzf-lua = {
           enable = true;
@@ -523,14 +519,14 @@ in {
         };
 
         mini = {
-          icons.enable = true;
-          indentscope.enable = true;
-          surround.enable = true;
+          icons.enable = false;
+          indentscope.enable = false;
+          surround.enable = false;
         };
 
         treesitter = {
-          enable = true;
-          context.enable = true;
+          enable = false;
+          context.enable = false;
           mappings.incrementalSelection = {
             init = "<C-space>";
             incrementByNode = "<C-space>";
