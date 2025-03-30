@@ -1,4 +1,6 @@
-{
+{lib, ...}: let
+  inherit (lib.generators) mkLuaInline;
+in {
   programs.nvf = {
     enable = true;
     settings = {
@@ -8,15 +10,27 @@
         # Autocommands ---------------------------------------------
         autocmds = [
           {
-            enable = false;
-            event = "TextYankPost";
+            enable = true;
+            event = ["TextYankPost"];
             desc = "Highlight yanked text";
-            group = "personal";
-            callback = ":lua
+            callback = mkLuaInline ''
               function()
                 vim.highlight.on_yank()
               end
-            ";
+            '';
+          }
+          {
+            enable = true;
+            event = ["LspAttach"];
+            desc = "Nvim default LSP completion";
+            callback = mkLuaInline ''
+              function(ev)
+                local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                if client.supports_method("textDocument/completion") then
+                  vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+                end
+              end
+            '';
           }
         ];
 
@@ -46,6 +60,19 @@
           };
         };
 
+        # Binds ------------------------------------------------------
+        binds = {
+          whichKey = {
+            enable = true;
+            setupOpts = {
+              preset = "helix";
+            };
+          };
+          cheatsheet = {
+            enable = true;
+          };
+        };
+
         # Dashboards -------------------------------------------------
         dashboard = {
           startify = {
@@ -62,6 +89,11 @@
         };
 
         # Filetree ---------------------------------------------------
+        filetree = {
+          neo-tree = {
+            enable = true;
+          };
+        };
 
         # Formatters -------------------------------------------------
         formatter = {
@@ -99,9 +131,53 @@
           {
             mode = "n";
             key = "<Esc>";
-            action = "<Esc><Cmd>nohlsearch<CR>";
+            action = "<Esc><Cmd>nohlsearch<Cr>";
             desc = "Clear search highlight";
           }
+          {
+            mode = ["n" "v"];
+            key = "gl";
+            action = "g_";
+            desc = "Move to last non-blank character";
+          }
+          {
+            mode = "n";
+            key = "<leader>y";
+            action = "ggVGy";
+            desc = "Yank entire file";
+          }
+          # Buffers -----
+          {
+            mode = "n";
+            key = "<leader>bb";
+            action = "<Cmd>e #<Cr>";
+            desc = "Switch to other buffer";
+          }
+          {
+            mode = "n";
+            key = "<Tab>";
+            action = "<Cmd>BufferLineCycleNext<Cr>";
+            desc = "Next buffer";
+          }
+          {
+            mode = "n";
+            key = "<S-Tab>";
+            action = "<Cmd>BufferLineCyclePrev<Cr>";
+            desc = "Previous buffer";
+          }
+          {
+            mode = "n";
+            key = "<leader>bd";
+            action = "<Cmd>BufferLinePickClose<Cr>";
+            desc = "Delete buffer";
+          }
+          {
+            mode = "n";
+            key = "<leader>bo";
+            action = "<Cmd>BufferLineCloseOthers<Cr>";
+            desc = "Close other buffers";
+          }
+
           # Movement -----
           {
             mode = "n";
@@ -141,8 +217,32 @@
             action = "<C-w>l";
             desc = "Move to right window";
           }
-          # Files -----
-          # ...
+
+          # Find -----
+          {
+            mode = "n";
+            key = "<leader>ff";
+            action = "<Cmd>lua require('fzf-lua').files()<Cr>";
+            desc = "Find files";
+          }
+          {
+            mode = "n";
+            key = "<leader>fg";
+            action = "<Cmd>lua require('fzf-lua').live_grep()<Cr>";
+            desc = "Live grep";
+          }
+          {
+            mode = "n";
+            key = "<leader>fb";
+            action = "<Cmd>lua require('fzf-lua').buffers()<Cr>";
+            desc = "Find buffers";
+          }
+          {
+            mode = "n";
+            key = "<leader>fh";
+            action = "<Cmd>lua require('fzf-lua').help_tags()<Cr>";
+            desc = "Find help tags";
+          }
         ];
 
         # LSP --------------------------------------------------------
@@ -191,7 +291,20 @@
         terminal = {
           toggleterm = {
             enable = true;
-            lazygit.enable = true;
+            lazygit = {
+              enable = true;
+              direction = "float";
+            };
+            setupOpts = {
+              winbar.name_formatter = {
+                _type = "lua-inline";
+                expr = ''
+                  function()
+                    return "Terminal " .. require("nvim-web-devicons").get_icon("terminal")
+                  end
+                '';
+              };
+            };
           };
         };
 
