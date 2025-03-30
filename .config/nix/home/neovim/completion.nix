@@ -2,7 +2,7 @@
   programs.nixvim = {
     plugins = {
       blink-cmp = {
-        enable = true;
+        enable = false;
         settings = {
           appearance = {
             use_nvim_cmp_as_default = true;

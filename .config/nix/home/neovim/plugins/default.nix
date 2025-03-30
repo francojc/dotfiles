@@ -3,60 +3,50 @@
   ...
 }: {
   imports = [
-    ./alpha.nix
-    ./bufferline.nix
-    ./lspsaga.nix
-    ./lualine.nix
-    ./obsidian.nix
-    ./slime.nix
-    ./snacks.nix
+    # ./alpha.nix
+    # ./bufferline.nix
+    # ./lspsaga.nix
+    # ./lualine.nix
+    # ./obsidian.nix
+    # ./slime.nix
+    # ./snacks.nix
     ./treesitter.nix
     ./which-key.nix
   ];
   programs.nixvim = {
-    colorschemes = {
-      # vague.nvim is configured via extraConfigLua below
-    };
     plugins = {
-      aerial.enable = true;
+      aerial.enable = false;
       auto-session = {
         enable = true;
         settings = {
           bypass_save_filetypes = ["alpha" "NvimTree" "term"];
         };
       };
-      avante = {
-        enable = true;
-      };
       codecompanion = {
         enable = true;
       };
       conform-nvim = {
-        enable = true;
-        # Ensure formatters are available (e.g., via nixpkgs) if relying on lsp_format = "last"
-        # Or define specific formatters here.
+        enable = false;
         settings = {
           default_format_opts = {
-            lsp_format = "last"; # Use LSP formatter if available, run others after
+            lsp_format = "last"; 
           };
-          formatters = {}; # Define non-LSP formatters if needed
+          formatters = {}; 
           formatters_by_ft = {
-            # Example: Python formatting using black and isort
-            # python = { "black", "isort" };
-            # Example: Nix formatting using alejandra
-            # nix = { "alejandra" };
-            # General formatters for all filetypes
-            "_" = ["trim_whitespace" "squeeze_blanks"];
+            python = [ "black" "isort" ];
+            nix = [ "alejandra" ];
+            r = [ "styler" ];
+            "*" = ["trim_whitespace" "squeeze_blanks"];
           };
         };
       };
       copilot-vim = {
-        enable = true;
+        enable = false;
         # Consider managing node via Nix instead of hardcoding brew path
         settings.node_command = "/opt/homebrew/bin/node";
       };
       copilot-chat = {
-        enable = true;
+        enable = false;
         settings = {
           answer_header = "  ";
           error_header = "  ";
@@ -66,16 +56,9 @@
           temperature = 0.2;
         };
       };
-      diffview.enable = true;
-      dropbar = {
-        enable = true;
-        settings = {
-          bar.enable = true;
-          sources.terminal.name = "Term";
-        };
-      };
-      fidget.enable = true;
-      flash.enable = true;
+      diffview.enable = false;
+      fidget.enable = false;
+      flash.enable = false;
       fzf-lua = {
         enable = true;
         profile = "fzf-native";
@@ -96,9 +79,9 @@
           untracked = {text = "?";}; # Question mark
         };
       };
-      grug-far.enable = true;
+      grug-far.enable = false;
       image = {
-        enable = true;
+        enable = false;
         settings = {
           editor_only_render_when_focused = true;
           integrations = {
@@ -110,10 +93,9 @@
           window_overlap_clear_enabled = true;
         };
       };
-      lazygit.enable = true;
-      leap.enable = false;
+      lazygit.enable = false;
       mini = {
-        enable = true;
+        enable = false;
         modules = {
           indentscope = {};
           icons = {};
@@ -121,10 +103,10 @@
           surround = {};
         };
       };
-      nix.enable = true;
-      notify.enable = true;
+      nix.enable = false;
+      notify.enable = false;
       colorizer = {
-        enable = true;
+        enable = false;
         settings = {
           filetypes = ["*"];
           user_default_options = {
@@ -138,7 +120,7 @@
         };
       };
       nvim-tree = {
-        enable = true;
+        enable = false;
         view.side = "left";
         hijackCursor = true;
         modified.enable = true;
@@ -151,10 +133,10 @@
           };
         };
       };
-      otter.enable = true;
-      quarto.enable = true;
+      otter.enable = false;
+      quarto.enable = false;
       render-markdown = {
-        enable = true;
+        enable = false;
         settings = {
           anti_conceal = {
             enabled = true;
@@ -184,10 +166,10 @@
         };
       };
 
-      todo-comments.enable = true;
+      todo-comments.enable = false;
 
       toggleterm = {
-        enable = true;
+        enable = false;
         settings = {
           auto_scroll = true;
           direction = "horizontal";
@@ -196,9 +178,9 @@
         };
       };
 
-      trouble.enable = true;
-      web-devicons.enable = true;
-      yazi.enable = true;
+      trouble.enable = false;
+      web-devicons.enable = false;
+      yazi.enable = false;
     };
 
     # extraPlugin
@@ -229,58 +211,6 @@
 
     # Lua config
     extraConfigLua = ''
-      -- Dropbar configuration
-       local dropbar = require('dropbar')
-       dropbar.setup({
-         bar = {
-           sources = function(buf, _)
-             local sources = require('dropbar.sources')
-             local utils = require('dropbar.utils')
-
-             -- Exclude NvimTree and alpha buffers
-             local excluded_filetypes = { "NvimTree", "alpha", "aerial" }
-             if vim.tbl_contains(excluded_filetypes, vim.bo[buf].ft) then
-               return {} -- Return an empty table to disable dropbar
-             end
-
-             if vim.bo[buf].ft == 'markdown' then
-               return {
-                 sources.path,
-                 sources.markdown,
-               }
-             end
-             if vim.bo[buf].buftype == 'terminal' then
-               return {
-                 sources.terminal,
-               }
-             end
-             return {
-               sources.path,
-               utils.source.fallback({
-                 sources.lsp,
-                 sources.treesitter,
-               }),
-             }
-           end,
-         },
-       })
-
-      -- img-clip nvim setup
-      -- WARN: this config does not seem to have an effect (using keymaps instead)
-      require('img-clip').setup({
-        default = {
-          dir_path = "images",
-          relative_to_current_file = true,
-        },
-        filetypes = {
-          quarto = {
-            download_images = true,
-            template = "![$CURSOR]($FILE_PATH)",
-            url_encode_path = true
-          }
-        },
-      })
-
       -- vague.nvim colorscheme setup
       require('vague').setup({})
       vim.cmd.colorscheme("vague")

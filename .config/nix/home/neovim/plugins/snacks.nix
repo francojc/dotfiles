@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.nixvim = {
     plugins.snacks = {
-      enable = true;
+      enable = false;
       package = pkgs.vimPlugins.snacks-nvim;
       settings = {
         bufdelete.enabled = true;
