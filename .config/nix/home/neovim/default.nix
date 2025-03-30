@@ -299,6 +299,18 @@ in {
             action = "<Cmd>ToggleTerm<Cr>";
             desc = "Toggle terminal";
           }
+          {
+            mode = "n";
+            key = "<C-c>";
+            action = "<Plug>SlimeParagraphSend<Cr>";
+            desc = "Send code phrase to terminal";
+          }
+          {
+            mode = "x";
+            key = "<C-c>";
+            action = "<Plug>SlimeRegionSend<Cr>";
+            desc = "Send code region to terminal";
+          }
         ];
 
         # LSP --------------------------------------------------------
@@ -340,7 +352,6 @@ in {
           sidescrolloff = 5;
           tabstop = 2;
           winborder = "rounded";
-          pumheight = 0;
           spell = false;
           spelllang = "en_us";
           spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
@@ -364,7 +375,7 @@ in {
 
         # Sessions -----------------------------------------------
         session = {
-          nvim-session-manager.enable = true;
+          nvim-session-manager.enable = false;
         };
 
         # Snippets -----------------------------------------------
@@ -438,18 +449,33 @@ in {
           enable = true;
           context.enable = true;
           mappings.incrementalSelection = {
-            # init "<C-space>";
             init = "<C-space>";
-            # node incremental selection "<C-space>";
             incrementByNode = "<C-space>";
-            # scope incremental selection ""
-            # node decremental a selection "<Bs>";
             decrementByNode = "<Bs>";
           };
         };
 
         # Extra plugins ------------------------------------------
         extraPlugins = {
+          # Slime
+          slime.package = pkgs.vimPlugins.vim-slime;
+          slime.setup = "
+            vim.g.slime_target = 'neovim'
+            vim.g.slime_bracketed_paste = 1
+           ";
+
+          # Nightfox
+          nightfox.package = pkgs.vimPlugins.nightfox-nvim;
+          nightfox.setup = "
+            require('nightfox').setup({
+              options = {
+                styles = {
+                  comments = 'italic',
+                 },
+              },
+            })
+          ";
+
           # Render Markdown
           render-markdown.package = pkgs.vimPlugins.render-markdown-nvim;
           render-markdown.setup = "
@@ -472,18 +498,6 @@ in {
               },
               latex = {
                 enabled = false,
-              },
-            })
-          ";
-
-          # Nightfox
-          nightfox.package = pkgs.vimPlugins.nightfox-nvim;
-          nightfox.setup = "
-            require('nightfox').setup({
-              options = {
-                styles = {
-                  comments = 'italic',
-                 },
               },
             })
           ";
