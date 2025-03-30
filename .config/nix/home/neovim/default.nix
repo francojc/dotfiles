@@ -351,13 +351,13 @@ in {
         languages = {
           enableLSP = false;
           enableFormat = false;
-          enableTreesitter = true;
-          enableExtraDiagnostics = true;
+          enableTreesitter = false;
+          enableExtraDiagnostics = false;
 
-          nix.enable = true;
-          lua.enable = true;
+          nix.enable = false;
+          lua.enable = false;
           markdown = {
-            enable = true;
+            enable = false;
             extensions.render-markdown-nvim = {
               enable = true;
               setupOpts = {
@@ -378,11 +378,11 @@ in {
               };
             };
           };
-          bash.enable = true;
-          css.enable = true;
-          html.enable = true;
-          python.enable = true;
-          r.enable = true;
+          bash.enable = false;
+          css.enable = false;
+          html.enable = false;
+          python.enable = false;
+          r.enable = false;
         };
 
         # Notes ------------------------------------------------------
