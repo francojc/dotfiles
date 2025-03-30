@@ -113,6 +113,7 @@ in {
                 css = ["prettier"];
                 html = ["prettier"];
                 nix = ["alejandra"];
+                "_" = ["trim_whitespace" "squeeze_blanks"];
               };
             };
           };
@@ -218,6 +219,14 @@ in {
             desc = "Move to right window";
           }
 
+          # Filetree -----
+          {
+            mode = "n";
+            key = "|";
+            action = "<Cmd>Neotree position=left focus<Cr>";
+            desc = "Toggle filetree";
+          }
+
           # Find -----
           {
             mode = "n";
@@ -242,6 +251,14 @@ in {
             key = "<leader>fh";
             action = "<Cmd>lua require('fzf-lua').help_tags()<Cr>";
             desc = "Find help tags";
+          }
+
+          # Terminal -----
+          {
+            mode = "n";
+            key = "<leader>tt";
+            action = "<Cmd>ToggleTerm<Cr>";
+            desc = "Toggle terminal";
           }
         ];
 
@@ -300,10 +317,11 @@ in {
                 _type = "lua-inline";
                 expr = ''
                   function()
-                    return "Terminal " .. require("nvim-web-devicons").get_icon("terminal")
+                    return require("nvim-web-devicons").get_icon("terminal") .. " Terminal "
                   end
                 '';
               };
+              auto_scroll = true;
             };
           };
         };
