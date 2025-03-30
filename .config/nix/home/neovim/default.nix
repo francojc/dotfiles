@@ -379,8 +379,6 @@ in {
                 latex.enabled = false;
               };
             };
-            lsp.enable = true;
-            treesitter.enable = true;
           };
           bash.enable = true;
           css.enable = true;
@@ -483,6 +481,30 @@ in {
           colorizer.enable = true;
         };
 
+        # Utility -----------------------------------------------
+        utility = {
+          images = {
+            image-nvim = {
+              enable = true;
+              setupOpts = {
+                backend = "kitty";
+                integrations = {
+                  markdown = {
+                    clearInInsertMode = true;
+                    filetypes = ["markdown" "quarto"];
+                  };
+                };
+              };
+            };
+          };
+          outline = {
+            aerial-nvim = {
+              enable = true;
+              mappings.toggle = "<leader>\\o";
+            };
+          };
+        };
+
         # Visuals -----------------------------------------------
         visuals = {
           fidget-nvim.enable = true;
@@ -517,14 +539,20 @@ in {
         };
 
         # Extra plugins ------------------------------------------
+
         extraPlugins = with pkgs.vimPlugins; {
-          # Slime
-          slime = {
-            package = vim-slime;
+          # Flash
+          flash = {
+            package = flash-nvim;
+            setup = "require('flash').setup()";
+          };
+
+          # Friendly Snippets
+          friendly-snippets = {
+            package = friendly-snippets;
             setup = "
-              vim.g.slime_target = 'neovim'
-              vim.g.slime_bracketed_paste = 1
-              ";
+              require('luasnip.loaders.from_vscode').lazy_load()
+            ";
           };
 
           # Nightfox
@@ -542,32 +570,14 @@ in {
             ";
           };
 
-          # Render Markdown
-          # render-markdown = {
-          #   package = render-markdown-nvim;
-          #   setup = "
-          #   require('render-markdown').setup({
-          #     bullet = {
-          #       enabled = true,
-          #       icons = { '■ ', '□ ', '▪ ', '▫ ' },
-          #     },
-          #     completions = { lsp = { enabled = true } },
-          #     dash = { enabled = false },
-          #     file_types = { 'markdown', 'quarto', 'CodeCompanion' },
-          #     heading = {
-          #       icons = { '# ', '## ', '### ', '#### ', '##### ', '###### ' },
-          #     },
-          #     html = {
-          #       comment = {
-          #         conceal = false,
-          #       },
-          #     },
-          #     latex = {
-          #       enabled = false,
-          #     },
-          #   })
-          #   ";
-          # };
+          # Slime
+          slime = {
+            package = vim-slime;
+            setup = "
+              vim.g.slime_target = 'neovim'
+              vim.g.slime_bracketed_paste = 1
+              ";
+          };
 
           #
         };
