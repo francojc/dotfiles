@@ -10,8 +10,6 @@ in {
     enable = true;
     settings = {
       vim = {
-        enableLuaLoader = true;
-        preventJunkFiles = true;
         vimAlias = false;
 
         # Autocommands ---------------------------------------------
@@ -42,45 +40,17 @@ in {
         ];
 
         # Assistant -------------------------------------------------
-        assistant = {
-          codecompanion-nvim = {
-            enable = false;
-            # setup codecompanion with:
-            # - copilot w/ sonnet
-            # - gemini pro 2.5
-          };
-          copilot = {
-            enable = false;
-            mappings = {
-              suggestion = {
-                acceptLine = "<C-f>";
-                acceptWord = "<C-d>";
-                next = "<C-]";
-                prev = "<C-[";
-                dismiss = "<C-e>";
-              };
-            };
-            setupOpts = {
-              suggestion = {
-                auto_trigger = true;
-              };
-            };
-          };
-        };
+        assistant = { };
 
         # Autocompletion ------------------------------------------
-        autocomplete = {
-          nvim-cmp = {
-            enable = false;
-          };
-        };
+        autocomplete = { };
 
         # Binds ------------------------------------------------------
         binds = {
           whichKey = {
             enable = true;
             setupOpts = {
-              preset = "modern";
+              preset = "helix";
             };
           };
         };
@@ -90,8 +60,6 @@ in {
           dashboard-nvim = {
             enable = false;
             setupOpts = {
-              # adapted from nvf logo (https://github.com/NotAShelf/nvf)
-              # under CC-BY (https://creativecommons.org/licenses/by/4.0/)
               config.header = [
                 "   🭇🭄🭏🬼          🬿    "
                 "  🭊🭁██🭌🬿         █🭏🬼  "
@@ -112,48 +80,16 @@ in {
         };
 
         # Diagnostics ------------------------------------------------
-        diagnostics = {
-          nvim-lint = {
-            enable = false;
-          };
-        };
+        diagnostics = { };
 
         # Filetree ---------------------------------------------------
-        filetree = {
-          neo-tree = {
-            enable = false;
-          };
-        };
+        filetree = { };
 
         # Formatters -------------------------------------------------
-        formatter = {
-          conform-nvim = {
-            enable = false;
-            setupOpts = {
-              format_on_save = {
-                lsp_format = "fallback";
-                timeout_ms = 500;
-              };
-              formatters_by_ft = {
-                python = ["black"];
-                r = ["styler"];
-                lua = ["stylua"];
-                bash = ["shfmt"];
-                javascript = ["prettier"];
-                css = ["prettier"];
-                html = ["prettier"];
-                nix = ["alejandra"];
-                "*" = ["trim_whitespace" "squeeze_blanks"];
-              };
-            };
-          };
-        };
+        formatter = { };
 
         # Git --------------------------------------------------------
-        git = {
-          enable = false;
-          gitsigns.enable = false;
-        };
+        git = { };
 
         # Keymaps -----------------------------------------------------
         keymaps = [
@@ -347,52 +283,13 @@ in {
         ];
 
         # LSP --------------------------------------------------------
-        languages = {
-          enableLSP = false;
-          enableFormat = false;
-          enableTreesitter = false;
-          enableExtraDiagnostics = false;
-
-          nix.enable = false;
-          lua.enable = false;
-          markdown = {
-            enable = false;
-            extensions.render-markdown-nvim = {
-              enable = true;
-              setupOpts = {
-                bullet = {
-                  enabled = true;
-                  icons = ["■ " "□ " "▪ " "▫ "];
-                };
-                completions = {
-                  lsp.enabled = true;
-                };
-                dash.enabled = false;
-                file_types = ["markdown" "quarto" "CodeCompanion"];
-                heading = {
-                  icons = ["# " "## " "### " "#### " "##### " "###### "];
-                };
-                html.comment.conceal = false;
-                latex.enabled = false;
-              };
-            };
-          };
-          bash.enable = false;
-          css.enable = false;
-          html.enable = false;
-          python.enable = false;
-          r.enable = false;
-        };
+        languages = { };
 
         # Notes ------------------------------------------------------
-        notes = {
-          todo-comments.enable = false;
-        };
+        notes = { };
 
         # Notfications -----------------------------------------------
-        notify = {
-          nvim-notify.enable = false;
-        };
+        notify = { };
 
         # Options ---------------------------------------------------
         options = {
@@ -427,9 +324,7 @@ in {
         };
 
         # Sessions -----------------------------------------------
-        session = {
-          nvim-session-manager.enable = false;
-        };
+        session = { };
 
         # Snippets -----------------------------------------------
         snippets = { };
@@ -437,74 +332,23 @@ in {
         # Tabline -------------------------------------------------
         tabline = {
           nvimBufferline = {
-            enable = false;
+            enable = true;
           };
         };
 
         # Terminal -----------------------------------------------
-        terminal = {
-          toggleterm = {
-            enable = false;
-            lazygit = {
-              enable = true;
-              direction = "float";
-            };
-            setupOpts = {
-              winbar.name_formatter = {
-                _type = "lua-inline";
-                expr = ''
-                  function()
-                    return require("nvim-web-devicons").get_icon("terminal") .. " Terminal "
-                  end
-                '';
-              };
-              auto_scroll = true;
-            };
-          };
-        };
+        terminal = { };
 
         # UI ---------------------------------------------------
-        ui = {
-          borders.enable = false;
-          colorizer.enable = false;
-        };
+        ui = { };
 
         # Utility -----------------------------------------------
-        utility = {
-          images = {
-            image-nvim = {
-              enable = false;
-              setupOpts = {
-                backend = "kitty";
-                integrations = {
-                  markdown = {
-                    clearInInsertMode = true;
-                    filetypes = ["markdown" "quarto"];
-                  };
-                };
-              };
-            };
-          };
-          outline = {
-            aerial-nvim = {
-              enable = false;
-              mappings.toggle = "<leader>\\o";
-            };
-          };
-        };
+        utility = { };
 
         # Visuals -----------------------------------------------
-        visuals = {
-          fidget-nvim.enable = false;
-          highlight-undo.enable = false;
-          nvim-cursorline.enable = false;
-          nvim-scrollbar.enable = false;
-          nvim-web-devicons.enable = false;
-        };
+        visuals = { };
 
         # Plugins -----------------------------------------------
-        autopairs.nvim-autopairs.enable = false;
-
         fzf-lua = {
           enable = true;
           profile = "fzf-native";
@@ -514,16 +358,6 @@ in {
           icons.enable = false;
           indentscope.enable = false;
           surround.enable = false;
-        };
-
-        treesitter = {
-          enable = false;
-          context.enable = false;
-          mappings.incrementalSelection = {
-            init = "<C-space>";
-            incrementByNode = "<C-space>";
-            decrementByNode = "<Bs>";
-          };
         };
 
         # Extra plugins ------------------------------------------
