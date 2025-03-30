@@ -70,26 +70,7 @@ in {
 
         autocomplete = {
           nvim-cmp = {
-            enable = false;
-          };
-
-          blink-cmp = {
-            enable = false;
-            friendly-snippets.enable = true;
-            setupOpts = {
-              keymap = {
-                "<C-space>" = ["show" "show_signature" "hide_signature" "fallback"];
-                "<C-e>" = ["hide"];
-                "<CR>" = ["accept" "fallback"];
-                "<Tab>" = ["snippet_forward" "fallback"];
-                "<S-Tab>" = ["snippet_backward" "fallback"];
-                "<C-j>" = ["select_next" "fallback"];
-                "<C-k>" = ["select_prev" "fallback"];
-              };
-              sources = {
-                default = ["path" "snippets"];
-              };
-            };
+            enable = true;
           };
         };
 
@@ -98,11 +79,8 @@ in {
           whichKey = {
             enable = true;
             setupOpts = {
-              preset = "helix";
+              preset = "modern";
             };
-          };
-          cheatsheet = {
-            enable = true;
           };
         };
 
@@ -311,14 +289,53 @@ in {
             action = "<Plug>SlimeRegionSend<Cr>";
             desc = "Send code region to terminal";
           }
+          {
+            mode = "t";
+            key = "<C-h>";
+            action = "<C-\\><C-n><C-w>h";
+            desc = "Move to left window";
+          }
+          {
+            mode = "t";
+            key = "<C-j>";
+            action = "<C-\\><C-n><C-w>j";
+            desc = "Move to bottom window";
+          }
+          {
+            mode = "t";
+            key = "<C-k>";
+            action = "<C-\\><C-n><C-w>k";
+            desc = "Move to top window";
+          }
+          {
+            mode = "t";
+            key = "<C-l>";
+            action = "<C-\\><C-n><C-w>l";
+            desc = "Move to right window";
+          }
+          {
+            mode = "t";
+            key = "jj";
+            action = "<C-\\><C-n>";
+            desc = "Esc from terminal";
+          }
+
+          # -- Keymaps for navigating Toggleterm terminal windows
+          # vim.keymap.set('t', 'jj', [[<C-\><C-n>]])
+          #
+          # --- Note: I only need to esc and change windows with
+          # --- C-h and C-j as I only open ToggleTerm in vert and horz
+          # vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]])
+          # -- vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]])
+          # vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]])
         ];
 
         # LSP --------------------------------------------------------
         languages = {
           enableLSP = true;
-          enableFormat = true;
-          enableTreesitter = true;
-          enableExtraDiagnostics = true;
+          # enableFormat = true;
+          # enableTreesitter = true;
+          # enableExtraDiagnostics = true;
           nix.enable = true;
           markdown.enable = true;
           lua.enable = true;
@@ -341,29 +358,29 @@ in {
 
         # Options ---------------------------------------------------
         options = {
+          backup = false;
           breakindent = true;
           clipboard = "unnamedplus";
+          cursorline = true;
+          cursorlineopt = "number";
           expandtab = true;
+          ignorecase = true;
           linebreak = true;
           scrolloff = 3;
           shiftwidth = 2;
           showbreak = "↳";
           showmode = false;
           sidescrolloff = 5;
-          tabstop = 2;
-          winborder = "rounded";
-          spell = false;
-          spelllang = "en_us";
-          spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
-          smartindent = true;
-          ignorecase = true;
-          smartcase = true;
-          swapfile = false;
-          backup = false;
-          undofile = true;
           signcolumn = "yes";
-          cursorline = true;
-          cursorlineopt = "number";
+          smartcase = true;
+          smartindent = true;
+          spell = false;
+          spellfile = "${config.home.homeDirectory}/.spell/en.utf-8.add"; # Use config variable
+          spelllang = "en_us";
+          swapfile = false;
+          tabstop = 2;
+          undofile = true;
+          winborder = "rounded";
         };
 
         statusline = {
@@ -381,7 +398,7 @@ in {
         # Snippets -----------------------------------------------
         snippets = {
           luasnip = {
-            enable = true;
+            enable = false;
             setupOpts = {
               enable_autosnippets = true;
             };
