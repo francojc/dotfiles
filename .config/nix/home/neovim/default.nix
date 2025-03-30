@@ -433,14 +433,7 @@ in {
         };
 
         # Snippets -----------------------------------------------
-        snippets = {
-          luasnip = {
-            enable = false;
-            setupOpts = {
-              enable_autosnippets = true;
-            };
-          };
-        };
+        snippets = { };
 
         # Tabline -------------------------------------------------
         tabline = {
@@ -537,43 +530,43 @@ in {
         # Extra plugins ------------------------------------------
 
         extraPlugins = with pkgs.vimPlugins; {
-          # Flash
-          flash = {
-            package = flash-nvim;
-            setup = "require('flash').setup()";
-          };
-
-          # Friendly Snippets
-          friendly-snippets = {
-            package = friendly-snippets;
-            setup = "
-              require('luasnip.loaders.from_vscode').lazy_load()
-            ";
-          };
-
-          # Nightfox
-          nightfox = {
-            package = nightfox-nvim;
-            setup = "
-            require('nightfox').setup({
-              options = {
-                styles = {
-                  comments = 'italic',
-                 },
-              },
-            })
-            vim.cmd('colorscheme nightfox')
-            ";
-          };
-
-          # Slime
-          slime = {
-            package = vim-slime;
-            setup = "
-              vim.g.slime_target = 'neovim'
-              vim.g.slime_bracketed_paste = 1
-              ";
-          };
+          # # Flash
+          # flash = {
+          #   package = flash-nvim;
+          #   setup = "require('flash').setup()";
+          # };
+          #
+          # # Friendly Snippets
+          # friendly-snippets = {
+          #   package = friendly-snippets;
+          #   setup = "
+          #     require('luasnip.loaders.from_vscode').lazy_load()
+          #   ";
+          # };
+          #
+          # # Nightfox
+          # nightfox = {
+          #   package = nightfox-nvim;
+          #   setup = "
+          #   require('nightfox').setup({
+          #     options = {
+          #       styles = {
+          #         comments = 'italic',
+          #        },
+          #     },
+          #   })
+          #   vim.cmd('colorscheme nightfox')
+          #   ";
+          # };
+          #
+          # # Slime
+          # slime = {
+          #   package = vim-slime;
+          #   setup = "
+          #     vim.g.slime_target = 'neovim'
+          #     vim.g.slime_bracketed_paste = 1
+          #     ";
+          # };
 
           #
         };
