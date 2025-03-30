@@ -43,13 +43,14 @@ in {
         assistant = {
           codecompanion-nvim = {
             enable = true;
-            # setup codecompanion
+            # setup codecompanion with:
+            # - copilot w/ sonnet
+            # - gemini pro 2.5
           };
           copilot = {
             enable = true;
             mappings = {
               suggestion = {
-                # TODO: find out how to auto-enable suggestions (:Copilot suggestions)
                 acceptLine = "<C-f>";
                 acceptWord = "<C-d>";
                 next = "<C-]";
@@ -68,8 +69,12 @@ in {
         # Autocompletion ------------------------------------------
 
         autocomplete = {
-          blink-cmp = {
+          nvim-cmp = {
             enable = true;
+          };
+
+          blink-cmp = {
+            enable = false;
             friendly-snippets.enable = true;
             setupOpts = {
               keymap = {
@@ -145,6 +150,12 @@ in {
               };
             };
           };
+        };
+
+        # Git --------------------------------------------------------
+        git = {
+          enable = true;
+          gitsigns.enable = true;
         };
 
         # Keymaps -----------------------------------------------------
@@ -251,7 +262,7 @@ in {
           {
             mode = "n";
             key = "|";
-            action = "<Cmd>Neotree position=left focus<Cr>";
+            action = "<Cmd>Neotree position=left focus toggle<Cr>";
             desc = "Toggle filetree";
           }
 
@@ -296,15 +307,24 @@ in {
           enableFormat = true;
           enableTreesitter = true;
           enableExtraDiagnostics = true;
-
           nix.enable = true;
           markdown.enable = true;
-
+          lua.enable = true;
           bash.enable = true;
           css.enable = true;
           html.enable = true;
           python.enable = true;
           r.enable = true;
+        };
+
+        # Notes ------------------------------------------------------
+        notes = {
+          todo-comments.enable = true;
+        };
+
+        # Notfications -----------------------------------------------
+        notify = {
+          nvim-notify.enable = true;
         };
 
         # Options ---------------------------------------------------
@@ -338,7 +358,13 @@ in {
         statusline = {
           lualine = {
             enable = true;
+            theme = "auto";
           };
+        };
+
+        # Sessions -----------------------------------------------
+        session = {
+          nvim-session-manager.enable = true;
         };
 
         # Snippets -----------------------------------------------
@@ -380,11 +406,10 @@ in {
           };
         };
 
-        # Themes ---------------------------------------------------
-        theme = {
-          enable = true;
-          name = "tokyonight";
-          style = "night";
+        # UI ---------------------------------------------------
+        ui = {
+          borders.enable = true;
+          colorizer.enable = true;
         };
 
         # Visuals -----------------------------------------------
@@ -409,14 +434,63 @@ in {
           surround.enable = true;
         };
 
+        treesitter = {
+          enable = true;
+          context.enable = true;
+          mappings.incrementalSelection = {
+            # init "<C-space>";
+            init = "<C-space>";
+            # node incremental selection "<C-space>";
+            incrementByNode = "<C-space>";
+            # scope incremental selection ""
+            # node decremental a selection "<Bs>";
+            decrementByNode = "<Bs>";
+          };
+        };
+
         # Extra plugins ------------------------------------------
         extraPlugins = {
+          # Render Markdown
           render-markdown.package = pkgs.vimPlugins.render-markdown-nvim;
           render-markdown.setup = "
-              require('render-markdown').setup({})
+            require('render-markdown').setup({
+              bullet = {
+                enabled = true,
+                icons = { '■ ', '□ ', '▪ ', '▫ ' },
 
-            ";
+              },
+              completions = { lsp = { enabled = true } },
+              dash = { enabled = false },
+              file_types = { 'markdown', 'quarto', 'CodeCompanion' },
+              heading = {
+                icons = { '# ', '## ', '### ', '#### ', '##### ', '###### ' },
+              },
+              html = {
+                comment = {
+                  conceal = false,
+                },
+              },
+              latex = {
+                enabled = false,
+              },
+            })
+          ";
+
+          # Nightfox
+          nightfox.package = pkgs.vimPlugins.nightfox-nvim;
+          nightfox.setup = "
+            require('nightfox').setup({
+              options = {
+                styles = {
+                  comments = 'italic',
+                 },
+              },
+            })
+          ";
         };
+        luaConfigRC.theme = ''
+          vim.cmd('colorscheme nightfox')
+        '';
       };
     };
   };
