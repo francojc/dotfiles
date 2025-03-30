@@ -119,6 +119,7 @@ in {
             action = "ggVGy";
             desc = "Yank entire file";
           }
+
           # Buffers -----
           {
             mode = "n";
