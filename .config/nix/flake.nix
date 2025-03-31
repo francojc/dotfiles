@@ -12,12 +12,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixCats = {
+      url = "github:BirdeeHub/nixCats-nvim";
+    };
   };
 
   outputs = inputs @ {
     nixpkgs,
     darwin,
     home-manager,
+    nixCats,
     ...
   }: let
     # Machine configurations
@@ -67,6 +71,7 @@
                 };
               users.${username} = {
                 imports = [
+                  # inputs.nixCats.homeModule
                   ./home/default.nix
                 ];
               };
