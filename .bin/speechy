@@ -16,12 +16,12 @@ show_help() {
     echo "  -t TEXT        Text to convert to speech (required)"
     echo "  -r RATE        Speech rate between 0.5 and 2.0 (optional, default: 1.0)"
     echo "  -o FILE        Output filename (optional, default: output.mp3)"
-    echo "  -v VOICE       Voice to use: 'male' for Leo or 'female' for Tatiana (optional, default: female)"
+    echo "  -v VOICE       Voice to use: david, leo, o tatiana"
     echo "  -h, --help     Display this help message"
     echo
     echo "Examples:"
     echo "  speechy -t \"Hello world\""
-    echo "  speechy -t \"Hello world\" -r 1.5 -o my_speech.mp3 -v male"
+    echo "  speechy -t \"Hello world\" -r 1.5 -o my_speech.mp3 -v leo"
     exit 0
 }
 
@@ -34,7 +34,7 @@ command -v pass >/dev/null 2>&1 || { echo "Error: pass is required" >&2; exit 1;
 
 get_pass() {
     local key_name="$1"
-    pass "API/${key_name}" || { 
+    pass "API/${key_name}" || {
         echo "Error: API key not found in pass store: API/${key_name}" >&2
         exit 1
     }
@@ -104,7 +104,7 @@ response=$(curl -s --write-out "\n%{http_code}" \
      -H "accept: audio/mpeg" \
      -d "{
         \"text\": \"$text\",
-        \"model_id\": \"eleven_turbo_v2\",
+        \"model_id\": \"eleven_flash_v2_5\",
         \"voice_settings\": {
             \"stability\": 0.5,
             \"similarity_boost\": 0.8
