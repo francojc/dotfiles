@@ -52,6 +52,7 @@ in {
         startupPlugins = {
           general = with pkgs.vimPlugins; [
             blink-cmp
+            bufferline-nvim
             codecompanion-nvim
             conform-nvim
             copilot-vim
