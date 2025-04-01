@@ -37,13 +37,13 @@ lspconfig.nixd.setup({
       formatting = { command = { "alejandra" } },
       options = {
         nixos = {
-          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").nixosConfigurations.' .. get_hostname() .. '.options'),
+          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").nixosConfigurations.' .. get_hostname() .. '.options',
         },
         nix_darwin = {
-          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").darwinConfigurations.' .. get_hostname() .. '.options'),
+          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").darwinConfigurations.' .. get_hostname() .. '.options',
         },
         home_manager = {
-          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").homeConfigurations.' .. get_hostname() .. '.options'),
+          expr = '(builtins.getFlake \"/Users/' .. get_username() .. '/.dotfiles/.config/nix\").homeConfigurations.' .. get_hostname() .. '.options',
         },
       },
     },
