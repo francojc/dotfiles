@@ -55,6 +55,7 @@ in {
             neo-tree-nvim
             nightfox-nvim
             gruvbox
+	    nvim-web-devicons
           ];
         };
 
