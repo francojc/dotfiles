@@ -26,6 +26,7 @@ in {
         # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
+            copilot-language-server
             lazygit
             fzf
             ripgrep
@@ -49,9 +50,11 @@ in {
         # Plugins that load on startup without packadd
         startupPlugins = {
           general = with pkgs.vimPlugins; [
+            blink-cmp
             codecompanion-nvim
             conform-nvim
             copilot-vim
+            friendly-snippets
             fzf-lua
             gitsigns-nvim
             gruvbox

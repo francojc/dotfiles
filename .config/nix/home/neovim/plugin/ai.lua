@@ -9,7 +9,7 @@ require("copilot").setup({
     },
   },
   suggestion = {
-    enabled = true,
+    enabled = false,
     auto_trigger = true,
     debounce = 75,
     keymap = {
@@ -31,3 +31,4 @@ require("copilot").setup({
 })
 
 -- CodeCompanion (codecompanion-nvim)
+require('codecompanion').setup()
