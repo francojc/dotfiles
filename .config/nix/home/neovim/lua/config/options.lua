@@ -4,6 +4,9 @@ opt = vim.opt
 -- Clipboard 
 opt.clipboard = "unnamedplus" 
 
+-- Completions
+vim.cmd("set completeopt+=noselect")
+
 -- Window
 opt.splitbelow = true
 opt.splitright = true
@@ -49,4 +52,3 @@ opt.termguicolors = true
 
 -- Misc
 opt.mouse = "a"
-opt.mousemove = true
