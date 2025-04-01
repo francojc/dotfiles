@@ -22,7 +22,15 @@ opt.cursorlineopt = "number"
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
+opt.softtabstop = 2
+opt.showtabline = 2
+
+-- Indentation
 opt.smartindent = true
+opt.autoindent = true
+opt.breakindent = true
+opt.linebreak = true
+opt.showbreak = "↪ "
 
 -- Search
 opt.ignorecase = true
@@ -39,3 +47,6 @@ opt.undofile = true
 -- Colors 
 opt.termguicolors = true 
 
+-- Misc
+opt.mouse = "a"
+opt.mousemove = true

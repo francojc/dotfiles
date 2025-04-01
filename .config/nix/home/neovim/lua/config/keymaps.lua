@@ -1,2 +1,10 @@
 -- Keymaps ----------------------------------------
-vim.g.mapleader = " "
+
+g = vim.g
+
+-- Leader key
+g.mapleader = " "
+g.maplocalleader = " "
+
+-- Keymaps ----------------------------------------
+--
