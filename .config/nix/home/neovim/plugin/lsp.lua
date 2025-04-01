@@ -7,33 +7,34 @@
 -- capabilities = vim.tbl_deep_extend("force", capabilities, {
 
 
-local lspconfig = require("lspconfig") 
+local lspconfig = require("lspconfig")
 
--- Bash 
+-- Bash
 lspconfig.bashls.setup {}
 
 -- Nix
 -- Get username and hostname from the system
-
 local function get_username()
   local handle = io.popen("whoami")
+  if not handle then return "" end
   local username = handle:read("*a")
   handle:close()
-  return username
+  return username:gsub("\n$", "") 
 end
 
 local function get_hostname()
   local handle = io.popen("hostname")
+  if not handle then return "" end
   local hostname = handle:read("*a")
   handle:close()
-  return hostname
+  return hostname:gsub("\n$", "")
 end
 
 lspconfig.nixd.setup({
   cmd = { "nixd" },
   settings = {
     nixd = {
-      nixpkgs = { expr = "import <nixpkgs> {}" }, 
+      nixpkgs = { expr = "import <nixpkgs> {}" },
       formatting = { command = { "alejandra" } },
       options = {
         nixos = {
@@ -50,5 +51,5 @@ lspconfig.nixd.setup({
   },
 })
 
--- R 
+-- R
 lspconfig.air.setup {}
