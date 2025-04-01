@@ -27,7 +27,7 @@ in {
             alejandra
           ];
         };
-
+        
         startupPlugins = with pkgs.vimPlugins; {
           general = [
             lze
