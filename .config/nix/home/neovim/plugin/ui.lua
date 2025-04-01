@@ -1,4 +1,4 @@
--- UI config 
+-- UI config
 
 -- Bufferline
 require('bufferline').setup({})
@@ -8,7 +8,7 @@ require('lualine').setup {
   options = {
     icons_enabled = true,
     theme = 'auto',
-    component_separators = { left = '', right = ''},
+    component_separators = { left = '', right = ''}, -- Changed to block separators
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
       statusline = {},
@@ -27,7 +27,7 @@ require('lualine').setup {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_x = {'lsp_progress', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
@@ -49,7 +49,7 @@ require('lualine').setup {
 require('render-markdown').setup({
   completions = { blink = { enabled = true } },
 })
--- Render Markdown 
+-- Render Markdown
 require('render-markdown').setup({
   completions = { blink = { enabled = true } },
 })
