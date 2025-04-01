@@ -55,9 +55,11 @@ in {
 
           colorschemes = [
             gruvbox
+            rose-pine
             nightfox
             onedark
             tokyonight
+
           ];
 
           completions = [
@@ -87,7 +89,6 @@ in {
           ];
 
           general = with pkgs.vimPlugins; [
-            nvim-treesitter.withAllGrammars
             lualine-nvim
             lualine-lsp-progress
             gitsigns-nvim
@@ -101,7 +102,7 @@ in {
       packageDefinitions.replace = {
         nvix = {pkgs , ... }: {
           settings = {
-            aliases = [ "v" ];
+            aliases = [ "v" "nvim" ];
           };
           categories = {
             general = true;
@@ -109,8 +110,6 @@ in {
             colorschemes = true;
             ui = true;
             ai = true;
-
-
           };
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';

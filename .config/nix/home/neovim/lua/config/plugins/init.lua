@@ -1,5 +1,5 @@
 require("lze").load({
-	{ import = "./general.lua" },
-    { import = "./colorschemes.lua" },
-    { import = "./completions.lua" },
+	{ import = "config.plugins.general" },
+    { import = "config.plugins.colorschemes" },
+    { import = "config.pluginsr.completions" },
 })
