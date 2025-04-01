@@ -16,6 +16,7 @@ in {
       luaPath = "${./.}";
 
       categoryDefinitions.replace = ({ pkgs, settings, categories, extra, name, mkPlugin, ... }@packageDef: {
+
         lspsAndRuntimeDeps = {
           general = with pkgs; [
             lazygit
@@ -53,6 +54,7 @@ in {
             gitsigns-nvim
             which-key-nvim
           ];
+
         };
 
       packageDefinitions.replace = {
@@ -72,4 +74,5 @@ in {
       };
     };
   };
+ };
 }
