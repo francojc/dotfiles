@@ -149,27 +149,8 @@ opt.undofile = true
 -- Colors
 opt.termguicolors = true
 opt.background = "dark"
+vim.cmd("colorscheme gruvbox")
 
 -- Misc
 -- opt.mouse = "a"
-
--- Plugins ------------------------------------------------------
--- Startup time
-
-vim.cmd("colorscheme gruvbox")
-
--- require('neo-tree').setup({
---   close_if_last_window = true,
--- })
-
--- require('toggleterm').setup({
---   open_mapping = [[<C-t>]],
---   direction = 'float'
---  })
-
--- require("which-key").setup()
--- require('lualine').setup()
--- require('mini.ai').setup()
--- require('mini.icons').setup()
--- require('mini.pairs').setup()
 

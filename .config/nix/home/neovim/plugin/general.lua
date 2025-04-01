@@ -72,7 +72,6 @@ require('toggleterm').setup({
 
 
 require("which-key").setup()
-require('lualine').setup()
 require('mini.ai').setup()
 require('mini.icons').setup()
 require('mini.pairs').setup()
