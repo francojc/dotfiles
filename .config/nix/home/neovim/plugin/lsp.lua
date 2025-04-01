@@ -80,4 +80,21 @@ lspconfig.nixd.setup({
 })
 
 -- R
-lspconfig.air.setup ({ })
+-- lspconfig.air.setup ({ })
+lspconfig.r_language_server.setup({
+  cmd = { "R", "--slave", "-e", "languageserver::run()" },
+  filetypes = { "r" },
+  root_dir = function(fname)
+    return lspconfig.util.root_pattern("DESCRIPTION")(fname) or
+           lspconfig.util.find_git_ancestor(fname) or
+           lspconfig.util.path.dirname(fname)
+  end,
+  settings = {
+    r = {
+      diagnostics = {
+        enable = true,
+        globals = { "vim" }
+      }
+    }
+  }
+})
