@@ -1,11 +1,4 @@
 -- LSP config
---
-
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
---
--- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
--- capabilities = vim.tbl_deep_extend("force", capabilities, {
-
 
 local lspconfig = require("lspconfig")
 
@@ -87,4 +80,4 @@ lspconfig.nixd.setup({
 })
 
 -- R
-lspconfig.air.setup {}
+lspconfig.air.setup ({ })

@@ -6,6 +6,9 @@ require('neo-tree').setup({
 })
 
 -- Treesitter 
+-- Make treesitter Quarto support work with markdown
+vim.treesitter.language.register('markdown', 'quarto')
+
 require('nvim-treesitter.configs').setup ({
   highlight = { enable = true, },
   indent = { enable = false, },
