@@ -39,6 +39,7 @@ in {
             air-formatter
             bash-language-server
             lua-language-server
+            marksman 
             nix-doc
             nixd
             pyright
@@ -65,11 +66,12 @@ in {
             mini-nvim
             neo-tree-nvim
             nightfox-nvim
+            nvim-lspconfig
+            nvim-treesitter-textobjects
+            nvim-treesitter.withAllGrammars
             nvim-web-devicons
             plenary-nvim
             toggleterm-nvim
-            nvim-treesitter.withAllGrammars
-            nvim-treesitter-textobjects
             which-key-nvim
           ];
         };
