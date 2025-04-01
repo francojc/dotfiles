@@ -34,69 +34,33 @@ in {
           ];
 
           lsps = with pkgs; [
+            alejandra
             air-formatter
             bash-language-server
             lua-language-server
-            nil
             nix-doc
+            nixd
             pyright
+            stylua
             yaml-language-server
           ];
         };
 
         # Plugins that load on startup without packadd
-        startupPlugins = with pkgs.vimPlugins; {
-          general = [
-            conform-nvim
-            fidget-nvim
+        startupPlugins = {
+          general = with pkgs.vimPlugins; [
             fzf-lua
-            gitsigns-nvim
             lze
             lzextras
             neo-tree-nvim
-            nvim-treesitter-textobjects
-            nvim-treesitter.withAllGrammars
-            nvim-web-devicons
-            plenary-nvim
-            toggleterm-nvim
-            which-key-nvim
-          ];
-
-          colorschemes = [
-            gruvbox
-            rose-pine
             nightfox-nvim
-            onedarkpro-nvim
-            tokyonight-nvim
-          ];
-
-          completions = [
-            blink-cmp
-          ];
-
-          ui = [
-            alpha-nvim
-            bufferline-nvim
-            nvim-autopairs
-            nvim-colorizer-lua
-            nvim-notify
-            neo-tree-nvim
-          ];
-
-          ai = [
-            copilot-lua
-            CopilotChat-nvim
-            codecompanion-nvim
+            gruvbox
           ];
         };
 
         # Plugins not loaded on startup
         # Use with packadd and an autocommand to get lazy loading
         optionalPlugins = {
-          lua = with pkgs.vimPlugins; [
-            lazydev-nvim
-          ];
-
           general = with pkgs.vimPlugins; [
             lualine-nvim
             lualine-lsp-progress
@@ -110,15 +74,9 @@ in {
         nvix = {pkgs, ...}: {
           settings = {
             aliases = ["v" "nvim"];
-            wrapRc = false;
-            withRuby = false;
           };
           categories = {
             general = true;
-            completions = true;
-            colorschemes = true;
-            ui = true;
-            ai = true;
           };
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
