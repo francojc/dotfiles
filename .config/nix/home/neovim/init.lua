@@ -89,7 +89,7 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)")
 -- Files -------
 -- Neotree
 
-map("n", "<leader>ft", "<Cmd>Neotree<Cr>")
+map("n", "<leader>ft", "<Cmd>Neotree toggle<Cr>")
 
 -- Fzf-lua
 
@@ -158,43 +158,18 @@ opt.background = "dark"
 
 vim.cmd("colorscheme gruvbox")
 
--- Lazy load plugins
-
--- require('config.plugins')
-
-require("lze").load({
-
-  -- Testing 
-  {
-    "lualine.nvim",
-    enabled = nixCats('general') or false,
-    event = "DeferredUIEnter",
-    load = function (name)
-      vim.cmd.packadd(name)
-      vim.cmd.packadd(lualine-lsp-progress)
-    end,
-    after = function (plugin)
-      require('lualine').setup({})
-    end,
-  },
-  {
-    "mini.nvim",
-    enabled = nixCats('general') or false,
-    event = "DeferredUIEnter",
-    after = function (plugin)
-      require('mini.pairs').setup()
-      require('mini.icons').setup()
-      require('mini.ai').setup()
-    end,
-  },
-  {
-    "which-key.nvim",
-    enabled = nixCats('general') or false,
-    event = "DeferredUIEnter",
-    after = function (plugin)
-      require("which-key").setup({})
-    end,
-  }
-
+require('neo-tree').setup({
+  close_if_last_window = true,
 })
+
+require('toggleterm').setup({
+  open_mapping = [[<C-t>]],
+  direction = 'float'
+ })
+
+require("which-key").setup()
+require('lualine').setup()
+require('mini.ai').setup()
+require('mini.icons').setup()
+require('mini.pairs').setup()
 

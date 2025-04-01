@@ -49,14 +49,22 @@ in {
         # Plugins that load on startup without packadd
         startupPlugins = {
           general = with pkgs.vimPlugins; [
+            codecompanion-nvim
+            copilot-vim
             fzf-lua
+            gitsigns-nvim
+            gruvbox
+            lualine-lsp-progress
+            lualine-nvim
             lze
             lzextras
+            mini-nvim
             neo-tree-nvim
             nightfox-nvim
-            gruvbox
             nvim-web-devicons
-            copilot-vim
+            plenary-nvim
+            toggleterm-nvim
+            which-key-nvim
           ];
         };
 
@@ -64,13 +72,6 @@ in {
         # Use with packadd and an autocommand to get lazy loading
         optionalPlugins = {
           general = with pkgs.vimPlugins; [
-            lualine-nvim
-            lualine-lsp-progress
-            gitsigns-nvim
-            which-key-nvim
-            codecompanion-nvim
-            plenary-nvim
-            mini-nvim
           ];
         };
       };
