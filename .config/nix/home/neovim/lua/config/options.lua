@@ -1,11 +1,11 @@
 -- Options ---------------------------------------
 opt = vim.opt
 
--- Clipboard 
-opt.clipboard = "unnamedplus" 
+-- Clipboard
+opt.clipboard = "unnamedplus"
 
 -- Completions
-vim.cmd("set completeopt+=noselect")
+opt.completeopt = "menu,preview,noselect"
 
 -- Window
 opt.splitbelow = true
@@ -14,7 +14,7 @@ opt.scrolloff = 3
 opt.sidescrolloff = 5
 opt.wrap = false
 
--- Gutter 
+-- Gutter
 opt.relativenumber = true
 opt.number = true
 opt.signcolumn = "yes"
@@ -41,14 +41,14 @@ opt.smartcase = true
 opt.incsearch = true
 opt.hlsearch = false
 
--- Swap/backup/undo 
+-- Swap/backup/undo
 opt.backup = false
 opt.swapfile = false
 opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 opt.undofile = true
 
--- Colors 
-opt.termguicolors = true 
+-- Colors
+opt.termguicolors = true
 
 -- Misc
 opt.mouse = "a"

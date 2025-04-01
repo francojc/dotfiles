@@ -1,20 +1,29 @@
-{ inputs, ... }: 
-let
+{inputs, ...}: let
   utils = inputs.nixCats.utils;
 in {
   config = {
     nixCats = {
       enable = true;
       nixpkgs_version = inputs.nixpkgs;
-      addOverlays = /* (import ./overlays inputs) ++ */ [
-        (utils.standardPluginOverlay inputs)
-      ];
-      packageNames = [ "nvix" ];
+      addOverlays =
+        /*
+        (import ./overlays inputs) ++
+        */
+        [
+          (utils.standardPluginOverlay inputs)
+        ];
+      packageNames = ["nvix"];
 
       luaPath = "${./.}";
 
-      categoryDefinitions.replace = ({ pkgs, settings, categories, name, ... }@packageDef: {
-
+      categoryDefinitions.replace = {
+        pkgs,
+        settings,
+        categories,
+        name,
+        ...
+      } @ packageDef: {
+        # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
             lazygit
@@ -25,6 +34,7 @@ in {
           ];
 
           lsps = with pkgs; [
+            air-formatter
             bash-language-server
             lua-language-server
             nil
@@ -32,11 +42,10 @@ in {
             pyright
             yaml-language-server
           ];
-
         };
-        
-        startupPlugins = with pkgs.vimPlugins; {
 
+        # Plugins that load on startup without packadd
+        startupPlugins = with pkgs.vimPlugins; {
           general = [
             conform-nvim
             fidget-nvim
@@ -59,13 +68,12 @@ in {
             nightfox-nvim
             onedarkpro-nvim
             tokyonight-nvim
-
           ];
 
           completions = [
-            blink-cmp              
+            blink-cmp
           ];
-          
+
           ui = [
             alpha-nvim
             bufferline-nvim
@@ -80,9 +88,10 @@ in {
             CopilotChat-nvim
             codecompanion-nvim
           ];
-
         };
 
+        # Plugins not loaded on startup
+        # Use with packadd and an autocommand to get lazy loading
         optionalPlugins = {
           lua = with pkgs.vimPlugins; [
             lazydev-nvim
@@ -94,17 +103,15 @@ in {
             gitsigns-nvim
             which-key-nvim
           ];
-
         };
-
-      }); 
+      };
 
       packageDefinitions.replace = {
-        nvix = {pkgs , ... }: {
+        nvix = {pkgs, ...}: {
           settings = {
-            aliases = [ "v" "nvim" ];
+            aliases = ["v" "nvim"];
             wrapRc = false;
-	    withRuby = false;
+            withRuby = false;
           };
           categories = {
             general = true;
@@ -117,7 +124,7 @@ in {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
           };
         };
-      }; 
-    }; 
-  }; 
+      };
+    };
+  };
 }
