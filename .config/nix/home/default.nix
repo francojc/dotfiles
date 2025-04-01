@@ -15,7 +15,7 @@
       VISUAL = "nvim";
     };
     stateVersion = "24.05";
-  };
+  }; # <-- Semicolon added here
 
-  programs.home-manager.enable = true;
+  programs.home-manager.enable = true; # <-- Semicolon added here
 }
