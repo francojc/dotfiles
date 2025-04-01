@@ -55,7 +55,7 @@ in {
             neo-tree-nvim
             nightfox-nvim
             gruvbox
-	    nvim-web-devicons
+            nvim-web-devicons
           ];
         };
 
@@ -63,6 +63,7 @@ in {
         # Use with packadd and an autocommand to get lazy loading
         optionalPlugins = {
           general = with pkgs.vimPlugins; [
+            copilot-lua
             lualine-nvim
             lualine-lsp-progress
             gitsigns-nvim

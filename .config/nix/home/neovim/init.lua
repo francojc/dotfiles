@@ -81,6 +81,11 @@ map("n", "<C-Right>", ":vertical resize +2<Cr>")
 
 map("n", "<leader>ft", "<Cmd>Neotree<Cr>")
 
+-- Fzf-lua
+
+map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>")
+map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>")
+
 -- Options ------------------------------------------------------
 
 opt = vim.opt
@@ -147,4 +152,19 @@ vim.cmd("colorscheme gruvbox")
 
 -- require('config.plugins')
 
+require("lze").load({
+
+  -- Testing
+  {
+   "copilot.lua",
+    enabled = nixCats('general') or false,
+    cmd = "Copilot",
+    event = "InsertEnter",
+    after = function(plugin)
+      require("copilot").setup({})
+    end,
+  }
+
+
+})
 
