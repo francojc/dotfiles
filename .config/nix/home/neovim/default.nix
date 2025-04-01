@@ -69,6 +69,7 @@ in {
             gitsigns-nvim
             which-key-nvim
             codecompanion-nvim
+            plenary-nvim
             mini-nvim
           ];
         };

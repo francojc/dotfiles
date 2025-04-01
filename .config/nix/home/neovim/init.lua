@@ -45,7 +45,7 @@ function map(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
--- Convenience -----------------
+-- Vim -----------------
 -- jj to escape insert mode
 map("i", "jj", "<Esc>")
 
@@ -62,19 +62,29 @@ map("n", "<C-q>", ":bd<Cr>")
 -- Quit
 map("n", "<leader>x", ":qa<Cr>")
 
---- Window management -----------
--- Move between windows
+--- Window  -----
+-- Move between 
 map("n", "<C-h>", "<C-w>h")
 map("n", "<C-j>", "<C-w>j")
 map("n", "<C-k>", "<C-w>k")
 map("n", "<C-l>", "<C-w>l")
 
--- Resize windows
+-- Resize 
 map("n", "<C-Up>", ":resize -2<Cr>")
 map("n", "<C-Down>", ":resize +2<Cr>")
 map("n", "<C-Left>", ":vertical resize -2<Cr>")
 map("n", "<C-Right>", ":vertical resize +2<Cr>")
 
+-- Plugin keymaps ----------------
+
+-- AI ----------
+-- Copilot 
+
+map("i", "<C-d>", "<Plug>(copilot-accept-word)")
+map("i", "<C-f>", "<Plug>(copilot-accept-line)")
+map("i", "<C-n>", "<Plug>(copilot-next)")
+map("i", "<C-p>", "<Plug>(copilot-previous)")
+map("i", "<C-e>", "<Plug>(copilot-dismiss)")
 
 -- Files -------
 -- Neotree
@@ -154,16 +164,7 @@ vim.cmd("colorscheme gruvbox")
 
 require("lze").load({
 
-  -- Testing
-  {
-   "copilot.lua",
-    enabled = nixCats('general') or false,
-    cmd = "Copilot",
-    event = "InsertEnter",
-    after = function (plugin)
-      require("copilot").setup({})
-    end,
-  },
+  -- Testing 
   {
     "lualine.nvim",
     enabled = nixCats('general') or false,
@@ -194,7 +195,6 @@ require("lze").load({
       require("which-key").setup({})
     end,
   }
-
 
 })
 
