@@ -58,6 +58,7 @@ require("render-markdown").setup({
 		right_pad = 1,
 	},
 	html = {
+		enabled = true,
 		conceal_comments = false,
 	},
 })
