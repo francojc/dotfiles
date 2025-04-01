@@ -35,8 +35,8 @@ g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
--- Slime 
-g.slime_target = "neovim" 
+-- Slime
+g.slime_target = "neovim"
 
 
 -- Keymaps ----------------------------------------
@@ -67,13 +67,13 @@ map("n", "<C-q>", ":bd<Cr>")
 map("n", "<leader>x", ":qa<Cr>")
 
 --- Window  -----
--- Move between 
+-- Move between
 map("n", "<C-h>", "<C-w>h")
 map("n", "<C-j>", "<C-w>j")
 map("n", "<C-k>", "<C-w>k")
 map("n", "<C-l>", "<C-w>l")
 
--- Resize 
+-- Resize
 map("n", "<C-Up>", ":resize -2<Cr>")
 map("n", "<C-Down>", ":resize +2<Cr>")
 map("n", "<C-Left>", ":vertical resize -2<Cr>")
@@ -81,8 +81,7 @@ map("n", "<C-Right>", ":vertical resize +2<Cr>")
 
 -- Plugin keymaps ----------------
 
--- AI ----------
--- Copilot 
+-- Copilot
 
 map("i", "<C-d>", "<Plug>(copilot-accept-word)")
 map("i", "<C-f>", "<Plug>(copilot-accept-line)")
@@ -90,13 +89,13 @@ map("i", "<C-n>", "<Plug>(copilot-next)")
 map("i", "<C-p>", "<Plug>(copilot-previous)")
 map("i", "<C-e>", "<Plug>(copilot-dismiss)")
 
--- Buffers ------ 
--- Bufferline 
+-- Buffers ------
+-- Bufferline
 
 map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
 map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>")
-map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>") 
+map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>")
 map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>")
 
 -- Files -------
@@ -166,4 +165,3 @@ vim.cmd("colorscheme gruvbox")
 
 -- Misc
 -- opt.mouse = "a"
-
