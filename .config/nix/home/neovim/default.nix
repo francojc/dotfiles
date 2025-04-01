@@ -1,7 +1,6 @@
 { inputs, ... }: let
   utils = inputs.nixCats.utils;
 in {
-  # Do not import nixCats.homeModule here
   config = {
     nixCats = {
       enable = true;
@@ -55,7 +54,7 @@ in {
 
         };
 
-      }); # Semicolon needed here to separate from next attribute
+      }); 
 
       packageDefinitions.replace = {
         nvix = {pkgs , ... }: {
@@ -71,7 +70,7 @@ in {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
           };
         };
-      }; # Semicolon needed here to separate from next attribute (if any) or end the set
-    }; # Closes nixCats set
-  }; # Closes config set
+      }; 
+    }; 
+  }; 
 }
