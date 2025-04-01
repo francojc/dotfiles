@@ -68,6 +68,8 @@ in {
             lualine-lsp-progress
             gitsigns-nvim
             which-key-nvim
+            codecompanion-nvim
+            mini-nvim
           ];
         };
       };

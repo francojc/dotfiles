@@ -160,8 +160,38 @@ require("lze").load({
     enabled = nixCats('general') or false,
     cmd = "Copilot",
     event = "InsertEnter",
-    after = function(plugin)
+    after = function (plugin)
       require("copilot").setup({})
+    end,
+  },
+  {
+    "lualine.nvim",
+    enabled = nixCats('general') or false,
+    event = "DeferredUIEnter",
+    load = function (name)
+      vim.cmd.packadd(name)
+      vim.cmd.packadd(lualine-lsp-progress)
+    end,
+    after = function (plugin)
+      require('lualine').setup({})
+    end,
+  },
+  {
+    "mini.nvim",
+    enabled = nixCats('general') or false,
+    event = "DeferredUIEnter",
+    after = function (plugin)
+      require('mini.pairs').setup()
+      require('mini.icons').setup()
+      require('mini.ai').setup()
+    end,
+  },
+  {
+    "which-key.nvim",
+    enabled = nixCats('general') or false,
+    event = "DeferredUIEnter",
+    after = function (plugin)
+      require("which-key").setup({})
     end,
   }
 
