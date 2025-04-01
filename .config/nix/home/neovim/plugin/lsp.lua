@@ -12,6 +12,28 @@ local lspconfig = require("lspconfig")
 -- Bash
 lspconfig.bashls.setup {}
 
+-- Lua 
+lspconfig.lua_ls.setup {
+  filetypes = { "lua" },
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Both",
+      },
+      diagnostics = {
+        globals = { "vim" },
+      },
+      runtime = {
+        version = "LuaJIT",
+      },
+      hint = {
+        enable = true,
+        arrayIndex = "Enable",
+      },
+    },
+  },
+}
+
 -- Nix
 -- Get username and hostname from the system
 local function get_username()

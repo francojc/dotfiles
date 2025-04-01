@@ -26,7 +26,6 @@ in {
         # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
-            copilot-language-server
             lazygit
             fzf
             ripgrep
@@ -72,6 +71,7 @@ in {
             nvim-treesitter.withAllGrammars
             nvim-web-devicons
             plenary-nvim
+            render-markdown-nvim
             toggleterm-nvim
             which-key-nvim
           ];

@@ -86,6 +86,15 @@ map("i", "<C-n>", "<Plug>(copilot-next)")
 map("i", "<C-p>", "<Plug>(copilot-previous)")
 map("i", "<C-e>", "<Plug>(copilot-dismiss)")
 
+-- Buffers ------ 
+-- Bufferline 
+
+map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
+map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
+map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>")
+map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>") 
+map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>")
+
 -- Files -------
 -- Neotree
 
