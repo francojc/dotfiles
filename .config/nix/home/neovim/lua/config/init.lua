@@ -1,2 +1,4 @@
-require('config.plugins') -- Corrected path
-require('config.settings')
+require('config.autocmds')
+require('config.keymaps')
+require('config.options')
+require('config.plugins')
