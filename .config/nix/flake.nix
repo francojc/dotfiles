@@ -21,7 +21,6 @@
     nixpkgs,
     darwin,
     home-manager,
-    nixCats,
     ...
   }: let
     # Machine configurations
@@ -71,7 +70,7 @@
                 };
               users.${username} = {
                 imports = [
-                  # inputs.nixCats.homeModule
+                   # inputs.nixCats.homeModule
                   ./home/default.nix
                 ];
               };
