@@ -1,3 +1,5 @@
 require("lze").load({
-	{ import = "config.plugins.treesitter" },
+	{ import = "./general.lua" },
+    { import = "./colorschemes.lua" },
+    { import = "./completions.lua" },
 })

@@ -1,4 +1,5 @@
-{ inputs, ... }: let
+{ inputs, ... }: 
+let
   utils = inputs.nixCats.utils;
 in {
   config = {
@@ -12,38 +13,79 @@ in {
 
       luaPath = "${./.}";
 
-      categoryDefinitions.replace = ({ pkgs, settings, categories, extra, name, mkPlugin, ... }@packageDef: {
+      categoryDefinitions.replace = ({ pkgs, settings, categories, name, ... }@packageDef: {
 
         lspsAndRuntimeDeps = {
           general = with pkgs; [
             lazygit
+            fzf
+            ripgrep
+            fd
+            gh
           ];
-          lua = with pkgs; [
+
+          lsps = with pkgs; [
+            bash-language-server
             lua-language-server
-            stylua
+            nil
+            nix-doc
+            pyright
+            yaml-language-server
           ];
-          nix = with pkgs; [
-            nixd
-            alejandra
-          ];
+
         };
         
         startupPlugins = with pkgs.vimPlugins; {
+
           general = [
+            conform-nvim
+            fidget-nvim
+            fzf-lua
+            gitsigns-nvim
             lze
             lzextras
+            neo-tree-nvim
+            nvim-treesitter-textobjects
+            nvim-treesitter.withAllGrammars
+            nvim-web-devicons
             plenary-nvim
+            toggleterm-nvim
+            which-key-nvim
           ];
 
-          treesitter = [
-            nvim-treesitter.withAllGrammars
+          colorschemes = [
+            gruvbox
+            nightfox
+            onedark
+            tokyonight
           ];
+
+          completions = [
+            blink-cmp              
+          ];
+          
+          ui = [
+            alpha-nvim
+            bufferline-nvim
+            nvim-autopairs
+            nvim-colorizer-lua
+            nvim-notify
+            nvim-tree-nvim
+          ];
+
+          ai = [
+            copilot-lua
+            CopilotChat-nvim
+            codecompanion-nvim
+          ];
+
         };
 
         optionalPlugins = {
           lua = with pkgs.vimPlugins; [
             lazydev-nvim
           ];
+
           general = with pkgs.vimPlugins; [
             nvim-treesitter.withAllGrammars
             lualine-nvim
@@ -63,8 +105,12 @@ in {
           };
           categories = {
             general = true;
-            lua = true;
-            nix = true;
+            completions = true;
+            colorschemes = true;
+            ui = true;
+            ai = true;
+
+
           };
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';
