@@ -50,6 +50,7 @@ in {
         startupPlugins = {
           general = with pkgs.vimPlugins; [
             codecompanion-nvim
+            conform-nvim
             copilot-vim
             fzf-lua
             gitsigns-nvim
@@ -64,6 +65,8 @@ in {
             nvim-web-devicons
             plenary-nvim
             toggleterm-nvim
+            nvim-treesitter.withAllGrammars
+            nvim-treesitter-textobjects
             which-key-nvim
           ];
         };

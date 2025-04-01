@@ -12,8 +12,8 @@ require('nvim-treesitter.configs').setup ({
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
+      init_selection = '<C-space>',
+      node_incremental = '<C-space>',
       scope_incremental = false,
       node_decremental = '<Bs>',
     },
@@ -68,7 +68,7 @@ require('nvim-treesitter.configs').setup ({
 require('toggleterm').setup({
   open_mapping = [[<C-t>]],
   direction = 'float'
- })
+})
 
 
 require("which-key").setup()
