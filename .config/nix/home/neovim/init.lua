@@ -35,6 +35,10 @@ g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
+-- Slime 
+g.slime_target = "neovim" 
+
+
 -- Keymaps ----------------------------------------
 
 function map(mode, lhs, rhs, opts)

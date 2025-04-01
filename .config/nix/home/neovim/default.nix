@@ -74,6 +74,7 @@ in {
             plenary-nvim
             render-markdown-nvim
             toggleterm-nvim
+            vim-slime
             which-key-nvim
           ];
         };

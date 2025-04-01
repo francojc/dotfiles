@@ -11,11 +11,11 @@ require('lualine').setup {
   options = {
     icons_enabled = true,
     theme = 'auto',
-    component_separators = { left = '', right = ''}, -- Changed to block separators
+    component_separators = { left = ' ', right = ' '}, 
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
-      statusline = {"neo-tree", "toggleterm", "alpha" },
-      winbar = {},
+      statusline = { "neo-tree", "toggleterm", "alpha" },
+      winbar = { "alpha" },
     },
     ignore_focus = {},
     always_divide_middle = true,

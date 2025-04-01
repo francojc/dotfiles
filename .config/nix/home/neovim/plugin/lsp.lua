@@ -2,6 +2,7 @@
 
 local lspconfig = require("lspconfig")
 
+-- Language servers ------ 
 -- Bash
 lspconfig.bashls.setup {}
 
@@ -39,6 +40,12 @@ lspconfig.lua_ls.setup {
     Lua = {}
   }
 }
+
+-- Markdown 
+lspconfig.marksman.setup ({ 
+  cmd = { "marksman", "server" }, 
+  filetypes = { "markdown", "quarto" },
+})
 
 -- Nix
 -- Get username and hostname from the system
@@ -98,3 +105,45 @@ lspconfig.r_language_server.setup({
     }
   }
 })
+
+-- Formatting ------ 
+
+require('conform').setup({
+  formatters_by_ft = { 
+    bash = { "shfmt" },
+    lua = { "stylua" }, 
+    nix = { "alejandra" }, 
+    r = { "styler" }, 
+    markdown = { "prettier" },
+  },
+  format_on_save = {
+    lsp_format = "fallback", 
+    timeout_ms = 500,
+  },
+})
+
+
+-- Sending code to REPL ------ 
+
+require("slime").setup({ 
+  -- Default options
+  default_config = {
+    -- The default REPL to use
+    default_repl = "ipython",
+    -- The default filetype to use
+    default_filetype = "python",
+    -- The default command to use for the REPL
+    default_command = "ipython",
+    -- The default command to use for the REPL
+    default_command_args = { "-i" },
+  },
+  -- Custom options for each filetype
+  filetype_config = {
+    python = {
+      repl = "ipython",
+      command = { "ipython", "-i" },
+      command_args = { "-i" },
+    },
+  },
+})
+
