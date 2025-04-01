@@ -56,9 +56,9 @@ in {
           colorschemes = [
             gruvbox
             rose-pine
-            nightfox
-            onedark
-            tokyonight
+            nightfox-nvim
+            onedarkpro-nvim
+            tokyonight-nvim
 
           ];
 
@@ -72,7 +72,7 @@ in {
             nvim-autopairs
             nvim-colorizer-lua
             nvim-notify
-            nvim-tree-nvim
+            neo-tree-nvim
           ];
 
           ai = [
@@ -103,6 +103,8 @@ in {
         nvix = {pkgs , ... }: {
           settings = {
             aliases = [ "v" "nvim" ];
+            wrapRc = false;
+	    withRuby = false;
           };
           categories = {
             general = true;
