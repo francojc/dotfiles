@@ -33,7 +33,7 @@ lspconfig.nixd.setup({
   cmd = { "nixd" },
   settings = {
     nixd = {
-      nixpkgs = { expr = "import <nixpkgs> {}" }, },
+      nixpkgs = { expr = "import <nixpkgs> {}" }, 
       formatting = { command = { "alejandra" } },
       options = {
         nixos = {
