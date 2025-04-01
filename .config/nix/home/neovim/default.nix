@@ -50,6 +50,7 @@ in {
         # Plugins that load on startup without packadd
         startupPlugins = {
           general = with pkgs.vimPlugins; [
+            alpha-nvim
             blink-cmp
             bufferline-nvim
             codecompanion-nvim

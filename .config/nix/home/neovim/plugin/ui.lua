@@ -1,5 +1,8 @@
 -- UI config
 
+-- Alpha
+require('alpha').setup(require('alpha.themes.startify').config)
+
 -- Bufferline
 require('bufferline').setup({})
 
@@ -11,7 +14,7 @@ require('lualine').setup {
     component_separators = { left = '', right = ''}, -- Changed to block separators
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
-      statusline = {},
+      statusline = {"neo-tree", "toggleterm", "alpha" },
       winbar = {},
     },
     ignore_focus = {},
