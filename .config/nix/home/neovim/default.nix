@@ -37,7 +37,7 @@ in {
             alejandra
             air-formatter
             bash-language-server
-            # lua-language-server
+            lua-language-server
             marksman
             nix-doc
             nixd
@@ -96,6 +96,7 @@ in {
           };
           categories = {
             general = true;
+            lsps = true;
           };
           extra = {
             nixdExtras.nixpkgs = ''import ${pkgs.path} {}'';

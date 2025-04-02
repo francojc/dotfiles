@@ -40,10 +40,11 @@
     ];
 
     brews = [
+      # "bash-language-server"
       "borders" # jankyborders
       "dstask"
       "huggingface-cli"
-      "lua-language-server"
+      # "lua-language-server"
       "npm"
       "ollama"
       "python@3.11"
