@@ -14,7 +14,7 @@ require("lualine").setup({
 		component_separators = { left = " ", right = " " },
 		section_separators = { left = " ", right = " " },
 		disabled_filetypes = {
-			statusline = { "neo-tree", "toggleterm", "alpha" },
+			statusline = { "neo-tree", "toggleterm", "alpha", "CodeCompanion" },
 			winbar = { "alpha" },
 		},
 		ignore_focus = {},
@@ -51,14 +51,14 @@ require("lualine").setup({
 -- Render Markdown
 require("render-markdown").setup({
 	-- completions = { blink = { enabled = true } },
-	file_types = { "markdown", "quarto" },
+	file_types = { "markdown", "quarto", "CodeCompanion" },
 	heading = { enabled = false },
 	bullet = {
 		icons = { "■", "□", "▪", "▫" },
 		right_pad = 1,
 	},
+	dash = { enabled = false },
 	html = {
-		enabled = true,
-		conceal_comments = false,
+		enabled = false,
 	},
 })
