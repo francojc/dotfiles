@@ -6,6 +6,9 @@ require("alpha").setup(require("alpha.themes.startify").config)
 -- Bufferline --------------------------------------------------------------
 require("bufferline").setup({})
 
+-- Image -------------------------------------------------------------------
+require("image").setup({})
+
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
 
