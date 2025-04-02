@@ -72,10 +72,29 @@ lspconfig.nixd.setup({
 })
 
 -- R
--- lspconfig.air.setup ()
+
+local configs = require("lspconfig.configs")
+
+-- Check if the config is already defined (useful when reloading this file)
+if not configs.air then
+	configs.air = {
+		default_config = {
+			cmd = { vim.fn.expand("$HOME/.local/bin/air"), "language-server" },
+			filetypes = { "r", "quarto" },
+			root_dir = function(fname)
+				return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) or vim.loop.os_homedir()
+			end,
+			settings = {},
+		},
+	}
+end
+
+lspconfig.air.setup({})
+
 lspconfig.r_language_server.setup({
+	autostart = false,
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
-	filetypes = { "r" },
+	filetypes = { "r", "quarto" },
 	root_dir = function(fname)
 		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
 			or lspconfig.util.find_git_ancestor(fname)
@@ -98,7 +117,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 		lua = { "stylua" },
 		nix = { "alejandra" },
-		r = { "styler" },
+		r = { "air" },
 		markdown = { "prettier" },
 	},
 	format_on_save = {
