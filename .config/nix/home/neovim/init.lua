@@ -207,7 +207,7 @@ opt.splitbelow = true
 opt.splitright = true
 opt.scrolloff = 3
 opt.sidescrolloff = 5
-opt.wrap = false
+opt.wrap = true
 
 -- Gutter
 opt.relativenumber = true
