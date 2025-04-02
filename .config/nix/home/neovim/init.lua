@@ -1,4 +1,4 @@
--- Autocommands -------------------------------------------------
+-- [A]utocommands -------------------------------------------------
 
 a = vim.api
 
@@ -26,7 +26,15 @@ a.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- Keymaps ------------------------------------------------------
+-- [D]iagnostics -------------------------------------------------
+
+vim.diagnostic.config({
+	virtual_lines = {
+		current_line = true,
+	},
+})
+
+-- [K]eymaps ------------------------------------------------------
 
 g = vim.g
 
@@ -87,7 +95,6 @@ map("n", "gL", "^", { desc = "Go to beginning of line" })
 
 -- AI ------
 -- Copilot
-
 map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
 map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
@@ -96,7 +103,6 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- Buffers ------
 -- Bufferline
-
 map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
 map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>", { desc = "Close other buffers" })
@@ -106,19 +112,25 @@ map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by e
 -- Commands ------
 -- ...
 
+-- Diagnostics -----
+--
+map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
+
 -- Explore -------
 -- Neotree
-
 map("n", "<leader>et", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
 map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
 
+-- Yazi
+map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
+map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
+
 -- Find ------
 -- Fzf-lua
+map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
+map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
 
-map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>")
-map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>")
-
--- Options ------------------------------------------------------
+-- [O]ptions ------------------------------------------------------
 
 opt = vim.opt
 
