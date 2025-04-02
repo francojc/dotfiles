@@ -43,6 +43,7 @@ in {
             nixd
             pyright
             stylua
+            shunit2
             yaml-language-server
           ];
         };
