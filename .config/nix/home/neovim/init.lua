@@ -215,8 +215,8 @@ map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling sugge
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
 -- Flash search -----
-map({ "n", "x", "o" }, "<leader>sj", "<Cmd>lua require('flash').jump()", { desc = "Search jump (Flash)" })
-map({ "n", "x", "o" }, "<leader>sp", "<Cmd>lua require('flash').treesitter()", { desc = "Search phrase (Flash)" })
+map({ "n", "x", "o" }, "<leader>sj", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Search jump (Flash)" })
+map({ "n", "x", "o" }, "<leader>sp", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Search phrase (Flash)" })
 
 -- Toggle -------
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
