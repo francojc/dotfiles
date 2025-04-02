@@ -1,6 +1,6 @@
 -- [A]utocommands -------------------------------------------------
 
-local vim = vim
+local vim = require("vim")
 local a = vim.api
 
 -- Create an autocommand group
