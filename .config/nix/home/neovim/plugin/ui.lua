@@ -10,7 +10,7 @@ require("bufferline").setup({})
 -- Lualine helper function to get attached LSP servers
 
 local function get_lsp_servers()
-	local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	local clients = vim.lsp.get_clients()({ bufnr = 0 })
 	if #clients == 0 then
 		return ""
 	end

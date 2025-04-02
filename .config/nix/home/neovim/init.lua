@@ -46,8 +46,6 @@ g.maplocalleader = " "
 -- Slime
 g.slime_target = "neovim"
 
--- Keymaps ----------------------------------------
-
 local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
 	if opts then
@@ -69,6 +67,8 @@ map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 
 -- Close buffer
 map("n", "<C-q>", ":bd<Cr>", { desc = "Close buffer" })
+-- Split window
+map("n", "<C-v>", ":vsplit<Cr>", { desc = "Split window vertically" })
 
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
@@ -103,7 +103,6 @@ map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- CodeCompanion
--- TODO: Add keymaps for CodeCompanion
 map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
 map("n", "<leader>ac", "<Cmd>CodeCompanionChat copilot<Cr>", { desc = "CodeCompanion: Copilot" })
 map("n", "<leader>aa", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
@@ -161,6 +160,21 @@ map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
 map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 -- Links
 map("v", "<leader>ml", 'c[<C-r>"](<Esc>i)', { desc = "Add link" })
+
+-- Obsidian ------
+map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
+map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "New note" })
+map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "New from template" })
+map("n", "<leader>oi", "<Cmd>ObsidianPasteImg<Cr>", { desc = "Paste image" })
+map("n", "<leader>ol", "<Cmd>ObsidianLinkNew<Cr>", { desc = "New link" })
+map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
+map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
+
+-- Search ------
+-- Todos
+map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
+-- Help
+map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
 
 -- [O]ptions ------------------------------------------------------
 
