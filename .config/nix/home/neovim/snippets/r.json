@@ -1,0 +1,12 @@
+{
+  "Comment section": {
+    "prefix": "comment",
+    "body": [
+      "# --------------------------",
+      "# $1",
+      "# --------------------------",
+      "$0"
+    ],
+    "description": "Comment section"
+  }
+}

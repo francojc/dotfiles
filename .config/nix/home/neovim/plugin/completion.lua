@@ -7,6 +7,24 @@ require("blink.cmp").setup({
 	},
 	keymap = { preset = "enter" },
 	signature = { enabled = true },
-	snippets = { preset = "luasnip" },
-	sources = { default = { "path", "snippets", "lsp" } },
+	snippets = {
+		preset = "luasnip",
+		expand = function(snippet)
+			vim.snippet.lsp_expand(snippet)
+		end,
+		active = function(filter)
+			return vim.snippet.active(filter)
+		end,
+		jump = function(direction)
+			return vim.snippet.jump(direction)
+		end,
+	},
+	sources = {
+		default = { "path", "snippets", "lsp" },
+		providers = {
+			snippets = {
+				opts = { search_paths = os.getenv("HOME") .. "/.config/nix/home/neovim/snippets" },
+			},
+		},
+	},
 })
