@@ -2,7 +2,7 @@
 
 -- Mini plugins ----------------------------------------------
 -- Around/Inner
-require("mini.ai").setup()
+-- require("mini.ai").setup()
 -- Indentscope
 require("mini.indentscope").setup()
 -- Icons
@@ -73,4 +73,4 @@ require("which-key").add({
 })
 
 -- Yazi ------------------------------------------------
-require("yazi").setup({})
+-- require("yazi").setup({})
