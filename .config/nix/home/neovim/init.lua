@@ -87,8 +87,6 @@ map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 map("n", "<C>s", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 
--- Close buffer
-map("n", "<C-q>", ":bd<Cr>", { desc = "Close buffer" })
 -- Split window
 map("n", "<C-v>", ":vsplit<Cr>", { desc = "Split window vertically" })
 
@@ -138,6 +136,9 @@ map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
 map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>", { desc = "Close other buffers" })
 map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>", { desc = "Sort by directory" })
 map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by extension" })
+map("n", "<leader>bd", "<Cmd>BufferLinePickClose<Cr>", { desc = "Delete buffer" })
+map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buffer(s)" })
+map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
 
 -- Commands ------
 -- ...
@@ -159,6 +160,7 @@ map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
+map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
 
 -- LSP ------
 map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Document symbols" })
@@ -215,7 +217,12 @@ map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling sugge
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
 -- Flash search -----
-map({ "n", "x", "o" }, "<leader>sj", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Search jump (Flash)" })
+map(
+	{ "n", "x", "o" },
+	"<leader>sj",
+	"<Cmd>lua require('flash').jump({remote_op == { restore = true, motion = true },})<Cr>",
+	{ desc = "Search jump (Flash)" }
+)
 map({ "n", "x", "o" }, "<leader>sp", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Search phrase (Flash)" })
 
 -- Toggle -------
