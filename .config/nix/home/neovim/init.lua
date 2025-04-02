@@ -148,10 +148,10 @@ map("v", "<leader>mu", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
 map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
 map("v", "<leader>mk", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
 -- Headings
-map("{n, v}", "<leader>m1", "I# ", { desc = "Heading 1" })
-map("{n, v}", "<leader>m2", "I## ", { desc = "Heading 2" })
-map("{n, v}", "<leader>m3", "I### ", { desc = "Heading 3" })
-map("{n, v}", "<leader>m4", "I#### ", { desc = "Heading 4" })
+map("n", "<leader>m1", "I# ", { desc = "Heading 1" })
+map("n", "<leader>m2", "I## ", { desc = "Heading 2" })
+map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
+map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 -- Links
 map("v", "<leader>ml", 'c[<C-r>"|](<C-r>"<Esc>', { desc = "Add link" })
 
