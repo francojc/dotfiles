@@ -6,14 +6,7 @@ require("blink.cmp").setup({
 		accept = { auto_brackets = { enabled = true } },
 	},
 	keymap = {
-		preset = "none",
-		["<C-Space>"] = { "show" },
-		["<C-e>"] = { "hide" },
-		["<C-y>"] = { "accept_and_enter" },
-		["<Tab>"] = { "select_next" },
-		["<S-Tab>"] = { "select_prev" },
-		["<C-u>"] = { "scroll_documentation_up" },
-		["<C-d>"] = { "scroll_documentation_down" },
+		preset = "enter",
 	},
 	sources = {
 		default = { "path", "snippets", "lsp" },
