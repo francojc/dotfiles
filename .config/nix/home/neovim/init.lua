@@ -49,58 +49,69 @@ end
 
 -- Vim -----------------
 -- jj to escape insert mode
-map("i", "jj", "<Esc>")
+map("i", "jj", "<Esc>", { desc = "jj to escape insert mode" })
 
 -- Hide highlights
 map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 
 -- Save file
-map("n", "<C>s", ":w<Cr>")
-map("n", "<C-a>", ":wa<Cr>")
+map("n", "<C>s", ":w<Cr>", { desc = "Save file" })
+map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 
 -- Close buffer
-map("n", "<C-q>", ":bd<Cr>")
+map("n", "<C-q>", ":bd<Cr>", { desc = "Close buffer" })
 
 -- Quit
-map("n", "<leader>x", ":qa<Cr>")
+map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 --- Window  -----
 -- Move between
-map("n", "<C-h>", "<C-w>h")
-map("n", "<C-j>", "<C-w>j")
-map("n", "<C-k>", "<C-w>k")
-map("n", "<C-l>", "<C-w>l")
+map("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+map("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
+map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
+map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
 -- Resize
-map("n", "<C-Up>", ":resize -2<Cr>")
-map("n", "<C-Down>", ":resize +2<Cr>")
-map("n", "<C-Left>", ":vertical resize -2<Cr>")
-map("n", "<C-Right>", ":vertical resize +2<Cr>")
+map("n", "<leader>+", ":resize +2<Cr>", { desc = "Increase window height" })
+map("n", "<leader>-", ":resize -2<Cr>", { desc = "Decrease window height" })
+map("n", "<leader>>", ":vertical resize +2<Cr>", { desc = "Increase window width" })
+map("n", "<leader><", ":vertical resize -2<Cr>", { desc = "Decrease window width" })
+
+-- Go to
+-- End of line
+map("n", "gl", "$", { desc = "Go to end of line" })
+-- Beginning of line
+map("n", "gL", "^", { desc = "Go to beginning of line" })
 
 -- Plugin keymaps ----------------
 
+-- AI ------
 -- Copilot
 
-map("i", "<C-d>", "<Plug>(copilot-accept-word)")
-map("i", "<C-f>", "<Plug>(copilot-accept-line)")
-map("i", "<C-n>", "<Plug>(copilot-next)")
-map("i", "<C-p>", "<Plug>(copilot-previous)")
-map("i", "<C-e>", "<Plug>(copilot-dismiss)")
+map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
+map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
+map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
+map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
+map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- Buffers ------
 -- Bufferline
 
 map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
-map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>")
-map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>")
-map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>")
+map("n", "<leader>bo", "<Cmd>BufferLineCloseOthers<Cr>", { desc = "Close other buffers" })
+map("n", "<leader>bs", "<Cmd>BufferLineSortByDirectory<Cr>", { desc = "Sort by directory" })
+map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by extension" })
 
--- Files -------
+-- Commands ------
+-- ...
+
+-- Explore -------
 -- Neotree
 
-map("n", "<leader>ft", "<Cmd>Neotree toggle<Cr>")
+map("n", "<leader>et", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
 
+-- Find ------
 -- Fzf-lua
 
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>")
