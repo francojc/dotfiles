@@ -102,6 +102,9 @@ map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
+-- CodeCompanion
+-- TODO: Add keymaps for CodeCompanion
+
 -- Buffers ------
 -- Bufferline
 map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
@@ -119,7 +122,7 @@ map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Sho
 
 -- Explore -------
 -- Neotree
-map("n", "<leader>et", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
+map("n", "<leader>ee", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
 map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
 
 -- Yazi

@@ -73,6 +73,7 @@ in {
             obsidian-nvim
             plenary-nvim
             render-markdown-nvim
+            todo-comments-nvim
             toggleterm-nvim
             vim-slime
             which-key-nvim

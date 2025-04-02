@@ -2,7 +2,6 @@
 --
 
 -- Obsidian ------------------------------------------------------------------
-
 require("obsidian").setup({
 	workspaces = {
 		{
@@ -32,3 +31,6 @@ require("obsidian").setup({
 		nvim_cmp = false,
 	},
 })
+
+-- Todo-comments ------------------------------------------------
+require("todo-comments").setup({})
