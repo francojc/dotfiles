@@ -1,12 +1,26 @@
 -- UI config
 
--- Alpha
+-- Alpha -------------------------------------------------------------------
 require("alpha").setup(require("alpha.themes.startify").config)
 
--- Bufferline
+-- Bufferline --------------------------------------------------------------
 require("bufferline").setup({})
 
--- Lualine
+-- Lualine ----------------------------------------------------------------
+-- Lualine helper function to get attached LSP servers
+
+local function get_lsp_servers()
+	local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	if #clients == 0 then
+		return ""
+	end
+	local client_names = {}
+	for _, client in ipairs(clients) do
+		table.insert(client_names, client.name)
+	end
+	return table.concat(client_names, ", ")
+end
+
 require("lualine").setup({
 	options = {
 		icons_enabled = true,
@@ -29,9 +43,9 @@ require("lualine").setup({
 		lualine_a = { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { "filename" },
-		lualine_x = { "lsp_progress", "filetype" },
-		lualine_y = { "progress" },
-		lualine_z = { "location" },
+		lualine_x = { "lsp_progress", get_lsp_servers },
+		lualine_y = { "filetype" },
+		lualine_z = { "progress" },
 	},
 	inactive_sections = {
 		lualine_a = {},
