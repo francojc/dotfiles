@@ -60,7 +60,13 @@ local function map(mode, lhs, rhs, opts)
 	if opts then
 		options = vim.tbl_extend("force", options, opts)
 	end
-	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	if type(mode) == "table" then
+		for _, m in ipairs(mode) do
+			vim.api.nvim_set_keymap(m, lhs, rhs, options)
+		end
+	else
+		vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	end
 end
 
 -- Slime
@@ -113,7 +119,6 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 
 -- Plugin keymaps ----------------
 
--- AI ------
 -- Copilot
 map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
 map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
