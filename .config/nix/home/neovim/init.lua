@@ -1,6 +1,7 @@
 -- [A]utocommands -------------------------------------------------
 
-a = vim.api
+local vim = vim
+local a = vim.api
 
 -- Create an autocommand group
 -- personal
@@ -36,7 +37,7 @@ vim.diagnostic.config({
 
 -- [K]eymaps ------------------------------------------------------
 
-g = vim.g
+local g = vim.g
 
 -- Leader key
 g.mapleader = " "
@@ -153,11 +154,11 @@ map("n", "<leader>m2", "I## ", { desc = "Heading 2" })
 map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
 map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 -- Links
-map("v", "<leader>ml", 'c[<C-r>"|](<C-r>"<Esc>', { desc = "Add link" })
+map("v", "<leader>ml", 'c[<C-r>"](<Esc>i)', { desc = "Add link" })
 
 -- [O]ptions ------------------------------------------------------
 
-opt = vim.opt
+local opt = vim.opt
 
 -- Clipboard
 opt.clipboard = "unnamedplus"
@@ -211,4 +212,5 @@ opt.background = "dark"
 vim.cmd("colorscheme gruvbox")
 
 -- Misc
+opt.winborder = "rounded"
 -- opt.mouse = "a"

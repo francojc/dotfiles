@@ -70,6 +70,7 @@ in {
             nvim-lspconfig
             nvim-treesitter.withAllGrammars
             nvim-web-devicons
+            obsidian-nvim
             plenary-nvim
             render-markdown-nvim
             toggleterm-nvim
