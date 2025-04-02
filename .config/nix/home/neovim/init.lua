@@ -219,6 +219,5 @@ vim.cmd("colorscheme gruvbox")
 
 -- Misc
 opt.winborder = "rounded"
-opt.conceallevel = 1
 
 -- opt.mouse = "a"
