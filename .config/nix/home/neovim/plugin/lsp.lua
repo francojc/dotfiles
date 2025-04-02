@@ -1,10 +1,11 @@
--- LSP config
+-- LSP server/formatting config
+
+-- Language servers -------------------------------------------------------
 
 local lspconfig = require("lspconfig")
 
--- Language servers ------
 -- Bash
-lspconfig.bashls.setup({})
+lspconfig.bashls.setup()
 
 -- Lua
 lspconfig.lua_ls.setup({
@@ -106,7 +107,7 @@ lspconfig.nixd.setup({
 })
 
 -- R
--- lspconfig.air.setup ({ })
+-- lspconfig.air.setup ()
 lspconfig.r_language_server.setup({
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
 	filetypes = { "r" },
@@ -125,7 +126,7 @@ lspconfig.r_language_server.setup({
 	},
 })
 
--- Formatting ------
+-- Formatting ------------------------------------------------------
 
 require("conform").setup({
 	formatters_by_ft = {

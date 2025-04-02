@@ -30,7 +30,7 @@ require("lualine").setup({
 		lualine_a = { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { "filename" },
-		lualine_x = { "lsp_progress", "fileformat", "filetype" },
+		lualine_x = { "lsp_progress", "filetype" },
 		lualine_y = { "progress" },
 		lualine_z = { "location" },
 	},
@@ -50,7 +50,7 @@ require("lualine").setup({
 
 -- Render Markdown
 require("render-markdown").setup({
-	completions = { blink = { enabled = true } },
+	-- completions = { blink = { enabled = true } },
 	file_types = { "markdown", "quarto" },
 	heading = { enabled = false },
 	bullet = {

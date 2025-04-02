@@ -15,7 +15,6 @@
     marksman
     nixd
     nurl
-    nushell
     oterm
     stylua
     vim
