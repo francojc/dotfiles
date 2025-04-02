@@ -30,8 +30,19 @@ a.nvim_create_autocmd("TextYankPost", {
 -- [D]iagnostics -------------------------------------------------
 
 vim.diagnostic.config({
+	severity_sort = true,
+	update_in_insert = false,
+	virtual_text = {
+		severity = {
+			min = vim.diagnostic.severity.INFO,
+			max = vim.diagnostic.severity.WARN,
+		},
+	},
 	virtual_lines = {
 		current_line = true,
+		severity = {
+			max = vim.diagnostic.severity.ERROR,
+		},
 	},
 })
 
