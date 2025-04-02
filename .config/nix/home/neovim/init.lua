@@ -41,6 +41,7 @@ vim.diagnostic.config({
 	virtual_lines = {
 		current_line = true,
 		severity = {
+			min = vim.diagnostic.severity.ERROR,
 			max = vim.diagnostic.severity.ERROR,
 		},
 	},
