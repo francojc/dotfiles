@@ -104,6 +104,9 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- CodeCompanion
 -- TODO: Add keymaps for CodeCompanion
+map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
+map("n", "<leader>ac", "<Cmd>CodeCompanionChat copilot<Cr>", { desc = "CodeCompanion: Copilot" })
+map("n", "<leader>aa", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
 
 -- Buffers ------
 -- Bufferline
