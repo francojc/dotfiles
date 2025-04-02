@@ -1,7 +1,7 @@
 -- [A]utocommands -------------------------------------------------
 
 local vim = vim
-local a = vim.api
+local a = vim.ai
 
 -- Create an autocommand group
 -- personal
