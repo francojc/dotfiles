@@ -42,11 +42,11 @@ require("toggleterm").setup({
 -- Which-key ---------------------------------------------
 require("which-key").setup()
 require("which-key").add({
-	{ "<leader>a", group = "[a]i" },
+	{ "<leader>a", group = "[a]i", icon = "" },
 	{ "<leader>a_", hidden = true },
-	{ "<leader>b", group = "[b]uffers" },
+	{ "<leader>b", group = "[b]uffers", icon = "" },
 	{ "<leader>b_", hidden = true },
-	{ "<leader>c", group = "[c]ommands" },
+	{ "<leader>c", group = "[c]ommands", icon = "" },
 	{ "<leader>c_", hidden = true },
 	{ "<leader>d", group = "[d]iagnostics" },
 	{ "<leader>d_", hidden = true },

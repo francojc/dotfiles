@@ -47,7 +47,7 @@ g.slime_target = "neovim"
 
 -- Keymaps ----------------------------------------
 
-function map(mode, lhs, rhs, opts)
+local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
 	if opts then
 		options = vim.tbl_extend("force", options, opts)
@@ -129,6 +129,31 @@ map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
+
+-- Markdown ------
+-- Unordered list item
+map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
+map("v", "<leader>mu", ":s/^/- /<CR>gv", { desc = "Unordered list item" })
+-- Ordered list item
+map("n", "<leader>mo", "I1. ", { desc = "Ordered list item" })
+map("v", "<leader>mo", ":s/^/1. /<CR>gv", { desc = "Ordered list item" })
+--- Task list item
+map("n", "<leader>mt", "I- [ ] ", { desc = "Task list item" })
+map("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task list item" })
+-- Styled text
+map("v", "<leader>mb", 'c**<C-r>"**<Esc>', { desc = "Bold" })
+map("v", "<leader>mi", 'c*<C-r>"*<Esc>', { desc = "Italic" })
+map("v", "<leader>mu", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
+--- Code blocks
+map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
+map("v", "<leader>mk", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
+-- Headings
+map("{n, v}", "<leader>m1", "I# ", { desc = "Heading 1" })
+map("{n, v}", "<leader>m2", "I## ", { desc = "Heading 2" })
+map("{n, v}", "<leader>m3", "I### ", { desc = "Heading 3" })
+map("{n, v}", "<leader>m4", "I#### ", { desc = "Heading 4" })
+-- Links
+map("v", "<leader>ml", 'c[<C-r>"|](<C-r>"<Esc>', { desc = "Add link" })
 
 -- [O]ptions ------------------------------------------------------
 
