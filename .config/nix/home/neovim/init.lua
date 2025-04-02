@@ -217,18 +217,16 @@ map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling sugge
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
 -- Flash search -----
-map(
-	{ "n", "x", "o" },
-	"<leader>sj",
-	"<Cmd>lua require('flash').jump({remote_op == { restore = true, motion = true },})<Cr>",
-	{ desc = "Search jump (Flash)" }
-)
-map({ "n", "x", "o" }, "<leader>sp", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Search phrase (Flash)" })
+map({ "n", "x", "o" }, "s", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
+map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
+map("n", "r", "<Cmd>lua require('flash').remote()<Cr>", { desc = "Remote flash" })
+map("n", "R", "<Cmd>lua require('flash').treesitter_search()<Cr>", { desc = "Treesitter search" })
 
 -- Toggle -------
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
+map("c", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 
 -- Spell Language Functionality
 local function get_project_root()
