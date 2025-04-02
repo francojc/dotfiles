@@ -57,6 +57,7 @@ in {
             codecompanion-nvim
             conform-nvim
             copilot-vim
+            flash-nvim
             friendly-snippets
             fzf-lua
             gitsigns-nvim
