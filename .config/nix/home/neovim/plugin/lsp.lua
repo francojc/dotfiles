@@ -118,6 +118,7 @@ require("conform").setup({
 		nix = { "alejandra" },
 		r = { "air" },
 		markdown = { "prettier" },
+		quarto = { "prettier" },
 	},
 	format_on_save = {
 		lsp_format = "fallback",

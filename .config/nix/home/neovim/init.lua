@@ -43,9 +43,6 @@ local g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
--- Slime
-g.slime_target = "neovim"
-
 local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
 	if opts then
@@ -53,6 +50,12 @@ local function map(mode, lhs, rhs, opts)
 	end
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
+
+-- Slime
+g.slime_target = "neovim"
+
+map("n", "<leader>rl", "<Plug>SlimeLineSend", { desc = "Send line to Slime" })
+map("v", "<leader>rr", "<Plug>SlimeRegionSend", { desc = "Send region to Slime" })
 
 -- Vim -----------------
 -- jj to escape insert mode
