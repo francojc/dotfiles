@@ -219,8 +219,8 @@ map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" 
 -- Flash search -----
 map({ "n", "x", "o" }, "s", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
-map("n", "r", "<Cmd>lua require('flash').remote()<Cr>", { desc = "Remote flash" })
-map("n", "R", "<Cmd>lua require('flash').treesitter_search()<Cr>", { desc = "Treesitter search" })
+-- map("n", "r", "<Cmd>lua require('flash').remote()<Cr>", { desc = "Remote flash" })
+-- map("n", "R", "<Cmd>lua require('flash').treesitter_search()<Cr>", { desc = "Treesitter search" })
 
 -- Toggle -------
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
