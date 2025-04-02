@@ -53,6 +53,7 @@ in {
           general = with pkgs.vimPlugins; [
             alpha-nvim
             blink-cmp
+            luasnip
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
