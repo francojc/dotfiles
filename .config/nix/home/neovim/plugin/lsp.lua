@@ -5,10 +5,10 @@
 local lspconfig = require("lspconfig")
 
 -- Bash
-lspconfig.bashls.setup()
+lspconfig.bashls.setup({}) -- Pass an empty table here
 
 -- Lua
-lspconfig.lua_ls.setup()
+lspconfig.lua_ls.setup({}) -- Also good practice to add {} here
 
 -- Markdown
 lspconfig.marksman.setup({
