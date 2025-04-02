@@ -30,6 +30,5 @@ require("obsidian").setup({
 	},
 	completion = {
 		nvim_cmp = false,
-		blink = true,
 	},
 })
