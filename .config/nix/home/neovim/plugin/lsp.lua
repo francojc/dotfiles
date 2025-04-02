@@ -89,10 +89,9 @@ if not configs.air then
 	}
 end
 
-lspconfig.air.setup({})
+-- lspconfig.air.setup({})
 
 lspconfig.r_language_server.setup({
-	autostart = false,
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
 	filetypes = { "r", "quarto" },
 	root_dir = function(fname)
