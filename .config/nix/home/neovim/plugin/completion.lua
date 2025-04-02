@@ -1,15 +1,15 @@
 require("blink.cmp").setup({
-	menu = {
-		auto_show = false,
-		documentation = {
-			auto_show = true,
-		},
-	},
 	appearance = {
 		use_nvim_cmp_as_default = true,
 	},
 	completion = {
 		accept = { auto_brackets = { enabled = true } },
+		menu = {
+			auto_show = false,
+		},
+		documentation = {
+			auto_show = true,
+		},
 	},
 	keymap = {
 		preset = "enter",
