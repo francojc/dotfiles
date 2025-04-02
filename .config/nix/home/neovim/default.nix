@@ -75,6 +75,7 @@ in {
             toggleterm-nvim
             vim-slime
             which-key-nvim
+            yazi-nvim
           ];
         };
 

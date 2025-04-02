@@ -41,7 +41,7 @@ require("toggleterm").setup({
 
 -- Which-key ---------------------------------------------
 require("which-key").setup()
-require("which-key").add{
+require("which-key").add({
 	{ "<leader>a", group = "[a]i" },
 	{ "<leader>a_", hidden = true },
 	{ "<leader>b", group = "[b]uffers" },
@@ -53,12 +53,24 @@ require("which-key").add{
 	{ "<leader>e", group = "[e]xplore" },
 	{ "<leader>e_", hidden = true },
 	{ "<leader>f", group = "[f]ind" },
+	{ "<leader>f_", hidden = true },
 	{ "<leader>g", group = "[g]it" },
+	{ "<leader>g_", hidden = true },
 	{ "<leader>h", group = "[h]elp" },
+	{ "<leader>h_", hidden = true },
 	{ "<leader>l", group = "[l]sp" },
+	{ "<leader>l_", hidden = true },
 	{ "<leader>m", group = "[m]arkdown" },
-	{ "<leader>n", group = "[n]eo-tree" },
+	{ "<leader>m_", hidden = true },
+	{ "<leader>o", group = "[o]bsidian" },
+	{ "<leader>o_", hidden = true },
 	{ "<leader>r", group = "[r]un" },
+	{ "<leader>r_", hidden = true },
 	{ "<leader>s", group = "[s]earch" },
-	{ "<leader>w", group = "[w]orkspace" },
-}
+	{ "<leader>s_", hidden = true },
+	{ "<leader>\\", group = "[t]oggle" },
+	{ "<leader>\\_", hidden = true },
+})
+
+-- Yazi ------------------------------------------------
+require("yazi").setup({})

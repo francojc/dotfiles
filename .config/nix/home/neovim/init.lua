@@ -72,10 +72,10 @@ map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
 map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
 -- Resize
-map("n", "<leader>+", ":resize +2<Cr>", { desc = "Increase window height" })
-map("n", "<leader>-", ":resize -2<Cr>", { desc = "Decrease window height" })
-map("n", "<leader>>", ":vertical resize +2<Cr>", { desc = "Increase window width" })
-map("n", "<leader><", ":vertical resize -2<Cr>", { desc = "Decrease window width" })
+map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
+map("n", "<leader>wj", "<C-w>+", { desc = "Resize window down" })
+map("n", "<leader>wh", "<C-w><", { desc = "Resize window left" })
+map("n", "<leader>wl", "<C-w>>", { desc = "Resize window right" })
 
 -- Go to
 -- End of line
@@ -110,6 +110,7 @@ map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by e
 -- Neotree
 
 map("n", "<leader>et", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
+map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
 
 -- Find ------
 -- Fzf-lua
