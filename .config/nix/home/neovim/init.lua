@@ -236,6 +236,11 @@ opt.smartcase = true
 opt.incsearch = true
 opt.hlsearch = false
 
+-- Spelling
+opt.spell = false
+opt.spelllang = { "en_us" }
+opt.spellfile = os.getenv("HOME") .. "/.spell/en.utf-8.add"
+
 -- Swap/backup/undo
 opt.backup = false
 opt.swapfile = false
@@ -249,5 +254,6 @@ vim.cmd("colorscheme gruvbox")
 
 -- Misc
 opt.winborder = "rounded"
+opt.showmode = false
 
 -- opt.mouse = "a"

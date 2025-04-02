@@ -80,30 +80,30 @@ alias qpub='quarto publish gh-pages'
 # --- FUNCTIONS ---
 # list directory contents after changing directory
 function cd() {
-    z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
+  z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
 # Make and change to a directory
 function mkcd() {
-    mkdir -p "$1" && cd "$1"
+  mkdir -p "$1" && cd "$1"
 }
 
 # Obsidian
 # Notes
 function on() {
-    if [ -z "$1" ]; then
-        cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Notes/ && nvim
-    else
-        cd "$1" && nvim
-    fi
+  if [ -z "$1" ]; then
+    cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Notes/ && nvim
+  else
+    cd "$1" && nvim
+  fi
 }
 # Personal
 function op() {
-    if [ -z "$1" ]; then
-        cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Personal/ && nvim
-    else
-        cd "$1" && nvim
-    fi
+  if [ -z "$1" ]; then
+    cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Personal/ && nvim
+  else
+    cd "$1" && nvim
+  fi
 }
 
 # Last command related aliases
@@ -112,30 +112,30 @@ alias lastrun='fc -e -'  # Re-execute last command
 
 # Recall last command output
 function r() {
-    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-        echo "Usage: r [PATTERN] [-p]"
-        echo "Recall last command output and copy to clipboard"
-        echo
-        echo "Options:"
-        echo "  PATTERN     Filter output using pattern"
-        echo "  -p          Print to stdout instead of copying to clipboard"
-        echo "  --help, -h  Show this help message"
-        return 0
-    fi
+  if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    echo "Usage: r [PATTERN] [-p]"
+    echo "Recall last command output and copy to clipboard"
+    echo
+    echo "Options:"
+    echo "  PATTERN     Filter output using pattern"
+    echo "  -p          Print to stdout instead of copying to clipboard"
+    echo "  --help, -h  Show this help message"
+    return 0
+  fi
 
-    if [ -z "$1" ]; then
-        if [ "$2" = "-p" ]; then
-            fc -ln -1  # Print to stdout with -p flag
-        else
-            fc -ln -1 | pbcopy
-        fi
+  if [ -z "$1" ]; then
+    if [ "$2" = "-p" ]; then
+      fc -ln -1  # Print to stdout with -p flag
     else
-        if [ "$2" = "-p" ]; then
-            fc -ln -1 | grep "$1"  # Print to stdout with -p flag
-        else
-            fc -ln -1 | grep "$1" | pbcopy
-        fi
+      fc -ln -1 | pbcopy
     fi
+  else
+    if [ "$2" = "-p" ]; then
+      fc -ln -1 | grep "$1"  # Print to stdout with -p flag
+    else
+      fc -ln -1 | grep "$1" | pbcopy
+    fi
+  fi
 }
 
 
@@ -143,25 +143,25 @@ function r() {
 # - first argument is the directory to list (default is current directory)
 # - second argument is the -L value (default is 2)
 function qtree() {
-    if [ -z "$1" ]; then
-        DIR="."
-    else
-        DIR=$1
-    fi
-    if [ -z "$2" ]; then
-        L=2
-    else
-        L=$2
-    fi
-    command tree $DIR -L $L -CF
+  if [ -z "$1" ]; then
+    DIR="."
+  else
+    DIR=$1
+  fi
+  if [ -z "$2" ]; then
+    L=2
+  else
+    L=$2
+  fi
+  command tree $DIR -L $L -CF
 }
 
 # -- Setup yazi (Yet Another Zoxide Integration) command
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
 }
