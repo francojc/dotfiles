@@ -32,7 +32,7 @@ require("codecompanion").setup({
 			roles = {
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
-					return " (" .. adapter.formatted_name .. ")"
+					return " (" .. adapter.formatted_name .. ": " .. adapter.model .. ")"
 				end,
 
 				---@type string
