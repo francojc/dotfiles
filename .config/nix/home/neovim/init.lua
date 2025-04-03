@@ -67,21 +67,6 @@ map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" 
 map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
--- Terminal -----------------
-function _G.set_terminal_keymaps()
-	local opts = { buffer = 0 }
-	vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-	vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
-	vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
-	vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
-	vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
-	vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
-	vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opts)
-end
-
--- if you only want these mappings for toggle term use term://*toggleterm#* instead
-vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
-
 -- Vim -----------------
 -- jj to escape insert mode
 map("i", "jj", "<Esc>", { desc = "jj to escape insert mode" })
@@ -97,17 +82,13 @@ map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 --- Window  -----
--- Move between editor windows
--- map("n", "<C-h>", "<C-W>h", { desc = "Move to left window" })
--- map("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
--- map("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
--- map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
+-- Move between editor/terminal windows
+map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
+map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
+map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
+map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 
--- Keymaps for navigating out of Toggleterm terminal windows
--- This works, the problem is that the above keymaps do not allow me to enter back into the terminal.
--- map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
--- map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
--- map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
+map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
@@ -238,10 +219,10 @@ map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc
 
 -- Toggle -------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
-map("n", "<leader>tt", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
+map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
-map("c", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
+map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 
 -- Spell Language Functionality
 local function get_project_root()

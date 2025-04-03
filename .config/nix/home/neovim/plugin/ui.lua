@@ -55,7 +55,7 @@ require("lualine").setup({
 			winbar = { "alpha" },
 		},
 		always_divide_middle = true,
-		globalstatus = false,
+		globalstatus = true,
 		refresh = {
 			statusline = 1000,
 			tabline = 1000,
