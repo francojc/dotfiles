@@ -35,7 +35,7 @@ require("nvim-treesitter.configs").setup({
 
 -- ToggleTerm ---------------------------------------------
 require("toggleterm").setup({
-	open_mapping = [[<leader>tt>]],
+	open_mapping = [[<leader>tt]],
 	direction = "float",
 })
 

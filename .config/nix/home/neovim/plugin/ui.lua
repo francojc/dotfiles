@@ -90,7 +90,6 @@ require("render-markdown").setup({
 	anti_conceal = {
 		enabled = true,
 	},
-	completions = { blink = { enabled = true } },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = { enabled = false },
 	bullet = {
