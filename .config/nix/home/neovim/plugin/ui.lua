@@ -117,8 +117,8 @@ require("lualine").setup({
 
 -- Render Markdown
 require("render-markdown").setup({
-	file_types = { "markdown", "quarto", "codecompanion" },
-	heading = { enabled = false },
+	file_types = { "markdown", "quarto" },
+	heading = { enabled = true },
 	bullet = {
 		icons = { "■", "□", "▪", "▫" },
 		right_pad = 1,

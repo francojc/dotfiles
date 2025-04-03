@@ -20,7 +20,6 @@ require("neo-tree").setup({
 vim.treesitter.language.register("markdown", "quarto")
 
 require("nvim-treesitter.configs").setup({
-	highlight = { enable = false },
 	indent = { enable = false },
 	incremental_selection = {
 		enable = true,
