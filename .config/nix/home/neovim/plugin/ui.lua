@@ -17,29 +17,44 @@ require("alpha").setup(require("alpha.themes.startify").config)
 require("bufferline").setup({})
 
 -- Image -------------------------------------------------------------------
--- require("image").setup({
--- 	processor = "magick_cli",
--- 	integrations = {
--- 		markdown = {
--- 			clear_in_insert_mode = true,
--- 			filetypes = { "markdown", "quarto" },
--- 		},
--- 	},
--- })
+require("image").setup({
+	processor = "magick_cli",
+	integrations = {
+		markdown = {
+			clear_in_insert_mode = true,
+			filetypes = { "markdown", "quarto" },
+			only_render_image_at_cursor = true,
+		},
+	},
+})
 
 require("img-clip").setup({})
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
-
 local function get_lsp_servers()
 	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	if #clients == 0 then
 		return ""
 	end
+
+	local server_icons = {
+		["GitHub Copilot"] = "",
+		["marksman"] = "",
+		["r_language_server"] = "",
+		["lua_ls"] = "",
+		["pyright"] = "",
+		["nixd"] = "",
+	}
+
 	local client_names = {}
 	for _, client in ipairs(clients) do
-		table.insert(client_names, client.name)
+		local name = client.name
+		if server_icons[name] then
+			table.insert(client_names, server_icons[name])
+		else
+			table.insert(client_names, name)
+		end
 	end
 	return table.concat(client_names, ", ")
 end
@@ -66,8 +81,7 @@ require("lualine").setup({
 		lualine_a = { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { "filename" },
-		-- lualine_x = { "lsp_progress", get_lsp_servers },
-		lualine_x = { "lsp_progress" },
+		lualine_x = { "lsp_progress", get_lsp_servers },
 		lualine_y = { " filetype" },
 		lualine_z = { "progress" },
 	},
