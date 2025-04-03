@@ -55,7 +55,7 @@ in {
           general = with pkgs.vimPlugins; [
             aerial-nvim
             alpha-nvim
-            # blink-cmp
+            blink-cmp
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
@@ -72,6 +72,7 @@ in {
             mini-nvim
             neo-tree-nvim
             nightfox-nvim
+            nvim-colorizer-lua
             nvim-lspconfig
             nvim-treesitter.withAllGrammars
             nvim-web-devicons
