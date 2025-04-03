@@ -71,6 +71,7 @@ end
 
 -- Slime
 g.slime_target = "neovim"
+vim.b.slime_cell_delimiter = "```"
 
 map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
 map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
@@ -140,10 +141,7 @@ map("n", "<leader>bd", "<Cmd>BufferLinePickClose<Cr>", { desc = "Delete buffer" 
 map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buffer(s)" })
 map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
 
--- Commands ------
--- ...
-
--- Diagnostics -----
+-- Diagnostics/Debug -----
 --
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
 
@@ -193,6 +191,13 @@ map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
 map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 -- Links
 map("v", "<leader>ml", 'c[<C-r>"](<Esc>i)', { desc = "Add link" })
+-- Paste image
+map(
+	"n",
+	"<leader>mp",
+	"<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
+	{ desc = "Paste image" }
+)
 
 -- Obsidian ------
 map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
@@ -204,16 +209,17 @@ map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
 map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
 map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
 
+-- Quarto ------
+map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
+map("n", "<leader>qa", "<Cmd>QuartoSendAbove<Cr>", { desc = "Quarto: send above" })
+map("n", "<leader>qb", "<Cmd>QuartoSendBelow<Cr>", { desc = "Quarto: send below" })
+map("n", "<leader>qf", "<Cmd>QuartoSendAll<Cr>", { desc = "Quarto: send file" })
+
 -- Search ------
--- Todos
 map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
--- Help
 map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
--- Keymaps
 map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
--- Spelling
 map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
--- Registers
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
 -- Flash search -----
@@ -223,6 +229,7 @@ map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc
 -- map("n", "R", "<Cmd>lua require('flash').treesitter_search()<Cr>", { desc = "Treesitter search" })
 
 -- Toggle -------
+map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
@@ -347,5 +354,4 @@ vim.cmd("colorscheme gruvbox")
 -- Misc
 opt.winborder = "rounded"
 opt.showmode = false
-
--- opt.mouse = "a"
+opt.cmdheight = 1

@@ -33,5 +33,8 @@ require("obsidian").setup({
 	},
 })
 
+-- Quarto ------------------------------------------------------------------
+require("quarto").setup({})
+
 -- Todo-comments ------------------------------------------------
 require("todo-comments").setup({})

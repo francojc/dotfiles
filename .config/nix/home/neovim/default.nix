@@ -42,7 +42,6 @@ in {
             marksman
             nix-doc
             nixd
-            prettierd
             pyright
             stylua
             shunit2
@@ -54,9 +53,9 @@ in {
         # Plugins that load on startup without packadd
         startupPlugins = {
           general = with pkgs.vimPlugins; [
+            aerial-nvim
             alpha-nvim
             blink-cmp
-            luasnip
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
@@ -66,9 +65,10 @@ in {
             fzf-lua
             gitsigns-nvim
             gruvbox
-            image-nvim
+            img-clip-nvim
             lualine-lsp-progress
             lualine-nvim
+            luasnip
             lze
             lzextras
             mini-nvim
@@ -79,6 +79,7 @@ in {
             nvim-web-devicons
             obsidian-nvim
             plenary-nvim
+            quarto-nvim
             render-markdown-nvim
             todo-comments-nvim
             toggleterm-nvim

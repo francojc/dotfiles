@@ -1,5 +1,15 @@
 -- UI config
 
+-- Aerial ----------------------------------------------------------------
+
+require("aerial").setup({
+	on_attach = function(bufnr)
+		-- Jump forwards/backwards with '{' and '}'
+		vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+		vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+	end,
+})
+
 -- Alpha -------------------------------------------------------------------
 require("alpha").setup(require("alpha.themes.startify").config)
 
@@ -16,6 +26,8 @@ require("bufferline").setup({})
 -- 		},
 -- 	},
 -- })
+
+require("img-clip").setup({})
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
