@@ -1,7 +1,6 @@
 -- UI config
 
 -- Aerial ----------------------------------------------------------------
-
 require("aerial").setup({
 	on_attach = function(bufnr)
 		-- Jump forwards/backwards with '{' and '}'
@@ -120,7 +119,7 @@ require("lualine").setup({
 	extensions = {},
 })
 
--- Render Markdown
+-- Render-Markdown ------------------------------------------------------
 require("render-markdown").setup({
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },

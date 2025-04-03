@@ -1,6 +1,3 @@
--- Copilot Chat
--- TODO: Add the Copilot Chat plugin to the setup
-
 -- CodeCompanion (codecompanion-nvim)
 require("codecompanion").setup({
 	adapters = {
@@ -33,11 +30,11 @@ require("codecompanion").setup({
 			roles = {
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
-					return " (" .. adapter.formatted_name .. ")"
+					return " (" .. adapter.formatted_name .. ") "
 				end,
 
 				---@type string
-				user = "",
+				user = " -------------",
 			},
 		},
 	},

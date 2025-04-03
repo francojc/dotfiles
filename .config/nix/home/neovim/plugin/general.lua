@@ -1,8 +1,8 @@
 -- General plugins
 
 -- Mini plugins ----------------------------------------------
--- Around/Inner
-require("mini.ai").setup()
+-- Surround
+require("mini.surround").setup()
 -- Indentscope
 require("mini.indentscope").setup()
 -- Icons
@@ -17,7 +17,7 @@ require("neo-tree").setup({
 
 -- Treesitter -----------------------------------------------
 -- Make treesitter Quarto support work with markdown
-vim.treesitter.language.register("markdown", "quarto")
+vim.treesitter.language.register("markdown", "quarto", "codecompanion")
 
 require("nvim-treesitter.configs").setup({
 	indent = { enable = false },
@@ -41,14 +41,18 @@ require("which-key").setup({
 	icons = {
 		group = " ",
 	},
+	win = {
+		border = "rounded",
+		title = false,
+	},
 })
 
 require("which-key").add({
-	{ "<leader>a", group = "[a]i", icon = "" },
+	{ "<leader>a", group = "[a]i" },
 	{ "<leader>a_", hidden = true },
-	{ "<leader>b", group = "[b]uffers", icon = "" },
+	{ "<leader>b", group = "[b]uffers" },
 	{ "<leader>b_", hidden = true },
-	{ "<leader>c", group = "[c]ommands", icon = "" },
+	{ "<leader>c", group = "[c]ommands" },
 	{ "<leader>c_", hidden = true },
 	{ "<leader>d", group = "[d]iagnostics" },
 	{ "<leader>d_", hidden = true },
@@ -66,6 +70,8 @@ require("which-key").add({
 	{ "<leader>m_", hidden = true },
 	{ "<leader>o", group = "[o]bsidian" },
 	{ "<leader>o_", hidden = true },
+	{ "<leader>q", group = "[q]uarto" },
+	{ "<leader>q_", hidden = true },
 	{ "<leader>r", group = "[r]un" },
 	{ "<leader>r_", hidden = true },
 	{ "<leader>s", group = "[s]earch" },

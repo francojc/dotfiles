@@ -15,7 +15,8 @@ window-new-tab-position = end
 macos-window-shadow = false
 
 # Theme
-theme = nightfox
+# theme = nightfox
+theme = GruvboxDarkHard
 
 # Enhancements
 confirm-close-surface = true

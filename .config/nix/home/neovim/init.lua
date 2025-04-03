@@ -88,7 +88,7 @@ map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window"
 map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 
-map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
