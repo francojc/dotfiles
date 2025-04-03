@@ -17,16 +17,6 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- -- Autocompletion (Nvim .11+)
--- a.nvim_create_autocmd("LspAttach", {
--- 	callback = function(ev)
--- 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
--- 		if client:supports_method("textDocument/completion") then
--- 			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
--- 		end
--- 	end,
--- })
-
 -- [D]iagnostics -------------------------------------------------
 
 vim.diagnostic.config({
@@ -100,9 +90,9 @@ map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
 
 -- Keymaps for navigating out of Toggleterm terminal windows
 -- This works, the problem is that the above keymaps do not allow me to enter back into the terminal.
-map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
-map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
-map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
+-- map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
+-- map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
+-- map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
