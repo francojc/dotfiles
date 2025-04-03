@@ -95,11 +95,17 @@ map("n", "<C-v>", ":vsplit<Cr>", { desc = "Split window vertically" })
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 --- Window  -----
--- Move between
+-- Move between editor windows
 map("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 map("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
 map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
 map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+
+-- Move between Terminal window and editor windows
+map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Terminal: Move left" })
+map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Terminal: Move down" })
+map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Terminal: Move up" })
+map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Terminal: Move right" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
