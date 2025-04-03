@@ -83,10 +83,10 @@ map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 --- Window  -----
 -- Move between editor windows
-map("n", "<C-h>", "<C-W>h", { desc = "Move to left window" })
-map("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
-map("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
-map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
+-- map("n", "<C-h>", "<C-W>h", { desc = "Move to left window" })
+-- map("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
+-- map("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
+-- map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
 
 -- Keymaps for navigating out of Toggleterm terminal windows
 -- This works, the problem is that the above keymaps do not allow me to enter back into the terminal.
