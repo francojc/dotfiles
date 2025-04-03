@@ -42,7 +42,7 @@ in {
             marksman
             nix-doc
             nixd
-            prettier
+            prettierd
             pyright
             stylua
             shunit2
