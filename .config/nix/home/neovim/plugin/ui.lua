@@ -124,7 +124,7 @@ require("render-markdown").setup({
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
-		right_pad = 1,
+		right_pad = 0,
 	},
 	code = {
 		style = "language",
@@ -135,8 +135,9 @@ require("render-markdown").setup({
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
+		backgrounds = {},
 		icons = {},
-		left_pad = 1,
+		left_pad = 0,
 		position = "inline",
 		right_pad = 3,
 		width = "full",
