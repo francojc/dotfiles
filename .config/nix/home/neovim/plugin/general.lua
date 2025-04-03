@@ -20,7 +20,7 @@ require("neo-tree").setup({
 vim.treesitter.language.register("markdown", "quarto")
 
 require("nvim-treesitter.configs").setup({
-	highlight = { enable = true },
+	highlight = { enable = false },
 	indent = { enable = false },
 	incremental_selection = {
 		enable = true,
@@ -40,7 +40,13 @@ require("toggleterm").setup({
 })
 
 -- Which-key ---------------------------------------------
-require("which-key").setup()
+require("which-key").setup({
+	preset = "modern",
+	icons = {
+		group = "",
+	},
+})
+
 require("which-key").add({
 	{ "<leader>a", group = "[a]i", icon = "" },
 	{ "<leader>a_", hidden = true },

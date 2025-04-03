@@ -23,19 +23,34 @@ weak-model: mistral-small-3.1 # git commit messages
 edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
 
-# Theme
+# # Theme: Gruvbox
+# # Main text colors
+# user-input-color: "#b8bb26" # Gruvbox green
+# assistant-output-color: "#83a598" # Gruvbox blue
+# tool-output-color: "#ebdbb2" # Gruvbox light/fg
+# tool-error-color: "#fb4934" # Gruvbox red
+# tool-warning-color: "#fe8019" # Gruvbox orange
+#
+# # Completion menu colors (terminal-based)
+# completion-menu-color: "#ebdbb2" # Gruvbox light/fg
+# completion-menu-bg-color: "#282828" # Gruvbox dark/bg
+# completion-menu-current-color: "#fbf1c7" # Gruvbox light
+# completion-menu-current-bg-color: "#504945" # Gruvbox dark-gray
+
+# Theme: Black Metal
 # Main text colors
-user-input-color: "#b8bb26" # Gruvbox green
-assistant-output-color: "#83a598" # Gruvbox blue
-tool-output-color: "#ebdbb2" # Gruvbox light/fg
-tool-error-color: "#fb4934" # Gruvbox red
-tool-warning-color: "#fe8019" # Gruvbox orange
+user-input-color: "#ff79c6" # Pink
+assistant-output-color: "#50fa7b" # Green
+tool-output-color: "#f8f8f2" # White
+tool-error-color: "#ff5555" # Red
+tool-warning-color: "#ffb86c" # Orange
 
 # Completion menu colors (terminal-based)
-completion-menu-color: "#ebdbb2" # Gruvbox light/fg
-completion-menu-bg-color: "#282828" # Gruvbox dark/bg
-completion-menu-current-color: "#fbf1c7" # Gruvbox light
-completion-menu-current-bg-color: "#504945" # Gruvbox dark-gray
+completion-menu-color: "#f8f8f2" # White
+completion-menu-bg-color: "#282a36" # Black
+completion-menu-current-color: "#f8f8f2" # White
+completion-menu-current-bg-color: "#44475a" # Dark Purple
+
 
 # Code theme for markdown syntax highlighting
 code-theme: "monokai"  # While not exactly Gruvbox, this dark theme works well with it

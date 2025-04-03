@@ -69,7 +69,6 @@ in {
             img-clip-nvim
             lualine-lsp-progress
             lualine-nvim
-            luasnip
             mini-nvim
             neo-tree-nvim
             nightfox-nvim
