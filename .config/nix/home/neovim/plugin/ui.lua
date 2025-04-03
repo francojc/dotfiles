@@ -68,7 +68,7 @@ require("lualine").setup({
 		lualine_c = { "filename" },
 		-- lualine_x = { "lsp_progress", get_lsp_servers },
 		lualine_x = { "lsp_progress" },
-		lualine_y = { "filetype" },
+		lualine_y = { " filetype" },
 		lualine_z = { "progress" },
 	},
 	inactive_sections = {
