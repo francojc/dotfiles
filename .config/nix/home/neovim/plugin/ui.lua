@@ -7,7 +7,12 @@ require("alpha").setup(require("alpha.themes.startify").config)
 require("bufferline").setup({})
 
 -- Image -------------------------------------------------------------------
-require("image").setup({})
+require("image").setup({
+	processor = "magick_cli",
+	integrations = {
+		filetypes = { "markdown", "quarto" },
+	},
+})
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
