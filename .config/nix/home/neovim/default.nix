@@ -65,6 +65,7 @@ in {
             fzf-lua
             gitsigns-nvim
             gruvbox
+            image-nvim
             img-clip-nvim
             lualine-lsp-progress
             lualine-nvim
