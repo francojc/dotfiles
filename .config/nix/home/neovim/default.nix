@@ -42,9 +42,11 @@ in {
             marksman
             nix-doc
             nixd
+            prettier
             pyright
             stylua
             shunit2
+            shfmt
             yaml-language-server
           ];
         };
