@@ -4,14 +4,14 @@ require("blink.cmp").setup({
 		menu = {
 			auto_show = true,
 			draw = {
-				columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+				columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind", gap = 1 } },
 			},
 		},
 		documentation = { auto_show = true, auto_show_delay_ms = 500 },
 	},
 	keymap = { preset = "enter" },
 	snippets = {
-		preset = "luasnip",
+		-- preset = "luasnip",
 	},
 	sources = {
 		default = { "path", "snippets", "lsp" },
