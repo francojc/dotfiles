@@ -1,7 +1,7 @@
 require("blink.cmp").setup({
 	completion = {
 		accept = { auto_brackets = { enabled = true } },
-		menu = { auto_show = false },
+		menu = { auto_show = true },
 		documentation = { auto_show = true },
 	},
 	keymap = { preset = "enter" },
