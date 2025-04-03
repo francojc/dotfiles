@@ -89,9 +89,6 @@ require("lualine").setup({
 require("render-markdown").setup({
 	anti_conceal = {
 		enabled = true,
-		ignore = {
-			sign = true,
-		},
 	},
 	completions = { blink = { enabled = true } },
 	file_types = { "markdown", "quarto", "codecompanion" },
