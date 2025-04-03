@@ -10,7 +10,10 @@ require("bufferline").setup({})
 require("image").setup({
 	processor = "magick_cli",
 	integrations = {
-		filetypes = { "markdown", "quarto" },
+		markdown = {
+			clear_in_insert_mode = true,
+			filetypes = { "markdown", "quarto" },
+		},
 	},
 })
 
