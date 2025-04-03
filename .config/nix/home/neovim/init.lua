@@ -101,11 +101,29 @@ map("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
 map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
 map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
--- Move between Terminal window and editor windows
-map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Terminal: Move left" })
-map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Terminal: Move down" })
-map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Terminal: Move up" })
-map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Terminal: Move right" })
+-- Functions to handle moving out of terminal mode
+local function term_move_left()
+	vim.cmd("stopinsert")
+	vim.cmd("wincmd h")
+end
+local function term_move_down()
+	vim.cmd("stopinsert")
+	vim.cmd("wincmd j")
+end
+local function term_move_up()
+	vim.cmd("stopinsert")
+	vim.cmd("wincmd k")
+end
+local function term_move_right()
+	vim.cmd("stopinsert")
+	vim.cmd("wincmd l")
+end
+
+-- Move between Terminal window and editor windows using Lua functions
+map("t", "<C-h>", term_move_left, { desc = "Terminal: Move left" })
+map("t", "<C-j>", term_move_down, { desc = "Terminal: Move down" })
+map("t", "<C-k>", term_move_up, { desc = "Terminal: Move up" })
+map("t", "<C-l>", term_move_right, { desc = "Terminal: Move right" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
