@@ -39,7 +39,7 @@ require("toggleterm").setup({})
 require("which-key").setup({
 	preset = "modern",
 	icons = {
-		group = "",
+		group = " ",
 	},
 })
 
