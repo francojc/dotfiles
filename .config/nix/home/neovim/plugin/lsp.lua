@@ -6,16 +6,13 @@ local lspconfig = require("lspconfig")
 
 -- Bash
 lspconfig.bashls.setup({}) -- Pass an empty table here
-
 -- Lua
 lspconfig.lua_ls.setup({}) -- Also good practice to add {} here
-
 -- Markdown
 lspconfig.marksman.setup({
 	cmd = { "marksman", "server" },
 	filetypes = { "markdown", "quarto" },
 })
-
 -- Nix
 -- Get username and hostname from the system
 local function get_username()
@@ -89,25 +86,25 @@ if not configs.air then
 	}
 end
 
-lspconfig.air.setup({})
+-- lspconfig.air.setup({})
 
--- lspconfig.r_language_server.setup({
--- 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
--- 	filetypes = { "r", "quarto" },
--- 	root_dir = function(fname)
--- 		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
--- 			or lspconfig.util.find_git_ancestor(fname)
--- 			or lspconfig.util.path.dirname(fname)
--- 	end,
--- 	settings = {
--- 		r = {
--- 			diagnostics = {
--- 				enable = true,
--- 				globals = { "vim" },
--- 			},
--- 		},
--- 	},
--- })
+lspconfig.r_language_server.setup({
+	cmd = { "R", "--slave", "-e", "languageserver::run()" },
+	filetypes = { "r", "quarto" },
+	root_dir = function(fname)
+		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
+			or lspconfig.util.find_git_ancestor(fname)
+			or lspconfig.util.path.dirname(fname)
+	end,
+	settings = {
+		r = {
+			diagnostics = {
+				enable = true,
+				globals = { "vim" },
+			},
+		},
+	},
+})
 
 -- Formatting ------------------------------------------------------
 
@@ -127,9 +124,9 @@ require("conform").setup({
 	},
 })
 
-require("conform").formatters.prettier = {
-	options = {
-		ft_parsers = { markdown = "markdown" },
-		ext_parsers = { qmd = "markdown" },
-	},
-}
+-- require("conform").formatters.prettier = {
+-- 	options = {
+-- 		ft_parsers = { markdown = "markdown" },
+-- 		ext_parsers = { qmd = "markdown" },
+-- 	},
+-- }
