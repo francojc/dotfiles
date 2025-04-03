@@ -1,21 +1,17 @@
 require("blink.cmp").setup({
 	completion = {
 		accept = { auto_brackets = { enabled = true } },
-		menu = { auto_show = true },
-		documentation = { auto_show = true },
+		menu = {
+			auto_show = true,
+			draw = {
+				columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+			},
+		},
+		documentation = { auto_show = true, auto_show_delay = 500 },
 	},
 	keymap = { preset = "enter" },
 	snippets = {
 		preset = "luasnip",
-		expand = function(snippet)
-			vim.snippet.lsp_expand(snippet)
-		end,
-		active = function(filter)
-			return vim.snippet.active(filter)
-		end,
-		jump = function(direction)
-			return vim.snippet.jump(direction)
-		end,
 	},
 	sources = {
 		default = { "path", "snippets", "lsp" },
