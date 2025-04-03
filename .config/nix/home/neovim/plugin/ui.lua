@@ -117,15 +117,8 @@ require("lualine").setup({
 
 -- Render Markdown
 require("render-markdown").setup({
-	anti_conceal = {
-		enabled = true,
-	},
 	file_types = { "markdown", "quarto", "codecompanion" },
-	heading = { enabled = false },
-	bullet = {
-		icons = { "■", "□", "▪", "▫" },
-		right_pad = 1,
-	},
+	bullet = { icons = { "■ ", "□ ", "▪ ", "▫ " } },
 	dash = { enabled = false },
 	html = { enabled = false },
 })

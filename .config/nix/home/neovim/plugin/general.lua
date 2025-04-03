@@ -1,8 +1,8 @@
--- General plugis
+-- General plugins
 
 -- Mini plugins ----------------------------------------------
 -- Around/Inner
--- require("mini.ai").setup()
+require("mini.ai").setup()
 -- Indentscope
 require("mini.indentscope").setup()
 -- Icons
@@ -37,7 +37,7 @@ require("toggleterm").setup({})
 
 -- Which-key ---------------------------------------------
 require("which-key").setup({
-	preset = "modern",
+	preset = "helix",
 	icons = {
 		group = " ",
 	},
@@ -75,4 +75,4 @@ require("which-key").add({
 })
 
 -- Yazi ------------------------------------------------
--- require("yazi").setup({})
+require("yazi").setup({})
