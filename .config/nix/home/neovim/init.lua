@@ -88,42 +88,20 @@ map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 map("n", "<C>s", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 
--- Split window
-map("n", "<C-v>", ":vsplit<Cr>", { desc = "Split window vertically" })
-
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 --- Window  -----
 -- Move between editor windows
-map("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
-map("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
-map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
-map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+map("n", "<C-h>", "<C-W>h", { desc = "Move to left window" })
+map("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
+map("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
+map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
 
--- Functions to handle moving out of terminal mode
-local function term_move_left()
-	vim.cmd("stopinsert")
-	vim.cmd("wincmd h")
-end
-local function term_move_down()
-	vim.cmd("stopinsert")
-	vim.cmd("wincmd j")
-end
-local function term_move_up()
-	vim.cmd("stopinsert")
-	vim.cmd("wincmd k")
-end
-local function term_move_right()
-	vim.cmd("stopinsert")
-	vim.cmd("wincmd l")
-end
-
--- Move between Terminal window and editor windows using Lua functions
-map("t", "<C-h>", term_move_left, { desc = "Terminal: Move left" })
-map("t", "<C-j>", term_move_down, { desc = "Terminal: Move down" })
-map("t", "<C-k>", term_move_up, { desc = "Terminal: Move up" })
-map("t", "<C-l>", term_move_right, { desc = "Terminal: Move right" })
+-- Keymaps for navigating Toggleterm terminal windows
+map("t", "jj", "[[<C-\\><C-n>]]", { desc = "jj to escape terminal mode" })
+map("t", "<C-h>", "[[<C-\\><C-n><C-w>h]]", { desc = "Move to left window" })
+map("t", "<C-k>", "[[<C-\\><C-n><C-w>k]]", { desc = "Move to bottom window" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
