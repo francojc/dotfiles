@@ -7,7 +7,7 @@ require("blink.cmp").setup({
 				columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
 			},
 		},
-		documentation = { auto_show = true, auto_show_delay = 500 },
+		documentation = { auto_show = true, auto_show_delay_ms = 500 },
 	},
 	keymap = { preset = "enter" },
 	snippets = {
