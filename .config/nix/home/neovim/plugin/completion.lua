@@ -1,4 +1,4 @@
-require("blink.cmp").setup({
-	keymap = { preset = "enter" },
-	sources = { default = { "path", "snippets", "lsp" } },
-})
+-- require("blink.cmp").setup({
+-- 	keymap = { preset = "enter" },
+-- 	sources = { default = { "path", "snippets", "lsp" } },
+-- })

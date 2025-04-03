@@ -55,7 +55,7 @@ in {
           general = with pkgs.vimPlugins; [
             aerial-nvim
             alpha-nvim
-            blink-cmp
+            # blink-cmp
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
@@ -70,8 +70,6 @@ in {
             lualine-lsp-progress
             lualine-nvim
             luasnip
-            lze
-            lzextras
             mini-nvim
             neo-tree-nvim
             nightfox-nvim
