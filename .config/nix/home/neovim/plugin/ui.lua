@@ -66,7 +66,8 @@ require("lualine").setup({
 		lualine_a = { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { "filename" },
-		lualine_x = { "lsp_progress", get_lsp_servers },
+		-- lualine_x = { "lsp_progress", get_lsp_servers },
+		lualine_x = { "lsp_progress" },
 		lualine_y = { "filetype" },
 		lualine_z = { "progress" },
 	},
@@ -86,7 +87,13 @@ require("lualine").setup({
 
 -- Render Markdown
 require("render-markdown").setup({
-	-- completions = { blink = { enabled = true } },
+	anti_conceal = {
+		enabled = true,
+		ignore = {
+			sign = true,
+		},
+	},
+	completions = { blink = { enabled = true } },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = { enabled = false },
 	bullet = {
