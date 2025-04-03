@@ -80,7 +80,7 @@ in {
             obsidian-nvim
             plenary-nvim
             quarto-nvim
-            # render-markdown-nvim
+            render-markdown-nvim
             todo-comments-nvim
             toggleterm-nvim
             vim-slime
