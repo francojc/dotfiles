@@ -220,6 +220,7 @@ map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc
 -- Toggle -------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
+map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
