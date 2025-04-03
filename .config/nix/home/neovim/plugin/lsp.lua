@@ -89,25 +89,25 @@ if not configs.air then
 	}
 end
 
--- lspconfig.air.setup({})
+lspconfig.air.setup({})
 
-lspconfig.r_language_server.setup({
-	cmd = { "R", "--slave", "-e", "languageserver::run()" },
-	filetypes = { "r", "quarto" },
-	root_dir = function(fname)
-		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
-			or lspconfig.util.find_git_ancestor(fname)
-			or lspconfig.util.path.dirname(fname)
-	end,
-	settings = {
-		r = {
-			diagnostics = {
-				enable = true,
-				globals = { "vim" },
-			},
-		},
-	},
-})
+-- lspconfig.r_language_server.setup({
+-- 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
+-- 	filetypes = { "r", "quarto" },
+-- 	root_dir = function(fname)
+-- 		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
+-- 			or lspconfig.util.find_git_ancestor(fname)
+-- 			or lspconfig.util.path.dirname(fname)
+-- 	end,
+-- 	settings = {
+-- 		r = {
+-- 			diagnostics = {
+-- 				enable = true,
+-- 				globals = { "vim" },
+-- 			},
+-- 		},
+-- 	},
+-- })
 
 -- Formatting ------------------------------------------------------
 
@@ -118,10 +118,18 @@ require("conform").setup({
 		nix = { "alejandra" },
 		r = { "air" },
 		markdown = { "prettier" },
-		quarto = { "prettier" },
+		quarto = { "air", "prettier" },
+		["_"] = { "trim_whitespace" },
 	},
 	format_on_save = {
 		lsp_format = "fallback",
 		timeout_ms = 500,
 	},
 })
+
+require("conform").formatters.prettier = {
+	options = {
+		ft_parsers = { markdown = "markdown" },
+		ext_parsers = { qmd = "markdown" },
+	},
+}
