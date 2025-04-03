@@ -40,7 +40,7 @@ architect: false
 # Theme: Black Metal
 # Main text colors
 user-input-color: "#ff79c6" # Pink
-assistant-output-color: "#50fa7b" # Green
+assistant-output-color: "#608787" # Teal
 tool-output-color: "#f8f8f2" # White
 tool-error-color: "#ff5555" # Red
 tool-warning-color: "#ffb86c" # Orange

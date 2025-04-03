@@ -16,6 +16,14 @@ require("alpha").setup(require("alpha.themes.startify").config)
 -- Bufferline --------------------------------------------------------------
 require("bufferline").setup({})
 
+-- Colorizer ---------------------------------------------------------------
+require("colorizer").setup({
+	user_default_options = {
+		mode = "virtualtext",
+		virtualtext_inline = true,
+	},
+})
+
 -- Image -------------------------------------------------------------------
 require("image").setup({
 	processor = "magick_cli",
@@ -28,7 +36,14 @@ require("image").setup({
 	},
 })
 
-require("img-clip").setup({})
+-- Img-clip ----------------------------------------------------------------
+require("img-clip").setup({
+	default = {
+		dir_path = "./images",
+		relative_to_current_file = true,
+		show_dir_path_in_prompt = true,
+	},
+})
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
@@ -59,6 +74,7 @@ local function get_lsp_servers()
 	return table.concat(client_names, ", ")
 end
 
+-- Lualine setup
 require("lualine").setup({
 	options = {
 		icons_enabled = true,
