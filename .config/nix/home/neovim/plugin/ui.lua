@@ -20,6 +20,7 @@ require("bufferline").setup({})
 require("colorizer").setup({
 	user_default_options = {
 		mode = "virtualtext",
+		names = false,
 		virtualtext_inline = true,
 	},
 })
@@ -55,23 +56,27 @@ local function get_lsp_servers()
 
 	local server_icons = {
 		["GitHub Copilot"] = "",
-		["marksman"] = "",
-		["r_language_server"] = "",
 		["lua_ls"] = "",
-		["pyright"] = "",
+		["marksman"] = "",
 		["nixd"] = "",
+		["otter-ls"] = "",
+		["pyright"] = "",
+		["r_language_server"] = "",
+		["render-markdown"] = "",
 	}
 
 	local client_names = {}
 	for _, client in ipairs(clients) do
 		local name = client.name
+		-- Remove buffer numbers, e.g. `[3]` from `name`
+		name = name:gsub("%[.*%]", "")
 		if server_icons[name] then
 			table.insert(client_names, server_icons[name])
 		else
 			table.insert(client_names, name)
 		end
 	end
-	return table.concat(client_names, ", ")
+	return table.concat(client_names, " | ")
 end
 
 -- Lualine setup
@@ -117,7 +122,11 @@ require("lualine").setup({
 
 -- Render Markdown
 require("render-markdown").setup({
-	bullet = { icons = { "■ ", "□ ", "▪ ", "▫ " } },
+	bullet = {
+		icons = { "■ ", "□ ", "▪ ", "▫ " },
+		left_pad = 0,
+		right_pad = 1,
+	},
 	code = {
 		style = "language",
 		language_name = false,
@@ -127,13 +136,18 @@ require("render-markdown").setup({
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
-		position = "inline",
-		width = "full",
+		icons = {},
 		left_pad = 1,
+		position = "inline",
 		right_pad = 3,
+		width = "full",
 	},
-	html = { enabled = false },
+	html = {
+		enabled = true,
+		comment = { conceal = false },
+	},
 	pipe_table = {
 		preset = "round",
 	},
+	win_options = { conceallevel = { rendered = 0 } },
 })
