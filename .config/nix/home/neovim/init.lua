@@ -98,10 +98,10 @@ map("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
 map("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
 map("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
 
--- Keymaps for navigating Toggleterm terminal windows
-map("t", "jj", "[[<C-\\><C-n>]]", { desc = "jj to escape terminal mode" })
-map("t", "<C-h>", "[[<C-\\><C-n><C-w>h]]", { desc = "Move to left window" })
-map("t", "<C-k>", "[[<C-\\><C-n><C-w>k]]", { desc = "Move to bottom window" })
+-- Keymaps for navigating out of Toggleterm terminal windows
+map("t", "jj", "<C-\\><C-n>", { desc = "jj to escape terminal mode" })
+map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
+map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Move to top window" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
