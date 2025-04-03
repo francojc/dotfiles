@@ -25,6 +25,7 @@
     imagemagick
     jq
     khal
+    kitty
     lazydocker
     lazygit
     mas

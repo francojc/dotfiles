@@ -82,7 +82,7 @@ in {
             quarto-nvim
             render-markdown-nvim
             todo-comments-nvim
-            # toggleterm-nvim
+            toggleterm-nvim
             vim-slime
             which-key-nvim
             yazi-nvim
