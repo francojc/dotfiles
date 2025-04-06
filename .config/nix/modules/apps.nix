@@ -57,8 +57,8 @@
 
     casks = [
       "appcleaner"
-      "bettermouse"
       "betterdisplay"
+      "bettermouse"
       "claude"
       "docker"
       "dropbox"
@@ -66,6 +66,7 @@
       "google-drive"
       "kap"
       "keycastr"
+      "memory-cleaner"
       "mullvadvpn"
       "obsidian"
       "raycast"
