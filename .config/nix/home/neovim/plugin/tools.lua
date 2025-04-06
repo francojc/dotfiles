@@ -1,8 +1,5 @@
 -- Tools config file
 
--- Lazygit ------------------------------------------------------------------
-require("lazygit").setup({})
-
 -- Obsidian ------------------------------------------------------------------
 require("obsidian").setup({
 	ui = { enable = false },
