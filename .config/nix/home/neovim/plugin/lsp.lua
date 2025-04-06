@@ -109,6 +109,9 @@ lspconfig.r_language_server.setup({
 	},
 })
 
+-- YAML
+lspconfig.yamlls.setup({})
+
 -- Formatting ------------------------------------------------------
 
 require("conform").setup({

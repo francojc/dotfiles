@@ -52,7 +52,6 @@ in {
             alpha-nvim
             auto-session
             blink-cmp
-            # blink-compat
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
@@ -64,6 +63,7 @@ in {
             gruvbox-nvim
             image-nvim
             img-clip-nvim
+            lazygit-nvim
             lualine-lsp-progress
             lualine-nvim
             mini-nvim
