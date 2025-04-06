@@ -66,7 +66,7 @@ in {
             friendly-snippets
             fzf-lua
             gitsigns-nvim
-            gruvbox
+            gruvbox-nvim
             image-nvim
             img-clip-nvim
             lualine-lsp-progress
@@ -84,6 +84,7 @@ in {
             render-markdown-nvim
             todo-comments-nvim
             toggleterm-nvim
+            tokyonight-nvim
             vim-slime
             which-key-nvim
             yazi-nvim
