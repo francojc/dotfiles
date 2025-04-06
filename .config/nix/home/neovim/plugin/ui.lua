@@ -97,6 +97,8 @@ local function get_lsp_servers()
 		["pyright"] = "",
 		["r_language_server"] = "",
 		["render-markdown"] = "",
+		["bashls"] = "",
+		["yamlls"] = "",
 	}
 
 	local client_names = {}
