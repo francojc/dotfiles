@@ -37,7 +37,7 @@ vim.diagnostic.config({
 	},
 })
 
--- [K]eymaps ------------------------------------------------------
+-- Keymaps ------------------------------------------------------
 
 local g = vim.g
 
@@ -290,7 +290,7 @@ vim.api.nvim_create_user_command("SpellLang", function()
 	end)
 end, {})
 
--- [O]ptions ------------------------------------------------------
+-- Options ------------------------------------------------------
 
 local opt = vim.opt
 
@@ -348,7 +348,6 @@ opt.undofile = true
 -- Colors
 opt.termguicolors = true
 opt.background = "dark"
-vim.cmd("colorscheme gruvbox")
 
 -- Misc
 opt.winborder = "rounded"
