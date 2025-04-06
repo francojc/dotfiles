@@ -88,6 +88,15 @@ function mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
+# Open iCloud Drive
+function icloud() {
+  if [ -z "$1" ]; then
+    open  ~/Library/Mobile\ Documents/
+  else
+    open "$1"
+  fi
+}
+
 # Obsidian
 # Notes
 function on() {

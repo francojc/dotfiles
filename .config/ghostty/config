@@ -3,8 +3,9 @@
 # UI
 cursor-color = #FF2557
 macos-titlebar-style = tabs
+macos-option-as-alt = right
 mouse-hide-while-typing = true
-font-size = 14
+font-size = 16
 unfocused-split-opacity = 0.5
 split-divider-color = #7B7252
 window-padding-x = 9
@@ -51,5 +52,4 @@ keybind = ctrl+shift+equal=equalize_splits
 # Text
 keybind = alt+m=text: |>
 keybind = alt+-=text: <-
-macos-option-as-alt = right
 
