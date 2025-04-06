@@ -10,7 +10,42 @@ require("aerial").setup({
 })
 
 -- Alpha -------------------------------------------------------------------
-require("alpha").setup(require("alpha.themes.startify").config)
+
+local alpha = require("alpha")
+local dashboard = require("alpha.themes.dashboard")
+
+-- Set header
+
+dashboard.section.header.val = {
+	-- NEOVIM
+	"                                                     ",
+	"  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+	"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+	"  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+	"  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+	"  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+	"                                                     ",
+}
+-- Set menu
+dashboard.section.buttons.val = {
+	dashboard.button("s", "  Restore last session", ":SessionRestore<CR>"),
+	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
+	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
+	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
+
+	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+}
+
+-- Set footer
+dashboard.section.footer.val = "Welcome back, " .. os.getenv("USER") .. "!"
+
+-- Send config to alpha
+alpha.setup(dashboard.opts)
+
+-- Disable folding on alpha
+vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
 
 -- Bufferline --------------------------------------------------------------
 require("bufferline").setup({})
@@ -121,22 +156,29 @@ require("lualine").setup({
 
 -- Render-Markdown ------------------------------------------------------
 require("render-markdown").setup({
+	anti_conceal = { enabled = true },
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
-		right_pad = 0,
+		right_pad = 1,
 	},
 	code = {
 		style = "language",
 		language_name = false,
 	},
 	completions = { lsp = { enabled = true } },
-	conceal = { level = 2 },
+	conceal = { level = 1 },
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
 		backgrounds = {},
-		icons = {},
+		icons = {
+			"# ",
+			"## ",
+			"### ",
+			"#### ",
+			"##### ",
+		},
 		left_pad = 0,
 		position = "inline",
 		right_pad = 3,
@@ -149,5 +191,5 @@ require("render-markdown").setup({
 	pipe_table = {
 		preset = "round",
 	},
-	win_options = { conceallevel = { rendered = 0 } },
+	-- win_options = { conceallevel = { rendered = 1 } },
 })

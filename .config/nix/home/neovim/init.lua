@@ -105,6 +105,15 @@ map("n", "gL", "^", { desc = "Go to beginning of line" })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 
+-- Window-centered movement
+map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
+map("n", "n", "nzzzv", { desc = "Next search result" })
+map("n", "N", "Nzzzv", { desc = "Previous search result" })
+
+-- Paste without overwriting register
+map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
+
 -- Plugin keymaps ----------------
 
 -- Copilot

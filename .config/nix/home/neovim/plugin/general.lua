@@ -1,5 +1,11 @@
 -- General plugins
 
+-- Auto session ---------------------------------------------
+require("auto-session").setup({
+	auto_restore = false,
+	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
+})
+
 -- Mini plugins ----------------------------------------------
 -- Surround
 require("mini.surround").setup()

@@ -56,6 +56,7 @@ in {
           general = with pkgs.vimPlugins; [
             aerial-nvim
             alpha-nvim
+            auto-session
             blink-cmp
             bufferline-nvim
             codecompanion-nvim
