@@ -16,13 +16,7 @@ in {
 
       luaPath = "${./.}";
 
-      categoryDefinitions.replace = {
-        pkgs,
-        settings,
-        categories,
-        name,
-        ...
-      } @ packageDef: {
+      categoryDefinitions.replace = {pkgs, ...} @ packageDef: {
         # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
@@ -58,6 +52,7 @@ in {
             alpha-nvim
             auto-session
             blink-cmp
+            # blink-compat
             bufferline-nvim
             codecompanion-nvim
             conform-nvim
@@ -93,10 +88,10 @@ in {
 
         # Plugins not loaded on startup
         # Use with packadd and an autocommand to get lazy loading
-        optionalPlugins = {
-          general = with pkgs.vimPlugins; [
-          ];
-        };
+        # optionalPlugins = {
+        #   general = with pkgs.vimPlugins; [
+        #   ];
+        # };
       };
 
       packageDefinitions.replace = {

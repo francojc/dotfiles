@@ -163,11 +163,11 @@ require("render-markdown").setup({
 		right_pad = 1,
 	},
 	code = {
-		style = "language",
+		style = "normal",
 		language_name = false,
 	},
 	completions = { lsp = { enabled = true } },
-	conceal = { level = 1 },
+	conceal = { level = 2 },
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
