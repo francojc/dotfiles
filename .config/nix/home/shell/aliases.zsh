@@ -91,9 +91,9 @@ function mkcd() {
 # Open iCloud Drive
 function icloud() {
   if [ -z "$1" ]; then
-    open  ~/Library/Mobile\ Documents/
+    cd ~/Library/Mobile\ Documents/
   else
-    open "$1"
+    cd "$1"
   fi
 }
 

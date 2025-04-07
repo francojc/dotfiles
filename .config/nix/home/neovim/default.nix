@@ -33,7 +33,6 @@ in {
             air-formatter
             bash-language-server
             lua-language-server
-            marksman
             nix-doc
             nixd
             nodePackages.prettier

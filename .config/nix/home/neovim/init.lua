@@ -1,7 +1,14 @@
--- [A]utocommands -------------------------------------------------
+-- This is the main configuration file for Neovim
 
 local vim = vim
 local a = vim.api
+
+-- Globals --------------------------------------------------------
+
+-- Record start time for startup duration
+_G.nvim_config_start_time = vim.loop.hrtime()
+
+-- Autocommands -------------------------------------------------
 
 -- Create an autocommand group
 -- personal
@@ -17,7 +24,7 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- [D]iagnostics -------------------------------------------------
+-- Diagnostics -------------------------------------------------
 
 vim.diagnostic.config({
 	severity_sort = true,
@@ -105,6 +112,10 @@ map("n", "gL", "^", { desc = "Go to beginning of line" })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 
+-- Next visual line
+map("n", "j", "gj", { desc = "Next visual line" })
+map("n", "k", "gk", { desc = "Previous visual line" })
+
 -- Window-centered movement
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
@@ -138,6 +149,7 @@ map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by e
 map("n", "<leader>bd", "<Cmd>BufferLinePickClose<Cr>", { desc = "Delete buffer" })
 map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buffer(s)" })
 map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
+map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
 
 -- Diagnostics/Debug -----
 --

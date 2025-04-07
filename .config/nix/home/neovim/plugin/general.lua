@@ -25,17 +25,19 @@ require("neo-tree").setup({
 -- Make treesitter Quarto support work with markdown
 vim.treesitter.language.register("markdown", "quarto", "codecompanion")
 
+-- Setup
 require("nvim-treesitter.configs").setup({
-	indent = { enable = false },
+	highlight = { enable = true },
 	incremental_selection = {
 		enable = true,
 		keymaps = {
-			init_selection = "<C-space>",
-			node_incremental = "<C-space>",
+			init_selection = "<Enter>",
+			node_incremental = "<Enter>",
 			scope_incremental = false,
-			node_decremental = "<Bs>",
+			node_decremental = "<Backspace>",
 		},
 	},
+	indent = { enable = false },
 })
 
 -- ToggleTerm ---------------------------------------------

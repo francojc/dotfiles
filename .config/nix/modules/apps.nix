@@ -12,7 +12,6 @@
     just
     lla
     lynx
-    marksman
     nixd
     nurl
     oterm

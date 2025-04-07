@@ -10,12 +10,6 @@ lspconfig.bashls.setup({}) -- Pass an empty table here
 -- Lua
 lspconfig.lua_ls.setup({}) -- Also good practice to add {} here
 
--- Markdown
-lspconfig.marksman.setup({
-	cmd = { "marksman", "server" },
-	filetypes = { "markdown", "quarto" },
-})
-
 -- Nix
 -- Get username and hostname from the system
 local function get_username()

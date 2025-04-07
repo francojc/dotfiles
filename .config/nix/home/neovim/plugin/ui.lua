@@ -39,7 +39,13 @@ dashboard.section.buttons.val = {
 }
 
 -- Set footer
-dashboard.section.footer.val = "Welcome back, " .. os.getenv("USER") .. "!"
+dashboard.section.footer.val = function()
+	local end_time = vim.loop.hrtime()
+	local start_time = _G.nvim_config_start_time or end_time -- Fallback if start time wasn't set
+	local duration_ns = end_time - start_time
+	local ms = math.floor(duration_ns / 1000000 + 0.5) -- Convert ns to ms and round
+	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
+end
 
 -- Send config to alpha
 alpha.setup(dashboard.opts)
@@ -91,12 +97,11 @@ local function get_lsp_servers()
 	local server_icons = {
 		["GitHub Copilot"] = "",
 		["lua_ls"] = "",
-		["marksman"] = "",
 		["nixd"] = "",
 		["otter-ls"] = "",
 		["pyright"] = "",
 		["r_language_server"] = "",
-		["render-markdown"] = "",
+		["render-markdown"] = "",
 		["bashls"] = "",
 		["yamlls"] = "",
 	}
