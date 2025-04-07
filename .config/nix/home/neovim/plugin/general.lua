@@ -36,17 +36,21 @@ require("nvim-treesitter.configs").setup({
 			scope_incremental = false,
 			node_decremental = "<Backspace>",
 		},
-		textobjects = {
+	},
+	indent = { enable = false },
+	textobjects = {
+		select = {
 			enable = true,
 			lookahead = true,
 			keymaps = {
 				["af"] = { query = "@function.outer", desc = "Select outer function" },
 				["if"] = { query = "@function.inner", desc = "Select inner function" },
+				["ac"] = { query = "@comment.outer", desc = "Select outer comment" },
+				["ic"] = { query = "@comment.inner", desc = "Select inner comment" },
 			},
 			include_surrounding_whitespace = true,
 		},
 	},
-	indent = { enable = false },
 })
 
 -- ToggleTerm ---------------------------------------------
