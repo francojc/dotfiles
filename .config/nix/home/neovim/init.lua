@@ -176,9 +176,10 @@ map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 
 -- Find ------
 -- Fzf-lua
-map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
+map("n", "<leader>ff", "<Cmd>FzfLua files resume=true<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
 map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
+map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 
 -- Git ------
 -- Lazygit

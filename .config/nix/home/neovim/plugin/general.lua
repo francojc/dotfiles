@@ -6,6 +6,12 @@ require("auto-session").setup({
 	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
 })
 
+-- Fzf-Lua ---------------------------------------------------
+require("fzf-lua").setup({
+	"hide",
+	file_icon_padding = " ",
+})
+
 -- Mini plugins ----------------------------------------------
 -- Surround
 require("mini.surround").setup()
