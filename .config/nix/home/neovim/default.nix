@@ -20,19 +20,22 @@ in {
         # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
+            fd
+            fzf
+            gh
             imagemagick
             lazygit
-            fzf
+            nodejs-slim_23
             ripgrep
-            fd
-            gh
           ];
 
           lsps = with pkgs; [
             alejandra
             air-formatter
             bash-language-server
+            copilot-language-server
             lua-language-server
+            mdformat
             nix-doc
             nixd
             nodePackages.prettier
@@ -53,6 +56,7 @@ in {
             blink-cmp
             bufferline-nvim
             codecompanion-nvim
+            fidget-nvim
             conform-nvim
             copilot-vim
             flash-nvim
@@ -71,6 +75,7 @@ in {
             nvim-colorizer-lua
             nvim-lspconfig
             nvim-treesitter.withAllGrammars
+            nvim-treesitter-textobjects
             nvim-web-devicons
             obsidian-nvim
             plenary-nvim

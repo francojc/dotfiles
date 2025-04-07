@@ -134,10 +134,15 @@ map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
--- CodeCompanion
+-- -- CodeCompanion
+map("n", "<leader>aa", "<Cmd>CodeCompanionChat Toggle<Cr>", { desc = "CodeCompanion: Toggle" })
 map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
 map("n", "<leader>ac", "<Cmd>CodeCompanionChat copilot<Cr>", { desc = "CodeCompanion: Copilot" })
-map("n", "<leader>aa", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
+map("n", "<leader>ax", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
+map({ "n", "v" }, "<leader>ae", "<Cmd>CodeCompanion /explain<Cr>", { desc = "CodeCompanion: Explain" })
+map("v", "<leader>al", "<Cmd>CodeCompanion /lsp<Cr>", { desc = "CodeCompanion: LSP" })
+map("v", "<leader>af", "<Cmd>CodeCompanion /fix<Cr>", { desc = "CodeCompanion: Fix" })
+map("v", "<leader>at", "<Cmd>CodeCompanion /tests<Cr>", { desc = "CodeCompanion: Tests" })
 
 -- Buffers ------
 -- Bufferline
@@ -150,6 +155,11 @@ map("n", "<leader>bd", "<Cmd>BufferLinePickClose<Cr>", { desc = "Delete buffer" 
 map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buffer(s)" })
 map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
 map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
+
+-- Code ------
+map("n", "<leader>ca", "<Cmd>lua require('fzf-lua').lsp_code_actions()<Cr>", { desc = "Code actions" })
+map({ "n", "v" }, "<leader>cf", "<Cmd>lua require('conform').format()<Cr>", { desc = "Format file" })
+map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra spaces" })
 
 -- Diagnostics/Debug -----
 --
@@ -180,7 +190,6 @@ map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Documen
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
 map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
 map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
-map("n", "<leader>la", "<Cmd>FzfLua lsp_code_actions<Cr>", { desc = "Code actions" })
 
 -- Markdown ------
 -- Unordered list item
@@ -195,10 +204,10 @@ map("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task list item" })
 -- Styled text
 map("v", "<leader>mb", 'c**<C-r>"**<Esc>', { desc = "Bold" })
 map("v", "<leader>mi", 'c*<C-r>"*<Esc>', { desc = "Italic" })
-map("v", "<leader>mu", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
+map("v", "<leader>ms", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
 --- Code blocks
 map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
-map("v", "<leader>mk", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
+map("v", "<leader>mC", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
 -- Headings
 map("n", "<leader>m1", "I# ", { desc = "Heading 1" })
 map("n", "<leader>m2", "I## ", { desc = "Heading 2" })
@@ -369,4 +378,4 @@ opt.background = "dark"
 -- Misc
 opt.winborder = "rounded"
 opt.showmode = false
-opt.cmdheight = 1
+opt.cmdheight = 0

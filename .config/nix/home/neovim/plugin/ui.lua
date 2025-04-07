@@ -65,6 +65,9 @@ require("colorizer").setup({
 	},
 })
 
+-- Fidget ----------------------------------------------------------------
+require("fidget").setup({})
+
 -- Image -------------------------------------------------------------------
 require("image").setup({
 	processor = "magick_cli",

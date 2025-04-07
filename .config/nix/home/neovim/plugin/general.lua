@@ -36,6 +36,15 @@ require("nvim-treesitter.configs").setup({
 			scope_incremental = false,
 			node_decremental = "<Backspace>",
 		},
+		textobjects = {
+			enable = true,
+			lookahead = true,
+			keymaps = {
+				["af"] = { query = "@function.outer", desc = "Select outer function" },
+				["if"] = { query = "@function.inner", desc = "Select inner function" },
+			},
+			include_surrounding_whitespace = true,
+		},
 	},
 	indent = { enable = false },
 })
@@ -60,7 +69,7 @@ require("which-key").add({
 	{ "<leader>a_", hidden = true },
 	{ "<leader>b", group = "[b]uffers" },
 	{ "<leader>b_", hidden = true },
-	{ "<leader>c", group = "[c]ommands" },
+	{ "<leader>c", group = "[c]ode" },
 	{ "<leader>c_", hidden = true },
 	{ "<leader>d", group = "[d]iagnostics" },
 	{ "<leader>d_", hidden = true },

@@ -114,7 +114,7 @@ require("conform").setup({
 		lua = { "stylua" },
 		nix = { "alejandra" },
 		r = { "air" },
-		markdown = { "prettier" },
+		markdown = { "mdformat" },
 		quarto = { "air", "prettier" },
 		["_"] = { "trim_whitespace" },
 	},
@@ -124,7 +124,7 @@ require("conform").setup({
 	},
 })
 
-require("conform").formatters.prettier = {
+require("conform").formatters.mdformat = {
 	options = {
 		ft_parsers = { markdown = "markdown" },
 		ext_parsers = { qmd = "markdown" },
