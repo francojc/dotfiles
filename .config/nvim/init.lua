@@ -1,4 +1,4 @@
--- Paq: install plugins ------------------------------------------
+--| Paq: plugins -------------------------------------------------
 require("paq")({
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
@@ -17,34 +17,66 @@ require("paq")({
   "ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
 })
 
--- This is the main configuration file for Neovim
-
-local vim = vim
+--| Options ------------------------------------------------------
 local a = vim.api
+local opt = vim.opt
+local vim = vim
 
--- Globals --------------------------------------------------------
-
+-- Globals -----
 -- Record start time for startup duration
 _G.nvim_config_start_time = vim.loop.hrtime()
 
--- Autocommands -------------------------------------------------
-
--- Create an autocommand group
--- personal
-
-a.nvim_create_augroup("personal", { clear = true })
-
--- Highlight on yank
-a.nvim_create_autocmd("TextYankPost", {
-	group = "personal",
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-})
-
--- Diagnostics -------------------------------------------------
-
+-- Locals -----
+-- Clipboard
+opt.clipboard = "unnamedplus"
+-- Completions
+opt.completeopt = "menu,preview,noselect"
+-- Window
+opt.splitbelow = true
+opt.splitright = true
+opt.scrolloff = 3
+opt.sidescrolloff = 5
+opt.wrap = true
+-- Gutter
+opt.relativenumber = true
+opt.number = true
+opt.signcolumn = "yes"
+opt.cursorline = true
+opt.cursorlineopt = "number"
+-- Tabs
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.tabstop = 2
+opt.softtabstop = 2
+opt.showtabline = 2
+-- Indentation
+opt.smartindent = true
+opt.autoindent = true
+opt.breakindent = true
+opt.linebreak = true
+opt.showbreak = "↪ "
+-- Search
+opt.ignorecase = true
+opt.smartcase = true
+opt.incsearch = true
+opt.hlsearch = false
+-- Spelling
+opt.spell = false
+opt.spelllang = { "en_us" }
+opt.spellfile = os.getenv("HOME") .. "/.spell/en.utf-8.add"
+-- Swap/backup/undo
+opt.backup = false
+opt.swapfile = false
+opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+opt.undofile = true
+-- Colors
+opt.termguicolors = true
+opt.background = "dark"
+-- Misc
+opt.winborder = "rounded"
+opt.showmode = false
+opt.cmdheight = 0
+-- Diagnostics 
 vim.diagnostic.config({
 	severity_sort = true,
 	update_in_insert = false,
@@ -63,14 +95,27 @@ vim.diagnostic.config({
 	},
 })
 
--- Keymaps ------------------------------------------------------
+--| Autocommands -------------------------------------------------
+-- Create an autocommand group
+-- personal group
+a.nvim_create_augroup("personal", { clear = true })
+-- Highlight on yank
+a.nvim_create_autocmd("TextYankPost", {
+	group = "personal",
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})
 
+--| Keymaps ------------------------------------------------------
 local g = vim.g
 
--- Leader key
+-- Leader key -----
 g.mapleader = " "
 g.maplocalleader = " "
 
+-- map() function -----
 local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
 	if opts then
@@ -85,43 +130,28 @@ local function map(mode, lhs, rhs, opts)
 	end
 end
 
--- Slime
-g.slime_target = "neovim"
-vim.b.slime_cell_delimiter = "```"
-
-map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
-map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
-map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
-
 -- Vim -----------------
 -- jj to escape insert mode
 map("i", "jj", "<Esc>", { desc = "jj to escape insert mode" })
-
 -- Hide highlights
 map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
-
 -- Save file
 map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
-
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
-
 --- Window  -----
 -- Move between editor/terminal windows
 map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
 map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
 map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
-
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
-
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
 map("n", "<leader>wj", "<C-w>+", { desc = "Resize window down" })
 map("n", "<leader>wh", "<C-w><", { desc = "Resize window left" })
 map("n", "<leader>wl", "<C-w>>", { desc = "Resize window right" })
-
 -- Go to
 -- End of line
 map("n", "gl", "$", { desc = "Go to end of line" })
@@ -130,30 +160,26 @@ map("n", "gL", "^", { desc = "Go to beginning of line" })
 -- Line up/down
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
-
 -- Next visual line
 map("n", "j", "gj", { desc = "Next visual line" })
 map("n", "k", "gk", { desc = "Previous visual line" })
-
 -- Window-centered movement
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
 map("n", "n", "nzzzv", { desc = "Next search result" })
 map("n", "N", "Nzzzv", { desc = "Previous search result" })
-
 -- Paste without overwriting register
 map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
-
+-- AI ----------------------------
 -- Copilot
 map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
 map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
-
--- -- CodeCompanion
+-- CodeCompanion
 map("n", "<leader>aa", "<Cmd>CodeCompanionChat Toggle<Cr>", { desc = "CodeCompanion: Toggle" })
 map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
 map("n", "<leader>ac", "<Cmd>CodeCompanionChat copilot<Cr>", { desc = "CodeCompanion: Copilot" })
@@ -163,7 +189,7 @@ map("v", "<leader>al", "<Cmd>CodeCompanion /lsp<Cr>", { desc = "CodeCompanion: L
 map("v", "<leader>af", "<Cmd>CodeCompanion /fix<Cr>", { desc = "CodeCompanion: Fix" })
 map("v", "<leader>at", "<Cmd>CodeCompanion /tests<Cr>", { desc = "CodeCompanion: Tests" })
 
--- Buffers ------
+-- Buffers --------------------------
 -- Bufferline
 map("n", "<Tab>", "<Cmd>BufferLineCycleNext<Cr>")
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<Cr>")
@@ -175,43 +201,38 @@ map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buff
 map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
 map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
 
--- Code ------
+-- Code -----------------------------
 map("n", "<leader>ca", "<Cmd>lua require('fzf-lua').lsp_code_actions()<Cr>", { desc = "Code actions" })
 map({ "n", "v" }, "<leader>cf", "<Cmd>lua require('conform').format()<Cr>", { desc = "Format file" })
 map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra spaces" })
 
--- Diagnostics/Debug -----
+-- Diagnostics/Debug ----------------------------- 
 --
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
 
--- Explore -------
+-- Explore -------------------------------
 -- Neotree
 map("n", "<leader>ee", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
 map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
-
 -- Yazi
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
-
--- Find ------
+-- Find -----------------------------------
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep resume=true<Cr>", { desc = "Live grep" })
 map("n", "<leader>fr", "<Cmd>FzfLua oldfiles cwd=./<Cr>", { desc = "Recent files" })
 map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
-
--- Git ------
+-- Git -----------------------------------
 -- Lazygit
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
-
--- LSP ------
+-- LSP -----------------------------------
 map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
 map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
 map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
-
--- Markdown ------
+-- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
 map("v", "<leader>mu", ":s/^/- /<CR>gv", { desc = "Unordered list item" })
@@ -242,8 +263,7 @@ map(
 	"<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
 	{ desc = "Paste image" }
 )
-
--- Obsidian ------
+-- Obsidian -----------------------------------
 map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
 map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "New note" })
 map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "New from template" })
@@ -252,27 +272,34 @@ map("n", "<leader>ol", "<Cmd>ObsidianLinkNew<Cr>", { desc = "New link" })
 map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
 map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
 map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
-
--- Quarto ------
+-- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
 map("n", "<leader>qa", "<Cmd>QuartoSendAbove<Cr>", { desc = "Quarto: send above" })
 map("n", "<leader>qb", "<Cmd>QuartoSendBelow<Cr>", { desc = "Quarto: send below" })
 map("n", "<leader>qf", "<Cmd>QuartoSendAll<Cr>", { desc = "Quarto: send file" })
 
--- Search ------
+-- Run -----------------------------------
+-- Slime
+g.slime_target = "neovim"
+vim.b.slime_cell_delimiter = "```"
+map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
+map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
+map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
+
+-- Search -----------------------------------
 map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
 map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
 map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
--- Flash search -----
+-- Flash search 
 map({ "n", "x", "o" }, "s", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
 -- map("n", "r", "<Cmd>lua require('flash').remote()<Cr>", { desc = "Remote flash" })
 -- map("n", "R", "<Cmd>lua require('flash').treesitter_search()<Cr>", { desc = "Treesitter search" })
 
--- Toggle -------
+-- Toggle ------------------------------------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
@@ -280,6 +307,7 @@ map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 
+---| Functions ----------------------------------------------------
 -- Spell Language Functionality
 local function get_project_root()
 	local current_file = vim.fn.expand("%:p")
@@ -336,72 +364,8 @@ vim.api.nvim_create_user_command("SpellLang", function()
 	end)
 end, {})
 
--- Options ------------------------------------------------------
-
-local opt = vim.opt
-
--- Clipboard
-opt.clipboard = "unnamedplus"
-
--- Completions
-opt.completeopt = "menu,preview,noselect"
-
--- Window
-opt.splitbelow = true
-opt.splitright = true
-opt.scrolloff = 3
-opt.sidescrolloff = 5
-opt.wrap = true
-
--- Gutter
-opt.relativenumber = true
-opt.number = true
-opt.signcolumn = "yes"
-opt.cursorline = true
-opt.cursorlineopt = "number"
-
--- Tabs
-opt.expandtab = true
-opt.shiftwidth = 2
-opt.tabstop = 2
-opt.softtabstop = 2
-opt.showtabline = 2
-
--- Indentation
-opt.smartindent = true
-opt.autoindent = true
-opt.breakindent = true
-opt.linebreak = true
-opt.showbreak = "↪ "
-
--- Search
-opt.ignorecase = true
-opt.smartcase = true
-opt.incsearch = true
-opt.hlsearch = false
-
--- Spelling
-opt.spell = false
-opt.spelllang = { "en_us" }
-opt.spellfile = os.getenv("HOME") .. "/.spell/en.utf-8.add"
-
--- Swap/backup/undo
-opt.backup = false
-opt.swapfile = false
-opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-opt.undofile = true
-
--- Colors
-opt.termguicolors = true
-opt.background = "dark"
-
--- Misc
-opt.winborder = "rounded"
-opt.showmode = false
-opt.cmdheight = 0
-
 -- Plugin configuration ----------------------------------------------
--- Colorscheme configuration
+-- Colorscheme ---------------------------------- 
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
@@ -413,16 +377,16 @@ require("vague").setup({})
 -- Set colorscheme
 vim.cmd("colorscheme vague")
 
--- FZF ----------------------------------------------------------------
+-- FZF ---------------------------------- 
 require("fzf-lua").setup({})
 
--- Mini ----------------------------------------------------------------
+-- Mini -----------------------------------
 require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
 require("mini.statusline").setup({})
 require("mini.surround").setup({})
 
--- Oil -----------------------------------------------------------------
+-- Oil -----------------------------------
 -- File explorer
 require("oil").setup({
   skip_confirm_for_simple_edits = true,
@@ -434,7 +398,7 @@ require("oil").setup({
   },
 })
 
---- Treesitter ---------------------------------------------------------
+--- Treesitter -----------------------------------
 --- register quarto as markdown 
 vim.treesitter.language.register("markdown", "quarto")
 
@@ -449,7 +413,7 @@ require("nvim-treesitter.configs").setup({
 	},
 })
 
---- WhichKey -----------------------------------------------------------
+--- WhichKey -----------------------------------
 --- setup 
 require("which-key").setup({
   preset = "helix",
@@ -461,6 +425,7 @@ require("which-key").setup({
 local wk = require("which-key")
 wk.add({
 	{ "<leader>b", group = "Buffer", icon = " " },
+  { "<leader>e", group = "Explore", icon = " " },
 	{ "<leader>f", group = "Find", icon = " " },
 	{ "<leader>g", group = "Git", icon = " " },
 	{ "<leader>h", group = "Help", icon = " " },
