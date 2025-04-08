@@ -3,7 +3,7 @@
 -- Auto session ---------------------------------------------
 require("auto-session").setup({
 	auto_restore = false,
-	bypass_save_filetypes = { "alpha", "dashboard", "oil" },
+	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
 })
 
 -- Fzf-Lua ---------------------------------------------------
@@ -22,15 +22,9 @@ require("mini.icons").setup()
 -- Open-close chars
 require("mini.pairs").setup()
 
--- Oil -----------------------------------------------------
-require("oil").setup({
-	default_file_explorer = true,
-	view_options = {
-		show_hidden = true,
-	},
-	float = {
-		enable = true,
-	},
+-- Neotree
+require("neo-tree").setup({
+	close_if_last_window = true,
 })
 
 -- Treesitter -----------------------------------------------
