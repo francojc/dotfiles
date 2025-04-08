@@ -32,6 +32,7 @@
     mdcat
     mpv-unwrapped
     ncdu
+    neovim
     nix-prefetch-git
     nodejs_22
     pandoc
