@@ -46,7 +46,6 @@ alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne.tail5650e0.ts.
 alias gss='git status'
 alias ga='git add'
 alias gaa='git add --all'
-alias gc='git commit -m'
 alias gp='git push'
 alias gpl='git pull'
 alias gf='git fetch'
