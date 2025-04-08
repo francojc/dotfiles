@@ -1,7 +1,7 @@
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
-	"MeanderingProgrammer/render-markdown.nvim",-- Render-Markdown
+	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
@@ -22,7 +22,7 @@ require("paq")({
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
-	"lilydjwg/colorizer",-- Colorizer
+	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
@@ -47,7 +47,7 @@ local vim = vim
 -- Record start time for startup duration
 _G.nvim_config_start_time = vim.loop.hrtime()
 
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Locals -----
 -- Clipboard
@@ -441,7 +441,7 @@ vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
 
 -- Auto-session -------------------------------
 require("auto-session").setup({
-  auto_restore = false,
+	auto_restore = false,
 	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
 })
 
@@ -578,8 +578,15 @@ require("flash").setup({})
 
 -- FZF ----------------------------------
 require("fzf-lua").setup({
-  "hide",
-  file_icon_padding = " ",
+	file_icon_padding = " ",
+	files = {
+		git_icons = true,
+		formatter = "path.filename_first",
+	},
+  oldfiles = {
+    cwd_only = true,
+    include_current_session = true,
+  },
 })
 
 -- Image ----------------------------------
@@ -693,7 +700,7 @@ require("mini.surround").setup({})
 
 -- Neo-tree -----------------------------------
 require("neo-tree").setup({
-  close_if_last_window = true,
+	close_if_last_window = true,
 })
 
 -- Obsidian -----------------------------------
@@ -743,8 +750,7 @@ require("render-markdown").setup({
 		style = "language",
 		language_name = false,
 	},
-	completions = { lsp = { enabled = true } },
-	-- conceal = { level = 1 },
+	-- conceal = { level = 2 },
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
@@ -768,7 +774,7 @@ require("render-markdown").setup({
 	pipe_table = {
 		preset = "round",
 	},
-  -- win_options = { conceallevel = { rendered = 1 } },
+	-- win_options = { conceallevel = { rendered = 1 } },
 })
 
 -- Todo-comments -----------------------------------
