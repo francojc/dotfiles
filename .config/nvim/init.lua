@@ -47,6 +47,8 @@ local vim = vim
 -- Record start time for startup duration
 _G.nvim_config_start_time = vim.loop.hrtime()
 
+vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- Locals -----
 -- Clipboard
 opt.clipboard = "unnamedplus"
@@ -315,8 +317,9 @@ map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling sugge
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 
 -- Flash search
-map({ "n", "x", "o" }, "s", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
-map({ "n", "x", "o" }, "S", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
+-- Map flash to f/F keys
+map({ "n", "x", "o" }, "m", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
+map({ "n", "x", "o" }, "M", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
 
 -- Toggle ------------------------------------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
@@ -445,7 +448,7 @@ require("auto-session").setup({
 -- Blink ----------------------------------
 require("blink.cmp").setup({
 	fuzzy = {
-		implementation = "prefer_rust",
+		implementation = "lua",
 	},
 	completion = {
 		menu = {
@@ -550,11 +553,10 @@ require("vague").setup({})
 vim.cmd("colorscheme gruvbox")
 
 -- Colorizer ---------------------------------------------------------------
+-- Consider: norcalli/nvim-colorizer.lua
 -- require("colorizer").setup({
 -- 	user_default_options = {
--- 		mode = "virtualtext",
 -- 		names = false,
--- 		virtualtext_inline = true,
 -- 	},
 -- })
 
@@ -566,17 +568,10 @@ require("conform").setup({
 		nix = { "alejandra" },
 		r = { "air" },
 		markdown = { "mdformat" },
-		quarto = { "air", "prettier" },
+		quarto = { "air" },
 		["*"] = { "trim_whitespace" },
 	},
 })
-
-require("conform").formatters.mdformat = {
-	options = {
-		ft_parsers = { markdown = "markdown" },
-		ext_parsers = { qmd = "markdown" },
-	},
-}
 
 -- Flash ----------------------------------
 require("flash").setup({})
@@ -677,21 +672,7 @@ lspconfig.pyright.setup({})
 -- R
 local configs = require("lspconfig.configs")
 
--- Check if the config is already defined (useful when reloading this file)
-if not configs.air then
-	configs.air = {
-		default_config = {
-			cmd = { vim.fn.expand("$HOME/.local/bin/air"), "language-server" },
-			filetypes = { "r", "quarto" },
-			root_dir = function(fname)
-				return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) or vim.loop.os_homedir()
-			end,
-			settings = {},
-		},
-	}
-end
-
--- lspconfig.air.setup({})
+lspconfig.air.setup({})
 
 lspconfig.r_language_server.setup({
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
@@ -756,14 +737,14 @@ require("render-markdown").setup({
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
-		right_pad = 1,
+		right_pad = 0,
 	},
 	code = {
-		style = "normal",
+		style = "language",
 		language_name = false,
 	},
 	completions = { lsp = { enabled = true } },
-	conceal = { level = 2 },
+	-- conceal = { level = 1 },
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
@@ -787,6 +768,7 @@ require("render-markdown").setup({
 	pipe_table = {
 		preset = "round",
 	},
+  -- win_options = { conceallevel = { rendered = 1 } },
 })
 
 -- Todo-comments -----------------------------------
