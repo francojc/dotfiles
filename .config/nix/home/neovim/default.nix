@@ -69,8 +69,8 @@ in {
             lualine-lsp-progress
             lualine-nvim
             mini-nvim
-            neo-tree-nvim
             nightfox-nvim
+            oil-nvim
             nvim-colorizer-lua
             nvim-lspconfig
             nvim-treesitter.withAllGrammars

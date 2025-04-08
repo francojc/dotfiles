@@ -88,6 +88,9 @@ map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
+-- Oil
+map("n", "-", "<Cmd>Oil --float<Cr>", { desc = "Open oil" })
+
 --- Window  -----
 -- Move between editor/terminal windows
 map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
@@ -166,9 +169,7 @@ map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra 
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
 
 -- Explore -------
--- Neotree
-map("n", "<leader>ee", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
-map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
+-- empty
 
 -- Yazi
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
