@@ -1,34 +1,41 @@
 --| Paq: plugins -------------------------------------------------
 require("paq")({
-  "akinsho/bufferline.nvim", -- Bufferline
-  "akinsho/toggleterm.nvim", -- Toggle terminal
-  "jmbuhr/otter.nvim", -- Otter for Quarto
-  "nvim-lua/plenary.nvim", -- Plenary for Lua functions 
-  "echasnovski/mini.icons", -- Icons
-  "echasnovski/mini.indentscope", -- Indent guides
-  "echasnovski/mini.pairs", -- Pairs
-  "echasnovski/mini.statusline", -- Statusline
-  "echasnovski/mini.surround", -- Surround
-  "ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
-  "epwalsh/obsidian.nvim", -- Obsidian integration
-  "folke/flash.nvim", -- Flash jump
-  "folke/todo-comments.nvim", -- Todo comments highlighting/searching
-  "folke/which-key.nvim", -- Keymaps popup
-  "github/copilot.vim", -- Copilot
-  "ibhagwan/fzf-lua", -- FZF
-  "hakonharnes/img-clip.nvim", -- Image pasting
-  "jpalardy/vim-slime", -- Slime integration
-  "kdheepak/lazygit.nvim", -- Lazygit integration
-  "mikavilpas/yazi.nvim", -- Yazi file manager integration
-  "neovim/nvim-lspconfig", -- LSP
-  "olimorris/codecompanion.nvim", -- Code companion AI integration
-  "nvim-neo-tree/neo-tree.nvim", -- File explorer
-  "nvim-treesitter/nvim-treesitter", -- Treesitter
-  "quarto-dev/quarto-nvim", -- Quarto integration
-  "savq/paq-nvim", -- Paq manages itself
-  "stevearc/aerial.nvim", -- Code outline
-  "stevearc/conform.nvim", -- Formatter
-  "vague2k/vague.nvim", -- Colorscheme: Vague
+	"3rd/image.nvim", -- Image support in Neovim
+	"MeanderingProgrammer/render-markdown.nvim",-- Render-Markdown
+	"Saghen/blink.cmp", -- Blink completion
+	"akinsho/bufferline.nvim", -- Bufferline
+	"akinsho/toggleterm.nvim", -- Toggle terminal
+	"echasnovski/mini.icons", -- Icons
+	"echasnovski/mini.indentscope", -- Indent guides
+	"echasnovski/mini.pairs", -- Pairs
+	"echasnovski/mini.statusline", -- Statusline
+	"echasnovski/mini.surround", -- Surround
+	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
+	"epwalsh/obsidian.nvim", -- Obsidian integration
+	"folke/flash.nvim", -- Flash jump
+	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
+	"folke/which-key.nvim", -- Keymaps popup
+	"github/copilot.vim", -- Copilot
+	"goolord/alpha-nvim", -- Alpha dashboard
+	"hakonharnes/img-clip.nvim", -- Image pasting
+	"ibhagwan/fzf-lua", -- FZF fuzzy finder
+	"jmbuhr/otter.nvim", -- Otter for Quarto
+	"jpalardy/vim-slime", -- Slime integration
+	"kdheepak/lazygit.nvim", -- Lazygit integration
+	"lilydjwg/colorizer",-- Colorizer
+	"mikavilpas/yazi.nvim", -- Yazi file manager integration
+	"neovim/nvim-lspconfig", -- LSP
+	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
+	"nvim-neo-tree/neo-tree.nvim", -- File explorer
+	"nvim-treesitter/nvim-treesitter", -- Treesitter
+	"olimorris/codecompanion.nvim", -- Code companion AI integration
+	"quarto-dev/quarto-nvim", -- Quarto integration
+	"rafamadriz/friendly-snippets", -- Snippets
+	"rmagatti/auto-session", -- Auto session management
+	"savq/paq-nvim", -- Paq manages itself
+	"stevearc/aerial.nvim", -- Code outline
+	"stevearc/conform.nvim", -- Formatter
+	"vague2k/vague.nvim", -- Colorscheme: Vague
 })
 
 --| Options ------------------------------------------------------
@@ -92,21 +99,21 @@ opt.showmode = false
 opt.cmdheight = 0
 -- Diagnostics
 vim.diagnostic.config({
-  severity_sort = true,
-  update_in_insert = false,
-  virtual_text = {
-    severity = {
-      min = vim.diagnostic.severity.INFO,
-      max = vim.diagnostic.severity.WARN,
-    },
-  },
-  virtual_lines = {
-    current_line = true,
-    severity = {
-      min = vim.diagnostic.severity.ERROR,
-      max = vim.diagnostic.severity.ERROR,
-    },
-  },
+	severity_sort = true,
+	update_in_insert = false,
+	virtual_text = {
+		severity = {
+			min = vim.diagnostic.severity.INFO,
+			max = vim.diagnostic.severity.WARN,
+		},
+	},
+	virtual_lines = {
+		current_line = true,
+		severity = {
+			min = vim.diagnostic.severity.ERROR,
+			max = vim.diagnostic.severity.ERROR,
+		},
+	},
 })
 
 --| Autocommands -------------------------------------------------
@@ -115,11 +122,11 @@ vim.diagnostic.config({
 a.nvim_create_augroup("personal", { clear = true })
 -- Highlight on yank
 a.nvim_create_autocmd("TextYankPost", {
-  group = "personal",
-  pattern = "*",
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+	group = "personal",
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank()
+	end,
 })
 
 --| Keymaps ------------------------------------------------------
@@ -131,17 +138,17 @@ g.maplocalleader = " "
 
 -- map() function -----
 local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  if type(mode) == "table" then
-    for _, m in ipairs(mode) do
-      vim.api.nvim_set_keymap(m, lhs, rhs, options)
-    end
-  else
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-  end
+	local options = { noremap = true, silent = true }
+	if opts then
+		options = vim.tbl_extend("force", options, opts)
+	end
+	if type(mode) == "table" then
+		for _, m in ipairs(mode) do
+			vim.api.nvim_set_keymap(m, lhs, rhs, options)
+		end
+	else
+		vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	end
 end
 
 -- Vim -----------------
@@ -235,7 +242,7 @@ map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep resume=true<Cr>", { desc = "Live grep" })
-map("n", "<leader>fr", "<Cmd>FzfLua oldfiles cwd=./<Cr>", { desc = "Recent files" })
+map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
 map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 -- Git -----------------------------------
 -- Lazygit
@@ -272,10 +279,10 @@ map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 map("v", "<leader>ml", 'c[<C-r>"](<Esc>i)', { desc = "Add link" })
 -- Paste image
 map(
-  "n",
-  "<leader>mp",
-  "<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
-  { desc = "Paste image" }
+	"n",
+	"<leader>mp",
+	"<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
+	{ desc = "Paste image" }
 )
 -- Obsidian -----------------------------------
 map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
@@ -322,96 +329,379 @@ map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggl
 ---| Functions ----------------------------------------------------
 -- Spell Language Functionality
 local function get_project_root()
-  local current_file = vim.fn.expand("%:p")
-  if current_file == "" then
-    return nil
-  end
-  local path = vim.fn.fnamemodify(current_file, ":h")
-  while path ~= "" and path ~= "/" do
-    if vim.fn.isdirectory(path .. "/.git") == 1 or vim.fn.isdirectory(path .. "/.nvim_spell_lang") == 1 then
-      return path
-    end
-    path = vim.fn.fnamemodify(path, ":h")
-  end
-  return nil
+	local current_file = vim.fn.expand("%:p")
+	if current_file == "" then
+		return nil
+	end
+	local path = vim.fn.fnamemodify(current_file, ":h")
+	while path ~= "" and path ~= "/" do
+		if vim.fn.isdirectory(path .. "/.git") == 1 or vim.fn.isdirectory(path .. "/.nvim_spell_lang") == 1 then
+			return path
+		end
+		path = vim.fn.fnamemodify(path, ":h")
+	end
+	return nil
 end
 
 local function load_spell_lang()
-  local project_root = get_project_root()
-  if not project_root then
-    return
-  end
-  local spell_lang_file = project_root .. "/.nvim_spell_lang"
-  if vim.fn.filereadable(spell_lang_file) == 1 then
-    local lang = vim.trim(vim.fn.readfile(spell_lang_file)[1])
-    vim.opt_local.spelllang = lang
-  else
-    vim.opt_local.spelllang = "en_us"
-  end
+	local project_root = get_project_root()
+	if not project_root then
+		return
+	end
+	local spell_lang_file = project_root .. "/.nvim_spell_lang"
+	if vim.fn.filereadable(spell_lang_file) == 1 then
+		local lang = vim.trim(vim.fn.readfile(spell_lang_file)[1])
+		vim.opt_local.spelllang = lang
+	else
+		vim.opt_local.spelllang = "en_us"
+	end
 end
 
 local function set_spell_lang(lang)
-  local project_root = get_project_root()
-  if not project_root then
-    return
-  end
-  local spell_lang_file = project_root .. "/.nvim_spell_lang"
-  vim.fn.writefile({ lang }, spell_lang_file)
-  vim.opt_local.spelllang = lang
+	local project_root = get_project_root()
+	if not project_root then
+		return
+	end
+	local spell_lang_file = project_root .. "/.nvim_spell_lang"
+	vim.fn.writefile({ lang }, spell_lang_file)
+	vim.opt_local.spelllang = lang
 end
 
 vim.api.nvim_create_autocmd("BufEnter", {
-  callback = function()
-    load_spell_lang()
-  end,
+	callback = function()
+		load_spell_lang()
+	end,
 })
 
 vim.api.nvim_create_user_command("SpellLang", function()
-  vim.ui.select({ "en_us", "es" }, {
-    prompt = "Select spell language:",
-  }, function(choice)
-    if choice then
-      set_spell_lang(choice)
-    end
-  end)
+	vim.ui.select({ "en_us", "es" }, {
+		prompt = "Select spell language:",
+	}, function(choice)
+		if choice then
+			set_spell_lang(choice)
+		end
+	end)
 end, {})
 
 -- Plugin configuration ----------------------------------------------
 -- Aerial ----------------------------------
-require("aerial").setup({})
+require("aerial").setup({
+	on_attach = function(bufnr)
+		-- Jump forwards/backwards with '{' and '}'
+		vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+		vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+	end,
+})
+
+-- Alpha ----------------------------------
+local alpha = require("alpha")
+local dashboard = require("alpha.themes.dashboard")
+
+-- Set header
+
+dashboard.section.header.val = {
+	-- NEOVIM
+	"                                                     ",
+	"  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+	"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+	"  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+	"  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+	"  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+	"                                                     ",
+}
+-- Set menu
+dashboard.section.buttons.val = {
+	dashboard.button("s", "  Restore last session", ":SessionRestore<CR>"),
+	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
+	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
+	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
+
+	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+}
+
+-- Set footer
+dashboard.section.footer.val = function()
+	local end_time = vim.loop.hrtime()
+	local start_time = _G.nvim_config_start_time or end_time -- Fallback if start time wasn't set
+	local duration_ns = end_time - start_time
+	local ms = math.floor(duration_ns / 1000000 + 0.5) -- Convert ns to ms and round
+	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
+end
+
+-- Send config to alpha
+alpha.setup(dashboard.opts)
+
+-- Disable folding on alpha
+vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
+
+-- Auto-session -------------------------------
+require("auto-session").setup({
+  auto_restore = false,
+	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
+})
+
+-- Blink ----------------------------------
+require("blink.cmp").setup({
+	fuzzy = {
+		implementation = "prefer_rust",
+	},
+	completion = {
+		menu = {
+			auto_show = false,
+			draw = {
+				columns = {
+					{ "label", "label_description", gap = 1 },
+					{ "kind_icon", "kind" },
+				},
+			},
+		},
+	},
+	keymap = {
+		preset = "none",
+		["<C-Space>"] = { "show", "hide" },
+		["<D-l>"] = { "select_and_accept" },
+		["<D-j>"] = { "select_next", "fallback" },
+		["<D-k>"] = { "select_prev", "fallback" },
+		["<Enter>"] = { "select_accept_and_enter", "fallback" },
+		["<D-esc>"] = { "cancel" },
+		["<D-d>"] = { "scroll_documentation_down" },
+		["<D-u>"] = { "scroll_documentation_up" },
+		["<D-s>"] = { "show_signature" },
+		["<Tab>"] = { "snippet_forward", "fallback" },
+		["<S-Tab>"] = { "snippet_backward", "fallback" },
+	},
+	signature = {
+		enabled = true,
+		window = {
+			show_documentation = false,
+		},
+	},
+	sources = { default = { "path", "snippets", "lsp" } },
+	cmdline = {
+		completion = {
+			menu = {
+				auto_show = function(ctx)
+					return vim.fn.getcmdtype() == ":"
+				end,
+			},
+		},
+		keymap = {
+			preset = "inherit",
+		},
+	},
+})
 
 -- Bufferline ----------------------------------
 require("bufferline").setup({})
 
 -- CodeCompanion ----------------------------------
-require("codecompanion").setup({})
+require("codecompanion").setup({
+	adapters = {
+		-- Use sonnet with Copilot
+		copilot = function()
+			return require("codecompanion.adapters").extend("copilot", {
+				schema = {
+					model = {
+						default = "claude-3.7-sonnet",
+						choices = {
+							["o3-mini-2025-01-31"] = { opts = { can_reason = true } },
+							"gpt-4o-2024-08-06",
+						},
+					},
+				},
+			})
+		end,
+		-- Use gemini-2.5-pro-exp-03-25 with Gemini
+		gemini = function()
+			return require("codecompanion.adapters").extend("gemini", {
+				schema = {
+					model = { default = "gemini-2.5-pro-exp-03-25" },
+				},
+			})
+		end,
+	},
+	strategies = {
+		chat = {
+			adapter = "copilot",
+			roles = {
+				---@type string|fun(adapter: CodeCompanion.Adapter): string
+				llm = function(adapter)
+					return " (" .. adapter.formatted_name .. ") "
+				end,
 
+				---@type string
+				user = " -------------",
+			},
+		},
+	},
+})
 -- Colorscheme ----------------------------------
 -- Gruvbox
 require("gruvbox").setup({
-  invert_selection = true,
-  contrast = "hard",
-  overrides = {},
+	invert_selection = true,
+	contrast = "hard",
+	overrides = {},
 })
 -- Vague
 require("vague").setup({})
 -- Set colorscheme
 vim.cmd("colorscheme gruvbox")
 
+-- Colorizer ---------------------------------------------------------------
+require("colorizer").setup({
+	user_default_options = {
+		mode = "virtualtext",
+		names = false,
+		virtualtext_inline = true,
+	},
+})
+
 -- Conform ----------------------------------
-require("conform").setup({})
+require("conform").setup({
+	formatters_by_ft = {
+		bash = { "shfmt" },
+		lua = { "stylua" },
+		nix = { "alejandra" },
+		r = { "air" },
+		markdown = { "mdformat" },
+		quarto = { "air", "prettier" },
+		["*"] = { "trim_whitespace" },
+	},
+})
+
+require("conform").formatters.mdformat = {
+	options = {
+		ft_parsers = { markdown = "markdown" },
+		ext_parsers = { qmd = "markdown" },
+	},
+}
 
 -- Flash ----------------------------------
 require("flash").setup({})
 
 -- FZF ----------------------------------
-require("fzf-lua").setup({})
+require("fzf-lua").setup({
+  "hide",
+  file_icon_padding = " ",
+})
+
+-- Image ---------------------------------- 
+require("image").setup({
+	processor = "magick_cli",
+	integrations = {
+		markdown = {
+			clear_in_insert_mode = true,
+			filetypes = { "markdown", "quarto" },
+			only_render_image_at_cursor = true,
+		},
+	},
+})
 
 -- Img-Clip ----------------------------------
-require("img-clip").setup({})
+require("img-clip").setup({
+	default = {
+		dir_path = "./images",
+		relative_to_current_file = true,
+		show_dir_path_in_prompt = true,
+	},
+})
 
--- -- Lazygit ----------------------------------
--- require("lazygit").setup({})
+-- Lspconfig --------------------------------
+-- LSP
+local lspconfig = require("lspconfig")
+-- Setup LSP servers
+-- Bash
+-- bash-language-server
+lspconfig.bashls.setup({})
+-- Lua
+-- lua-lanuage-server
+lspconfig.lua_ls.setup({})
+-- Nix
+-- nixd
+local function get_username()
+	local handle = io.popen("whoami")
+	if not handle then
+		return ""
+	end
+	local username = handle:read("*a")
+	handle:close()
+	return username:gsub("\n$", "")
+end
+
+local function get_hostname()
+	local handle = io.popen("hostname")
+	if not handle then
+		return ""
+	end
+	local hostname = handle:read("*a")
+	handle:close()
+	return hostname:gsub("\n$", "")
+end
+
+lspconfig.nixd.setup({
+	cmd = { "nixd" },
+	settings = {
+		nixd = {
+			nixpkgs = { expr = "import <nixpkgs> {}" },
+			formatting = { command = { "alejandra" } },
+			options = {
+				nixos = {
+					expr = '(builtins.getFlake "/Users/'
+						.. get_username()
+						.. '/.dotfiles/.config/nix").nixosConfigurations.'
+						.. get_hostname()
+						.. ".options",
+				},
+				nix_darwin = {
+					expr = '(builtins.getFlake "/Users/'
+						.. get_username()
+						.. '/.dotfiles/.config/nix").darwinConfigurations.'
+						.. get_hostname()
+						.. ".options",
+				},
+				home_manager = {
+					expr = '(builtins.getFlake "/Users/'
+						.. get_username()
+						.. '/.dotfiles/.config/nix").homeConfigurations.'
+						.. get_hostname()
+						.. ".options",
+				},
+			},
+		},
+	},
+})
+-- Python
+lspconfig.pyright.setup({})
+-- R
+local configs = require("lspconfig.configs")
+
+-- Check if the config is already defined (useful when reloading this file)
+if not configs.air then
+	configs.air = {
+		default_config = {
+			cmd = { vim.fn.expand("$HOME/.local/bin/air"), "language-server" },
+			filetypes = { "r", "quarto" },
+			root_dir = function(fname)
+				return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) or vim.loop.os_homedir()
+			end,
+			settings = {},
+		},
+	}
+end
+
+-- lspconfig.air.setup({})
+
+lspconfig.r_language_server.setup({
+	cmd = { "R", "--slave", "-e", "languageserver::run()" },
+	filetypes = { "r", "quarto" },
+	root_dir = lspconfig.util.root_pattern(".git", "DESCRIPTION"),
+})
+
+-- YAML
+-- yaml-language-server
+lspconfig.yamlls.setup({})
 
 -- Mini -----------------------------------
 require("mini.icons").setup({})
@@ -421,7 +711,9 @@ require("mini.statusline").setup({})
 require("mini.surround").setup({})
 
 -- Neo-tree -----------------------------------
-require("neo-tree").setup({})
+require("neo-tree").setup({
+  close_if_last_window = true,
+})
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
@@ -458,6 +750,45 @@ require("obsidian").setup({
 -- Quarto -----------------------------------
 require("quarto").setup({})
 
+-- Render-Markdown ---------------------------
+require("render-markdown").setup({
+	anti_conceal = { enabled = true },
+	bullet = {
+		icons = { "■ ", "□ ", "▪ ", "▫ " },
+		left_pad = 0,
+		right_pad = 1,
+	},
+	code = {
+		style = "normal",
+		language_name = false,
+	},
+	completions = { lsp = { enabled = true } },
+	conceal = { level = 2 },
+	dash = { enabled = false },
+	file_types = { "markdown", "quarto", "codecompanion" },
+	heading = {
+		backgrounds = {},
+		icons = {
+			"# ",
+			"## ",
+			"### ",
+			"#### ",
+			"##### ",
+		},
+		left_pad = 0,
+		position = "inline",
+		right_pad = 3,
+		width = "full",
+	},
+	html = {
+		enabled = true,
+		comment = { conceal = false },
+	},
+	pipe_table = {
+		preset = "round",
+	},
+})
+
 -- Todo-comments -----------------------------------
 require("todo-comments").setup({})
 
@@ -470,45 +801,44 @@ vim.treesitter.language.register("markdown", "quarto")
 
 -- setup
 require("nvim-treesitter.configs").setup({
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-  indent = {
-    enable = true,
-  },
+	highlight = {
+		enable = true,
+		additional_vim_regex_highlighting = false,
+	},
+	indent = {
+		enable = true,
+	},
 })
 
 --- WhichKey -----------------------------------
 --- setup
 require("which-key").setup({
-  preset = "helix",
-  icons = {
-    group = " ",
-  },
+	preset = "helix",
+	icons = {
+		group = " ",
+	},
 })
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-  { "<leader>a", group = "AI", icon = " " }, -- Added AI group for consistency
-  { "<leader>b", group = "Buffer", icon = " " },
-  { "<leader>c", group = "Code", icon = " " }, -- Added Code group for consistency
-  { "<leader>d", group = "Diagnostics/Debug", icon = " " }, -- Added Diagnostics group
-  { "<leader>e", group = "Explore", icon = " " },
-  { "<leader>f", group = "Find", icon = " " },
-  { "<leader>g", group = "Git", icon = " " },
-  { "<leader>h", group = "Help", icon = " " },
-  { "<leader>l", group = "LSP", icon = " " },
-  { "<leader>m", group = "Markdown", icon = " " },
-  { "<leader>o", group = "Obsidian", icon = "" },
-  { "<leader>q", group = "Quarto", icon = " " },
-  { "<leader>r", group = "Run", icon = " " }, -- Added Run group for Slime
-  { "<leader>s", group = "Search", icon = " " },
-  { "<leader>t", group = "Toggle", icon = " " },
-  { "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
-  { "<leader>x", desc = "Quit all", icon = " " }, -- Added Quit description
+	{ "<leader>a", group = "AI", icon = " " },
+	{ "<leader>b", group = "Buffer", icon = " " },
+	{ "<leader>c", group = "Code", icon = " " },
+	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
+	{ "<leader>e", group = "Explore", icon = " " },
+	{ "<leader>f", group = "Find", icon = " " },
+	{ "<leader>g", group = "Git", icon = " " },
+	{ "<leader>h", group = "Help", icon = " " },
+	{ "<leader>l", group = "LSP", icon = " " },
+	{ "<leader>m", group = "Markdown", icon = " " },
+	{ "<leader>o", group = "Obsidian", icon = "" },
+	{ "<leader>q", group = "Quarto", icon = " " },
+	{ "<leader>r", group = "Run", icon = " " },
+	{ "<leader>s", group = "Search", icon = " " },
+	{ "<leader>t", group = "Toggle", icon = " " },
+	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
+	{ "<leader>x", desc = "Quit all", icon = " " },
 })
 
 -- Yazi -----------------------------------
 require("yazi").setup({})
-

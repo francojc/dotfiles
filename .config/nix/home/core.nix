@@ -1,76 +1,115 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
+{ pkgs, ... }:
+
+let
+  # Define packages primarily used with or by Neovim
+  neovimPackages = with pkgs; [
+    # Core dependencies
+    tree-sitter
+    tree-sitter-grammars.tree-sitter-bash
+    tree-sitter-grammars.tree-sitter-lua
+    tree-sitter-grammars.tree-sitter-markdown
+    tree-sitter-grammars.tree-sitter-markdown-inline
+    tree-sitter-grammars.tree-sitter-nix
+    tree-sitter-grammars.tree-sitter-python
+    tree-sitter-grammars.tree-sitter-r
+
+    # Language Servers (LSPs)
+    bash-language-server # Bash LSP
+    lua-language-server # Lua LSP
+    marksman # Markdown LSP
+    nix-doc # Nix documentation server
+    nixd # Nix LSP
+    pyright # Python LSP
+    yaml-language-server # YAML LSP
+
+    # Formatters & Linters commonly integrated with Neovim
+    alejandra # Nix formatter
+    air-formatter # Go formatter? Assuming used via Neovim integration
+    mdformat # Markdown formatter
+    nodePackages.prettier # General purpose formatter
+    shfmt # Shell formatter
+    stylua # Lua formatter
+  ];
+
+  # Define general home packages (excluding Neovim and its associated packages)
+  generalPackages = with pkgs; [
     aerc
-    air-formatter
-    alejandra
     atuin
-    bash-language-server
-    bat
-    claude-code
-    copilot-language-server
+    bat # Often used by fzf previews, etc. but also standalone
+    claude-code # CLI tool
     datasette
     drawio
     duf
     entr
-    eza
+    eza # ls replacement
     fastfetch
-    fd
+    fd # find replacement
     ffmpeg
     file
-    fzf
-    gh
+    fzf # General fuzzy finder
+    gh # GitHub CLI
     ghostscript
     git
     gnupg
-    gv
-    haskellPackages.pandoc-crossref
-    home-manager
+    gv # Ghostview - PostScript/PDF viewer
+    haskellPackages.pandoc-crossref # Pandoc filter
+    home-manager # Essential for this config
     htop
     imagemagick
-    jq
-    khal
-    kitty
+    jq # JSON processor
+    khal # Calendar
+    kitty # Terminal emulator
     lazydocker
-    lazygit
-    lua-language-server
-    marksman
-    mas
-    mdcat
-    mdformat
-    mpv-unwrapped
-    ncdu
-    neovim
-    nix-doc
+    lazygit # TUI Git client
+    mas # Mac App Store CLI
+    mdcat # Markdown cat
+    mpv-unwrapped # Media player
+    ncdu # Disk usage analyzer
     nix-prefetch-git
-    nixd
-    nodePackages.prettier
-    nodejs_22
+    nodejs-slim_23 # Needed for prettier, but potentially other tools too
     pandoc
-    pass
+    pass # Password manager
     pianobar
-    pipx
-    pngpaste
-    poppler_utils
-    pyright
-    qpdf
-    quarto
-    ripgrep
-    searxng
-    shfmt
-    shunit2
-    silver-searcher
+    pipx # Python executable installer
+    pngpaste # Paste image from clipboard
+    poppler_utils # PDF utilities (pdftotext, etc.)
+    qpdf # PDF manipulation tool
+    quarto # Scientific publishing system
+    ripgrep # grep replacement
+    searxng # Metasearch engine (assuming local instance tools)
+    shunit2 # Shell testing
+    silver-searcher # Code searching tool (ag)
     sqlite
-    starship
-    stow
-    stylua
-    tldr
-    tree
-    vdirsyncer
+    starship # Shell prompt
+    stow # Symlink manager
+    tldr # Simplified man pages
+    tree # Directory listing tool
+    vdirsyncer # CalDAV/CardDAV sync
     which
-    wiper
-    yaml-language-server
-    yazi-unwrapped
-    yt-dlp
-    zoxide
+    wiper # Secure deletion?
+    yazi-unwrapped # Terminal file manager
+    yt-dlp # Video downloader
+    zoxide # Smarter cd command
   ];
+
+in
+{
+  # Install general packages globally for the user
+  home.packages = generalPackages;
+
+  # Configure Neovim using the dedicated home-manager module
+  programs.neovim = {
+    enable = true;
+    # Specify the Neovim package itself
+    package = pkgs.neovim;
+
+    # Add packages that Neovim depends on or integrates with
+    # This makes the dependency explicit and keeps the main packages list cleaner
+    extraPackages = neovimPackages;
+
+    # Your existing Neovim configuration (likely managed via home.file or similar
+    # pointing to ~/.config/nvim) will be used.
+    # No need for extraConfig or plugin management here unless you want to
+    # migrate your Lua config fully into Nix.
+  };
 }
