@@ -29,6 +29,7 @@
     kitty
     lazydocker
     lazygit
+    marksman
     mas
     mdcat
     mdformat
