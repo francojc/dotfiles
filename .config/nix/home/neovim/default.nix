@@ -17,7 +17,6 @@ in {
       luaPath = "${./.}";
 
       categoryDefinitions.replace = {pkgs, ...} @ packageDef: {
-        # General plugins and runtime dependencies
         lspsAndRuntimeDeps = {
           general = with pkgs; [
             fd
