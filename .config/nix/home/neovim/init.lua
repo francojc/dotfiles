@@ -8,6 +8,10 @@ local a = vim.api
 -- Record start time for startup duration
 _G.nvim_config_start_time = vim.loop.hrtime()
 
+-- Disable netrw (I'm using Oil instead)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Autocommands -------------------------------------------------
 
 -- Create an autocommand group

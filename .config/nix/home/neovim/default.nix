@@ -55,9 +55,9 @@ in {
             blink-cmp
             bufferline-nvim
             codecompanion-nvim
-            fidget-nvim
             conform-nvim
             copilot-vim
+            fidget-nvim
             flash-nvim
             friendly-snippets
             fzf-lua
@@ -70,13 +70,13 @@ in {
             lualine-nvim
             mini-nvim
             nightfox-nvim
-            oil-nvim
             nvim-colorizer-lua
             nvim-lspconfig
-            nvim-treesitter.withAllGrammars
             nvim-treesitter-textobjects
+            nvim-treesitter.withAllGrammars
             nvim-web-devicons
             obsidian-nvim
+            oil-nvim
             plenary-nvim
             quarto-nvim
             render-markdown-nvim
