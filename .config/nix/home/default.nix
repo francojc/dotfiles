@@ -3,7 +3,6 @@
     ./core.nix
     ./git.nix
     ./shell/default.nix
-    ./neovim/default.nix
     ./vim.nix
   ];
 

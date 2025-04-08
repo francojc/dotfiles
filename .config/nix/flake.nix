@@ -12,9 +12,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixCats = {
-      url = "github:BirdeeHub/nixCats-nvim";
-    };
   };
 
   outputs = inputs @ {
@@ -73,7 +70,6 @@
               # Use username from the attribute set value
               users.${systemAttrs.username} = {
                 imports = [
-                  inputs.nixCats.homeModule # Import nixCats module here
                   ./home/default.nix
                 ];
               };
