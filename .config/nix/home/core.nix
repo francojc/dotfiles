@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     aerc
+    air-formatter
     atuin
     bat
     claude-code
@@ -30,6 +31,7 @@
     lazygit
     mas
     mdcat
+    mdformat
     mpv-unwrapped
     ncdu
     neovim
