@@ -6,12 +6,21 @@ let
     # Core dependencies
     tree-sitter
     tree-sitter-grammars.tree-sitter-bash
+    tree-sitter-grammars.tree-sitter-html
+    tree-sitter-grammars.tree-sitter-latex
     tree-sitter-grammars.tree-sitter-lua
     tree-sitter-grammars.tree-sitter-markdown
     tree-sitter-grammars.tree-sitter-markdown-inline
     tree-sitter-grammars.tree-sitter-nix
     tree-sitter-grammars.tree-sitter-python
     tree-sitter-grammars.tree-sitter-r
+    tree-sitter-grammars.tree-sitter-yaml
+    tree-sitter-grammars.tree-sitter-toml
+    tree-sitter-grammars.tree-sitter-scss
+    tree-sitter-grammars.tree-sitter-json
+    tree-sitter-grammars.tree-sitter-bibtex
+    tree-sitter-grammars.tree-sitter-dockerfile
+    tree-sitter-grammars.tree-sitter-javascript
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
@@ -24,11 +33,15 @@ let
 
     # Formatters & Linters commonly integrated with Neovim
     alejandra # Nix formatter
-    air-formatter # Go formatter? Assuming used via Neovim integration
+    air-formatter # R LSP/Formatter
     mdformat # Markdown formatter
     nodePackages.prettier # General purpose formatter
     shfmt # Shell formatter
     stylua # Lua formatter
+
+    # Build dependencies for Neovim plugins (e.g., blink.cmp)
+    rustc
+    cargo
   ];
 
   # Define general home packages (excluding Neovim and its associated packages)
@@ -100,8 +113,10 @@ in
   # Configure Neovim using the dedicated home-manager module
   programs.neovim = {
     enable = true;
-    # Specify the Neovim package itself
-    package = pkgs.neovim;
+    # Specify the unwrapped Neovim package. The home-manager module
+    # should handle necessary wrapping steps itself, potentially avoiding
+    # the issue in the default pkgs.neovim wrapper.
+    package = pkgs.neovim-unwrapped;
 
     # Add packages that Neovim depends on or integrates with
     # This makes the dependency explicit and keeps the main packages list cleaner

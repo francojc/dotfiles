@@ -550,13 +550,13 @@ require("vague").setup({})
 vim.cmd("colorscheme gruvbox")
 
 -- Colorizer ---------------------------------------------------------------
-require("colorizer").setup({
-	user_default_options = {
-		mode = "virtualtext",
-		names = false,
-		virtualtext_inline = true,
-	},
-})
+-- require("colorizer").setup({
+-- 	user_default_options = {
+-- 		mode = "virtualtext",
+-- 		names = false,
+-- 		virtualtext_inline = true,
+-- 	},
+-- })
 
 -- Conform ----------------------------------
 require("conform").setup({
@@ -587,7 +587,7 @@ require("fzf-lua").setup({
   file_icon_padding = " ",
 })
 
--- Image ---------------------------------- 
+-- Image ----------------------------------
 require("image").setup({
 	processor = "magick_cli",
 	integrations = {
