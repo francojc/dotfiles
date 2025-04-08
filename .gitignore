@@ -9,7 +9,6 @@
 .config/gh/*
 .config/git/*
 .config/github-copilot
-.config/nvim/*
 .config/raycast/*
 .continue
 .env
