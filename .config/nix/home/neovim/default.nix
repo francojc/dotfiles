@@ -100,7 +100,7 @@ in {
       packageDefinitions.replace = {
         nvix = {pkgs, ...}: {
           settings = {
-            aliases = ["v" "nvim"];
+            aliases = []; # add aliases
           };
           categories = {
             general = true;

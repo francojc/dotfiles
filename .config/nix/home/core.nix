@@ -1,5 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
+    air-formatter
     aerc
     atuin
     bat
@@ -28,10 +29,15 @@
     kitty
     lazydocker
     lazygit
+    lua-language-server
+    marksman
     mas
     mdcat
+    mdformat
     mpv-unwrapped
     ncdu
+    neovim
+    nixd
     nix-prefetch-git
     nodejs_22
     pandoc
@@ -53,6 +59,7 @@
     vdirsyncer
     which
     wiper
+    yaml-language-server
     yazi-unwrapped
     yt-dlp
     zoxide
