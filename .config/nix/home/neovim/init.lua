@@ -89,7 +89,7 @@ map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
 
 -- Oil
-map("n", "-", "<Cmd>Oil --float<Cr>", { desc = "Open oil" })
+map("n", "-", "<Cmd>Oil<Cr>", { desc = "Open oil" })
 
 --- Window  -----
 -- Move between editor/terminal windows

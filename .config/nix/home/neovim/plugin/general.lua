@@ -24,22 +24,22 @@ require("mini.pairs").setup()
 
 -- Oil -----------------------------------------------------
 require("oil").setup({
-	delete_to_trash = true,
-	skip_confirm_for_simple_edits = true,
-	view_options = {
-		show_hidden = true,
-	},
-	float = {
-		enable = true,
-		max_width = 80,
-		max_height = 20,
-		win_options = {
-			winblend = 10,
-		},
-	},
-	keymaps = {
-		["<Esc>"] = { "actions.close", mode = "n" },
-	},
+	-- delete_to_trash = true,
+	-- skip_confirm_for_simple_edits = true,
+	-- view_options = {
+	-- 	show_hidden = true,
+	-- },
+	-- float = {
+	-- 	enable = true,
+	-- 	max_width = 80,
+	-- 	max_height = 20,
+	-- 	win_options = {
+	-- 		winblend = 10,
+	-- 	},
+	-- },
+	-- keymaps = {
+	-- 	["<Esc>"] = { "actions.close", mode = "n" },
+	-- },
 })
 
 -- Treesitter -----------------------------------------------
