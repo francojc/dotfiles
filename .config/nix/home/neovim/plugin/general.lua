@@ -3,7 +3,7 @@
 -- Auto session ---------------------------------------------
 require("auto-session").setup({
 	auto_restore = false,
-	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
+	bypass_save_filetypes = { "alpha", "dashboard", "oil" },
 })
 
 -- Fzf-Lua ---------------------------------------------------
@@ -23,7 +23,15 @@ require("mini.icons").setup()
 require("mini.pairs").setup()
 
 -- Oil -----------------------------------------------------
-require("oil").setup({})
+require("oil").setup({
+	default_file_explorer = true,
+	view_options = {
+		show_hidden = true,
+	},
+	float = {
+		enable = true,
+	},
+})
 
 -- Treesitter -----------------------------------------------
 -- Make treesitter Quarto support work with markdown
