@@ -1,10 +1,13 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    air-formatter
     aerc
+    air-formatter
+    alejandra
     atuin
+    bash-language-server
     bat
     claude-code
+    copilot-language-server
     datasette
     drawio
     duf
@@ -37,8 +40,10 @@
     mpv-unwrapped
     ncdu
     neovim
-    nixd
+    nix-doc
     nix-prefetch-git
+    nixd
+    nodePackages.prettier
     nodejs_22
     pandoc
     pass
@@ -46,14 +51,18 @@
     pipx
     pngpaste
     poppler_utils
+    pyright
     qpdf
     quarto
     ripgrep
     searxng
+    shfmt
+    shunit2
     silver-searcher
     sqlite
     starship
     stow
+    stylua
     tldr
     tree
     vdirsyncer
