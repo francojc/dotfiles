@@ -568,10 +568,17 @@ require("conform").setup({
 		nix = { "alejandra" },
 		r = { "air" },
 		markdown = { "mdformat" },
-		quarto = { "air" },
+		quarto = { "air", "prettier" },
 		["*"] = { "trim_whitespace" },
 	},
 })
+
+require("conform").formatters.mdformat = {
+	options = {
+		ft_parsers = { markdown = "markdown" },
+		ext_parsers = { qmd = "markdown" },
+	},
+}
 
 -- Flash ----------------------------------
 require("flash").setup({})
@@ -583,10 +590,10 @@ require("fzf-lua").setup({
 		git_icons = true,
 		formatter = "path.filename_first",
 	},
-  oldfiles = {
-    cwd_only = true,
-    include_current_session = true,
-  },
+	oldfiles = {
+		cwd_only = true,
+		include_current_session = true,
+	},
 })
 
 -- Image ----------------------------------
@@ -679,12 +686,24 @@ lspconfig.pyright.setup({})
 -- R
 local configs = require("lspconfig.configs")
 
-lspconfig.air.setup({})
+-- lspconfig.air.setup({})
 
 lspconfig.r_language_server.setup({
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
 	filetypes = { "r", "quarto" },
-	root_dir = lspconfig.util.root_pattern(".git", "DESCRIPTION"),
+	root_dir = function(fname)
+		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
+			or lspconfig.util.find_git_ancestor(fname)
+			or lspconfig.util.path.dirname(fname)
+	end,
+	settings = {
+		r = {
+			diagnostics = {
+				enable = true,
+				globals = { "vim" },
+			},
+		},
+	},
 })
 
 -- YAML
@@ -744,15 +763,16 @@ require("render-markdown").setup({
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
-		right_pad = 0,
+		right_pad = 1,
 	},
 	code = {
 		style = "language",
 		language_name = false,
 	},
-	-- conceal = { level = 2 },
+	completions = { lsp = { enabled = true } },
+	conceal = { level = 2 },
 	dash = { enabled = false },
-	file_types = { "markdown", "quarto", "codecompanion" },
+	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
 	heading = {
 		backgrounds = {},
 		icons = {
@@ -774,7 +794,6 @@ require("render-markdown").setup({
 	pipe_table = {
 		preset = "round",
 	},
-	-- win_options = { conceallevel = { rendered = 1 } },
 })
 
 -- Todo-comments -----------------------------------
@@ -784,18 +803,26 @@ require("todo-comments").setup({})
 require("toggleterm").setup({})
 
 --- Treesitter -----------------------------------
---- register quarto as markdown
+-- Ensure this line is REMOVED or commented out:
 vim.treesitter.language.register("markdown", "quarto")
 
--- setup
+-- Setup
 require("nvim-treesitter.configs").setup({
+	auto_install = true, -- Key for the `paq` approach to get parsers
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
 	},
-	indent = {
+	incremental_selection = {
 		enable = true,
+		keymaps = {
+			init_selection = "<Enter>",
+			node_incremental = "<Enter>",
+			scope_incremental = false,
+			node_decremental = "<Backspace>",
+		},
 	},
+	indent = { enable = false },
 })
 
 --- WhichKey -----------------------------------

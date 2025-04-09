@@ -4,23 +4,7 @@ let
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
     # Core dependencies
-    tree-sitter
-    tree-sitter-grammars.tree-sitter-bash
-    tree-sitter-grammars.tree-sitter-html
-    tree-sitter-grammars.tree-sitter-latex
-    tree-sitter-grammars.tree-sitter-lua
-    tree-sitter-grammars.tree-sitter-markdown
-    tree-sitter-grammars.tree-sitter-markdown-inline
-    tree-sitter-grammars.tree-sitter-nix
-    tree-sitter-grammars.tree-sitter-python
-    tree-sitter-grammars.tree-sitter-r
-    tree-sitter-grammars.tree-sitter-yaml
-    tree-sitter-grammars.tree-sitter-toml
-    tree-sitter-grammars.tree-sitter-scss
-    tree-sitter-grammars.tree-sitter-json
-    tree-sitter-grammars.tree-sitter-bibtex
-    tree-sitter-grammars.tree-sitter-dockerfile
-    tree-sitter-grammars.tree-sitter-javascript
+    tree-sitter # Parser generator, using `auto_install` in nvim-treesitter for language parsers
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
