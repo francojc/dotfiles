@@ -135,6 +135,22 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Hide statusline for alpha dashboard
+a.nvim_create_autocmd("FileType", {
+  pattern = "alpha",
+  group = "personal", -- Use your existing group
+  callback = function()
+    -- Use mini.statusline's buffer-local disable flag
+    vim.b.ministatusline_disable = true
+    -- Optional: You might also want to disable line numbers for alpha
+    vim.wo.number = false
+    vim.wo.relativenumber = false
+    -- Optional: And the signcolumn
+    vim.wo.signcolumn = "no"
+  end,
+  desc = "Hide statusline and other UI elements in alpha dashboard",
+})
+
 --| Keymaps ------------------------------------------------------
 local g = vim.g
 
@@ -160,6 +176,8 @@ end
 -- Vim -----------------
 -- jj to escape insert mode
 map("i", "jj", "<Esc>", { desc = "jj to escape insert mode" })
+-- jj to escape terminal mode
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
 -- Hide highlights
 map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 -- Save file
@@ -167,13 +185,14 @@ map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
+-- Delete session and quit
+map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit all (delete session)" })
 --- Window  -----
 -- Move between editor/terminal windows
 map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
 map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
 map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
 -- Resize
 map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
 map("n", "<leader>wj", "<C-w>+", { desc = "Resize window down" })
@@ -199,7 +218,6 @@ map("n", "N", "Nzzzv", { desc = "Previous search result" })
 map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
--- AI ----------------------------
 -- Copilot
 map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
 map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
@@ -445,8 +463,8 @@ vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
 
 -- Auto-session -------------------------------
 require("auto-session").setup({
-	auto_restore = false,
-	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree" },
+	auto_restore = true,
+	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree", "codecompanion" },
 })
 
 -- Blink ----------------------------------
