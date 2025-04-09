@@ -84,6 +84,7 @@ let
     vdirsyncer # CalDAV/CardDAV sync
     which
     wiper # Secure deletion?
+    xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
     yt-dlp # Video downloader
     zoxide # Smarter cd command
