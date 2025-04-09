@@ -1,6 +1,6 @@
 --| Bootstrap paq-nvim -------------------------------------------
 -- Ensure paq-nvim is installed before trying to use it
-require('bootstrap').ensure_paq()
+require("bootstrap").ensure_paq()
 
 --| Paq: plugins -------------------------------------------------
 require("paq")({
@@ -12,7 +12,6 @@ require("paq")({
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
-	"echasnovski/mini.statusline", -- Statusline
 	"echasnovski/mini.surround", -- Surround
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
 	"epwalsh/obsidian.nvim", -- Obsidian integration
@@ -27,6 +26,7 @@ require("paq")({
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lilydjwg/colorizer", -- Colorizer
+  "nvim-lualine/lualine.nvim", -- Statusline
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
@@ -137,18 +137,32 @@ a.nvim_create_autocmd("TextYankPost", {
 
 -- Hide statusline for alpha dashboard
 a.nvim_create_autocmd("FileType", {
-  pattern = "alpha",
-  group = "personal", -- Use your existing group
-  callback = function()
-    -- Use mini.statusline's buffer-local disable flag
-    vim.b.ministatusline_disable = true
-    -- Optional: You might also want to disable line numbers for alpha
-    vim.wo.number = false
-    vim.wo.relativenumber = false
-    -- Optional: And the signcolumn
-    vim.wo.signcolumn = "no"
-  end,
-  desc = "Hide statusline and other UI elements in alpha dashboard",
+	pattern = "alpha",
+	group = "personal", -- Use your existing group
+	callback = function()
+		-- Use mini.statusline's buffer-local disable flag
+		vim.b.ministatusline_disable = true
+		-- Optional: You might also want to disable line numbers for alpha
+		vim.wo.number = false
+		vim.wo.relativenumber = false
+		-- Optional: And the signcolumn
+		vim.wo.signcolumn = "no"
+	end,
+	desc = "Hide statusline and other UI elements in alpha dashboard",
+})
+
+-- Make sure to enable the statusline and line numbers for other file types after leaving the alpha buffer
+a.nvim_create_autocmd("BufLeave", {
+	group = "personal", -- Use your existing group
+	pattern = "*",
+	callback = function()
+		-- Re-enable the statusline and line numbers
+		vim.b.ministatusline_disable = false
+		vim.wo.number = true
+		vim.wo.relativenumber = true
+		vim.wo.signcolumn = "yes"
+	end,
+	desc = "Re-enable statusline and other UI elements after leaving alpha dashboard",
 })
 
 --| Keymaps ------------------------------------------------------
@@ -506,7 +520,7 @@ require("blink.cmp").setup({
 	cmdline = {
 		completion = {
 			menu = {
-				auto_show = function(ctx)
+				auto_show = function()
 					return vim.fn.getcmdtype() == ":"
 				end,
 			},
@@ -550,8 +564,10 @@ require("codecompanion").setup({
 		chat = {
 			adapter = "copilot",
 			roles = {
+---@diagnostic disable-next-line: undefined-doc-name
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
+---@diagnostic disable-next-line: undefined-field
 					return " (" .. adapter.formatted_name .. ") "
 				end,
 
@@ -704,8 +720,8 @@ lspconfig.nixd.setup({
 })
 -- Python
 lspconfig.pyright.setup({})
+
 -- R
-local configs = require("lspconfig.configs")
 
 -- lspconfig.air.setup({})
 
@@ -731,12 +747,85 @@ lspconfig.r_language_server.setup({
 -- yaml-language-server
 lspconfig.yamlls.setup({})
 
+-- Lualine ----------------------------------------------------------------
+-- Lualine helper function to get attached LSP servers
+local function get_lsp_servers()
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	if #clients == 0 then
+		return ""
+	end
+
+	local server_icons = {
+		["GitHub Copilot"] = "",
+		["lua_ls"] = "",
+		["nixd"] = "",
+		["otter-ls"] = "",
+		["pyright"] = "",
+		["r_language_server"] = "",
+		["render-markdown"] = "",
+		["bashls"] = "",
+		["yamlls"] = "",
+	}
+
+	local client_names = {}
+	for _, client in ipairs(clients) do
+		local name = client.name
+		-- Remove buffer numbers, e.g. `[3]` from `name`
+		name = name:gsub("%[.*%]", "")
+		if server_icons[name] then
+			table.insert(client_names, server_icons[name])
+		else
+			table.insert(client_names, name)
+		end
+	end
+	return table.concat(client_names, " | ")
+end
+
+-- Lualine setup
+require("lualine").setup({
+	options = {
+		icons_enabled = true,
+		theme = "auto",
+		component_separators = { left = " ", right = " " },
+		section_separators = { left = " ", right = " " },
+		disabled_filetypes = {
+			statusline = { "neo-tree", "toggleterm", "alpha", "codecompanion", "aerial" },
+			winbar = { "alpha" },
+		},
+		always_divide_middle = true,
+		globalstatus = true,
+		refresh = {
+			statusline = 1000,
+			tabline = 1000,
+			winbar = 1000,
+		},
+	},
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { "filename" },
+		lualine_x = { "lsp_progress", get_lsp_servers },
+		lualine_y = { " filetype" },
+		lualine_z = { "progress" },
+	},
+	inactive_sections = {
+		lualine_a = {},
+		lualine_b = {},
+		lualine_c = { "filename" },
+		lualine_x = { "location" },
+		lualine_y = {},
+		lualine_z = {},
+	},
+	tabline = {},
+	winbar = {},
+	inactive_winbar = {},
+	extensions = {},
+})
+
 -- Mini -----------------------------------
 require("mini.icons").setup({})
 require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
-require("mini.statusline").setup({})
-require("mini.surround").setup({})
 
 -- Neo-tree -----------------------------------
 require("neo-tree").setup({
