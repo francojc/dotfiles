@@ -914,7 +914,7 @@ require("toggleterm").setup({})
 
 --- Treesitter -----------------------------------
 -- Ensure this line is REMOVED or commented out:
-vim.treesitter.language.register("markdown", "quarto")
+-- vim.treesitter.language.register("markdown", "quarto")
 
 -- Setup
 require("nvim-treesitter.configs").setup({
