@@ -437,12 +437,11 @@ dashboard.section.header.val = {
 }
 -- Set menu
 dashboard.section.buttons.val = {
-	dashboard.button("s", "  Restore last session", ":SessionRestore<CR>"),
-	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
-	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
 	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
+	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
 	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
-
+	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+	dashboard.button("s", "  Select a session", ":SessionSearch<CR>"),
 	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
 }
 
