@@ -1,3 +1,7 @@
+--| Bootstrap paq-nvim -------------------------------------------
+-- Ensure paq-nvim is installed before trying to use it
+require('bootstrap').ensure_paq()
+
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
