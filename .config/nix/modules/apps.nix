@@ -39,11 +39,8 @@
     ];
 
     brews = [
-      # "bash-language-server"
       "borders" # jankyborders
-      "dstask"
       "huggingface-cli"
-      # "lua-language-server"
       "npm"
       "ollama"
       "python@3.11"
@@ -58,13 +55,13 @@
       "appcleaner"
       "betterdisplay"
       "bettermouse"
+      "chatgpt"
       "claude"
       "docker"
       "dropbox"
       "ghostty@tip"
       "google-drive"
       "kap"
-      "keycastr"
       "memory-cleaner"
       "mullvadvpn"
       "obsidian"
