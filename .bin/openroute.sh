@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 # Description: Connects to the OpenRouter AI service providing input/output from many different AI models from one service.
-# Usage: openroute.sh [-p <prompt>] [-m <model>] [-a <attachment>] [-i <input_file>] [-o <output_file>] [-h]
-#   -p <prompt>: The user instructions/prompt text.
-#   -m <model>: The model to use (e.g., 'anthropic/claude-3.5-sonnet').
-#   -a <attachment>: Path to an attachment file (e.g., image, pdf).
-#   -i <input_file>: Path to a file containing additional input text (prepended to prompt).
+# Usage: openroute.sh [options] ["<prompt>"]
+#   or   openroute.sh [options] -p "<prompt>"
+#
+# Options:
+#   -p <prompt>:      The user instructions/prompt text. Can also be provided as the last argument without the flag.
+#   -m <model>:       The model to use (default: google/gemini-flash-1.5).
+#                     Format: 'vendor/model-name' or 'vendor/model-name:version'.
+#   -a <attachment>:  Path to an attachment file (e.g., image, pdf).
+#   -i <input_file>:  Path to a file containing additional input text (prepended to prompt).
 #   -o <output_file>: File to write the output to (default: stdout).
-#   -h: Display this help message.
+#   -h:               Display this help message.
 #
 # Defaults:
 #   Model (-m): google/gemini-flash-1.5
@@ -25,13 +29,19 @@ API_URL="https://openrouter.ai/api/v1/chat/completions"
 
 # Function to display usage information
 usage() {
-  echo "Usage: openroute.sh [-p <prompt>] [-m <model>] [-a <attachment>] [-i <input_file>] [-o <output_file>] [-h]"
+  echo "Usage: openroute.sh [options] [\"<prompt>\"]"
+  echo "   or  openroute.sh [options] -p \"<prompt>\""
+  echo
+  echo "Description: Sends a prompt (and optionally an attachment) to the OpenRouter API."
+  echo
+  echo "Options:"
   echo "  -p <prompt>:      The user instructions/prompt text."
+  echo "                    Alternatively, provide the prompt as the last argument without the -p flag."
   echo "  -m <model>:       The model to use (default: $DEFAULT_MODEL)."
   echo "                    Format: 'vendor/model-name' or 'vendor/model-name:version'."
   echo "  -a <attachment>:  Path to an attachment file (e.g., image, pdf)."
   echo "  -i <input_file>:  Path to a file containing additional input text."
-  echo "                    Content will be prepended to the prompt (-p)."
+  echo "                    Content will be prepended to the prompt (-p or positional)."
   echo "  -o <output_file>: File to write the output to (default: stdout)."
   echo "  -h:               Display this help message."
   echo
@@ -57,11 +67,12 @@ model="$DEFAULT_MODEL"
 attachment_path=""
 input_file=""
 output_file=""
+prompt_from_p_option="" # Track if -p was used
 
 while getopts ":p:m:a:i:o:h" opt; do
   case ${opt} in
     p )
-      prompt="$OPTARG"
+      prompt_from_p_option="$OPTARG"
       ;;
     m )
       model="$OPTARG"
@@ -79,6 +90,12 @@ while getopts ":p:m:a:i:o:h" opt; do
       usage
       ;;
     \? )
+      # Check if it looks like a positional argument after options
+      if [[ "$OPTARG" == "-" ]] && [[ "${!OPTIND}" != -* ]]; then
+          # This case handles things like `script -m model prompt` where `prompt` might be misinterpreted
+          # We break here and let the positional argument handling below take care of it.
+          break
+      fi
       echo "Invalid option: -$OPTARG" 1>&2
       usage
       ;;
@@ -89,6 +106,35 @@ while getopts ":p:m:a:i:o:h" opt; do
   esac
 done
 shift $((OPTIND -1))
+
+# Handle positional argument as prompt
+positional_prompt=""
+if [[ $# -gt 0 ]]; then
+  # Check if the first positional argument looks like an option - this shouldn't happen if getopts worked correctly, but as a safeguard.
+  if [[ "$1" == -* ]]; then
+      error_exit "Unexpected option '$1' found after arguments."
+  fi
+  positional_prompt="$1"
+  shift # Consume the positional prompt argument
+fi
+
+# Check for conflicting prompt inputs
+if [[ -n "$prompt_from_p_option" ]] && [[ -n "$positional_prompt" ]]; then
+  error_exit "Prompt provided with both -p option and as a positional argument. Use only one method."
+fi
+
+# Assign the prompt
+if [[ -n "$prompt_from_p_option" ]]; then
+  prompt="$prompt_from_p_option"
+elif [[ -n "$positional_prompt" ]]; then
+  prompt="$positional_prompt"
+fi
+
+# Check for any remaining unexpected arguments
+if [[ $# -gt 0 ]]; then
+    error_exit "Unexpected arguments found: '$*'. Did you forget to quote the prompt?"
+fi
+
 
 # --- Input Validation ---
 
@@ -124,15 +170,16 @@ if [[ -n "$input_file" ]]; then
   input_content=$(<"$input_file")
   # Prepend file content to the prompt, separated by a newline
   if [[ -n "$prompt" ]]; then
-      prompt="${input_content}\n\n${prompt}"
+      # Use printf for potentially multi-line content preservation
+      prompt="$(printf "%s\n\n%s" "$input_content" "$prompt")"
   else
       prompt="$input_content"
   fi
 fi
 
-# Ensure prompt is not empty if no input file was given
+# Ensure prompt is not empty if no input file or attachment was given
 if [[ -z "$prompt" ]] && [[ -z "$attachment_path" ]]; then
-    error_exit "Prompt (-p) or input file (-i) or attachment (-a) must be provided."
+    error_exit "A prompt (via -p, positional argument, or -i) or an attachment (-a) must be provided."
 fi
 
 
@@ -150,6 +197,7 @@ if [[ -n "$attachment_path" ]]; then
   fi
 
   # Base64 encode the file content
+  # Use standard base64 without options for portability
   base64_content=$(base64 < "$attachment_path" | tr -d '\n') # Remove newlines for JSON compatibility
 
   # Construct the JSON part for the attachment using data URI scheme
@@ -163,16 +211,20 @@ fi
 
 # --- Construct JSON Payload ---
 
-# Start building the messages array with the text part
-# Use jq to handle JSON encoding safely
-messages_json=$(jq -n --arg text_prompt "$prompt" \
-  '[{role: "user", content: [{type: "text", text: $text_prompt}]}]')
-
-# If there's an attachment, add it to the content array of the user message
-if [[ -n "$attachment_json_part" ]]; then
-  # Add the attachment object to the 'content' array of the first message
-  messages_json=$(echo "$messages_json" | jq --argjson attachment "$attachment_json_part" '.[0].content += [$attachment]')
+# Start building the messages array. Handle case where prompt might be empty (e.g., only attachment provided)
+messages_content_array='[]'
+if [[ -n "$prompt" ]]; then
+    messages_content_array=$(jq -n --arg text_prompt "$prompt" '[{type: "text", text: $text_prompt}]')
 fi
+
+# If there's an attachment, add it to the content array
+if [[ -n "$attachment_json_part" ]]; then
+  messages_content_array=$(echo "$messages_content_array" | jq --argjson attachment "$attachment_json_part" '. += [$attachment]')
+fi
+
+# Construct the messages array with the user role and the content array
+messages_json=$(jq -n --argjson content "$messages_content_array" '[{role: "user", content: $content}]')
+
 
 # Construct the final JSON payload
 json_payload=$(jq -n --arg model "$model" --argjson messages "$messages_json" \
@@ -194,7 +246,12 @@ if [[ $curl_exit_status -ne 0 ]]; then
   if [[ -n "$error_message" ]]; then
       error_exit "API call failed (curl exit code $curl_exit_status): $error_message"
   else
-      error_exit "API call failed (curl exit code $curl_exit_status). Response: $api_response"
+      # Check if the response is valid JSON before trying to parse further
+      if ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
+          error_exit "API call failed (curl exit code $curl_exit_status). Response was not valid JSON: $api_response"
+      else
+          error_exit "API call failed (curl exit code $curl_exit_status). Response: $api_response"
+      fi
   fi
 fi
 
@@ -210,7 +267,15 @@ if [[ -z "$response_content" ]]; then
   if [[ -n "$error_message" ]]; then
       error_exit "API returned an error: $error_message"
   else
-      error_exit "Failed to extract content from API response. Response: $api_response"
+      # Check if the response is valid JSON
+      if ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
+           error_exit "API returned empty content and response was not valid JSON. Response: $api_response"
+      else
+           # It's valid JSON but content is missing/empty, which might be valid in some cases?
+           # Or it could indicate an unexpected response structure.
+           # Let's consider it an error for now if content is expected.
+           error_exit "API returned empty content. Response: $api_response"
+      fi
   fi
 fi
 
@@ -219,7 +284,7 @@ fi
 if [[ -n "$output_file" ]]; then
   # Write to output file
   echo "$response_content" > "$output_file"
-  echo "Output written to $output_file"
+  echo "Output written to $output_file" >&2 # Send confirmation message to stderr
 else
   # Print to stdout
   echo "$response_content"
