@@ -9,8 +9,8 @@
 #   -m <model>:       The model to use (default: google/gemini-flash-1.5).
 #                     Format: 'vendor/model-name' or 'vendor/model-name:version'.
 #   -a <attachment>:  Path to an attachment file (e.g., image, pdf).
-#   -i <input_file>:  Path to a file containing additional input text (prepended to prompt).
 #   -o <output_file>: File to write the output to (default: stdout).
+#   -t <tokens>:      Maximum number of tokens to generate (optional).
 #   -h:               Display this help message.
 #
 # Defaults:
@@ -40,9 +40,8 @@ usage() {
   echo "  -m <model>:       The model to use (default: $DEFAULT_MODEL)."
   echo "                    Format: 'vendor/model-name' or 'vendor/model-name:version'."
   echo "  -a <attachment>:  Path to an attachment file (e.g., image, pdf)."
-  echo "  -i <input_file>:  Path to a file containing additional input text."
-  echo "                    Content will be prepended to the prompt (-p or positional)."
   echo "  -o <output_file>: File to write the output to (default: stdout)."
+  echo "  -t <tokens>:      Maximum number of tokens to generate (optional)."
   echo "  -h:               Display this help message."
   echo
   echo "Environment Variables:"
@@ -65,11 +64,13 @@ set -euo pipefail
 prompt=""
 model="$DEFAULT_MODEL"
 attachment_path=""
-input_file=""
 output_file=""
+max_tokens=""
 prompt_from_p_option="" # Track if -p was used
 
-while getopts ":p:m:a:i:o:h" opt; do
+# Process options using getopts
+# Options must come before the optional positional prompt argument
+while getopts ":p:m:a:o:t:h" opt; do
   case ${opt} in
     p )
       prompt_from_p_option="$OPTARG"
@@ -80,24 +81,22 @@ while getopts ":p:m:a:i:o:h" opt; do
     a )
       attachment_path="$OPTARG"
       ;;
-    i )
-      input_file="$OPTARG"
-      ;;
     o )
       output_file="$OPTARG"
+      ;;
+    t )
+      max_tokens="$OPTARG"
       ;;
     h )
       usage
       ;;
     \? )
       # Check if it looks like a positional argument after options
-      if [[ "$OPTARG" == "-" ]] && [[ "${!OPTIND}" != -* ]]; then
-          # This case handles things like `script -m model prompt` where `prompt` might be misinterpreted
-          # We break here and let the positional argument handling below take care of it.
-          break
+      if [[ "$OPTARG" != "-" ]]; then
+          echo "Invalid option: -$OPTARG" 1>&2
+          usage
       fi
-      echo "Invalid option: -$OPTARG" 1>&2
-      usage
+      break
       ;;
     : )
       echo "Invalid option: -$OPTARG requires an argument" 1>&2
@@ -105,18 +104,22 @@ while getopts ":p:m:a:i:o:h" opt; do
       ;;
   esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND -1)) # Shift processed options away
 
-# Handle positional argument as prompt
+# Handle positional argument as prompt (must be the *only* remaining argument)
 positional_prompt=""
-if [[ $# -gt 0 ]]; then
-  # Check if the first positional argument looks like an option - this shouldn't happen if getopts worked correctly, but as a safeguard.
+if [[ $# -eq 1 ]]; then
+  # Check if the single remaining argument looks like an option - safeguard
   if [[ "$1" == -* ]]; then
-      error_exit "Unexpected option '$1' found after arguments."
+      error_exit "Unexpected option '$1' found where positional prompt was expected. Options must precede the prompt."
   fi
   positional_prompt="$1"
   shift # Consume the positional prompt argument
+elif [[ $# -gt 1 ]]; then
+  # If more than one argument remains, it's an error
+   error_exit "Unexpected arguments found: '$*'. Options must come before the single positional prompt, or use -p."
 fi
+
 
 # Check for conflicting prompt inputs
 if [[ -n "$prompt_from_p_option" ]] && [[ -n "$positional_prompt" ]]; then
@@ -130,9 +133,9 @@ elif [[ -n "$positional_prompt" ]]; then
   prompt="$positional_prompt"
 fi
 
-# Check for any remaining unexpected arguments
+# Check for any remaining unexpected arguments (double check, should be caught above)
 if [[ $# -gt 0 ]]; then
-    error_exit "Unexpected arguments found: '$*'. Did you forget to quote the prompt?"
+    error_exit "Unexpected arguments found after processing: '$*'. Check argument order and quoting."
 fi
 
 
@@ -158,28 +161,21 @@ if ! command -v base64 &> /dev/null; then
     error_exit "'base64' command is not found. Please install base64."
 fi
 
-
-# --- Prepare Input ---
-
-# Read input from file if specified
-input_content=""
-if [[ -n "$input_file" ]]; then
-  if [[ ! -f "$input_file" ]]; then
-    error_exit "Input file not found: $input_file"
-  fi
-  input_content=$(<"$input_file")
-  # Prepend file content to the prompt, separated by a newline
-  if [[ -n "$prompt" ]]; then
-      # Use printf for potentially multi-line content preservation
-      prompt="$(printf "%s\n\n%s" "$input_content" "$prompt")"
-  else
-      prompt="$input_content"
-  fi
+# Check if tr command is installed
+if ! command -v tr &> /dev/null; then
+    error_exit "'tr' command is not found. Please install tr (translate characters)."
 fi
 
-# Ensure prompt is not empty if no input file or attachment was given
+# Ensure prompt or attachment is provided
 if [[ -z "$prompt" ]] && [[ -z "$attachment_path" ]]; then
-    error_exit "A prompt (via -p, positional argument, or -i) or an attachment (-a) must be provided."
+    error_exit "A prompt (via -p or positional argument) or an attachment (-a) must be provided."
+fi
+
+# Validate max_tokens if provided
+if [[ -n "$max_tokens" ]]; then
+  if ! [[ "$max_tokens" =~ ^[1-9][0-9]*$ ]]; then
+    error_exit "Invalid value for -t (max_tokens): '$max_tokens'. Must be a positive integer."
+  fi
 fi
 
 
@@ -196,16 +192,41 @@ if [[ -n "$attachment_path" ]]; then
       error_exit "Could not determine MIME type for attachment: $attachment_path"
   fi
 
-  # Base64 encode the file content
-  # Use standard base64 without options for portability
-  base64_content=$(base64 < "$attachment_path" | tr -d '\n') # Remove newlines for JSON compatibility
+  # Base64 encode the file content and remove newlines for portability
+  base64_content=$(base64 < "$attachment_path" | tr -d '\n')
+  if [[ -z "$base64_content" ]]; then
+      # Check if base64 command succeeded but produced empty output (e.g., empty file)
+      # Or if tr failed, though less likely if the command check passed.
+      # Get exit status of the pipeline components
+      pipe_status=("${PIPESTATUS[@]}")
+      if [[ ${pipe_status[0]} -ne 0 ]]; then
+          error_exit "base64 command failed for attachment: $attachment_path"
+      elif [[ ${pipe_status[1]} -ne 0 ]]; then
+          error_exit "tr command failed while processing base64 output for attachment: $attachment_path"
+      else
+          # Base64 succeeded, tr succeeded, but output is empty. Likely an empty input file.
+          # Allow empty content, as it might be valid for some use cases or APIs.
+          : # Keep base64_content as empty string
+      fi
+  fi
 
-  # Construct the JSON part for the attachment using data URI scheme
-  # Note: OpenRouter expects image content within an "image_url" field using a data URI.
-  # This might need adjustment if non-image types require a different structure.
-  # We assume 'image_url' works for common types based on the example.
-  attachment_json_part=$(jq -n --arg mime "$mime_type" --arg data "$base64_content" \
-    '{type: "image_url", image_url: {url: ("data:" + $mime + ";base64," + $data)}}')
+
+  # Construct the JSON part for the attachment based on MIME type
+  if [[ "$mime_type" == image/* ]]; then
+      # Structure for images using data URI
+      attachment_json_part=$(jq -n --arg mime "$mime_type" --arg data "$base64_content" \
+        '{type: "image_url", image_url: {url: ("data:" + $mime + ";base64," + $data)}}')
+  elif [[ "$mime_type" == "application/pdf" ]]; then
+      # Structure for PDFs (using a common pattern for base64 documents)
+      # This structure might need adjustment based on specific OpenRouter/model requirements.
+      attachment_json_part=$(jq -n \
+        --arg mime "$mime_type" \
+        --arg data "$base64_content" \
+        '{type: "document_attachment", source: {type: "base64", media_type: $mime, data: $data}}')
+  else
+      # Handle unsupported types
+      error_exit "Unsupported attachment type '$mime_type'. Currently only image/* and application/pdf types are explicitly supported by this script's structure."
+  fi
 
 fi
 
@@ -214,6 +235,7 @@ fi
 # Start building the messages array. Handle case where prompt might be empty (e.g., only attachment provided)
 messages_content_array='[]'
 if [[ -n "$prompt" ]]; then
+    # Ensure prompt is treated as a single JSON string, even with newlines/quotes
     messages_content_array=$(jq -n --arg text_prompt "$prompt" '[{type: "text", text: $text_prompt}]')
 fi
 
@@ -226,9 +248,18 @@ fi
 messages_json=$(jq -n --argjson content "$messages_content_array" '[{role: "user", content: $content}]')
 
 
-# Construct the final JSON payload
-json_payload=$(jq -n --arg model "$model" --argjson messages "$messages_json" \
-  '{model: $model, messages: $messages}')
+# Construct the base JSON payload by piping messages_json to jq stdin
+base_payload=$(echo "$messages_json" | jq --arg model "$model" \
+  '{model: $model, messages: .}')
+
+# Add max_tokens to the payload if it was provided
+if [[ -n "$max_tokens" ]]; then
+  # Use --argjson to ensure max_tokens is treated as a number
+  json_payload=$(echo "$base_payload" | jq --argjson tokens "$max_tokens" '. + {max_tokens: $tokens}')
+else
+  json_payload="$base_payload"
+fi
+
 
 # --- Make API Call ---
 # Use curl to send the request
@@ -248,9 +279,11 @@ if [[ $curl_exit_status -ne 0 ]]; then
   else
       # Check if the response is valid JSON before trying to parse further
       if ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
-          error_exit "API call failed (curl exit code $curl_exit_status). Response was not valid JSON: $api_response"
+          # Provide more context if response isn't JSON
+          error_exit "API call failed (curl exit code $curl_exit_status). Response was not valid JSON: $(echo "$api_response" | head -c 200) ..." # Show beginning of response
       else
-          error_exit "API call failed (curl exit code $curl_exit_status). Response: $api_response"
+          # Valid JSON but no specific error message found
+          error_exit "API call failed (curl exit code $curl_exit_status). Response: $(echo "$api_response" | jq -c .)" # Show compact JSON
       fi
   fi
 fi
@@ -269,12 +302,18 @@ if [[ -z "$response_content" ]]; then
   else
       # Check if the response is valid JSON
       if ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
-           error_exit "API returned empty content and response was not valid JSON. Response: $api_response"
+           error_exit "API returned empty content and response was not valid JSON. Response: $(echo "$api_response" | head -c 200) ..."
       else
-           # It's valid JSON but content is missing/empty, which might be valid in some cases?
-           # Or it could indicate an unexpected response structure.
-           # Let's consider it an error for now if content is expected.
-           error_exit "API returned empty content. Response: $api_response"
+           # It's valid JSON but content is missing/empty.
+           # This might be valid in some cases, but often indicates an issue.
+           # Check if choices array exists but is empty or message is null
+           if [[ $(echo "$api_response" | jq '.choices | length') -eq 0 ]] || \
+              [[ $(echo "$api_response" | jq -r '.choices[0].message // "null"') == "null" ]]; then
+               error_exit "API returned no message content. Check model compatibility or prompt. Response: $(echo "$api_response" | jq -c .)"
+           else
+               # Content is genuinely empty string "" - pass it through
+               : # No error, content is just empty
+           fi
       fi
   fi
 fi
@@ -283,11 +322,13 @@ fi
 
 if [[ -n "$output_file" ]]; then
   # Write to output file
-  echo "$response_content" > "$output_file"
+  # Use printf to handle potential edge cases like content starting with '-'
+  printf "%s\n" "$response_content" > "$output_file"
   echo "Output written to $output_file" >&2 # Send confirmation message to stderr
 else
   # Print to stdout
-  echo "$response_content"
+  # Use printf for robustness
+  printf "%s\n" "$response_content"
 fi
 
 exit 0
