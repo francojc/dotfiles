@@ -70,5 +70,11 @@
     ],
     "description": "Include in code block"
   }
-
+  {
+    "prefix": "cbmessage",
+    "body": [
+      "#| message: ${1|true,false|}",
+      "${0}"
+    ],
+  }
 }

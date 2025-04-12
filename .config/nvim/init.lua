@@ -26,10 +26,11 @@ require("paq")({
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lilydjwg/colorizer", -- Colorizer
-	"nvim-lualine/lualine.nvim", -- Statusline
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
+	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
+	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"olimorris/codecompanion.nvim", -- Code companion AI integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
@@ -39,6 +40,7 @@ require("paq")({
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
+	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 })
 
 --| Options ------------------------------------------------------
@@ -362,7 +364,6 @@ map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc = "Toggle terminal: vertical" })
 
-
 ---| Functions ----------------------------------------------------
 -- Spell Language Functionality
 local function get_project_root()
@@ -475,7 +476,7 @@ vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
 -- Auto-session -------------------------------
 require("auto-session").setup({
 	auto_restore = true,
-	bypass_save_filetypes = { "alpha", "dashboard", "neo-tree", "codecompanion" },
+	bypass_save_filetypes = { "alpha", "dashboard", "codecompanion" },
 })
 
 -- Blink ----------------------------------
@@ -485,7 +486,9 @@ require("blink.cmp").setup({
 	},
 	completion = {
 		menu = {
-			auto_show = function() return false end, -- We'll handle auto-show with a timer below
+			auto_show = function()
+				return false
+			end, -- We'll handle auto-show with a timer below
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -514,7 +517,23 @@ require("blink.cmp").setup({
 			show_documentation = false,
 		},
 	},
-	sources = { default = { "path", "snippets", "lsp" } },
+	sources = {
+		default = { "path", "snippets", "lsp", "buffer" },
+		per_filetype = {
+			quarto = { "path", "snippets", "lsp", "references", "emoji" },
+			markdown = { "path", "snippets", "lsp", "references", "emoji" },
+		},
+		providers = {
+			emoji = {
+				name = "Emoji",
+				module = "blink-emoji",
+			},
+			references = {
+				name = "pandoc_references",
+				module = "cmp-pandoc-references.blink",
+			},
+		},
+	},
 	cmdline = {
 		completion = {
 			menu = {
@@ -525,6 +544,7 @@ require("blink.cmp").setup({
 		},
 		keymap = {
 			preset = "inherit",
+			["Enter"] = { "select_accept_and_enter", "fallback" },
 		},
 	},
 })
@@ -865,7 +885,7 @@ require("lualine").setup({
 		component_separators = { left = " ", right = " " },
 		section_separators = { left = " ", right = " " },
 		disabled_filetypes = {
-			statusline = { "neo-tree", "toggleterm", "alpha", "codecompanion", "aerial" },
+			statusline = { "toggleterm", "alpha", "codecompanion", "aerial" },
 			winbar = { "alpha" },
 		},
 		always_divide_middle = true,
@@ -906,11 +926,6 @@ require("lualine").setup({
 require("mini.icons").setup({})
 require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
-
--- Neo-tree -----------------------------------
-require("neo-tree").setup({
-	close_if_last_window = true,
-})
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
