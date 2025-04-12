@@ -502,6 +502,7 @@ require("blink.cmp").setup({
 		preset = "none",
 		["<C-Space>"] = { "show", "hide" },
 		["<D-l>"] = { "select_and_accept" },
+    ["Enter"] = { "select_accept_and_enter", "fallback" },
 		["<D-j>"] = { "select_next", "fallback" },
 		["<D-k>"] = { "select_prev", "fallback" },
 		["<C-e>"] = { "cancel", "fallback" },
@@ -544,7 +545,6 @@ require("blink.cmp").setup({
 		},
 		keymap = {
 			preset = "inherit",
-			["Enter"] = { "select_accept_and_enter", "fallback" },
 		},
 	},
 })
