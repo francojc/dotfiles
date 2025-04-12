@@ -529,11 +529,11 @@ require("blink.cmp").setup({
 	},
 })
 
--- Delayed Blink completion menu (500ms, only after 2+ chars)
+-- Delayed Blink completion menu (1500ms, only after 2+ chars)
 do
 	local blink = require("blink.cmp")
 	local blink_timer = nil
-	local blink_delay = 500 -- milliseconds
+	local blink_delay = 1500 -- milliseconds
 
 	local function should_show_menu()
 		local col = vim.fn.col(".") - 1
@@ -866,7 +866,7 @@ local function get_lsp_servers()
 			table.insert(client_names, name)
 		end
 	end
-	return table.concat(client_names, " | ")
+	return table.concat(client_names, "  ǀ ")
 end
 
 -- Lualine setup
