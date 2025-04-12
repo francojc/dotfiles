@@ -55,7 +55,6 @@
       "appcleaner"
       "betterdisplay"
       "bettermouse"
-      "chatgpt"
       "claude"
       "docker"
       "dropbox"
