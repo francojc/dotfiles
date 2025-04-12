@@ -270,9 +270,6 @@ map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra 
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
 
 -- Explore -------------------------------
--- Neotree
-map("n", "<leader>ee", "<Cmd>Neotree toggle<Cr>", { desc = "Toggle Neotree" })
-map("n", "<leader>ef", "<Cmd>Neotree float<Cr>", { desc = "Float Neotree" })
 -- Yazi
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
@@ -364,6 +361,8 @@ map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggl
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
+map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc = "Toggle terminal: vertical" })
+
 
 ---| Functions ----------------------------------------------------
 -- Spell Language Functionality
@@ -505,9 +504,7 @@ local blink_config = {
 		["<C-Space>"] = { "show", "hide" },
 		["<D-l>"] = { "select_and_accept" },
 		["<D-j>"] = { "select_next", "fallback" },
-    ["Up"] = { "select_next", "fallback" },
 		["<D-k>"] = { "select_prev", "fallback" },
-    ["Down"] = { "select_prev", "fallback" },
 		["<C-e>"] = { "cancel", "fallback" },
 		["<D-d>"] = { "scroll_documentation_down" },
 		["<D-u>"] = { "scroll_documentation_up" },
@@ -545,11 +542,11 @@ do
 	local blink_delay = 1500 -- milliseconds
 
 	local function should_show_menu()
-		local col = vim.fn.col('.') - 1
+		local col = vim.fn.col(".") - 1
 		if col < 2 then
 			return false
 		end
-		local line = vim.fn.getline('.')
+		local line = vim.fn.getline(".")
 		local start = col
 		while start > 0 and line:sub(start, start):match("[%w_]") do
 			start = start - 1
