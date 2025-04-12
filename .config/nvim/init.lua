@@ -487,7 +487,9 @@ require("blink.cmp").setup({
 	},
 	completion = {
 		menu = {
-			auto_show = true,
+			auto_show = function()
+				return false
+			end, -- We'll handle auto-show with a timer below
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -503,7 +505,6 @@ require("blink.cmp").setup({
 		["<D-l>"] = { "select_and_accept" },
 		["<D-j>"] = { "select_next", "fallback" },
 		["<D-k>"] = { "select_prev", "fallback" },
-		["<Enter>"] = { "select_accept_and_enter", "fallback" },
 		["<C-e>"] = { "cancel", "fallback" },
 		["<D-d>"] = { "scroll_documentation_down" },
 		["<D-u>"] = { "scroll_documentation_up" },
@@ -531,6 +532,34 @@ require("blink.cmp").setup({
 		},
 	},
 })
+
+-- Delayed Blink completion menu (500ms)
+do
+	local blink = require("blink.cmp")
+	local blink_timer = nil
+	local blink_delay = 500 -- milliseconds
+
+	vim.api.nvim_create_autocmd("InsertCharPre", {
+		callback = function()
+			if blink_timer then
+				blink_timer:stop()
+				blink_timer:close()
+				blink_timer = nil
+			end
+			blink_timer = vim.loop.new_timer()
+			blink_timer:start(
+				blink_delay,
+				0,
+				vim.schedule_wrap(function()
+					blink.show()
+					blink_timer:stop()
+					blink_timer:close()
+					blink_timer = nil
+				end)
+			)
+		end,
+	})
+end
 
 -- Blink buffer completion toggle and autocmds
 local blink = require("blink.cmp")
