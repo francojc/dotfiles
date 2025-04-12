@@ -30,7 +30,6 @@ require("paq")({
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
-	"nvim-neo-tree/neo-tree.nvim", -- File explorer
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"olimorris/codecompanion.nvim", -- Code companion AI integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
@@ -480,16 +479,13 @@ require("auto-session").setup({
 })
 
 -- Blink ----------------------------------
--- Store your full Blink config in a table for dynamic updates
-local blink_config = {
+require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
 	},
 	completion = {
 		menu = {
-			auto_show = function()
-				return false
-			end, -- We'll handle auto-show with a timer below
+			auto_show = function() return false end, -- We'll handle auto-show with a timer below
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -531,15 +527,13 @@ local blink_config = {
 			preset = "inherit",
 		},
 	},
-}
+})
 
-require("blink.cmp").setup(blink_config)
-
--- Delayed Blink completion menu (1500ms, only after 2+ chars)
+-- Delayed Blink completion menu (500ms, only after 2+ chars)
 do
 	local blink = require("blink.cmp")
 	local blink_timer = nil
-	local blink_delay = 1500 -- milliseconds
+	local blink_delay = 500 -- milliseconds
 
 	local function should_show_menu()
 		local col = vim.fn.col(".") - 1
@@ -578,42 +572,6 @@ do
 		end,
 	})
 end
-
--- Blink buffer completion toggle and autocmds
-local buffer_enabled = false
-
-function ToggleBlinkBufferSource()
-	buffer_enabled = not buffer_enabled
-	local sources = { "lsp", "path", "snippets" }
-	if buffer_enabled then
-		table.insert(sources, "buffer")
-		vim.notify("Blink: Buffer completion ENABLED", vim.log.levels.INFO)
-	else
-		vim.notify("Blink: Buffer completion DISABLED", vim.log.levels.INFO)
-	end
-	blink_config.sources = { default = sources }
-	require("blink.cmp").setup(blink_config)
-end
-
-vim.keymap.set("n", "<leader>tb", ToggleBlinkBufferSource, { desc = "Toggle Blink buffer completion" })
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "quarto" },
-	callback = function()
-		buffer_enabled = false
-		blink_config.sources = { default = { "lsp", "path", "snippets" } }
-		require("blink.cmp").setup(blink_config)
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "python", "lua", "r", "nix" },
-	callback = function()
-		buffer_enabled = true
-		blink_config.sources = { default = { "lsp", "path", "snippets", "buffer" } }
-		require("blink.cmp").setup(blink_config)
-	end,
-})
 
 -- Bufferline ----------------------------------
 require("bufferline").setup({})
