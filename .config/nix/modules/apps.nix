@@ -3,6 +3,7 @@
     alejandra
     age
     brave
+    browsh
     carapace
     codespell
     curl
