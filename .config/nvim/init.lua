@@ -481,7 +481,8 @@ require("auto-session").setup({
 })
 
 -- Blink ----------------------------------
-require("blink.cmp").setup({
+-- Store your full Blink config in a table for dynamic updates
+local blink_config = {
 	fuzzy = {
 		implementation = "lua",
 	},
@@ -531,13 +532,29 @@ require("blink.cmp").setup({
 			preset = "inherit",
 		},
 	},
-})
+}
 
--- Delayed Blink completion menu (500ms)
+require("blink.cmp").setup(blink_config)
+
+-- Delayed Blink completion menu (1500ms, only after 2+ chars)
 do
 	local blink = require("blink.cmp")
 	local blink_timer = nil
-	local blink_delay = 500 -- milliseconds
+	local blink_delay = 1500 -- milliseconds
+
+	local function should_show_menu()
+		local col = vim.fn.col('.') - 1
+		if col < 2 then
+			return false
+		end
+		local line = vim.fn.getline('.')
+		local start = col
+		while start > 0 and line:sub(start, start):match("[%w_]") do
+			start = start - 1
+		end
+		local word = line:sub(start + 1, col)
+		return #word >= 2
+	end
 
 	vim.api.nvim_create_autocmd("InsertCharPre", {
 		callback = function()
@@ -551,7 +568,9 @@ do
 				blink_delay,
 				0,
 				vim.schedule_wrap(function()
-					blink.show()
+					if should_show_menu() then
+						blink.show()
+					end
 					blink_timer:stop()
 					blink_timer:close()
 					blink_timer = nil
@@ -562,7 +581,6 @@ do
 end
 
 -- Blink buffer completion toggle and autocmds
-local blink = require("blink.cmp")
 local buffer_enabled = false
 
 function ToggleBlinkBufferSource()
@@ -574,7 +592,8 @@ function ToggleBlinkBufferSource()
 	else
 		vim.notify("Blink: Buffer completion DISABLED", vim.log.levels.INFO)
 	end
-	blink.setup({ sources = { default = sources } })
+	blink_config.sources = { default = sources }
+	require("blink.cmp").setup(blink_config)
 end
 
 vim.keymap.set("n", "<leader>tb", ToggleBlinkBufferSource, { desc = "Toggle Blink buffer completion" })
@@ -583,7 +602,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "quarto" },
 	callback = function()
 		buffer_enabled = false
-		blink.setup({ sources = { default = { "lsp", "path", "snippets" } } })
+		blink_config.sources = { default = { "lsp", "path", "snippets" } }
+		require("blink.cmp").setup(blink_config)
 	end,
 })
 
@@ -591,7 +611,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "python", "lua", "r", "nix" },
 	callback = function()
 		buffer_enabled = true
-		blink.setup({ sources = { default = { "lsp", "path", "snippets", "buffer" } } })
+		blink_config.sources = { default = { "lsp", "path", "snippets", "buffer" } }
+		require("blink.cmp").setup(blink_config)
 	end,
 })
 
