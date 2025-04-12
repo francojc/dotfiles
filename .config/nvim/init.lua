@@ -713,23 +713,11 @@ lspconfig.lua_ls.setup({ capabilities = capabilities })
 -- Nix
 -- nixd
 local function get_username()
-	local handle = io.popen("whoami")
-	if not handle then
-		return ""
-	end
-	local username = handle:read("*a")
-	handle:close()
-	return username:gsub("\n$", "")
+	return os.getenv("USER") or ""
 end
 
 local function get_hostname()
-	local handle = io.popen("hostname")
-	if not handle then
-		return ""
-	end
-	local hostname = handle:read("*a")
-	handle:close()
-	return hostname:gsub("\n$", "")
+	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
 end
 
 lspconfig.nixd.setup({
