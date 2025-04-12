@@ -495,6 +495,7 @@ require("blink.cmp").setup({
 				},
 			},
 		},
+    documentation = { auto_show = true }, 
 	},
 	keymap = {
 		preset = "none",
@@ -503,7 +504,7 @@ require("blink.cmp").setup({
 		["<D-j>"] = { "select_next", "fallback" },
 		["<D-k>"] = { "select_prev", "fallback" },
 		["<Enter>"] = { "select_accept_and_enter", "fallback" },
-		["<D-esc>"] = { "cancel" },
+		["<C-e>"] = { "cancel", "fallback" },
 		["<D-d>"] = { "scroll_documentation_down" },
 		["<D-u>"] = { "scroll_documentation_up" },
 		["<D-s>"] = { "show_signature" },
@@ -657,13 +658,17 @@ require("img-clip").setup({
 -- Lspconfig --------------------------------
 -- LSP
 local lspconfig = require("lspconfig")
+
+-- Get enhanced LSP capabilities from blink.cmp
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+
 -- Setup LSP servers
 -- Bash
 -- bash-language-server
-lspconfig.bashls.setup({})
+lspconfig.bashls.setup({ capabilities = capabilities })
 -- Lua
 -- lua-lanuage-server
-lspconfig.lua_ls.setup({})
+lspconfig.lua_ls.setup({ capabilities = capabilities })
 -- Nix
 -- nixd
 local function get_username()
@@ -688,6 +693,7 @@ end
 
 lspconfig.nixd.setup({
 	cmd = { "nixd" },
+	capabilities = capabilities,
 	settings = {
 		nixd = {
 			nixpkgs = { expr = "import <nixpkgs> {}" },
@@ -719,7 +725,7 @@ lspconfig.nixd.setup({
 	},
 })
 -- Python
-lspconfig.pyright.setup({})
+lspconfig.pyright.setup({ capabilities = capabilities })
 
 -- R
 
@@ -727,7 +733,8 @@ lspconfig.pyright.setup({})
 
 lspconfig.r_language_server.setup({
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
-	filetypes = { "r", "quarto" },
+	filetypes = { "r" },
+	capabilities = capabilities,
 	root_dir = function(fname)
 		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
 			or lspconfig.util.find_git_ancestor(fname)
@@ -745,7 +752,7 @@ lspconfig.r_language_server.setup({
 
 -- YAML
 -- yaml-language-server
-lspconfig.yamlls.setup({})
+lspconfig.yamlls.setup({ capabilities = capabilities })
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
