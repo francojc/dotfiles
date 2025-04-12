@@ -490,12 +490,12 @@ require("blink.cmp").setup({
 			auto_show = true,
 			draw = {
 				columns = {
-					{ "label", "label_description", gap = 1 },
-					{ "kind_icon", "kind" },
+					{ "kind_icon", "label", "label_description", gap = 1 },
+					{ "kind", "source_name", gap = 1 },
 				},
 			},
 		},
-    documentation = { auto_show = true }, 
+		documentation = { auto_show = true },
 	},
 	keymap = {
 		preset = "none",
@@ -530,6 +530,40 @@ require("blink.cmp").setup({
 			preset = "inherit",
 		},
 	},
+})
+
+-- Blink buffer completion toggle and autocmds
+local blink = require("blink.cmp")
+local buffer_enabled = false
+
+function ToggleBlinkBufferSource()
+	buffer_enabled = not buffer_enabled
+	local sources = { "lsp", "path", "snippets" }
+	if buffer_enabled then
+		table.insert(sources, "buffer")
+		vim.notify("Blink: Buffer completion ENABLED", vim.log.levels.INFO)
+	else
+		vim.notify("Blink: Buffer completion DISABLED", vim.log.levels.INFO)
+	end
+	blink.setup({ sources = { default = sources } })
+end
+
+vim.keymap.set("n", "<leader>tb", ToggleBlinkBufferSource, { desc = "Toggle Blink buffer completion" })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		buffer_enabled = false
+		blink.setup({ sources = { default = { "lsp", "path", "snippets" } } })
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "python", "lua", "r", "nix" },
+	callback = function()
+		buffer_enabled = true
+		blink.setup({ sources = { default = { "lsp", "path", "snippets", "buffer" } } })
+	end,
 })
 
 -- Bufferline ----------------------------------
@@ -755,41 +789,43 @@ lspconfig.r_language_server.setup({
 
 -- Dynamically detect Quarto YAML schema and configure yamlls
 local function get_quarto_resource_path()
-  local function strsplit(s, delimiter)
-    local result = {}
-    for match in (s .. delimiter):gmatch('(.-)' .. delimiter) do
-      table.insert(result, match)
-    end
-    return result
-  end
+	local function strsplit(s, delimiter)
+		local result = {}
+		for match in (s .. delimiter):gmatch("(.-)" .. delimiter) do
+			table.insert(result, match)
+		end
+		return result
+	end
 
-  local f = io.popen('quarto --paths', 'r')
-  if not f then return nil end
-  local s = f:read('*a')
-  f:close()
-  local lines = strsplit(s, '\n')
-  -- The second line is usually the system share path
-  return lines[2]
+	local f = io.popen("quarto --paths", "r")
+	if not f then
+		return nil
+	end
+	local s = f:read("*a")
+	f:close()
+	local lines = strsplit(s, "\n")
+	-- The second line is usually the system share path
+	return lines[2]
 end
 
 local resource_path = get_quarto_resource_path()
 local quarto_schema_path = resource_path and (resource_path .. "/schemas/quarto-schema.json") or nil
 
 if quarto_schema_path then
-  lspconfig.yamlls.setup({
-    capabilities = capabilities,
-    settings = {
-      yaml = {
-        schemas = {
-          [quarto_schema_path] = { "*.qmd", ".quarto.yaml", "quarto.yml", "*.quarto.yml" },
-        },
-        completion = true,
-        validate = true,
-      },
-    },
-  })
+	lspconfig.yamlls.setup({
+		capabilities = capabilities,
+		settings = {
+			yaml = {
+				schemas = {
+					[quarto_schema_path] = { "*.qmd", ".quarto.yaml", "quarto.yml", "*.quarto.yml" },
+				},
+				completion = true,
+				validate = true,
+			},
+		},
+	})
 else
-  lspconfig.yamlls.setup({ capabilities = capabilities })
+	lspconfig.yamlls.setup({ capabilities = capabilities })
 end
 
 -- Lualine ----------------------------------------------------------------
@@ -839,7 +875,7 @@ require("lualine").setup({
 		},
 		always_divide_middle = true,
 		globalstatus = true,
-		refresh =  {
+		refresh = {
 			statusline = 1000,
 			tabline = 1000,
 			winbar = 1000,
