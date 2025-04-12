@@ -487,7 +487,7 @@ require("blink.cmp").setup({
 	},
 	completion = {
 		menu = {
-			auto_show = false,
+			auto_show = true,
 			draw = {
 				columns = {
 					{ "label", "label_description", gap = 1 },
@@ -752,7 +752,45 @@ lspconfig.r_language_server.setup({
 
 -- YAML
 -- yaml-language-server
-lspconfig.yamlls.setup({ capabilities = capabilities })
+
+-- Dynamically detect Quarto YAML schema and configure yamlls
+local function get_quarto_resource_path()
+  local function strsplit(s, delimiter)
+    local result = {}
+    for match in (s .. delimiter):gmatch('(.-)' .. delimiter) do
+      table.insert(result, match)
+    end
+    return result
+  end
+
+  local f = io.popen('quarto --paths', 'r')
+  if not f then return nil end
+  local s = f:read('*a')
+  f:close()
+  local lines = strsplit(s, '\n')
+  -- The second line is usually the system share path
+  return lines[2]
+end
+
+local resource_path = get_quarto_resource_path()
+local quarto_schema_path = resource_path and (resource_path .. "/schemas/quarto-schema.json") or nil
+
+if quarto_schema_path then
+  lspconfig.yamlls.setup({
+    capabilities = capabilities,
+    settings = {
+      yaml = {
+        schemas = {
+          [quarto_schema_path] = { "*.qmd", ".quarto.yaml", "quarto.yml", "*.quarto.yml" },
+        },
+        completion = true,
+        validate = true,
+      },
+    },
+  })
+else
+  lspconfig.yamlls.setup({ capabilities = capabilities })
+end
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine helper function to get attached LSP servers
