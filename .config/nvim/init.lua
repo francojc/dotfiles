@@ -26,7 +26,7 @@ require("paq")({
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lilydjwg/colorizer", -- Colorizer
-  "nvim-lualine/lualine.nvim", -- Statusline
+	"nvim-lualine/lualine.nvim", -- Statusline
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
@@ -323,14 +323,15 @@ map(
 	{ desc = "Paste image" }
 )
 -- Obsidian -----------------------------------
-map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
-map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "New note" })
 map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "New from template" })
+map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
+map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
+map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
 map("n", "<leader>oi", "<Cmd>ObsidianPasteImg<Cr>", { desc = "Paste image" })
 map("n", "<leader>ol", "<Cmd>ObsidianLinkNew<Cr>", { desc = "New link" })
-map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
+map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "New note" })
 map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
-map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
+
 -- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
 map("n", "<leader>qa", "<Cmd>QuartoSendAbove<Cr>", { desc = "Quarto: send above" })
@@ -346,24 +347,23 @@ map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Sli
 map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
 -- Search -----------------------------------
-map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
 map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
 map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
-map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
+map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
-
+map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
+map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
 -- Flash search
--- Map flash to f/F keys
-map({ "n", "x", "o" }, "m", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
-map({ "n", "x", "o" }, "M", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
+map({ "n", "x", "o" }, "<leader>sf", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
+map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
 
 -- Toggle ------------------------------------
-map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
-map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
+map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
+map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
-map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
+map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 
 ---| Functions ----------------------------------------------------
 -- Spell Language Functionality
@@ -564,10 +564,10 @@ require("codecompanion").setup({
 		chat = {
 			adapter = "copilot",
 			roles = {
----@diagnostic disable-next-line: undefined-doc-name
+				---@diagnostic disable-next-line: undefined-doc-name
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
----@diagnostic disable-next-line: undefined-field
+					---@diagnostic disable-next-line: undefined-field
 					return " (" .. adapter.formatted_name .. ") "
 				end,
 
@@ -794,7 +794,7 @@ require("lualine").setup({
 		},
 		always_divide_middle = true,
 		globalstatus = true,
-		refresh = {
+		refresh =  {
 			statusline = 1000,
 			tabline = 1000,
 			winbar = 1000,
@@ -803,9 +803,13 @@ require("lualine").setup({
 	sections = {
 		lualine_a = { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
-		lualine_c = { "filename" },
+		lualine_c = {
+			{ "filename", path = 1 },
+		},
 		lualine_x = { "lsp_progress", get_lsp_servers },
-		lualine_y = { " filetype" },
+		lualine_y = {
+			{ " filetype", icon_only = true },
+		},
 		lualine_z = { "progress" },
 	},
 	inactive_sections = {
