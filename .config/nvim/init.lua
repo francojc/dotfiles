@@ -213,9 +213,9 @@ map("n", "<leader>wh", "<C-w><", { desc = "Resize window left" })
 map("n", "<leader>wl", "<C-w>>", { desc = "Resize window right" })
 -- Go to
 -- End of line
-map("n", "gl", "$", { desc = "Go to end of line" })
+map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
 -- Beginning of line
-map("n", "gL", "^", { desc = "Go to beginning of line" })
+map({ "n", "v" }, "gL", "^", { desc = "Go to beginning of line" })
 -- Line up/down
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
