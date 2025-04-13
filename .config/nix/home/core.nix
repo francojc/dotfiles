@@ -16,10 +16,11 @@ let
     yaml-language-server # YAML LSP
 
     # Formatters & Linters commonly integrated with Neovim
-    alejandra # Nix formatter
     air-formatter # R LSP/Formatter
+    alejandra # Nix formatter
     mdformat # Markdown formatter
     nodePackages.prettier # General purpose formatter
+    ruff # Python linter/formatter
     shfmt # Shell formatter
     stylua # Lua formatter
 

@@ -104,6 +104,7 @@ opt.background = "dark"
 opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
+opt.formatexpr = "v:lua.require('conform').formatexpr()"
 -- Diagnostics
 vim.diagnostic.config({
 	severity_sort = true,
@@ -263,7 +264,12 @@ map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
 
 -- Code -----------------------------
 map("n", "<leader>ca", "<Cmd>lua require('fzf-lua').lsp_code_actions()<Cr>", { desc = "Code actions" })
-map({ "n", "v" }, "<leader>cf", "<Cmd>lua require('conform').format()<Cr>", { desc = "Format file" })
+map(
+	{ "n", "v" },
+	"<leader>cf",
+	"<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
+	{ desc = "Format file" }
+)
 map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra spaces" })
 
 -- Diagnostics/Debug -----------------------------
@@ -502,7 +508,7 @@ require("blink.cmp").setup({
 		preset = "none",
 		["<C-Space>"] = { "show", "hide" },
 		["<D-l>"] = { "select_and_accept" },
-    ["Enter"] = { "select_accept_and_enter", "fallback" },
+		["Enter"] = { "select_accept_and_enter", "fallback" },
 		["<D-j>"] = { "select_next", "fallback" },
 		["<D-k>"] = { "select_prev", "fallback" },
 		["<C-e>"] = { "cancel", "fallback" },
@@ -661,14 +667,21 @@ vim.cmd("colorscheme gruvbox")
 
 -- Conform ----------------------------------
 require("conform").setup({
+	default_format_ops = {
+		lsp_format = "fallback",
+	},
 	formatters_by_ft = {
 		bash = { "shfmt" },
 		lua = { "stylua" },
 		nix = { "alejandra" },
+		python = { "ruff", lsp_format = "fallback" },
 		r = { "air" },
 		markdown = { "mdformat" },
-		quarto = { "air", "prettier" },
 		["*"] = { "trim_whitespace" },
+	},
+	format_on_save = {
+		timeout_ms = 500,
+		lsp_format = "fallback",
 	},
 })
 
@@ -777,10 +790,23 @@ lspconfig.nixd.setup({
 lspconfig.pyright.setup({ capabilities = capabilities })
 
 -- R
-
--- lspconfig.air.setup({})
+-- https://posit-dev.github.io/air/editor-neovim.html
+require("lspconfig").air.setup({
+	on_attach = function(_, bufnr)
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = bufnr,
+			callback = function()
+				vim.lsp.buf.format()
+			end,
+		})
+	end,
+})
 
 lspconfig.r_language_server.setup({
+	on_attach = function(client, _)
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
+	end,
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
 	filetypes = { "r" },
 	capabilities = capabilities,
@@ -853,13 +879,15 @@ local function get_lsp_servers()
 
 	local server_icons = {
 		["GitHub Copilot"] = "",
+		["air"] = "",
+		["bashls"] = "",
 		["lua_ls"] = "",
 		["nixd"] = "",
 		["otter-ls"] = "",
 		["pyright"] = "",
 		["r_language_server"] = "",
 		["render-markdown"] = "",
-		["bashls"] = "",
+		["ruff_lsp"] = "",
 		["yamlls"] = "",
 	}
 
