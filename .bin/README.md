@@ -10,8 +10,10 @@ This repository contains a collection of scripts and tools that I have created t
 ├── am
 ├── am-art.applescript
 ├── battery_status.sh
+├── change-git-remote.sh
 ├── chat_interface.py
 ├── create-color-wallpaper.sh
+├── extracty
 ├── fetch-student-merge
 ├── fetch-student-remote
 ├── flake.lock
@@ -20,22 +22,23 @@ This repository contains a collection of scripts and tools that I have created t
 ├── git-all-acp
 ├── google-drive-files.sh
 ├── imagey
-├── macchange
-├── macfind
+├── import-env-var-pass.sh
 ├── myllama
-├── network_info
+├── openroute.sh
 ├── pass-export.sh
 ├── pass-keys.sh
+├── personal-contacts-fetcher.py
+├── personal-contacts-setup.sh
 ├── pptx2md.py
 ├── preview_watch
 ├── push-pull-request
 ├── render_watch
-├── text2speech.sh
-├── to_nvim.sh
+├── speechy
 ├── transcribe
+├── vdirsyncer-sync.sh
 ├── weather
 ├── weather.sh
 └── wifi_status.zsh
 
-3 directories, 30 files
+3 directories, 33 files
 ```
