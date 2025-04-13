@@ -683,14 +683,15 @@ require("conform").setup({
 		timeout_ms = 500,
 		lsp_format = "fallback",
 	},
+	notify_on_error = false,
 })
 
-require("conform").formatters.mdformat = {
-	options = {
-		ft_parsers = { markdown = "markdown" },
-		ext_parsers = { qmd = "markdown" },
-	},
-}
+-- require("conform").formatters.mdformat = {
+-- 	options = {
+-- 		ft_parsers = { markdown = "markdown" },
+-- 		ext_parsers = { qmd = "markdown" },
+-- 	},
+-- }
 
 -- Flash ----------------------------------
 require("flash").setup({})
