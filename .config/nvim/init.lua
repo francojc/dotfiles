@@ -22,10 +22,12 @@ require("paq")({
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
+	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lilydjwg/colorizer", -- Colorizer
+	"metalelf0/base16-black-metal-scheme", -- Colorscheme: Base16 Black Metal
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
@@ -40,7 +42,6 @@ require("paq")({
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
-	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 })
 
 --| Options ------------------------------------------------------
@@ -646,6 +647,9 @@ require("codecompanion").setup({
 	},
 })
 -- Colorscheme ----------------------------------
+
+-- Black Metal
+
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
@@ -654,6 +658,7 @@ require("gruvbox").setup({
 })
 -- Vague
 require("vague").setup({})
+
 -- Set colorscheme
 vim.cmd("colorscheme gruvbox")
 

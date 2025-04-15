@@ -3,8 +3,8 @@
 # Description: This script leverages the Perplexica API to query and return results to the command line.
 # Usage: perp.sh <prompt>
 # Example: perp.sh "What is the latest news on AI?"
-#          > "AI is making significant strides in various fields, including healthcare, finance, and transportation. Recent advancements include..."
-#          > Sources: [1] [AI News Today](https://ainewstoday.com), [2] [TechCrunch](https://techcrunch.com), [3] [MIT Technology Review](https://technologyreview.com)
+#          "AI is making significant strides in various fields, including healthcare, finance, and transportation. Recent advancements include..."
+#          Sources: [1] [AI News Today](https://ainewstoday.com), [2] [TechCrunch](https://techcrunch.com), [3] [MIT Technology Review](https://technologyreview.com)
 # Dependencies: curl, jq
 
 # --- Configuration ---
@@ -44,7 +44,7 @@ usage() {
   echo "       echo \"<prompt>\" | $(basename "$0") [--mode <focusMode>]"
   echo
   echo "Available focus modes: ${AVAILABLE_FOCUS_MODES[*]}"
-  echo "Example: $(basename "$0") --mode academicSearch \"What is the latest in AI research?\""
+  echo "Example: $(basename "$0") --mode academic \"What is the latest in AI research?\""
   exit 1
 }
 
@@ -126,7 +126,8 @@ JSON_PAYLOAD=$(cat <<EOF
   },
   "focusMode": "$API_FOCUS_MODE",
   "query": $ESCAPED_PROMPT,
-  "stream": false
+  "stream": false,
+  "optimizationMode": "balanced"
 }
 EOF
 )
