@@ -268,7 +268,7 @@ map(
 	{ "n", "v" },
 	"<leader>cf",
 	"<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
-	{ desc = "Format file" }
+	{ desc = "Code format" }
 )
 map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra spaces" })
 
@@ -318,7 +318,7 @@ map("n", "<leader>m2", "I## ", { desc = "Heading 2" })
 map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
 map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
 -- Links
-map("v", "<leader>ml", 'c[<C-r>"](<Esc>i)', { desc = "Add link" })
+map("v", "<leader>ml", 'c[<C-r>"]()<Left>', { desc = "Add link" })
 -- Paste image
 map(
 	"n",
