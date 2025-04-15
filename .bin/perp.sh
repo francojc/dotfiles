@@ -55,20 +55,6 @@ json_escape() {
 
 # --- Main Script ---
 
-# Spinner function
-spinner() {
-  local sp='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-  local i=0
-  tput civis 2>/dev/null # Hide cursor
-  while kill -0 "$1" 2>/dev/null; do
-    printf "\r%s" "$(echo -n "${sp:i%${#sp}}")"
-    i=$(( (i+1) % ${#sp} ))
-    sleep 0.1
-  done
-  printf "\r\033[K" # Clear line
-  tput cnorm 2>/dev/null # Show cursor
-}
-
 # Parse arguments for --mode/-m and prompt
 FOCUS_MODE="web"
 PROMPT=""
@@ -145,23 +131,13 @@ JSON_PAYLOAD=$(cat <<EOF
 EOF
 )
 
-# Make the API call using curl in the background and show a spinner
-TMP_API_RESPONSE=$(mktemp)
-(
-  curl -s -S -X POST \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d "$JSON_PAYLOAD" \
-    "$PERPLEXICA_API_URL"
-) > "$TMP_API_RESPONSE" &
-CURL_PID=$!
-
-spinner "$CURL_PID"
-wait "$CURL_PID"
+# Make the API call using curl and capture the response
+API_RESPONSE=$(curl -s -S -X POST \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d "$JSON_PAYLOAD" \
+  "$PERPLEXICA_API_URL")
 CURL_EXIT_CODE=$?
-
-API_RESPONSE=$(cat "$TMP_API_RESPONSE")
-rm -f "$TMP_API_RESPONSE"
 
 # Check if curl command was successful
 if [ $CURL_EXIT_CODE -ne 0 ]; then
