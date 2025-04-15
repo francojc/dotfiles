@@ -657,14 +657,6 @@ require("vague").setup({})
 -- Set colorscheme
 vim.cmd("colorscheme gruvbox")
 
--- Colorizer ---------------------------------------------------------------
--- Consider: norcalli/nvim-colorizer.lua
--- require("colorizer").setup({
--- 	user_default_options = {
--- 		names = false,
--- 	},
--- })
-
 -- Conform ----------------------------------
 require("conform").setup({
 	default_format_ops = {
@@ -679,19 +671,19 @@ require("conform").setup({
 		markdown = { "mdformat" },
 		["*"] = { "trim_whitespace" },
 	},
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_format = "fallback",
-	},
+	format_on_save = function()
+		-- Do not format markdown/quarto files on save
+		local ft = vim.bo.filetype
+		if ft == "markdown" or ft == "quarto" then
+			return false
+		end
+		return {
+			timeout_ms = 500,
+			lsp_format = "fallback",
+		}
+	end,
 	notify_on_error = false,
 })
-
--- require("conform").formatters.mdformat = {
--- 	options = {
--- 		ft_parsers = { markdown = "markdown" },
--- 		ext_parsers = { qmd = "markdown" },
--- 	},
--- }
 
 -- Flash ----------------------------------
 require("flash").setup({})
