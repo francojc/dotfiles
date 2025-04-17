@@ -18,11 +18,11 @@ read: [~/.conventions.md, README.md]
 
 # Models
 model: gemini-2.5-pro # reasoner
-editor-model: deepseek-chat # editor
+editor-model: sonnet # code editor
 weak-model: mistral-small-3.1 # git commit messages
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
-architect: false
+architect: true
 
 # # Theme: Gruvbox
 # # Main text colors

@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-let
+{pkgs, ...}: let
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
     # Core dependencies
@@ -34,6 +32,7 @@ let
     aerc
     atuin
     bat # Often used by fzf previews, etc. but also standalone
+    chatgpt #
     claude-code # CLI tool
     datasette
     drawio
@@ -90,9 +89,7 @@ let
     yt-dlp # Video downloader
     zoxide # Smarter cd command
   ];
-
-in
-{
+in {
   # Install general packages globally for the user
   home.packages = generalPackages;
 
