@@ -14,7 +14,8 @@ require("paq")({
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
-	"epwalsh/obsidian.nvim", -- Obsidian integration
+	-- "epwalsh/obsidian.nvim", -- Obsidian integration
+	"obsidian-nvim/obsidian.nvim", -- Obsidian integration (fork of epwalsh/obsidian.nvim)
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -955,7 +956,16 @@ require("mini.indentscope").setup({})
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
-	ui = { enable = false },
+	ui = {
+		enable = true,
+		checkboxes = {
+			[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+			["x"] = { char = "", hl_group = "ObsidianDone" },
+			[">"] = { char = "", hl_group = "ObsidianRightArrow" },
+			["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+			["!"] = { char = "", hl_group = "ObsidianImportant" },
+		},
+	},
 	workspaces = {
 		{
 			name = "Notes",
@@ -982,6 +992,7 @@ require("obsidian").setup({
 	},
 	completion = {
 		nvim_cmp = false,
+		blink = true,
 	},
 })
 
