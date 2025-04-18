@@ -1028,7 +1028,8 @@ require("render-markdown").setup({
 		left_pad = 1,
 		position = "inline",
 		right_pad = 3,
-		width = "full",
+		width = "block",
+		min_width = 40,
 	},
 	html = {
 		enabled = true,
