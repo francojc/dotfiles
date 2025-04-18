@@ -332,6 +332,7 @@ map(
 map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "New from template" })
 map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
 map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
+map("n", "<leader>ot", "<Cmd>ObsidianTomorrow<Cr>", { desc = "Tomorrow note" })
 map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
 map("n", "<leader>oi", "<Cmd>ObsidianPasteImg<Cr>", { desc = "Paste image" })
 map("n", "<leader>ol", "<Cmd>ObsidianLinkNew<Cr>", { desc = "New link" })
@@ -1016,15 +1017,15 @@ require("render-markdown").setup({
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
 	heading = {
-		backgrounds = {},
-		icons = {
-			"# ",
-			"## ",
-			"### ",
-			"#### ",
-			"##### ",
-		},
-		left_pad = 0,
+		-- backgrounds = {},
+		-- icons = {
+		-- 	"# ",
+		-- 	"## ",
+		-- 	"### ",
+		-- 	"#### ",
+		-- 	"##### ",
+		-- },
+		left_pad = 1,
 		position = "inline",
 		right_pad = 3,
 		width = "full",
