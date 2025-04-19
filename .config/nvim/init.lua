@@ -6,6 +6,7 @@ require("bootstrap").ensure_paq()
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
+	"lewis6991/gitsigns.nvim", -- Git signs
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
@@ -671,7 +672,7 @@ require("one_monokai").setup({
 require("vague").setup({})
 
 -- Set colorscheme
-vim.cmd("colorscheme one_monokai")
+vim.cmd("colorscheme gruvbox")
 
 -- Conform ----------------------------------
 require("conform").setup({
@@ -716,6 +717,9 @@ require("fzf-lua").setup({
 		include_current_session = true,
 	},
 })
+
+-- Gitsigns -------------------------------
+require("gitsigns").setup()
 
 -- Image ----------------------------------
 require("image").setup({

@@ -22,7 +22,8 @@ modify_font cell_height 1px
 # Text Rendering -----------------------------------------
 ## Drawing and Composition
 box_drawing_scale 0.001, 0.85, 1, 1.5
-text_composition_strategy 1.0 15
+text_composition_strategy 1.0 0
+text_fg_override_threshold 3
 
 # Performance Tuning -------------------------------------
 input_delay 2
@@ -42,8 +43,9 @@ cursor_blink_interval -1
 cursor_trail 6
 
 ## Color and Border Settings
-# active_border_color #9D221F
-inactive_text_alpha .55
+window_border_width 1pt
+active_border_color #a98051
+inactive_text_alpha .75
 
 # User Experience ----------------------------------------
 ## Interaction Preferences
@@ -153,6 +155,6 @@ map cmd+, edit_config_file
 map ctrl+cmd+, load_config_file
 
 # BEGIN_KITTY_THEME
-# Twilight
+# N0tch2k
 include current-theme.conf
 # END_KITTY_THEME
