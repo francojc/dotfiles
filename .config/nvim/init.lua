@@ -9,13 +9,12 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
+	"cpea2506/one_monokai.nvim", -- Colorscheme: One Monokai
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
-	-- "epwalsh/obsidian.nvim", -- Obsidian integration
-	"obsidian-nvim/obsidian.nvim", -- Obsidian integration (fork of epwalsh/obsidian.nvim)
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -28,16 +27,18 @@ require("paq")({
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lilydjwg/colorizer", -- Colorizer
-	"metalelf0/base16-black-metal-scheme", -- Colorscheme: Base16 Black Metal
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
+	"obsidian-nvim/obsidian.nvim", -- Obsidian integration
 	"olimorris/codecompanion.nvim", -- Code companion AI integration
+	"olimorris/onedarkpro.nvim", -- Colorscheme: OneDarkPro
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
+	"rktjmp/lush.nvim", -- Colorscheme: Lush
 	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
@@ -85,6 +86,8 @@ opt.autoindent = true
 opt.breakindent = true
 opt.linebreak = true
 opt.showbreak = "↪ "
+-- Display chars
+opt.list = false
 -- Search
 opt.ignorecase = true
 opt.smartcase = true
@@ -272,7 +275,8 @@ map(
 	"<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
 	{ desc = "Code format" }
 )
-map({ "n", "v" }, "<leader>cn", "<Cmd>s/\\s\\+/ /g<Cr>", { desc = "Remove extra spaces" })
+map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (current line)" })
+map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
 
 -- Diagnostics/Debug -----------------------------
 --
@@ -300,10 +304,10 @@ map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" }
 -- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
-map("v", "<leader>mu", ":s/^/- /<CR>gv", { desc = "Unordered list item" })
+map("v", "<leader>mu", ":s/^/- /g<CR>gv", { desc = "Unordered list item" })
 -- Ordered list item
 map("n", "<leader>mo", "I1. ", { desc = "Ordered list item" })
-map("v", "<leader>mo", ":s/^/1. /<CR>gv", { desc = "Ordered list item" })
+map("v", "<leader>mo", ":s/^/1. /g<CR>gv", { desc = "Ordered list item" })
 --- Task list item
 map("n", "<leader>mt", "I- [ ] ", { desc = "Task list item" })
 map("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task list item" })
@@ -648,21 +652,26 @@ require("codecompanion").setup({
 		},
 	},
 })
+
 -- Colorscheme ----------------------------------
-
--- Black Metal
-
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
 	contrast = "hard",
 	overrides = {},
 })
+
+-- One Monokai
+require("one_monokai").setup({
+	transparent = true,
+	italics = true,
+})
+
 -- Vague
 require("vague").setup({})
 
 -- Set colorscheme
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme one_monokai")
 
 -- Conform ----------------------------------
 require("conform").setup({
@@ -959,13 +968,6 @@ require("mini.indentscope").setup({})
 require("obsidian").setup({
 	ui = {
 		enable = true,
-		checkboxes = {
-			[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-			["x"] = { char = "", hl_group = "ObsidianDone" },
-			[">"] = { char = "", hl_group = "ObsidianRightArrow" },
-			["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-			["!"] = { char = "", hl_group = "ObsidianImportant" },
-		},
 	},
 	workspaces = {
 		{
@@ -1008,28 +1010,32 @@ require("render-markdown").setup({
 		left_pad = 0,
 		right_pad = 1,
 	},
-	code = {
-		style = "language",
-		language_name = false,
+	checkbox = {
+		checked = { scope_highlight = "@markup.strikethrough" },
+		custom = {
+			issue = { raw = "[~]", rendered = "", highlight = "DiagnosticWarn", scope_highlight = nil },
+			forward = { raw = "[>]", rendered = "", highlight = "RenderMarkdownTodo", scope_highlight = nil },
+			important = { raw = "[!]", rendered = "", highlight = "RenderMarkdownUnchecked", scope_highlight = nil },
+		},
 	},
+	code = { language_icon = false },
 	completions = { lsp = { enabled = true } },
 	conceal = { level = 2 },
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
 	heading = {
-		-- backgrounds = {},
-		-- icons = {
-		-- 	"# ",
-		-- 	"## ",
-		-- 	"### ",
-		-- 	"#### ",
-		-- 	"##### ",
-		-- },
-		left_pad = 1,
+		backgrounds = {},
+		left_pad = 0,
 		position = "inline",
 		right_pad = 3,
-		width = "block",
-		min_width = 40,
+		icons = {
+			"# ",
+			"## ",
+			"### ",
+			"#### ",
+			"##### ",
+			"###### ",
+		},
 	},
 	html = {
 		enabled = true,
