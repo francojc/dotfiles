@@ -6,28 +6,44 @@
 
 set -euo pipefail
 
-# Check for required commands
-for cmd in vdirsyncer reminders jq khal ikhal; do
-  if ! command -v "$cmd" &> /dev/null; then
-    echo "Error: Required command '$cmd' not found." >&2
+# Define constants
+readonly REMINDERS_CALENDAR_NAME="Reminders"
+readonly REMINDERS_DIR="$HOME/.calendars/local/reminders"
+readonly TARGET_ICS_FILE="$REMINDERS_DIR/reminders.ics"
+readonly REQUIRED_COMMANDS=("vdirsyncer" "reminders" "jq" "khal" "ikhal")
+
+# Common error handling function
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+# Function to check for required commands
+check_dependencies() {
+  local missing_cmd=0
+  for cmd in "${REQUIRED_COMMANDS[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+      echo "Error: Required command '$cmd' not found." >&2
+      missing_cmd=1
+    fi
+  done
+  if [ "$missing_cmd" -ne 0 ]; then
     exit 1
   fi
-done
+}
 
-# Step 1: Sync calendars with vdirsyncer
-echo "Syncing calendars with vdirsyncer..."
-echo "DEBUG: Starting calendar sync..."
-if ! vdirsyncer sync; then
-  echo "Error: vdirsyncer sync failed." >&2
-  exit 1
-fi
-echo "Sync complete."
+# Function to sync calendars
+sync_calendars() {
+  echo "Syncing calendars with vdirsyncer..."
+  if ! vdirsyncer -v ERROR sync; then
+    die "vdirsyncer sync failed."
+  fi
+  echo "Sync complete."
+}
 
-# Step 2 & 3: Export reminders, convert to ICS, and import into khal
-echo "Exporting reminders and importing into khal..."
-
-# Define the jq filter to convert Reminders JSON to ICS VEVENT format with correct block separation
-jq_filter='
+# Function to get the jq filter for converting reminders to ICS format
+get_jq_filter() {
+  cat <<'EOF'
 [
   # Header block as a single string
   (
@@ -36,86 +52,118 @@ jq_filter='
       "VERSION:2.0",
       "PRODID:-//reminders-cli_to_khal//EN",
       "CALSCALE:GREGORIAN"
+      # No VTIMEZONE needed if using UTC "Z" format
     ] | join("\r\n")
   )
 ] +
 # Array of VEVENT blocks, each as a single string
 (
-  map(select(.startDate != null and .isCompleted == false)) # Filter reminders
+  # Filter reminders: must not be completed and have either startDate or dueDate
+  map(select(.isCompleted == false and (.startDate != null or .dueDate != null)))
   | map( # Transform each reminder into a VEVENT string block
-      [
-        "BEGIN:VEVENT",
-        "UID:" + .externalId + "@reminders.local", # Using a dummy domain for UID
-        # Prepend checkbox emoji to the summary
-        "SUMMARY:☑️ " + .title,
-        # Use DTSTART for the event start time
-        "DTSTART;VALUE=DATE-TIME:" + (.startDate | gsub("[-:]"; "")), # Format date-time
-        # Add DTEND, making it same as DTSTART for a zero-duration event marker
-        "DTEND;VALUE=DATE-TIME:" + (.startDate | gsub("[-:]"; "")),
-        "DTSTAMP:" + (now | strftime("%Y%m%dT%H%M%SZ")) # Current timestamp
-      ] +
-      # Add DESCRIPTION field only if .notes is not null and not empty, escaping newlines
-      (if .notes and (.notes | length > 0) then ["DESCRIPTION:" + (.notes | gsub("\n"; "\\\\n"))] else [] end) +
-      ["END:VEVENT"]
-      | join("\r\n") # Join lines within this VEVENT block
+      # Determine which date field to use as the primary one
+      . as $reminder |
+      (
+          if $reminder.dueDate and ($reminder.dueDate | contains("T")) then $reminder.dueDate
+          elif $reminder.startDate then $reminder.startDate
+          elif $reminder.dueDate then $reminder.dueDate
+          else null
+          end
+      ) as $primary_date_field |
+
+      if $primary_date_field == null then empty
+      else
+        [
+          "BEGIN:VEVENT",
+          "UID:" + $reminder.externalId + "@reminders.local",
+          "SUMMARY:☑️ " + $reminder.title,
+          "DTSTAMP:" + (now | strftime("%Y%m%dT%H%M%SZ"))
+        ] +
+        # --- Conditional DTSTART/DTEND: Treat T00:00:00Z as ALL-DAY ---
+        (
+          # Check if it contains T AND the time part is NOT 00:00:00Z
+          if ($primary_date_field | contains("T") and test("T00:00:00Z$") | not) then
+            # --- Specific Time Event (use UTC format) ---
+            [
+              # Format as YYYYMMDDTHHMMSSZ by removing separators
+              "DTSTART:" + ($primary_date_field | gsub("[-:]"; "")),
+              "DTEND:" + ($primary_date_field | gsub("[-:]"; ""))
+              # DTEND is same as DTSTART for a zero-duration marker
+            ]
+          else
+            # --- All-Day Event (includes dates without T or with T00:00:00Z) ---
+            [
+              # Extract date part (YYYYMMDD), remove separators/time
+              "DTSTART;VALUE=DATE:" + ($primary_date_field | split("T")[0] | gsub("-"; ""))
+            ]
+          end
+        ) +
+        # --- End Conditional DTSTART/DTEND ---
+        # Add DESCRIPTION field if present
+        (if $reminder.notes and ($reminder.notes | length > 0) then ["DESCRIPTION:" + ($reminder.notes | gsub("\n"; "\\\\n"))] else [] end) +
+        ["END:VEVENT"]
+        | join("\r\n") # Join lines within this VEVENT block
+      end
     )
 ) +
 [
-  # Footer block as a single string
   "END:VCALENDAR"
 ]
-# Join Header, VEVENT blocks, and Footer with double CRLF for separation
+# Join blocks with double CRLF
 | join("\r\n\r\n")
-'
+EOF
+}
 
-# Define the target directory and file for the consolidated ICS data
-reminders_dir="$HOME/.calendars/local/reminders"
-target_ics_file="$reminders_dir/reminders.ics"
+# Function to generate the ICS file
+generate_ics_file() {
+  local filter target_file
+  filter="$1"
+  target_file="$2"
 
-# Ensure the target directory exists
-mkdir -p "$reminders_dir"
+  # Ensure the target directory exists
+  mkdir -p "$(dirname "$target_file")" || die "Failed to create directory $(dirname "$target_file")"
 
-echo "DEBUG: Exporting reminders and constructing ICS data..."
-if ! reminders show-all --format json | jq -r "$jq_filter" > "$target_ics_file"; then
-    echo "Error: Failed during reminders export or jq conversion or file saving." >&2
-    # Optional: Remove potentially incomplete file
-    rm -f "$target_ics_file"
-    exit 1
-fi
+  if ! reminders show-all --format json | jq -r "$filter" > "$target_file"; then
+      # Preserve potentially incomplete file for debugging, but report error
+      die "Failed during reminders export or jq conversion or file saving to $target_file."
+  fi
+}
 
-# DEBUG: Verify file content (optional)
-echo "DEBUG: Generated ICS data saved to $target_ics_file"
-echo "DEBUG: File Content BEGIN >>>"
-head -n 20 "$target_ics_file" # Show beginning of file
-echo "..."
-tail -n 5 "$target_ics_file" # Show end of file
-echo "<<< DEBUG: File Content END"
+# Function to import the ICS file
+import_ics_file() {
+  local target_file calendar_name
+  target_file="$1"
+  calendar_name="$2"
 
-if [ -z "$(cat "$target_ics_file")" ]; then
-    echo "Warning: No reminder data generated for import (check filters or source)." >&2
-    # Decide if this is an error or just informational. Let's proceed for now.
-else
-    # Import the specific ICS file
-    echo "DEBUG: Importing ICS file ($target_ics_file) with khal..."
-    if khal import -a Reminders --batch "$target_ics_file"; then
-        echo "Apple Reminders import command completed."
+  if [ ! -s "$target_file" ]; then
+      # Use -s to check if file exists and has size > 0
+      echo "Warning: No reminder data generated or file is empty ($target_file). Skipping import." >&2
+      return 0 # Not a fatal error, just nothing to import
+  fi
 
-        # Optional: You might still check if khal now sees the events
-        # event_count=$(khal list -a Reminders --format "{uid}" | wc -l)
-        # echo "DEBUG: khal list reports $event_count items in Reminders calendar."
+  if ! khal -v ERROR import -a "$calendar_name" --batch "$target_file"; then
+      # Keep the file for debugging if import fails
+      die "Failed during khal import of $target_file. The generated ICS file is preserved for debugging."
+  fi
+  echo "Apple Reminders import command completed."
+}
 
-        # We keep the single file; khal should now read it.
-        # No need to delete the target_ics_file unless you want to clean up *after* ikhal runs.
-    else
-        echo "Error: Failed during khal import of $target_ics_file." >&2
-        # Keep the file for debugging in case of error
-        echo "The generated ICS file is preserved at: $target_ics_file for debugging"
-        exit 1
-    fi
-fi
+# Main execution block
+main() {
+  check_dependencies
+  sync_calendars
 
-# Step 4: Display calendar
-echo "Opening interactive khal (ikhal)..."
-echo "DEBUG: Proceeding to launch ikhal..."
-ikhal
+  echo "Processing Apple Reminders for khal..."
+  local jq_filter
+  jq_filter=$(get_jq_filter) # Get the filter string
+
+  generate_ics_file "$jq_filter" "$TARGET_ICS_FILE"
+  import_ics_file "$TARGET_ICS_FILE" "$REMINDERS_CALENDAR_NAME"
+
+  echo "Opening interactive khal (ikhal)..."
+  ikhal
+}
+
+# --- Script Entry Point ---
+main "$@"
 
