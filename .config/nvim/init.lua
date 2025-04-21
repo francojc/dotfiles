@@ -672,7 +672,7 @@ require("one_monokai").setup({
 require("vague").setup({})
 
 -- Set colorscheme
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme vague")
 
 -- Conform ----------------------------------
 require("conform").setup({
