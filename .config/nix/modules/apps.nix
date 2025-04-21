@@ -43,6 +43,7 @@
       "borders" # jankyborders
       "huggingface-cli"
       "npm"
+      "keith/formulae/reminders-cli"
       "ollama"
       "python@3.11"
       "rename"
