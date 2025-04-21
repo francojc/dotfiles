@@ -1012,14 +1012,15 @@ require("render-markdown").setup({
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
-		right_pad = 1,
+		right_pad = 2,
 	},
 	checkbox = {
-		checked = { scope_highlight = "@markup.strikethrough" },
+		unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
+		checked = { icon = " ", highlight = "RenderMarkdownChecked", scope_highlight = "@markup.strikethrough" },
 		custom = {
-			issue = { raw = "[~]", rendered = "", highlight = "DiagnosticWarn", scope_highlight = nil },
-			forward = { raw = "[>]", rendered = "", highlight = "RenderMarkdownTodo", scope_highlight = nil },
-			important = { raw = "[!]", rendered = "", highlight = "RenderMarkdownUnchecked", scope_highlight = nil },
+			todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+			forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
+			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
 		},
 	},
 	code = { language_icon = false },
