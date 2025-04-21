@@ -24,10 +24,11 @@ path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.goo
 type = discover
 color = "#FB4934"
 
-[[reminders]]
-path = ~/.calendars/google/c_5617c8787c23ee97b37cba42673385f72a92ab7a9ead8a4c6ae21ec30e0970d5@group.calendar.google.com
-type = discover
+[[Reminders]]
+path = ~/.calendars/local/reminders/
+type = calendar
 color = "#dfdfdf"
+readonly = false
 
 [default]
 default_calendar = Scheduled

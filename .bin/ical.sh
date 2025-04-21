@@ -26,7 +26,7 @@ echo "Sync complete."
 # Step 2 & 3: Export reminders, convert to ICS, and import into khal
 echo "Exporting reminders and importing into khal..."
 
-# Define the jq filter to convert Reminders JSON to ICS VTODO format with correct block separation
+# Define the jq filter to convert Reminders JSON to ICS VEVENT format with correct block separation
 jq_filter='
 [
   # Header block as a single string
@@ -39,55 +39,77 @@ jq_filter='
     ] | join("\r\n")
   )
 ] +
-# Array of VTODO blocks, each as a single string
+# Array of VEVENT blocks, each as a single string
 (
   map(select(.startDate != null and .isCompleted == false)) # Filter reminders
-  | map( # Transform each reminder into a VTODO string block
+  | map( # Transform each reminder into a VEVENT string block
       [
-        "BEGIN:VTODO",
+        "BEGIN:VEVENT",
         "UID:" + .externalId + "@reminders.local", # Using a dummy domain for UID
-        "SUMMARY:" + .title,
+        # Prepend checkbox emoji to the summary
+        "SUMMARY:☑️ " + .title,
+        # Use DTSTART for the event start time
         "DTSTART;VALUE=DATE-TIME:" + (.startDate | gsub("[-:]"; "")), # Format date-time
-        "DTSTAMP:" + (now | strftime("%Y%m%dT%H%M%SZ")), # Current timestamp
-        "STATUS:NEEDS-ACTION"
+        # Add DTEND, making it same as DTSTART for a zero-duration event marker
+        "DTEND;VALUE=DATE-TIME:" + (.startDate | gsub("[-:]"; "")),
+        "DTSTAMP:" + (now | strftime("%Y%m%dT%H%M%SZ")) # Current timestamp
       ] +
       # Add DESCRIPTION field only if .notes is not null and not empty, escaping newlines
       (if .notes and (.notes | length > 0) then ["DESCRIPTION:" + (.notes | gsub("\n"; "\\\\n"))] else [] end) +
-      ["END:VTODO"]
-      | join("\r\n") # Join lines within this VTODO block
+      ["END:VEVENT"]
+      | join("\r\n") # Join lines within this VEVENT block
     )
 ) +
 [
   # Footer block as a single string
   "END:VCALENDAR"
 ]
-# Join Header, VTODO blocks, and Footer with double CRLF for separation
+# Join Header, VEVENT blocks, and Footer with double CRLF for separation
 | join("\r\n\r\n")
 '
 
-echo "DEBUG: Exporting reminders and constructing ICS data..."
-ics_data=$(reminders show-all --format json | jq -r "$jq_filter")
+# Define the target directory and file for the consolidated ICS data
+reminders_dir="$HOME/.calendars/local/reminders"
+target_ics_file="$reminders_dir/reminders.ics"
 
-if [ $? -ne 0 ]; then
-    echo "Error: Failed during reminders export or jq conversion." >&2
+# Ensure the target directory exists
+mkdir -p "$reminders_dir"
+
+echo "DEBUG: Exporting reminders and constructing ICS data..."
+if ! reminders show-all --format json | jq -r "$jq_filter" > "$target_ics_file"; then
+    echo "Error: Failed during reminders export or jq conversion or file saving." >&2
+    # Optional: Remove potentially incomplete file
+    rm -f "$target_ics_file"
     exit 1
 fi
 
-# DEBUG: Print the generated ICS data for inspection
-echo "DEBUG: Generated ICS Data BEGIN >>>"
-echo "$ics_data"
-echo "<<< DEBUG: Generated ICS Data END"
+# DEBUG: Verify file content (optional)
+echo "DEBUG: Generated ICS data saved to $target_ics_file"
+echo "DEBUG: File Content BEGIN >>>"
+head -n 20 "$target_ics_file" # Show beginning of file
+echo "..."
+tail -n 5 "$target_ics_file" # Show end of file
+echo "<<< DEBUG: File Content END"
 
-if [ -z "$ics_data" ]; then
+if [ -z "$(cat "$target_ics_file")" ]; then
     echo "Warning: No reminder data generated for import (check filters or source)." >&2
     # Decide if this is an error or just informational. Let's proceed for now.
 else
-    echo "DEBUG: Piping generated ICS data to khal import..."
-    if echo "$ics_data" | khal import -a Reminders --batch -; then
-        echo "Reminders imported successfully."
+    # Import the specific ICS file
+    echo "DEBUG: Importing ICS file ($target_ics_file) with khal..."
+    if khal import -a Reminders --batch "$target_ics_file"; then
+        echo "Apple Reminders import command completed."
+
+        # Optional: You might still check if khal now sees the events
+        # event_count=$(khal list -a Reminders --format "{uid}" | wc -l)
+        # echo "DEBUG: khal list reports $event_count items in Reminders calendar."
+
+        # We keep the single file; khal should now read it.
+        # No need to delete the target_ics_file unless you want to clean up *after* ikhal runs.
     else
-        echo "Error: Failed during khal import." >&2
-        # Ensure script exits on import failure
+        echo "Error: Failed during khal import of $target_ics_file." >&2
+        # Keep the file for debugging in case of error
+        echo "The generated ICS file is preserved at: $target_ics_file for debugging"
         exit 1
     fi
 fi
@@ -96,6 +118,4 @@ fi
 echo "Opening interactive khal (ikhal)..."
 echo "DEBUG: Proceeding to launch ikhal..."
 ikhal
-
-
 
