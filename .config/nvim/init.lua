@@ -883,41 +883,6 @@ else
 end
 
 -- Lualine ----------------------------------------------------------------
--- Lualine helper function to get attached LSP servers
-local function get_lsp_servers()
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	if #clients == 0 then
-		return ""
-	end
-
-	local server_icons = {
-		["GitHub Copilot"] = "",
-		["air"] = "",
-		["bashls"] = "",
-		["lua_ls"] = "",
-		["nixd"] = "",
-		["otter-ls"] = "",
-		["pyright"] = "",
-		["r_language_server"] = "",
-		["render-markdown"] = "",
-		["ruff_lsp"] = "",
-		["yamlls"] = "",
-	}
-
-	local client_names = {}
-	for _, client in ipairs(clients) do
-		local name = client.name
-		-- Remove buffer numbers, e.g. `[3]` from `name`
-		name = name:gsub("%[.*%]", "")
-		if server_icons[name] then
-			table.insert(client_names, server_icons[name])
-		else
-			table.insert(client_names, name)
-		end
-	end
-	return table.concat(client_names, "  ǀ ")
-end
-
 -- Lualine setup
 require("lualine").setup({
 	options = {
@@ -943,7 +908,7 @@ require("lualine").setup({
 		lualine_c = {
 			{ "filename", path = 1 },
 		},
-		lualine_x = { "lsp_progress", get_lsp_servers },
+		lualine_x = {},
 		lualine_y = {
 			{ " filetype", icon_only = true },
 		},
