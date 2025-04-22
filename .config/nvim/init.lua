@@ -499,10 +499,17 @@ require("blink.cmp").setup({
 		implementation = "lua",
 	},
 	completion = {
+		list = {
+			selection = {
+				preselect = false,
+				auto_insert = false,
+			},
+		},
 		menu = {
-			auto_show = function()
-				return false
-			end, -- We'll handle auto-show with a timer below
+			auto_show = false,
+			-- auto_show = function()
+			-- 	return false
+			-- end, -- We'll handle auto-show with a timer below
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -513,23 +520,28 @@ require("blink.cmp").setup({
 		documentation = { auto_show = true },
 	},
 	keymap = {
-		preset = "none",
-		["<C-Space>"] = { "show", "hide" },
-		["<D-l>"] = { "select_and_accept" },
-		["Enter"] = { "select_accept_and_enter", "fallback" },
-		["<D-j>"] = { "select_next", "fallback" },
-		["<D-k>"] = { "select_prev", "fallback" },
+		-- preset = "enter", -- with mods
+		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 		["<C-e>"] = { "cancel", "fallback" },
-		["<D-d>"] = { "scroll_documentation_down" },
-		["<D-u>"] = { "scroll_documentation_up" },
-		["<D-s>"] = { "show_signature" },
+		["<CR>"] = { "select_and_accept", "fallback" },
+
 		["<Tab>"] = { "snippet_forward", "fallback" },
 		["<S-Tab>"] = { "snippet_backward", "fallback" },
+
+		["<Up>"] = { "select_prev", "fallback" },
+		["<Down>"] = { "select_next", "fallback" },
+		["<C-p>"] = { "select_prev", "fallback_to_mappings" },
+		["<C-n>"] = { "select_next", "fallback_to_mappings" },
+
+		["<C-b>"] = { "scroll_documentation_up", "fallback" },
+		["<C-f>"] = { "scroll_documentation_down", "fallback" },
+
+		["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
 	},
 	signature = {
 		enabled = true,
 		window = {
-			show_documentation = false,
+			show_documentation = true,
 		},
 	},
 	sources = {
@@ -564,48 +576,48 @@ require("blink.cmp").setup({
 })
 
 -- Delayed Blink completion menu (1500ms, only after 2+ chars)
-do
-	local blink = require("blink.cmp")
-	local blink_timer = nil
-	local blink_delay = 1500 -- milliseconds
-
-	local function should_show_menu()
-		local col = vim.fn.col(".") - 1
-		if col < 2 then
-			return false
-		end
-		local line = vim.fn.getline(".")
-		local start = col
-		while start > 0 and line:sub(start, start):match("[%w_]") do
-			start = start - 1
-		end
-		local word = line:sub(start + 1, col)
-		return #word >= 2
-	end
-
-	vim.api.nvim_create_autocmd("InsertCharPre", {
-		callback = function()
-			if blink_timer then
-				blink_timer:stop()
-				blink_timer:close()
-				blink_timer = nil
-			end
-			blink_timer = vim.loop.new_timer()
-			blink_timer:start(
-				blink_delay,
-				0,
-				vim.schedule_wrap(function()
-					if should_show_menu() then
-						blink.show()
-					end
-					blink_timer:stop()
-					blink_timer:close()
-					blink_timer = nil
-				end)
-			)
-		end,
-	})
-end
+-- do
+-- 	local blink = require("blink.cmp")
+-- 	local blink_timer = nil
+-- 	local blink_delay = 1500 -- milliseconds
+--
+-- 	local function should_show_menu()
+-- 		local col = vim.fn.col(".") - 1
+-- 		if col < 2 then
+-- 			return false
+-- 		end
+-- 		local line = vim.fn.getline(".")
+-- 		local start = col
+-- 		while start > 0 and line:sub(start, start):match("[%w_]") do
+-- 			start = start - 1
+-- 		end
+-- 		local word = line:sub(start + 1, col)
+-- 		return #word >= 2
+-- 	end
+--
+-- 	vim.api.nvim_create_autocmd("InsertCharPre", {
+-- 		callback = function()
+-- 			if blink_timer then
+-- 				blink_timer:stop()
+-- 				blink_timer:close()
+-- 				blink_timer = nil
+-- 			end
+-- 			blink_timer = vim.loop.new_timer()
+-- 			blink_timer:start(
+-- 				blink_delay,
+-- 				0,
+-- 				vim.schedule_wrap(function()
+-- 					if should_show_menu() then
+-- 						blink.show()
+-- 					end
+-- 					blink_timer:stop()
+-- 					blink_timer:close()
+-- 					blink_timer = nil
+-- 				end)
+-- 			)
+-- 		end,
+-- 	})
+-- end
 
 -- Bufferline ----------------------------------
 require("bufferline").setup({})
@@ -988,7 +1000,11 @@ require("render-markdown").setup({
 			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
 		},
 	},
-	code = { language_icon = false },
+	code = {
+		language_icon = false,
+		width = "block",
+		min_width = 80,
+	},
 	completions = { lsp = { enabled = true } },
 	conceal = { level = 2 },
 	dash = { enabled = false },
