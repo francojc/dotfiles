@@ -21,7 +21,7 @@ read: [~/.conventions.md, README.md]
 
 # Models
 model: gemini-2.5-pro # reasoner
-editor-model: sonnet # code editor
+editor-model: gemini-2.5-flash # code editor
 weak-model: gemma # git commit messages
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
@@ -80,7 +80,7 @@ multiline: false  # Often useful with vim mode
 restore-chat-history: false  # Helps maintain context between sessions
 
 # Disable automatic linting/testing as requested
-auto-lint: true
+auto-lint: false
 auto-test: false
 
 # Cache Settings
