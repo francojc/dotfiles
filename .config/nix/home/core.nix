@@ -29,6 +29,7 @@
 
   # Define general home packages (excluding Neovim and its associated packages)
   generalPackages = with pkgs; [
+    _7zz
     aerc
     atuin
     bat # Often used by fzf previews, etc. but also standalone
