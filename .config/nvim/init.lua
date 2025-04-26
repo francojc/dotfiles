@@ -216,10 +216,10 @@ map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window"
 map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 -- Resize
-map("n", "<leader>wk", "<C-w>-", { desc = "Resize window up" })
-map("n", "<leader>wj", "<C-w>+", { desc = "Resize window down" })
-map("n", "<leader>wh", "<C-w><", { desc = "Resize window left" })
-map("n", "<leader>wl", "<C-w>>", { desc = "Resize window right" })
+map("n", "<leader>wk", "<C-w>5-", { desc = "Resize window up" })
+map("n", "<leader>wj", "<C-w>5+", { desc = "Resize window down" })
+map("n", "<leader>wh", "<C-w>5<", { desc = "Resize window left" })
+map("n", "<leader>wl", "<C-w>5>", { desc = "Resize window right" })
 -- Go to
 -- End of line
 map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
@@ -302,6 +302,7 @@ map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Documen
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
 map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
 map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
+map("n", "<leader>lr", "<Cmd>lua vim.lsp.buf.rename()<Cr>", { desc = "Rename" })
 -- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
@@ -631,10 +632,6 @@ require("codecompanion").setup({
 				schema = {
 					model = {
 						default = "claude-3.7-sonnet",
-						choices = {
-							["o3-mini-2025-01-31"] = { opts = { can_reason = true } },
-							"gpt-4o-2024-08-06",
-						},
 					},
 				},
 			})
