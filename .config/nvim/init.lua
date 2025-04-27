@@ -14,7 +14,10 @@ require("paq")({
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
+	"rktjmp/lush.nvim", -- Lush: colorscheme editor/ support
+	"kvrohit/rasmus.nvim", -- Colorscheme: Rasmus
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
+	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -682,6 +685,12 @@ require("kanagawa").setup({
 	theme = "dragon",
 	background = "dragon",
 })
+
+-- Rasmus
+g.rasmus_italic_functions = 1
+g.rasmus_bold_functions = 1
+
+-- g.rasmus_variant = "monochrome"
 
 -- Vague
 require("vague").setup({})
