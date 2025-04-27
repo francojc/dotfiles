@@ -6,8 +6,11 @@ require("bootstrap").ensure_paq()
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
+	"itspriddle/vim-themes", -- Themes
 	"lewis6991/gitsigns.nvim", -- Git signs
+	"fenetikm/falcon", -- Falcon: colorscheme
 	"Saghen/blink.cmp", -- Blink completion
+	"AlessandroYorba/Alduin", -- Alduin: colorscheme
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
 	"cpea2506/one_monokai.nvim", -- Colorscheme: One Monokai
@@ -664,6 +667,11 @@ require("codecompanion").setup({
 })
 
 -- Colorscheme ----------------------------------
+
+-- Alduin
+g.alduin_Shout_Dragon_Aspect = 1
+g.alduin_Shout_Aura_Whisper = 1
+
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
@@ -681,7 +689,7 @@ require("one_monokai").setup({
 require("vague").setup({})
 
 -- Set colorscheme
-vim.cmd("colorscheme vague")
+vim.cmd("colorscheme new-autumn")
 
 -- Conform ----------------------------------
 require("conform").setup({
