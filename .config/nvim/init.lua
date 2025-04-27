@@ -5,12 +5,10 @@ require("bootstrap").ensure_paq()
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
-	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
-	"itspriddle/vim-themes", -- Themes
-	"lewis6991/gitsigns.nvim", -- Git signs
-	"fenetikm/falcon", -- Falcon: colorscheme
-	"Saghen/blink.cmp", -- Blink completion
 	"AlessandroYorba/Alduin", -- Alduin: colorscheme
+	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
+	"Saghen/blink.cmp", -- Blink completion
+	"rebelot/kanagawa.nvim", -- Colorscheme: Kanagawa
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
 	"cpea2506/one_monokai.nvim", -- Colorscheme: One Monokai
@@ -19,6 +17,7 @@ require("paq")({
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
+	"fenetikm/falcon", -- Falcon: colorscheme
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -26,10 +25,12 @@ require("paq")({
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
+	"itspriddle/vim-themes", -- Colorscheme: Themes
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
+	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
@@ -677,6 +678,12 @@ require("gruvbox").setup({
 	invert_selection = true,
 	contrast = "hard",
 	overrides = {},
+})
+
+-- Kanagawa
+require("kanagawa").setup({
+	theme = "dragon",
+	background = "dragon",
 })
 
 -- One Monokai
