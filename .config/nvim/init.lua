@@ -8,16 +8,13 @@ require("paq")({
 	"AlessandroYorba/Alduin", -- Alduin: colorscheme
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
-	"rebelot/kanagawa.nvim", -- Colorscheme: Kanagawa
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
-	"cpea2506/one_monokai.nvim", -- Colorscheme: One Monokai
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
-	"fenetikm/falcon", -- Falcon: colorscheme
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -40,15 +37,15 @@ require("paq")({
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"obsidian-nvim/obsidian.nvim", -- Obsidian integration
 	"olimorris/codecompanion.nvim", -- Code companion AI integration
-	"olimorris/onedarkpro.nvim", -- Colorscheme: OneDarkPro
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
-	"rktjmp/lush.nvim", -- Colorscheme: Lush
+	"rebelot/kanagawa.nvim", -- Colorscheme: Kanagawa
 	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
+	"rcarriga/nvim-notify", -- Notifications
 })
 
 --| Options ------------------------------------------------------
@@ -684,12 +681,6 @@ require("gruvbox").setup({
 require("kanagawa").setup({
 	theme = "dragon",
 	background = "dragon",
-})
-
--- One Monokai
-require("one_monokai").setup({
-	transparent = true,
-	italics = true,
 })
 
 -- Vague
