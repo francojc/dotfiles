@@ -378,12 +378,28 @@ map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>
 map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
+map("n", "<leader>ti", "<Cmd>lua toggle_image_rendering()<CR>", { desc = "Toggle image rendering" }) -- Use custom toggle function
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
+map("n", "<leader>tr", "<Cmd>LspStart r_language_server<Cr>", { desc = "Start R LSP" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc = "Toggle terminal: vertical" })
 
 ---| Functions ----------------------------------------------------
+
+-- Image Rendering Toggle Functionality
+Image_rendering_enabled = false -- Assume images are disabled by default -- Make global
+function Toggle_image_rendering() -- Make global
+	if Image_rendering_enabled then
+		require("image").disable()
+		vim.notify("Image rendering disabled", vim.log.levels.INFO, { title = "Image" })
+	else
+		require("image").enable()
+		vim.notify("Image rendering enabled", vim.log.levels.INFO, { title = "Image" })
+	end
+	Image_rendering_enabled = not Image_rendering_enabled
+end
+
 -- Spell Language Functionality
 local function get_project_root()
 	local current_file = vim.fn.expand("%:p")
@@ -750,9 +766,11 @@ require("image").setup({
 	processor = "magick_cli",
 	integrations = {
 		markdown = {
-			clear_in_insert_mode = true,
+			-- clear_in_insert_mode = true, -- Disable this to test flicker
+			clear_in_insert_mode = false,
 			filetypes = { "markdown", "quarto" },
-			only_render_image_at_cursor = true,
+			-- only_render_image_at_cursor = true, -- Disable this to test flicker
+			only_render_image_at_cursor = false,
 		},
 	},
 })
@@ -997,7 +1015,6 @@ require("quarto").setup({})
 
 -- Render-Markdown ---------------------------
 require("render-markdown").setup({
-	anti_conceal = { enabled = true },
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
@@ -1018,7 +1035,7 @@ require("render-markdown").setup({
 		min_width = 80,
 	},
 	completions = { lsp = { enabled = true } },
-	conceal = { level = 2 },
+	conceal = { level = 1 }, -- Disable conceal entirely
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
 	heading = {
