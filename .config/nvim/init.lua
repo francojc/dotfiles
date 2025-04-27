@@ -378,9 +378,9 @@ map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>
 map("n", "<C-t>", "<Cmd>ToggleTerm direction=horizontal size=20<Cr>", { desc = "Toggle terminal" })
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
-map("n", "<leader>ti", "<Cmd>lua toggle_image_rendering()<CR>", { desc = "Toggle image rendering" }) -- Use custom toggle function
+map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
-map("n", "<leader>tr", "<Cmd>LspStart r_language_server<Cr>", { desc = "Start R LSP" })
+map("n", "<leader>tr", "<Cmd>Toggle_r_language_server<Cr>", { desc = "Toggle R LSP" })
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc = "Toggle terminal: vertical" })
@@ -389,7 +389,7 @@ map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc 
 
 -- Image Rendering Toggle Functionality
 Image_rendering_enabled = false -- Assume images are disabled by default -- Make global
-function Toggle_image_rendering() -- Make global
+function _G.Toggle_image_rendering() -- Make global
 	if Image_rendering_enabled then
 		require("image").disable()
 		vim.notify("Image rendering disabled", vim.log.levels.INFO, { title = "Image" })
@@ -398,6 +398,19 @@ function Toggle_image_rendering() -- Make global
 		vim.notify("Image rendering enabled", vim.log.levels.INFO, { title = "Image" })
 	end
 	Image_rendering_enabled = not Image_rendering_enabled
+end
+
+-- Toggle R language server
+R_language_server_enabled = false -- Assume R language server is disabled by default
+function _G.Toggle_r_language_server()
+	if R_language_server_enabled then
+		require("lspconfig").r_language_server.stop()
+		vim.notify("R language server disabled", vim.log.levels.INFO, { title = "R Language Server" })
+	else
+		require("lspconfig").r_language_server.start()
+		vim.notify("R language server enabled", vim.log.levels.INFO, { title = "R Language Server" })
+	end
+	R_language_server_enabled = not R_language_server_enabled
 end
 
 -- Spell Language Functionality
