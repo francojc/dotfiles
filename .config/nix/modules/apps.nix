@@ -54,24 +54,25 @@
     ];
 
     casks = [
-      "appcleaner"
-      "betterdisplay"
-      "bettermouse"
-      "claude"
+      "appcleaner" # remove macOS apps
+      "betterdisplay" # display tweaks
+      "bettermouse" # mouse tweaks
+      "claude" #
       "docker"
       "dropbox"
       "ghostty@tip"
       "google-drive"
-      "kap"
+      "kap" # screen recording
       "memory-cleaner"
       "mullvadvpn"
       "obsidian"
       "raycast"
       "rectangle"
-      "rocket"
+      "rocket" # emoji picker
       "transcribe"
       "transmission"
       "visual-studio-code"
+      "yaak" # API client
       "zen-browser"
       "zoom"
       "zotero@beta"
