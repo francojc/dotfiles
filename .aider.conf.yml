@@ -25,7 +25,7 @@ editor-model: gemini-2.5-flash # code editor
 weak-model: gemma # git commit messages
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
-architect: true
+architect: false
 
 # # Theme: Gruvbox
 # # Main text colors
@@ -46,11 +46,11 @@ architect: true
 
 # Theme: Black Metal
 # Main text colors
-user-input-color: "#f8f8f2" #  # "#ff79c6"
+user-input-color: "#f8f8f2" # "#ff79c6"
 assistant-output-color: "#f8f8f2"
-tool-output-color: "#608787" #
+tool-output-color: "#608787"
 tool-error-color: "#ff5555"
-tool-warning-color: "#cfb86c"
+tool-warning-color: "#CBC983"
 
 # Completion menu colors (terminal-based)
 completion-menu-color: "#f8f8f2"
@@ -59,7 +59,10 @@ completion-menu-current-color: "#f8f8f2"
 completion-menu-current-bg-color: "#44475a"
 
 # Code theme for markdown syntax highlighting
-code-theme: "github-dark"
+# https://pygments.org/styles
+# code-theme: "github-dark"
+# code-theme: "monokai"
+code-theme: "coffee"
 
 # Editor Configuration
 editor: nvim

@@ -115,6 +115,7 @@ opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
+
 -- Diagnostics
 vim.diagnostic.config({
 	severity_sort = true,
@@ -380,12 +381,12 @@ map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
-map("n", "<leader>tr", "<Cmd>Toggle_r_language_server<Cr>", { desc = "Toggle R LSP" })
+map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" }) -- Call the Lua function
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tv", "<Cmd>ToggleTerm direction=vertical size=25<Cr>", { desc = "Toggle terminal: vertical" })
 
----| Functions ----------------------------------------------------
+---| Toggle functions --------------------------------------------
 
 -- Image Rendering Toggle Functionality
 Image_rendering_enabled = false -- Assume images are disabled by default -- Make global
@@ -400,17 +401,38 @@ function _G.Toggle_image_rendering() -- Make global
 	Image_rendering_enabled = not Image_rendering_enabled
 end
 
--- Toggle R language server
-R_language_server_enabled = false -- Assume R language server is disabled by default
+-- Toggle R language server using standard vim.lsp APIs
 function _G.Toggle_r_language_server()
-	if R_language_server_enabled then
-		require("lspconfig").r_language_server.stop()
-		vim.notify("R language server disabled", vim.log.levels.INFO, { title = "R Language Server" })
+	local clients = vim.lsp.get_clients({ bufnr = 0, name = "r_language_server" })
+
+	if #clients > 0 then
+		-- LSP is running for this buffer, stop all R clients for this buffer
+		vim.notify("Stopping R LSP client(s) for current buffer...", vim.log.levels.INFO, { title = "R LSP" })
+		for _, client in ipairs(clients) do
+			vim.lsp.stop_client(client.id)
+		end
 	else
-		require("lspconfig").r_language_server.start()
-		vim.notify("R language server enabled", vim.log.levels.INFO, { title = "R Language Server" })
+		-- LSP is not running for this buffer, start it
+		vim.notify("Starting R LSP for current buffer...", vim.log.levels.INFO, { title = "R LSP" })
+		-- We need configuration details to start the client manually
+		local lspconfig_util = require("lspconfig.util")
+		local bufname = vim.api.nvim_buf_get_name(0)
+		local root_dir = lspconfig_util.root_pattern("DESCRIPTION")(bufname)
+			or lspconfig_util.find_git_ancestor(bufname)
+			or lspconfig_util.path.dirname(bufname)
+
+		if root_dir then
+			vim.lsp.start({
+				name = "r_language_server",
+				cmd = { "R", "--slave", "-e", "languageserver::run()" },
+				root_dir = root_dir,
+				capabilities = capabilities,
+				filetypes = { "r" }, -- Ensure filetype association
+			})
+		else
+			vim.notify("Could not determine project root for R LSP.", vim.log.levels.WARN, { title = "R LSP" })
+		end
 	end
-	R_language_server_enabled = not R_language_server_enabled
 end
 
 -- Spell Language Functionality
@@ -609,50 +631,6 @@ require("blink.cmp").setup({
 	},
 })
 
--- Delayed Blink completion menu (1500ms, only after 2+ chars)
--- do
--- 	local blink = require("blink.cmp")
--- 	local blink_timer = nil
--- 	local blink_delay = 1500 -- milliseconds
---
--- 	local function should_show_menu()
--- 		local col = vim.fn.col(".") - 1
--- 		if col < 2 then
--- 			return false
--- 		end
--- 		local line = vim.fn.getline(".")
--- 		local start = col
--- 		while start > 0 and line:sub(start, start):match("[%w_]") do
--- 			start = start - 1
--- 		end
--- 		local word = line:sub(start + 1, col)
--- 		return #word >= 2
--- 	end
---
--- 	vim.api.nvim_create_autocmd("InsertCharPre", {
--- 		callback = function()
--- 			if blink_timer then
--- 				blink_timer:stop()
--- 				blink_timer:close()
--- 				blink_timer = nil
--- 			end
--- 			blink_timer = vim.loop.new_timer()
--- 			blink_timer:start(
--- 				blink_delay,
--- 				0,
--- 				vim.schedule_wrap(function()
--- 					if should_show_menu() then
--- 						blink.show()
--- 					end
--- 					blink_timer:stop()
--- 					blink_timer:close()
--- 					blink_timer = nil
--- 				end)
--- 			)
--- 		end,
--- 	})
--- end
-
 -- Bufferline ----------------------------------
 require("bufferline").setup({})
 
@@ -719,10 +697,13 @@ require("kanagawa").setup({
 g.rasmus_italic_functions = 1
 g.rasmus_bold_functions = 1
 
--- g.rasmus_variant = "monochrome"
+g.rasmus_variant = "monochrome"
 
 -- Vague
 require("vague").setup({})
+
+-- Vim themes
+-- Peruse: FzfLua colortheme
 
 -- Set colorscheme
 vim.cmd("colorscheme new-autumn")
@@ -802,9 +783,16 @@ require("img-clip").setup({
 local lspconfig = require("lspconfig")
 
 -- Get enhanced LSP capabilities from blink.cmp
+-- Define capabilities early so the toggle function can access it
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
--- Setup LSP servers
+-- LSP Setup will happen later...
+
+-- Functions dependent on capabilities or LSP config can be defined here or later
+
+-- (Function definitions using capabilities will go here or after)
+
+-- Setup LSP servers later in the file...
 -- Bash
 -- bash-language-server
 lspconfig.bashls.setup({ capabilities = capabilities })
@@ -1081,10 +1069,6 @@ require("todo-comments").setup({})
 require("toggleterm").setup({})
 
 --- Treesitter -----------------------------------
--- Ensure this line is REMOVED or commented out:
--- vim.treesitter.language.register("markdown", "quarto")
-
--- Setup
 require("nvim-treesitter.configs").setup({
 	auto_install = true, -- Key for the `paq` approach to get parsers
 	highlight = {
@@ -1104,7 +1088,6 @@ require("nvim-treesitter.configs").setup({
 })
 
 --- WhichKey -----------------------------------
---- setup
 require("which-key").setup({
 	preset = "helix",
 	icons = {
