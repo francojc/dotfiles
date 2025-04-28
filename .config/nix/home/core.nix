@@ -33,7 +33,6 @@
     aerc
     atuin
     bat # Often used by fzf previews, etc. but also standalone
-    bruno # API client
     cachix # Nix package cache
     chatgpt #
     claude-code # CLI tool
