@@ -87,6 +87,7 @@
     which
     wiper # Secure deletion?
     xan # CLI tool for CSV files
+    yaak # API client
     yazi-unwrapped # Terminal file manager
     yt-dlp # Video downloader
     zoxide # Smarter cd command
