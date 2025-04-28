@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 """
+NOTE:
+    This script must be run from the ~/.bin directory!
+
 Personal Google Contacts to Emailbook Converter
 
 This script fetches contacts data from your personal Google account
@@ -28,8 +31,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # Configuration
-
-# Why is the 'credentials_file' path relative not working for me AI?
 
 CONFIG = {
     "credentials_file": "~/.config/aerc/google-aerc-credentials.json",  # OAuth client credentials
