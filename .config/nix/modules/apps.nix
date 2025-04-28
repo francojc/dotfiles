@@ -58,7 +58,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "claude" #
-      "docker"
+      # "docker" # replaced with OrbStack
       "dropbox"
       "ghostty@tip"
       "google-drive"
