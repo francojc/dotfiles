@@ -12,9 +12,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nixCats = {
+      url = "github:BirdeeHub/nixCats-nvim";
     };
   };
 
@@ -22,7 +21,6 @@
     nixpkgs,
     darwin,
     home-manager,
-    nixvim,
     ...
   }: let
     # Machine configurations
@@ -38,20 +36,20 @@
         system = "aarch64-darwin";
       };
     };
-    mkDarwinConfig = hostname: {
-      username,
-      useremail,
-      system,
-    }:
+    # Corrected function signature to accept name and value from mapAttrs
+    mkDarwinConfig = hostname: systemAttrs:
       darwin.lib.darwinSystem {
-        inherit system;
+        system = systemAttrs.system; # Use system from the attribute set value
         specialArgs =
           inputs
           // {
-            inherit username useremail hostname;
+            # Pass arguments from the function parameters
+            inherit hostname;
+            username = systemAttrs.username;
+            useremail = systemAttrs.useremail;
           };
         pkgs = import nixpkgs {
-          inherit system;
+          system = systemAttrs.system; # Use system from the attribute set value
           config.allowUnfree = true;
         };
         modules = [
@@ -65,15 +63,18 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               verbose = true;
-              extraSpecialArgs =
-                inputs
-                // {
-                  inherit username useremail hostname;
-                };
-              users.${username} = {
+              # Modified extraSpecialArgs structure
+              extraSpecialArgs = {
+                inherit inputs; # Pass flake inputs as 'inputs' attribute
+                inherit hostname; # Pass hostname
+                username = systemAttrs.username; # Pass username
+                useremail = systemAttrs.useremail; # Pass useremail
+              };
+              # Use username from the attribute set value
+              users.${systemAttrs.username} = {
                 imports = [
+                  inputs.nixCats.homeModule # Import nixCats module here
                   ./home/default.nix
-                  nixvim.homeManagerModules.nixvim
                 ];
               };
             };
@@ -81,7 +82,8 @@
         ];
       };
   in {
-    darwinConfigurations = builtins.mapAttrs mkDarwinConfig systems; # nix code formatter
+    # mapAttrs calls mkDarwinConfig with hostname (name) and systemAttrs (value)
+    darwinConfigurations = builtins.mapAttrs mkDarwinConfig systems;
     formatter."aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin".alejandra;
   };
 }

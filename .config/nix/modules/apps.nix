@@ -3,6 +3,7 @@
     alejandra
     age
     brave
+    browsh
     carapace
     codespell
     curl
@@ -12,10 +13,8 @@
     just
     lla
     lynx
-    marksman
     nixd
     nurl
-    nushell
     oterm
     stylua
     vim
@@ -42,9 +41,9 @@
 
     brews = [
       "borders" # jankyborders
-      "dstask"
       "huggingface-cli"
       "npm"
+      "keith/formulae/reminders-cli"
       "ollama"
       "python@3.11"
       "rename"
@@ -56,15 +55,15 @@
 
     casks = [
       "appcleaner"
-      "bettermouse"
       "betterdisplay"
+      "bettermouse"
       "claude"
       "docker"
       "dropbox"
       "ghostty@tip"
       "google-drive"
       "kap"
-      "keycastr"
+      "memory-cleaner"
       "mullvadvpn"
       "obsidian"
       "raycast"

@@ -1,15 +1,19 @@
 # Aliases
 alias:
+  # OpenRouter
   - "deepseek-reasoner:openrouter/deepseek/deepseek-r1"
   - "mistral-small-3.1:openrouter/mistralai/mistral-small-3.1-24b-instruct"
   - "sonnet:openrouter/anthropic/claude-3.7-sonnet"
   - "deepseek-chat:openrouter/deepseek/deepseek-chat-v3-0324"
+  - "quasar:openrouter/openrouter/quasar-alpha"
+  - "optimus:openrouter/openrouter/optimus-alpha"
+  - "gemini-2.5-pro:openrouter/google/gemini-2.5-pro-preview-03-25"
+  - "gemini-2.5-flash:openrouter/google/gemini-2.5-flash-preview"
+  - "gemini-reasoner:openrouter/google/gemini-2.0-flash-thinking-exp"
+  - "flash:openrouter/google/gemini-2.0-flash-001"
+  - "gemma:openrouter/google/gemma-3-27b-it"
 
-  - "gemini-2.5-pro:gemini/gemini-2.5-pro-exp-03-25"
-  - "gemini-reasoner:gemini/gemini-2.0-flash-thinking-exp"
-  - "flash:gemini/gemini-2.0-flash"
-  - "gemma:gemini/gemma-3-27b-it"
-
+  # Ollama
   - "gemma-local:ollama_chat/gemma3:12b"
 
 # Conventions/ project description
@@ -17,28 +21,48 @@ read: [~/.conventions.md, README.md]
 
 # Models
 model: gemini-2.5-pro # reasoner
-editor-model: deepseek-chat # editor
-weak-model: mistral-small-3.1 # git commit messages
+editor-model: gemini-2.5-flash # code editor
+weak-model: gemma # git commit messages
 
-edit-format: whole # options; diff, whole, udiff, diff-fenced
+# edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
 
-# Theme
+# # Theme: Gruvbox
+# # Main text colors
+# user-input-color: "#b8bb26"
+# assistant-output-color: "#83a598"
+# tool-output-color: "#ebdbb2"
+# tool-error-color: "#fb4934"
+# tool-warning-color: "#fe8019"
+#
+# # Completion menu colors (terminal-based)
+# completion-menu-color: "#ebdbb2"
+# completion-menu-bg-color: "#282828"
+# completion-menu-current-color: "#fbf1c7"
+# completion-menu-current-bg-color: "#504945"
+#
+# Code theme for markdown syntax highlighting
+# code-theme: "monokai"
+
+# Theme: Black Metal
 # Main text colors
-user-input-color: "#b8bb26" # Gruvbox green
-assistant-output-color: "#83a598" # Gruvbox blue
-tool-output-color: "#ebdbb2" # Gruvbox light/fg
-tool-error-color: "#fb4934" # Gruvbox red
-tool-warning-color: "#fe8019" # Gruvbox orange
+user-input-color: "#f8f8f2" # "#ff79c6"
+assistant-output-color: "#f8f8f2"
+tool-output-color: "#608787"
+tool-error-color: "#ff5555"
+tool-warning-color: "#CBC983"
 
 # Completion menu colors (terminal-based)
-completion-menu-color: "#ebdbb2" # Gruvbox light/fg
-completion-menu-bg-color: "#282828" # Gruvbox dark/bg
-completion-menu-current-color: "#fbf1c7" # Gruvbox light
-completion-menu-current-bg-color: "#504945" # Gruvbox dark-gray
+completion-menu-color: "#f8f8f2"
+completion-menu-bg-color: "#282a36"
+completion-menu-current-color: "#f8f8f2"
+completion-menu-current-bg-color: "#44475a"
 
 # Code theme for markdown syntax highlighting
-code-theme: "monokai"  # While not exactly Gruvbox, this dark theme works well with it
+# https://pygments.org/styles
+# code-theme: "github-dark"
+# code-theme: "monokai"
+code-theme: "coffee"
 
 # Editor Configuration
 editor: nvim
@@ -59,7 +83,7 @@ multiline: false  # Often useful with vim mode
 restore-chat-history: false  # Helps maintain context between sessions
 
 # Disable automatic linting/testing as requested
-auto-lint: true
+auto-lint: false
 auto-test: false
 
 # Cache Settings

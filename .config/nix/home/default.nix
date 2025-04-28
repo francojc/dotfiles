@@ -2,14 +2,18 @@
   imports = [
     ./core.nix
     ./git.nix
-    ./neovim/default.nix
     ./shell/default.nix
+    ./neovim/default.nix
     ./vim.nix
   ];
 
   home = {
-    inherit username;
     homeDirectory = "/Users/${username}";
+    inherit username;
+    sessionVariables = {
+      EDITOR = "nvim";
+      VISUAL = "nvim";
+    };
     stateVersion = "24.05";
   };
 

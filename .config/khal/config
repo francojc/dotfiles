@@ -3,6 +3,7 @@
 [[francojc]]
 path = ~/.calendars/google/francojc@wfu.edu
 type = discover
+color = "#9bb4bc"
 
 [[jerid.francom]]
 path = ~/.calendars/google/jerid.francom@gmail.com
@@ -12,17 +13,23 @@ color = "#8EC07C"
 [[holidays]]
 path = ~/.calendars/google/cln2stbjc4hmgrrcd5i62ua0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual
 type = discover
-color = "#D3869B"
+color = "#bb9dbd"
 
 [[spanish.department]]
 path = ~/.calendars/google/wfu.edu_27uakldtgi42knb0bbcs50flgk@group.calendar.google.com
 type = discover
-color = "#FABD2F"
+color = "#FEE18C"
 
 [[deans.office]]
 path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.google.com
 type = discover
-color = "#FB4934"
+color = "#df6882"
+
+[[Reminders]]
+path = ~/.calendars/local/reminders/
+type = calendar
+color = "#1591EA"
+readonly = false
 
 [default]
 default_calendar = Scheduled
