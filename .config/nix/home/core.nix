@@ -33,6 +33,7 @@
     aerc
     atuin
     bat # Often used by fzf previews, etc. but also standalone
+    bruno # API client
     cachix # Nix package cache
     chatgpt #
     claude-code # CLI tool
@@ -87,7 +88,6 @@
     which
     wiper # Secure deletion?
     xan # CLI tool for CSV files
-    yaak # API client
     yazi-unwrapped # Terminal file manager
     yt-dlp # Video downloader
     zoxide # Smarter cd command
