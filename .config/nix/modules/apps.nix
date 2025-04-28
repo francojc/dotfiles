@@ -66,6 +66,7 @@
       "memory-cleaner"
       "mullvadvpn"
       "obsidian"
+      "orbstack" # Docker alternative
       "raycast"
       "rectangle"
       "rocket" # emoji picker
