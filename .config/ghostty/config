@@ -2,11 +2,13 @@
 
 # UI
 cursor-color = #FF2557
+cursor-style = bar
+adjust-cursor-thickness = 3
 macos-titlebar-style = tabs
 macos-option-as-alt = right
 mouse-hide-while-typing = true
 font-size = 16
-unfocused-split-opacity = 0.5
+unfocused-split-opacity = 0.7
 split-divider-color = #7B7252
 window-padding-x = 9
 window-padding-y = 9
@@ -17,7 +19,8 @@ macos-window-shadow = false
 
 # Theme
 # theme = nightfox
-theme = GruvboxDarkHard
+# theme = GruvboxDarkHard
+theme = Arthur
 
 # Enhancements
 confirm-close-surface = true
