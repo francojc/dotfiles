@@ -31,7 +31,6 @@
   generalPackages = with pkgs; [
     _7zz
     aerc
-    atac # CLI API client
     atuin
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
