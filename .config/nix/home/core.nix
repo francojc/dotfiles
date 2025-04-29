@@ -58,11 +58,11 @@
     jq # JSON processor
     khal # Calendar
     kitty # Terminal emulator
-    lazydocker
     lazygit # TUI Git client
     mas # Mac App Store CLI
     mdcat # Markdown cat
     mpv-unwrapped # Media player
+    netscanner
     ncdu # Disk usage analyzer
     nix-prefetch-git
     nodejs-slim_23 # Needed for prettier, but potentially other tools too

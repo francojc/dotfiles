@@ -58,12 +58,6 @@ alias gd='git diff'
 alias gdf='git diff --name-only'
 alias gitit='gh browse > /dev/null 2>&1'
 
-# Docker aliases
-alias d='docker'
-alias dr='docker run'
-alias di='docker images -a'
-alias dc='docker ps -a'
-
 # Neovim aliases
 alias v='nvim'
 
