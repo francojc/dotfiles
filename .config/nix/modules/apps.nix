@@ -58,7 +58,6 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "claude" #
-      # "docker" # replaced with OrbStack
       "dropbox"
       "ghostty@tip"
       "google-drive"
@@ -73,7 +72,6 @@
       "transcribe"
       "transmission"
       "visual-studio-code"
-      "yaak" # API client
       "zen-browser"
       "zoom"
       "zotero@beta"

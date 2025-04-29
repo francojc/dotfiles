@@ -31,6 +31,7 @@
   generalPackages = with pkgs; [
     _7zz
     aerc
+    atac # CLI API client
     atuin
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
@@ -62,7 +63,6 @@
     mas # Mac App Store CLI
     mdcat # Markdown cat
     mpv-unwrapped # Media player
-    netscanner
     ncdu # Disk usage analyzer
     nix-prefetch-git
     nodejs-slim_23 # Needed for prettier, but potentially other tools too
@@ -74,10 +74,10 @@
     poppler_utils # PDF utilities (pdftotext, etc.)
     qpdf # PDF manipulation tool
     quarto # Scientific publishing system
+    repgrep # ripgrep across files
     ripgrep # grep replacement
     searxng # Metasearch engine (assuming local instance tools)
     shunit2 # Shell testing
-    silver-searcher # Code searching tool (ag)
     sqlite
     starship # Shell prompt
     stow # Symlink manager
