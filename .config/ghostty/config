@@ -3,7 +3,7 @@
 # UI
 cursor-color = #FF2557
 cursor-style = bar
-adjust-cursor-thickness = 3
+adjust-cursor-thickness = 2
 macos-titlebar-style = tabs
 macos-option-as-alt = right
 mouse-hide-while-typing = true
