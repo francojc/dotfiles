@@ -12,9 +12,6 @@
 ## Configuration Structure
 
 ```txt
-Nix
-├── Justfile
-├── README.md
 ├── flake.lock
 ├── flake.nix
 ├── home
@@ -22,22 +19,16 @@ Nix
 │   ├── default.nix
 │   ├── git.nix
 │   ├── neovim
-│   │   ├── autocommands.nix
-│   │   ├── completion.nix
 │   │   ├── default.nix
-│   │   ├── keymaps.nix
-│   │   ├── lsp.nix
-│   │   ├── options.nix
-│   │   ├── plugins
-│   │   │   ├── alpha.nix
-│   │   │   ├── bufferline.nix
-│   │   │   ├── default.nix
-│   │   │   ├── lspsaga.nix
-│   │   │   ├── lualine.nix
-│   │   │   ├── obsidian.nix
-│   │   │   ├── slime.nix
-│   │   │   ├── treesitter.nix
-│   │   │   └── which-key.nix
+│   │   ├── init.lua
+│   │   ├── plugin
+│   │   │   ├── ai.lua
+│   │   │   ├── colorscheme.lua
+│   │   │   ├── completion.lua
+│   │   │   ├── general.lua
+│   │   │   ├── lsp.lua
+│   │   │   ├── tools.lua
+│   │   │   └── ui.lua
 │   │   └── snippets
 │   │       ├── all.json
 │   │       ├── markdown.json
@@ -50,9 +41,11 @@ Nix
 │   │   ├── default.nix
 │   │   └── fzf.zsh
 │   └── vim.nix
-└── modules
-    ├── apps.nix
-    ├── host-users.nix
-    ├── nix-core.nix
-    └── system.nix
+├── Justfile
+├── modules
+│   ├── apps.nix
+│   ├── host-users.nix
+│   ├── nix-core.nix
+│   └── system.nix
+└── README.md
 ```
