@@ -87,6 +87,7 @@
     wiper # Secure deletion?
     xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
+    yq-go # YAML processor
     yt-dlp # Video downloader
     zoxide # Smarter cd command
   ];
