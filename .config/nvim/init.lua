@@ -14,10 +14,7 @@ require("paq")({
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
-	"rktjmp/lush.nvim", -- Lush: colorscheme editor/ support
-	"kvrohit/rasmus.nvim", -- Colorscheme: Rasmus
 	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
-	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -30,6 +27,7 @@ require("paq")({
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
+	"kvrohit/rasmus.nvim", -- Colorscheme: Rasmus
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
@@ -42,13 +40,15 @@ require("paq")({
 	"olimorris/codecompanion.nvim", -- Code companion AI integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
+	"rcarriga/nvim-notify", -- Notifications
 	"rebelot/kanagawa.nvim", -- Colorscheme: Kanagawa
+	"rktjmp/lush.nvim", -- Lush: colorscheme editor/ support
 	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
-	"rcarriga/nvim-notify", -- Notifications
+	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
 })
 
 --| Options ------------------------------------------------------
