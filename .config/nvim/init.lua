@@ -706,7 +706,7 @@ require("vague").setup({})
 -- Peruse: FzfLua colortheme
 
 -- Set colorscheme
-vim.cmd("colorscheme new-autumn")
+vim.cmd("colorscheme gruvbox")
 
 -- Conform ----------------------------------
 require("conform").setup({
