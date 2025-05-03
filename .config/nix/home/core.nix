@@ -59,7 +59,6 @@
     khal # Calendar
     kitty # Terminal emulator
     lazygit # TUI Git client
-    mas # Mac App Store CLI
     mdcat # Markdown cat
     mpv-unwrapped # Media player
     ncdu # Disk usage analyzer
