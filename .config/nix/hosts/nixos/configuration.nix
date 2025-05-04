@@ -11,18 +11,26 @@
 # Receive specialArgs
 {
   imports = [
-    ./hardware-configuration.nix # Generated on the target machine
-    # Import shared system modules (relative path from flake root)
+    ./hardware-configuration.nix
     ../../modules/shared/nix-core.nix
-    # Import NixOS-specific modules if you create any
-    # ../../modules/nixos/some-nixos-module.nix
   ];
 
   # --- Core NixOS Settings ---
   networking.hostName = hostname; # Use hostname from specialArgs
   time.timeZone = "America/New_York"; # Set your timezone
-  i18n.defaultLocale = "en_US.UTF-8";
-  # console.keyMap = "us"; # If needed
+  i18n.defaultLocale = "en_US.UTF-8"; # From original config
+  i18n.extraLocaleSettings = {
+    # From original config
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
 
   # Define the primary user for NixOS
   users.users.${username} = {
@@ -39,35 +47,68 @@
     git
     wget
     curl
+    just
     htop
     # Add any other system-level tools here
   ];
 
   # Allow flakes & nix command for the root user too
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  # nix.settings.experimental-features is handled by ../../modules/shared/nix-core.nix
 
-  # --- NixOS Specific services / settings ---
-  # Example: Enable SSH server
-  # services.openssh = {
-  #   enable = true;
-  #   settings.PasswordAuthentication = false; # Recommend key-based auth
-  #   settings.KbdInteractiveAuthentication = false;
-  # };
+  # --- Desktop Environment / GUI (from original config) ---
+  services.xserver = {
+    enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+    # services.xserver.libinput.enable = true; # Usually enabled by default with GNOME
+  };
+
+  # --- Auto Login (from original config) ---
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = username; # Use username from specialArgs
+  };
+  # Workaround for GNOME autologin
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
+
+  # --- Sound (from original config) ---
+  # services.pulseaudio.enable = false; # Default anyway if pipewire is enabled
+  security.rtkit.enable = true; # Often needed for pipewire realtime priorities
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true; # Keep if you might run 32-bit ALSA apps
+    pulse.enable = true;
+    # jack.enable = true; # Enable if you need JACK support
+  };
+
+  # --- Other System Services (from original config) ---
+  networking.networkmanager.enable = true;
+  services.printing.enable = true; # CUPS
+  programs.firefox.enable = true; # Firefox system-wide
 
   # Example: Bootloader (adjust for your system, e.g., UEFI or BIOS)
   boot.loader.systemd-boot.enable = true; # For UEFI systems
   boot.loader.efi.canTouchEfiVariables = true;
-  # boot.loader.grub.enable = true; # For BIOS or if you prefer GRUB
-  # boot.loader.grub.device = "/dev/sdX"; # Set your boot disk
-
-  # Example: Networking (enable NetworkManager is common for desktops/laptops)
-  networking.networkmanager.enable = true;
 
   # --- !! Home Manager is configured via the flake !! ---
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s important to update this value
-  # when upgrading NixOS -> see nixos-rebuild switch documentation.
-  system.stateVersion = "23.11"; # Or "24.05", etc. Set to the version you installed with.
+  # when upgrading NixOS -> see nixos-rebuild switch documentation. Make consistent with HM.
+  # Original was 24.11 (likely typo), HM is 24.05.
+  system.stateVersion = "24.05";
+
+  # Optional: Enable SSH server if needed
+  # services.openssh = {
+  #   enable = true;
+  #   settings.PasswordAuthentication = false; # Recommend key-based auth
+  #   settings.KbdInteractiveAuthentication = false;
+  # };
 }

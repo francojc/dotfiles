@@ -39,14 +39,12 @@
         username = "jeridf";
         useremail = "francojc@wfu.edu";
       };
-      # --- ADD YOUR NixOS HOST HERE ---
       "nixos" = {
-        # <--- Replace with your actual NixOS hostname
         type = "nixos";
         system = "aarch64-linux";
-        username = "francojc"; # <--- Replace with your NixOS username
-        useremail = "francojc@wfu.edu"; # <--- Replace with your email
-        configFile = ./hosts/nixos/configuration.nix; # <--- Adjust path if hostname differs
+        username = "francojc";
+        useremail = "francojc@wfu.edu";
+        configFile = ./hosts/nixos/configuration.nix;
       };
     };
 
