@@ -18,7 +18,10 @@
 
   nix.settings.trusted-users = [username];
 
-  system.stateVersion = "24.05"; # Keep consistent
+  # Add this line to disable nix-darwin's Nix management
+  nix.enable = false;
+
+  system.stateVersion = 5; # Keep consistent with nix-darwin requirements
 
   system = {
     activationScripts.postUserActivation.text = ''
