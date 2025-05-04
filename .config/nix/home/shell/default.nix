@@ -47,6 +47,15 @@
         function __xan {
           xan compgen "$1" "$2" "$3"
         }
+        # Set 'pbcopy' if not on darwin
+        if [[ "$OSTYPE" != "darwin"* ]]; then
+          # Check if xclip is installed
+          if command -v xclip &> /dev/null; then
+            alias pbcopy='xclip -selection clipboard'
+          else
+            echo "xclip not found. Please install it to use pbcopy."
+          fi
+        fi
       '';
       # Other ZSH plugins
       plugins = [];
