@@ -34,7 +34,6 @@
     atuin
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
-    chatgpt #
     claude-code # CLI tool
     datasette
     drawio

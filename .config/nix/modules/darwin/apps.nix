@@ -32,6 +32,7 @@
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
+      "chatgpt"
       "claude" #
       "dropbox"
       "ghostty@tip"
