@@ -805,6 +805,10 @@ local function get_username()
 	return os.getenv("USER") or ""
 end
 
+local function get_home_dir()
+	return os.getenv("HOME") or os.getenv("HOMEPATH") or os.getenv("USERPROFILE") or ""
+end
+
 local function get_hostname()
 	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
 end
@@ -818,23 +822,17 @@ lspconfig.nixd.setup({
 			formatting = { command = { "alejandra" } },
 			options = {
 				nixos = {
-					expr = '(builtins.getFlake "/Users/'
-						.. get_username()
-						.. '/.dotfiles/.config/nix").nixosConfigurations.'
+					expr = '(builtins.getFlake get_home_dir() .. "/.dotfiles/.config/nix").nixosConfigurations.'
 						.. get_hostname()
 						.. ".options",
 				},
 				nix_darwin = {
-					expr = '(builtins.getFlake "/Users/'
-						.. get_username()
-						.. '/.dotfiles/.config/nix").darwinConfigurations.'
+					expr = '(builtins.getFlake get_home_dir() .. "/.dotfiles/.config/nix").darwinConfigurations.'
 						.. get_hostname()
 						.. ".options",
 				},
 				home_manager = {
-					expr = '(builtins.getFlake "/Users/'
-						.. get_username()
-						.. '/.dotfiles/.config/nix").homeConfigurations.'
+					expr = '(builtins.getFlake get_home_dir() .. "/.dotfiles/.config/nix").homeConfigurations.'
 						.. get_hostname()
 						.. ".options",
 				},
