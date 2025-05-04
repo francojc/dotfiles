@@ -66,13 +66,13 @@
       "mullvadvpn"
       "obsidian"
       "orbstack" # Docker alternative
+      "parallels" # virtualization
       "raycast"
       "rectangle"
       "rocket" # emoji picker
       "signal" # messaging
       "transcribe"
       "transmission"
-      "utm" # virtualization
       "visual-studio-code"
       "yaak" # API client
       "zen-browser"
