@@ -49,7 +49,7 @@
     };
 
     # Helper to filter systems by type
-    filterSystems = type: builtins.filterAttrs (name: value: value.type == type) allSystems;
+    filterSystems = type: nixpkgs.lib.filterAttrs (name: value: value.type == type) allSystems;
 
     # --- Helper function for Darwin ---
     mkDarwinConfig = hostname: systemAttrs:
