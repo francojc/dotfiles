@@ -4,8 +4,9 @@
     # Keep only NixOS-specific system packages here, if any.
     # Example: gnome packages if not pulled in by services.xserver.desktopManager.gnome.enable
     ghostty
-    gnome-tweaks # Example of a potentially NixOS-specific addition
-    # Add any other system-level tools here
+    gnome-tweaks
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.clipboard-indicator
     xclip
   ];
 }
