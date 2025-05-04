@@ -1,8 +1,9 @@
 # --- ALIASES ---
 # Nix aliases
+
 # -- Uses hostname to determine the flake to switch to
-# HACK: Allows unfree packages (temporary hack)
-alias switch='NIXPKGS_ALLOW_UNFREE=1 darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname) --impure'
+alias dswitch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
+alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
 # Aider-chat aliases
 alias aider-proj='aider --model gemini-reasoner --editor-model gemma --architect --watch-files'
