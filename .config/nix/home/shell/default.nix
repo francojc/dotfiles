@@ -1,4 +1,4 @@
-{username, ...}: {
+{config, ...}: {
   programs = {
     # Enable some useful shells
     zsh = {
@@ -22,8 +22,8 @@
 
         # --- PATH ---
         export PATH="/usr/local/sbin:$PATH"
-        export PATH="/Users/${username}/.bin:$PATH" # custom scripts
-        export PATH="/Users/${username}/.local/bin:$PATH" # pipx
+        export PATH="${config.home.Directory}/.bin:$PATH" # custom scripts
+        export PATH="${config.home.Directory}/.local/bin:$PATH" # pipx
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
@@ -41,7 +41,7 @@
         export ZVM_KEYTIMEOUT=1 # 1 second
 
         # --- SECRETS (from `pass`) ---
-        source /Users/${username}/.variables.env
+        source ${config.home.Directory}/.variables.env
 
         # Xan completions
         function __xan {
