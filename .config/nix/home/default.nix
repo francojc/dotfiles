@@ -1,11 +1,5 @@
 {
-  pkgs,
-  lib,
-  config,
   username,
-  useremail,
-  inputs,
-  isLinux,
   isDarwin,
   ...
 }: {
