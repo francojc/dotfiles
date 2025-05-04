@@ -11,7 +11,5 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnsupportedSystem = true;
 
-  services = {
-    tailscale.enable = true;
-  };
+  services.tailscale.enable = true;
 }

@@ -1,4 +1,3 @@
-# --- Replace nixos-vm with your actual hostname ---
 {
   config,
   pkgs,
@@ -7,17 +6,13 @@
   hostname,
   username,
   ...
-}:
-# Receive specialArgs
-{
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
 
   # --- Core NixOS Settings ---
-  # networking.hostName is set in shared/nix-core.nix via host-users.nix import? No, host-users is Darwin only. Keep it here for NixOS.
   networking.hostName = hostname;
-  # time.timeZone removed (handled by shared/time.nix)
   i18n.defaultLocale = "en_US.UTF-8"; # From original config
   i18n.extraLocaleSettings = {
     # From original config
@@ -32,6 +27,8 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  programs.zsh.enable = true; # Enable Zsh
+
   # Define the primary user for NixOS
   users.users.${username} = {
     isNormalUser = true;
@@ -41,10 +38,6 @@
     home = "/home/${username}"; # Standard Linux home
   };
 
-  # Allow flakes & nix command for the root user too
-  # nix.settings.experimental-features is handled by ../../modules/shared/nix-core.nix
-
-  # --- Desktop Environment / GUI (from original config) ---
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
