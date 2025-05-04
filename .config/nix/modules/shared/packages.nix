@@ -1,10 +1,11 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    # Common CLI tools found in both original lists
-    alejandra # Formatter
     age # Encryption
+    alejandra # Formatter
+    brave
+    browsh
+    carapace
+    codespell
     curl
     direnv
     git
@@ -12,10 +13,14 @@
     htop # Included in NixOS template
     just # Task runner
     lla # Alias manager (assuming available on both)
+    lynx
     nixd # Language server
     nurl # Nix URL fetcher helper
+    oterm
     stylua # Lua formatter
     vim # Basic editor
+    viu
+    w3m
     wget # Included in NixOS template
   ];
 }

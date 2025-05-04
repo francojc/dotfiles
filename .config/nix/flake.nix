@@ -32,12 +32,14 @@
         system = "aarch64-darwin";
         username = "francojc";
         useremail = "francojc@wfu.edu";
+        configFile = ./hosts/darwin/configuration.nix;
       };
       "Mac-Minicore" = {
         type = "darwin";
         system = "aarch64-darwin";
         username = "jeridf";
         useremail = "francojc@wfu.edu";
+        configFile = ./hosts/darwin/configuration.nix;
       };
       "nixos" = {
         type = "nixos";
@@ -65,15 +67,16 @@
             isDarwin = true;
           };
         modules = [
+          # Core host specifics (hardware, state version)
+          systemAttrs.configFile # Host-specific Darwin settings
+
           # New shared modules first
-          ./modules/shared/time.nix
           ./modules/shared/fonts.nix
-          ./modules/shared/packages.nix
-          # Import relevant shared/darwin system modules
           ./modules/shared/nix-core.nix
-          ./modules/darwin/system.nix
+          ./modules/shared/packages.nix
+
+          # Darwin Specific System Modules
           ./modules/darwin/apps.nix
-          ./modules/darwin/host-users.nix
 
           # Integrate Home Manager for Darwin
           home-manager.darwinModules.home-manager
@@ -120,19 +123,13 @@
           systemAttrs.configFile # Host-specific NixOS settings
 
           # Shared System Modules
-          ./modules/shared/time.nix
           ./modules/shared/fonts.nix
+          ./modules/shared/nix-core.nix
           ./modules/shared/packages.nix
-          ./modules/shared/nix-core.nix # Shared core nix settings
 
           # NixOS Specific System Modules
-          ./modules/nixos/locale.nix
-          ./modules/nixos/users.nix
-          ./modules/nixos/bootloader.nix
-          ./modules/nixos/networking.nix
-          ./modules/nixos/desktop.nix  # Includes Desktop, Autologin, Tweaks
-          ./modules/nixos/sound.nix
-          ./modules/nixos/services.nix # Includes Printing, Firefox
+          ./modules/nixos/apps.nix
+
           # Integrate Home Manager for NixOS
           home-manager.nixosModules.home-manager
           {

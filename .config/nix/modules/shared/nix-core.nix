@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  time.timeZone = "America/New_York";
+
   nix = {
     package = pkgs.nix;
     settings = {

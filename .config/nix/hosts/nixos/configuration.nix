@@ -12,7 +12,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/shared/nix-core.nix
   ];
 
   # --- Core NixOS Settings ---
@@ -41,16 +40,6 @@
     # Shell is managed by Home Manager
     home = "/home/${username}"; # Standard Linux home
   };
-
-  # Add NixOS system packages (complementary to Home Manager packages)
-  environment.systemPackages = with pkgs; [
-    # Common packages moved to shared/packages.nix:
-    # vim, git, wget, curl, just, htop, alejandra, age, direnv, glow, lla, nixd, nurl, stylua
-    # Keep only NixOS-specific system packages here, if any.
-    # Example: gnome packages if not pulled in by services.xserver.desktopManager.gnome.enable
-    gnome.gnome-tweaks # Example of a potentially NixOS-specific addition
-    # Add any other system-level tools here
-  ];
 
   # Allow flakes & nix command for the root user too
   # nix.settings.experimental-features is handled by ../../modules/shared/nix-core.nix

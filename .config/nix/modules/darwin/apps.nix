@@ -1,18 +1,4 @@
 {pkgs, ...}: {
-  environment.systemPackages = with pkgs; [
-    # Common packages moved to shared/packages.nix
-    brave
-    browsh
-    carapace
-    codespell
-    lynx
-    oterm
-    viu
-    w3m
-  ];
-
-  # environment.variables.EDITOR removed (handled by home-manager)
-
   homebrew = {
     enable = true;
     onActivation = {
