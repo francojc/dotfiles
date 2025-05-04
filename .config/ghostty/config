@@ -19,8 +19,8 @@ macos-window-shadow = false
 
 # Theme
 # theme = nightfox
-# theme = GruvboxDarkHard
-theme = Arthur
+theme = GruvboxDarkHard
+# theme = Arthur
 
 # Enhancements
 confirm-close-surface = true
