@@ -22,8 +22,8 @@
 
         # --- PATH ---
         export PATH="/usr/local/sbin:$PATH"
-        export PATH="${config.home.Directory}/.bin:$PATH" # custom scripts
-        export PATH="${config.home.Directory}/.local/bin:$PATH" # pipx
+        export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
+        export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
@@ -41,7 +41,7 @@
         export ZVM_KEYTIMEOUT=1 # 1 second
 
         # --- SECRETS (from `pass`) ---
-        source ${config.home.Directory}/.variables.env
+        source ${config.home.homeDirectory}/.variables.env
 
         # Xan completions
         function __xan {
