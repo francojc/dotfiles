@@ -67,7 +67,6 @@
     pass # Password manager
     pianobar
     pipx # Python executable installer
-    pngpaste # Paste image from clipboard
     poppler_utils # PDF utilities (pdftotext, etc.)
     qpdf # PDF manipulation tool
     quarto # Scientific publishing system

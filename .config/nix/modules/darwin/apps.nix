@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  # Add system packages
+  environment.systemPackages = with pkgs; [
+    pngpaste # Example of a potentially darwin-specific addition
+  ];
+
   homebrew = {
     enable = true;
     onActivation = {
