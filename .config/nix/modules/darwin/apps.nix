@@ -1,28 +1,17 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    alejandra
-    age
+    # Common packages moved to shared/packages.nix
     brave
     browsh
     carapace
     codespell
-    curl
-    direnv
-    git
-    glow
-    just
-    lla
     lynx
-    nixd
-    nurl
     oterm
-    stylua
-    vim
     viu
     w3m
   ];
 
-  environment.variables.EDITOR = "nvim";
+  # environment.variables.EDITOR removed (handled by home-manager)
 
   homebrew = {
     enable = true;

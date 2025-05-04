@@ -65,6 +65,10 @@
             isDarwin = true;
           };
         modules = [
+          # New shared modules first
+          ./modules/shared/time.nix
+          ./modules/shared/fonts.nix
+          ./modules/shared/packages.nix
           # Import relevant shared/darwin system modules
           ./modules/shared/nix-core.nix
           ./modules/darwin/system.nix
@@ -113,7 +117,12 @@
           };
         modules = [
           # Import the host's main configuration.nix
-          systemAttrs.configFile
+          systemAttrs.configFile # Host-specific NixOS settings
+          # Shared modules (order might matter if they override host config)
+          ./modules/shared/time.nix
+          ./modules/shared/fonts.nix
+          ./modules/shared/packages.nix
+          ./modules/shared/nix-core.nix # Shared core nix settings
           # Integrate Home Manager for NixOS
           home-manager.nixosModules.home-manager
           {

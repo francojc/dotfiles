@@ -16,8 +16,9 @@
   ];
 
   # --- Core NixOS Settings ---
-  networking.hostName = hostname; # Use hostname from specialArgs
-  time.timeZone = "America/New_York"; # Set your timezone
+  # networking.hostName is set in shared/nix-core.nix via host-users.nix import? No, host-users is Darwin only. Keep it here for NixOS.
+  networking.hostName = hostname;
+  # time.timeZone removed (handled by shared/time.nix)
   i18n.defaultLocale = "en_US.UTF-8"; # From original config
   i18n.extraLocaleSettings = {
     # From original config
@@ -43,12 +44,11 @@
 
   # Add NixOS system packages (complementary to Home Manager packages)
   environment.systemPackages = with pkgs; [
-    vim # Basic editor often useful
-    git
-    wget
-    curl
-    just
-    htop
+    # Common packages moved to shared/packages.nix:
+    # vim, git, wget, curl, just, htop, alejandra, age, direnv, glow, lla, nixd, nurl, stylua
+    # Keep only NixOS-specific system packages here, if any.
+    # Example: gnome packages if not pulled in by services.xserver.desktopManager.gnome.enable
+    gnome.gnome-tweaks # Example of a potentially NixOS-specific addition
     # Add any other system-level tools here
   ];
 
@@ -89,7 +89,8 @@
 
   # --- Other System Services (from original config) ---
   networking.networkmanager.enable = true;
-  services.printing.enable = true; # CUPS
+  # services.printing.enable = true; # CUPS - Let's make this shared too potentially? Or keep host specific. Keep here for now.
+  services.printing.enable = true;
   programs.firefox.enable = true; # Firefox system-wide
 
   # Example: Bootloader (adjust for your system, e.g., UEFI or BIOS)

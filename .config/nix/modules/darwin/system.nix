@@ -148,23 +148,10 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   nix.enable = false;
-  programs.zsh.enable = true;
+  # programs.zsh.enable removed (handled by home-manager)
 
-  environment = {
-    shells = [pkgs.zsh];
-    variables.HOMBREW_NO_ANALYTICS = "1";
-  };
-
-  time.timeZone = "America/New_York";
-
-  fonts = {
-    packages = with pkgs; [
-      material-design-icons
-      font-awesome
-      nerd-fonts.symbols-only
-      nerd-fonts.hack
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.meslo-lg
-    ];
-  };
+  # environment shells and variables moved or handled elsewhere
+  environment.variables.HOMBREW_NO_ANALYTICS = "1"; # Keep brew specific var
+  # time.timeZone removed (handled by shared/time.nix)
+  # fonts.packages removed (handled by shared/fonts.nix)
 }
