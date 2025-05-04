@@ -116,13 +116,23 @@
             isDarwin = false;
           };
         modules = [
-          # Import the host's main configuration.nix
+          # Core host specifics (hardware, state version)
           systemAttrs.configFile # Host-specific NixOS settings
-          # Shared modules (order might matter if they override host config)
+
+          # Shared System Modules
           ./modules/shared/time.nix
           ./modules/shared/fonts.nix
           ./modules/shared/packages.nix
           ./modules/shared/nix-core.nix # Shared core nix settings
+
+          # NixOS Specific System Modules
+          ./modules/nixos/locale.nix
+          ./modules/nixos/users.nix
+          ./modules/nixos/bootloader.nix
+          ./modules/nixos/networking.nix
+          ./modules/nixos/desktop.nix  # Includes Desktop, Autologin, Tweaks
+          ./modules/nixos/sound.nix
+          ./modules/nixos/services.nix # Includes Printing, Firefox
           # Integrate Home Manager for NixOS
           home-manager.nixosModules.home-manager
           {
