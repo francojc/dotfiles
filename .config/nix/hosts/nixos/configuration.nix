@@ -37,7 +37,7 @@
     isNormalUser = true;
     description = username; # Use username from specialArgs
     extraGroups = ["wheel" "networkmanager"]; # Common groups, add others if needed
-    # Shell is managed by Home Manager
+    shell = pkgs.zsh; # Use Zsh as the default shell
     home = "/home/${username}"; # Standard Linux home
   };
 

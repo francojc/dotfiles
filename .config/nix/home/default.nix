@@ -28,7 +28,6 @@
     sessionVariables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
-      SHELL = "${pkgs.zsh}/bin/zsh";
     };
     stateVersion = "24.05"; # Keep consistent
   };
