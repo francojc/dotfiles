@@ -1,4 +1,15 @@
-{ pkgs, lib, config, username, useremail, inputs, isLinux, isDarwin, ... }: { # Accept standard HM args
+{
+  pkgs,
+  lib,
+  config,
+  username,
+  useremail,
+  inputs,
+  isLinux,
+  isDarwin,
+  ...
+}: {
+  # Accept standard HM args
   imports = [
     ./core.nix
     ./git.nix
@@ -10,7 +21,10 @@
   home = {
     # Use args passed by Home Manager
     inherit username;
-    homeDirectory = if isDarwin then "/Users/${username}" else "/home/${username}";
+    homeDirectory =
+      if isDarwin
+      then "/Users/${username}"
+      else "/home/${username}";
     sessionVariables = {
       # Define preferred editor here for consistency across systems via HM
       EDITOR = "nvim"; # Or "vim" if preferred
