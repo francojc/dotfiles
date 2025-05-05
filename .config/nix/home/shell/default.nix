@@ -7,7 +7,7 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       defaultKeymap = "viins";
-      initExtra = ''
+      initContent = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
       '';
