@@ -1,13 +1,10 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "org/gnome/shell" = {
-      disabled-extensions = [ "windowsNavigator@gnome-shell-extensions.gcampax.github.com" "dash-to-dock@micxgx.gmail.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "light-style@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" "drive-menu@gnome-shell-extensions.gcampax.github.com" "status-icons@gnome-shell-extensions.gcampax.github.com" ];
-      enabled-extensions = [ "clipboard-indicator@tudmotu.com" "system-monitor@gnome-shell-extensions.gcampax.github.com" "window-list@gnome-shell-extensions.gcampax.github.com" "apps-menu@gnome-shell-extensions.gcampax.github.com" "places-menu@gnome-shell-extensions.gcampax.github.com" "screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com" "awesome-tiles@velitasali.com" ];
+      disabled-extensions = ["windowsNavigator@gnome-shell-extensions.gcampax.github.com" "dash-to-dock@micxgx.gmail.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "light-style@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" "drive-menu@gnome-shell-extensions.gcampax.github.com" "status-icons@gnome-shell-extensions.gcampax.github.com"];
+      enabled-extensions = ["clipboard-indicator@tudmotu.com" "system-monitor@gnome-shell-extensions.gcampax.github.com" "window-list@gnome-shell-extensions.gcampax.github.com" "apps-menu@gnome-shell-extensions.gcampax.github.com" "places-menu@gnome-shell-extensions.gcampax.github.com" "screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com" "awesome-tiles@velitasali.com"];
       favorite-apps = [];
       last-selected-power-profile = "power-saver";
       welcome-dialog-last-shown-version = "47.2";
@@ -20,17 +17,17 @@ with lib.hm.gvariant;
     "org/gnome/shell/extensions/awesome-tiles" = {
       gap-size = 3;
       gap-size-increments = 3;
-      shortcut-decrease-gap-size = [ "<Alt>minus" ];
-      shortcut-increase-gap-size = [ "<Alt>equal" ];
-      shortcut-tile-window-to-bottom = [ "<Alt>j" ];
-      shortcut-tile-window-to-bottom-left = [ "<Shift><Control>h" ];
-      shortcut-tile-window-to-bottom-right = [ "<Shift><Control>l" ];
-      shortcut-tile-window-to-center = [ "<Alt>m" ];
-      shortcut-tile-window-to-left = [ "<Alt>h" ];
-      shortcut-tile-window-to-right = [ "<Alt>l" ];
-      shortcut-tile-window-to-top = [ "<Alt>k" ];
-      shortcut-tile-window-to-top-left = [ "<Shift><Alt>h" ];
-      shortcut-tile-window-to-top-right = [ "<Shift><Alt>l" ];
+      shortcut-decrease-gap-size = ["<Alt>minus"];
+      shortcut-increase-gap-size = ["<Alt>equal"];
+      shortcut-tile-window-to-bottom = ["<Alt>j"];
+      shortcut-tile-window-to-bottom-left = ["<Shift><Control>h"];
+      shortcut-tile-window-to-bottom-right = ["<Shift><Control>l"];
+      shortcut-tile-window-to-center = ["<Alt>m"];
+      shortcut-tile-window-to-left = ["<Alt>h"];
+      shortcut-tile-window-to-right = ["<Alt>l"];
+      shortcut-tile-window-to-top = ["<Alt>k"];
+      shortcut-tile-window-to-top-left = ["<Shift><Alt>h"];
+      shortcut-tile-window-to-top-right = ["<Shift><Alt>l"];
       tiling-steps-side = "0.25,0.5,0.75,1,0.75,0.5,0.25,0";
     };
 
@@ -45,11 +42,6 @@ with lib.hm.gvariant;
       show-upload = false;
     };
 
-    "org/gnome/shell/weather" = {
-      automatic-location = true;
-      locations = [ (mkVariant [ (mkUint32 2) (mkVariant [ "Winston-Salem" "KINT" true [ (mkTuple [ 0.6306456305695202 (-1.4001855403971304) ]) ] [ (mkTuple [ 0.6300614165090002 (-1.400525774881514) ]) ] ]) ]) ];
-    };
-
     "org/gnome/shell/world-clocks" = {
       locations = [];
     };
@@ -57,6 +49,5 @@ with lib.hm.gvariant;
     "org/gnome/tweaks" = {
       show-extensions-notice = false;
     };
-
   };
 }
