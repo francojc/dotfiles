@@ -72,7 +72,7 @@
   # --- Other System Services (from original config) ---
   networking.networkmanager.enable = true;
   # services.printing.enable = true; # CUPS - Let's make this shared too potentially? Or keep host specific. Keep here for now.
-  services.printing.enable = true;
+  # services.printing.enable = true;
   programs.firefox.enable = true; # Firefox system-wide
 
   # Example: Bootloader (adjust for your system, e.g., UEFI or BIOS)
