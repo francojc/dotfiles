@@ -149,7 +149,7 @@
                   nixCats.homeModules.default # Use the nixCats HM module
                   ./home # Import shared home config entrypoint
                   # Add host-specific HM config here if needed:
-                  ./hosts/nixos/home.nix
+                  ./hosts/nixos/dconf.nix
                 ];
               };
             };
