@@ -30,6 +30,7 @@
   # Define general home packages (excluding Neovim and its associated packages)
   generalPackages = with pkgs; [
     _7zz
+    aider-chat
     aerc
     atuin
     bat # Often used by fzf previews, etc. but also standalone
@@ -47,6 +48,7 @@
     fzf # General fuzzy finder
     gh # GitHub CLI
     ghostscript
+    ghostty
     git
     gnupg
     gv # Ghostview - PostScript/PDF viewer
@@ -58,6 +60,12 @@
     khal # Calendar
     kitty # Terminal emulator
     lazygit # TUI Git client
+    (pkgs.python3.withPackages (ps: [
+      ps.llm
+      ps.llm-anthropic # Anthropic plugin
+      ps.llm-gemini # Gemini plugin
+      ps.llm-ollama # Ollama plugin
+    ])) # AI CLI tool with plugins
     mdcat # Markdown cat
     mpv-unwrapped # Media player
     ncdu # Disk usage analyzer

@@ -40,7 +40,6 @@
       "chatgpt"
       "claude" #
       "dropbox"
-      "ghostty@tip"
       "google-drive"
       "kap" # screen recording
       "memory-cleaner"
