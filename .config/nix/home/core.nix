@@ -81,6 +81,7 @@
     ripgrep # grep replacement
     searxng # Metasearch engine (assuming local instance tools)
     shunit2 # Shell testing
+    speedtest-cli # Internet speed test
     sqlite
     starship # Shell prompt
     stow # Symlink manager

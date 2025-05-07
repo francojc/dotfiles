@@ -27,7 +27,6 @@
       "ollama"
       "python@3.11"
       "rename"
-      "speedtest-cli"
       "sunbeam"
       "sqly"
       "wget"
