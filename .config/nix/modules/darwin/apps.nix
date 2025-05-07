@@ -47,6 +47,7 @@
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization
+      "protonvpn"
       "raycast"
       "rectangle"
       "rocket" # emoji picker

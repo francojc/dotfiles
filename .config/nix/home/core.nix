@@ -48,7 +48,6 @@
     fzf # General fuzzy finder
     gh # GitHub CLI
     ghostscript
-    ghostty
     git
     gnupg
     gv # Ghostview - PostScript/PDF viewer
