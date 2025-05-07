@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Desription: This script runs `speedtest` and logs the results. The logs will be include the date, time, ip address (and location), download speed, upload speed, and ping. The logs will be saved in a file named `speedtest.log` in the `~/.local/share/speedtest/` directory. The script will also perform checks to ensure that the `speedtest` command is available and that the log directory exists. If the directory does not exist, it will be created. The script will also check if the `jq` command is available, as it is used to parse the JSON output from the `speedtest` command. If `jq` is not available, the script will exit with an error message. The script will also check if the `speedtest` command is available, and if it is not, it will exit with an error message. The script will also check if the `curl` command is available, and if it is not, it will exit with an error message.
+#
+# Here's an example of the output of the script:
+# $ speedtest --json
+# {"download": 306974935.1890806, "upload": 120909451.19215208, "ping": 60.159, "server": {"url": "http://laxir0008speedtestserver01.wiline.com:8080/speedtest/upload.php", "lat": "33.6842", "lon": "-117.7925", "name": "Irvine, CA", "country": "United States", "cc": "US", "sponsor": "WiLine Networks", "id": "64431", "host": "laxir0008speedtestserver01.wiline.com:8080", "d": 58.591180945960545, "latency": 60.159}, "timestamp": "2025-05-07T14:47:35.902691Z", "bytes_sent": 151150592, "bytes_received": 383813035, "share": null, "client": {"ip": "138.199.35.119", "lat": "34.0544", "lon": "-118.2441", "isp": "Datacamp", "isprating": "3.7", "rating": "0", "ispdlavg": "0", "ispulavg": "0", "loggedin": "0", "country": "US"}}
+#
