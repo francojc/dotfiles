@@ -100,16 +100,16 @@ get_speedtest_data() {
   # Execute speedtest, attempting to capture stdout, stderr, and exit code.
   # The --accept-license and --accept-gdpr flags are for the Ookla CLI.
   # If you are using a different speedtest client, these flags may not be supported.
-  if ! speedtest_json=$(speedtest --json --accept-license --accept-gdpr 2> "$stderr_file"); then
+  if ! speedtest_json=$(speedtest --json 2> "$stderr_file"); then
     speedtest_exit_code=$? # Capture exit code immediately
-    
+
     if [[ -s "$stderr_file" ]]; then # Check if stderr_file has content
         speedtest_stderr_content=$(<"$stderr_file")
     else
         speedtest_stderr_content="<empty>"
     fi
     rm -f "$stderr_file"
-    
+
     error_message=$(printf "speedtest command failed.\n  Path: %s\n  Exit code: %s\n  STDERR:\n%s" \
         "$speedtest_cmd_path" "$speedtest_exit_code" "$speedtest_stderr_content")
     error_exit "$error_message"
@@ -174,7 +174,7 @@ main() {
 
   local speed_data
   speed_data=$(get_speedtest_data)
-  
+
   append_to_log "$speed_data"
 }
 
