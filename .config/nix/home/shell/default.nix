@@ -24,6 +24,7 @@
         export PATH="/usr/local/sbin:$PATH"
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
+        export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
