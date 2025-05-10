@@ -9,7 +9,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.allowUnsupportedSystem = true;
+  nixpkgs.config.allowBroken = false;
 
   services.tailscale.enable = true;
 }

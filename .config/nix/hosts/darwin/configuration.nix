@@ -45,7 +45,7 @@
         expose-group-apps = true;
         orientation = "bottom";
         persistent-apps = [
-          "/Applications/Zen Browser.app"
+          "/Applications/Zen.app"
           "/Applications/Ghostty.app"
           "/System/Applications/Utilities/Screen Sharing.app"
         ];

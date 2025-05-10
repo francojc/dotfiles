@@ -22,6 +22,7 @@
     brews = [
       "borders" # jankyborders
       "huggingface-cli"
+      "mas" # Mac App Store CLI
       "npm"
       "keith/formulae/reminders-cli"
       "ollama"
@@ -39,9 +40,9 @@
       "chatgpt"
       "claude" #
       "dropbox"
+      "ghostty" # Terminal emulator
       "google-drive"
       "kap" # screen recording
-      "mas" # Mac App Store CLI
       "memory-cleaner"
       "mullvadvpn"
       "obsidian"
