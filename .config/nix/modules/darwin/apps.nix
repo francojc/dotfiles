@@ -41,6 +41,7 @@
       "dropbox"
       "google-drive"
       "kap" # screen recording
+      "mas" # Mac App Store CLI
       "memory-cleaner"
       "mullvadvpn"
       "obsidian"
