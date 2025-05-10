@@ -55,7 +55,7 @@
       "transmission"
       "visual-studio-code"
       "yaak" # API client
-      "zen-browser"
+      "zen" # browser
       "zoom"
       "zotero@beta"
     ];
