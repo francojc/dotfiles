@@ -85,6 +85,7 @@
     sqlite
     starship # Shell prompt
     stow # Symlink manager
+    tailscale # Mesh network
     tldr # Simplified man pages
     tree # Directory listing tool
     vdirsyncer # CalDAV/CardDAV sync
