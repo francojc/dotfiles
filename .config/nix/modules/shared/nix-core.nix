@@ -11,5 +11,5 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = false;
 
-  # services.tailscale.enable = true;
+  services.tailscale.enable = true;
 }
