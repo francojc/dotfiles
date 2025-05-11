@@ -12,7 +12,7 @@ set -o pipefail # Return value of a pipeline is the value of the last command to
 # --- Configuration ---
 readonly LOG_DIR="$HOME/.local/share/speedtest"
 readonly LOG_FILE="$LOG_DIR/speedtest.csv"
-readonly REQUIRED_COMMANDS=("speedtest" "jq" "curl" "mktemp") # Added mktemp
+readonly REQUIRED_COMMANDS=("speedtest" "jq" "curl" "mktemp")
 
 # --- Functions ---
 
@@ -27,13 +27,16 @@ Options:
 
 Description:
   This script performs an internet speed test and records the timestamp,
-  IP address, client location (latitude, longitude, country), download speed (Mbps),
-  upload speed (Mbps), and ping (ms).
+  IP address, client location (latitude, longitude, country, state, city/area),
+  download speed (Mbps), upload speed (Mbps), and ping (ms).
 
   Logs are stored in: $LOG_FILE
   The script requires 'speedtest', 'jq', 'curl', and 'mktemp' to be installed.
   It will automatically create the log directory if it doesn't exist
   and initialize the log file with a header row if it's new or empty.
+
+  Note: Location lookup (state, city/area) uses OpenStreetMap Nominatim (nominatim.openstreetmap.org).
+  Please respect their usage policy.
 EOF
 }
 
@@ -67,7 +70,8 @@ ensure_log_dir() {
 initialize_log_file() {
   if [[ ! -f "$LOG_FILE" ]] || [[ ! -s "$LOG_FILE" ]]; then
     # Check if we can write to the directory by attempting to write the header
-    if ! echo "timestamp,ip_address,client_lat,client_lon,client_country,download_mbps,upload_mbps,ping_ms" > "$LOG_FILE"; then
+    # Added 'client_state' and adjusted 'client_city'
+    if ! echo "timestamp,ip_address,client_lat,client_lon,client_country,client_state,client_city_area,download_mbps,upload_mbps,ping_ms" > "$LOG_FILE"; then
       error_exit "Failed to write header to log file: $LOG_FILE. Check permissions."
     fi
   fi
@@ -77,7 +81,7 @@ initialize_log_file() {
 get_speedtest_data() {
   local speedtest_json
   local speedtest_cmd_path
-  local speedtest_stderr_content # Renamed from speedtest_stderr to avoid conflict
+  local speedtest_stderr_content
   local speedtest_exit_code
   local stderr_file
   local error_message
@@ -121,14 +125,14 @@ get_speedtest_data() {
     error_exit "$error_message"
   fi
 
-  local timestamp ip_address client_lat client_lon client_country download_bps upload_bps ping_ms
-  local download_mbps upload_mbps
+  local timestamp ip_address client_lat client_lon speedtest_country download_bps upload_bps ping_ms
+  local download_mbps upload_mbps nominatim_country client_state client_city_area
 
   timestamp=$(echo "$speedtest_json" | jq -e -r '.timestamp')
   ip_address=$(echo "$speedtest_json" | jq -e -r '.client.ip')
   client_lat=$(echo "$speedtest_json" | jq -e -r '.client.lat // "N/A"')
   client_lon=$(echo "$speedtest_json" | jq -e -r '.client.lon // "N/A"')
-  client_country=$(echo "$speedtest_json" | jq -e -r '.client.country // "N/A"')
+  speedtest_country=$(echo "$speedtest_json" | jq -e -r '.client.country // "N/A"') # Keep speedtest country for reference
   download_bps=$(echo "$speedtest_json" | jq -e -r '.download')
   upload_bps=$(echo "$speedtest_json" | jq -e -r '.upload')
   ping_ms=$(echo "$speedtest_json" | jq -e -r '.ping')
@@ -138,16 +142,69 @@ get_speedtest_data() {
   if [[ "$download_bps" == "null" || -z "$download_bps" ]]; then error_exit "Failed to parse download speed."; fi
   if [[ "$upload_bps" == "null" || -z "$upload_bps" ]]; then error_exit "Failed to parse upload speed."; fi
   if [[ "$ping_ms" == "null" || -z "$ping_ms" ]]; then error_exit "Failed to parse ping."; fi
+  # Lat/Lon/Country can be "N/A" if speedtest doesn't provide them, which is acceptable.
 
   download_mbps=$(awk "BEGIN {printf \"%.2f\", $download_bps / 1000000}")
   upload_mbps=$(awk "BEGIN {printf \"%.2f\", $upload_bps / 1000000}")
 
+  # --- Reverse Geocoding using Nominatim ---
+  nominatim_country="N/A"
+  client_state="N/A"
+  client_city_area="N/A" # Default value
+
+  if [[ "$client_lat" != "N/A" && "$client_lon" != "N/A" ]]; then
+    echo "Performing reverse geocoding lookup..." >&2
+    local nominatim_url="https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${client_lat}&lon=${client_lon}"
+    local nominatim_json
+    local nominatim_status
+
+    # Use curl to fetch data, suppress progress, fail on error, set user agent
+    # Added --connect-timeout and --max-time for robustness
+    nominatim_json=$(curl -s -A "speedlog.sh/1.0" -w "%{http_code}" --connect-timeout 5 --max-time 10 "$nominatim_url")
+    nominatim_status="${nominatim_json: -3}" # Extract the last 3 characters (HTTP status code)
+    nominatim_json="${nominatim_json:0:${#nominatim_json}-3}" # Remove status code from json
+
+    if [[ "$nominatim_status" -ne 200 ]]; then
+      echo "Warning: Nominatim lookup failed with HTTP status $nominatim_status." >&2
+      client_city_area="Lookup Failed ($nominatim_status)"
+    elif [[ -z "$nominatim_json" ]] || ! echo "$nominatim_json" | jq empty 2>/dev/null; then
+       echo "Warning: Nominatim lookup returned empty or invalid JSON." >&2
+       client_city_area="Lookup Failed (Invalid JSON)"
+    else
+      # Extract country, state, and city/area from Nominatim JSON
+      nominatim_country=$(echo "$nominatim_json" | jq -r '.address.country // "N/A"')
+      client_state=$(echo "$nominatim_json" | jq -r '.address.state // "N/A"')
+      # Attempt to extract city or a relevant place name
+      # Prioritize city, town, village, hamlet, then county, then display_name
+      client_city_area=$(echo "$nominatim_json" | jq -r '.address.city // .address.town // .address.village // .address.hamlet // .address.county // .display_name // "Unknown Area"')
+
+      # Remove commas from the city/area name to avoid breaking CSV
+      client_city_area=$(echo "$client_city_area" | tr ',' ' ')
+      # Remove commas from state name
+      client_state=$(echo "$client_state" | tr ',' ' ')
+      # Remove commas from country name
+      nominatim_country=$(echo "$nominatim_country" | tr ',' ' ')
+    fi
+  else
+    echo "Skipping reverse geocoding: Latitude or longitude not available." >&2
+  fi
+  # --- End Reverse Geocoding ---
+
+  # Decide which country to use - prefer Nominatim if available, otherwise speedtest's
+  local final_country="$speedtest_country"
+  if [[ "$nominatim_country" != "N/A" ]]; then
+      final_country="$nominatim_country"
+  fi
+
+
   # Return the comma-separated data line and the pretty-printed output
-  echo "$timestamp,$ip_address,$client_lat,$client_lon,$client_country,$download_mbps,$upload_mbps,$ping_ms"
+  # Added client_state and client_city_area to the data line
+  echo "$timestamp,$ip_address,$client_lat,$client_lon,$final_country,$client_state,$client_city_area,$download_mbps,$upload_mbps,$ping_ms"
   echo "--- Speedtest Results ---" >&2
   echo "Timestamp: $timestamp" >&2
   echo "IP Address: $ip_address" >&2
-  echo "Location: $client_lat, $client_lon ($client_country)" >&2
+  # Updated Location line to include state and city/area
+  echo "Location: $client_lat, $client_lon ($final_country, $client_state, $client_city_area)" >&2
   echo "Download: ${download_mbps} Mbps" >&2
   echo "Upload: ${upload_mbps} Mbps" >&2
   echo "Ping: ${ping_ms} ms" >&2
