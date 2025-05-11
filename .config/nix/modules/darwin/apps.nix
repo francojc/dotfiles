@@ -44,7 +44,6 @@
       "google-drive"
       "kap" # screen recording
       "memory-cleaner"
-      "mullvadvpn"
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization
