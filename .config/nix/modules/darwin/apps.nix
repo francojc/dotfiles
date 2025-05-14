@@ -81,6 +81,7 @@
       # Vinegar_for_Safari = 1591303229;
       # VoiceType = 6736525125;
       iPreview = 1519213509;
+      windows-app = 1295203466;
     };
   };
 }
