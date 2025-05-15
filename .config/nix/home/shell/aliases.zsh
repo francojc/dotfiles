@@ -43,6 +43,7 @@ alias path='echo -e ${PATH//:/\\n}'
 
 alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore'
 alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
+alias home='TERM=xterm-256color ssh jeridf@home'
 
 # Git aliases
 alias gss='git status'
