@@ -562,7 +562,7 @@ require("blink.cmp").setup({
 			},
 		},
 		menu = {
-			auto_show = false,
+			auto_show = true,
 			-- auto_show = function()
 			-- 	return false
 			-- end, -- We'll handle auto-show with a timer below
