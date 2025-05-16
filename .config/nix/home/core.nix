@@ -86,6 +86,7 @@
     starship # Shell prompt
     stow # Symlink manager
     tldr # Simplified man pages
+    tmux # Terminal multiplexer
     tree # Directory listing tool
     vdirsyncer # CalDAV/CardDAV sync
     which
