@@ -23,3 +23,4 @@ theme = GruvboxDarkHard
 keybind = alt+m=text: |>
 keybind = alt+-=text: <-
 
+macos-option-as-alt = right
