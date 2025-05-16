@@ -358,7 +358,7 @@ map("n", "<leader>qf", "<Cmd>QuartoSendAll<Cr>", { desc = "Quarto: send file" })
 
 -- Run -----------------------------------
 -- Slime
-g.slime_target = "kitty"
+g.slime_target = "neovim"
 vim.b.slime_cell_delimiter = "```"
 map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
 map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
