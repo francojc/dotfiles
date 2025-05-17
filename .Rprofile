@@ -1,4 +1,4 @@
 options(
   repo = c(CRAN = "https://cran.rstudio.com/"),
-  browser = "open -a 'Zen Browser'"
+  browser = "open -a 'Zen'"
 )
