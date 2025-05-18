@@ -632,7 +632,67 @@ require("blink.cmp").setup({
 })
 
 -- Bufferline ----------------------------------
-require("bufferline").setup({})
+require("bufferline").setup({
+	highlights = {
+		fill = {
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		close_button = {
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		close_button_visible = {
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		close_button_selected = {
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		background = {
+			italic = false,
+			bold = false,
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		buffer_visible = {
+			italic = false,
+			bold = false,
+			fg = "#EBDBB2",
+			bg = "#3C3836",
+		},
+		buffer_selected = {
+			italic = false,
+			bold = true,
+			fg = "#FABD2E",
+			bg = "#3C3836",
+		},
+		modified = {
+			bg = "#3C3836",
+		},
+		modified_selected = {
+			bg = "#3C3836",
+		},
+		separator = {
+			bg = "#3C3836",
+		},
+		separator_visible = {
+			bg = "#3C3836",
+		},
+		separator_selected = {
+			bg = "#FABD2E",
+			fg = "#FABD2E",
+		},
+		offset_separator = {
+			bg = "#3C3836",
+		},
+	},
+	options = {
+		color_icons = true,
+		separator_style = "thin",
+	},
+})
 
 -- CodeCompanion ----------------------------------
 require("codecompanion").setup({
