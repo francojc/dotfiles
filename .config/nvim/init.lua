@@ -687,10 +687,24 @@ require("bufferline").setup({
 		offset_separator = {
 			bg = "#3C3836",
 		},
+		pick_selected = {
+			bg = "#3C3836",
+		},
+		pick_visible = {
+			bg = "#3C3836",
+		},
+		pick = {
+			bg = "#3C3836",
+			bold = true,
+			italic = true,
+		},
 	},
 	options = {
 		color_icons = true,
 		separator_style = "thin",
+		indicator = {
+			style = "none",
+		},
 	},
 })
 
