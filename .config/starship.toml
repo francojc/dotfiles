@@ -4,7 +4,6 @@ add_newline = true
 continuation_prompt = "[▸▹ ](dimmed white)"
 
 format = """($os$nix_shell$container$fill$cmd_duration\n)\
-$hostname\
 $shell\
 $env_var\
 $jobs\
