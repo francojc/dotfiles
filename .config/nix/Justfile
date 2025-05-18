@@ -1,5 +1,9 @@
 # Justfile for nix-darwin
 
+
+default:
+  @just --list
+
 hostname := "Mac-Minicore"
 
 ############################################################################
