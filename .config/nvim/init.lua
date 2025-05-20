@@ -5,6 +5,7 @@ require("bootstrap").ensure_paq()
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
+	-- "pappasam/nvim-repl", -- REPL support
 	"AlessandroYorba/Alduin", -- Alduin: colorscheme
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
@@ -1047,6 +1048,8 @@ require("lualine").setup({
 require("mini.icons").setup({})
 require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
+
+-- Nvim REPL --------------------------------
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
