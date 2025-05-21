@@ -24,9 +24,7 @@
   system.stateVersion = 5; # Keep consistent with nix-darwin requirements
 
   system = {
-    activationScripts.postUserActivation.text = ''
-      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-    '';
+    primaryUser = username; # Set the primary user for user-specific options
 
     defaults = {
       smb.NetBIOSName = hostname;
