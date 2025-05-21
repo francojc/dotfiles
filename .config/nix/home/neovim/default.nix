@@ -24,7 +24,7 @@ in {
             gh
             imagemagick
             lazygit
-            nodejs-slim_23
+            nodejs-slim # was nodejs-slim_23
             ripgrep
           ];
 

@@ -70,7 +70,7 @@
     mpv-unwrapped # Media player
     ncdu # Disk usage analyzer
     nix-prefetch-git
-    nodejs-slim_23 # Needed for prettier, but potentially other tools too
+    nodejs-slim # was nodejs-slim_23
     pandoc
     pass # Password manager
     pianobar
