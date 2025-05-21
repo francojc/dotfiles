@@ -5,7 +5,6 @@ require("bootstrap").ensure_paq()
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
-	-- "pappasam/nvim-repl", -- REPL support
 	"AlessandroYorba/Alduin", -- Alduin: colorscheme
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
@@ -50,6 +49,8 @@ require("paq")({
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
 	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
+	-- "pappasam/nvim-repl", -- REPL support
+	"m4xshen/hardtime.nvim", -- Vim training wheels
 })
 
 --| Options ------------------------------------------------------
@@ -830,6 +831,9 @@ require("fzf-lua").setup({
 -- Gitsigns -------------------------------
 require("gitsigns").setup()
 
+-- Hardtime ----------------------------------
+require("hardtime").setup({})
+
 -- Image ----------------------------------
 require("image").setup({
 	processor = "magick_cli",
@@ -861,13 +865,6 @@ local lspconfig = require("lspconfig")
 -- Define capabilities early so the toggle function can access it
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
--- LSP Setup will happen later...
-
--- Functions dependent on capabilities or LSP config can be defined here or later
-
--- (Function definitions using capabilities will go here or after)
-
--- Setup LSP servers later in the file...
 -- Bash
 -- bash-language-server
 lspconfig.bashls.setup({ capabilities = capabilities })
