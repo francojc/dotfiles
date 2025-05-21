@@ -65,6 +65,7 @@
       ps.llm-anthropic # Anthropic plugin
       ps.llm-gemini # Gemini plugin
       ps.llm-ollama # Ollama plugin
+      ps.llm-openai-plugin # OpenAI plugin
     ])) # AI CLI tool with plugins
     mdcat # Markdown cat
     mpv-unwrapped # Media player
