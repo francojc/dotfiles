@@ -2,7 +2,7 @@
 # Nix aliases
 
 # -- Uses hostname to determine the flake to switch to
-alias dswitch='darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
+alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
 alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
