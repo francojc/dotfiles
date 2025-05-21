@@ -36,6 +36,7 @@
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
     claude-code # CLI tool
+    clipse # Clipboard manager
     datasette
     drawio
     duf
