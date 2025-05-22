@@ -12,51 +12,55 @@
         ${builtins.readFile ./fzf.zsh}
       '';
       profileExtra = ''
-        # zprofile
+          # zprofile
 
-        # --- Hombrew ---
-        # Brew binary (Apple Silicon)
-        if [[ -f "/opt/homebrew/bin/brew" ]] then
-         eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-
-        # --- PATH ---
-        export PATH="/usr/local/sbin:$PATH"
-        export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
-        export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
-        export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
-
-        # --- ENVIRONMENT VARIABLES ---
-        export EDITOR='nvim'
-        export HOMEBREW_NO_ENV_HINTS=true
-        export HOSTNAME=$(hostname)
-        export LUA_CPATH=""
-        export MANPAGER="less -R"
-        export PAGER='bat'
-        export USER=$(whoami)
-        export VISUAL='nvim'
-
-        # --- ZSH ---
-        # ZSH plugins
-        export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
-        export ZVM_KEYTIMEOUT=1 # 1 second
-
-        # --- SECRETS (from `pass`) ---
-        source ${config.home.homeDirectory}/.variables.env
-
-        # Xan completions
-        function __xan {
-          xan compgen "$1" "$2" "$3"
-        }
-        # Set 'pbcopy' if not on darwin
-        if [[ "$OSTYPE" != "darwin"* ]]; then
-          # Check if xclip is installed
-          if command -v xclip &> /dev/null; then
-            alias pbcopy='xclip -selection clipboard'
-          else
-            echo "xclip not found. Please install it to use pbcopy."
+          # --- Hombrew ---
+          # Brew binary (Apple Silicon)
+          if [[ -f "/opt/homebrew/bin/brew" ]] then
+           eval "$(/opt/homebrew/bin/brew shellenv)"
           fi
-        fi
+
+          # --- PATH ---
+          export PATH="/usr/local/sbin:$PATH"
+          export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
+          export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
+          export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
+
+          # --- ENVIRONMENT VARIABLES ---
+          export EDITOR='nvim'
+          export HOMEBREW_NO_ENV_HINTS=true
+          export HOSTNAME=$(hostname)
+          export LUA_CPATH=""
+          export MANPAGER="less -R"
+          export PAGER='bat'
+          export USER=$(whoami)
+          export VISUAL='nvim'
+
+          # --- ZSH ---
+          # ZSH plugins
+          export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
+          export ZVM_KEYTIMEOUT=1 # 1 second
+
+          # --- SECRETS (from `pass`) ---
+          source ${config.home.homeDirectory}/.variables.env
+
+          # Xan completions
+          function __xan {
+            xan compgen "$1" "$2" "$3"
+          }
+          # Set 'pbcopy' if not on darwin
+          if [[ "$OSTYPE" != "darwin"* ]]; then
+            # Check if xclip is installed
+            if command -v xclip &> /dev/null; then
+              alias pbcopy='xclip -selection clipboard'
+            else
+              echo "xclip not found. Please install it to use pbcopy."
+            fi
+          fi
+        # Attach Tmux to ZSH on startup
+          if [[ -n "$TMUX" ]]; then
+            tmux attach
+          fi
       '';
       # Other ZSH plugins
       plugins = [];
