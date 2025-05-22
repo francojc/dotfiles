@@ -1,4 +1,11 @@
 # --- ALIASES ---
+
+# Tmux aliases
+alias tm='tmux attach || tmux new' # attach to existing session or create a new one
+alias tml='tmux list-sessions' # list all tmux sessions
+alias tma=' tmux attach-session -t' # attach to a specific session
+alias tmk='tmux kill-session -t' # kill a specific session
+
 # Nix aliases
 
 # -- Uses hostname to determine the flake to switch to
