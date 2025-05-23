@@ -30,7 +30,7 @@ require("paq")({
 	"kvrohit/rasmus.nvim", -- Colorscheme: Rasmus
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
-	"m4xshen/hardtime.nvim", -- Vim training wheels
+	-- "m4xshen/hardtime.nvim", -- Vim training wheels
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
@@ -48,7 +48,7 @@ require("paq")({
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"tris203/precognition.nvim", -- Precognition: auto-hints
+	-- "tris203/precognition.nvim", -- Precognition: auto-hints
 	"vague2k/vague.nvim", -- Colorscheme: Vague
 	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
 	-- "pappasam/nvim-repl", -- REPL support
@@ -833,7 +833,7 @@ require("fzf-lua").setup({
 require("gitsigns").setup()
 
 -- Hardtime ----------------------------------
-require("hardtime").setup({})
+-- require("hardtime").setup({})
 
 -- Image ----------------------------------
 require("image").setup({
@@ -1085,7 +1085,7 @@ require("obsidian").setup({
 })
 
 -- Precognition -------------------------------
-require("precognition").setup({})
+-- require("precognition").setup({})
 
 -- Quarto -----------------------------------
 require("quarto").setup({})
