@@ -27,3 +27,7 @@ keybind = alt+m=text: |>
 keybind = alt+-=text: <-
 
 macos-option-as-alt = right
+
+# Keybinds
+
+keybind = global:ctrl+`=toggle_quick_terminal

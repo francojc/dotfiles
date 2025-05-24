@@ -58,6 +58,7 @@ require("paq")({
 local a = vim.api
 local opt = vim.opt
 local vim = vim
+local g = vim.g
 
 -- Globals -----
 -- Record start time for startup duration
@@ -249,6 +250,7 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
 -- Copilot
+g.copilot_settings = { selectedCompletionModel = "claude-sonnet-4" } -- WARN: not sure if this is working
 map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
 map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
@@ -719,7 +721,6 @@ require("codecompanion").setup({
 			return require("codecompanion.adapters").extend("copilot", {
 				schema = {
 					model = {
-						-- default = "claude-3.7-sonnet",
 						default = "claude-sonnet-4",
 					},
 				},
