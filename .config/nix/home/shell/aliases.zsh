@@ -16,7 +16,7 @@ alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hos
 # Aider-chat aliases
 alias aider-proj='aider --model gemini-reasoner --editor-model gemma --architect --watch-files'
 alias aider-helper='aider --model gemma --no-git --watch-files'
-alias aider-commit='aider --commit --no-gitignore'
+alias aider-commit='aider --commit --no-gitignore --config $(realpath ~/.config/aider/commit.yml)'
 
 # Aerc (mail)
 

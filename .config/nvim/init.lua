@@ -523,12 +523,12 @@ dashboard.section.header.val = {
 }
 -- Set menu
 dashboard.section.buttons.val = {
-	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
-	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
-	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
-	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
-	dashboard.button("s", "  Select a session", ":SessionSearch<CR>"),
-	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
+	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
+	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
+	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+	dashboard.button("s", "  Select a session", ":SessionSearch<CR>"),
+	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
 }
 
 -- Set footer
@@ -537,7 +537,7 @@ dashboard.section.footer.val = function()
 	local start_time = _G.nvim_config_start_time or end_time -- Fallback if start time wasn't set
 	local duration_ns = end_time - start_time
 	local ms = math.floor(duration_ns / 1000000 + 0.5) -- Convert ns to ms and round
-	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
+	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
 end
 
 -- Send config to alpha
@@ -553,6 +553,9 @@ require("auto-session").setup({
 })
 
 -- Blink ----------------------------------
+-- Timer for delayed auto_show
+local completion_timer = nil
+
 require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
@@ -565,10 +568,20 @@ require("blink.cmp").setup({
 			},
 		},
 		menu = {
-			auto_show = false,
-			-- auto_show = function()
-			-- 	return false
-			-- end, -- We'll handle auto-show with a timer below
+			auto_show = function(ctx)
+				-- Cancel any existing timer
+				if completion_timer then
+					vim.fn.timer_stop(completion_timer)
+					completion_timer = nil
+				end
+				-- Start a new timer for 1000ms delay
+				completion_timer = vim.fn.timer_start(1000, function()
+					require("blink.cmp").show()
+					completion_timer = nil
+				end)
+				-- Return false to prevent immediate showing
+				return false
+			end,
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -741,11 +754,11 @@ require("codecompanion").setup({
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
 					---@diagnostic disable-next-line: undefined-field
-					return " (" .. adapter.formatted_name .. ") "
+					return " (" .. adapter.formatted_name .. ") "
 				end,
 
 				---@type string
-				user = " -------------",
+				user = " -------------",
 			},
 		},
 	},
@@ -1092,11 +1105,11 @@ require("render-markdown").setup({
 	},
 	checkbox = {
 		unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-		checked = { icon = " ", highlight = "RenderMarkdownChecked", scope_highlight = "@markup.strikethrough" },
+		checked = { icon = " ", highlight = "RenderMarkdownChecked", scope_highlight = "@markup.strikethrough" },
 		custom = {
-			todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
-			forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
-			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
+			todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+			forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
+			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
 		},
 	},
 	code = {
@@ -1166,23 +1179,23 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "AI", icon = " " },
-	{ "<leader>b", group = "Buffer", icon = " " },
-	{ "<leader>c", group = "Code", icon = " " },
-	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
-	{ "<leader>e", group = "Explore", icon = " " },
-	{ "<leader>f", group = "Find", icon = " " },
-	{ "<leader>g", group = "Git", icon = " " },
-	{ "<leader>h", group = "Help", icon = " " },
-	{ "<leader>l", group = "LSP", icon = " " },
-	{ "<leader>m", group = "Markdown", icon = " " },
-	{ "<leader>o", group = "Obsidian", icon = "" },
-	{ "<leader>q", group = "Quarto", icon = " " },
-	{ "<leader>r", group = "Run", icon = " " },
-	{ "<leader>s", group = "Search", icon = " " },
-	{ "<leader>t", group = "Toggle", icon = " " },
-	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
-	{ "<leader>x", desc = "Quit all", icon = " " },
+	{ "<leader>a", group = "AI", icon = " " },
+	{ "<leader>b", group = "Buffer", icon = " " },
+	{ "<leader>c", group = "Code", icon = " " },
+	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
+	{ "<leader>e", group = "Explore", icon = " " },
+	{ "<leader>f", group = "Find", icon = " " },
+	{ "<leader>g", group = "Git", icon = " " },
+	{ "<leader>h", group = "Help", icon = " " },
+	{ "<leader>l", group = "LSP", icon = " " },
+	{ "<leader>m", group = "Markdown", icon = " " },
+	{ "<leader>o", group = "Obsidian", icon = "" },
+	{ "<leader>q", group = "Quarto", icon = " " },
+	{ "<leader>r", group = "Run", icon = " " },
+	{ "<leader>s", group = "Search", icon = " " },
+	{ "<leader>t", group = "Toggle", icon = " " },
+	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
+	{ "<leader>x", desc = "Quit all", icon = " " },
 })
 
 -- Yazi -----------------------------------
