@@ -563,12 +563,9 @@ require("blink.cmp").setup({
 				preselect = false,
 				auto_insert = false,
 			},
-			menu = {
-				delay = 1000,
-			},
 		},
 		menu = {
-			auto_show = true,
+			auto_show = false,
 			-- auto_show = function()
 			-- 	return false
 			-- end, -- We'll handle auto-show with a timer below
@@ -877,13 +874,6 @@ lspconfig.bashls.setup({ capabilities = capabilities })
 lspconfig.lua_ls.setup({ capabilities = capabilities })
 -- Nix
 -- nixd
-local function get_username()
-	return os.getenv("USER") or ""
-end
-
-local function get_home_dir()
-	return os.getenv("HOME") or os.getenv("HOMEPATH") or os.getenv("USERPROFILE") or ""
-end
 
 local function get_hostname()
 	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
