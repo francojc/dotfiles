@@ -563,6 +563,9 @@ require("blink.cmp").setup({
 				preselect = false,
 				auto_insert = false,
 			},
+			menu = {
+				delay = 1000,
+			},
 		},
 		menu = {
 			auto_show = true,
