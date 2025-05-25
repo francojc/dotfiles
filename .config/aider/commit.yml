@@ -1,8 +1,6 @@
 # Aider configuration file
 # Commit messages
 
-read: [""]
-
 weak-model: openrouter/google/gemma-3-27b-it:free
 architect: false
 stream: false
