@@ -1,20 +1,18 @@
 # Aliases
 alias:
   # OpenRouter
-  - "deepseek-reasoner:openrouter/deepseek/deepseek-r1"
-  - "mistral-small-3.1:openrouter/mistralai/mistral-small-3.1-24b-instruct"
   - "sonnet:openrouter/anthropic/claude-3.7-sonnet"
   - "deepseek-chat:openrouter/deepseek/deepseek-chat-v3-0324"
   - "gemini-pro:openrouter/google/gemini-2.5-pro-preview"
   - "gemini-flash:openrouter/google/gemini-2.5-flash-preview"
   - "flash:openrouter/google/gemini-2.0-flash-001"
-  - "gemma:openrouter/google/gemma-3-27b-it"
+  - "gemma:openrouter/google/gemma-3-27b-it:free"
 
   # Ollama
   - "gemma-local:ollama_chat/gemma3:12b"
 
 # Conventions/ project description
-read: [~/.conventions.md, README.md]
+read: [.conventions.md, README.md]
 
 # Models
 model: gemini-flash
@@ -23,23 +21,6 @@ weak-model: gemma
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
-
-# # Theme: Gruvbox
-# # Main text colors
-# user-input-color: "#b8bb26"
-# assistant-output-color: "#83a598"
-# tool-output-color: "#ebdbb2"
-# tool-error-color: "#fb4934"
-# tool-warning-color: "#fe8019"
-#
-# # Completion menu colors (terminal-based)
-# completion-menu-color: "#ebdbb2"
-# completion-menu-bg-color: "#282828"
-# completion-menu-current-color: "#fbf1c7"
-# completion-menu-current-bg-color: "#504945"
-#
-# Code theme for markdown syntax highlighting
-# code-theme: "monokai"
 
 # Theme: Black Metal
 # Main text colors
@@ -56,9 +37,6 @@ completion-menu-current-color: "#f8f8f2"
 completion-menu-current-bg-color: "#44475a"
 
 # Code theme for markdown syntax highlighting
-# https://pygments.org/styles
-# code-theme: "github-dark"
-# code-theme: "monokai"
 code-theme: "coffee"
 
 # Editor Configuration
