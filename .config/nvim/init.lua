@@ -1058,7 +1058,7 @@ require("mini.indentscope").setup({})
 -- Obsidian -----------------------------------
 require("obsidian").setup({
 	ui = {
-		enable = true,
+		enable = false,
 	},
 	workspaces = {
 		{
@@ -1118,7 +1118,7 @@ require("render-markdown").setup({
 		min_width = 80,
 	},
 	completions = { lsp = { enabled = true } },
-	conceal = { level = 1 }, -- Disable conceal entirely
+	-- conceal = { level = 1 }, -- Disable conceal entirely
 	dash = { enabled = false },
 	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
 	heading = {
