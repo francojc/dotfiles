@@ -1105,11 +1105,11 @@ require("render-markdown").setup({
 	},
 	checkbox = {
 		unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-		checked = { icon = " ", highlight = "RenderMarkdownChecked", scope_highlight = "@markup.strikethrough" },
+		checked = { icon = " ", highlight = "RenderMarkdownChecked", scope_highlight = "@markup.strikethrough" },
 		custom = {
-			todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
-			forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
-			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
+			todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+			forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
+			important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
 		},
 	},
 	code = {
