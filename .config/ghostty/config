@@ -8,8 +8,9 @@ adjust-cursor-thickness = 2
 mouse-hide-while-typing = true
 
 # Tabs and windows
-window-padding-x = 5
-window-padding-y = 5
+# window-padding-x = 5
+# window-padding-y = 3
+window-padding-balance = true
 
 macos-titlebar-style = hidden
 macos-window-shadow = false
