@@ -1,10 +1,20 @@
 # --- ALIASES ---
 
 # Tmux aliases
-alias t='tmux attach || tmux new "%%"' # attach to existing session or create a new one
 alias tl='tmux list-sessions' # list all tmux sessions
-alias ta=' tmux attach-session -t' # attach to a specific session
-alias tk='tmux kill-session -t' # kill a specific session
+alias taa=' tmux attach-session -t' # attach to a specific session
+alias tka='tmux kill-session -t' # kill a specific session
+alias tko='tmux kill-server' # kill all tmux sessions
+
+# Attach to a tmux session or create a new one if none exists
+t() {
+  if [ $# -eq 0 ]; then
+    tmux attach-session 2>/dev/null || tmux new-session
+  else
+    tmux attach-session -t "$1" 2>/dev/null || tmux new-session -s "$1"
+  fi
+}
+
 
 # Nix aliases
 
