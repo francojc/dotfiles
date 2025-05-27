@@ -15,9 +15,7 @@ t() {
   fi
 }
 
-
 # Nix aliases
-
 # -- Uses hostname to determine the flake to switch to
 alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
@@ -29,7 +27,6 @@ alias aider-helper='aider --model gemma --no-git --watch-files'
 alias aider-commit='aider --commit --no-gitignore --config $(realpath ~/.config/aider/commit.yml)'
 
 # Aerc (mail)
-
 alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
 
 # Directory navigation
@@ -57,7 +54,6 @@ alias mv='mv -iv'
 alias path='echo -e ${PATH//:/\\n}'
 
 # SSH aliases
-
 alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore'
 alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
 alias home='TERM=xterm-256color ssh jeridf@home'
