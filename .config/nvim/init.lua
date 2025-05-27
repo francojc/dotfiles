@@ -6,6 +6,7 @@ require("bootstrap").ensure_paq()
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
 	"AlessandroYorba/Alduin", -- Alduin: colorscheme
+	"christoomey/vim-tmux-navigator", -- Tmux navigator
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
@@ -221,6 +222,13 @@ map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" }
 map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
 map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
+-- Move between editor/tmux windows
+map("n", "<C-h>", "<Cmd><C-U>TmuxNavigateLeft<Cr>", { desc = "Move to left window" })
+map("n", "<C-j>", "<Cmd><C-U>TmuxNavigateDown<Cr>", { desc = "Move to bottom window" })
+map("n", "<C-k>", "<Cmd><C-U>TmuxNavigateUp<Cr>", { desc = "Move to top window" })
+map("n", "<C-l>", "<Cmd><C-U>TmuxNavigateRight<Cr>", { desc = "Move to right window" })
+map("n", "<C-\\>", "<Cmd><C-U>TmuxNavigatePrevious<Cr>", { desc = "Move to last active window" })
+
 -- Resize
 map("n", "<leader>wk", "<C-w>5-", { desc = "Resize window up" })
 map("n", "<leader>wj", "<C-w>5+", { desc = "Resize window down" })

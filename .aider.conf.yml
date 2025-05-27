@@ -8,7 +8,7 @@ alias:
   - "gemma:openrouter/google/gemma-3-27b-it:free"
 
   # Google
-  - "gemini-flash:gemini/gemini-2.5-flash-preview-05-20"
+  - "gemini-flash:google/gemini-2.5-flash-preview-05-20"
 
   # Ollama
   - "gemma-local:ollama_chat/gemma3:12b"
