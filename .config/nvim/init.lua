@@ -5,7 +5,6 @@ require("bootstrap").ensure_paq()
 --| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
-	"AlessandroYorba/Alduin", -- Alduin: colorscheme
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
@@ -23,12 +22,10 @@ require("paq")({
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
-	"itspriddle/vim-themes", -- Colorscheme: Themes
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration
-	"kvrohit/rasmus.nvim", -- Colorscheme: Rasmus
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
@@ -42,14 +39,10 @@ require("paq")({
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
 	"rcarriga/nvim-notify", -- Notifications
-	"rebelot/kanagawa.nvim", -- Colorscheme: Kanagawa
-	"rktjmp/lush.nvim", -- Lush: colorscheme editor/ support
 	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"vague2k/vague.nvim", -- Colorscheme: Vague
-	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
 })
 
 --| Options ------------------------------------------------------
@@ -736,22 +729,17 @@ require("codecompanion").setup({
 				---@type string|fun(adapter: CodeCompanion.Adapter): string
 				llm = function(adapter)
 					---@diagnostic disable-next-line: undefined-field
-					return " (" .. adapter.formatted_name .. ") "
+					return " (" .. adapter.formatted_name .. ") "
 				end,
 
 				---@type string
-				user = " -------------",
+				user = " -------------",
 			},
 		},
 	},
 })
 
 -- Colorscheme ----------------------------------
-
--- Alduin
-g.alduin_Shout_Dragon_Aspect = 1
-g.alduin_Shout_Aura_Whisper = 1
-
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
@@ -759,25 +747,6 @@ require("gruvbox").setup({
 	overrides = {},
 })
 
--- Kanagawa
-require("kanagawa").setup({
-	theme = "dragon",
-	background = "dragon",
-})
-
--- Rasmus
-g.rasmus_italic_functions = 1
-g.rasmus_bold_functions = 1
-
-g.rasmus_variant = "monochrome"
-
--- Vague
-require("vague").setup({})
-
--- Vim themes
--- Peruse: FzfLua colortheme
-
--- Set colorscheme
 vim.cmd("colorscheme gruvbox")
 
 -- Conform ----------------------------------
@@ -1101,7 +1070,7 @@ require("render-markdown").setup({
 	completions = { lsp = { enabled = true } },
 	-- conceal = { level = 1 }, -- Disable conceal entirely
 	dash = { enabled = false },
-	file_types = { "markdown", "quarto", "codecompanion" }, -- Ensure quarto is here
+	file_types = { "markdown", "quarto", "codecompanion" },
 	heading = {
 		backgrounds = {},
 		left_pad = 0,
