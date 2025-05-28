@@ -51,11 +51,7 @@ local opt = vim.opt
 
 -- Globals -----
 -- Record start time for startup duration
-vim.api.nvim_create_autocmd("VimEnter", {
-	callback = function()
-		_G.nvim_config_end_time = vim.loop.hrtime()
-	end,
-})
+_G.nvim_config_start_time = vim.loop.hrtime()
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
@@ -336,7 +332,15 @@ map("n", "<leader>qf", "<Cmd>QuartoSendAll<Cr>", { desc = "Quarto: send file" })
 -- Run -----------------------------------
 -- Slime
 g.slime_target = "tmux"
-vim.b.slime_cell_delimiter = "```"
+vim.api.nvim_create_autocmd("FileType", {
+	-- limit to only certain filetypes
+	pattern = { "r", "quarto", "markdown" },
+	callback = function()
+		vim.b.slime_cell_delimiter = "```"
+	end,
+})
+
+-- vim.b.slime_cell_delimiter = "```"
 map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
 map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
@@ -842,6 +846,10 @@ lspconfig.bashls.setup({ capabilities = capabilities })
 lspconfig.lua_ls.setup({ capabilities = capabilities })
 -- Nix
 -- nixd
+
+local function get_home_dir()
+	return os.getenv("HOME") or "~"
+end
 
 local function get_hostname()
 	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
