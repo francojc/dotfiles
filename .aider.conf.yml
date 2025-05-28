@@ -16,7 +16,7 @@ read: [.conventions.md, README.md]
 # Models
 model: gemini-flash
 editor-model: gemini-flash
-weak-model: gemma
+weak-model: gemma-local
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
