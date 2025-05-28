@@ -1,14 +1,11 @@
 # Aliases
 alias:
   # OpenRouter
-  - "sonnet:openrouter/anthropic/claude-3.7-sonnet"
+  - "sonnet:openrouter/anthropic/claude-sonnet-4"
   - "deepseek-chat:openrouter/deepseek/deepseek-chat-v3-0324"
   - "gemini-pro:openrouter/google/gemini-2.5-pro-preview"
-  - "flash:openrouter/google/gemini-2.0-flash-001"
-  - "gemma:openrouter/google/gemma-3-27b-it:free"
-
-  # Google
-  - "gemini-flash:google/gemini-2.5-flash-preview-05-20"
+  - "gemini-flash:openrouter/google/gemini-2.5-flash-preview-05-20"
+  - "gemma:openrouter/google/gemma-3n-e4b-it:free"
 
   # Ollama
   - "gemma-local:ollama_chat/gemma3:1b"
