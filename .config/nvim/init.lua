@@ -1058,13 +1058,14 @@ require("lualine").setup({
 require("mini.icons").setup({})
 require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
+require("mini.surround").setup({})
 
 -- Nvim REPL --------------------------------
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
 	ui = {
-		enable = false,
+		enable = true,
 	},
 	workspaces = {
 		{
