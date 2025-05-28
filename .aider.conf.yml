@@ -8,7 +8,7 @@ alias:
   - "gemma:openrouter/google/gemma-3n-e4b-it:free"
 
   # Ollama
-  - "gemma-local:ollama_chat/gemma3:1b"
+  - "gemma-local:ollama_chat/gemma3:4b"
 
 # Conventions/ project description
 read: [.conventions.md, README.md]
