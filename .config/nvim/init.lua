@@ -710,6 +710,9 @@ require("bufferline").setup({
 -- CodeCompanion ----------------------------------
 require("codecompanion").setup({
 	adapters = {
+		opts = {
+			show_model_choices = false,
+		},
 		-- Use sonnet with Copilot
 		copilot = function()
 			return require("codecompanion.adapters").extend("copilot", {
