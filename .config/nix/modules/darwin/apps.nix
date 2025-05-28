@@ -62,24 +62,25 @@
     ];
 
     masApps = {
-      GarageBand = 682658836;
-      # iMovie = 408981434;
       # Adblock_Plus = 1432731683;
       # AudioBookBinder = 413969927;
-      Bitwarden = 1352778147;
       # Dark_Reader_for_Safari = 1438243180;
-      IPA_Keyboard = 1461264628;
       # JustFocus = 1142151959;
-      # LittleSnitchMini = 1629008763;
       # Kagi_for_Safari = 1622835804;
-      Keynote = 409183694;
-      Numbers = 409203825;
-      Pages = 409201541;
+      # LittleSnitchMini = 1629008763;
       # Suggester = 1106482294;
-      Triode = 1450027401;
       # Vimari = 1480933944;
       # Vinegar_for_Safari = 1591303229;
       # VoiceType = 6736525125;
+      # iMovie = 408981434;
+      Bitwarden = 1352778147;
+      GarageBand = 682658836;
+      IPA_Keyboard = 1461264628;
+      Keynote = 409183694;
+      Numbers = 409203825;
+      Pages = 409201541;
+      Session_Pomodoro = 1521432881;
+      Triode = 1450027401;
       iPreview = 1519213509;
       windows-app = 1295203466;
     };
