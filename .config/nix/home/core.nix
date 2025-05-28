@@ -23,40 +23,40 @@
     stylua # Lua formatter
 
     # Build dependencies for Neovim plugins (e.g., blink.cmp)
-    rustc
-    cargo
+    rustc # Rust compiler, needed for many Neovim plugins
+    cargo # Rust package manager, needed for many Neovim plugins
   ];
 
   # Define general home packages (excluding Neovim and its associated packages)
   generalPackages = with pkgs; [
     _7zz
     aider-chat-full # includes, playwright, browser, help, etc.
-    aerc
-    atuin
+    aerc # Email client
+    atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
     claude-code # CLI tool (anthropic)
     clipse # Clipboard manager
     codex # CLI tool (openai)
-    datasette
-    drawio
-    duf
-    entr
+    datasette # SQLite database browser
+    drawio # Diagramming tool
+    duf # Disk usage utility
+    entr # Event notify tool
     eza # ls replacement
-    fastfetch
+    fastfetch # System information tool
     fd # find replacement
-    ffmpeg
-    file
+    ffmpeg # Multimedia framework
+    file # File type identification
     fzf # General fuzzy finder
     gh # GitHub CLI
-    ghostscript
-    git
-    gnupg
+    ghostscript # PostScript/PDF interpreter
+    git # Version control system
+    gnupg # GNU Privacy Guard
     gv # Ghostview - PostScript/PDF viewer
     haskellPackages.pandoc-crossref # Pandoc filter
     home-manager # Essential for this config
-    htop
-    imagemagick
+    htop # Interactive process viewer
+    imagemagick # Image manipulation
     jq # JSON processor
     khal # Calendar
     kitty # Terminal emulator
@@ -73,9 +73,9 @@
     ncdu # Disk usage analyzer
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    pandoc
+    pandoc # Document converter
     pass # Password manager
-    pianobar
+    pianobar # Pandora client
     pipx # Python executable installer
     poppler_utils # PDF utilities (pdftotext, etc.)
     qpdf # PDF manipulation tool
@@ -85,14 +85,14 @@
     searxng # Metasearch engine (assuming local instance tools)
     shunit2 # Shell testing
     speedtest-cli # Internet speed test
-    sqlite
+    sqlite # SQLite database engine
     starship # Shell prompt
     stow # Symlink manager
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
     vdirsyncer # CalDAV/CardDAV sync
-    which
+    which # Command location utility
     wiper # Secure deletion?
     xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
