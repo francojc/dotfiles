@@ -43,6 +43,7 @@ require("paq")({
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
+	"j-hui/fidget.nvim", -- LSP progress indicator
 })
 
 --| Options ------------------------------------------------------
@@ -59,7 +60,7 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 -- Clipboard
 opt.clipboard = "unnamedplus"
 -- Completions
-opt.completeopt = "menu,preview,noselect"
+opt.completeopt = "menu,menuone,noselect"
 -- Window
 opt.splitbelow = true
 opt.splitright = true
@@ -709,16 +710,16 @@ require("bufferline").setup({
 
 -- CodeCompanion ----------------------------------
 require("codecompanion").setup({
+	opts = {
+		show_model_choices = false,
+	},
 	adapters = {
-		opts = {
-			show_model_choices = false,
-		},
 		-- Use sonnet with Copilot
 		copilot = function()
 			return require("codecompanion.adapters").extend("copilot", {
 				schema = {
 					model = {
-						default = "claude-sonnet-4-20250514",
+						default = "claude-sonnet-4",
 					},
 				},
 			})
@@ -789,6 +790,31 @@ require("conform").setup({
 		}
 	end,
 	notify_on_error = false,
+})
+
+-- Fidget ----------------------------------
+require("fidget").setup({
+	notification = {
+		window = {
+			winblend = 80, -- 80% transparency
+			border = "none", -- Clean look without borders
+		},
+	},
+
+	progress = {
+		display = {
+			done_icon = "✓", -- Clean checkmark for completed tasks
+			done_style = "DiagnosticOk", -- Green styling for completed
+			progress_icon = {
+				pattern = "dots_pulse", -- Smooth pulsing animation
+				period = 1,
+			},
+			progress_style = "DiagnosticInfo", -- Blue styling for progress
+			group_style = "Title", -- Bold styling for LSP server names
+			render_limit = 8, -- Limit notifications to avoid clutter
+			done_ttl = 2, -- Show completed tasks for 2 seconds
+		},
+	},
 })
 
 -- Flash ----------------------------------
