@@ -50,13 +50,11 @@ require("paq")({
 	"stevearc/conform.nvim", -- Formatter
 	"vague2k/vague.nvim", -- Colorscheme: Vague
 	"zenbones-theme/zenbones.nvim", -- Colorscheme: Zenbones
-	-- "pappasam/nvim-repl", -- REPL support
 })
 
 --| Options ------------------------------------------------------
 local a = vim.api
 local opt = vim.opt
-local vim = vim
 
 -- Globals -----
 -- Record start time for startup duration
@@ -148,36 +146,6 @@ a.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank()
 	end,
-})
-
--- Hide statusline for alpha dashboard
-a.nvim_create_autocmd("FileType", {
-	pattern = "alpha",
-	group = "personal", -- Use your existing group
-	callback = function()
-		-- Use mini.statusline's buffer-local disable flag
-		vim.b.ministatusline_disable = true
-		-- Optional: You might also want to disable line numbers for alpha
-		vim.wo.number = false
-		vim.wo.relativenumber = false
-		-- Optional: And the signcolumn
-		vim.wo.signcolumn = "no"
-	end,
-	desc = "Hide statusline and other UI elements in alpha dashboard",
-})
-
--- Make sure to enable the statusline and line numbers for other file types after leaving the alpha buffer
-a.nvim_create_autocmd("BufLeave", {
-	group = "personal", -- Use your existing group
-	pattern = "*",
-	callback = function()
-		-- Re-enable the statusline and line numbers
-		vim.b.ministatusline_disable = false
-		vim.wo.number = true
-		vim.wo.relativenumber = true
-		vim.wo.signcolumn = "yes"
-	end,
-	desc = "Re-enable statusline and other UI elements after leaving alpha dashboard",
 })
 
 --| Keymaps ------------------------------------------------------
@@ -303,10 +271,11 @@ map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Sho
 -- Yazi
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
--- Find -----------------------------------
+-- Files -----------------------------------
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep resume=true<Cr>", { desc = "Live grep" })
+map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
 map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
 map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 -- Git -----------------------------------
@@ -318,7 +287,7 @@ map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Documen
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
 map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
 map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
-map("n", "<leader>lr", "<Cmd>lua vim.lsp.buf.rename()<Cr>", { desc = "Rename" })
+map("n", "<leader>ln", "<Cmd>lua vim.lsp.buf.rename()<Cr>", { desc = "Rename" })
 -- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
@@ -546,11 +515,18 @@ dashboard.section.footer.val = function()
 	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
 end
 
--- Send config to alpha
-alpha.setup(dashboard.opts)
+-- Configure alpha options to handle UI automatically
+dashboard.config.opts.setup = function()
+	vim.opt_local.foldenable = false
+	vim.opt_local.number = false
+	vim.opt_local.relativenumber = false
+	vim.opt_local.signcolumn = "no"
+	vim.b.ministatusline_disable = true
+	vim.b.miniindentscope_disable = true
+end
 
--- Disable folding on alpha
-vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
+-- Send config to alpha
+alpha.setup(dashboard.config)
 
 -- Auto-session -------------------------------
 require("auto-session").setup({
@@ -1060,8 +1036,6 @@ require("mini.pairs").setup({})
 require("mini.indentscope").setup({})
 require("mini.surround").setup({})
 
--- Nvim REPL --------------------------------
-
 -- Obsidian -----------------------------------
 require("obsidian").setup({
 	ui = {
@@ -1191,7 +1165,7 @@ wk.add({
 	{ "<leader>c", group = "Code", icon = " " },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
 	{ "<leader>e", group = "Explore", icon = " " },
-	{ "<leader>f", group = "Find", icon = " " },
+	{ "<leader>f", group = "Files", icon = " " },
 	{ "<leader>g", group = "Git", icon = " " },
 	{ "<leader>h", group = "Help", icon = " " },
 	{ "<leader>l", group = "LSP", icon = " " },
