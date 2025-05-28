@@ -1,7 +1,7 @@
 # Aider configuration file
 # Commit messages
 
-weak-model: openrouter/google/gemma-3-27b-it:free
+weak-model: gemma-local:ollama_chat/gemma3:1b
 architect: false
 stream: false
 no-attribute-author: true
