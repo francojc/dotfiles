@@ -1,7 +1,7 @@
 # Aider configuration file
 # Commit messages
 
-weak-model: ollama_chat/qwen3nt:latest
+weak-model: ollama_chat/gemma3:4b
 architect: false
 stream: false
 no-attribute-author: true
