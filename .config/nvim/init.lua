@@ -213,9 +213,9 @@ map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
-map("n", "<leader>x", ":qa<Cr>", { desc = "Quit all" })
+map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
 -- Delete session and quit
-map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit all (delete session)" })
+map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit (session)" })
 --- Window  -----
 -- Move between editor/terminal windows
 -- map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
@@ -1201,7 +1201,7 @@ wk.add({
 	{ "<leader>s", group = "Search", icon = " " },
 	{ "<leader>t", group = "Toggle", icon = " " },
 	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
-	{ "<leader>x", desc = "Quit all", icon = " " },
+	{ "<leader>x", desc = "Quit", icon = " " },
 })
 
 -- Yazi -----------------------------------
