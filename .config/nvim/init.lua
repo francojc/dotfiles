@@ -51,7 +51,11 @@ local opt = vim.opt
 
 -- Globals -----
 -- Record start time for startup duration
-_G.nvim_config_start_time = vim.loop.hrtime()
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		_G.nvim_config_end_time = vim.loop.hrtime()
+	end,
+})
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
@@ -914,17 +918,18 @@ lspconfig.r_language_server.setup({
 
 -- Dynamically detect Quarto YAML schema and configure yamlls
 local function get_quarto_resource_path()
+	-- error handling for io.popen
+	local ok, f = pcall(io.popen, "quarto --paths", "r")
+	if not ok or not f then
+		return nil
+	end
+	-- Function to split a string by a delimiter
 	local function strsplit(s, delimiter)
 		local result = {}
 		for match in (s .. delimiter):gmatch("(.-)" .. delimiter) do
 			table.insert(result, match)
 		end
 		return result
-	end
-
-	local f = io.popen("quarto --paths", "r")
-	if not f then
-		return nil
 	end
 	local s = f:read("*a")
 	f:close()
