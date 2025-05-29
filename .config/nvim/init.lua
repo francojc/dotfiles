@@ -9,7 +9,6 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
-	"christoomey/vim-tmux-navigator", -- Tmux navigator
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
@@ -180,16 +179,10 @@ map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
 map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit (session)" })
 --- Window  -----
 -- Move between editor/terminal windows
--- map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
--- map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
--- map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
--- map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
--- Move between editor/tmux windows
--- map("n", "<C-h>", "<Cmd><C-U>TmuxNavigateLeft<Cr>", { desc = "Move to left window" })
--- map("n", "<C-j>", "<Cmd><C-U>TmuxNavigateDown<Cr>", { desc = "Move to bottom window" })
--- map("n", "<C-k>", "<Cmd><C-U>TmuxNavigateUp<Cr>", { desc = "Move to top window" })
--- map("n", "<C-l>", "<Cmd><C-U>TmuxNavigateRight<Cr>", { desc = "Move to right window" })
--- map("n", "<C-\\>", "<Cmd><C-U>TmuxNavigatePrevious<Cr>", { desc = "Move to last active window" })
+map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
+map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
+map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
+map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>5-", { desc = "Resize window up" })
