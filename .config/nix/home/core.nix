@@ -51,6 +51,7 @@
     gh # GitHub CLI
     ghostscript # PostScript/PDF interpreter
     git # Version control system
+    glances # System monitoring tool
     gnupg # GNU Privacy Guard
     gv # Ghostview - PostScript/PDF viewer
     haskellPackages.pandoc-crossref # Pandoc filter
