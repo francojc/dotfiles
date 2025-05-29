@@ -185,11 +185,11 @@ map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit (sessi
 -- map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 -- map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 -- Move between editor/tmux windows
-map("n", "<C-h>", "<Cmd><C-U>TmuxNavigateLeft<Cr>", { desc = "Move to left window" })
-map("n", "<C-j>", "<Cmd><C-U>TmuxNavigateDown<Cr>", { desc = "Move to bottom window" })
-map("n", "<C-k>", "<Cmd><C-U>TmuxNavigateUp<Cr>", { desc = "Move to top window" })
-map("n", "<C-l>", "<Cmd><C-U>TmuxNavigateRight<Cr>", { desc = "Move to right window" })
-map("n", "<C-\\>", "<Cmd><C-U>TmuxNavigatePrevious<Cr>", { desc = "Move to last active window" })
+-- map("n", "<C-h>", "<Cmd><C-U>TmuxNavigateLeft<Cr>", { desc = "Move to left window" })
+-- map("n", "<C-j>", "<Cmd><C-U>TmuxNavigateDown<Cr>", { desc = "Move to bottom window" })
+-- map("n", "<C-k>", "<Cmd><C-U>TmuxNavigateUp<Cr>", { desc = "Move to top window" })
+-- map("n", "<C-l>", "<Cmd><C-U>TmuxNavigateRight<Cr>", { desc = "Move to right window" })
+-- map("n", "<C-\\>", "<Cmd><C-U>TmuxNavigatePrevious<Cr>", { desc = "Move to last active window" })
 
 -- Resize
 map("n", "<leader>wk", "<C-w>5-", { desc = "Resize window up" })
