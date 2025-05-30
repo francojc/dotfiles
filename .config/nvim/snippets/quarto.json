@@ -38,7 +38,7 @@
     "description": "A Quarto dive deeper callout block"
   },
   "Aider call": {
-    "prefix": "qaider",
+    "prefix": "caider",
     "body": [
       "<!--",
       "-- ${0}",

@@ -18,7 +18,7 @@
     "description": "HTML inline comment"
   },
   "HTML block comment": {
-    "prefix": "cblockhtml",
+    "prefix": "chtmlblock",
     "body": [
       "<!-- ",
       " ${1:}",
