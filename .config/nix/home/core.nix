@@ -79,6 +79,7 @@
     pianobar # Pandora client
     pipx # Python executable installer
     poppler_utils # PDF utilities (pdftotext, etc.)
+    procs # Process viewer
     qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     repgrep # ripgrep across files
@@ -92,6 +93,7 @@
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
+    unp # Archive unpacker
     vdirsyncer # CalDAV/CardDAV sync
     which # Command location utility
     wiper # Secure deletion?
