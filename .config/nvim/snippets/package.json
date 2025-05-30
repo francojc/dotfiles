@@ -10,7 +10,8 @@
       },
       {
         "language": [
-          "markdown"
+          "markdown",
+          "quarto"
         ],
         "path": "./markdown.json"
       },

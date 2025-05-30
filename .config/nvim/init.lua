@@ -596,8 +596,8 @@ require("blink.cmp").setup({
 	sources = {
 		default = { "path", "snippets", "lsp", "buffer" },
 		per_filetype = {
-			quarto = { "path", "snippets", "lsp", "references", "emoji" },
 			markdown = { "path", "snippets", "lsp", "references", "emoji" },
+			quarto = { "path", "snippets", "lsp", "references", "emoji" },
 		},
 		providers = {
 			emoji = {
