@@ -52,7 +52,6 @@
       "rectangle"
       "rocket" # emoji picker
       "signal" # messaging
-      "tailscale" # mesh networking
       "transcribe"
       "transmission"
       "visual-studio-code"
