@@ -73,6 +73,7 @@
       # Vinegar_for_Safari = 1591303229;
       # VoiceType = 6736525125;
       # iMovie = 408981434;
+      # tailscale = 1475387142;
       Bitwarden = 1352778147;
       GarageBand = 682658836;
       IPA_Keyboard = 1461264628;
