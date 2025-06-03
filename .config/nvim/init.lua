@@ -211,8 +211,11 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 -- Plugin keymaps ----------------
 -- Copilot
 g.copilot_settings = { selectedCompletionModel = "claude-sonnet-4" } -- WARN: not sure if this is working
-map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
-map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
+map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
+g.copilot_no_tab_map = true -- Disable default tab mapping
+
+map("i", "<Tab>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
+map("i", "<C-d>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
