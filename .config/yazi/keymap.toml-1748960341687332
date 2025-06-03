@@ -1,25 +1,25 @@
 # Manager keymaps ----------------------------------------------
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "<C-j>" ]
 run = "arrow 1"
 desc = "Move cursor down"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "<C-k>" ]
 run = "arrow -1"
 desc = "Move cursor up"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "<C-s>" ]
 run = 'shell "$SHELL" --block --confirm'
 desc = "Open shell here"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "<C-e>" ]
 run = 'seek +5'
 desc = "Seek down 5 lines"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "<C-y>" ]
 run = 'seek -5'
 desc = "Seek up 5 lines"
