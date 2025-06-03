@@ -7,8 +7,12 @@ alias:
   - "gemini-flash:openrouter/google/gemini-2.5-flash-preview-05-20"
   - "gemma:openrouter/google/gemma-3n-e4b-it:free"
 
+  # GitHub Copilot
+  - "sonnet-3.7-thought:openai/claude-3.7-sonnet-thought"
+
   # Ollama
   - "gemma-local:ollama_chat/gemma3:4b"
+
 
 # Conventions/ project description
 read: [.conventions.md, README.md]
@@ -17,6 +21,8 @@ read: [.conventions.md, README.md]
 model: gemini-flash
 editor-model: gemini-flash
 weak-model: gemma-local
+
+openai-api-base: https://api.githubcopilot.com
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false
