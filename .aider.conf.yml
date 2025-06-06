@@ -22,7 +22,7 @@ model: gemini-flash
 editor-model: gemini-flash
 weak-model: gemma-local
 
-openai-api-base: https://api.githubcopilot.com
+# openai-api-base: https://api.githubcopilot.com
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false

@@ -36,6 +36,9 @@
         export USER=$(whoami)
         export VISUAL='nvim'
 
+        # OLLAMA
+        export OLLAMA_HOST="0.0.0.0"
+
         # --- ZSH ---
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
