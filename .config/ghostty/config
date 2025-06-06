@@ -1,7 +1,8 @@
 # Ghostty config
 
 # UI
-font-size = 15
+font-family = "Aporetic Sans Mono"
+font-size = 16
 cursor-color = #FF2557
 cursor-style = bar
 adjust-cursor-thickness = 2
