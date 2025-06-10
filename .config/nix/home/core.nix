@@ -53,6 +53,7 @@
     git # Version control system
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
+    gollama # Manage Ollama models
     gv # Ghostview - PostScript/PDF viewer
     haskellPackages.pandoc-crossref # Pandoc filter
     home-manager # Essential for this config
