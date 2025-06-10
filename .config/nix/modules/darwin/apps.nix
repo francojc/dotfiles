@@ -25,6 +25,7 @@
       "mas" # Mac App Store CLI
       "npm"
       "keith/formulae/reminders-cli"
+      "ollama" # AI model management
       "python@3.11"
       "rename"
       "sunbeam"
