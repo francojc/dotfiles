@@ -16,6 +16,7 @@
     lynx
     nixd # Language server
     nurl # Nix URL fetcher helper
+    ollama # AI assistant
     oterm
     stylua # Lua formatter
     vim # Basic editor

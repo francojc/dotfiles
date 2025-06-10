@@ -15,5 +15,6 @@
     gnomeExtensions.extension-list
     gnomeExtensions.awesome-tiles
     xclip
+    wl-clipboard
   ];
 }
