@@ -109,6 +109,8 @@ opt.showmode = false
 opt.cmdheight = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
 
+opt.laststatus = 2 -- show statusline always
+
 -- Diagnostics
 vim.diagnostic.config({
 	severity_sort = true,
@@ -1007,7 +1009,7 @@ require("lualine").setup({
 			winbar = { "alpha" },
 		},
 		always_divide_middle = true,
-		globalstatus = true,
+		globalstatus = false, -- conflicts with statusline = 2
 		refresh = {
 			statusline = 1000,
 			tabline = 1000,
