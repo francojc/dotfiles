@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# extracty: Extract text from images using OpenAI GPT-4o-mini vision model
+# Usage: extracty [-h] IMAGE_FILE
+
+set -euo pipefail
+
+# Function to display help message
+show_help() {
+    echo "Usage: $0 [-h] IMAGE_FILE"
+    echo "Extract text from images using OpenAI GPT-4o-mini vision model"
+    exit 0
+}
+
+# Validate dependencies
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
+command -v base64 >/dev/null 2>&1 || { echo "Error: base64 is required" >&2; exit 1; }
+
+# Parse options
+while getopts ":h" opt; do
+    case $opt in
+        h) show_help ;;
+        \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Validate arguments
+if [[ $# -ne 1 ]]; then
+    echo "Error: Please provide an image file" >&2
+    echo "Usage: $0 IMAGE_FILE" >&2
+    exit 1
+fi
+
+if [[ ! -f "$1" ]]; then
+    echo "Error: File not found: $1" >&2
+    exit 1
+fi
+
+# Check API key
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+    echo "Error: OPENAI_API_KEY environment variable required" >&2
+    exit 1
+fi
+
+# Base64 encode image
+IMAGE_B64=$(base64 -i "$1")
+
+# Make API request and process response
+response=$(curl -sS --write-out "\n%{http_code}" \
+  https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "$(jq -n \
+    --arg model "gpt-4o-mini" \
+    --arg content "Return ONLY the extracted text in markdown format, preserving original formatting, layout, and structure. Include no commentary or explanations." \
+    --arg image "data:image/jpeg;base64,$IMAGE_B64" \
+    '{
+        model: $model,
+        messages: [
+            {
+                role: "user",
+                content: [
+                    {type: "text", text: $content},
+                    {type: "image_url", image_url: {url: $image}}
+                ]
+            }
+        ],
+        temperature: 0.0
+    }')")
+
+# Separate HTTP status code and content
+http_code=$(echo "$response" | tail -n 1)
+content=$(echo "$response" | head -n -1)
+
+# Check for errors
+if [[ $http_code -ne 200 ]]; then
+  # Try to extract JSON error message, fallback to raw output
+  if error_message=$(echo "$content" | jq -r '.error.message' 2>/dev/null); then
+    echo "API Error (HTTP $http_code): $error_message" >&2
+  else
+    echo "API Error (HTTP $http_code): Received non-JSON response" >&2
+    echo "Raw response: '$content'" >&2
+  fi
+  exit 1
+fi
+
+# Output the extracted text
+echo "$content" | jq -r '.choices[0].message.content'

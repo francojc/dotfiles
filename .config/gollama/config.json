@@ -1,0 +1,21 @@
+{
+  "columns": [
+    "Name",
+    "Size",
+    "Quant",
+    "Family",
+    "Modified",
+    "ID"
+  ],
+  "docker_container": "",
+  "editor": "/usr/bin/vim",
+  "lm_studio_file_paths": "/Users/jeridf/.lmstudio/models",
+  "log_file_path": "",
+  "log_level": "info",
+  "ollama_api_key": "",
+  "ollama_api_url": "http://0.0.0.0",
+  "ollama_models_dir": "/Users/jeridf/.ollama/models",
+  "sort_order": "modified",
+  "strip_string": "",
+  "theme": "dark-neon"
+}

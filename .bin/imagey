@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+
+# imagey: Generate images using OpenAI's DALL-E API
+# Usage: imagey [-h] [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER] PROMPT NAME
+# Example: imagey "a painting of a sunset over a mountain" "sunset_mountain" --model "dall-e-3" --size "1024x1024" --quality "standard" --n 1
+
+set -euo pipefail
+
+# Function to display help message
+show_help() {
+    echo "Usage: $0 [-h] [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER] PROMPT NAME"
+    echo "Generate images using OpenAI's DALL-E API"
+    echo
+    echo "Options:"
+    echo "  -h, --help       Display this help message"
+    echo "  --model MODEL    Model to use (default: dall-e-3)"
+    echo "  --size SIZE      Image size (default: 1024x1024)"
+    echo "  --quality QUALITY Image quality: standard or hd (default: standard)"
+    echo "  --n NUMBER       Number of images to generate (default: 1)"
+    echo
+    echo "Example: $0 \"a painting of a sunset\" \"sunset\" --model \"dall-e-3\" --size \"1024x1024\""
+    exit 0
+}
+
+# Validate dependencies
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
+command -v pass >/dev/null 2>&1 || { echo "Error: pass is required" >&2; exit 1; }
+
+get_pass() {
+    local key_name="$1"
+    pass "API/${key_name}" || {
+        echo "Error: API key not found in pass store: API/${key_name}" >&2
+        exit 1
+    }
+}
+
+# Check API key using pass
+OPENAI_API_KEY=$(get_pass OPENAI_API_KEY)
+
+# Initialize variables
+prompt=""
+name=""
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            ;;
+        --model)
+            model="$2"
+            shift 2
+            ;;
+        --size)
+            size="$2"
+            shift 2
+            ;;
+        --quality)
+            quality="$2"
+            shift 2
+            ;;
+        --n)
+            n="$2"
+            shift 2
+            ;;
+        *)
+            if [[ -z "$prompt" ]]; then
+                prompt="$1"
+            elif [[ -z "$name" ]]; then
+                name="$1"
+            else
+                echo "Error: Unexpected argument: $1" >&2
+                echo "Usage: $0 [-h] [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER] PROMPT NAME" >&2
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Set defaults
+model=${model:-"dall-e-3"}
+size=${size:-"1024x1024"}
+quality=${quality:-"standard"}
+n=${n:-1}
+
+# Validate required arguments
+if [[ -z "$prompt" || -z "$name" ]]; then
+    echo "Error: Both PROMPT and NAME are required" >&2
+    echo "Usage: $0 [-h] [--model MODEL] [--size SIZE] [--quality QUALITY] [--n NUMBER] PROMPT NAME" >&2
+    exit 1
+fi
+
+# Create images directory if it doesn't exist
+mkdir -p images
+
+# Generate filename
+filename="images/${name// /_}.jpg"
+
+# Make API request
+response=$(curl -s --write-out "\n%{http_code}" \
+    -X POST "https://api.openai.com/v1/images/generations" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d "$(jq -n \
+        --arg model "$model" \
+        --arg prompt "$prompt" \
+        --arg size "$size" \
+        --arg quality "$quality" \
+        --argjson n "$n" \
+        '{
+            model: $model,
+            prompt: $prompt,
+            size: $size,
+            quality: $quality,
+            n: $n
+        }')")
+
+# Separate HTTP status code and content
+http_code=$(echo "$response" | tail -n 1)
+content=$(echo "$response" | sed '$d')
+
+# Check for errors
+if [[ $http_code -ne 200 ]]; then
+    if error_message=$(echo "$content" | jq -r '.error.message' 2>/dev/null); then
+        echo "API Error (HTTP $http_code): $error_message" >&2
+    else
+        echo "API Error (HTTP $http_code): Received non-JSON response" >&2
+        echo "Raw response: '$content'" >&2
+    fi
+    exit 1
+fi
+
+# Extract URL from response
+url=$(echo "$content" | jq -r '.data[0].url')
+
+if [[ "$url" == "null" || -z "$url" ]]; then
+    echo "Error: Failed to extract image URL from response" >&2
+    echo "$content" | jq . >&2
+    exit 1
+fi
+
+# Download image
+curl -s -o "$filename" "$url"
+
+if [[ $? -ne 0 ]]; then
+    echo "Error downloading image from $url" >&2
+    exit 1
+fi
+
+echo "Image saved to: $filename"

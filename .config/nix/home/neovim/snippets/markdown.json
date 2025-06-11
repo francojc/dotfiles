@@ -1,0 +1,11 @@
+{
+  "Aider call": {
+    "prefix": "qaider",
+    "body": [
+      "<!--",
+      "-- ${0:prompt}",
+      "-->"
+    ],
+    "description": "Aider call"
+  }
+}

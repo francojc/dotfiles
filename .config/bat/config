@@ -1,0 +1,5 @@
+# This is `bat`s configuration file.
+--theme="ansi"
+--italic-text=always
+--style="numbers,changes,header"
+

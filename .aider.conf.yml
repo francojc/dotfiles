@@ -1,0 +1,71 @@
+# Aliases
+alias:
+  # OpenRouter
+  - "sonnet:openrouter/anthropic/claude-sonnet-4"
+  - "deepseek-chat:openrouter/deepseek/deepseek-chat-v3-0324"
+  - "gemini-pro:openrouter/google/gemini-2.5-pro-preview"
+  - "gemini-flash:openrouter/google/gemini-2.5-flash-preview-05-20"
+  - "gemma:openrouter/google/gemma-3n-e4b-it:free"
+
+  # GitHub Copilot
+  - "sonnet-3.7-thought:openai/claude-3.7-sonnet-thought"
+
+  # Ollama
+  - "gemma-local:ollama_chat/gemma3:4b"
+
+
+# Conventions/ project description
+read: [.conventions.md, README.md]
+
+# Models
+model: gemini-flash
+editor-model: gemini-flash
+weak-model: gemma-local
+
+openai-api-base: https://api.githubcopilot.com
+
+# edit-format: whole # options; diff, whole, udiff, diff-fenced
+architect: false
+
+# Theme: Black Metal
+# Main text colors
+user-input-color: "#f8f8f2" # "#ff79c6"
+assistant-output-color: "#f8f8f2"
+tool-output-color: "#608787"
+tool-error-color: "#ff5555"
+tool-warning-color: "#CBC983"
+
+# Completion menu colors (terminal-based)
+completion-menu-color: "#f8f8f2"
+completion-menu-bg-color: "#282a36"
+completion-menu-current-color: "#f8f8f2"
+completion-menu-current-bg-color: "#44475a"
+
+# Code theme for markdown syntax highlighting
+code-theme: "coffee"
+
+# Editor Configuration
+editor: nvim
+
+# Streaming
+stream: true
+show-model-warnings: false
+
+# Git Settings
+auto-commits: false
+no-attribute-author: true
+no-attribute-committer: true
+show-diffs: false  # Optional, but useful to review changes
+
+# Input Mode
+vim: true
+multiline: false  # Often useful with vim mode
+restore-chat-history: false  # Helps maintain context between sessions
+
+# Disable automatic linting/testing as requested
+auto-lint: false
+auto-test: false
+
+# Cache Settings
+cache-prompts: true
+cache-keepalive-pings: 12  # Will ping every 5 minutes for up to 1 hour

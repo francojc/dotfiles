@@ -1,0 +1,20 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Jerid Francom
+	email = francojc@wfu.edu
+[init]
+	defaultBranch = main
+[core]
+	editor = "nvim"
+	excludesFile = ~/.gitignore
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[pull]
+	rebase = true
+[credential "https://github.com"]
+	helper = !/etc/profiles/per-user/francojc/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !/etc/profiles/per-user/francojc/bin/gh auth git-credential

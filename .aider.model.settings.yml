@@ -1,0 +1,11 @@
+# Model settings for the Aider models
+# Note: use_temperature, streaming, and use_system_prompt set to false for reasoning models
+
+- name: o3-mini
+  edit_format: diff
+  weak_model_name: gpt-4o-mini
+  use_repo_map: true
+  use_temperature: false
+  editor_model_name: gpt-4o
+  editor_edit_format: editor_diff
+

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Associative array to store alias-model connections
+declare -A model_aliases=(
+    ["mistral-small"]="mistral-small:22b-instruct-2409-q3_K_S"
+    ["qwen-r1"]="deepseek-r1:14b"
+    ["s1"]="hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M"
+)
+
+# Function to display help information
+show_help() {
+    echo "Usage: $0 <model-shortname>"
+    echo ""
+    echo "Model Shortnames and their full names:"
+    for alias in "${!model_aliases[@]}"; do
+        echo "  $alias -> ${model_aliases[$alias]}"
+    done
+}
+
+# Validate input arguments
+if [[ $# -ne 1 ]]; then
+    echo "Error: Incorrect number of arguments."
+    show_help
+    exit 1
+fi
+
+shortname=$1
+
+# Check if the shortname exists in the model_aliases
+if [[ -z "${model_aliases[$shortname]}" ]]; then
+    echo "Error: Model shortname '$shortname' not recognized."
+    show_help
+    exit 1
+fi
+
+full_model_name=${model_aliases[$shortname]}
+
+# Execute the operation with the full model name using 'ollama run'
+echo "Running ollama with model '${full_model_name}'..."
+ollama run "$full_model_name"

@@ -1,0 +1,12 @@
+# Aider configuration file
+# Commit messages
+
+weak-model: ollama_chat/gemma3:4b
+architect: false
+stream: false
+no-attribute-author: true
+no-attribute-committer: true
+show-diffs: false
+
+restore-chat-history: false
+

@@ -1,0 +1,30 @@
+{
+  "Aider call": {
+    "prefix": "caider",
+    "body": [
+      "<!--",
+      "-- ${1:}",
+      "-->",
+      "${0:}"
+    ],
+    "description": "Aider call"
+  },
+  "HTML inline comment": {
+    "prefix": "cinlinehtml",
+    "body": [
+      "<!-- ${1:} -->",
+      "${0:}"
+    ],
+    "description": "HTML inline comment"
+  },
+  "HTML block comment": {
+    "prefix": "chtmlblock",
+    "body": [
+      "<!-- ",
+      " ${1:}",
+      " -->",
+      "${0:}"
+    ],
+    "description": "HTML block comment"
+  }
+}

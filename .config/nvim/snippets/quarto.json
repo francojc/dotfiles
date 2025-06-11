@@ -1,0 +1,81 @@
+{
+  "Quarto Code Block": {
+    "prefix": "qcode",
+    "body": ["```{${1:language}}", "#| label: ${2:label}", "${0}", "```"],
+    "description": "A Quarto code block with language specification"
+  },
+  "Callout Block: Tip": {
+    "prefix": "qtip",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa hand-point-up >}} Tip**",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "A Quarto tip callout block"
+  },
+  "Callout Block: Warning": {
+    "prefix": "qwarn",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa triangle-exclamation >}} Warning**",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "A Quarto warning callout block"
+  },
+  "Callout Block: Dive Deeper": {
+    "prefix": "qdive",
+    "body": [
+      "::: {.callout}",
+      "**{{< fa medal >}} Dive deeper**",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "A Quarto dive deeper callout block"
+  },
+  "Aider call": {
+    "prefix": "caider",
+    "body": [
+      "<!--",
+      "-- ${0}",
+      "-->"
+    ],
+    "description": "Aider call"
+  },
+  "Code block: label": {
+    "prefix": "cblabel",
+    "body": [
+      "#| label: ${1:label}",
+      "${0}"
+    ],
+    "description": "Label in code block"
+  },
+  "Code block: echo": {
+    "prefix": "cbecho",
+    "body": [
+      "#| echo: ${1|true,false|}",
+      "${0}"
+    ],
+    "description": "Echo in code block"
+  },
+  "Code block: include": {
+    "prefix": "cbinclude",
+    "body": [
+      "#| include: ${1|true,false|}",
+      "${0}"
+    ],
+    "description": "Include in code block"
+  },
+  "Code block: message": {
+    "prefix": "cbmessage",
+    "body": [
+      "#| message: ${1|true,false|}",
+      "${0}"
+    ],
+    "description": "Message in code block"
+  }
+}

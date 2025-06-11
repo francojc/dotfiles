@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+
+# Description: This script updates the `kcal` calendar by running `vdirsyncer`
+# to sync the calendar files and then using `khal` to import an `ics` file
+# which is the export from `reminders-cli` in JSON format converted to `ics`
+# for this import specifically.
+# Usage: ical.sh
+# Dependencies: vdirsyncer, khal, reminders-cli
+
+set -euo pipefail
+
+# Define constants
+readonly REMINDERS_CALENDAR_NAME="Reminders"
+readonly REMINDERS_DIR="$HOME/.calendars/local/reminders"
+readonly TARGET_ICS_FILE="$REMINDERS_DIR/reminders.ics"
+readonly REQUIRED_COMMANDS=("vdirsyncer" "reminders" "jq" "khal" "ikhal")
+
+# Common error handling function
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+# Function to check for required commands
+check_dependencies() {
+  local missing_cmd=0
+  for cmd in "${REQUIRED_COMMANDS[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+      echo "Error: Required command '$cmd' not found." >&2
+      missing_cmd=1
+    fi
+  done
+  if [ "$missing_cmd" -ne 0 ]; then
+    exit 1
+  fi
+}
+
+# Function to sync calendars
+sync_calendars() {
+  echo "Syncing calendars with vdirsyncer..."
+  if ! vdirsyncer -v ERROR sync; then
+    die "vdirsyncer sync failed."
+  fi
+  echo "Sync complete."
+}
+
+# Function to get the jq filter for converting reminders to ICS format
+get_jq_filter() {
+  cat <<'EOF'
+[
+  # Header block as a single string
+  (
+    [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//reminders-cli_to_khal//EN",
+      "CALSCALE:GREGORIAN"
+      # No VTIMEZONE needed if using UTC "Z" format
+    ] | join("\r\n")
+  )
+] +
+# Array of VEVENT blocks, each as a single string
+(
+  # Filter reminders: must not be completed and have either startDate or dueDate
+  map(select(.isCompleted == false and (.startDate != null or .dueDate != null)))
+  | map( # Transform each reminder into a VEVENT string block
+      # Determine which date field to use as the primary one
+      . as $reminder |
+      (
+          if $reminder.dueDate and ($reminder.dueDate | contains("T")) then $reminder.dueDate
+          elif $reminder.startDate then $reminder.startDate
+          elif $reminder.dueDate then $reminder.dueDate
+          else null
+          end
+      ) as $primary_date_field |
+
+      if $primary_date_field == null then empty
+      else
+        [
+          "BEGIN:VEVENT",
+          "UID:" + $reminder.externalId + "@reminders.local",
+          "SUMMARY:☑️ " + $reminder.title,
+          "DTSTAMP:" + (now | strftime("%Y%m%dT%H%M%SZ"))
+        ] +
+        # --- Conditional DTSTART/DTEND: Treat T00:00:00Z as ALL-DAY ---
+        (
+          # Check if it contains T AND the time part is NOT 00:00:00Z
+          if ($primary_date_field | contains("T") and test("T00:00:00Z$") | not) then
+            # --- Specific Time Event (use UTC format) ---
+            [
+              # Format as YYYYMMDDTHHMMSSZ by removing separators
+              "DTSTART:" + ($primary_date_field | gsub("[-:]"; "")),
+              "DTEND:" + ($primary_date_field | gsub("[-:]"; ""))
+              # DTEND is same as DTSTART for a zero-duration marker
+            ]
+          else
+            # --- All-Day Event (includes dates without T or with T00:00:00Z) ---
+            [
+              # Extract date part (YYYYMMDD), remove separators/time
+              "DTSTART;VALUE=DATE:" + ($primary_date_field | split("T")[0] | gsub("-"; ""))
+            ]
+          end
+        ) +
+        # --- End Conditional DTSTART/DTEND ---
+        # Add DESCRIPTION field if present
+        (if $reminder.notes and ($reminder.notes | length > 0) then ["DESCRIPTION:" + ($reminder.notes | gsub("\n"; "\\\\n"))] else [] end) +
+        ["END:VEVENT"]
+        | join("\r\n") # Join lines within this VEVENT block
+      end
+    )
+) +
+[
+  "END:VCALENDAR"
+]
+# Join blocks with double CRLF
+| join("\r\n\r\n")
+EOF
+}
+
+# Function to generate the ICS file
+generate_ics_file() {
+  local filter target_file
+  filter="$1"
+  target_file="$2"
+
+  # Ensure the target directory exists
+  mkdir -p "$(dirname "$target_file")" || die "Failed to create directory $(dirname "$target_file")"
+
+  if ! reminders show-all --format json | jq -r "$filter" > "$target_file"; then
+      # Preserve potentially incomplete file for debugging, but report error
+      die "Failed during reminders export or jq conversion or file saving to $target_file."
+  fi
+}
+
+# Function to import the ICS file
+import_ics_file() {
+  local target_file calendar_name
+  target_file="$1"
+  calendar_name="$2"
+
+  if [ ! -s "$target_file" ]; then
+      # Use -s to check if file exists and has size > 0
+      echo "Warning: No reminder data generated or file is empty ($target_file). Skipping import." >&2
+      return 0 # Not a fatal error, just nothing to import
+  fi
+
+  if ! khal -v ERROR import -a "$calendar_name" --batch "$target_file"; then
+      # Keep the file for debugging if import fails
+      die "Failed during khal import of $target_file. The generated ICS file is preserved for debugging."
+  fi
+  echo "Apple Reminders import command completed."
+}
+
+# Main execution block
+main() {
+  check_dependencies
+  sync_calendars
+
+  echo "Processing Apple Reminders for khal..."
+  local jq_filter
+  jq_filter=$(get_jq_filter) # Get the filter string
+
+  generate_ics_file "$jq_filter" "$TARGET_ICS_FILE"
+  import_ics_file "$TARGET_ICS_FILE" "$REMINDERS_CALENDAR_NAME"
+
+  echo "Opening interactive khal (ikhal)..."
+  ikhal
+}
+
+# --- Script Entry Point ---
+main "$@"
+

@@ -1,0 +1,18 @@
+# ncdu - config file 
+
+# Color mode
+--color dark
+
+# Interface options
+--graph-style half-block
+--show-percent 
+--show-graph
+--show-hidden
+
+# Extended mode
+--no-extended 
+
+# Exclude directories
+--exclude .git
+
+

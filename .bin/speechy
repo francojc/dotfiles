@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# speechy: Convert text to speech using the Eleven Labs API
+# Usage: speechy -t "text to convert" [-r SPEECH_RATE] [-o OUTPUT_FILE] [-v VOICE] [-h]
+# Note: API key is read from pass store: API/ELEVENLABS_API_KEY
+# Speech rate can be between 0.5 (slower) and 2.0 (faster). Default is 1.0
+# Example: speechy -t "Hello world, this is a test" -r 1.5 -o my_speech.mp3 -v male
+
+set -euo pipefail
+
+# Function to display help message
+show_help() {
+    echo "Usage: $0 [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  -t TEXT        Text to convert to speech (required)"
+    echo "  -r RATE        Speech rate between 0.5 and 2.0 (optional, default: 1.0)"
+    echo "  -o FILE        Output filename (optional, default: output.mp3)"
+    echo "  -v VOICE       Voice to use: david, leo, o tatiana"
+    echo "  -h, --help     Display this help message"
+    echo
+    echo "Examples:"
+    echo "  speechy -t \"Hello world\""
+    echo "  speechy -t \"Hello world\" -r 1.5 -o my_speech.mp3 -v leo"
+    exit 0
+}
+
+# Validate dependencies
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
+command -v bc >/dev/null 2>&1 || { echo "Error: bc is required" >&2; exit 1; }
+command -v ffmpeg >/dev/null 2>&1 || { echo "Error: ffmpeg is required" >&2; exit 1; }
+command -v pass >/dev/null 2>&1 || { echo "Error: pass is required" >&2; exit 1; }
+
+get_pass() {
+    local key_name="$1"
+    pass "API/${key_name}" || {
+        echo "Error: API key not found in pass store: API/${key_name}" >&2
+        exit 1
+    }
+}
+
+# Retrieve API key
+api_key=$(get_pass ELEVENLABS_API_KEY)
+
+# Initialize variables with defaults
+speech_rate=1.0
+text=""
+output_file="output.mp3"
+voice_type="female"
+
+# Parse command line arguments
+while getopts ":t:r:o:v:h-:" opt; do
+    case $opt in
+        t) text="$OPTARG";;
+        r) speech_rate="$OPTARG";;
+        o) output_file="$OPTARG";;
+        v) voice_type="$OPTARG";;
+        h) show_help;;
+        -) case "${OPTARG}" in
+               help) show_help;;
+               *) echo "Invalid option: --${OPTARG}" >&2; exit 1;;
+           esac;;
+        \?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
+        :) echo "Option -$OPTARG requires an argument" >&2; exit 1;;
+    esac
+done
+
+# Validate required arguments
+if [ -z "$text" ]; then
+    echo "Error: Text argument (-t) is required" >&2
+    echo "Use -h or --help for usage information" >&2
+    exit 1
+fi
+
+# Validate speech rate is between 0.5 and 2.0
+if (( $(echo "$speech_rate < 0.5" | bc -l) )) || (( $(echo "$speech_rate > 2.0" | bc -l) )); then
+    echo "Error: Speech rate must be between 0.5 and 2.0" >&2
+    exit 1
+fi
+
+# Set voice ID based on voice type
+case "$voice_type" in
+    "david")
+        voice_id="asDeXBMC8hUkhqqL7agO"
+        ;;
+    "tatiana")
+        voice_id="2rigMbVWLdqtBSCahJFX"
+        ;;
+    "leo")
+        voice_id="Ux2YbCNfurnKHnzlBHGX"
+        ;;
+    *)
+        echo "Invalid voice type. Use 'david', 'tatiana', or 'leo'" >&2
+        exit 1
+        ;;
+esac
+
+# Make a POST request to the Eleven Labs API to convert the text to speech
+response=$(curl -s --write-out "\n%{http_code}" \
+     -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
+     -H "xi-api-key: $api_key" \
+     -H "Content-Type: application/json" \
+     -H "accept: audio/mpeg" \
+     -d "{
+        \"text\": \"$text\",
+        \"model_id\": \"eleven_flash_v2_5\",
+        \"voice_settings\": {
+            \"stability\": 0.5,
+            \"similarity_boost\": 0.8
+        }
+      }" -o "$output_file")
+
+# Get HTTP status code and response body
+http_code=$(echo "$response" | tail -n 1)
+
+# Check for errors
+if [[ $http_code -ne 200 ]]; then
+    error_msg=$(jq -r '.detail.message // .detail' "$output_file" 2>/dev/null || echo "Unknown error")
+    echo "API Error (HTTP $http_code): $error_msg" >&2
+    [[ -f "$output_file" ]] && rm "$output_file"
+    exit 1
+fi
+
+if [ "$speech_rate" != "1.0" ]; then
+    temp_file="${output_file%.*}_original.mp3"
+    mv "$output_file" "$temp_file"
+
+    ffmpeg -i "$temp_file" -filter:a "atempo=$speech_rate" -vn "$output_file" -y 2>/dev/null
+
+    rm "$temp_file"
+fi
+
+echo "Audio saved to $output_file"

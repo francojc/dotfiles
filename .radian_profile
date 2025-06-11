@@ -1,0 +1,60 @@
+# Radian Configuration
+# Organized into logical sections for better readability and maintenance
+
+# Color and Appearance
+options(
+  radian.color_scheme = "nord-darker",
+  radian.tab_size = 2,
+  radian.auto_width = TRUE
+)
+
+# Editing Mode Configuration
+options(
+  radian.editing_mode = "vi",
+  radian.emacs_bindings_in_vi_insert_mode = TRUE,
+  radian.show_vi_mode_prompt = TRUE
+)
+
+# Vi Mode Prompts
+options(
+  radian.vi_mode_prompt = list(
+    "ins" = "\033[0;34m>\033[0m",
+    "nav" = "\033[0;33m□\033[0m",
+    "rep" = "\033[0;31m␣\033[0m"
+  )
+)
+
+# Prompt Styles
+options(
+  radian.prompt = "\033[0;34m\033[0m ",
+  radian.shell_prompt = "\033[0;31m#!>\033[0m ",
+  radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m "
+)
+
+# Completion and Suggestion Settings
+options(
+  radian.complete_while_typing = TRUE,
+  radian.auto_suggest = TRUE,
+  radian.completion_prefix_length = 4
+)
+
+# History Configuration
+options(
+  radian.global_history_file = "~/.radian_history",
+  radian.history_search_no_duplicates = TRUE
+)
+
+# Bracket and Syntax Highlighting
+options(
+  radian.auto_match = FALSE,
+  radian.highlight_matching_bracket = TRUE
+)
+
+# Custom Keybindings
+options(
+  radian.ctrl_key_map = list(
+    list(key = "o", value = " <- "),
+    list(key = "p", value = " |> ")
+  )
+)
+

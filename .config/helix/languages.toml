@@ -1,0 +1,26 @@
+[language-server.gpt]
+command = "helix-gpt"
+args = ["--handler", "copilot"]
+
+[[language]]
+name = "rmarkdown"
+scope = "source.rmd"
+language-id = "rmd"
+injection-regex = "(r|R)md"
+file-types = ["rmd", "Rmd", "qmd"]
+indent = { tab-width = 2, unit = "  " }
+grammar = "markdown"
+block-comment-tokens = { start = "<!--", end = "-->" }
+language-servers = [ "r", "gpt" ]
+
+[[language]]
+name = "python"
+language-servers = [ "pyright", "gpt" ]
+
+[[language]]
+name = "r"
+language-servers = [ "r", "gpt" ]
+
+[[language]]
+name = "markdown"
+language-servers = [ "marksman", "markdown-oxide", "gpt" ]

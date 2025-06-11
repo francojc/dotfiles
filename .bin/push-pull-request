@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# This script pushes the current branch to the remote repository and creates a pull request on the student's forked repository.
+# It takes a message for the pr request as an argument.
+
+# Check if the user has provided a message for the pull request
+if [ -z "$1" ]; then
+  echo "Please provide a message for the pull request"
+  exit 1
+fi
+
+# Get the name of the current branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Student username
+student_username=$current_branch
+
+# Push the current branch to the remote repository
+git push origin $current_branch
+
+# Get the instructor's organization name
+instructor_org=$(git remote get-url origin | sed -E 's/.*github.com[:\/](.*)\/.*/\1/')
+
+# Get the name of the instructor's repository (assumes it's the origin remote)
+instructor_repo=$(git remote get-url origin | sed -E 's/.*github.com[:\/](.*)\.git/\1/')
+
+# Get the name of the student's repository (assumes it's their username)
+student_repo=$(git remote get-url $student_username | sed -E 's/.*github.com[:\/](.*)/\1/')
+
+# Create a pull request on the student's forked repository
+gh pr create --repo "$student_repo" --head "$instructor_org:$current_branch" --title "Instructor feedback" --body "$1"
+
+# Change back to the original branch
+git checkout main
+
+
+

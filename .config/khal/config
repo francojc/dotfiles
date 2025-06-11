@@ -1,0 +1,52 @@
+[calendars]
+
+[[francojc]]
+path = ~/.calendars/google/francojc@wfu.edu
+type = discover
+color = "#9bb4bc"
+
+[[jerid.francom]]
+path = ~/.calendars/google/jerid.francom@gmail.com
+type = discover
+color = "#8EC07C"
+
+[[holidays]]
+path = ~/.calendars/google/cln2stbjc4hmgrrcd5i62ua0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual
+type = discover
+color = "#bb9dbd"
+
+[[spanish.department]]
+path = ~/.calendars/google/wfu.edu_27uakldtgi42knb0bbcs50flgk@group.calendar.google.com
+type = discover
+color = "#FEE18C"
+
+[[deans.office]]
+path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.google.com
+type = discover
+color = "#df6882"
+
+[[Reminders]]
+path = ~/.calendars/local/reminders/
+type = calendar
+color = "#1591EA"
+readonly = false
+
+[default]
+default_calendar = Scheduled
+highlight_event_days = True
+
+[highlight_days]
+default_color = "#EBDBB2"
+multiple = ""
+
+[view]
+# event_view_always_visible = True
+
+[locale]
+local_timezone= America/New_York
+timeformat = %H:%M
+dateformat = %Y-%m-%d
+longdateformat = %Y-%m-%d
+datetimeformat = %Y-%m-%d %H:%M
+longdatetimeformat = %Y-%m-%d %H:%M
+weeknumbers = right
