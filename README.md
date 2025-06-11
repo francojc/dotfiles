@@ -43,7 +43,14 @@ Before restoring the dotfiles, ensure you have the following installed:
    cd ~/.config/nix/
    nix  flake init -t nix-darwin
    sed -i '' "s/simple/$(scutil --get LocalHostName)/" flake.nix
-   nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix
+   ```
+
+   You will then need to add `nix.enable = false;` to the `~/.config/nix/flake.nix` file to allow nix-darwin to manage the Nix configuration.
+
+   After that, you can run the following command to install nix-darwin:
+
+   ```bash
+   sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix
    ```
 
    Check to see that the installation was successful by running:
@@ -79,6 +86,9 @@ Before restoring the dotfiles, ensure you have the following installed:
    ```bash
    hostname
    ```
+
+   > [!NOTE]
+   > You can update the hostname in macOS running `sudo scutil --set LocalHostName <new-hostname>`. I've also found that running `sudo hostname -s <new-hostname>` can help in some cases. 
 
 5. Apply the configurations using the full path to the flake's directory:
 
