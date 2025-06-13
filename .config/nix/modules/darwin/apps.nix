@@ -13,7 +13,6 @@
     };
 
     taps = [
-      "homebrew/services"
       "FelixKratz/formulae" # for jankyborders
       "nao1215/tap" # for sqly
       "pomdtr/tap" # for sunbeam
@@ -43,11 +42,9 @@
       "ghostty" # Terminal emulator
       "google-drive"
       "kap" # screen recording
-      "memory-cleaner"
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization
-      "protonvpn"
       "raycast"
       "rectangle"
       "rocket" # emoji picker
@@ -79,7 +76,6 @@
       Keynote = 409183694;
       Numbers = 409203825;
       Pages = 409201541;
-      Session_Pomodoro = 1521432881;
       Triode = 1450027401;
       iPreview = 1519213509;
       windows-app = 1295203466;

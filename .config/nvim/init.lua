@@ -43,6 +43,7 @@ require("paq")({
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 	"j-hui/fidget.nvim", -- LSP progress indicator
+	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 })
 
 --| Options ------------------------------------------------------
