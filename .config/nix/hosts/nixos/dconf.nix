@@ -1,7 +1,9 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
+# Modified to include Mac-like keybindings
 {lib, ...}:
 with lib.hm.gvariant; {
   dconf.settings = {
+    # Your existing Console settings
     "org/gnome/Console" = {
       font-scale = 1.2000000000000002;
       last-window-maximised = true;
@@ -61,17 +63,21 @@ with lib.hm.gvariant; {
       secondary-color = "#2f302f";
     };
 
+    # Updated input sources to include Alt/Super key swap for Mac-like behavior
     "org/gnome/desktop/input-sources" = {
       sources = [(mkTuple ["xkb" "us"])];
-      xkb-options = ["terminate:ctrl_alt_bksp" "lv3:ralt_switch"];
+      xkb-options = ["terminate:ctrl_alt_bksp" "lv3:ralt_switch" "altwin:swap_lalt_lwin"];
     };
 
+    # Merge with your existing interface settings + Mac-like additions
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       enable-animations = true;
       font-hinting = "slight";
       icon-theme = "Adwaita";
       text-scaling-factor = 0.95;
+      show-battery-percentage = true;
+      clock-show-weekday = true;
     };
 
     "org/gnome/desktop/notifications" = {
@@ -112,8 +118,11 @@ with lib.hm.gvariant; {
       natural-scroll = false;
     };
 
+    # Updated touchpad settings for Mac-like behavior
     "org/gnome/desktop/peripherals/touchpad" = {
       two-finger-scrolling-enabled = true;
+      natural-scroll = true;
+      tap-to-click = true;
     };
 
     "org/gnome/desktop/screensaver" = {
@@ -126,6 +135,30 @@ with lib.hm.gvariant; {
 
     "org/gnome/desktop/search-providers" = {
       sort-order = ["org.gnome.Settings.desktop" "org.gnome.Contacts.desktop" "org.gnome.Nautilus.desktop"];
+    };
+
+    # NEW: Window management keybindings (Mac-like)
+    "org/gnome/desktop/wm/keybindings" = {
+      close = ["<Super>w"];
+      minimize = ["<Super>m"];
+      toggle-maximized = ["<Super>f"];
+      show-desktop = ["<Super>d"];
+
+      # Workspace switching
+      switch-to-workspace-1 = ["<Super>1"];
+      switch-to-workspace-2 = ["<Super>2"];
+      switch-to-workspace-3 = ["<Super>3"];
+      switch-to-workspace-4 = ["<Super>4"];
+
+      # Move windows between workspaces
+      move-to-workspace-1 = ["<Super><Shift>1"];
+      move-to-workspace-2 = ["<Super><Shift>2"];
+      move-to-workspace-3 = ["<Super><Shift>3"];
+      move-to-workspace-4 = ["<Super><Shift>4"];
+
+      # Window cycling
+      cycle-windows = ["<Super>grave"]; # Super+`
+      cycle-windows-backward = ["<Super><Shift>grave"];
     };
 
     "org/gnome/epiphany/state" = {
@@ -190,6 +223,36 @@ with lib.hm.gvariant; {
       night-light-schedule-automatic = false;
     };
 
+    # NEW: Media keys and system shortcuts (Mac-like)
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      terminal = ["<Super>Return"];
+      home = ["<Super>e"]; # File manager
+
+      # Screenshot shortcuts (Mac-like)
+      screenshot = ["<Super><Shift>3"];
+      area-screenshot = ["<Super><Shift>4"];
+      window-screenshot = ["<Super><Shift>5"];
+
+      # Custom keybindings
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
+    };
+
+    # NEW: Custom application shortcuts
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      name = "Terminal";
+      command = "gnome-console"; # Using GNOME Console since you have it configured
+      binding = "<Super>t";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+      name = "File Manager";
+      command = "nautilus";
+      binding = "<Super><Shift>f";
+    };
+
     "org/gnome/shell" = {
       disable-user-extensions = false;
       disabled-extensions = ["windowsNavigator@gnome-shell-extensions.gcampax.github.com" "dash-to-dock@micxgx.gmail.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "light-style@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" "drive-menu@gnome-shell-extensions.gcampax.github.com" "status-icons@gnome-shell-extensions.gcampax.github.com"];
@@ -199,10 +262,18 @@ with lib.hm.gvariant; {
       welcome-dialog-last-shown-version = "47.2";
     };
 
+    # NEW: GNOME Shell keybindings (Mac-like)
+    "org/gnome/shell/keybindings" = {
+      toggle-overview = ["<Super>space"];
+      show-applications = ["<Super>a"];
+      toggle-message-tray = []; # Disable to avoid conflicts
+    };
+
     "org/gnome/shell/extensions/auto-move-windows" = {
       application-list = [];
     };
 
+    # Your existing awesome-tiles configuration (preserved)
     "org/gnome/shell/extensions/awesome-tiles" = {
       enable-inner-gaps = true;
       gap-size = 0;
