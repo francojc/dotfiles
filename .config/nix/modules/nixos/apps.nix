@@ -12,13 +12,14 @@
   # Add NixOS system packages (complementary to Home Manager packages)
   environment.systemPackages = with pkgs; [
     dconf2nix
+    gcc
     ghostty
     gnome-tweaks
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.clipboard-indicator
-    gnomeExtensions.extension-list
     gnomeExtensions.awesome-tiles
-    xclip
+    gnomeExtensions.clipboard-indicator
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.extension-list
     wl-clipboard
+    xclip
   ];
 }
