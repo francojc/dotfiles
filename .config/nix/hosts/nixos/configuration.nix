@@ -86,9 +86,9 @@
   system.stateVersion = "24.05";
 
   # Optional: Enable SSH server if needed
-  # services.openssh = {
-  #   enable = true;
-  #   settings.PasswordAuthentication = false; # Recommend key-based auth
-  #   settings.KbdInteractiveAuthentication = false;
-  # };
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = false; # Recommend key-based auth
+    settings.KbdInteractiveAuthentication = false;
+  };
 }

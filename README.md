@@ -1,9 +1,11 @@
 # DOTFILES
 
-This repository contains my personal dotfiles for configuring my development environment on macOS.
+This repository contains my personal dotfiles for configuring my development environment on MacOS/ NixOS.
 
 > [!NOTE]
 > Before applying the new configurations, it's a good idea to back up your existing dotfiles. You can do this by renaming them or moving them to a backup directory.
+
+# MacOS
 
 ## Prerequisites
 
@@ -106,3 +108,7 @@ Before restoring the dotfiles, ensure you have the following installed:
    cd ~/.dotfiles
    stow .
    ```
+
+# NixOS 
+
+...
