@@ -88,7 +88,6 @@
   # Optional: Enable SSH server if needed
   services.openssh = {
     enable = true;
-    settings.PasswordAuthentication = false; # Recommend key-based auth
-    settings.KbdInteractiveAuthentication = false;
+    settings.PasswordAuthentication = true;
   };
 }
