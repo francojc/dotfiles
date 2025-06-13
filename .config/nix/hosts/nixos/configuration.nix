@@ -43,18 +43,22 @@
     };
   };
 
-  # --- Auto Login (from original config) ---
-  services.displayManager = {
-    autoLogin = {
-      enable = true;
-      user = username; # Use username from specialArgs
+  # --- Display Manager & Desktop Environment ---
+  services = {
+    # GDM display manager with auto-login
+    displayManager = {
+      gdm = {
+        enable = true;
+        wayland = true; # Enable Wayland support
+      };
+      autoLogin = {
+        enable = true;
+        user = username; # Use username from specialArgs
+      };
     };
-    gdm.enable = true; # Use GDM as the display manager
-  };
 
-  # --- Desktop Environment ---
-  services.desktopManager = {
-    gnome.enable = true; # Enable GNOME desktop environment
+    # GNOME desktop environment
+    desktopManager.gnome.enable = true;
   };
 
   # Workaround for GNOME autologin
