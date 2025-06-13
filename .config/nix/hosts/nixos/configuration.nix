@@ -37,20 +37,26 @@
 
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
     xkb = {
       layout = "us";
       variant = "";
     };
-    # services.xserver.libinput.enable = true; # Usually enabled by default with GNOME
   };
 
   # --- Auto Login (from original config) ---
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = username; # Use username from specialArgs
+  services.displayManager = {
+    autoLogin = {
+      enable = true;
+      user = username; # Use username from specialArgs
+    };
+    gdm.enable = true; # Use GDM as the display manager
   };
+
+  # --- Desktop Environment ---
+  services.desktopManager = {
+    gnome.enable = true; # Enable GNOME desktop environment
+  };
+
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
