@@ -11,6 +11,7 @@
 
   # Add NixOS system packages (complementary to Home Manager packages)
   environment.systemPackages = with pkgs; [
+    dconf-editor
     dconf2nix
     gcc
     ghostty
@@ -22,4 +23,7 @@
     wl-clipboard
     xclip
   ];
+
+  # Programs
+  programs.dconf.enable = true;
 }
