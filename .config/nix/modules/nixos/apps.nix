@@ -1,7 +1,13 @@
 {pkgs, ...}: {
-  # enable tailscale for nixos hosts
+  # enable Tailscale for nixos hosts
   # (macOS hosts use the tailscale app from the official website)
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+  };
+  # Enable Ollama
+  services.ollama = {
+    enable = true;
+  };
 
   # Add NixOS system packages (complementary to Home Manager packages)
   environment.systemPackages = with pkgs; [
