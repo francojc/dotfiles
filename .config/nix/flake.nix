@@ -41,10 +41,10 @@
         useremail = "francojc@wfu.edu";
         configFile = ./hosts/darwin/configuration.nix;
       };
-      "nixos" = {
+      "Nix-Rover" = {
         type = "nixos";
         system = "aarch64-linux";
-        username = "francojc";
+        username = "jeridf";
         useremail = "francojc@wfu.edu";
         configFile = ./hosts/nixos/configuration.nix;
       };
@@ -147,8 +147,7 @@
               users.${systemAttrs.username} = {
                 imports = [
                   nixCats.homeModules.default # Use the nixCats HM module
-                  ./home # Import shared home config entrypoint
-                  # Add host-specific HM config here if needed:
+                  ./home 
                   ./hosts/nixos/dconf.nix
                 ];
               };

@@ -1,4 +1,4 @@
-# My Nix Darwin Configuration
+# My Nix Darwin/ NixOS Configuration
 
 <!--toc:start-->
 
@@ -7,7 +7,7 @@
 
 <!--toc:end-->
 
-> **Note**: This is a personal configuration, and it may not be suitable for you. You can use it as a reference to build your own configuration. I recommend taking a look a the "Nix Darwin Kickstarter" demo which served as a reference for this configuration.
+> **Note**: This is a personal configuration, and it may not be suitable for you. You can use it as a reference to build your own configuration. 
 
 ## Configuration Structure
 
@@ -22,30 +22,29 @@
 │   │   ├── default.nix
 │   │   ├── init.lua
 │   │   ├── plugin
-│   │   │   ├── ai.lua
-│   │   │   ├── colorscheme.lua
-│   │   │   ├── completion.lua
-│   │   │   ├── general.lua
-│   │   │   ├── lsp.lua
-│   │   │   ├── tools.lua
-│   │   │   └── ui.lua
 │   │   └── snippets
-│   │       ├── all.json
-│   │       ├── markdown.json
-│   │       ├── nix.json
-│   │       ├── package.json
-│   │       ├── quarto.json
-│   │       └── r.json
 │   ├── shell
 │   │   ├── aliases.zsh
 │   │   ├── default.nix
 │   │   └── fzf.zsh
 │   └── vim.nix
+├── hosts
+│   ├── darwin
+│   │   └── configuration.nix
+│   └── nixos
+│       ├── configuration.nix
+│       ├── dconf.nix
+│       ├── dconf.settings
+│       └── hardware-configuration.nix
 ├── Justfile
 ├── modules
-│   ├── apps.nix
-│   ├── host-users.nix
-│   ├── nix-core.nix
-│   └── system.nix
+│   ├── darwin
+│   │   └── apps.nix
+│   ├── nixos
+│   │   └── apps.nix
+│   └── shared
+│       ├── fonts.nix
+│       ├── nix-core.nix
+│       └── packages.nix
 └── README.md
 ```
