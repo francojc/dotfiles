@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   # Add system packages
   environment.systemPackages = with pkgs; [
-    pngpaste # Example of a potentially darwin-specific addition
+    # nix-darwin specific apps on nixpkgs
   ];
 
   homebrew = {
@@ -28,6 +28,7 @@
       "python@3.11"
       "rename"
       "sunbeam"
+      "pngpaste" # paste images
       "sqly"
       "wget"
     ];
