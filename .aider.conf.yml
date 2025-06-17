@@ -58,6 +58,7 @@ no-attribute-committer: true
 show-diffs: false  # Optional, but useful to review changes
 
 # Input Mode
+suggest-shell-commands: false
 vim: true
 multiline: false  # Often useful with vim mode
 restore-chat-history: false  # Helps maintain context between sessions
@@ -68,4 +69,6 @@ auto-test: false
 
 # Cache Settings
 cache-prompts: true
-cache-keepalive-pings: 12  # Will ping every 5 minutes for up to 1 hour
+cache-keepalive-pings: 12
+
+check-update: false
