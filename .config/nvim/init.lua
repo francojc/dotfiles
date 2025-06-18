@@ -553,6 +553,13 @@ require("blink.cmp").setup({
 		},
 		menu = {
 			auto_show = function(ctx)
+				-- Don't show if we're at the end of a line with only whitespace after cursor
+				local line = vim.api.nvim_get_current_line()
+				local col = vim.api.nvim_win_get_cursor(0)[2]
+				local after_cursor = line:sub(col + 1)
+				if after_cursor:match("^%s*$") then
+					return false
+				end
 				-- Cancel any existing timer
 				if completion_timer then
 					vim.fn.timer_stop(completion_timer)
