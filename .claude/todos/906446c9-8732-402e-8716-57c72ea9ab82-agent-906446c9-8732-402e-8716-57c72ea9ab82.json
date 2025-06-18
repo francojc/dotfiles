@@ -1,0 +1,38 @@
+[
+  {
+    "content": "Analyze current structure and plan new organization",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Create new directory structure with clear separation of concerns",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Move existing files to appropriate new locations",
+    "status": "completed",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Update _quarto.yml configuration for new structure",
+    "status": "completed",
+    "priority": "high",
+    "id": "4"
+  },
+  {
+    "content": "Update CLAUDE.md with new structure guidance",
+    "status": "completed",
+    "priority": "medium",
+    "id": "5"
+  },
+  {
+    "content": "Test that site renders correctly after reorganization",
+    "status": "completed",
+    "priority": "high",
+    "id": "6"
+  }
+]

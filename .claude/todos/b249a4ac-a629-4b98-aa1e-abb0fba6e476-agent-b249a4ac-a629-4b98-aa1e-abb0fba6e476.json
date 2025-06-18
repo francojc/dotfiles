@@ -1,0 +1,56 @@
+[
+  {
+    "content": "Complete analysis of research leave proposal sections",
+    "status": "completed",
+    "priority": "high",
+    "id": "analysis_complete"
+  },
+  {
+    "content": "Create specs/ directory and add research leave proposal analysis",
+    "status": "completed",
+    "priority": "high",
+    "id": "create_specs_dir"
+  },
+  {
+    "content": "Commit specs framework and establish Git workflow",
+    "status": "completed",
+    "priority": "high",
+    "id": "setup_git_workflow"
+  },
+  {
+    "content": "Research Wake Forest University's strategic priorities and educational technology initiatives",
+    "status": "pending",
+    "priority": "high",
+    "id": "wfu_alignment"
+  },
+  {
+    "content": "Develop faculty development section with scholarly trajectory narrative",
+    "status": "pending",
+    "priority": "high",
+    "id": "personal_narrative"
+  },
+  {
+    "content": "Design detailed evaluation frameworks for student learning assessment",
+    "status": "pending",
+    "priority": "high",
+    "id": "evaluation_framework"
+  },
+  {
+    "content": "Develop IRB requirements and ethical considerations section",
+    "status": "pending",
+    "priority": "medium",
+    "id": "irb_planning"
+  },
+  {
+    "content": "Strengthen justification for leave timing with research momentum narrative",
+    "status": "pending",
+    "priority": "medium",
+    "id": "timing_justification"
+  },
+  {
+    "content": "Document previous leave record and scholarly productivity pattern",
+    "status": "pending",
+    "priority": "medium",
+    "id": "leave_history"
+  }
+]
