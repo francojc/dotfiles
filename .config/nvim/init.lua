@@ -771,11 +771,13 @@ require("conform").setup({
 	},
 	formatters_by_ft = {
 		bash = { "shfmt" },
+		json = { "jq" },
+		jsonl = { "jq" },
 		lua = { "stylua" },
+		markdown = { "mdformat" },
 		nix = { "alejandra" },
 		python = { "ruff", lsp_format = "fallback" },
 		r = { "air" },
-		markdown = { "mdformat" },
 		["*"] = { "trim_whitespace" },
 	},
 	format_on_save = function()

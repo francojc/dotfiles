@@ -1,3 +1,5 @@
 projects/*
 statsig/*
 todos/*
+.mcp.json
+claude_desktop_config.json
