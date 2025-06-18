@@ -44,6 +44,7 @@ require("paq")({
 	"stevearc/conform.nvim", -- Formatter
 	"j-hui/fidget.nvim", -- LSP progress indicator
 	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
+	"sindrets/diffview.nvim", -- Git diff viewer
 })
 
 --| Options ------------------------------------------------------
@@ -1204,3 +1205,6 @@ wk.add({
 
 -- Yazi -----------------------------------
 require("yazi").setup({})
+
+-- Diffview ----------------------------------
+require("diffview").setup({})
