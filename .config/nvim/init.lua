@@ -197,6 +197,7 @@ map("n", "<leader>wl", "<C-w>5>", { desc = "Resize window right" })
 map({ "n", "v" }, "gh", "^", { desc = "Go to beginning of line" })
 -- End of line
 map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
+map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
 -- Line up/down
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })

@@ -18,9 +18,9 @@ alias:
 read: [.conventions.md, README.md]
 
 # Models
-model: gemini-flash
-editor-model: gemini-flash
-weak-model: gemma-local
+model: gemini-pro
+editor-model: gemini-pro
+weak-model: gemma-flash
 
 openai-api-base: https://api.githubcopilot.com
 
