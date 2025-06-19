@@ -11,9 +11,21 @@
       "Bash(mv:*)",
       "Bash(quarto:*)",
       "Bash(rg:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "mcp__filesystem__list_directory",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(rg:*)",
+      "mcp__filesystem__list_allowed_directories",
+      "WebFetch(domain:docs.anthropic.com)"
     ],
     "deny": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "fetch",
+    "memory",
+    "sequential-thinking",
+    "mcp-scholarly"
+  ]
 }
-
