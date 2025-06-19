@@ -12,9 +12,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixCats = {
-      url = "github:BirdeeHub/nixCats-nvim";
-    };
   };
 
   outputs = inputs @ {
@@ -22,145 +19,119 @@
     nixpkgs,
     darwin,
     home-manager,
-    nixCats,
     ...
   }: let
-    # Define all systems centrally
-    allSystems = {
-      "Macbook-Airborne" = {
-        type = "darwin";
-        system = "aarch64-darwin";
-        username = "francojc";
-        useremail = "francojc@wfu.edu";
-        configFile = ./hosts/darwin/configuration.nix;
-      };
-      "Mac-Minicore" = {
-        type = "darwin";
-        system = "aarch64-darwin";
-        username = "jeridf";
-        useremail = "francojc@wfu.edu";
-        configFile = ./hosts/darwin/configuration.nix;
-      };
-      "Nix-Rover" = {
-        type = "nixos";
-        system = "aarch64-linux";
-        username = "jeridf";
-        useremail = "francojc@wfu.edu";
-        configFile = ./hosts/nixos/configuration.nix;
-      };
+    # Import system definitions and host configurations
+    systemLib = import ./lib/systems.nix;
+
+    # Load host configurations
+    hosts = {
+      "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
+      "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
+      "Nix-Rover" = import ./hosts/Nix-Rover/default.nix;
     };
 
-    # Helper to filter systems by type
-    filterSystems = type: nixpkgs.lib.filterAttrs (name: value: value.type == type) allSystems;
+    # Unified configuration builder for both Darwin and NixOS
+    mkSystemConfig = hostname: hostConfig: let
+      systemInfo = systemLib.supportedSystems.${hostConfig.system};
+      isDarwin = systemInfo.platform == "darwin";
+      isLinux = systemInfo.platform == "linux";
 
-    # --- Helper function for Darwin ---
-    mkDarwinConfig = hostname: systemAttrs:
-      darwin.lib.darwinSystem {
-        system = systemAttrs.system;
-        specialArgs =
-          inputs
-          // {
-            inherit hostname;
-            username = systemAttrs.username;
-            useremail = systemAttrs.useremail;
-            isLinux = false;
-            isDarwin = true;
-          };
-        modules = [
-          # Core host specifics (hardware, state version)
-          systemAttrs.configFile # Host-specific Darwin settings
+      # Common special args passed to all modules
+      commonSpecialArgs =
+        inputs
+        // {
+          inherit hostname;
+          username = hostConfig.username;
+          useremail = hostConfig.useremail;
+          inherit isDarwin isLinux;
+        };
 
-          # New shared modules first
-          ./modules/shared/fonts.nix
-          ./modules/shared/nix-core.nix
-          ./modules/shared/packages.nix
-
-          # Darwin Specific System Modules
-          ./modules/darwin/apps.nix
-
-          # Integrate Home Manager for Darwin
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              verbose = true;
-              extraSpecialArgs = {
-                inherit inputs hostname;
-                username = systemAttrs.username; # Pass username
-                useremail = systemAttrs.useremail; # Pass useremail
-                isLinux = false; # Pass down to HM config
-                isDarwin = true;
-              };
-              users.${systemAttrs.username} = {
-                imports = [
-                  nixCats.homeModules.default # Use the nixCats HM module
-                  ./home # Import shared home config entrypoint
-                  # Add host-specific HM config here if needed:
-                  # ./hosts/${hostname}/home.nix
-                ];
-              };
-            };
-          }
-        ];
+      # Common Home Manager configuration
+      homeManagerConfig = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        verbose = true;
+        extraSpecialArgs = commonSpecialArgs;
+        users.${hostConfig.username} = {
+          imports =
+            [
+              ./home
+            ]
+            ++ hostConfig.homeModules;
+        };
       };
 
-    # --- Helper function for NixOS ---
-    mkNixosConfig = hostname: systemAttrs:
-      nixpkgs.lib.nixosSystem {
-        system = systemAttrs.system;
-        specialArgs =
-          inputs
-          // {
-            inherit hostname;
-            username = systemAttrs.username;
-            useremail = systemAttrs.useremail;
-            isLinux = true;
-            isDarwin = false;
-          };
-        modules = [
-          # Core host specifics (hardware, state version)
-          systemAttrs.configFile # Host-specific NixOS settings
+      # Common system modules (shared between Darwin and NixOS)
+      commonModules = [
+        ./modules/shared/fonts.nix
+        ./modules/shared/nix-core.nix
+        ./modules/shared/packages.nix
+      ];
+    in
+      if isDarwin
+      then
+        # Darwin system configuration
+        darwin.lib.darwinSystem {
+          system = hostConfig.system;
+          specialArgs = commonSpecialArgs;
+          modules =
+            commonModules
+            ++ [
+              # Darwin-specific modules
+              ./modules/darwin/apps.nix
 
-          # Shared System Modules
-          ./modules/shared/fonts.nix
-          ./modules/shared/nix-core.nix
-          ./modules/shared/packages.nix
+              # Home Manager integration for Darwin
+              home-manager.darwinModules.home-manager
+              {
+                home-manager = homeManagerConfig;
+              }
+            ]
+            ++ hostConfig.hostModules;
+        }
+      else if isLinux
+      then
+        # NixOS system configuration
+        nixpkgs.lib.nixosSystem {
+          system = hostConfig.system;
+          specialArgs = commonSpecialArgs;
+          modules =
+            commonModules
+            ++ [
+              # NixOS-specific modules
+              ./modules/nixos/apps.nix
 
-          # NixOS Specific System Modules
-          ./modules/nixos/apps.nix
+              # Home Manager integration for NixOS
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = homeManagerConfig;
+              }
+            ]
+            ++ hostConfig.hostModules;
+        }
+      else throw "Unsupported system: ${hostConfig.system}";
 
-          # Integrate Home Manager for NixOS
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              verbose = true;
-              extraSpecialArgs = {
-                inherit inputs hostname;
-                username = systemAttrs.username;
-                useremail = systemAttrs.useremail;
-                isLinux = true;
-                isDarwin = false;
-              };
-              users.${systemAttrs.username} = {
-                imports = [
-                  nixCats.homeModules.default # Use the nixCats HM module
-                  ./home 
-                  ./hosts/nixos/dconf.nix
-                ];
-              };
-            };
-          }
-        ];
-      };
+    # Helper to filter hosts by platform
+    filterHostsByPlatform = platform:
+      nixpkgs.lib.filterAttrs (
+        hostname: hostConfig: let
+          systemInfo = systemLib.supportedSystems.${hostConfig.system};
+        in
+          systemInfo.platform == platform
+      )
+      hosts;
   in {
-    darwinConfigurations = builtins.mapAttrs mkDarwinConfig (filterSystems "darwin");
-    nixosConfigurations = builtins.mapAttrs mkNixosConfig (filterSystems "nixos");
+    # Generate Darwin configurations for Darwin hosts
+    darwinConfigurations = builtins.mapAttrs mkSystemConfig (filterHostsByPlatform "darwin");
 
-    # Keep formatters
-    formatter."aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin".alejandra;
-    formatter."aarch64-linux" = nixpkgs.legacyPackages."aarch64-linux".alejandra;
+    # Generate NixOS configurations for Linux hosts
+    nixosConfigurations = builtins.mapAttrs mkSystemConfig (filterHostsByPlatform "linux");
+
+    # Formatters for supported systems
+    formatter =
+      nixpkgs.lib.genAttrs
+      (builtins.attrNames systemLib.supportedSystems)
+      (system: nixpkgs.legacyPackages.${system}.alejandra);
   };
 }
+

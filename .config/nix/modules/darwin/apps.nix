@@ -56,7 +56,7 @@
       "yaak" # API client
       "zen" # browser
       "zoom"
-      "zotero"
+      "zotero@beta" # reference manager
     ];
 
     masApps = {
