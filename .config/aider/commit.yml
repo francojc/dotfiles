@@ -1,7 +1,7 @@
 # Aider configuration file
 # Commit messages
 
-weak-model: openrouter/google/gemini-2.5-flash-preview-05-20
+weak-model: openai/gpt-4o
 architect: false
 stream: false
 no-attribute-author: true
