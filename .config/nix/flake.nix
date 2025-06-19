@@ -134,4 +134,3 @@
       (system: nixpkgs.legacyPackages.${system}.alejandra);
   };
 }
-
