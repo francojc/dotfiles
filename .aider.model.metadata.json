@@ -3,12 +3,15 @@
     "max_tokens": 4096,
     "max_input_tokens": 32000,
     "max_output_tokens": 4096,
-    "input_cost_per_token": 0.00000014,
-    "output_cost_per_token": 0.00000028,
+    "input_cost_per_token": 1.4E-7,
+    "output_cost_per_token": 2.8E-7,
     "litellm_provider": "deepseek",
     "mode": "chat"
   },
   "openrouter/google/gemini-2.5-pro-preview": {
+    "max_tokens": 4096,
+    "max_input_tokens": 32000,
+    "max_output_tokens": 4096,
     "input_cost_per_token": 0.00000125,
     "output_cost_per_token": 0.00001,
     "litellm_provider": "openrouter",
