@@ -21,3 +21,4 @@ conversation.toml
 .config/aerc/accounts.conf
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
+.claude/.credentials.json
