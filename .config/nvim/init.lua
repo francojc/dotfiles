@@ -1184,7 +1184,7 @@ require("nvim-treesitter.configs").setup({
 
 --- WhichKey -----------------------------------
 require("which-key").setup({
-	preset = "classic",
+	preset = "helix",
 	icons = {
 		group = " ",
 	},
