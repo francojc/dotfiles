@@ -9,6 +9,7 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
+	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
@@ -21,6 +22,7 @@ require("paq")({
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
+	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
@@ -40,11 +42,10 @@ require("paq")({
 	"rcarriga/nvim-notify", -- Notifications
 	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
+	"sindrets/diffview.nvim", -- Git diff viewer
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"j-hui/fidget.nvim", -- LSP progress indicator
-	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
-	"sindrets/diffview.nvim", -- Git diff viewer
+	"hat0uma/csvview.nvim", -- CSV viewer
 })
 
 --| Options ------------------------------------------------------
@@ -810,6 +811,17 @@ require("conform").setup({
 	notify_on_error = false,
 })
 
+-- csvview ----------------------------------
+require("csvview").setup({})
+
+-- Diffview ----------------------------------
+local actions = require("diffview.actions")
+require("diffview").setup({
+	keymaps = {
+		disable_defaults = false,
+	},
+})
+
 -- Fidget ----------------------------------
 require("fidget").setup({
 	notification = {
@@ -1213,11 +1225,3 @@ wk.add({
 
 -- Yazi -----------------------------------
 require("yazi").setup({})
-
--- Diffview ----------------------------------
-local actions = require("diffview.actions")
-require("diffview").setup({
-	keymaps = {
-		disable_defaults = false,
-	},
-})
