@@ -31,7 +31,7 @@ This document provides context about myself and my work and outlines my preferre
 - Student assessment automation
 - Language learning tools
 - Corpus-based pedagogy resources
-- Grade analysis and reporting
+- Assessment analysis and reporting
 
 #### Service Applications
 
