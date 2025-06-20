@@ -1,11 +1,10 @@
-README.md
-.git
 .*gpg$
-.macos
 .DS_Store
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4/
 .config/direnv
-.aider*
+.git
+.macos
 .mypy*
-.aider.tags*
-.aider.chat*
-.aider.input*
+README.md
