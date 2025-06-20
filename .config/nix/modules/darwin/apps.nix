@@ -21,15 +21,16 @@
     brews = [
       "borders" # jankyborders
       "huggingface-cli"
+      "keith/formulae/reminders-cli"
       "mas" # Mac App Store CLI
       "npm"
-      "keith/formulae/reminders-cli"
       "ollama" # AI model management
+      "pngpaste" # paste images
       "python@3.11"
       "rename"
-      "sunbeam"
-      "pngpaste" # paste images
       "sqly"
+      "sunbeam"
+      "uv"
       "wget"
     ];
 

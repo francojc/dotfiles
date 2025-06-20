@@ -77,8 +77,6 @@
     pandoc # Document converter
     pass # Password manager
     pianobar # Pandora client
-    # pipx # Python executable installer
-    uv # Python virtual environment manager
     poppler_utils # PDF utilities (pdftotext, etc.)
     procs # Process viewer
     qpdf # PDF manipulation tool
