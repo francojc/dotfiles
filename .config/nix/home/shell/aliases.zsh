@@ -60,20 +60,30 @@ alias home='TERM=xterm-256color ssh root@home'
 alias docker-lxc='TERM=xterm-256color ssh jeridf@docker-lxc'
 
 # Git aliases
-alias gss='git status'
 alias ga='git add'
 alias gaa='git add --all'
-alias gc='git commit -m'
-alias gp='git push'
-alias gpl='git pull'
-alias gf='git fetch'
-alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 alias gba='git branch -a'
-alias gco='git checkout'
+
 alias gsw='git switch'
+alias gswc='git switch -c'      # Create and switch to new branch (newer syntax)
+alias gcb='git checkout -b'     # Create and switch to new branch
+alias gco='git checkout'
+
+alias gc='git commit -m'
 alias gd='git diff'
 alias gdf='git diff --name-only'
+alias gdt='git difftool'        # Use your configured nvimdiff
+alias gf='git fetch'
 alias gitit='gh browse > /dev/null 2>&1'
+alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias gmt='git mergetool'       # Use your configured nvimdiff for conflicts
+alias gp='git push'
+alias gpl='git pull'
+alias grh='git reset HEAD'      # Unstage files
+alias grhh='git reset --hard HEAD'  # Hard reset (use carefully!)
+alias gss='git status'
+alias gst='git stash'           # Quick stash
+alias gstp='git stash pop'      # Quick stash pop
 
 # Neovim aliases
 alias v='nvim'
