@@ -1,6 +1,9 @@
-{ lib, useremail, ... }:
 {
-  home.activation.removeExistingGitconfig = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+  lib,
+  useremail,
+  ...
+}: {
+  home.activation.removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
     rm -f ~/.gitconfig
   '';
   programs.git = {
@@ -13,6 +16,9 @@
       push.autoSetupRemote = true;
       pull.rebase = true;
       credential.helper = "osxkeychain";
+      diff.tool = "nvimdiff";
+      difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
+      difftool.prompt = false;
     };
     delta = {
       enable = true;

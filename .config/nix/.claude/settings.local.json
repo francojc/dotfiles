@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(nix flake check:*)"
+      "Bash(nix flake check:*)",
     ],
     "deny": []
   }
