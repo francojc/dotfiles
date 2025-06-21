@@ -1,0 +1,9 @@
+{
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "fetch",
+    "memory",
+    "mcp-scholarly"
+  ],
+  "enableAllProjectMcpServers": true
+}
