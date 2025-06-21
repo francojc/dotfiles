@@ -51,6 +51,7 @@
       "rectangle"
       "rocket" # emoji picker
       "signal" # messaging
+      "superwhisper" # AI transcription
       "transcribe"
       "transmission"
       "visual-studio-code"
