@@ -1,5 +1,8 @@
 {
   "permissions": {
+    "allow": [
+      "mcp__zen"
+    ],
     "deny": [
       "Read(.env)",
       "Read(.aider.chat.history.md)",
@@ -7,3 +10,4 @@
     ]
   }
 }
+
