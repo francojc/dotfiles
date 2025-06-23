@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.aider.chat.history.md)",
+      "Read(.aider.tags.cache:*)"
+    ]
+  }
+}
