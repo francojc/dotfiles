@@ -3,7 +3,8 @@
 ## Professional Context
 
 **Role:** University Professor, Spanish Department  
-**Specializations:** Corpus Linguistics, Computational Linguistics (NLP), Hispanic Linguistics
+**Research:** Corpus Linguistics, Computational Linguistics (NLP), Hispanic Linguistics
+**Teaching:** Spanish language, linguistics, and computational, quantitative methods
 
 ## Project Planning Framework
 
@@ -56,7 +57,7 @@ Use `specs/` directory for systematic project development:
 ## Environment & Tools
 
 - **OS**: macOS (primary), NixOS, Linux
-- **Package Manager**: Nix flakes with direnv
+- **Package Manager**: Nix flakes with direnv (not nix develop)
 - **Editor**: Neovim
 - **Containerization**: Docker for reproducible research
 

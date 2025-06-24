@@ -1,5 +1,7 @@
 # --- ALIASES ---
 
+# Claude aliases
+
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
 alias taa=' tmux attach-session -t' # attach to a specific session
