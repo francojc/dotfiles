@@ -35,7 +35,6 @@
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
-    claude-code # CLI tool (anthropic)
     clipse # Clipboard manager
     codex # CLI tool (openai)
     datasette # SQLite database browser
