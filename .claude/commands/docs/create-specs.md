@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Grep, Edit 
+allowed-tools: Read, Grep, Edit, Bash(find:*), Bash(ls:*)
 description: |
   Create a CLAUDE.md file summarizing the project, including planning, progress tracking, design specifications, and implementation details.
 ---

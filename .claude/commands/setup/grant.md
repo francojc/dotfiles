@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Grep, Edit
+allowed-tools: Read, Grep, Edit, Bash(find:*), Bash(ls:*)
 description: |
     Create a CLAUDE.md file summarizing the grant proposal, including context, goals, structure, and guidance for contributors.
 --- 
