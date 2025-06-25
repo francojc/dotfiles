@@ -1,5 +1,6 @@
+.credentials.json
+claude_desktop_config.json
+local/*
 projects/*
 statsig/*
 todos/*
-claude_desktop_config.json
-.credentials.json
