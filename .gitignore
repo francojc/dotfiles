@@ -1,24 +1,62 @@
+# ==========================================================
+# .gitignore - Project Exclusions
+# ==========================================================
+# Organized by category for maintainability
+
+# ----------------------------------------------------------
+# Operating System Files
+# ----------------------------------------------------------
 .DS_Store
-.Rdata
-.Rhistory
-.Rproj.user
-.aider.chat*
-.aider.input*
-.aider.tags*
+
+# ----------------------------------------------------------
+# Environment & Configuration Files
+# ----------------------------------------------------------
+.env
+
+# Application configuration directories
 .config/containers/*
 .config/gh/*
 .config/git/*
 .config/github-copilot
 .config/raycast/*
-.continue
-.env
-.httr-oauth
-.quarto
-_freeze
-
-conversation.toml
 .config/pianobar/state
 .config/aerc/accounts.conf
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
+
+# ----------------------------------------------------------
+# Development Tools & AI Assistants
+# ----------------------------------------------------------
+# Aider AI development tool
+.aider.chat*
+.aider.input*
+.aider.tags*
+
+# Continue AI assistant
+.continue
+
+# Claude AI credentials
 .claude/.credentials.json
+
+# Gemini CLI config
+.config/configstore/*
+
+# ----------------------------------------------------------
+# R Programming Language
+# ----------------------------------------------------------
+.Rdata
+.Rhistory
+.Rproj.user
+.httr-oauth
+
+# ----------------------------------------------------------
+# Documentation & Publishing
+# ----------------------------------------------------------
+# Quarto publishing system
+.quarto
+_freeze
+
+# ----------------------------------------------------------
+# Project-Specific Files
+# ----------------------------------------------------------
+conversation.toml
