@@ -7,7 +7,7 @@ bitrate = 320
 
 # Audio/UI settings
 cover_max_scale = 2.0
-initial_screen = "library"
+initial_screen = "queue"
 repeat = "off"
 flip_status_indicators = true
 hide_display_names = true
@@ -27,14 +27,6 @@ hide_display_names = true
 "n" = "next"
 "p" = "previous"
 
-# Queue management
-"a" = "queue"
-"d" = "delete"
-"c" = "clear queue"
-
-# Discovery
-"s" = "similar selected"
-
 # Volume control
 "+" = "volup 5"
 "-" = "voldown 5"
@@ -46,6 +38,9 @@ hide_display_names = true
 "Shift+Right" = "seek +30000"
 "Shift+Left" = "seek -30000"
 
+# Saving
+"s" = "save"
+
 # Modes
 "r" = "repeat"
 "z" = "shuffle"
@@ -56,9 +51,9 @@ hide_display_names = true
 "o" = "open selected"
 
 # Quick tab switching
-"1" = "goto library"
-"2" = "goto search"
-"3" = "goto queue"
+"1" = "focus queue"
+"2" = "focus library"
+"3" = "focus search"
 
 # Utility
 "q" = "quit"
