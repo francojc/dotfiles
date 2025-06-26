@@ -14,15 +14,16 @@
 .env
 
 # Application configuration directories
+.config/aerc/accounts.conf
+.config/aerc/google-aerc-credentials.json
+.config/aerc/token.pickle
 .config/containers/*
 .config/gh/*
 .config/git/*
 .config/github-copilot
-.config/raycast/*
+.config/ncspot/userstate.cbor
 .config/pianobar/state
-.config/aerc/accounts.conf
-.config/aerc/google-aerc-credentials.json
-.config/aerc/token.pickle
+.config/raycast/*
 
 # ----------------------------------------------------------
 # Development Tools & AI Assistants

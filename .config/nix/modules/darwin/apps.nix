@@ -23,8 +23,9 @@
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "mas" # Mac App Store CLI
-      "npm"
+      "npm" # Node.js package manager
       "ollama" # AI model management
+      "ncspot" # Spotify client
       "pngpaste" # paste images
       "python@3.11"
       "rename"
@@ -51,6 +52,7 @@
       "rectangle"
       "rocket" # emoji picker
       "signal" # messaging
+      "spotify" # music streaming
       "superwhisper" # AI transcription
       "transcribe"
       "transmission"

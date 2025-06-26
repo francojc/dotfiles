@@ -82,6 +82,7 @@
     quarto # Scientific publishing system
     repgrep # ripgrep across files
     ripgrep # grep replacement
+    rustup
     searxng # Metasearch engine (assuming local instance tools)
     shunit2 # Shell testing
     speedtest-cli # Internet speed test
