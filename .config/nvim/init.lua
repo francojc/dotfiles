@@ -717,12 +717,17 @@ require("bufferline").setup({
 			bold = true,
 			italic = true,
 		},
+		indicator_selected = {
+			fg = "#FABD2E",
+			bg = "#3C3836",
+		},
 	},
 	options = {
 		color_icons = true,
 		separator_style = "thin",
 		indicator = {
-			style = "none",
+			style = "icon",
+			icon = "▎",
 		},
 	},
 })
