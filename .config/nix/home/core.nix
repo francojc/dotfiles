@@ -36,7 +36,6 @@
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
     clipse # Clipboard manager
-    chawan # lightweight terminal browser
     codex # CLI tool (openai)
     datasette # SQLite database browser
     drawio # Diagramming tool

@@ -20,6 +20,7 @@
 
     brews = [
       "borders" # jankyborders
+      "chawan" # TUI web browser
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "mas" # Mac App Store CLI
