@@ -30,12 +30,13 @@
   # Define general home packages (excluding Neovim and its associated packages)
   generalPackages = with pkgs; [
     _7zz
-    aider-chat-full # includes, playwright, browser, help, etc.
     aerc # Email client
+    aider-chat-full # includes, playwright, browser, help, etc.
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
     clipse # Clipboard manager
+    chawan # lightweight terminal browser
     codex # CLI tool (openai)
     datasette # SQLite database browser
     drawio # Diagramming tool

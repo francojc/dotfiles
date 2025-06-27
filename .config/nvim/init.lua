@@ -375,6 +375,8 @@ map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" }) -- Call the Lua function
 map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
+map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
+map("n", "<leader>tw", "<Cmd>set wrap!<Cr>", { desc = "Toggle word wrap" })
 
 ---| Toggle functions --------------------------------------------
 

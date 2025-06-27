@@ -1,0 +1,9 @@
+[start]
+visual-home = "https://searxng.gerbil-matrix.ts.net"
+
+[buffer]
+images = true
+autofocus = true
+
+[display]
+image-mode = "kitty"
