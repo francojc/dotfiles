@@ -28,9 +28,10 @@
       "ollama" # AI model management
       "ncspot" # Spotify client
       "pngpaste" # paste images
-      "python@3.11"
-      "rename"
-      "sqly"
+      "python@3.11" # Python 3
+      "rename" # file renaming utility
+      "sqly" #
+      "sst/tap/opencode" #
       "sunbeam"
       "uv"
       "wget"
