@@ -14,8 +14,6 @@
 
     taps = [
       "FelixKratz/formulae" # for jankyborders
-      "nao1215/tap" # for sqly
-      "pomdtr/tap" # for sunbeam
     ];
 
     brews = [
