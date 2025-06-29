@@ -6,12 +6,14 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     flake-utils,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
+
       # Base packages
       basePackages = with pkgs; [
         bashInteractive
@@ -23,22 +25,19 @@
         quarto
         R
         radianWrapper
+        python3
       ];
 
-      # Python environment with packages
-      python = pkgs.python312.withPackages pythonPackages;
-
       # Python packages
-      pythonPackages = ps:
-        with ps; [
-          ipython
-          jupyter
-          openai
-          requests
-          google-api-python-client
-          google-auth-oauthlib
-          google-auth-httplib2
-        ];
+      pyPackages = with pkgs.python3Packages; [
+        ipython
+        jupyter
+        openai
+        requests
+        google-api-python-client
+        google-auth-oauthlib
+        google-auth-httplib2
+      ];
 
       # R packages
       rPackages = with pkgs.rPackages; [
@@ -50,14 +49,20 @@
         tidyverse
       ];
 
-      allPackages = basePackages ++ rPackages ++ [python];
+      allPackages = basePackages ++ rPackages ++ pyPackages;
     in {
       devShell = pkgs.mkShell {
         buildInputs = allPackages;
         shellHook = ''
-          export R_LIBS_USER=$PWD/R/Library;
-          mkdir -p "$R_LIBS_USER";
-          export PATH=$PATH:${python}/bin;
+          echo "Welcome to the development shell!"
+          echo "You have access to the following tools:"
+          echo "- R"
+          echo "- Python"
+          echo "- Jupyter"
+          echo "- Quarto"
+          echo "- Git"
+          echo "- Pandoc"
+          echo "Feel free to customize this shell further as needed."
         '';
       };
     });

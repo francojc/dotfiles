@@ -9,15 +9,16 @@
 
 # --- Configuration ---
 # Set the URL for your Perplexica API instance
-PERPLEXICA_API_URL="http://mac-minicore.tail5650e0.ts.net:3110/api/search"
+
+PERPLEXICA_API_URL="https://perplexica.gerbil-matrix.ts.net/api/search" # <-- ADJUST THIS URL TO YOUR PERPLEXICA INSTANCE
 
 # --- Model Configuration ---
 # Chat Model (Using Custom OpenAI settings)
 CHAT_PROVIDER="custom_openai" # <-- VERIFY THIS PROVIDER NAME
-CHAT_MODEL_NAME="openai/gpt-4.1-mini"
+CHAT_MODEL_NAME="claude-sonnet-4"
 # IMPORTANT: Set this to your custom OpenAI-compatible endpoint URL (e.g., OpenRouter)
-CUSTOM_OPENAI_BASE_URL="https://openrouter.ai/api/v1" # <-- ADJUST IF NEEDED
-
+CUSTOM_OPENAI_BASE_URL="https://api.githubcopilot.com" # <-- ADJUST IF NEEDED
+CUSTOM_OPENAI_API_KEY="${GITHUB_COPILOT_API_KEY}" # <-- Set this to your OpenRouter API key or similar
 # Embedding Model (Using transformers - see /api/models endpoint)
 EMBEDDING_PROVIDER="transformers"
 EMBEDDING_MODEL_NAME="xenova-bge-small-en-v1.5"
@@ -101,14 +102,14 @@ if [[ -z "${FOCUS_MODE_MAP[$FOCUS_MODE]}" ]]; then
 fi
 API_FOCUS_MODE="${FOCUS_MODE_MAP[$FOCUS_MODE]}"
 
-# Check if OPENROUTER_API_KEY environment variable is set
-if [ -z "$OPENROUTER_API_KEY" ]; then
-  echo "Error: OPENROUTER_API_KEY environment variable is not set." >&2
+# Check if CUSTOM_OPENAI_API_KEY environment variable is set
+if [ -z "$CUSTOM_OPENAI_API_KEY" ]; then
+  echo "Error: CUSTOM_OPENAI_API_KEY environment variable is not set." >&2
   exit 1
 fi
 
 ESCAPED_PROMPT=$(json_escape "$PROMPT")
-ESCAPED_API_KEY=$(json_escape "$OPENROUTER_API_KEY")
+ESCAPED_API_KEY=$(json_escape "$CUSTOM_OPENAI_API_KEY")
 ESCAPED_BASE_URL=$(json_escape "$CUSTOM_OPENAI_BASE_URL")
 
 # Construct the JSON payload
