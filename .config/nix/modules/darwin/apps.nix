@@ -19,11 +19,11 @@
     ];
 
     brews = [
+      "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
       "huggingface-cli"
       "keith/formulae/reminders-cli"
-      "mas" # Mac App Store CLI
       "npm" # Node.js package manager
       "ollama" # AI model management
       "ncspot" # Spotify client
@@ -32,7 +32,6 @@
       "rename" # file renaming utility
       "sqly" #
       "sst/tap/opencode" #
-      "sunbeam"
       "uv"
       "wget"
     ];

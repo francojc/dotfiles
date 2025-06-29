@@ -31,13 +31,11 @@
   generalPackages = with pkgs; [
     _7zz
     aerc # Email client
-    aider-chat-full # includes, playwright, browser, help, etc.
+    # aider-chat-full # includes, playwright, browser, help, etc.
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     cachix # Nix package cache
-    clipse # Clipboard manager
     codex # CLI tool (openai)
-    datasette # SQLite database browser
     drawio # Diagramming tool
     duf # Disk usage utility
     entr # Event notify tool
@@ -61,13 +59,6 @@
     khal # Calendar
     kitty # Terminal emulator
     lazygit # TUI Git client
-    (pkgs.python3.withPackages (ps: [
-      ps.llm
-      ps.llm-anthropic # Anthropic plugin
-      ps.llm-gemini # Gemini plugin
-      ps.llm-ollama # Ollama plugin
-      ps.llm-openai-plugin # OpenAI plugin
-    ])) # AI CLI tool with plugins
     mdcat # Markdown cat
     mpv-unwrapped # Media player
     ncdu # Disk usage analyzer
@@ -82,7 +73,6 @@
     quarto # Scientific publishing system
     repgrep # ripgrep across files
     ripgrep # grep replacement
-    searxng # Metasearch engine (assuming local instance tools)
     shunit2 # Shell testing
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
@@ -94,7 +84,6 @@
     unp # Archive unpacker
     vdirsyncer # CalDAV/CardDAV sync
     which # Command location utility
-    wiper # Secure deletion?
     xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
