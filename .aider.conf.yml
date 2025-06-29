@@ -18,7 +18,7 @@ alias:
   - "gemma-local:ollama_chat/gemma3:4b"
 
 # Conventions/ project description
-read: [.conventions.md, README.md]
+read: [AIDER.md, README.md]
 
 # Models
 model: gemini-pro-2.5
