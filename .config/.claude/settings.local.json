@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(brew info:*)",
+      "Bash(cargo install:*)"
+    ],
+    "deny": []
+  }
+}
