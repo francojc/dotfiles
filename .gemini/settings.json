@@ -1,0 +1,75 @@
+{
+  "selectedAuthType": "gemini-api-key",
+  "theme": "Atom One",
+  "preferredEditor": "vim",
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "mcp-scholarly": {
+      "command": "uvx",
+      "args": [
+        "mcp-scholarly"
+      ]
+    },
+    "karakeep": {
+      "command": "npx",
+      "args": [
+        "@karakeep/mcp"
+      ],
+      "env": {
+        "KARAKEEP_API_KEY": "$KARAKEEP_API_KEY",
+        "KARAKEEP_API_ADDR": "https://karakeep.gerbil-matrix.ts.net"
+      }
+    },
+    "Context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "obsidian": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "obsidian-mcp",
+        "/Users/francojc/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
+      ]
+    },
+    "airtable": {
+      "command": "npx",
+      "args": [
+        "@felores/airtable-mcp-server"
+      ],
+      "env": {
+        "AIRTABLE_API_KEY": "$AIRTABLE_API_KEY"
+      }
+    },
+    "zotero": {
+      "command": "zotero-mcp",
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    },
+    "canvas-api": {
+      "command": "canvas-mcp-server"
+    },
+    "google_workspace": {
+      "command": "uvx",
+      "args": [
+        "workspace-mcp"
+      ],
+      "env": {
+        "OAUTHLIB_INSECURE_TRANSPORT": "1",
+        "GOOGLE_CLIENT_SECRETS": "/Users/francojc/.google/workspace_client_secret.json",
+        "HOME": "/Users/francojc"
+      }
+    }
+  }
+}
+
