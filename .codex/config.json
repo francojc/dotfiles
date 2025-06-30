@@ -1,5 +1,5 @@
 {
-  "model": "o3-mini",
+  "model": "claude-sonnet-4",
   "provider": "GitHub Copilot",
   "providers": {
     "openai": {
