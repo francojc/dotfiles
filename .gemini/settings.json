@@ -69,7 +69,9 @@
         "GOOGLE_CLIENT_SECRETS": "/Users/francojc/.google/workspace_client_secret.json",
         "HOME": "/Users/francojc"
       }
+    },
+    "zen": {
+      "command": "/Users/francojc/.local/mcp/prod/zen-mcp-server/zen-mcp-server"
     }
   }
 }
-
