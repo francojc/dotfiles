@@ -189,7 +189,7 @@ map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
 -- Delete session and quit
-map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa<CR>", { desc = "Quit (session)" })
+map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa!<CR>", { desc = "Quit (session)" })
 --- Window  -----
 -- Move between editor/terminal windows
 map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
@@ -381,17 +381,17 @@ map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggl
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" }) -- Call the Lua function
-map("n", "<leader>ts", "<Cmd>set spell!<Cr>", { desc = "Toggle spell" })
+map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
-map("n", "<leader>tw", "<Cmd>set wrap!<Cr>", { desc = "Toggle word wrap" })
+map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })
 
 ---| Functions --------------------------------------------
 
 -- Notification helper function
 local function notify_toggle(enabled, feature)
 	local status = enabled and "enabled" or "disabled"
-	vim.notify(feature .. " " .. status, vim.log.levels.INFO, { title = feature })
+	require("fidget").notify(feature .. " " .. status, vim.log.levels.INFO, { title = feature })
 end
 
 -- Image Rendering Toggle Functionality
@@ -436,9 +436,20 @@ function _G.Toggle_r_language_server()
 			})
 			notify_toggle(true, "R LSP")
 		else
-			vim.notify("Could not determine project root for R LSP.", vim.log.levels.WARN, { title = "R LSP" })
+			require("fidget").notify("Could not determine project root for R LSP.", vim.log.levels.WARN, { title = "R LSP" })
 		end
 	end
+end
+
+-- Additional toggle functions with notifications
+function _G.Toggle_spell()
+	vim.opt.spell = not vim.opt.spell:get()
+	notify_toggle(vim.opt.spell:get(), "Spell checking")
+end
+
+function _G.Toggle_wrap()
+	vim.opt.wrap = not vim.opt.wrap:get()
+	notify_toggle(vim.opt.wrap:get(), "Word wrap")
 end
 
 -- Spell Language Functionality
