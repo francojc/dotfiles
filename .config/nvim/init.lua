@@ -58,6 +58,13 @@ _G.nvim_config_start_time = vim.loop.hrtime()
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
+-- Color variables -----
+local colors = {
+	bg = "#3C3836",
+	fg = "#EBDBB2",
+	yellow = "#FABD2E"
+}
+
 -- Locals -----
 -- Clipboard
 opt.clipboard = "unnamedplus"
@@ -111,6 +118,7 @@ opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
+opt.autoread = true -- auto read files when changed outside of Neovim
 
 opt.laststatus = 2 -- show statusline always
 
@@ -380,32 +388,37 @@ map("n", "<leader>tw", "<Cmd>set wrap!<Cr>", { desc = "Toggle word wrap" })
 
 ---| Toggle functions --------------------------------------------
 
+-- Notification helper function
+local function notify_toggle(enabled, feature)
+	local status = enabled and "enabled" or "disabled"
+	vim.notify(feature .. " " .. status, vim.log.levels.INFO, { title = feature })
+end
+
 -- Image Rendering Toggle Functionality
 Image_rendering_enabled = false -- Assume images are disabled by default -- Make global
 function _G.Toggle_image_rendering() -- Make global
 	if Image_rendering_enabled then
 		require("image").disable()
-		vim.notify("Image rendering disabled", vim.log.levels.INFO, { title = "Image" })
 	else
 		require("image").enable()
-		vim.notify("Image rendering enabled", vim.log.levels.INFO, { title = "Image" })
 	end
 	Image_rendering_enabled = not Image_rendering_enabled
+	notify_toggle(Image_rendering_enabled, "Image rendering")
 end
 
 -- Toggle R language server using standard vim.lsp APIs
 function _G.Toggle_r_language_server()
 	local clients = vim.lsp.get_clients({ bufnr = 0, name = "r_language_server" })
+	local is_running = #clients > 0
 
-	if #clients > 0 then
+	if is_running then
 		-- LSP is running for this buffer, stop all R clients for this buffer
-		vim.notify("Stopping R LSP client(s) for current buffer...", vim.log.levels.INFO, { title = "R LSP" })
 		for _, client in ipairs(clients) do
 			vim.lsp.stop_client(client.id)
 		end
+		notify_toggle(false, "R LSP")
 	else
 		-- LSP is not running for this buffer, start it
-		vim.notify("Starting R LSP for current buffer...", vim.log.levels.INFO, { title = "R LSP" })
 		-- We need configuration details to start the client manually
 		local lspconfig_util = require("lspconfig.util")
 		local bufname = vim.api.nvim_buf_get_name(0)
@@ -421,6 +434,7 @@ function _G.Toggle_r_language_server()
 				capabilities = capabilities,
 				filetypes = { "r" }, -- Ensure filetype association
 			})
+			notify_toggle(true, "R LSP")
 		else
 			vim.notify("Could not determine project root for R LSP.", vim.log.levels.WARN, { title = "R LSP" })
 		end
@@ -511,14 +525,18 @@ dashboard.section.header.val = {
 	"                                                     ",
 }
 -- Set menu
-dashboard.section.buttons.val = {
-	dashboard.button("r", "  Recent files", ":FzfLua oldfiles<CR>"),
-	dashboard.button("f", "  Find file", ":FzfLua files<CR>"),
-	dashboard.button("g", "  Find text", ":FzfLua live_grep <CR>"),
-	dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
-	dashboard.button("s", "  Select a session", ":SessionSearch<CR>"),
-	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+local dashboard_buttons = {
+	{ "r", "  Recent files", ":FzfLua oldfiles<CR>" },
+	{ "f", "  Find file", ":FzfLua files<CR>" },
+	{ "g", "  Find text", ":FzfLua live_grep <CR>" },
+	{ "n", "  New file", ":ene <BAR> startinsert <CR>" },
+	{ "s", "  Select a session", ":SessionSearch<CR>" },
+	{ "q", "  Quit Neovim", ":qa<CR>" },
 }
+dashboard.section.buttons.val = {}
+for _, btn in ipairs(dashboard_buttons) do
+	table.insert(dashboard.section.buttons.val, dashboard.button(unpack(btn)))
+end
 
 -- Set footer
 dashboard.section.footer.val = function()
@@ -654,72 +672,72 @@ require("blink.cmp").setup({
 require("bufferline").setup({
 	highlights = {
 		fill = {
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		close_button = {
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		close_button_visible = {
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		close_button_selected = {
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		background = {
 			italic = false,
 			bold = false,
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		buffer_visible = {
 			italic = false,
 			bold = false,
-			fg = "#EBDBB2",
-			bg = "#3C3836",
+			fg = colors.fg,
+			bg = colors.bg,
 		},
 		buffer_selected = {
 			italic = false,
 			bold = true,
-			fg = "#FABD2E",
-			bg = "#3C3836",
+			fg = colors.yellow,
+			bg = colors.bg,
 		},
 		modified = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		modified_selected = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		separator = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		separator_visible = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		separator_selected = {
-			bg = "#FABD2E",
-			fg = "#FABD2E",
+			bg = colors.yellow,
+			fg = colors.yellow,
 		},
 		offset_separator = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		pick_selected = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		pick_visible = {
-			bg = "#3C3836",
+			bg = colors.bg,
 		},
 		pick = {
-			bg = "#3C3836",
+			bg = colors.bg,
 			bold = true,
 			italic = true,
 		},
 		indicator_selected = {
-			fg = "#FABD2E",
-			bg = "#3C3836",
+			fg = colors.yellow,
+			bg = colors.bg,
 		},
 	},
 	options = {
@@ -955,18 +973,6 @@ lspconfig.nixd.setup({
 lspconfig.pyright.setup({ capabilities = capabilities })
 
 -- R
--- https://posit-dev.github.io/air/editor-neovim.html
-require("lspconfig").air.setup({
-	on_attach = function(_, bufnr)
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			buffer = bufnr,
-			callback = function()
-				vim.lsp.buf.format()
-			end,
-		})
-	end,
-})
-
 lspconfig.r_language_server.setup({
 	on_attach = function(client, _)
 		client.server_capabilities.documentFormattingProvider = false
@@ -1082,10 +1088,10 @@ require("lualine").setup({
 })
 
 -- Mini -----------------------------------
-require("mini.icons").setup({})
-require("mini.pairs").setup({})
-require("mini.indentscope").setup({})
-require("mini.surround").setup({})
+local mini_modules = { "icons", "pairs", "indentscope", "surround" }
+for _, module in ipairs(mini_modules) do
+	require("mini." .. module).setup({})
+end
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
