@@ -1,4 +1,4 @@
-This document outlines my preferred conventions and practices to help guide style choices, code generation, and other suggestions.
+  This document outlines my preferred conventions and practices to help guide style choices, code generation, and other suggestions.
 
 # Coding Conventions
 

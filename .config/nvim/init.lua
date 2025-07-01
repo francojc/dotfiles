@@ -1,8 +1,8 @@
---| Bootstrap paq-nvim -------------------------------------------
+---| Bootstrap paq-nvim -------------------------------------------
 -- Ensure paq-nvim is installed before trying to use it
 require("bootstrap").ensure_paq()
 
---| Paq: plugins -------------------------------------------------
+---| Paq: plugins -------------------------------------------------
 require("paq")({
 	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
@@ -48,7 +48,7 @@ require("paq")({
 	"hat0uma/csvview.nvim", -- CSV viewer
 })
 
---| Options ------------------------------------------------------
+---| Options ------------------------------------------------------
 local a = vim.api
 local opt = vim.opt
 
@@ -62,7 +62,7 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 local colors = {
 	bg = "#3C3836",
 	fg = "#EBDBB2",
-	yellow = "#FABD2E"
+	yellow = "#FABD2E",
 }
 
 -- Locals -----
@@ -224,7 +224,7 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
 -- Copilot
-g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" } -- INFO: this works, but there only seems to be one model available 2025-06-03
+g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" } -- INFO: this works, but there only seems to be one model available 2025-07-01
 map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 g.copilot_no_tab_map = true -- Disable default tab mapping
 
@@ -386,7 +386,7 @@ map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle t
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>set wrap!<Cr>", { desc = "Toggle word wrap" })
 
----| Toggle functions --------------------------------------------
+---| Functions --------------------------------------------
 
 -- Notification helper function
 local function notify_toggle(enabled, feature)
@@ -497,7 +497,7 @@ vim.api.nvim_create_user_command("SpellLang", function()
 	end)
 end, {})
 
--- Plugin configuration ----------------------------------------------
+---| Plugins ---------------------------------------------------
 -- Aerial ----------------------------------
 require("aerial").setup({
 	on_attach = function(bufnr)
@@ -1096,7 +1096,7 @@ end
 -- Obsidian -----------------------------------
 require("obsidian").setup({
 	ui = {
-		enable = true,
+		enable = false,
 	},
 	workspaces = {
 		{
