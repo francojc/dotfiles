@@ -25,9 +25,8 @@ alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(ho
 alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
 # Aider-chat aliases
-alias aider-proj='aider --model gemini-reasoner --editor-model gemma --architect --watch-files'
-alias aider-helper='aider --model gemma --no-git --watch-files'
-alias aider-commit='aider --commit --no-gitignore --config $(realpath ~/.config/aider/commit.yml)'
+alias aider-proj='aider --model power --editor-model power --architect --watch-files'
+alias aider-commit='aider --config $(realpath ~/.config/aider/commit.yml)'
 
 # Aerc (mail)
 alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'

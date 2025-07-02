@@ -17,13 +17,14 @@ alias:
   # Ollama
   - "gemma-local:ollama_chat/gemma3:4b"
 
-# Conventions/ project description
-read: [AIDER.md, README.md]
+  # labels:
+  - "power:openai/gemini-2.5-pro-preview-06-05"
+  - "econo:openai/gpt-4o"
 
 # Models
-model: gemini-pro-2.5
-editor-model: gemini-pro-2.5
-weak-model: sonnet-3.5
+model: power
+editor-model: power
+weak-model: econo
 
 openai-api-base: https://api.githubcopilot.com
 
