@@ -145,7 +145,6 @@ a.nvim_create_autocmd("TextYankPost", {
 })
 
 ---| Keymaps -------------------------------------------------------
-
 -- Leader key -----
 g.mapleader = " "
 g.maplocalleader = " "
