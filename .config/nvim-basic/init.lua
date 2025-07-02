@@ -25,6 +25,7 @@ require("paq")({
 	"folke/flash.nvim",
 	"github/copilot.vim",
 	"nvim-treesitter/nvim-treesitter",
+	"nvim-lua/plenary.nvim",
 	"savq/paq-nvim",
 	"stevearc/conform.nvim",
 	"ibhagwan/fzf-lua",

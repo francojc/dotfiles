@@ -1,7 +1,5 @@
 # --- ALIASES ---
 
-# Claude aliases
-
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
 alias taa=' tmux attach-session -t' # attach to a specific session
@@ -89,7 +87,7 @@ alias gstp='git stash pop'      # Quick stash pop
 
 # Neovim aliases
 alias v='NVIM_APPNAME="nvim" nvim'
-alias nv='NVIM_APPNAME="nvim-basic" nvim'
+alias b='NVIM_APPNAME="nvim-basic" nvim'
 
 # Quarto aliases
 alias q='quarto'

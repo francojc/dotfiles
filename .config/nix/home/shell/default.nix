@@ -9,6 +9,7 @@
       defaultKeymap = "viins";
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
+        ${builtins.readFile ./claude-aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
       '';
       profileExtra = ''
@@ -25,6 +26,7 @@
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
+        export PATH="${config.home.homeDirectory}/.claude/local:$PATH" # claude-cli
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
