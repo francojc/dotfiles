@@ -1,6 +1,7 @@
 # Aider configuration file
 # Commit messages
 
+model: openai/gpt-4o
 weak-model: openai/gpt-4o
 commit: true
 architect: false
@@ -10,4 +11,4 @@ no-attribute-committer: true
 show-diffs: false
 gitignore: false
 restore-chat-history: false
-
+read: []
