@@ -822,7 +822,7 @@ require("gruvbox").setup({
 })
 require("black-metal").setup()
 
-vim.cmd("colorscheme bathory")
+vim.cmd("colorscheme gruvbox") -- Set colorscheme
 
 -- Conform ----------------------------------
 require("conform").setup({
