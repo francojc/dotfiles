@@ -38,7 +38,6 @@ local a = vim.api
 local g = vim.g
 local opt = vim.opt
 local cmd = vim.cmd
-local api = vim.api
 
 -- Appearance and UI
 require("black-metal").setup()
@@ -49,6 +48,16 @@ opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
 opt.laststatus = 2
+-- Search count function
+function _G.searchcount()
+	local result = vim.fn.searchcount({ maxcount = 0 })
+	if result.total > 0 then
+		return string.format("[%d/%d]", result.current, result.total)
+	end
+	return ""
+end
+
+opt.statusline = "%#StatusLine#%f %m%r%h%w %{v:lua.searchcount()} %=%-14.(%l,%c%V%) %P"
 
 -- Line numbers and cursor
 opt.relativenumber = true
@@ -102,7 +111,7 @@ opt.path:append("**")
 opt.clipboard:append("unnamedplus")
 
 -- Tabs and formatting
-opt.showtabline = 2
+opt.showtabline = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
 
 vim.diagnostic.config({
@@ -161,6 +170,8 @@ map("i", "jj", "<Esc>", { desc = "Exit insert mode with jj" })
 map("n", "<C-s>", "<Cmd>w<CR>", { desc = "Save file" })
 map("n", "<leader>x", "<Cmd>qa<CR>", { desc = "Quit" })
 map("n", "<Esc>", "<Cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+map("n", "gl", "$", { desc = "Go to end of line" })
+map("n", "gh", "^", { desc = "Go to start of line" })
 
 -- Autocompletion ------------------------
 g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" }
@@ -173,22 +184,43 @@ map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
+-- Editing --------------------------------
+-- Paste without overwriting register
+map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
+
 -- Explore -------------------------------
--- Yazi
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
--- Files -----------------------------------
--- Fzf-lua
+
+-- Find ---------------------------------
+map("n", "<leader>fb", "<Cmd>FzfLua buffers<Cr>", { desc = "Find buffers" })
+map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>FzfLua live_grep resume=true<Cr>", { desc = "Live grep" })
 map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
 map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
-map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 
 -- Movement -----------------------------
 -- Flash search
 map({ "n", "x", "o" }, "<leader>sf", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
+-- Go to
+-- Beginning of line
+map({ "n", "v" }, "gh", "^", { desc = "Go to beginning of line" })
+-- End of line
+map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
+map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
+-- Line up/down
+map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
+map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
+-- Next visual line
+map("n", "j", "gj", { desc = "Next visual line" })
+map("n", "k", "gk", { desc = "Previous visual line" })
+-- Window-centered movement
+map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
+map("n", "n", "nzzzv", { desc = "Next search result" })
+map("n", "N", "Nzzzv", { desc = "Previous search result" })
 
 ---| Setups ------------------------------------------------------
 
