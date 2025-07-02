@@ -1,5 +1,8 @@
 # --- ALIASES ---
 
+# llm aliases
+alias llmb='llm -t briefly' # uses the template 'briefly'
+
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
 alias taa=' tmux attach-session -t' # attach to a specific session

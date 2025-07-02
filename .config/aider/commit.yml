@@ -2,11 +2,12 @@
 # Commit messages
 
 weak-model: openai/gpt-4o
+commit: true
 architect: false
 stream: false
 no-attribute-author: true
 no-attribute-committer: true
 show-diffs: false
-
+gitignore: false
 restore-chat-history: false
 
