@@ -21,6 +21,7 @@ require("paq")({
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
+	"hat0uma/csvview.nvim", -- CSV viewer
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
 	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
@@ -29,6 +30,7 @@ require("paq")({
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
+	"metalelf0/black-metal-theme-neovim",
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
@@ -45,7 +47,6 @@ require("paq")({
 	"sindrets/diffview.nvim", -- Git diff viewer
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"hat0uma/csvview.nvim", -- CSV viewer
 })
 
 ---| Options ------------------------------------------------------
@@ -819,8 +820,9 @@ require("gruvbox").setup({
 	contrast = "hard",
 	overrides = {},
 })
+require("black-metal").setup()
 
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme bathory")
 
 -- Conform ----------------------------------
 require("conform").setup({
