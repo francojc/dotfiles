@@ -67,9 +67,10 @@ local colors = {
 
 -- Locals -----
 -- Clipboard
-opt.clipboard = "unnamedplus"
+opt.clipboard:append("unnamedplus") --- Use system clipboard
 -- Completions
-opt.completeopt = "menu,menuone,noselect"
+opt.completeopt = "menu,menuone,noselect" -- Completion options
+opt.path:append("**") -- Search subdirectories
 -- Window
 opt.splitbelow = true
 opt.splitright = true
@@ -100,15 +101,15 @@ opt.list = false
 opt.ignorecase = true
 opt.smartcase = true
 opt.incsearch = true
-opt.hlsearch = false
+opt.hlsearch = true
 -- Spelling
 opt.spell = false
 opt.spelllang = { "en_us" }
-opt.spellfile = os.getenv("HOME") .. "/.spell/en.utf-8.add"
+opt.spellfile = vim.fn.expand("~/.spell/en.utf-8.add")
 -- Swap/backup/undo
 opt.backup = false
 opt.swapfile = false
-opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+opt.undodir = vim.fn.expand("~/.vim/undodir")
 opt.undofile = true
 -- Colors
 opt.termguicolors = true
@@ -436,7 +437,11 @@ function _G.Toggle_r_language_server()
 			})
 			notify_toggle(true, "R LSP")
 		else
-			require("fidget").notify("Could not determine project root for R LSP.", vim.log.levels.WARN, { title = "R LSP" })
+			require("fidget").notify(
+				"Could not determine project root for R LSP.",
+				vim.log.levels.WARN,
+				{ title = "R LSP" }
+			)
 		end
 	end
 end

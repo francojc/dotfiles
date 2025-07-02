@@ -88,7 +88,8 @@ alias gst='git stash'           # Quick stash
 alias gstp='git stash pop'      # Quick stash pop
 
 # Neovim aliases
-alias v='nvim'
+alias v='NVIM_APPNAME="nvim" nvim'
+alias nv='NVIM_APPNAME="nvim-basic" nvim'
 
 # Quarto aliases
 alias q='quarto'
