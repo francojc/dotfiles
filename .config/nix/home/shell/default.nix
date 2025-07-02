@@ -9,7 +9,6 @@
       defaultKeymap = "viins";
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
-        ${builtins.readFile ./claude-aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
       '';
       profileExtra = ''

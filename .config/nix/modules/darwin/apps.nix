@@ -22,9 +22,10 @@
       "chawan" # TUI web browser
       "huggingface-cli"
       "keith/formulae/reminders-cli"
+      "llm"
+      "ncspot" # Spotify client
       "npm" # Node.js package manager
       "ollama" # AI model management
-      "ncspot" # Spotify client
       "pngpaste" # paste images
       "python@3.11" # Python 3
       "rename" # file renaming utility
