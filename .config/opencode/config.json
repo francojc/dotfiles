@@ -61,7 +61,7 @@
       "enabled": true,
       "type": "local",
       "command": [
-        "~/.local/bin/zotero-mcp"
+        "zotero-mcp"
       ],
       "environment": {
         "ZOTERO_LOCAL": "true"
