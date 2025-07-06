@@ -62,3 +62,4 @@ _freeze
 # Project-Specific Files
 # ----------------------------------------------------------
 conversation.toml
+.gemini/installation_id

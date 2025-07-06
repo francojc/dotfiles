@@ -74,7 +74,7 @@ echo "────────────────────────�
 # %p: precipitation
 
 # First get just the condition for ASCII art
-CONDITION=$(curl -s --connect-timeout 10 "wttr.in/$LOCATION?format=%C") || {
+CONDITION=$(curl -s --connect-timeout 10 "wttr.in/$LOCATION?format=%F") || {
     echo "Error: Failed to connect to weather service"
     exit 1
 }

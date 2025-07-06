@@ -103,7 +103,7 @@ alias qpub='quarto publish gh-pages'
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory
-function cd() {
+function zl() {
   z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
