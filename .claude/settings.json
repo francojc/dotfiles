@@ -8,6 +8,6 @@
       "Read(.aider.chat.history.md)",
       "Read(.aider.tags.cache:*)"
     ]
-  }
+  },
+  "model": "sonnet"
 }
-
