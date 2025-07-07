@@ -60,6 +60,7 @@ Use `specs/` directory for systematic project development:
 - **Package Manager**: Nix flakes with direnv (not nix develop)
 - **Editor**: Neovim
 - **Containerization**: Docker for reproducible research
+  - The attribute `version` is obsolete in Docker. Do not include.
 
 ### Nix Flake Structure
 
