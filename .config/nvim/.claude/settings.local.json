@@ -4,7 +4,8 @@
       "WebFetch(domain:github.com)",
       "Bash(grep:*)",
       "Bash(nvim:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "mcp__airtable__list_bases"
     ],
     "deny": []
   }
