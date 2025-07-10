@@ -4,6 +4,7 @@ require("bootstrap").ensure_paq()
 
 ---| Paq: plugins -------------------------------------------------
 require("paq")({
+	"greggh/claude-code.nvim", -- Claude AI integration
 	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
@@ -238,8 +239,9 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- CodeCompanion
 map("n", "<leader>aa", "<Cmd>CodeCompanionChat Toggle<Cr>", { desc = "CodeCompanion: Toggle" })
+map("n", "<leader>ac", "<Cmd>ClaudeCode<Cr>", { desc = "Claude Code" })
 map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
-map("n", "<leader>ac", "<Cmd>CodeCompanionChat copilot<Cr>", { desc = "CodeCompanion: Copilot" })
+map("n", "<leader>ag", "<Cmd>CodeCompanionChat GitHub copilot<Cr>", { desc = "CodeCompanion: Copilot" })
 map("n", "<leader>ax", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
 map({ "n", "v" }, "<leader>ae", "<Cmd>CodeCompanion /explain<Cr>", { desc = "CodeCompanion: Explain" })
 map("v", "<leader>al", "<Cmd>CodeCompanion /lsp<Cr>", { desc = "CodeCompanion: LSP" })
@@ -334,15 +336,15 @@ map(
 	{ desc = "Paste image" }
 )
 -- Obsidian -----------------------------------
-map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "New from template" })
-map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
-map("n", "<leader>od", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily note" })
-map("n", "<leader>ot", "<Cmd>ObsidianTomorrow<Cr>", { desc = "Tomorrow note" })
-map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link" })
-map("n", "<leader>oi", "<Cmd>ObsidianPasteImg<Cr>", { desc = "Paste image" })
-map("n", "<leader>ol", "<Cmd>ObsidianLinkNew<Cr>", { desc = "New link" })
-map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "New note" })
-map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
+map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
+map("n", "<leader>oc", "<Cmd>Obsidian toggle_checkbox<Cr>", { desc = "Toggle checkbox" })
+map("n", "<leader>od", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily note" })
+map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
+map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" })
+map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
+map("n", "<leader>ol", "<Cmd>Obsidian link_new<Cr>", { desc = "New link" })
+map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
+map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
 
 -- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
@@ -767,6 +769,9 @@ require("bufferline").setup({
 	},
 })
 
+-- Claude Code -----------------------------------
+require("claude-code").setup({})
+
 -- CodeCompanion ----------------------------------
 require("codecompanion").setup({
 	opts = {
@@ -1113,6 +1118,7 @@ end
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({
+	legacy_commands = false, -- Use legacy commands for compatibility
 	ui = {
 		enable = false,
 	},
