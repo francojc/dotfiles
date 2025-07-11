@@ -4,7 +4,8 @@
       "Bash(pass ls)",
       "Bash(ls:*)",
       "Bash(chmod:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(bash:*)"
     ],
     "deny": []
   }

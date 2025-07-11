@@ -17,6 +17,7 @@
     ];
 
     brews = [
+      "acrogenesis/macchanger/macchanger" # MAC address changer
       "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
@@ -30,6 +31,7 @@
       "python@3.11" # Python 3
       "rename" # file renaming utility
       "sqly" #
+      "nmap"
       "sst/tap/opencode" #
       "uv"
       "wget"
