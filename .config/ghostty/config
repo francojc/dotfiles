@@ -23,7 +23,8 @@ macos-icon-ghost-color = #FF2557
 # theme = nightfox
 # theme = GruvboxDarkHard
 # theme = Arthur
-theme = Spacedust
+# theme = Spacedust
+theme = BirdsOfParadise
 
 # Keybindings
 keybind = alt+m=text: |>
