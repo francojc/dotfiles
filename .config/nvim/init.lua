@@ -4,9 +4,8 @@ require("bootstrap").ensure_paq()
 
 ---| Paq: plugins -------------------------------------------------
 require("paq")({
-	"EdenEast/nightfox.nvim", -- theme
-	"greggh/claude-code.nvim", -- Claude AI integration
 	"3rd/image.nvim", -- Image support in Neovim
+	"EdenEast/nightfox.nvim", -- theme
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
@@ -22,6 +21,7 @@ require("paq")({
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
+	"greggh/claude-code.nvim", -- Claude AI integration
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"hat0uma/csvview.nvim", -- CSV viewer
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
