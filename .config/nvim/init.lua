@@ -4,6 +4,7 @@ require("bootstrap").ensure_paq()
 
 ---| Paq: plugins -------------------------------------------------
 require("paq")({
+	"EdenEast/nightfox.nvim", -- theme
 	"greggh/claude-code.nvim", -- Claude AI integration
 	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
@@ -15,7 +16,7 @@ require("paq")({
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
-	"ellisonleao/gruvbox.nvim", -- Colorscheme: Gruvbox
+	"ellisonleao/gruvbox.nvim", -- theme
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -31,7 +32,7 @@ require("paq")({
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
-	"metalelf0/black-metal-theme-neovim",
+	"metalelf0/black-metal-theme-neovim", --theme
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"neovim/nvim-lspconfig", -- LSP
@@ -825,9 +826,18 @@ require("gruvbox").setup({
 	contrast = "hard",
 	overrides = {},
 })
+
 require("black-metal").setup()
 
-vim.cmd("colorscheme gruvbox") -- Set colorscheme
+require("nightfox").setup({
+	styles = {
+		comments = "italic",
+		keywords = "bold",
+		functions = "bold",
+	},
+})
+
+vim.cmd("colorscheme nightfox") -- Set colorscheme
 
 -- Conform ----------------------------------
 require("conform").setup({
