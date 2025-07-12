@@ -35,6 +35,7 @@
       "sst/tap/opencode" #
       "uv"
       "wget"
+      "transmission-cli" # command-line torrent client
     ];
 
     casks = [
