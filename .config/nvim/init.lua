@@ -837,7 +837,7 @@ require("nightfox").setup({
 	},
 })
 
-vim.cmd("colorscheme nightfox") -- Set colorscheme
+vim.cmd("colorscheme gruvbox") -- Set colorscheme
 
 -- Conform ----------------------------------
 require("conform").setup({
