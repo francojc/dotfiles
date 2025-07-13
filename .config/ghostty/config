@@ -20,8 +20,8 @@ macos-icon-frame = plastic
 macos-icon-ghost-color = #FF2557
 
 # Theme
-theme = nightfox
-# theme = GruvboxDarkHard
+# theme = nightfox
+theme = GruvboxDarkHard
 # theme = Arthur
 # theme = Spacedust
 # theme = BirdsOfParadise
