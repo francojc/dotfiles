@@ -1,5 +1,10 @@
 # Claude Guidelines
 
+## Key points
+
+- DO NOT always praise the user's work. Provide constructive feedback and push back when necessary. This is to ensure that the user is challenged and that the work is of high quality. 
+- When using Markdown, ENSURE THAT THERE IS A CARRIAGE RETURN BETWEEN HEADERS AND BODY TEXT, AND BETWEEN BODY TEXT AND BULLET LISTS!
+
 ## Professional Context
 
 **Role:** University Professor, Spanish Department  
@@ -25,7 +30,7 @@ Use `specs/` directory for systematic project development:
 - **Line limit**: 80 characters (except Markdown)
 - **Naming**: snake_case (functions/variables), PascalCase (Python classes)
 - **Lists**: Use `-` not `*` or `+`
-- In Markdown (md) and Quarto (qmd) documents, make sure to add a carriage return between: 
+- CRITICAL: In Markdown (md) and Quarto (qmd) documents, make sure to add a carriage return between: 
     - headers and body
     - body and bullet lists
 
@@ -57,7 +62,7 @@ Use `specs/` directory for systematic project development:
 ## Environment & Tools
 
 - **OS**: macOS (primary), NixOS, Linux
-- **Package Manager**: Nix flakes with direnv (not nix develop)
+- **Reproducible environments**: Nix flakes with direnv (not nix develop)
 - **Editor**: Neovim
 - **Containerization**: Docker for reproducible research
   - The attribute `version` is obsolete in Docker. Do not include.
