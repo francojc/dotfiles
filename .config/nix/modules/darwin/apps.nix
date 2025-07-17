@@ -78,15 +78,15 @@
       # Vinegar_for_Safari = 1591303229;
       # VoiceType = 6736525125;
       # iMovie = 408981434;
-      Bitwarden = 1352778147;
-      GarageBand = 682658836;
-      IPA_Keyboard = 1461264628;
-      Keynote = 409183694;
-      Numbers = 409203825;
-      Pages = 409201541;
-      Triode = 1450027401;
-      iPreview = 1519213509;
-      windows-app = 1295203466;
+      # Bitwarden = 1352778147;
+      # GarageBand = 682658836;
+      # IPA_Keyboard = 1461264628;
+      # Keynote = 409183694;
+      # Numbers = 409203825;
+      # Pages = 409201541;
+      # Triode = 1450027401;
+      # iPreview = 1519213509;
+      # windows-app = 1295203466;
     };
   };
 }
