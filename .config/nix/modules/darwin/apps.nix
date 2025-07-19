@@ -47,6 +47,7 @@
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"
+      "handbrake" # Video transcoder for content creation
       "kap" # screen recording
       "obsidian"
       "orbstack" # Docker alternative
