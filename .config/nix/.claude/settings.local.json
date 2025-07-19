@@ -3,7 +3,9 @@
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(claude mcp:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(nix search:*)",
+      "Bash(brew search:*)"
     ],
     "deny": []
   }

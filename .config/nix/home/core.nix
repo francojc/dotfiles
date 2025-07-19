@@ -27,69 +27,86 @@
     cargo # Rust package manager, needed for many Neovim plugins
   ];
 
-  # Define general home packages (excluding Neovim and its associated packages)
-  generalPackages = with pkgs; [
-    _7zz
-    aerc # Email client
-    # aider-chat-full # includes, playwright, browser, help, etc.
+  # Development and system tools
+  developmentPackages = with pkgs; [
+    cachix # Nix package cache
+    gh # GitHub CLI
+    git # Version control system
+    home-manager # Essential for this config
+    lazygit # TUI Git client
+    nix-prefetch-git
+    nodejs-slim # was nodejs-slim_23
+    shunit2 # Shell testing
+    stow # Symlink manager
+  ];
+
+  # Command-line utilities and system monitoring
+  cliUtilities = with pkgs; [
+    _7zz # Archive compression
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
-    cachix # Nix package cache
-    codex # CLI tool (openai)
-    drawio # Diagramming tool
     duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement
     fastfetch # System information tool
     fd # find replacement
-    ffmpeg # Multimedia framework
     file # File type identification
     fzf # General fuzzy finder
-    gh # GitHub CLI
-    ghostscript # PostScript/PDF interpreter
-    git # Version control system
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
-    gv # Ghostview - PostScript/PDF viewer
-    haskellPackages.pandoc-crossref # Pandoc filter
-    home-manager # Essential for this config
     htop # Interactive process viewer
-    imagemagick # Image manipulation
     jq # JSON processor
-    khal # Calendar
-    kitty # Terminal emulator
-    lazygit # TUI Git client
-    mdcat # Markdown cat
-    mpv-unwrapped # Media player
     ncdu # Disk usage analyzer
-    nix-prefetch-git
-    nodejs-slim # was nodejs-slim_23
-    pandoc # Document converter
     pass # Password manager
-    pianobar # Pandora client
-    poppler_utils # PDF utilities (pdftotext, etc.)
     procs # Process viewer
-    qpdf # PDF manipulation tool
-    quarto # Scientific publishing system
-    repgrep # ripgrep across files
     ripgrep # grep replacement
-    shunit2 # Shell testing
+    repgrep # ripgrep across files
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
-    stow # Symlink manager
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
     unp # Archive unpacker
-    vdirsyncer # CalDAV/CardDAV sync
     which # Command location utility
     xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
-    yt-dlp # Video downloader
     zoxide # Smarter cd command
   ];
+
+  # Media and document processing
+  mediaDocumentPackages = with pkgs; [
+    aerc # Email client
+    codex # CLI tool (openai)
+    drawio # Diagramming tool
+    ffmpeg # Multimedia framework
+    ghostscript # PostScript/PDF interpreter
+    gv # Ghostview - PostScript/PDF viewer
+    haskellPackages.pandoc-crossref # Pandoc filter
+    imagemagick # Image manipulation
+    khal # Calendar
+    kitty # Terminal emulator
+    mdcat # Markdown cat
+    mpv-unwrapped # Media player
+    pandoc # Document converter
+    pianobar # Pandora client
+    poppler_utils # PDF utilities (pdftotext, etc.)
+    qpdf # PDF manipulation tool
+    quarto # Scientific publishing system
+    vdirsyncer # CalDAV/CardDAV sync
+    yt-dlp # Video downloader
+  ];
+
+  # YouTube content creation and streaming
+  youtubeContentPackages = with pkgs; [
+    audacity # Audio editing and recording
+    keycastr # Keystroke visualizer for tutorials
+    obs-studio # Live streaming and screen recording
+  ];
+
+  # Combined package list
+  generalPackages = developmentPackages ++ cliUtilities ++ mediaDocumentPackages ++ youtubeContentPackages;
 in {
   # Install general packages globally for the user
   home.packages = generalPackages;
