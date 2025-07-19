@@ -42,6 +42,8 @@
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
+      "blackhole-2ch" # virtual audio driver
+      "camo-studio" # webcam software
       "chatgpt"
       "claude" #
       "dropbox"
@@ -49,6 +51,7 @@
       "google-drive"
       "handbrake" # Video transcoder for content creation
       "kap" # screen recording
+      "loopback" # audio routing
       "obs" # OBS Studio for streaming and recording
       "obsidian"
       "orbstack" # Docker alternative
