@@ -102,7 +102,6 @@
   youtubeContentPackages = with pkgs; [
     audacity # Audio editing and recording
     keycastr # Keystroke visualizer for tutorials
-    obs-studio # Live streaming and screen recording
   ];
 
   # Combined package list

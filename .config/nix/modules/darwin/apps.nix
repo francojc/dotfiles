@@ -49,6 +49,7 @@
       "google-drive"
       "handbrake" # Video transcoder for content creation
       "kap" # screen recording
+      "obs" # OBS Studio for streaming and recording
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization
