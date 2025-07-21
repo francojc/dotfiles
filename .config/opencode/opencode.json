@@ -5,13 +5,12 @@
   "autoupdate": true,
   "model": "github-copilot/gemini-2.5-pro",
   "disabled_providers": [
-    "anthropic",
     "deepseek",
     "gemini",
     "openai"
   ],
   "keybinds": {
-    "leader": "ctrl+x",
+    "leader": "ctrl+o",
     "editor_open": "<leader>e",
     "session_new": "<leader>n",
     "session_list": "<leader>l",
