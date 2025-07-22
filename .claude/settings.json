@@ -18,10 +18,6 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Blow.aiff"
-          },
-          {
-            "type": "command",
-            "command": "/Users/francojc/.dotfiles/.claude/scripts/project-update-hook.sh"
           }
         ]
       }
@@ -39,4 +35,3 @@
     ]
   }
 }
-
