@@ -5,7 +5,8 @@
       "Bash(grep:*)",
       "Bash(nvim:*)",
       "Bash(true)",
-      "mcp__airtable__list_bases"
+      "mcp__airtable__list_bases",
+      "Bash(find:*)"
     ],
     "deny": []
   }
