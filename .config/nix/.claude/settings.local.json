@@ -5,7 +5,9 @@
       "Bash(claude mcp:*)",
       "Bash(chmod:*)",
       "Bash(nix search:*)",
-      "Bash(brew search:*)"
+      "Bash(brew search:*)",
+      "Bash(hostname)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }
