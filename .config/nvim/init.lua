@@ -1166,6 +1166,7 @@ require("obsidian").setup({
 -- require("precognition").setup({})
 
 -- Quarto -----------------------------------
+require("otter").setup({})
 require("quarto").setup({})
 
 -- Render-Markdown ---------------------------
