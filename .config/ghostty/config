@@ -39,3 +39,4 @@ keybind = shift+enter=text:\n
 
 # Host-specific configuration
 config-file = ?hosts/Mac-Minicore.config
+config-file = ?hosts/Macbook-Airborne.config
