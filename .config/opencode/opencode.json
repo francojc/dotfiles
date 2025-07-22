@@ -1,26 +1,64 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "system",
-  "autoshare": false,
-  "autoupdate": true,
-  "model": "github-copilot/gemini-2.5-pro",
+  "layout": "stretch",
+  "share": "manual",
+  "autoupdate": false,
   "disabled_providers": [
     "deepseek",
     "gemini",
     "openai"
   ],
+  "mode": {
+    "diagnose": {
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "plan": {
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      }
+    },
+    "build": {
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    }
+  },
   "keybinds": {
     "leader": "ctrl+o",
+    "app_help": "<leader>h",
+    "switch_mode": "tab",
     "editor_open": "<leader>e",
     "session_new": "<leader>n",
     "session_list": "<leader>l",
     "session_share": "<leader>s",
+    "session_unshare": "<leader>u",
     "session_interrupt": "esc",
     "session_compact": "<leader>c",
     "tool_details": "<leader>d",
     "model_list": "<leader>m",
     "theme_list": "<leader>t",
     "project_init": "<leader>i",
+    "file_list": "<leader>f",
+    "file_close": "esc",
+    "file_diff_toggle": "<leader>v",
     "input_clear": "ctrl+c",
     "input_paste": "ctrl+v",
     "input_submit": "enter",
@@ -29,10 +67,13 @@
     "messages_page_down": "pgdown",
     "messages_half_page_up": "ctrl+alt+u",
     "messages_half_page_down": "ctrl+alt+d",
-    "messages_previous": "ctrl+alt+k",
-    "messages_next": "ctrl+alt+j",
+    "messages_previous": "ctrl+up",
+    "messages_next": "ctrl+down",
     "messages_first": "ctrl+g",
     "messages_last": "ctrl+alt+g",
+    "messages_layout_toggle": "<leader>p",
+    "messages_copy": "<leader>y",
+    "messages_revert": "<leader>r",
     "app_exit": "ctrl+c,<leader>q"
   },
   "mcp": {
