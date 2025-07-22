@@ -7,6 +7,7 @@
   imports = [
     ./core.nix
     ./git.nix
+    ./ghostty.nix
     ./shell/default.nix
     ./vim.nix
   ];
