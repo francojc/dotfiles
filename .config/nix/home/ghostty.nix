@@ -7,7 +7,7 @@
       font-family = "Aporetic Sans Mono"
       font-size = ${toString (
         if hostname == "Mac-Minicore"
-        then 24
+        then 20
         else if hostname == "Macbook-Airborne"
         then 16
         else 16
@@ -48,4 +48,3 @@
     '';
   };
 }
-
