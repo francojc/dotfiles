@@ -10,6 +10,7 @@
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
+        source /opt/homebrew/share/zsh-ai/zsh-ai.plugin.zsh
       '';
       profileExtra = ''
         # zprofile
