@@ -24,7 +24,7 @@
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
-      "matheusml/zsh-ai"
+      "matheusml/zsh-ai/zsh-ai" # AI shell plugin
       "ncspot" # Spotify client
       "nmap"
       "npm" # Node.js package manager
