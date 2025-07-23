@@ -24,18 +24,19 @@
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
+      "matheusml/zsh-ai"
       "ncspot" # Spotify client
+      "nmap"
       "npm" # Node.js package manager
       "ollama" # AI model management
       "pngpaste" # paste images
       "python@3.11" # Python 3
       "rename" # file renaming utility
       "sqly" #
-      "nmap"
       "sst/tap/opencode" #
+      "transmission-cli" # command-line torrent client
       "uv"
       "wget"
-      "transmission-cli" # command-line torrent client
     ];
 
     casks = [
