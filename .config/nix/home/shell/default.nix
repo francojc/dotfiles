@@ -45,6 +45,7 @@
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
+        export ZSH_AI_PROVIDER="gemini"
 
         # --- SECRETS (from `pass`) ---
         source ${config.home.homeDirectory}/.variables.env
