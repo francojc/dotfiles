@@ -5,7 +5,13 @@
       "Bash(ls:*)",
       "Bash(chmod:*)",
       "Bash(grep:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(./ical)",
+      "Bash(vdirsyncer:*)",
+      "WebFetch(domain:www.google.com)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }
