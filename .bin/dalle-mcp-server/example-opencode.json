@@ -3,7 +3,10 @@
   "mcp": {
     "dalle-image-generator": {
       "type": "local",
-      "command": ["node", "/Users/jeridf/.dotfiles/.bin/dalle-mcp-server/server.js"],
+      "command": [
+        "node",
+        "/Users/jeridf/.dotfiles/.bin/dalle-mcp-server/server.js"
+      ],
       "enabled": true,
       "environment": {
         "OPENAI_API_KEY": "your_openai_api_key_here"
@@ -11,3 +14,4 @@
     }
   }
 }
+
