@@ -27,6 +27,7 @@
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
         export PATH="${config.home.homeDirectory}/.claude/local:$PATH" # claude-cli
+        export PATH="${config.home.homeDirectory}/.opencode/bin:$PATH" # opencode
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'

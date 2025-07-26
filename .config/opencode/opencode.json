@@ -11,7 +11,7 @@
   ],
   "mode": {
     "diagnose": {
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "github-copilot/claude-sonnet-4",
       "tools": {
         "write": false,
         "edit": false,
@@ -22,7 +22,7 @@
       }
     },
     "plan": {
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "github-copilot/claude-sonnet-4",
       "tools": {
         "write": false,
         "edit": false,
@@ -30,7 +30,7 @@
       }
     },
     "build": {
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "github-copilot/claude-sonnet-4",
       "tools": {
         "write": true,
         "edit": true,
@@ -77,6 +77,14 @@
     "app_exit": "ctrl+c,<leader>q"
   },
   "mcp": {
+    "dalle-image-generator": {
+      "type": "local",
+      "command": [
+        "node",
+        "/Users/jeridf/.dotfiles/.bin/dalle-mcp-server/server.js"
+      ],
+      "enabled": true
+    },
     "sequential-thinking": {
       "enabled": true,
       "type": "local",
@@ -84,43 +92,6 @@
         "npx",
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
-      ]
-    },
-    "mcp-scholarly": {
-      "enabled": true,
-      "type": "local",
-      "command": [
-        "uvx",
-        "mcp-scholarly"
-      ]
-    },
-    "zotero": {
-      "enabled": true,
-      "type": "local",
-      "command": [
-        "/Users/francojc/.local/bin/zotero-mcp"
-      ],
-      "environment": {
-        "ZOTERO_LOCAL": "true"
-      }
-    },
-    "Context7": {
-      "enabled": true,
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@upstash/context7-mcp"
-      ]
-    },
-    "obsidian": {
-      "enabled": true,
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "obsidian-mcp",
-        "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
       ]
     }
   }

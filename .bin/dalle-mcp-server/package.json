@@ -1,0 +1,17 @@
+{
+  "name": "dalle-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for DALL-E image generation in opencode",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0"
+  },
+  "keywords": ["mcp", "dalle", "openai", "image-generation"],
+  "author": "",
+  "license": "MIT"
+}
