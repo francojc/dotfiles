@@ -1,8 +1,1 @@
-return {
-  colorscheme = "gruvbox",
-  colors = {
-    bg = "#3c3836",
-    fg = "#ebdbb2",
-    yellow = "#fabd2f",
-  }
-}
+/nix/store/a0f7kagq4zgbrlq4zn79rnjj5khg3ha5-home-manager-files/.config/nvim/lua/theme-config.lua
