@@ -25,6 +25,9 @@
 .config/pianobar/state
 .config/raycast/*
 
+.config/nvim/lua/theme-config.lua
+.config/tmux/*
+
 # ----------------------------------------------------------
 # Development Tools & AI Assistants
 # ----------------------------------------------------------
@@ -32,9 +35,6 @@
 .aider.chat*
 .aider.input*
 .aider.tags*
-
-# Continue AI assistant
-.continue
 
 # Claude AI credentials
 .claude/.credentials.json
