@@ -49,6 +49,7 @@ require("paq")({
 	"sindrets/diffview.nvim", -- Git diff viewer
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
+	"navarasu/onedark.nvim", -- One Dark theme
 })
 
 ---| Options ------------------------------------------------------
@@ -820,15 +821,15 @@ require("codecompanion").setup({
 })
 
 -- Colorscheme ----------------------------------
+-- Black Metal
+require("black-metal").setup()
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
 	contrast = "hard",
 	overrides = {},
 })
-
-require("black-metal").setup()
-
+-- Nightfox
 require("nightfox").setup({
 	styles = {
 		comments = "italic",
@@ -836,8 +837,12 @@ require("nightfox").setup({
 		functions = "bold",
 	},
 })
+-- OneDark
+require("onedark").setup({
+	style = "darker",
+})
 
-vim.cmd("colorscheme gruvbox") -- Set colorscheme
+vim.cmd("colorscheme onedark") -- Set colorscheme
 
 -- Conform ----------------------------------
 require("conform").setup({
