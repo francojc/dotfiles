@@ -1160,6 +1160,14 @@ require("render-markdown").setup({
 			"##### ",
 			"###### ",
 		},
+		foregrounds = {
+			"RenderMarkdownH1",
+			"RenderMarkdownH2",
+			"RenderMarkdownH3",
+			"RenderMarkdownH4",
+			"RenderMarkdownH5",
+			"RenderMarkdownH6",
+		},
 	},
 	html = {
 		enabled = true,
