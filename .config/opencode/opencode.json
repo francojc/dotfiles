@@ -1,6 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "zenburn",
   "layout": "stretch",
   "share": "manual",
   "autoupdate": false,
