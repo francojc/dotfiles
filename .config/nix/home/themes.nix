@@ -34,7 +34,7 @@
         accent = "#ffa500";
       };
       ghostty = {
-        theme = "Arthur";
+        theme = "Desert";
         cursor_color = "#ffa500";
       };
       vim = {
