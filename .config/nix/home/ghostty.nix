@@ -1,4 +1,4 @@
-{hostname, ...}: {
+{hostname, theme, ...}: {
   xdg.configFile."ghostty/config" = {
     text = ''
       # Ghostty config
@@ -12,7 +12,7 @@
         then 16
         else 16
       )}
-      cursor-color = #FF2557
+      cursor-color = ${theme.ghostty.cursor_color}
       cursor-style = bar
       adjust-cursor-thickness = 2
       mouse-hide-while-typing = true
@@ -26,14 +26,10 @@
       macos-window-shadow = false
       macos-icon = custom-style
       macos-icon-frame = plastic
-      macos-icon-ghost-color = #FF2557
+      macos-icon-ghost-color = ${theme.ghostty.cursor_color}
 
       # Theme
-      # theme = nightfox
-      theme = GruvboxDarkHard
-      # theme = Arthur
-      # theme = Spacedust
-      # theme = BirdsOfParadise
+      theme = ${theme.ghostty.theme}
 
       # Keybindings
       keybind = alt+m=text: |>

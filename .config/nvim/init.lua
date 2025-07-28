@@ -21,7 +21,6 @@ require("paq")({
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
-	"greggh/claude-code.nvim", -- Claude AI integration
 	"hakonharnes/img-clip.nvim", -- Image pasting
 	"hat0uma/csvview.nvim", -- CSV viewer
 	"ibhagwan/fzf-lua", -- FZF fuzzy finder
@@ -35,12 +34,13 @@ require("paq")({
 	"metalelf0/black-metal-theme-neovim", --theme
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
+	"navarasu/onedark.nvim", -- One Dark theme
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
+	"nvim-treesitter/playground", -- TreeSitter playground for debugging
 	"obsidian-nvim/obsidian.nvim", -- Obsidian integration
-	"olimorris/codecompanion.nvim", -- Code companion AI integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
 	"rcarriga/nvim-notify", -- Notifications
@@ -49,7 +49,6 @@ require("paq")({
 	"sindrets/diffview.nvim", -- Git diff viewer
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"navarasu/onedark.nvim", -- One Dark theme
 })
 
 ---| Options ------------------------------------------------------
@@ -63,11 +62,9 @@ _G.nvim_config_start_time = vim.loop.hrtime()
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Color variables -----
-local colors = {
-	bg = "#3C3836",
-	fg = "#EBDBB2",
-	yellow = "#FABD2E",
-}
+-- Load theme from Nix-generated config
+local theme_config = require('theme-config')
+local colors = theme_config.colors
 
 -- Locals -----
 -- Clipboard
@@ -238,17 +235,6 @@ map("i", "<C-d>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
-
--- CodeCompanion
-map("n", "<leader>aa", "<Cmd>CodeCompanionChat Toggle<Cr>", { desc = "CodeCompanion: Toggle" })
-map("n", "<leader>ac", "<Cmd>ClaudeCode<Cr>", { desc = "Claude Code" })
-map("n", "<leader>ag", "<Cmd>CodeCompanionChat gemini<Cr>", { desc = "CodeCompanion: Gemini" })
-map("n", "<leader>ag", "<Cmd>CodeCompanionChat GitHub copilot<Cr>", { desc = "CodeCompanion: Copilot" })
-map("n", "<leader>ax", "<Cmd>CodeCompanionActions<Cr>", { desc = "CodeCompanion actions" })
-map({ "n", "v" }, "<leader>ae", "<Cmd>CodeCompanion /explain<Cr>", { desc = "CodeCompanion: Explain" })
-map("v", "<leader>al", "<Cmd>CodeCompanion /lsp<Cr>", { desc = "CodeCompanion: LSP" })
-map("v", "<leader>af", "<Cmd>CodeCompanion /fix<Cr>", { desc = "CodeCompanion: Fix" })
-map("v", "<leader>at", "<Cmd>CodeCompanion /tests<Cr>", { desc = "CodeCompanion: Tests" })
 
 -- Buffers --------------------------
 -- Bufferline
@@ -584,7 +570,7 @@ alpha.setup(dashboard.config)
 -- Auto-session -------------------------------
 require("auto-session").setup({
 	auto_restore = true,
-	bypass_save_filetypes = { "alpha", "dashboard", "codecompanion" },
+	bypass_save_filetypes = { "alpha", "dashboard" },
 })
 
 -- Blink ----------------------------------
@@ -771,55 +757,6 @@ require("bufferline").setup({
 	},
 })
 
--- Claude Code -----------------------------------
-require("claude-code").setup({})
-
--- CodeCompanion ----------------------------------
-require("codecompanion").setup({
-	opts = {
-		show_model_choices = false,
-	},
-	adapters = {
-		-- Use sonnet with Copilot
-		copilot = function()
-			return require("codecompanion.adapters").extend("copilot", {
-				schema = {
-					model = {
-						default = "claude-sonnet-4",
-					},
-				},
-			})
-		end,
-		-- Use gemini-2.5-pro-exp-03-25 with Gemini
-		gemini = function()
-			return require("codecompanion.adapters").extend("gemini", {
-				schema = {
-					model = { default = "gemini-2.5-pro-exp-03-25" },
-				},
-			})
-		end,
-	},
-	strategies = {
-		chat = {
-			adapter = "copilot",
-			roles = {
-				---@diagnostic disable-next-line: undefined-doc-name
-				---@type string|fun(adapter: CodeCompanion.Adapter): string
-				llm = function(adapter)
-					---@diagnostic disable-next-line: undefined-field
-					return " (" .. adapter.formatted_name .. ") "
-				end,
-
-				---@type string
-				user = " -------------",
-			},
-		},
-		inline = {
-			adapter = "copilot",
-		},
-	},
-})
-
 -- Colorscheme ----------------------------------
 -- Black Metal
 require("black-metal").setup()
@@ -840,9 +777,17 @@ require("nightfox").setup({
 -- OneDark
 require("onedark").setup({
 	style = "darker",
+	highlights = {
+		-- Fix markdown table cell backgrounds to match main background
+		RenderMarkdownTableHead = { bg = "none" },
+		RenderMarkdownTableRow = { bg = "none" },
+		RenderMarkdownTableFill = { bg = "none" },
+		-- Also fix any other table-related highlights
+		["@markup.raw.block.markdown"] = { bg = "none" },
+	},
 })
 
-vim.cmd("colorscheme onedark") -- Set colorscheme
+vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 
 -- Conform ----------------------------------
 require("conform").setup({
@@ -1088,7 +1033,7 @@ require("lualine").setup({
 		component_separators = { left = " ", right = " " },
 		section_separators = { left = " ", right = " " },
 		disabled_filetypes = {
-			statusline = { "toggleterm", "alpha", "codecompanion", "aerial" },
+			statusline = { "toggleterm", "alpha", "aerial" },
 			winbar = { "alpha" },
 		},
 		always_divide_middle = true,
@@ -1198,7 +1143,7 @@ require("render-markdown").setup({
 	completions = { lsp = { enabled = true } },
 	-- conceal = { level = 1 }, -- Disable conceal entirely
 	dash = { enabled = false },
-	file_types = { "markdown", "quarto", "codecompanion" },
+	file_types = { "markdown", "quarto" },
 	heading = {
 		backgrounds = {},
 		left_pad = 0,
@@ -1245,6 +1190,24 @@ require("nvim-treesitter.configs").setup({
 		},
 	},
 	indent = { enable = false },
+	playground = {
+		enable = true,
+		disable = {},
+		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+		persist_queries = false, -- Whether the query persists across vim sessions
+		keybindings = {
+			toggle_query_editor = 'o',
+			toggle_hl_groups = 'i',
+			toggle_injected_languages = 't',
+			toggle_anonymous_nodes = 'a',
+			toggle_language_display = 'I',
+			focus_language = 'f',
+			unfocus_language = 'F',
+			update = 'R',
+			goto_node = '<cr>',
+			show_help = '?',
+		},
+	}
 })
 
 --- WhichKey -----------------------------------
@@ -1257,23 +1220,22 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "AI", icon = " " },
-	{ "<leader>b", group = "Buffer", icon = " " },
-	{ "<leader>c", group = "Code", icon = " " },
-	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
-	{ "<leader>e", group = "Explore", icon = " " },
-	{ "<leader>f", group = "Files", icon = " " },
-	{ "<leader>g", group = "Git", icon = " " },
-	{ "<leader>h", group = "Help", icon = " " },
-	{ "<leader>l", group = "LSP", icon = " " },
-	{ "<leader>m", group = "Markdown", icon = " " },
-	{ "<leader>o", group = "Obsidian", icon = "" },
-	{ "<leader>q", group = "Quarto", icon = " " },
-	{ "<leader>r", group = "Run", icon = " " },
-	{ "<leader>s", group = "Search", icon = " " },
-	{ "<leader>t", group = "Toggle", icon = " " },
-	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
-	{ "<leader>x", desc = "Quit", icon = " " },
+	{ "<leader>b", group = "Buffer", icon = " " },
+	{ "<leader>c", group = "Code", icon = " " },
+	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
+	{ "<leader>e", group = "Explore", icon = " " },
+	{ "<leader>f", group = "Files", icon = " " },
+	{ "<leader>g", group = "Git", icon = " " },
+	{ "<leader>h", group = "Help", icon = " " },
+	{ "<leader>l", group = "LSP", icon = " " },
+	{ "<leader>m", group = "Markdown", icon = " " },
+	{ "<leader>o", group = "Obsidian", icon = "" },
+	{ "<leader>q", group = "Quarto", icon = " " },
+	{ "<leader>r", group = "Run", icon = " " },
+	{ "<leader>s", group = "Search", icon = " " },
+	{ "<leader>t", group = "Toggle", icon = " " },
+	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
+	{ "<leader>x", desc = "Quit", icon = " " },
 })
 
 -- Yazi -----------------------------------

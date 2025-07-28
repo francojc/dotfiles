@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, theme, ...}: {
   programs = {
     # Enable some useful shells
     vim = {
@@ -13,7 +13,11 @@
         vim-sensible # Sensible defaults
         vim-surround # Surround text objects
         vim-which-key # Keybindings
-      ];
+        # Theme plugins
+        gruvbox # Gruvbox colorscheme
+      ] ++ (if theme.vim.colorscheme == "nightfox" then [ 
+        pkgs.vimPlugins.nightfox-nvim 
+      ] else []);
       extraConfig = ''
         " GENERAL --------------------------------------------------
         set number              " Show line numbers
@@ -39,8 +43,8 @@
         set noswapfile          " Disable swap files
         set nobackup            " Disable backup files
         set cursorline          " Highlight current line
-        colorscheme quiet       " Simple colorscheme
-        set background=dark     " Dark background
+        colorscheme ${theme.vim.colorscheme}
+        set background=${theme.vim.background}
 
         " KEYMAPS --------------------------------------------------
         let mapleader = ' '     " Leader key is <Space>

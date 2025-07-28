@@ -5,10 +5,12 @@
 }: {
   # Accept standard HM args
   imports = [
+    ./themes.nix
     ./core.nix
     ./git.nix
     ./ghostty.nix
     ./shell/default.nix
+    ./tmux.nix
     ./vim.nix
   ];
 
