@@ -26,8 +26,6 @@
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
-        export PATH="${config.home.homeDirectory}/.claude/local:$PATH" # claude-cli
-        export PATH="${config.home.homeDirectory}/.opencode/bin:$PATH" # opencode
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
@@ -42,6 +40,15 @@
         # OLLAMA
         export OLLAMA_HOST="0.0.0.0"
 
+        # --- OPENCODE AI ---
+        # Install opencode-ai, if not already installed
+        if ! command -v opencode &> /dev/null; then
+          if command -v npm &> /dev/null; then
+            npm install -g opencode-ai@latest
+          else
+            echo "npm not found. Please install Node.js and npm to use opencode-ai."
+          fi
+        fi
         # --- ZSH ---
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj

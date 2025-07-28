@@ -44,6 +44,7 @@
   cliUtilities = with pkgs; [
     _7zz # Archive compression
     atuin # Shell history manager
+    aider-chat # AI-powered shell assistant
     bat # Often used by fzf previews, etc. but also standalone
     duf # Disk usage utility
     entr # Event notify tool
