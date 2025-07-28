@@ -7,6 +7,9 @@
   username = "jeridf";
   useremail = "francojc@wfu.edu";
   
+  # Theme selection for this host
+  theme = "arthur";  # options: gruvbox, nightfox, arthur, onedark
+  
   # Host-specific modules
   hostModules = [
     ../nixos/configuration.nix

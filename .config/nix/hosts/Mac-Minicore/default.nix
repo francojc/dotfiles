@@ -7,6 +7,9 @@
   username = "jeridf";
   useremail = "francojc@wfu.edu";
   
+  # Theme selection for this host
+  theme = "nightfox";  # options: gruvbox, nightfox, arthur, onedark
+  
   # Host-specific modules
   hostModules = [
     ../darwin/configuration.nix

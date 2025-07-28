@@ -44,6 +44,7 @@
           inherit hostname;
           username = hostConfig.username;
           useremail = hostConfig.useremail;
+          themeName = hostConfig.theme;
           inherit isDarwin isLinux;
         };
 
