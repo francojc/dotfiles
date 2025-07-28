@@ -6,12 +6,13 @@ require("bootstrap").ensure_paq()
 require("paq")({
 
 	-- themes
-	"EdenEast/nightfox.nvim", -- theme
-	"folke/tokyonight.nvim", -- theme
-	"navarasu/onedark.nvim", -- One Dark theme
-	"ellisonleao/gruvbox.nvim", -- Gruvbox theme
 	"thenewvu/vim-colors-arthur", -- Arthur theme
+	"wolloda/vim-autumn", -- Autumn theme
 	"metalelf0/black-metal-theme-neovim", -- Black Metal theme
+	"ellisonleao/gruvbox.nvim", -- Gruvbox theme
+	"EdenEast/nightfox.nvim", -- theme
+	"navarasu/onedark.nvim", -- One Dark theme
+	"vague2k/vague.nvim", -- Vague theme
 
 	-- plugins
 	"3rd/image.nvim", -- Image support in Neovim
@@ -764,6 +765,8 @@ require("bufferline").setup({
 })
 
 -- Colorscheme ----------------------------------
+-- Arthur
+-- Autumn
 -- Black Metal
 require("black-metal").setup()
 -- Gruvbox
@@ -783,15 +786,9 @@ require("nightfox").setup({
 -- OneDark
 require("onedark").setup({
 	style = "darker",
-	highlights = {
-		-- Fix markdown table cell backgrounds to match main background
-		RenderMarkdownTableHead = { bg = "none" },
-		RenderMarkdownTableRow = { bg = "none" },
-		RenderMarkdownTableFill = { bg = "none" },
-		-- Also fix any other table-related highlights
-		["@markup.raw.block.markdown"] = { bg = "none" },
-	},
 })
+-- Vague
+require("vague").setup({})
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 

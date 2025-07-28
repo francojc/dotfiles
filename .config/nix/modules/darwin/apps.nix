@@ -44,7 +44,7 @@
       "blackhole-2ch" # virtual audio driver
       "camo-studio" # webcam software
       "chatgpt"
-      "claude" #
+      "claude" # Claude Desktop
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"

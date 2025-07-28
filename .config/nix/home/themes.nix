@@ -4,9 +4,167 @@
   ...
 }: let
   themes = {
+    arthur = {
+      name = "arthur";
+      colors = {
+        # Background colors
+        bg0 = "#1c1c1c";
+        bg1 = "#262626";
+        bg2 = "#303030";
+        bg3 = "#3a3a3a";
+        bg4 = "#444444";
+
+        # Foreground colors
+        fg0 = "#feffff";
+        fg1 = "#e4e4e4";
+        fg2 = "#c6c6c6";
+        fg3 = "#a8a8a8";
+
+        # Accent colors
+        red = "#cd5c5c";
+        green = "#86af80";
+        yellow = "#e8ae5b";
+        blue = "#6495ed";
+        purple = "#deb887";
+        aqua = "#b0c4de";
+        orange = "#ffa500";
+
+        # Special
+        cursor = "#ffa500";
+        accent = "#ffa500";
+      };
+      ghostty = {
+        theme = "Arthur";
+        cursor_color = "#ffa500";
+      };
+      vim = {
+        colorscheme = "desert";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "arthur";
+        colors = {
+          bg = "#262626";
+          fg = "#e4e4e4";
+          yellow = "#e8ae5b";
+        };
+      };
+    };
+
+    autumn = {
+      name = "autumn";
+      colors = {
+        # Background colors
+        bg0 = "#2d1b00";
+        bg1 = "#402800";
+        bg2 = "#533500";
+        bg3 = "#664200";
+        bg4 = "#794f00";
+
+        # Foreground colors
+        fg0 = "#ffd084";
+        fg1 = "#e6bb75";
+        fg2 = "#cca666";
+        fg3 = "#b39157";
+
+        # Accent colors
+        red = "#d2691e";
+        green = "#8fbc8f";
+        yellow = "#daa520";
+        blue = "#4682b4";
+        purple = "#cd853f";
+        aqua = "#5f9ea0";
+        orange = "#ff8c00";
+
+        # Bright colors
+        bright_red = "#ff6347";
+        bright_green = "#98fb98";
+        bright_yellow = "#ffd700";
+        bright_blue = "#87ceeb";
+        bright_purple = "#dda0dd";
+        bright_aqua = "#afeeee";
+        bright_orange = "#ffa500";
+
+        # Special
+        cursor = "#ff8c00";
+        accent = "#ff8c00";
+      };
+      ghostty = {
+        theme = "autumn";
+        cursor_color = "#ff8c00";
+      };
+      vim = {
+        colorscheme = "autumn";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "autumn";
+        colors = {
+          bg = "#402800";
+          fg = "#e6bb75";
+          yellow = "#daa520";
+        };
+      };
+    };
+
+    blackmetal = {
+      name = "blackmetal";
+      colors = {
+        # Background colors
+        bg0 = "#000000";
+        bg1 = "#121212";
+        bg2 = "#222222";
+        bg3 = "#333333";
+        bg4 = "#444444";
+
+        # Foreground colors
+        fg0 = "#c1c1c1";
+        fg1 = "#b5b5b5";
+        fg2 = "#999999";
+        fg3 = "#777777";
+
+        # Accent colors
+        red = "#5f8787";
+        green = "#dd9999";
+        yellow = "#a0a0a0";
+        blue = "#888888";
+        purple = "#999999";
+        aqua = "#aaaaaa";
+        orange = "#999999";
+
+        # Bright colors
+        bright_red = "#5f8787";
+        bright_green = "#dd9999";
+        bright_yellow = "#a0a0a0";
+        bright_blue = "#888888";
+        bright_purple = "#999999";
+        bright_aqua = "#aaaaaa";
+        bright_orange = "#999999";
+
+        # Special
+        cursor = "#c1c1c1";
+        accent = "#c1c1c1";
+      };
+      ghostty = {
+        theme = "blackmetal";
+        cursor_color = "#c1c1c1";
+      };
+      vim = {
+        colorscheme = "blackmetal";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "blackmetal";
+        colors = {
+          bg = "#121212";
+          fg = "#c1c1c1";
+          yellow = "#a0a0a0";
+        };
+      };
+    };
+
     gruvbox = {
       name = "gruvbox";
-      wallpaper_dir = "gruvbox";
       colors = {
         # Background colors
         bg0_hard = "#1d2021";
@@ -68,7 +226,6 @@
 
     nightfox = {
       name = "nightfox";
-      wallpaper_dir = "nightfox";
       colors = {
         # Background colors
         bg0 = "#192330";
@@ -123,57 +280,8 @@
       };
     };
 
-    arthur = {
-      name = "arthur";
-      wallpaper_dir = "arthur";
-      colors = {
-        # Background colors
-        bg0 = "#1c1c1c";
-        bg1 = "#262626";
-        bg2 = "#303030";
-        bg3 = "#3a3a3a";
-        bg4 = "#444444";
-
-        # Foreground colors
-        fg0 = "#feffff";
-        fg1 = "#e4e4e4";
-        fg2 = "#c6c6c6";
-        fg3 = "#a8a8a8";
-
-        # Accent colors
-        red = "#cd5c5c";
-        green = "#86af80";
-        yellow = "#e8ae5b";
-        blue = "#6495ed";
-        purple = "#deb887";
-        aqua = "#b0c4de";
-        orange = "#ffa500";
-
-        # Special
-        cursor = "#ffa500";
-        accent = "#ffa500";
-      };
-      ghostty = {
-        theme = "Arthur";
-        cursor_color = "#ffa500";
-      };
-      vim = {
-        colorscheme = "desert";
-        background = "dark";
-      };
-      neovim = {
-        colorscheme = "arthur";
-        colors = {
-          bg = "#262626";
-          fg = "#e4e4e4";
-          yellow = "#e8ae5b";
-        };
-      };
-    };
-
     onedark = {
       name = "onedark";
-      wallpaper_dir = "onedark";
       colors = {
         # Background colors
         bg0 = "#282c34";
@@ -230,6 +338,62 @@
           bg = "#31353f";
           fg = "#abb2bf";
           yellow = "#e5c07b";
+        };
+      };
+    };
+
+    vague = {
+      name = "vague";
+      colors = {
+        # Background colors
+        bg0 = "#18191a";
+        bg1 = "#1c1d1e";
+        bg2 = "#2a2d2e";
+        bg3 = "#3c4142";
+        bg4 = "#4e5556";
+
+        # Foreground colors
+        fg0 = "#cdcdcd";
+        fg1 = "#b9b9b9";
+        fg2 = "#a5a5a5";
+        fg3 = "#919191";
+
+        # Accent colors
+        red = "#d2788c";
+        green = "#a6b89d";
+        yellow = "#e6c792";
+        blue = "#8db4d4";
+        purple = "#b4a4d4";
+        aqua = "#87ceeb";
+        orange = "#d99669";
+
+        # Bright colors
+        bright_red = "#e68aa1";
+        bright_green = "#b7c7a8";
+        bright_yellow = "#f0d3a7";
+        bright_blue = "#a2c4e0";
+        bright_purple = "#c7b7e0";
+        bright_aqua = "#9dd9f3";
+        bright_orange = "#e6a97e";
+
+        # Special
+        cursor = "#8db4d4";
+        accent = "#8db4d4";
+      };
+      ghostty = {
+        theme = "tokyonight_night";
+        cursor_color = "#8db4d4";
+      };
+      vim = {
+        colorscheme = "vague";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "vague";
+        colors = {
+          bg = "#1c1d1e";
+          fg = "#b9b9b9";
+          yellow = "#e6c792";
         };
       };
     };

@@ -40,6 +40,17 @@
         # OLLAMA
         export OLLAMA_HOST="0.0.0.0"
 
+
+        # --- CLAUDE CODE ---
+        # Install claude-code, if not already installed
+        if ! command -v claude &> /dev/null; then
+          if command -v npm &> /dev/null; then
+            npm install -g @anthropic-ai/claude-code@latest
+          else
+            echo "npm not found. Please install Node.js and npm to use claude-code."
+          fi
+        fi
+
         # --- OPENCODE AI ---
         # Install opencode-ai, if not already installed
         if ! command -v opencode &> /dev/null; then
@@ -49,6 +60,8 @@
             echo "npm not found. Please install Node.js and npm to use opencode-ai."
           fi
         fi
+
+
         # --- ZSH ---
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
