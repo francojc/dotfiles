@@ -381,7 +381,7 @@
         accent = "#8db4d4";
       };
       ghostty = {
-        theme = "tokyonight_night";
+        theme = "vague";
         cursor_color = "#8db4d4";
       };
       vim = {
