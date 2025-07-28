@@ -4,8 +4,17 @@ require("bootstrap").ensure_paq()
 
 ---| Paq: plugins -------------------------------------------------
 require("paq")({
-	"3rd/image.nvim", -- Image support in Neovim
+
+	-- themes
 	"EdenEast/nightfox.nvim", -- theme
+	"folke/tokyonight.nvim", -- theme
+	"navarasu/onedark.nvim", -- One Dark theme
+	"ellisonleao/gruvbox.nvim", -- Gruvbox theme
+	"thenewvu/vim-colors-arthur", -- Arthur theme
+	"metalelf0/black-metal-theme-neovim", -- Black Metal theme
+
+	-- plugins
+	"3rd/image.nvim", -- Image support in Neovim
 	"MeanderingProgrammer/render-markdown.nvim", -- Render-Markdown
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
@@ -15,7 +24,6 @@ require("paq")({
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
-	"ellisonleao/gruvbox.nvim", -- theme
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -31,10 +39,8 @@ require("paq")({
 	"kdheepak/lazygit.nvim", -- Lazygit integration
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
-	"metalelf0/black-metal-theme-neovim", --theme
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
-	"navarasu/onedark.nvim", -- One Dark theme
 	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
@@ -63,7 +69,7 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 -- Color variables -----
 -- Load theme from Nix-generated config
-local theme_config = require('theme-config')
+local theme_config = require("theme-config")
 local colors = theme_config.colors
 
 -- Locals -----
@@ -1196,18 +1202,18 @@ require("nvim-treesitter.configs").setup({
 		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
 		persist_queries = false, -- Whether the query persists across vim sessions
 		keybindings = {
-			toggle_query_editor = 'o',
-			toggle_hl_groups = 'i',
-			toggle_injected_languages = 't',
-			toggle_anonymous_nodes = 'a',
-			toggle_language_display = 'I',
-			focus_language = 'f',
-			unfocus_language = 'F',
-			update = 'R',
-			goto_node = '<cr>',
-			show_help = '?',
+			toggle_query_editor = "o",
+			toggle_hl_groups = "i",
+			toggle_injected_languages = "t",
+			toggle_anonymous_nodes = "a",
+			toggle_language_display = "I",
+			focus_language = "f",
+			unfocus_language = "F",
+			update = "R",
+			goto_node = "<cr>",
+			show_help = "?",
 		},
-	}
+	},
 })
 
 --- WhichKey -----------------------------------
