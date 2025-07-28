@@ -31,6 +31,8 @@ require("paq")({
 	"ibhagwan/fzf-lua",
 	"mikavilpas/yazi.nvim",
 	"metalelf0/black-metal-theme-neovim",
+	"webhooked/kanso.nvim",
+	"rebelot/kanagawa.nvim",
 })
 
 ---| Options ------------------------------------------------------
@@ -41,7 +43,8 @@ local cmd = vim.cmd
 
 -- Appearance and UI
 require("black-metal").setup()
-cmd.colorscheme("bathory")
+cmd.colorscheme("kanagawa")
+
 opt.termguicolors = true
 opt.background = "dark"
 opt.winborder = "rounded"
