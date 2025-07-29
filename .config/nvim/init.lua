@@ -163,6 +163,32 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Ensure .qmd files are treated as markdown for navigation and features
+a.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+	group = "personal",
+	pattern = "*.qmd",
+	callback = function()
+		-- Set filetype to quarto but ensure markdown features work
+		vim.bo.filetype = "quarto"
+		-- Enable markdown-like navigation
+		vim.bo.define = "^\\s*#\\+\\s*"
+	end,
+})
+
+-- Enhanced markdown/quarto navigation
+a.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		local opts = { buffer = true, silent = true }
+		-- ATX heading navigation
+		vim.keymap.set("n", "]]", "/^#\\+\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Next heading" }))
+		vim.keymap.set("n", "[[", "?^#\\+\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Previous heading" }))
+		vim.keymap.set("n", "][", "/^#\\{1,1\\}\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Next H1" }))
+		vim.keymap.set("n", "[]", "?^#\\{1,1\\}\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Previous H1" }))
+	end,
+})
+
 --| Keymaps ------------------------------------------------------
 local g = vim.g
 
