@@ -1,16 +1,21 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "theme": "opencode",
+  "instructions": [
+    "AGENTS.md"
+  ],
   "layout": "stretch",
   "share": "manual",
   "autoupdate": false,
+  "small_model": "github-copilot/o4-mini",
   "disabled_providers": [
     "deepseek",
-    "gemini",
     "openai"
   ],
   "mode": {
     "diagnose": {
-      "model": "github-copilot/claude-sonnet-4",
+      "model": "github-copilot/gemini-2.5-pro",
+      "temperature": 0.1,
       "tools": {
         "write": false,
         "edit": false,
@@ -21,19 +26,36 @@
       }
     },
     "plan": {
-      "model": "github-copilot/claude-sonnet-4",
+      "model": "github-copilot/gemini-2.5-pro",
+      "temperature": 0.2,
       "tools": {
         "write": false,
         "edit": false,
-        "bash": false
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true
       }
     },
     "build": {
       "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.3,
       "tools": {
         "write": true,
         "edit": true,
         "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "review": {
+      "model": "github-copilot/o4-mini",
+      "temperature": 0.1,
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
         "read": true,
         "grep": true,
         "glob": true
@@ -77,12 +99,12 @@
   },
   "mcp": {
     "dalle-image-generator": {
+      "enabled": true,
       "type": "local",
       "command": [
         "node",
-        "/Users/jeridf/.dotfiles/.bin/dalle-mcp-server/server.js"
-      ],
-      "enabled": true
+        "/Users/jeridf/.bin/dalle-mcp-server/server.js"
+      ]
     },
     "sequential-thinking": {
       "enabled": true,
@@ -92,6 +114,40 @@
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ]
+    },
+    "mcp-scholarly": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-server-scholarly"
+      ]
+    },
+    "fetch": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-server-fetch"
+      ]
+    },
+    "zen": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "/Users/jeridf/.local/mcp/zen-mcp-server/.zen_venv/bin/python",
+        "/Users/jeridf/.local/mcp/zen-mcp-server/server.py"
+      ]
+    },
+    "zotero": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "/Users/jeridf/.local/bin/zotero-mcp"
+      ],
+      "environment": {
+        "ZOTERO_LOCAL": "true"
+      }
     }
   }
 }
