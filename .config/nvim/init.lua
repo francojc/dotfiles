@@ -164,7 +164,7 @@ a.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Ensure .qmd files are treated as markdown for navigation and features
-a.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+a.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	group = "personal",
 	pattern = "*.qmd",
 	callback = function()
@@ -175,17 +175,14 @@ a.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 	end,
 })
 
--- Enhanced markdown/quarto navigation
+-- Simple markdown/quarto heading navigation
 a.nvim_create_autocmd("FileType", {
 	group = "personal",
 	pattern = { "markdown", "quarto" },
 	callback = function()
-		local opts = { buffer = true, silent = true }
-		-- ATX heading navigation
-		vim.keymap.set("n", "]]", "/^#\\+\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Next heading" }))
-		vim.keymap.set("n", "[[", "?^#\\+\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Previous heading" }))
-		vim.keymap.set("n", "][", "/^#\\{1,1\\}\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Next H1" }))
-		vim.keymap.set("n", "[]", "?^#\\{1,1\\}\\s.*$<CR>", vim.tbl_extend("force", opts, { desc = "Previous H1" }))
+		-- Basic ]] and [[ navigation for headings
+		vim.keymap.set("n", "]]", "/^#\\+\\s.*$<CR>:nohlsearch<CR>", { buffer = true, silent = true, desc = "Next heading" })
+		vim.keymap.set("n", "[[", "?^#\\+\\s.*$<CR>:nohlsearch<CR>", { buffer = true, silent = true, desc = "Previous heading" })
 	end,
 })
 
@@ -1185,14 +1182,6 @@ require("render-markdown").setup({
 			"#### ",
 			"##### ",
 			"###### ",
-		},
-		foregrounds = {
-			"RenderMarkdownH1",
-			"RenderMarkdownH2",
-			"RenderMarkdownH3",
-			"RenderMarkdownH4",
-			"RenderMarkdownH5",
-			"RenderMarkdownH6",
 		},
 	},
 	html = {
