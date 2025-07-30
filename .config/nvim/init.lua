@@ -46,7 +46,6 @@ require("paq")({
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
-	"nvim-treesitter/playground", -- TreeSitter playground for debugging
 	"obsidian-nvim/obsidian.nvim", -- Obsidian integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
@@ -402,6 +401,7 @@ map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
 map("n", "<leader>tf", "<Cmd>lua require('flash').toggle()<Cr>", { desc = "Toggle flash" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
+map("n", "<leader>tm", "<Cmd>RenderMarkdown toggle<Cr>", { desc = "Toggle markdown rendering" })
 map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" }) -- Call the Lua function
 map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tt", "<Cmd>ToggleTerm direction=float<Cr>", { desc = "Toggle terminal float" })
