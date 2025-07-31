@@ -26,6 +26,7 @@
 .config/raycast/*
 
 .config/nvim/lua/theme-config.lua
+.config/opencode/opencode.json
 .config/tmux/*
 
 # ----------------------------------------------------------
