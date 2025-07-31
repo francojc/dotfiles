@@ -1,18 +1,17 @@
 {config, ...}: let
   # Get the user's home directory dynamically
   homeDir = config.home.homeDirectory;
-  
+
   # Define the opencode configuration with dynamic paths
   opencodeConfig = {
     "$schema" = "https://opencode.ai/config.json";
-    theme = "opencode";
+    theme = "system";
     instructions = ["AGENTS.md"];
     layout = "stretch";
     share = "manual";
     autoupdate = false;
     small_model = "github-copilot/o4-mini";
     disabled_providers = ["deepseek" "openai"];
-    
     mode = {
       diagnose = {
         model = "github-copilot/gemini-2.5-pro";
@@ -63,7 +62,7 @@
         };
       };
     };
-    
+
     keybinds = {
       leader = "ctrl+o";
       app_help = "<leader>h";
@@ -85,7 +84,7 @@
       input_clear = "ctrl+c";
       input_paste = "ctrl+v";
       input_submit = "enter";
-      input_newline = "shift+enter,ctrl+j";
+      input_newline = "alt+enter";
       messages_page_up = "pgup";
       messages_page_down = "pgdown";
       messages_half_page_up = "ctrl+alt+u";
@@ -99,7 +98,7 @@
       messages_revert = "<leader>r";
       app_exit = "ctrl+c,<leader>q";
     };
-    
+
     mcp = {
       dalle-image-generator = {
         enabled = true;
@@ -160,3 +159,4 @@ in {
     text = builtins.toJSON opencodeConfig;
   };
 }
+
