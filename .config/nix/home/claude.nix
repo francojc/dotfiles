@@ -145,9 +145,21 @@
     };
   };
 in {
-  # Generate the .claude.json file with dynamic paths
-  home.file.".claude.json" = {
-    text = builtins.toJSON claudeConfig;
-  };
+  # Use home.activation to create a mutable copy of .claude.json
+  home.activation.claudeConfig = config.lib.dag.entryAfter ["writeBoundary"] ''
+    claude_config="${config.home.homeDirectory}/.claude.json"
+    
+    # Remove any existing symlink or file
+    if [ -L "$claude_config" ] || [ ! -f "$claude_config" ]; then
+      $DRY_RUN_CMD rm -f "$claude_config"
+      
+      # Create the mutable config file
+      $DRY_RUN_CMD cat > "$claude_config" << 'EOF'
+${builtins.toJSON claudeConfig}
+EOF
+      $DRY_RUN_CMD chmod 644 "$claude_config"
+      echo "Created mutable .claude.json configuration"
+    fi
+  '';
 }
 
