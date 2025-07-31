@@ -103,7 +103,7 @@
       "type": "local",
       "command": [
         "node",
-        "/Users/jeridf/.bin/dalle-mcp-server/server.js"
+        "/Users/francojc/.bin/dalle-mcp-server/server.js"
       ]
     },
     "sequential-thinking": {
@@ -135,15 +135,15 @@
       "enabled": true,
       "type": "local",
       "command": [
-        "/Users/jeridf/.local/mcp/zen-mcp-server/.zen_venv/bin/python",
-        "/Users/jeridf/.local/mcp/zen-mcp-server/server.py"
+        "/Users/francojc/.local/mcp/zen-mcp-server/.zen_venv/bin/python",
+        "/Users/francojc/.local/mcp/zen-mcp-server/server.py"
       ]
     },
     "zotero": {
       "enabled": true,
       "type": "local",
       "command": [
-        "/Users/jeridf/.local/bin/zotero-mcp"
+        "/Users/francojc/.local/bin/zotero-mcp"
       ],
       "environment": {
         "ZOTERO_LOCAL": "true"
