@@ -32,7 +32,7 @@ VIDEO_FILENAME=$(yt-dlp \
   --merge-output-format mp4 \
   --cookies "$COOKIES" \
   --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-  --legacy-server-connect \
+  --impersonate "" \
   --print "%(title)s.%(ext)s" \
   "$URL")
 
@@ -50,7 +50,7 @@ yt-dlp \
   --merge-output-format mp4 \
   --cookies "$COOKIES" \
   --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-  --legacy-server-connect \
+  --impersonate "" \
   -o "%(title)s.%(ext)s" \
   "$URL"
 
@@ -70,7 +70,7 @@ yt-dlp \
   --sub-format srt \
   --cookies "$COOKIES" \
   --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-  --legacy-server-connect \
+  --impersonate "" \
   "$URL" || echo "⚠️ Subtitles not available or failed to download."
 
 echo "✅ Done. Video saved as: $VIDEO_FILENAME"
