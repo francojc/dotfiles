@@ -1,5 +1,26 @@
-GOOSE_PROVIDER: openrouter
+GOOSE_MODEL: qwen/qwen3-coder
+GOOSE_MODE: approve
 extensions:
+  computercontroller:
+    bundled: true
+    display_name: Computer Controller
+    enabled: true
+    name: computercontroller
+    timeout: 300
+    type: builtin
+  context7:
+    args:
+    - -y
+    - '@upstash/context7-mcp'
+    bundled: null
+    cmd: npx
+    description: Pull up-to-date, version-specific code and docs so Goose can vibe code with real context, not hallucinated or outdated answers.
+    enabled: true
+    env_keys: []
+    envs: {}
+    name: context7
+    timeout: 300
+    type: stdio
   developer:
     bundled: true
     display_name: Developer
@@ -7,4 +28,36 @@ extensions:
     name: developer
     timeout: 300
     type: builtin
-GOOSE_MODEL: qwen/qwen3-coder
+  elevenlabs:
+    args:
+    - elevenlabs-mcp
+    bundled: null
+    cmd: uvx
+    description: null
+    enabled: true
+    env_keys:
+    - ELEVENLABS_API_KEY
+    envs: {}
+    name: elevenlabs
+    timeout: 300
+    type: stdio
+  fetch:
+    args:
+    - mcp-server-fetch
+    bundled: null
+    cmd: uvx
+    description: null
+    enabled: true
+    env_keys: []
+    envs: {}
+    name: fetch
+    timeout: 300
+    type: stdio
+  googledrive:
+    bundled: true
+    display_name: Google Drive
+    enabled: true
+    name: googledrive
+    timeout: 300
+    type: builtin
+GOOSE_PROVIDER: openrouter
