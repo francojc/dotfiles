@@ -31,6 +31,7 @@
       "pngpaste" # paste images
       "python@3.11" # Python 3
       "poetry" # Python dependency management
+      "pipx" # Python package manager
       "rename" # file renaming utility
       "sqly" #
       "transmission-cli" # command-line torrent client
