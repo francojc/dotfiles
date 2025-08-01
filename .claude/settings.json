@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "mcp__zen"
@@ -35,6 +36,7 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1753981203577
+    "lastShownTime": 1754007462885
   }
 }
+
