@@ -52,6 +52,7 @@
       "google-drive"
       "handbrake" # Video transcoder for content creation
       "kap" # screen recording
+      "keycastr" # keystroke visualizer
       "loopback" # audio routing
       "obs" # OBS Studio for streaming and recording
       "obsidian"
