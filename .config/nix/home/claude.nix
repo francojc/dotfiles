@@ -130,10 +130,16 @@
         };
       };
       "zen" = {
-        "command" = "${homeDir}/.local/mcp/zen-mcp-server/.zen_venv/bin/python";
+        "command" = "sh";
         "args" = [
-          "${homeDir}/.local/mcp/zen-mcp-server/server.py"
+          "-c"
+          "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
         ];
+        "env" = {
+          "CUSTOM_API_URL" = "https://api.githubcopilot.com";
+          "CUSTOM_API_KEY" = builtins.getEnv "GITHUB_COPILOT_API_KEY";
+          "DEFAULT_MODEL" = "auto";
+        };
       };
       "zotero" = {
         "command" = "${homeDir}/.local/bin/zotero-mcp";
@@ -147,19 +153,18 @@
 in {
   # Use home.activation to create a mutable copy of .claude.json
   home.activation.claudeConfig = config.lib.dag.entryAfter ["writeBoundary"] ''
-    claude_config="${config.home.homeDirectory}/.claude.json"
-    
-    # Remove any existing symlink or file
-    if [ -L "$claude_config" ] || [ ! -f "$claude_config" ]; then
-      $DRY_RUN_CMD rm -f "$claude_config"
-      
-      # Create the mutable config file
-      $DRY_RUN_CMD cat > "$claude_config" << 'EOF'
-${builtins.toJSON claudeConfig}
-EOF
-      $DRY_RUN_CMD chmod 644 "$claude_config"
-      echo "Created mutable .claude.json configuration"
-    fi
+        claude_config="${config.home.homeDirectory}/.claude.json"
+
+        # Remove any existing symlink or file
+        if [ -L "$claude_config" ] || [ ! -f "$claude_config" ]; then
+          $DRY_RUN_CMD rm -f "$claude_config"
+
+          # Create the mutable config file
+          $DRY_RUN_CMD cat > "$claude_config" << 'EOF'
+    ${builtins.toJSON claudeConfig}
+    EOF
+          $DRY_RUN_CMD chmod 644 "$claude_config"
+          echo "Created mutable .claude.json configuration"
+        fi
   '';
 }
-

@@ -137,9 +137,15 @@
         enabled = true;
         type = "local";
         command = [
-          "${homeDir}/.local/mcp/zen-mcp-server/.zen_venv/bin/python"
-          "${homeDir}/.local/mcp/zen-mcp-server/server.py"
+          "sh"
+          "-c"
+          "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
         ];
+        environment = {
+          CUSTOM_API_URL = "https://api.githubcopilot.com";
+          CUSTOM_API_KEY = builtins.getEnv "GITHUB_COPILOT_API_KEY";
+          DEFAULT_MODEL = "auto";
+        };
       };
       zotero = {
         enabled = true;
@@ -159,4 +165,3 @@ in {
     text = builtins.toJSON opencodeConfig;
   };
 }
-
