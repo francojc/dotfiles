@@ -102,7 +102,6 @@
   # YouTube content creation and streaming
   youtubeContentPackages = with pkgs; [
     audacity # Audio editing and recording
-    keycastr # Keystroke visualizer for tutorials
   ];
 
   # Combined package list
