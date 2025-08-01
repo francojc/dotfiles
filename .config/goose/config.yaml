@@ -1,5 +1,7 @@
-GOOSE_MODEL: qwen/qwen3-coder
 GOOSE_MODE: approve
+GOOSE_MODEL: qwen/qwen3-coder
+GOOSE_PROVIDER: openrouter
+GOOSE_ROUTER_TOOL_SELECTION_STRATEGY: vector
 extensions:
   computercontroller:
     bundled: true
@@ -53,11 +55,15 @@ extensions:
     name: fetch
     timeout: 300
     type: stdio
-  googledrive:
-    bundled: true
-    display_name: Google Drive
+  zen:
+    args:
+    - /Users/francojc/.local/mcp/prod/zen-mcp-server/server.py
+    bundled: null
+    cmd: /Users/francojc/.local/mcp/prod/zen-mcp-server/.zen_venv/bin/python
+    description: null
     enabled: true
-    name: googledrive
+    env_keys: []
+    envs: {}
+    name: zen
     timeout: 300
-    type: builtin
-GOOSE_PROVIDER: openrouter
+    type: stdio

@@ -1,1 +1,5 @@
-{}
+user:
+  always_allow:
+  - platform__search_available_extensions
+  ask_before: []
+  never_allow: []
