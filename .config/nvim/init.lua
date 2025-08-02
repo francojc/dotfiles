@@ -37,7 +37,7 @@ require("paq")({
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
-	"kdheepak/lazygit.nvim", -- Lazygit integration
+	"kdheepak/lazygit.nvim", -- Lazygit integration (* X)
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
