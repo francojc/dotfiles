@@ -1,7 +1,3 @@
-GOOSE_MODE: approve
-GOOSE_MODEL: qwen/qwen3-coder
-GOOSE_PROVIDER: openrouter
-GOOSE_ROUTER_TOOL_SELECTION_STRATEGY: vector
 extensions:
   computercontroller:
     bundled: true
@@ -36,7 +32,7 @@ extensions:
     bundled: null
     cmd: uvx
     description: null
-    enabled: true
+    enabled: false
     env_keys:
     - ELEVENLABS_API_KEY
     envs: {}
@@ -67,3 +63,6 @@ extensions:
     name: zen
     timeout: 300
     type: stdio
+GOOSE_MODE: approve
+GOOSE_MODEL: qwen/qwen3-coder
+GOOSE_PROVIDER: openrouter
