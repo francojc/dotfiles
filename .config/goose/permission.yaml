@@ -1,5 +1,6 @@
 user:
   always_allow:
   - platform__search_available_extensions
+  - developer__shell
   ask_before: []
   never_allow: []
