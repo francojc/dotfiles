@@ -1,5 +1,8 @@
 # --- ALIASES ---
 
+# Meta-aliases
+alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
+
 # llm aliases
 alias llmb='llm -t briefly' # uses the template 'briefly'
 
