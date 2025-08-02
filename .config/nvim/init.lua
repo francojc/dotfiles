@@ -50,9 +50,7 @@ require("paq")({
 	"quarto-dev/quarto-nvim", -- Quarto integration
 	"rafamadriz/friendly-snippets", -- Snippets
 	"rcarriga/nvim-notify", -- Notifications
-	"rmagatti/auto-session", -- Auto session management
 	"savq/paq-nvim", -- Paq manages itself
-	"sindrets/diffview.nvim", -- Git diff viewer
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
 })
@@ -180,8 +178,18 @@ a.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "quarto" },
 	callback = function()
 		-- Basic ]] and [[ navigation for headings
-		vim.keymap.set("n", "]]", "/^#\\+\\s.*$<CR>:nohlsearch<CR>", { buffer = true, silent = true, desc = "Next heading" })
-		vim.keymap.set("n", "[[", "?^#\\+\\s.*$<CR>:nohlsearch<CR>", { buffer = true, silent = true, desc = "Previous heading" })
+		vim.keymap.set(
+			"n",
+			"]]",
+			"/^#\\+\\s.*$<CR>:nohlsearch<CR>",
+			{ buffer = true, silent = true, desc = "Next heading" }
+		)
+		vim.keymap.set(
+			"n",
+			"[[",
+			"?^#\\+\\s.*$<CR>:nohlsearch<CR>",
+			{ buffer = true, silent = true, desc = "Previous heading" }
+		)
 	end,
 })
 
@@ -219,8 +227,6 @@ map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
--- Delete session and quit
-map("n", "<leader>X", "<Cmd>SessionDelete<CR><Cmd>qa!<CR>", { desc = "Quit (session)" })
 --- Window  -----
 -- Move between editor/terminal windows
 map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
@@ -307,14 +313,6 @@ map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 -- Lazygit
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
--- Diffview
-map("n", "<leader>gd", "<Cmd>DiffviewOpen<Cr>", { desc = "Diffview open" })
-map("n", "<leader>gD", "<Cmd>DiffviewOpen HEAD~1<Cr>", { desc = "Diffview compare with previous" })
-map("n", "<leader>gh", "<Cmd>DiffviewFileHistory<Cr>", { desc = "File history (current)" })
-map("n", "<leader>gH", "<Cmd>DiffviewFileHistory %<Cr>", { desc = "File history (all)" })
-map("n", "<leader>gc", "<Cmd>DiffviewClose<Cr>", { desc = "Diffview close" })
-map("n", "<leader>gf", "<Cmd>lua require('diffview').emit('focus_files')<Cr>", { desc = "Focus file panel" })
-map("n", "<leader>gt", "<Cmd>lua require('diffview').emit('toggle_files')<Cr>", { desc = "Toggle file panel" })
 -- LSP -----------------------------------
 map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
@@ -567,7 +565,6 @@ local dashboard_buttons = {
 	{ "f", "  Find file", ":FzfLua files<CR>" },
 	{ "g", "  Find text", ":FzfLua live_grep <CR>" },
 	{ "n", "  New file", ":ene <BAR> startinsert <CR>" },
-	{ "s", "  Select a session", ":SessionSearch<CR>" },
 	{ "q", "  Quit Neovim", ":qa<CR>" },
 }
 dashboard.section.buttons.val = {}
@@ -596,12 +593,6 @@ end
 
 -- Send config to alpha
 alpha.setup(dashboard.config)
-
--- Auto-session -------------------------------
-require("auto-session").setup({
-	auto_restore = true,
-	bypass_save_filetypes = { "alpha", "dashboard" },
-})
 
 -- Blink ----------------------------------
 -- Timer for delayed auto_show
@@ -848,14 +839,6 @@ require("conform").setup({
 -- csvview ----------------------------------
 require("csvview").setup({})
 
--- Diffview ----------------------------------
-local actions = require("diffview.actions")
-require("diffview").setup({
-	keymaps = {
-		disable_defaults = false,
-	},
-})
-
 -- Fidget ----------------------------------
 require("fidget").setup({
 	notification = {
@@ -899,9 +882,6 @@ require("fzf-lua").setup({
 
 -- Gitsigns -------------------------------
 require("gitsigns").setup()
-
--- Hardtime ----------------------------------
--- require("hardtime").setup({})
 
 -- Image ----------------------------------
 require("image").setup({
@@ -1216,24 +1196,6 @@ require("nvim-treesitter.configs").setup({
 		},
 	},
 	indent = { enable = false },
-	playground = {
-		enable = true,
-		disable = {},
-		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-		persist_queries = false, -- Whether the query persists across vim sessions
-		keybindings = {
-			toggle_query_editor = "o",
-			toggle_hl_groups = "i",
-			toggle_injected_languages = "t",
-			toggle_anonymous_nodes = "a",
-			toggle_language_display = "I",
-			focus_language = "f",
-			unfocus_language = "F",
-			update = "R",
-			goto_node = "<cr>",
-			show_help = "?",
-		},
-	},
 })
 
 --- WhichKey -----------------------------------
