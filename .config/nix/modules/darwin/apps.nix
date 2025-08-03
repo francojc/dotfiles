@@ -14,6 +14,7 @@
 
     taps = [
       "FelixKratz/formulae" # for jankyborders
+      "benjiwolff/neovim-nightly" # for Neovim nightly build
     ];
 
     brews = [
@@ -25,6 +26,7 @@
       "llm"
       "matheusml/zsh-ai/zsh-ai" # AI shell plugin
       "ncspot" # Spotify client
+      "neovim-nightly" # Neovim nightly build
       "nmap"
       "npm" # Node.js package manager
       "ollama" # AI model management
