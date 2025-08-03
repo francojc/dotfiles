@@ -4,9 +4,27 @@ options=(
   style=round
   width=12
   hidpi=off
-  background_color=0xff000000
-  active_color=0xffff6b00
-  inactive_color=0xff2a2a2a
+  # Colors A: dark --------
+  # background_color=0xff000000 # #000000 -- black
+  # active_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # inactive_color=0xff000000 # #000000 -- black
+  # Colors B: light --------
+  # background_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # active_color=0xffffffff # #ffffff -- white
+  # inactive_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # Colors C: colorful (orange) --------
+  background_color=0xff2a2a2a # #2a2a2a -- dark gray
+  active_color=0xffff9800 # #ff9800 -- orange
+  inactive_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # Colors D: colorful (blue) --------
+  # background_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # active_color=0xff2196f3 # #2196f3 -- blue
+  # inactive_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # Colors E: colorful (yellow) --------
+  # background_color=0xff2a2a2a # #2a2a2a -- dark gray
+  # active_color=0xffffeb3b # #ffeb3b -- yellow
+  # inactive_color=0xff2a2a2a # #2a2a2a -- dark gray
 )
 
 borders "${options[@]}"
+
