@@ -31,6 +31,18 @@
       "Nix-Rover" = import ./hosts/Nix-Rover/default.nix;
     };
 
+    # Import environment secrets with secrets file fallback
+    # First try to import from secrets.nix file, then fall back to environment variables
+    environmentSecrets = 
+      if builtins.pathExists ./secrets.nix
+      then import ./secrets.nix
+      else {
+        githubCopilotApiKey = builtins.getEnv "GITHUB_COPILOT_API_KEY";
+        karakeepApiKey = builtins.getEnv "KARAKEEP_API_KEY";
+        karakeepApiAddr = builtins.getEnv "KARAKEEP_API_ADDR";
+        airtableApiKey = builtins.getEnv "AIRTABLE_API_KEY";
+      };
+
     # Unified configuration builder for both Darwin and NixOS
     mkSystemConfig = hostname: hostConfig: let
       systemInfo = systemLib.supportedSystems.${hostConfig.system};
@@ -40,13 +52,16 @@
       # Common special args passed to all modules
       commonSpecialArgs =
         inputs
+        # Users and host info
         // {
           inherit hostname;
           username = hostConfig.username;
           useremail = hostConfig.useremail;
           themeName = hostConfig.theme;
           inherit isDarwin isLinux;
-        };
+        }
+        # Environment variables and secrets
+        // environmentSecrets;
 
       # Common Home Manager configuration
       homeManagerConfig = {

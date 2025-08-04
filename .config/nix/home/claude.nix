@@ -1,4 +1,11 @@
-{config, ...}: let
+{
+  config,
+  githubCopilotApiKey,
+  karakeepApiKey,
+  karakeepApiAddr,
+  airtableApiKey,
+  ...
+}: let
   # Get the user's home directory dynamically
   homeDir = config.home.homeDirectory;
 
@@ -90,8 +97,8 @@
           "@karakeep/mcp"
         ];
         "env" = {
-          "KARAKEEP_API_KEY" = builtins.getEnv "KARAKEEP_API_KEY";
-          "KARAKEEP_API_ADDR" = builtins.getEnv "KARAKEEP_API_ADDR";
+          "KARAKEEP_API_KEY" = karakeepApiKey;
+          "KARAKEEP_API_ADDR" = karakeepApiAddr;
         };
       };
       "Context7" = {
@@ -115,7 +122,7 @@
           "@felores/airtable-mcp-server"
         ];
         "env" = {
-          "AIRTABLE_API_KEY" = builtins.getEnv "AIRTABLE_API_KEY";
+          "AIRTABLE_API_KEY" = airtableApiKey;
         };
       };
       "google_workspace" = {
@@ -137,7 +144,7 @@
         ];
         "env" = {
           "CUSTOM_API_URL" = "https://api.githubcopilot.com";
-          "CUSTOM_API_KEY" = builtins.getEnv "GITHUB_COPILOT_API_KEY";
+          "CUSTOM_API_KEY" = githubCopilotApiKey;
           "DEFAULT_MODEL" = "auto";
         };
       };
@@ -156,3 +163,4 @@ in {
     text = builtins.toJSON claudeConfig;
   };
 }
+
