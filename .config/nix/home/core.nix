@@ -85,7 +85,6 @@
     ghostscript # PostScript/PDF interpreter
     gv # Ghostview - PostScript/PDF viewer
     haskellPackages.pandoc-crossref # Pandoc filter
-    # handbrake # Video transcoder
     imagemagick # Image manipulation
     khal # Calendar
     kitty # Terminal emulator
