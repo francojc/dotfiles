@@ -1,7 +1,7 @@
 {
-  "name": "dalle-mcp-server",
+  "name": "gemini-mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for DALL-E image generation in opencode",
+  "description": "MCP server for Gemini Flash image generation in opencode",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0"
   },
-  "keywords": ["mcp", "dalle", "openai", "image-generation"],
+  "keywords": ["mcp", "gemini", "google", "image-generation"],
   "author": "",
   "license": "MIT"
 }

@@ -13,11 +13,11 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-class DalleServer {
+class GeminiServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'dalle-image-generator',
+        name: 'gemini-image-generator',
         version: '1.0.0',
       },
       {
@@ -42,25 +42,13 @@ class DalleServer {
         tools: [
           {
             name: 'generate_image',
-            description: 'Generate an image using DALL-E 3',
+            description: 'Generate an image using Gemini Flash',
             inputSchema: {
               type: 'object',
               properties: {
                 prompt: {
                   type: 'string',
                   description: 'The text prompt describing the image to generate',
-                },
-                size: {
-                  type: 'string',
-                  description: 'Image size',
-                  enum: ['1024x1024', '1024x1792', '1792x1024'],
-                  default: '1024x1024',
-                },
-                quality: {
-                  type: 'string',
-                  description: 'Image quality',
-                  enum: ['standard', 'hd'],
-                  default: 'standard',
                 },
                 output_dir: {
                   type: 'string',
@@ -80,14 +68,14 @@ class DalleServer {
 
       if (name === 'generate_image') {
         try {
-          const { prompt, size = '1024x1024', quality = 'standard', output_dir = './generated_images' } = args;
+          const { prompt, output_dir = './generated_images' } = args;
 
           if (!prompt) {
             throw new Error('Prompt is required');
           }
 
           const scriptPath = join(__dirname, 'generate-image.sh');
-          const command = `"${scriptPath}" "${prompt}" "${size}" "${quality}" "${output_dir}"`;
+          const command = `"${scriptPath}" "${prompt}" "${output_dir}"`;
           
           const result = execSync(command, { 
             encoding: 'utf8',
@@ -100,7 +88,7 @@ class DalleServer {
             content: [
               {
                 type: 'text',
-                text: `Successfully generated image using DALL-E 3!\n\nPrompt: ${prompt}\nSize: ${size}\nQuality: ${quality}\nSaved to: ${imagePath}`,
+                text: `Successfully generated image using Gemini Flash!\n\nPrompt: ${prompt}\nSaved to: ${imagePath}`,
               },
             ],
           };
@@ -124,9 +112,9 @@ class DalleServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('DALL-E MCP server running on stdio');
+    console.error('Gemini Flash MCP server running on stdio');
   }
 }
 
-const server = new DalleServer();
+const server = new GeminiServer();
 server.run().catch(console.error);

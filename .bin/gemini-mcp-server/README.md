@@ -1,27 +1,26 @@
-# DALL-E MCP Server for opencode
+# Gemini Flash MCP Server for opencode
 
-A Model Context Protocol (MCP) server that adds DALL-E 3 image generation capabilities to opencode.
+A Model Context Protocol (MCP) server that adds Gemini Flash image generation capabilities to opencode.
 
 ## Features
 
-- Generate images using OpenAI's DALL-E 3 model
-- Configurable image size (1024x1024, 1024x1792, 1792x1024)
-- Quality options (standard, hd)
+- Generate images using Google's Gemini 2.0 Flash model
 - Automatic file naming with timestamps
 - Error handling and validation
+- Base64 image decoding and saving
 
 ## Prerequisites
 
 - Node.js (v18 or higher)
 - opencode installed
-- OpenAI API key
+- Google Gemini API key
 
 ## Installation
 
 1. **Clone or copy the server files:**
    ```bash
-   # Files are already created in: /Users/jeridf/.dotfiles/.bin/dalle-mcp-server/
-   cd dalle-mcp-server
+   # Files are already created in: /Users/jeridf/.dotfiles/.bin/gemini-mcp-server/
+   cd gemini-mcp-server
    ```
 
 2. **Install dependencies:**
@@ -29,8 +28,8 @@ A Model Context Protocol (MCP) server that adds DALL-E 3 image generation capabi
    npm install
    ```
 
-3. **Set up your OpenAI API key:**
-   - Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+3. **Set up your Google Gemini API key:**
+   - Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
    - You can set it in the opencode config or as an environment variable
 
 ## Configuration
@@ -41,12 +40,12 @@ Add the MCP server to your opencode configuration file (`opencode.json` in your 
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "dalle-image-generator": {
+    "gemini-image-generator": {
       "type": "local",
-      "command": ["node", "/Users/jeridf/.dotfiles/.bin/dalle-mcp-server/server.js"],
+      "command": ["node", "/Users/jeridf/.dotfiles/.bin/gemini-mcp-server/server.js"],
       "enabled": true,
       "environment": {
-        "OPENAI_API_KEY": "your_openai_api_key_here"
+        "GEMINI_API_KEY": "your_gemini_api_key_here"
       }
     }
   }
@@ -55,7 +54,7 @@ Add the MCP server to your opencode configuration file (`opencode.json` in your 
 
 **Alternative:** Set your API key as an environment variable:
 ```bash
-export OPENAI_API_KEY="your_openai_api_key_here"
+export GEMINI_API_KEY="your_gemini_api_key_here"
 ```
 
 ## Usage
@@ -69,31 +68,29 @@ Generate an image of a futuristic city at sunset with flying cars
 
 **With specific parameters:**
 ```
-Generate a high-quality 1792x1024 image of a serene mountain landscape
+Generate an image of a serene mountain landscape
 ```
 
 ### Tool Parameters
 
 - `prompt` (required): Text description of the image to generate
-- `size` (optional): Image dimensions - `1024x1024`, `1024x1792`, or `1792x1024` (default: `1024x1024`)
-- `quality` (optional): Image quality - `standard` or `hd` (default: `standard`)
 - `output_dir` (optional): Directory to save images (default: `./generated_images`)
 
 ## Generated Images
 
 Images are saved with descriptive filenames in the format:
 ```
-dalle_[prompt_snippet]_[timestamp].png
+gemini_[prompt_snippet]_[timestamp].png
 ```
 
-Example: `dalle_futuristic_city_sunset_20240126_143022.png`
+Example: `gemini_futuristic_city_sunset_20240126_143022.png`
 
 ## Files Structure
 
 ```
-dalle-mcp-server/
+gemini-mcp-server/
 ├── server.js              # MCP server implementation
-├── generate-image.sh      # Shell script for DALL-E API calls
+├── generate-image.sh      # Shell script for Gemini API calls
 ├── package.json           # Node.js dependencies
 ├── example-opencode.json  # Example configuration
 └── README.md             # This file
@@ -101,12 +98,12 @@ dalle-mcp-server/
 
 ## Troubleshooting
 
-**"OPENAI_API_KEY environment variable is required":**
+**"GEMINI_API_KEY environment variable is required":**
 - Ensure your API key is set in the opencode config or as an environment variable
 
-**"Error from OpenAI API":**
-- Check your API key is valid and has sufficient credits
-- Verify the prompt doesn't violate OpenAI's content policy
+**"Error from Gemini API":**
+- Check your API key is valid and has sufficient quota
+- Verify the prompt doesn't violate Google's content policy
 
 **"Command not found" errors:**
 - Ensure Node.js is installed and accessible
@@ -117,12 +114,9 @@ dalle-mcp-server/
 
 ## Cost Considerations
 
-DALL-E 3 pricing (as of 2024):
-- Standard quality (1024×1024): $0.040 per image
-- Standard quality (1024×1792, 1792×1024): $0.080 per image  
-- HD quality: $0.080 per image (1024×1024), $0.120 per image (1024×1792, 1792×1024)
+Gemini 2.0 Flash image generation is currently free during the preview period.
 
-Monitor your usage on the [OpenAI Platform](https://platform.openai.com/usage).
+Monitor your usage on the [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 ## License
 
