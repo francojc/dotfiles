@@ -1,5 +1,5 @@
 ---
-model: github-copilot/o4-mini
+model: github-copilot/claude-sonnet-4
 temperature: 0.1
 tools:
   write: true
