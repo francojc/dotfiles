@@ -19,7 +19,7 @@
         tools = {
           write = false;
           edit = false;
-          bash = false;
+          bash = true;
           read = true;
           grep = true;
           glob = true;
