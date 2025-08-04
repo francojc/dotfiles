@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  githubCopilotApiKey,
+  ...
+}: let
   # Get the user's home directory dynamically
   homeDir = config.home.homeDirectory;
 
@@ -143,7 +147,7 @@
         ];
         environment = {
           CUSTOM_API_URL = "https://api.githubcopilot.com";
-          CUSTOM_API_KEY = builtins.getEnv "GITHUB_COPILOT_API_KEY";
+          CUSTOM_API_KEY = githubCopilotApiKey;
           DEFAULT_MODEL = "auto";
         };
       };
