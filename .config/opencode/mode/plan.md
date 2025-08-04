@@ -1,5 +1,5 @@
 ---
-model: github-copilot/o4-mini
+model: github-copilot/gemini-2.5-pro
 temperature: 0.3
 tools:
   write: false

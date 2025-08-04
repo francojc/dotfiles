@@ -1,5 +1,5 @@
 ---
-model: github-copilot/o4-mini
+model: github-copilot/gpt-4.1
 temperature: 0.1
 tools:
   write: false
