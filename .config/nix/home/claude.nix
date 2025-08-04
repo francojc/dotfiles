@@ -1,9 +1,5 @@
 {
   config,
-  githubCopilotApiKey,
-  karakeepApiKey,
-  karakeepApiAddr,
-  airtableApiKey,
   ...
 }: let
   # Get the user's home directory dynamically
@@ -92,14 +88,11 @@
         ];
       };
       "karakeep" = {
-        "command" = "npx";
+        "command" = "sh";
         "args" = [
-          "@karakeep/mcp"
+          "-c"
+          "export KARAKEEP_API_KEY=\"$KARAKEEP_API_KEY\" && export KARAKEEP_API_ADDR=\"$KARAKEEP_API_ADDR\" && exec npx @karakeep/mcp"
         ];
-        "env" = {
-          "KARAKEEP_API_KEY" = karakeepApiKey;
-          "KARAKEEP_API_ADDR" = karakeepApiAddr;
-        };
       };
       "Context7" = {
         "command" = "npx";
@@ -117,13 +110,11 @@
         ];
       };
       "airtable" = {
-        "command" = "npx";
+        "command" = "sh";
         "args" = [
-          "@felores/airtable-mcp-server"
+          "-c"
+          "export AIRTABLE_API_KEY=\"$AIRTABLE_API_KEY\" && exec npx @felores/airtable-mcp-server"
         ];
-        "env" = {
-          "AIRTABLE_API_KEY" = airtableApiKey;
-        };
       };
       "google_workspace" = {
         "command" = "uvx";
@@ -140,13 +131,8 @@
         "command" = "sh";
         "args" = [
           "-c"
-          "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
+          "export CUSTOM_API_URL=\"https://api.githubcopilot.com\" && export CUSTOM_API_KEY=\"$GITHUB_COPILOT_API_KEY\" && export DEFAULT_MODEL=\"auto\" && exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
         ];
-        "env" = {
-          "CUSTOM_API_URL" = "https://api.githubcopilot.com";
-          "CUSTOM_API_KEY" = githubCopilotApiKey;
-          "DEFAULT_MODEL" = "auto";
-        };
       };
       "zotero" = {
         "command" = "${homeDir}/.local/bin/zotero-mcp";
