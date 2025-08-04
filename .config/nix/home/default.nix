@@ -9,8 +9,6 @@
     ./core.nix
     ./git.nix
     ./ghostty.nix
-    ./opencode.nix
-    ./claude.nix
     ./shell/default.nix
     ./tmux.nix
     ./vim.nix
