@@ -50,7 +50,6 @@
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"
-      "handbrake" # Video transcoder for content creation
       "kap" # screen recording
       "keycastr" # keystroke visualizer
       "loopback" # audio routing
@@ -66,7 +65,6 @@
       "superwhisper" # AI transcription
       "transcribe"
       "transmission"
-      "visual-studio-code"
       "yaak" # API client
       "zen" # browser
       "zoom"
