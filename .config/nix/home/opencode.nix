@@ -1,6 +1,5 @@
 {
   config,
-  githubCopilotApiKey,
   ...
 }: let
   # Get the user's home directory dynamically
@@ -143,13 +142,8 @@
         command = [
           "sh"
           "-c"
-          "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
+          "export CUSTOM_API_URL=\"https://api.githubcopilot.com\" && export CUSTOM_API_KEY=\"$GITHUB_COPILOT_API_KEY\" && export DEFAULT_MODEL=\"auto\" && exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
         ];
-        environment = {
-          CUSTOM_API_URL = "https://api.githubcopilot.com";
-          CUSTOM_API_KEY = githubCopilotApiKey;
-          DEFAULT_MODEL = "auto";
-        };
       };
       zotero = {
         enabled = true;
