@@ -19,14 +19,14 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly VERSION="1.0.0"
 
 # Color codes for output formatting
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly PURPLE='\033[0;35m'
-readonly CYAN='\033[0;36m'
-readonly WHITE='\033[1;37m'
-readonly NC='\033[0m' # No Color
+readonly RED=$'\033[0;31m'
+readonly GREEN=$'\033[0;32m'
+readonly YELLOW=$'\033[1;33m'
+readonly BLUE=$'\033[0;34m'
+readonly PURPLE=$'\033[0;35m'
+readonly CYAN=$'\033[0;36m'
+readonly WHITE=$'\033[1;37m'
+readonly NC=$'\033[0m' # No Color
 
 # Function to check if colors should be used
 use_colors() {
