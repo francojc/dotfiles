@@ -97,3 +97,7 @@ outputs = { nixpkgs, flake-utils, ... }:
 - Institutional ethics compliance
 - Long-term data preservation
 - Balance computational efficiency with linguistic validity
+
+## Spanish Language Guidelines
+
+- Avoid excessive capitalization in Spanish in titles and headings. Only capitalize when it is a proper noun, an acronym, etc.
