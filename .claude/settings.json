@@ -10,7 +10,6 @@
       "Read(.aider.tags.cache:*)"
     ]
   },
-  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
