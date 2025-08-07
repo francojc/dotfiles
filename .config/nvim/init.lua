@@ -38,6 +38,7 @@ require("paq")({
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration (* X)
+	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
@@ -1032,6 +1033,19 @@ end
 
 -- Lualine ----------------------------------------------------------------
 -- Lualine setup
+
+-- Create a Lua function that will match status for lualine
+local function search_match_status()
+	if vim.v.hlsearch == 0 then
+		return ""
+	end
+	local search_count = vim.fn.searchcount({ recompute = true, maxcount = 999 })
+	if search_count.total == 0 then
+		return ""
+	end
+	return string.format(" %d/%d", search_count.current, search_count.total)
+end
+
 require("lualine").setup({
 	options = {
 		icons_enabled = true,
@@ -1058,7 +1072,8 @@ require("lualine").setup({
 		},
 		lualine_x = {},
 		lualine_y = {
-			{ " filetype", icon_only = true },
+			search_match_status, -- Custom function to show search match status
+			{ "filetype", colored = true, icon_only = true, icon = { align = "right" } },
 		},
 		lualine_z = { "progress" },
 	},
