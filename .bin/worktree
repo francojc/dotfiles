@@ -291,12 +291,78 @@ status_worktrees() {
 }
 
 generate_completion_script() {
-  cat <<'EOF'
+  local shell_type="${1:-bash}" # Default to bash
+
+  if [[ "$shell_type" == "zsh" ]]; then
+    cat <<'EOF'
+#compdef worktree
+
+_worktree_completion() {
+    local -a commands
+    local -a sub_commands
+    local ret=1
+
+    _arguments -C \
+        "1: :->command" \
+        "*::arg:->args"
+
+    case $state in
+        command)
+            commands=(
+                "create:Create a new worktree"
+                "list:List worktrees"
+                "remove:Remove a worktree"
+                "delete:Alias for remove"
+                "rm:Alias for remove"
+                "status:Show git status for all worktrees"
+                "sync:Pull changes for all worktrees"
+                "prune:Remove worktrees for merged branches"
+                "switch:Switch to a worktree's directory"
+                "completion:Generate tab completion script"
+                "help:Show this help message"
+            )
+            _describe "command" commands && ret=0
+            ;;
+        args)
+            case $words[1] in
+                list)
+                    sub_commands=("table" "json" "simple")
+                    _describe "format" sub_commands && ret=0
+                    ;;
+                remove|delete|rm|switch)
+                    local branches
+                    branches=($(git worktree list --porcelain | awk '/^branch refs\/heads\// {print substr($0, 20)}'))
+                    _describe "branch" branches && ret=0
+                    ;;
+                sync)
+                    _arguments \
+                        '--strategy=[rebase or merge]:sync strategy:(rebase merge)' \
+                        '--dry-run[perform a dry run]' && ret=0
+                    ;;
+                prune)
+                    _arguments \
+                        '--force[force removal]' && ret=0
+                    ;;
+                completion)
+                    sub_commands=("bash" "zsh")
+                    _describe "shell type" sub_commands && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+_worktree_completion "$@"
+EOF
+  else # Bash completion
+    cat <<'EOF'
 _worktree_completion() {
     local cur prev words cword
     _get_comp_words_by_ref -n : cur prev words cword
 
-    local commands="create list remove delete rm status sync prune help completion"
+    local commands="create list remove delete rm status sync prune help completion switch"
     local list_formats="table json simple"
     local sync_opts="--strategy=rebase --strategy=merge --dry-run"
     local prune_opts="--force"
@@ -311,8 +377,8 @@ _worktree_completion() {
         list)
             COMPREPLY=( $(compgen -W "${list_formats}" -- "${cur}") )
             ;;
-        remove|delete|rm)
-            local branches=$(git worktree list --porcelain | awk '/^branch refs\/heads\// {print substr($2, 12)}')
+        remove|delete|rm|switch)
+            local branches=$(git worktree list --porcelain | awk '/^branch refs\/heads\// {print substr($0, 20)}')
             COMPREPLY=( $(compgen -W "${branches}" -- "${cur}") )
             ;;
         sync)
@@ -321,15 +387,63 @@ _worktree_completion() {
         prune)
             COMPREPLY=( $(compgen -W "${prune_opts}" -- "${cur}") )
             ;;
+        completion)
+            COMPREPLY=( $(compgen -W "bash zsh" -- "${cur}") )
+            ;;
         *)
             COMPREPLY=()
             ;;
     esac
 }
 
-complete -F _worktree_completion worktree.sh
+complete -F _worktree_completion worktree
 EOF
+  fi
 }
+
+switch_worktree() {
+  local target_branch="${1:-}"
+  if [[ -z "$target_branch" ]]; then
+    log_error "Target branch is required for switch"
+    return 1
+  fi
+
+  # Attempt to find the worktree path associated with the branch
+  local worktree_path
+  worktree_path=$(git worktree list --porcelain | awk -v b="refs/heads/$target_branch" '
+    $0 ~ "branch " b {
+      getline; # Move to the next line which should be the path
+      if ($1 == "worktree") {
+        print $2;
+        exit;
+      }
+    }
+  ')
+  
+  if [[ -z "$worktree_path" ]]; then
+      # Fallback for detached HEADs or other cases
+      local ext_dir
+      ext_dir="$(get_default_external_worktree_dir)"
+      if [[ -d "$ext_dir/$target_branch" ]]; then
+          worktree_path="$ext_dir/$target_branch"
+      fi
+  fi
+
+  if [[ -n "$worktree_path" ]] && [[ -d "$worktree_path" ]]; then
+    cd "$worktree_path" || return 1
+    log_success "Switched to worktree for branch '$target_branch' at: $worktree_path"
+    
+    # If the shell is interactive, start a new shell, otherwise just exit
+    if [[ -t 1 ]]; then
+      exec "${SHELL:-/bin/bash}"
+    fi
+  else
+    log_error "No worktree found for branch '$target_branch'. Use 'create' to make it."
+    return 1
+  fi
+}
+
+
 
 sync_worktrees() {
     local strategy="rebase"
@@ -475,8 +589,8 @@ main() {
       prune_worktrees "$@"
       ;;
     completion)
-      # Usage: source <(worktree.sh completion)
-      generate_completion_script
+      # Usage: source <(worktree.sh completion [bash|zsh])
+      generate_completion_script "$@"
       ;;
     help|-h|--help|"")
       echo "Usage: $SCRIPT_NAME <command> [args]"
