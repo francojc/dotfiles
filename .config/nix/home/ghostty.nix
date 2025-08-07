@@ -1,4 +1,8 @@
-{hostname, theme, ...}: {
+{
+  hostname,
+  theme,
+  ...
+}: {
   xdg.configFile."ghostty/config" = {
     text = ''
       # Ghostty config
