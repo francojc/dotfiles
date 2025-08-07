@@ -119,33 +119,36 @@ convert_date_format() {
 
   # Step 1: Interpret the input date string as America/New_York time
   #         and get the corresponding epoch timestamp (seconds since UTC epoch).
-  local epoch_timestamp date_output date_error exit_code
+  local epoch_timestamp date_output exit_code
 
-  # Use date command, capture stdout and stderr separately.
-  # We need stderr to check for parsing errors.
-  # Run command, capture combined output, then check exit code immediately.
-  date_output=$(TZ="America/New_York" date --date="$date_str" "+%s" 2>&1)
-  exit_code=$? # Capture exit code immediately
-
-  # Check if date command failed
-  if [[ "$exit_code" -ne 0 ]]; then
-      # If failed, the output contains the error message
-      date_error="$date_output"
-      echo "Error: Failed to parse date string '$date_str' assuming America/New_York timezone. Date command exit code: $exit_code. Error output: '$date_error'" >&2
-      return 1 # Indicate failure
-  # Check if successful output is actually a number (epoch timestamp)
-  elif ! [[ "$date_output" =~ ^[0-9]+$ ]]; then
-      # Handle unexpected non-error, non-numeric output
-      echo "Error: Date command succeeded for '$date_str' but produced non-numeric output: '$date_output'" >&2
-      return 1 # Indicate failure
+  if date --version >/dev/null 2>&1; then
+    # GNU date path
+    date_output=$(TZ="America/New_York" date --date="$date_str" "+%s" 2>&1) || {
+      echo "Error: Failed to parse date string '$date_str' with GNU date" >&2
+      return 1
+    }
+  else
+    # BSD/macOS date path
+    # Expect input as "YYYY-MM-DD HH:MM"
+    date_output=$(TZ="America/New_York" date -j -f "%Y-%m-%d %H:%M" "$date_str" "+%s" 2>&1) || {
+      echo "Error: Failed to parse date string '$date_str' with BSD date (-j -f)" >&2
+      return 1
+    }
   fi
 
-  # If successful and numeric, assign to epoch_timestamp
+  # Validate numeric epoch
+  if ! [[ "$date_output" =~ ^[0-9]+$ ]]; then
+    echo "Error: Date parsing produced non-numeric epoch: '$date_output'" >&2
+    return 1
+  fi
   epoch_timestamp="$date_output"
 
   # Step 2: Convert the epoch timestamp to the desired UTC ISO 8601 format.
-  # The -u flag ensures the output is UTC, -d "@..." reads the epoch timestamp.
-  date -u -d "@$epoch_timestamp" +"%Y-%m-%dT%H:%M:%SZ"
+  if date --version >/dev/null 2>&1; then
+    date -u -d "@$epoch_timestamp" +"%Y-%m-%dT%H:%M:%SZ"
+  else
+    date -u -r "$epoch_timestamp" +"%Y-%m-%dT%H:%M:%SZ"
+  fi
 }
 
 # Function to update assignment dates

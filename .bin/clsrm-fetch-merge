@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Wrapper for fetch-student-merge
+
+SCRIPT_NAME="clsrm-fetch-merge"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+main(){
+  if [[ -x "$(dirname "$0")/fetch-student-merge" ]]; then
+    "$(dirname "$0")/fetch-student-merge" "$@"
+  else
+    die "fetch-student-merge not found"
+  fi
+}
+
+main "$@"

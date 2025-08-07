@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Extract audio track from a video file using ffmpeg
+# Usage: av-audio-extract INPUT [OUTPUT]
+
+SCRIPT_NAME="av-audio-extract"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+usage(){ cat <<EOF
+Usage: av-audio-extract INPUT [OUTPUT]
+
+Extract audio track (m4a) from a video file using ffmpeg.
+EOF
+}
+
+main(){
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  require ffmpeg
+  local input="${1:-}" output="${2:-}"
+  [[ -n "$input" ]] || die "INPUT is required"
+  [[ -f "$input" ]] || die "File not found: $input"
+  if [[ -z "$output" ]]; then
+    output="${input%.*}.m4a"
+  fi
+
+  run ffmpeg -i "$input" -vn -acodec copy "$output"
+  log_info "Audio saved to $output"
+}
+
+main "$@"

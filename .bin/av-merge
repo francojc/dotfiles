@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Merge multiple video files using ffmpeg
+# Usage: av-merge file1.mp4 file2.mp4 ... -o out.mp4
+
+SCRIPT_NAME="av-merge"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+usage(){ cat <<EOF
+Usage: av-merge FILE... -o OUTPUT
+
+Merge multiple MP4 files into one using ffmpeg concat demuxer.
+EOF
+}
+
+main(){
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local show_help=0 show_version=0 output=""
+  local files=()
+  while (($#)); do
+    case "$1" in
+      -o) shift; output="${1:-}" ;;
+      -h|--help) show_help=1 ;;
+      --version) show_version=1 ;;
+      -q) QUIET=1 ;;
+      -v) VERBOSE=$((VERBOSE+1)) ;;
+      -n) DRY_RUN=1 ;;
+      *) files+=("$1") ;;
+    esac; shift || true
+  done
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  require ffmpeg
+  [[ -n "$output" ]] || die "-o OUTPUT is required"
+  [[ ${#files[@]} -ge 2 ]] || die "Provide at least two input files"
+
+  local listfile; listfile=$(mktemp)
+  for f in "${files[@]}"; do
+    [[ -f "$f" ]] || die "Input file not found: $f"
+    printf "file '%s'\n" "$f" >> "$listfile"
+  done
+
+  run ffmpeg -f concat -safe 0 -i "$listfile" -c copy "$output"
+  rm -f "$listfile"
+  log_info "Merged to $output"
+}
+
+main "$@"

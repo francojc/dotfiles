@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# Show Wi-Fi SSID and signal strength on macOS
+# Usage: net-wifi-status [-qv]
+
+SCRIPT_NAME="net-wifi-status"; SCRIPT_VERSION="1.0.0"
+# shellcheck source=common.sh
+. "$(dirname "$0")/common.sh"
+
+usage() {
+  cat <<EOF
+Usage: net-wifi-status [options]
+
+Display current Wi‑Fi SSID and signal strength on macOS.
+
+Options:
+  -q            Quiet
+  -v            Verbose (repeatable)
+  -h, --help    Show help
+  --version     Show version
+EOF
+}
+
+bars_from_rssi() {
+  local rssi="$1"
+  # Convert RSSI (negative dBm) to 0-4 bars heuristically
+  if [[ -z "$rssi" ]]; then echo 0; return; fi
+  if (( rssi >= -50 )); then echo 4
+  elif (( rssi >= -65 )); then echo 3
+  elif (( rssi >= -75 )); then echo 2
+  elif (( rssi >= -85 )); then echo 1
+  else echo 0; fi
+}
+
+main() {
+  local show_help=0 show_version=0
+  case "$(basename -- "$0")" in
+    wifi_status.zsh)
+      log_warn "Deprecated: use net-wifi-status instead" ;;
+  esac
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  local airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
+  [[ -x "$airport" ]] || die "airport tool not found on this system"
+
+  local info
+  info=$("$airport" -I) || die "airport -I failed"
+
+  local ssid rssi
+  ssid=$(printf '%s\n' "$info" | awk -F': ' '/ SSID/ {print substr($0,index($0,": ")+2)}' | sed 's/^ *//')
+  rssi=$(printf '%s\n' "$info" | awk -F': ' '/ agrCtlRSSI/ {print $2}' | tr -d ' ') 
+
+  local bars; bars=$(bars_from_rssi "$rssi")
+  local icon
+  case "$bars" in
+    4) icon="📶📶📶📶" ;;
+    3) icon="📶📶📶" ;;
+    2) icon="📶📶" ;;
+    1) icon="📶" ;;
+    0) icon="✖" ;;
+  esac
+
+  if [[ -n "$ssid" ]]; then
+    echo "SSID: $ssid"
+  else
+    echo "SSID: (disconnected)"
+  fi
+  echo "Signal: $icon ($rssi dBm)"
+}
+
+main "$@"

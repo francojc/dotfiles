@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Push current branch and create a PR
+# Usage: gh-pr -m "message" [-b base] [--remote origin] [-nqv] [-C dir]
+
+SCRIPT_NAME="gh-pr"; SCRIPT_VERSION="1.0.0"
+# shellcheck source=common.sh
+. "$(dirname "$0")/common.sh"
+
+usage() {
+  cat <<EOF
+Usage: gh-pr -m "message" [options]
+
+Push current branch and create a pull request.
+
+Options:
+  -m MSG              PR title/message (required)
+  -b BASE             Base branch (default: main)
+  --remote NAME       Remote to push to (default: origin)
+  -n                  Dry run
+  -q                  Quiet
+  -v                  Verbose (repeatable)
+  -C DIR              Change to DIR before running
+  -h, --help          Show help
+  --version           Show version
+EOF
+}
+
+main() {
+  local pr_msg="" base="main" remote="origin" show_help=0 show_version=0
+
+  # Preprocess long options
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  # Manually handle --remote before getopts as it takes an argument
+  local pre_out=() ;
+  while (($#)); do
+    case "$1" in
+      --remote) shift; [[ -n "${1:-}" ]] || die "--remote requires a value"; remote="$1" ;;
+      *) pre_out+=("$1") ;;
+    esac; shift || true
+  done
+  set -- "${pre_out[@]}"
+
+  local OPTIND=1 opt
+  while getopts ":hvnqC:m:b:-:" opt; do
+    case "$opt" in
+      m) pr_msg="$OPTARG" ;;
+      b) base="$OPTARG" ;;
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      n) DRY_RUN=1 ;;
+      C) CHANGE_DIR="$OPTARG" ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      :) die "Option -$OPTARG requires an argument" ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  if [[ -n "$CHANGE_DIR" ]]; then
+    [[ -d "$CHANGE_DIR" ]] || die "Directory not found: $CHANGE_DIR"
+    cd "$CHANGE_DIR"
+  fi
+
+  require git gh
+  [[ -n "$pr_msg" ]] || die "-m PR message is required"
+
+  # Determine current branch
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD) || die "Failed to get current branch"
+
+  # Push current branch
+  run git push "$remote" "$branch"
+
+  # Create PR against the repository of the current dir's git remote
+  # gh pr create will infer repo from cwd; supply title and body
+  run gh pr create --base "$base" --title "$pr_msg" --body "$pr_msg"
+
+  log_info "PR created for $branch -> $base"
+}
+
+main "$@"

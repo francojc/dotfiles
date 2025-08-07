@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Wrapper for pptx2md.py
+
+SCRIPT_NAME="pdc-pptx2md"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+main(){
+  if [[ -x "$(dirname "$0")/pptx2md.py" ]]; then
+    "$(dirname "$0")/pptx2md.py" "$@"
+  else
+    die "pptx2md.py not found"
+  fi
+}
+
+main "$@"

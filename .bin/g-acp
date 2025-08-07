@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+# Add/commit/push across immediate subdirectories that are git repos
+# Usage: g-acp -m "message" [-nqv] [-C dir]
+
+SCRIPT_NAME="g-acp"; SCRIPT_VERSION="1.0.0"
+# shellcheck source=common.sh
+. "$(dirname "$0")/common.sh"
+
+usage() {
+  cat <<EOF
+Usage: g-acp -m "message" [options]
+
+Add, commit, and push changes for each immediate child directory that is a Git
+repository.
+
+Options:
+  -m MSG        Commit message (required)
+  -n            Dry run
+  -q            Quiet
+  -v            Verbose (repeatable)
+  -C DIR        Change to DIR before running
+  -h, --help    Show help
+  --version     Show version
+EOF
+}
+
+main() {
+  local commit_msg="" show_help=0 show_version=0
+  case "$(basename -- "$0")" in
+    git-all-acp)
+      log_warn "Deprecated: use g-acp instead" ;;
+  esac
+
+  # Preprocess long options
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  # Parse common + local flags
+  local OPTIND=1 opt
+  while getopts ":hvnqC:m:-:" opt; do
+    case "$opt" in
+      m) commit_msg="$OPTARG" ;;
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      n) DRY_RUN=1 ;;
+      C) CHANGE_DIR="$OPTARG" ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      :) die "Option -$OPTARG requires an argument" ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  # Apply -C if set
+  if [[ -n "$CHANGE_DIR" ]]; then
+    [[ -d "$CHANGE_DIR" ]] || die "Directory not found: $CHANGE_DIR"
+    cd "$CHANGE_DIR"
+  fi
+
+  [[ -n "$commit_msg" ]] || die "-m commit message is required"
+  require git
+
+  local dir repo_count=0 changed_count=0 failed_count=0 pushed_count=0
+
+  # Iterate only immediate subdirectories (handle spaces)
+  while IFS= read -r -d '' dir; do
+    dir=${dir%/}
+    [[ -d "$dir/.git" ]] || continue
+    repo_count=$((repo_count+1))
+
+    log_info "Processing $dir"
+    # Stage changes
+    if ! run git -C "$dir" add -A; then
+      log_warn "git add failed in $dir"; failed_count=$((failed_count+1)); continue
+    fi
+
+    # Check if there is anything to commit
+    if ! git -C "$dir" diff --cached --quiet; then
+      changed_count=$((changed_count+1))
+      if ! run git -C "$dir" commit -m "$commit_msg"; then
+        log_warn "git commit failed in $dir"; failed_count=$((failed_count+1)); continue
+      fi
+      if ! run git -C "$dir" push; then
+        log_warn "git push failed in $dir"; failed_count=$((failed_count+1)); continue
+      fi
+      pushed_count=$((pushed_count+1))
+    else
+      log_info "No staged changes in $dir"
+    fi
+  done < <(find . -maxdepth 1 -mindepth 1 -type d -print0)
+
+  echo ""
+  echo "Repos scanned:   $repo_count"
+  echo "Repos changed:   $changed_count"
+  echo "Repos pushed:    $pushed_count"
+  echo "Failures:        $failed_count"
+}
+
+main "$@"
