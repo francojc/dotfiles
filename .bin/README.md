@@ -1,105 +1,151 @@
 # Personal Scripts and Tools
 
-This directory contains a collection of scripts and tools for automating tasks, improving productivity, and enhancing the development workflow. The scripts are organized by functionality and written in various languages including Bash, Python, Zsh, and AppleScript.
+This directory contains a flat collection of personal scripts and small tools. The naming is now consistent and concise, using short prefixes by category while preserving your AI tools with their original names.
 
-## Categories
+## Prefix scheme (short and consistent)
 
-### 🎵 Media and Entertainment
+- g- = local Git utilities
+- gh- = GitHub utilities
+- cnvs- = Canvas (LMS)
+- clsrm- = Classroom workflows
+- av- = Audio/Video utilities
+- net- = Networking
+- vm- = VM and sync
+- pdc- = Pandoc / document conversion
+- q- = Quarto helpers
+- gdrv- = Google Drive
+- cntc- = Contacts
+- wx = Weather
 
-- **`am`** - Advanced Apple Music controller with TUI interface, playlist management, and album art display
-- **`am-art.applescript`** - AppleScript companion for extracting album artwork from Apple Music
+AI tools intentionally unchanged: imagey, speechy, extracty, transcribe, ical, myllama, am, vds, chat_interface.py.
 
-### 🤖 AI and Machine Learning
+## Shared CLI conventions
 
-- **`chat_interface.py`** - Interactive curses-based chat interface for Ollama models
-- **`extracty`** - Extract text from images using OpenAI GPT-4o-mini vision model
-- **`imagey`** - Generate images using OpenAI's DALL-E API with customizable parameters
-- **`myllama`** - Simplified Ollama model launcher with predefined aliases
-- **`speechy`** - Convert text to speech using Eleven Labs API with voice selection
-- **`transcribe`** - Transcribe audio files using OpenAI's Whisper API
+All Bash scripts follow a common interface:
 
-### 🔧 System Utilities
+- Shebang: env bash; safe mode: set -Eeuo pipefail
+- NO_COLOR respected: set NO_COLOR to disable colors
+- Common flags
+  - -h/--help: Show help
+  - --version: Show script version
+  - -v: Verbose (repeatable)
+  - -q: Quiet
+  - -n: Dry run (show commands but don’t execute)
+  - -C DIR: Change directory before running
 
-- **`battery_status.sh`** - Display battery status with icons and color-coded output
-- **`create-color-wallpaper.sh`** - Generate solid color wallpapers for macOS
-- **`switch-mac-addr.sh`** - Utility for changing MAC addresses
-- **`weather`** - Get current weather information with emoji icons
-- **`weather.sh`** - Alternative weather script
-- **`wifi_status.zsh`** - Display WiFi connection status and information
+Shared helpers are provided in common.sh and automatically sourced by converted scripts.
 
-### 🔐 Security and Password Management
+## Command index by prefix
 
-- **`import-env-var-pass.sh`** - Import environment variables from pass password store
-- **`pass-export.sh`** - Export all pass passwords as shell environment variables
-- **`pass-keys.sh`** - Utility for managing pass password store keys
-- **`pass-to-env.sh`** - Convert pass entries to environment variables
+### g- (Git)
 
-### 📚 Academic and Teaching Tools
+- g-acp — Add/commit/push across immediate child git repos
+- g-status — Recursively show git status for nested repos
+- g-remote-set — Change a remote URL in the current repo
 
-- **`canvas_list_assignments.sh`** - List Canvas course assignments in CSV format
-- **`canvas_update_assignments.sh`** - Update Canvas assignment dates and settings
-- **`fetch-student-merge`** - Merge student repository changes into instructor branch
-- **`fetch-student-remote`** - Fetch changes from student remote repositories
-- **`pptx2md.py`** - Convert PowerPoint presentations to Markdown with image extraction
+Legacy names remain as symlinks (e.g., git-all-acp -> g-acp; get-git-statuses.sh -> g-status; change-git-remote.sh -> g-remote-set).
 
-### 🔄 Development and Git Tools
+### gh- (GitHub)
 
-- **`change-git-remote.sh`** - Utility for changing Git remote URLs
-- **`get-git-statuses.sh`** - Check Git status across multiple repositories
-- **`git-all-acp`** - Add, commit, and push changes across multiple Git repositories
-- **`push-pull-request`** - Streamlined pull request creation workflow
+- gh-pr — Push current branch and create a pull request
+- gh-cop-models — List GitHub Copilot models
+- gh-mcp-setup — Wrapper for MCP repos setup (delegates to setup-mcp-repos-gh.sh)
 
-### 📁 File and Document Processing
+### cnvs- (Canvas)
 
-- **`pandoc_watch`** - Watch files and automatically convert with Pandoc
-- **`preview_watch`** - Watch and preview document changes
-- **`render_watch`** - Watch and render documents automatically
-- **`speedlog.sh`** - Fast logging utility
+- cnvs-assign-ls — List assignments for a course to CSV template
+- canvas_update_assignments.sh — Update assignment dates (portable date conversion)
 
-### 🌐 Web and API Tools
+Note: cnvs-assign-upd may be added later; for now keep using canvas_update_assignments.sh.
 
-- **`google-drive-files.sh`** - Interact with Google Drive files via API
-- **`openroute.sh`** - OpenRoute service API interactions
-- **`perp.sh`** - Perpetual process management utility
+### clsrm- (Classroom workflows)
 
-### 📞 Communication and Contacts
+- clsrm-fetch-merge — Wrapper for fetch-student-merge
+- clsrm-fetch-remote — Wrapper for fetch-student-remote
 
-- **`personal-contacts-fetcher.py`** - Fetch and manage personal contacts
-- **`personal-contacts-setup.sh`** - Setup script for personal contacts management
+### av- (Audio/Video)
 
-### 📅 Calendar and Synchronization
+- av-yt-dl — Video downloader (yt-dlp), optional subtitles
+- av-audio-extract — Extract audio track using ffmpeg
+- av-merge — Concatenate videos using ffmpeg concat demuxer
+- av-srt — Placeholder wrapper for generating SRT from audio
 
-- **`ical`** - iCalendar utilities and management
-- **`vds`** - vdirsyncer wrapper for calendar synchronization
-- **`vm_sync_tool.sh`** - Virtual machine synchronization utility
+Legacy names remain as symlinks (dl-youtube.sh, extract-audio.sh, merge-videos.sh, audio-to-srt.sh).
 
-### 🛠️ Development Environment
+### net- (Networking)
 
-- **`flake.nix`** - Nix flake configuration for reproducible development environment
-- **`flake.lock`** - Nix flake lock file
-- **`.envrc`** - direnv configuration for automatic environment loading
+- net-wifi-status — macOS Wi‑Fi SSID + signal bars (replaces wifi_status.zsh)
+- net-mac-switch — Wrapper for switch-mac-addr.sh
 
-## Usage
+### vm- (VM / sync)
 
-Most scripts include built-in help accessible with `-h` or `--help` flags. Many scripts require API keys stored in the `pass` password manager or as environment variables.
+- vm-sync — Wrapper for vm_sync_tool.sh
 
-### Prerequisites
+### pdc- (Pandoc / conversion)
 
-Common dependencies across scripts:
-- `curl` - HTTP requests
-- `jq` - JSON processing  
-- `pass` - Password management
-- `ffmpeg` - Audio/video processing (for some scripts)
-- Various API keys (OpenAI, Eleven Labs, Canvas, etc.)
+- pdc-watch — Wrapper for pandoc_watch
+- pdc-pptx2md — Wrapper for pptx2md.py
 
-### Environment Setup
+### q- (Quarto)
 
-The directory includes a Nix flake for reproducible development environments. Use with direnv for automatic environment loading:
+- q-prev — Wrapper for preview_watch
+- q-render — Wrapper for render_watch
 
-```bash
-# Enable direnv (if not already done)
-direnv allow
+### gdrv- (Google Drive)
 
-# Or manually enter the Nix environment
-nix develop
-```
+- gdrv-ls — Wrapper for google-drive-files.sh
+
+### cntc- (Contacts)
+
+- cntc-setup — Wrapper for personal-contacts-setup.sh
+- cntc-fetch — Wrapper for personal-contacts-fetcher.py
+
+### wx (Weather)
+
+- wx — Weather dashboard via wttr.in with ASCII art
+
+Legacy names weather and weather.sh point to wx. You’ll see a one-line note when using the old names.
+
+### Unchanged AI tools
+
+- am — Apple Music controller
+- imagey — Image generation tool
+- speechy — Text-to-speech
+- extracty — Image text extraction
+- transcribe — Audio transcription
+- ical — Calendar utilities
+- myllama — Ollama launcher
+- vds — vdirsyncer wrapper
+- chat_interface.py — TUI chat interface
+
+### Other utilities (not yet prefixed)
+
+- openroute.sh — OpenRoute service interactions
+- speedlog.sh — Fast logging utility
+- create-color-wallpaper.sh — Generate solid color wallpapers
+- perp.sh — Perpetual process manager
+
+These can be grouped later (e.g., sys- or ors-) if desired.
+
+## Environment variables and dependencies
+
+- Canvas scripts: CANVAS_API_KEY and CANVAS_BASE_URL required
+- gh-cop-models: OPENAI_API_KEY required
+- wx: relies on wttr.in (no API key needed)
+- Common dependencies: curl, jq, git, gh, ffmpeg, yt-dlp (depending on the script)
+
+## Backward compatibility
+
+- Older names remain as symlinks to the new short names
+- Some scripts print a brief deprecation notice when invoked via the old name
+- Update your aliases and automations at your pace; the symlinks can be removed later
+
+## Notes on portability
+
+- Canvas date conversion is now portable across macOS (BSD date) and Linux (GNU date)
+- Colors auto-disable with NO_COLOR or when stdout is not a TTY
+
+## Development
+
+- Use the common CLI conventions for any new scripts
+- Source common.sh for logging, flag parsing, dry-run, and error handling
