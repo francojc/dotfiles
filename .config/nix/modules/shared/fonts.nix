@@ -1,11 +1,12 @@
 {pkgs, ...}: {
   fonts.packages = with pkgs; [
-    material-design-icons
-    font-awesome
     aporetic
-    nerd-fonts.symbols-only
+    font-awesome
+    maple-mono.truetype
+    material-design-icons
     nerd-fonts.hack
     nerd-fonts.jetbrains-mono
     nerd-fonts.meslo-lg
+    nerd-fonts.symbols-only
   ];
 }
