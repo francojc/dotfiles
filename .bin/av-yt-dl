@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# YouTube (and others) video downloader wrapper using yt-dlp
+# Usage: av-yt-dl URL [lang]
+
+SCRIPT_NAME="av-yt-dl"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+usage(){ cat <<EOF
+Usage: av-yt-dl URL [LANG]
+
+Download video at up to 720p and attempt subtitles in LANG (default: en).
+Uses cookies from ~/.bin/cookies.txt if present.
+EOF
+}
+
+main(){
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  require yt-dlp
+  local url="${1:-}" lang="${2:-en}" cookies="$HOME/.bin/cookies.txt"
+  [[ -n "$url" ]] || die "URL is required"
+
+  local format
+  if echo "$url" | grep -qi 'youtube'; then
+    format='bv*[height<=720]+ba/b[height<=720]'
+  else
+    format='bestvideo[height<=720]+bestaudio/best[height<=720]'
+  fi
+
+  log_info "Determining output filename"
+  local outfile
+  outfile=$(yt-dlp -f "$format" --merge-output-format mp4 \
+    ${cookies:+--cookies "$cookies"} \
+    --print "%\(title\)s.%\(ext\)s" "$url") || die "yt-dlp failed"
+
+  [[ -n "$outfile" ]] || die "Failed to determine output filename"
+  log_info "Output: $outfile"
+
+  run yt-dlp -f "$format" --merge-output-format mp4 \
+    ${cookies:+--cookies "$cookies"} \
+    -o "%\(title\)s.%\(ext\)s" "$url"
+
+  if [[ -f "$outfile" ]]; then
+    log_info "Attempting subtitles: $lang"
+    yt-dlp --skip-download --write-sub --write-auto-sub --sub-lang "$lang" \
+      --sub-format srt ${cookies:+--cookies "$cookies"} "$url" \
+      || log_warn "Subtitles not available"
+    echo "Done: $outfile"
+  else
+    die "Download appears to have failed: $outfile not found"
+  fi
+}
+
+main "$@"

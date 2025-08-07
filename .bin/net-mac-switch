@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Wrapper for switch-mac-addr.sh
+
+SCRIPT_NAME="net-mac-switch"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+main(){
+  if [[ -x "$(dirname "$0")/switch-mac-addr.sh" ]]; then
+    "$(dirname "$0")/switch-mac-addr.sh" "$@"
+  else
+    die "switch-mac-addr.sh not found"
+  fi
+}
+
+main "$@"

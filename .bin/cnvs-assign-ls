@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# List Canvas assignments (CSV template) for a course
+# Usage: cnvs-assign-ls --course ID --output DIR [-nqv] [-C dir]
+
+SCRIPT_NAME="cnvs-assign-ls"; SCRIPT_VERSION="1.0.0"
+# shellcheck source=common.sh
+. "$(dirname "$0")/common.sh"
+
+usage() {
+  cat <<EOF
+Usage: cnvs-assign-ls --course ID --output DIR [options]
+
+Lists assignments for a Canvas course and writes a CSV template:
+  title,assignment_id,due_at,unlock_at,lock_at
+
+Options:
+  --course ID         Course ID (required)
+  --output DIR        Output directory for assignments.csv (required)
+  -n                  Dry run
+  -q                  Quiet
+  -v                  Verbose (repeatable)
+  -C DIR              Change to DIR before running
+  -h, --help          Show help
+  --version           Show version
+
+Env:
+  CANVAS_API_KEY      Canvas API token (required)
+  CANVAS_BASE_URL     Base URL (e.g., https://canvas.instructure.com) (required)
+EOF
+}
+
+main() {
+  local course_id="" out_dir="" show_help=0 show_version=0
+
+  # Preprocess long options
+  local args=()
+  while (($#)); do
+    case "$1" in
+      --course) shift; course_id="${1:-}" ;;
+      --output) shift; out_dir="${1:-}" ;;
+      *) args+=("$1") ;;
+    esac; shift || true
+  done
+
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "${args[@]}")
+
+  local OPTIND=1 opt
+  while getopts ":hvnqC:-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      n) DRY_RUN=1 ;;
+      C) CHANGE_DIR="$OPTARG" ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      :) die "Option -$OPTARG requires an argument" ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  if [[ -n "$CHANGE_DIR" ]]; then
+    [[ -d "$CHANGE_DIR" ]] || die "Directory not found: $CHANGE_DIR"
+    cd "$CHANGE_DIR"
+  fi
+
+  require curl jq
+  [[ -n "${CANVAS_API_KEY:-}" ]] || die "CANVAS_API_KEY is not set"
+  [[ -n "${CANVAS_BASE_URL:-}" ]] || die "CANVAS_BASE_URL is not set"
+  CANVAS_BASE_URL="${CANVAS_BASE_URL%/}"
+
+  [[ -n "$course_id" ]] || die "--course is required"
+  [[ -n "$out_dir" ]] || die "--output is required"
+  [[ -d "$out_dir" ]] || die "Output directory does not exist: $out_dir"
+  [[ -w "$out_dir" ]] || die "Output directory not writable: $out_dir"
+
+  local out_file="$out_dir/assignments.csv"
+
+  log_info "Writing header to $out_file"
+  if [[ "$DRY_RUN" -eq 0 ]]; then
+    echo "title,assignment_id,due_at,unlock_at,lock_at" > "$out_file"
+  else
+    echo "+ echo header > $out_file"
+  fi
+
+  local url="${CANVAS_BASE_URL}/api/v1/courses/${course_id}/assignments?per_page=100"
+  log_info "Fetching: $url"
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "+ curl -s -H 'Authorization: Bearer ***' '$url' | jq ..."
+    exit 0
+  fi
+
+  local response
+  response=$(curl -s -H "Authorization: Bearer ${CANVAS_API_KEY}" "$url") || die "curl failed"
+
+  # shellcheck disable=SC2016
+  echo "$response" | jq -r '.[] | [.name, .id, "", "", ""] | @csv' >> "$out_file" \
+    || die "jq failed to process response"
+
+  log_info "CSV generated at: $out_file"
+}
+
+main "$@"

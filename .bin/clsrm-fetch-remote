@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Wrapper for fetch-student-remote
+
+SCRIPT_NAME="clsrm-fetch-remote"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+main(){
+  if [[ -x "$(dirname "$0")/fetch-student-remote" ]]; then
+    "$(dirname "$0")/fetch-student-remote" "$@"
+  else
+    die "fetch-student-remote not found"
+  fi
+}
+
+main "$@"

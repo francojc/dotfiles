@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+# Weather dashboard using wttr.in with ASCII art
+# Usage: wx [-l LOCATION] [-u f|c] [-nqv] [-C dir]
+
+SCRIPT_NAME="wx"; SCRIPT_VERSION="1.0.0"
+# shellcheck source=common.sh
+. "$(dirname "$0")/common.sh"
+
+usage() {
+  cat <<EOF
+Usage: wx [options]
+
+Fetch weather summary from wttr.in.
+
+Options:
+  -l, --location STR   Location string (e.g., "Winston-Salem, NC").
+                       Defaults to \$WX_LOCATION or "Winston-Salem, NC".
+  -u f|c               Units (f for Fahrenheit, c for Celsius). Default: f
+  --raw                Print raw wttr output only
+  -n                   Dry run
+  -q                   Quiet
+  -v                   Verbose (repeatable)
+  -C DIR               Change to DIR before running
+  -h, --help           Show help
+  --version            Show version
+EOF
+}
+
+weather_art() {
+  local condition lc
+  condition="$1"; lc=$(printf '%s' "$condition" | tr '[:upper:]' '[:lower:]')
+  case "$lc" in
+    *clear*|*sunny*) cat <<'A'
+    \   /
+     .-.
+  ― (   ) ―
+     '-'
+    /   \
+A
+      ;;
+    *rain*|*drizzle*) cat <<'A'
+     .-.
+     (   ).
+    (___(__)
+     ' ' ' '
+    ' ' ' '
+A
+      ;;
+    *snow*) cat <<'A'
+     .-.
+     (   ).
+    (___(__)
+     *  *  *
+    *  *  *
+A
+      ;;
+    *cloud*|*overcast*) cat <<'A'
+    .--.
+  .-(    ).
+ (___.__)__)
+A
+      ;;
+    *thunder*|*lightning*) cat <<'A'
+     .-.
+     (   ).
+    (___(__)
+    ⚡⚡⚡⚡
+     ' ' '
+A
+      ;;
+    *) cat <<'A'
+    .-.
+    (   ).
+   (___(__)
+A
+      ;;
+  esac
+}
+
+main() {
+  local location units="f" raw=0 show_help=0 show_version=0
+  # Defaults
+  location="${WX_LOCATION:-Winston-Salem, NC}"
+  # Deprecation notice if invoked via old names
+  case "$(basename -- "$0")" in
+    weather|weather.sh)
+      echo "Note: '$(basename -- "$0")' is deprecated. Use 'wx' instead." >&2 ;;
+  esac
+
+  # Long options pre-parse
+  local args=()
+  while (($#)); do
+    case "$1" in
+      --location) shift; location="${1:-$location}" ;;
+      --raw) raw=1 ;;
+      -u) args+=("-u" "$2"); shift ;;
+      *) args+=("$1") ;;
+    esac; shift || true
+  done
+  set -- "${args[@]}"
+
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local OPTIND=1 opt
+  while getopts ":hvnqC:l:u:-:" opt; do
+    case "$opt" in
+      l) location="$OPTARG" ;;
+      u) units="$OPTARG" ;;
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      n) DRY_RUN=1 ;;
+      C) CHANGE_DIR="$OPTARG" ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      :) die "Option -$OPTARG requires an argument" ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  if [[ -n "$CHANGE_DIR" ]]; then
+    [[ -d "$CHANGE_DIR" ]] || die "Directory not found: $CHANGE_DIR"
+    cd "$CHANGE_DIR"
+  fi
+
+  require curl
+
+  local fmt_units=""; [[ "$units" == "c" ]] && fmt_units="&u" || fmt_units=""
+  local base="wttr.in/$(printf '%s' "$location" | sed 's/ /%20/g')"
+
+  if [[ "$raw" -eq 1 ]]; then
+    run curl -s "https://$base?format=%l:+%C+%t\n💧Humidity:+%h\n🌪️Wind:+%w\n🌧️Precip:+%p${fmt_units}"
+    exit 0
+  fi
+
+  echo ""
+  echo "╭──────────────────────────────────╮"
+  echo "│        Weather Dashboard         │"
+  echo "╰──────────────────────────────────╯"
+  echo ""
+
+  log_info "Fetching weather for: $location"
+  echo "────────────────────────────────────"
+
+  local condition data
+  condition=$(curl -s --connect-timeout 10 "https://$base?format=%F${fmt_units}") || die "Failed to connect"
+  data=$(curl -s --connect-timeout 10 "https://$base?format=%l:+%C+%t\n💧Humidity:+%h\n🌪️Wind:+%w\n🌧️Precipitation:+%p${fmt_units}") || die "Failed to connect"
+
+  weather_art "$condition"
+  echo
+  while IFS= read -r line; do
+    printf "│ %s\n" "$line"
+  done <<<"$data"
+  echo "────────────────────────────────────"
+  echo "Data from wttr.in"
+}
+
+main "$@"

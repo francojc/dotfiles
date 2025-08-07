@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Generate SRT subtitles from audio using faster-whisper/whisper via ffmpeg+whisper.cpp if installed
+# Simple wrapper placeholder to keep naming consistent
+
+SCRIPT_NAME="av-srt"; SCRIPT_VERSION="1.0.0"
+. "$(dirname "$0")/common.sh"
+
+usage(){ cat <<EOF
+Usage: av-srt INPUT_AUDIO [OUTPUT_SRT]
+
+Extract subtitles from audio. Placeholder wrapper; implement with your preferred tool.
+EOF
+}
+
+main(){
+  # shellcheck disable=SC2046
+  set -- $(canonicalize_long_opts "$@")
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  local input="${1:-}" output="${2:-}"
+  [[ -n "$input" ]] || die "INPUT_AUDIO is required"
+  if [[ -z "$output" ]]; then output="${input%.*}.srt"; fi
+  echo "Stub: generate SRT for '$input' -> '$output'"
+}
+
+main "$@"
