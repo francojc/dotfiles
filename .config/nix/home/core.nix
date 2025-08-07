@@ -58,6 +58,7 @@
     htop # Interactive process viewer
     jq # JSON processor
     ncdu # Disk usage analyzer
+    ncspot # ncurses Spotify client
     pass # Password manager
     procs # Process viewer
     ripgrep # grep replacement
