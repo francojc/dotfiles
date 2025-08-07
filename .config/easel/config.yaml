@@ -1,7 +1,7 @@
 version: '1.0'
 canvas:
-  name: Wake Forest University
-  url: https://wakeforest.instructure.com
+  name: Test University
+  url: https://test.instructure.com
 api:
   rate_limit: 10
   timeout: 30
