@@ -32,6 +32,7 @@
       "poetry" # Python dependency management
       "pipx" # Python package manager
       "rename" # file renaming utility
+      "ncspot" # ncurses Spotify client
       "sqly" #
       "transmission-cli" # command-line torrent client
       "uv"
