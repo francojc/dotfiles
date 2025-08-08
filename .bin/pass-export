@@ -2,7 +2,7 @@
 
 # Export all pass passwords to a file
 # in the format of shell variables 'export VAR_NAME=VALUE'
-# Usage: export_pass.sh
+# Usage: pass-export
 # Result: ~/.variables.env file with all pass passwords exported
 # as shell variables
 # Requires pass and gpg

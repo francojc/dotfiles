@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Description: Connects to the OpenRouter AI service providing input/output from many different AI models from one service.
-# Usage: openroute.sh [options] ["<prompt>"]
-#   or   openroute.sh [options] -p "<prompt>"
+# Usage: openroute [options] ["<prompt>"]
+#   or   openroute [options] -p "<prompt>"
 #
 # Options:
 #   -p <prompt>:      The user instructions/prompt text. Can also be provided as the last argument without the flag.
@@ -29,8 +29,8 @@ API_URL="https://openrouter.ai/api/v1/chat/completions"
 
 # Function to display usage information
 usage() {
-  echo "Usage: openroute.sh [options] [\"<prompt>\"]"
-  echo "   or  openroute.sh [options] -p \"<prompt>\""
+  echo "Usage: openroute [options] [\"<prompt>\"]"
+  echo "   or  openroute [options] -p \"<prompt>\""
   echo
   echo "Description: Sends a prompt (and optionally an attachment) to the OpenRouter API."
   echo

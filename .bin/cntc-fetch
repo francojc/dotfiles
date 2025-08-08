@@ -2,7 +2,7 @@
 # Wrapper for personal-contacts-fetcher.py
 
 SCRIPT_NAME="cntc-fetch"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common.sh"
+. "$(dirname "$0")/common"
 
 main(){
   if [[ -x "$(dirname "$0")/personal-contacts-fetcher.py" ]]; then

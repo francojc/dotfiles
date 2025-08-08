@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Desription: This script runs `speedtest` and logs the results. The logs will be include the date, time, ip address (and location), download speed, upload speed, and ping. The logs will be saved in a file named `speedtest.log` in the `~/.local/share/speedtest/` directory. The script will also perform checks to ensure that the `speedtest` command is available and that the log directory exists. If the directory does not exist, it will be created. The script will also check if the `jq` command is available, as it is used to parse the JSON output from the `speedtest` command. If `jq` is not available, the script will exit with an error message. The script will also check if the `speedtest` command is available, and if it is not, it will exit with an error message. The script will also check if the `curl` command is available, and if it is not, it will exit with an error message.
-# Usage: speedlog.sh [-h|--help]
+# Usage: speedlog [-h|--help]
 
 # Strict mode
 set -o errexit  # Exit immediately if a command exits with a non-zero status.

@@ -2,7 +2,7 @@
 # Wrapper for vm_sync_tool.sh
 
 SCRIPT_NAME="vm-sync"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common.sh"
+. "$(dirname "$0")/common"
 
 main(){
   if [[ -x "$(dirname "$0")/vm_sync_tool.sh" ]]; then

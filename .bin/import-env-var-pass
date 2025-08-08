@@ -5,7 +5,7 @@
 # KEY=VALUE
 # The script will prompt for the password to be used to encrypt the values in the password store.
 #
-# Usage: ./import-env-var-pass.sh <.env file path>
+# Usage: ./import-env-var-pass <.env file path>
 #
 # Example: ./import-env-var-pass.sh ~/.variables.env
 

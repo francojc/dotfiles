@@ -5,7 +5,7 @@
 # are read in hex format (e.g. #FF0000) from
 # a piped list.
 # Requires ImageMagick.
-# Usage: create-color-wallpaper.sh < colors.txt
+# Usage: create-color-wallpaper < colors.txt
 #
 # colors.txt should be a list of colors in hex format, one per line.
 
