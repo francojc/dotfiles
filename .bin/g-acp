@@ -3,7 +3,7 @@
 # Usage: g-acp -m "message" [-nqv] [-C dir]
 
 SCRIPT_NAME="g-acp"; SCRIPT_VERSION="1.0.0"
-# shellcheck source=common.sh
+# shellcheck source=common
 . "$(dirname "$0")/common.sh"
 
 usage() {

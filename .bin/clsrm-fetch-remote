@@ -2,7 +2,7 @@
 # Wrapper for fetch-student-remote
 
 SCRIPT_NAME="clsrm-fetch-remote"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common.sh"
+. "$(dirname "$0")/common"
 
 main(){
   if [[ -x "$(dirname "$0")/fetch-student-remote" ]]; then

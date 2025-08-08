@@ -15,9 +15,9 @@
 #   ./pass-keys.sh -i [directory]  Decrypt and import GPG keys
 #
 # Examples:
-#   ./pass-keys.sh -e              Export to default location (~/.gpg_backup)
+#   ./pass-keys -e              Export to default location (~/.gpg_backup)
 #   ./pass-keys.sh -e ~/backups    Export to specified directory
-#   ./pass-keys.sh -i              Import from default location
+#   ./pass-keys -i              Import from default location
 #
 # The script will create an encrypted archive (backup.age) containing:
 #   - public.gpg: Public GPG key

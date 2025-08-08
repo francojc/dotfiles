@@ -1,5 +1,9 @@
 # Personal Scripts and Tools
 
+**Migration Note (August 2025):**
+
+All Bash script filenames in this directory have dropped the `.sh` extension for consistency and clarity. Please update any personal aliases, scripts, or automations to use the new names (e.g., `openroute` instead of `openroute.sh`). Symlinks and legacy names may remain for backward compatibility, but will be removed in a future update.
+
 This directory contains a flat collection of personal scripts and small tools. The naming is now consistent and concise, using short prefixes by category while preserving your AI tools with their original names.
 
 ## Prefix scheme (short and consistent)
@@ -33,7 +37,7 @@ All Bash scripts follow a common interface:
   - -n: Dry run (show commands but don’t execute)
   - -C DIR: Change directory before running
 
-Shared helpers are provided in common.sh and automatically sourced by converted scripts.
+Shared helpers are provided in common and automatically sourced by converted scripts.
 
 ## Command index by prefix
 
@@ -120,10 +124,10 @@ Legacy names weather and weather.sh point to wx. You’ll see a one-line note wh
 
 ### Other utilities (not yet prefixed)
 
-- openroute.sh — OpenRoute service interactions
-- speedlog.sh — Fast logging utility
-- create-color-wallpaper.sh — Generate solid color wallpapers
-- perp.sh — Perpetual process manager
+- openroute — OpenRoute service interactions
+- speedlog — Fast logging utility
+- create-color-wallpaper — Generate solid color wallpapers
+- perp — Perpetual process manager
 
 These can be grouped later (e.g., sys- or ors-) if desired.
 
@@ -148,4 +152,4 @@ These can be grouped later (e.g., sys- or ors-) if desired.
 ## Development
 
 - Use the common CLI conventions for any new scripts
-- Source common.sh for logging, flag parsing, dry-run, and error handling
+- Source common for logging, flag parsing, dry-run, and error handling

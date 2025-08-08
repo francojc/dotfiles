@@ -3,7 +3,7 @@
 # Usage: av-merge file1.mp4 file2.mp4 ... -o out.mp4
 
 SCRIPT_NAME="av-merge"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common.sh"
+. "$(dirname "$0")/common"
 
 usage(){ cat <<EOF
 Usage: av-merge FILE... -o OUTPUT
