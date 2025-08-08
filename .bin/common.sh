@@ -21,19 +21,25 @@ SCRIPT_NAME="${SCRIPT_NAME:-$(basename "${0:-script}")}"
 
 # Color handling (respect NO_COLOR)
 _color_enabled() {
+  # Enable color when:
+  # - NO_COLOR is not set, and
+  # - stdout is a TTY OR FORCE_COLOR is set (any non-empty value)
   if [[ -n "${NO_COLOR:-}" ]]; then
     return 1
+  fi
+  if [[ -n "${FORCE_COLOR:-}" ]]; then
+    return 0
   fi
   [[ -t 1 ]] || return 1
   return 0
 }
 
 if _color_enabled; then
-  C_RESET='\033[0m'
-  C_DIM='\033[2m'
-  C_RED='\033[31m'
-  C_YELLOW='\033[33m'
-  C_BLUE='\033[34m'
+  C_RESET=$'\033[0m'
+  C_DIM=$'\033[2m'
+  C_RED=$'\033[31m'
+  C_YELLOW=$'\033[33m'
+  C_BLUE=$'\033[34m'
 else
   C_RESET=''
   C_DIM=''

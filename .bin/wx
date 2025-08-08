@@ -132,7 +132,7 @@ main() {
   require curl
 
   local fmt_units=""; [[ "$units" == "c" ]] && fmt_units="&u" || fmt_units=""
-  local base="wttr.in/$(printf '%s' "$location" | sed 's/ /%20/g')"
+  local base="wttr.in/$(printf '%s' "$location" | sed 's/ /%20/g' | sed 's/,/%2C/g')"
 
   if [[ "$raw" -eq 1 ]]; then
     run curl -s "https://$base?format=%l:+%C+%t\n💧Humidity:+%h\n🌪️Wind:+%w\n🌧️Precip:+%p${fmt_units}"
