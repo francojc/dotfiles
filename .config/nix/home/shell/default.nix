@@ -11,7 +11,7 @@
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
         source /opt/homebrew/share/zsh-ai/zsh-ai.plugin.zsh
-        source <(${config.home.homeDirectory}/.bin/worktree completion)
+        source <(${config.home.homeDirectory}/.bin/gh-worktree completion)
       '';
       profileExtra = ''
         # zprofile
