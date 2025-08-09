@@ -44,7 +44,6 @@
   cliUtilities = with pkgs; [
     _7zz # Archive compression
     atuin # Shell history manager
-    aider-chat # AI-powered shell assistant
     bat # Often used by fzf previews, etc. but also standalone
     duf # Disk usage utility
     entr # Event notify tool
@@ -55,11 +54,9 @@
     fzf # General fuzzy finder
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
-    htop # Interactive process viewer
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
-    procs # Process viewer
     ripgrep # grep replacement
     repgrep # ripgrep across files
     speedtest-cli # Internet speed test
@@ -70,7 +67,6 @@
     tree # Directory listing tool
     unp # Archive unpacker
     which # Command location utility
-    xan # CLI tool for CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
     zoxide # Smarter cd command
@@ -79,7 +75,6 @@
   # Media and document processing
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
-    codex # CLI tool (openai)
     drawio # Diagramming tool
     ffmpeg # Multimedia framework
     ghostscript # PostScript/PDF interpreter
@@ -87,8 +82,6 @@
     haskellPackages.pandoc-crossref # Pandoc filter
     imagemagick # Image manipulation
     khal # Calendar
-    kitty # Terminal emulator
-    mdcat # Markdown cat
     mpv-unwrapped # Media player
     pandoc # Document converter
     pianobar # Pandora client
