@@ -71,10 +71,10 @@
     ];
 
     masApps = {
-      JustFocus = 1142151959;
+      # JustFocus = 1142151959;
       # Suggester = 1106482294;
       # iMovie = 408981434;
-      Bitwarden = 1352778147;
+      # Bitwarden = 1352778147;
       # GarageBand = 682658836;
       # IPA_Keyboard = 1461264628;
       # Keynote = 409183694;
