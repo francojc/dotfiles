@@ -18,21 +18,22 @@
 
     brews = [
       "acrogenesis/macchanger/macchanger" # MAC address changer
+      "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
       "matheusml/zsh-ai/zsh-ai" # AI shell plugin
+      "ncspot" # ncurses Spotify client
       "nmap"
       "npm" # Node.js package manager
       "ollama" # AI model management
-      "pngpaste" # paste images
-      "python@3.11" # Python 3
-      "poetry" # Python dependency management
       "pipx" # Python package manager
+      "pngpaste" # paste images
+      "poetry" # Python dependency management
+      "python@3.11" # Python 3
       "rename" # file renaming utility
-      "ncspot" # ncurses Spotify client
       "sqly" #
       "transmission-cli" # command-line torrent client
       "uv"
@@ -62,28 +63,18 @@
       "rocket" # emoji picker
       "signal" # messaging
       "spotify" # music streaming
-      "superwhisper" # AI transcription
       "transcribe"
       "transmission"
-      "yaak" # API client
       "zen" # browser
       "zoom"
       "zotero@beta" # reference manager
     ];
 
     masApps = {
-      # Adblock_Plus = 1432731683;
-      # AudioBookBinder = 413969927;
-      # Dark_Reader_for_Safari = 1438243180;
-      # JustFocus = 1142151959;
-      # Kagi_for_Safari = 1622835804;
-      # LittleSnitchMini = 1629008763;
+      JustFocus = 1142151959;
       # Suggester = 1106482294;
-      # Vimari = 1480933944;
-      # Vinegar_for_Safari = 1591303229;
-      # VoiceType = 6736525125;
       # iMovie = 408981434;
-      # Bitwarden = 1352778147;
+      Bitwarden = 1352778147;
       # GarageBand = 682658836;
       # IPA_Keyboard = 1461264628;
       # Keynote = 409183694;
