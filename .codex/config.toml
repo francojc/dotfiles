@@ -1,0 +1,7 @@
+projects = { "/Users/francojc/.dotfiles/.config/nix" = { trust_level = "trusted" } , "/Users/francojc/.dotfiles/.codex" = { trust_level = "trusted" } }
+disable_response_storage = true
+model = "gpt-5"
+notifiy = true
+sandbox_mode = "workspace-write"
+model_reasoning_summary = "detailed"
+
