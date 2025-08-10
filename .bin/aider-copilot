@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Wrapper to run Aider with GitHub Copilot (OpenAI-compatible) credentials
+# pulled from `pass` at API/GITHUB_COPILOT_API_KEY by default.
+
+BASE_URL="https://api.githubcopilot.com"
+PASS_ENTRY_DEFAULT="API/GITHUB_COPILOT_API_KEY"
+
+# Allow override via env var if you store it elsewhere in pass
+PASS_ENTRY="${AIDER_COPILOT_PASS_ENTRY:-$PASS_ENTRY_DEFAULT}"
+
+if ! command -v pass >/dev/null 2>&1; then
+  echo "Error: 'pass' not found on PATH." >&2
+  exit 127
+fi
+
+if ! command -v aider >/dev/null 2>&1; then
+  echo "Error: 'aider' not found on PATH." >&2
+  exit 127
+fi
+
+# Read only the first line (the secret) from pass
+TOKEN=$(pass show "$PASS_ENTRY" | head -n1 | tr -d '\r') || {
+  echo "Error: failed to read secret from pass entry '$PASS_ENTRY'." >&2
+  exit 1
+}
+
+if [[ -z "$TOKEN" ]]; then
+  echo "Error: pass entry '$PASS_ENTRY' returned an empty secret." >&2
+  exit 1
+fi
+
+# Run aider with the Copilot base; forward all args
+exec env OPENAI_API_KEY="$TOKEN" aider --openai-api-base "$BASE_URL" "$@"
+
