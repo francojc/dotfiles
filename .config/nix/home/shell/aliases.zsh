@@ -29,7 +29,7 @@ alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hos
 
 # Aider-chat aliases
 
-alias aider='aider-copilot --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY"
+alias aider-copilot='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY"'
 
 alias aider-proj='aider --model power --editor-model power --architect --watch-files'
 alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
