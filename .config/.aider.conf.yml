@@ -1,1 +1,5 @@
---no-gitignore
+gitignore: false
+openai-api-base: https://api.githubcopilot.com
+model: openai/gpt-4o
+weak-model:  openai/gpt-4o-mini
+show-model-warnings: false
