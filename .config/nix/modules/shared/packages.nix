@@ -17,7 +17,7 @@
     nixd # Language server
     nodejs_22 # Node.js for bleeding-edge npm packages
     nurl # Nix URL fetcher helper
-    ollama # AI assistant
+    # ollama # AI assistant
     oterm
     stylua # Lua formatter
     vim # Basic editor
