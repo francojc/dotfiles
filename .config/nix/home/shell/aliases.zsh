@@ -29,7 +29,7 @@ alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hos
 
 # Aider-chat aliases
 alias aider-proj='aider --model power --editor-model power --architect --watch-files'
-alias aider-commit='aider-copilot --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
+alias aider-commit='aider --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
 
 # Aerc (mail)
 alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
