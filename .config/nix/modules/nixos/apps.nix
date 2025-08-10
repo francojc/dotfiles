@@ -5,9 +5,9 @@
     enable = true;
   };
   # Enable Ollama
-  services.ollama = {
-    enable = true;
-  };
+  # services.ollama = {
+  #   enable = true;
+  # };
 
   # Add NixOS system packages (complementary to Home Manager packages)
   environment.systemPackages = with pkgs; [
