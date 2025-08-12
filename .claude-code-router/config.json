@@ -1,0 +1,51 @@
+{
+  "LOG": false,
+  "OPENAI_API_KEY": "",
+  "OPENAI_BASE_URL": "",
+  "OPENAI_MODEL": "",
+  "transformers": [
+    {
+      "path": "/Users/danrousseau/.claude-code-router/plugins/copilot.js"
+    }
+  ],
+  "Providers": [
+    {
+      "name": "copilot",
+      "api_base_url": "https://api.githubcopilot.com/chat/completions",
+      "api_key": "${GITHUB_COPILOT_API_KEY}",
+      "models": [
+        "gpt-4.1",
+        "gpt-4o",
+        "gpt-5"
+      ],
+      "transformer": {
+        "use": [
+          "copilot"
+        ]
+      }
+    },
+    {
+      "name": "openrouter",
+      "api_base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key": "${OPENROUTER_API_KEY}",
+      "models": [
+        "openai/gpt-5-mini",
+        "qwen/qwen3-coder",
+        "moonshotai/kimi-k2"
+      ],
+      "transformer": {
+        "use": [
+          "openrouter"
+        ]
+      }
+    }
+  ],
+  "Router": {
+    "default": "copilot,gpt-4.1",
+    "background": "copilot,gpt-4o",
+    "think": "copilot,gpt-5",
+    "longContext": "copilot,gemini-2.5-pro",
+    "webSearch": "copilot,gpt-4o"
+  }
+}
+

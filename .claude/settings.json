@@ -1,10 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y ccusage statusline",
-    "padding": 0
-  },
   "permissions": {
     "allow": [
       "mcp__zen"
@@ -39,8 +34,13 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccusage statusline",
+    "padding": 0
+  },
   "feedbackSurveyState": {
     "lastShownTime": 1754255023538
-  }
+  },
+  "model": "copilot,gpt-4.1"
 }
-
