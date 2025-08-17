@@ -20,6 +20,7 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
+	"MagicDuck/grug-far.nvim", -- Grug far plugin (search/replace)
 	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
@@ -28,6 +29,7 @@ require("paq")({
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
+	"folke/persistence.nvim", -- Session management
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
@@ -373,6 +375,12 @@ map("n", "<leader>ol", "<Cmd>Obsidian link_new<Cr>", { desc = "New link" })
 map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
 map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
 
+-- Persistence ---------------------------
+-- Sessions
+map("n", "<leader>pl", "<Cmd>lua require('persistence').load()<Cr>", { desc = "Load session" })
+map("n", "<leader>ps", "<Cmd>lua require('persistence').select()<Cr>", { desc = "Select session" })
+map("n", "<leader>ps", "<Cmd>lua require('persistence').load(last = true )<Cr>", { desc = "Load last session" })
+
 -- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
 map("n", "<leader>qa", "<Cmd>QuartoSendAbove<Cr>", { desc = "Quarto: send above" })
@@ -396,6 +404,7 @@ map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Sli
 map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
 -- Search -----------------------------------
+map("n", "<leader>sg", "<Cmd>GrugFar<Cr>", { desc = "Grug far" })
 map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
 map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
@@ -1144,8 +1153,9 @@ require("obsidian").setup({
 	},
 })
 
--- Precognition -------------------------------
--- require("precognition").setup({})
+-- Persistence -------------------------------
+-- Session management
+require("persistence").setup({ need = 0 })
 
 -- Quarto -----------------------------------
 require("otter").setup({})
