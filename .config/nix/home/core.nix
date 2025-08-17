@@ -23,6 +23,7 @@
     stylua # Lua formatter
 
     # Build dependencies for Neovim plugins (e.g., blink.cmp)
+    ast-grep # for grug-far
     rustc # Rust compiler, needed for many Neovim plugins
     cargo # Rust package manager, needed for many Neovim plugins
   ];
