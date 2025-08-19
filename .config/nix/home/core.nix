@@ -58,14 +58,15 @@
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
-    ripgrep # grep replacement
     repgrep # ripgrep across files
+    ripgrep # grep replacement
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
+    typtea # Terminal-based typing test
     unp # Archive unpacker
     which # Command location utility
     yazi-unwrapped # Terminal file manager
