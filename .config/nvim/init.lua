@@ -366,14 +366,16 @@ map(
 )
 -- Obsidian -----------------------------------
 map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
+map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Backlinks" })
 map("n", "<leader>oc", "<Cmd>Obsidian toggle_checkbox<Cr>", { desc = "Toggle checkbox" })
 map("n", "<leader>od", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily note" })
-map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
 map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" })
 map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
 map("n", "<leader>ol", "<Cmd>Obsidian link_new<Cr>", { desc = "New link" })
 map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
 map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
+map("n", "<leader>os", "<Cmd>Obsidian search<Cr>", { desc = "Search" })
+map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
 
 -- Persistence ---------------------------
 -- Sessions
@@ -400,8 +402,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- vim.b.slime_cell_delimiter = "```"
 map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
-map("n", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
-map("v", "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
+map({ "n", "v" }, "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
 -- Search -----------------------------------
 map("n", "<leader>sg", "<Cmd>GrugFar<Cr>", { desc = "Grug far" })
