@@ -25,6 +25,7 @@
       "keith/formulae/reminders-cli"
       "llm"
       "matheusml/zsh-ai/zsh-ai" # AI shell plugin
+      "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
       "nmap"
       "npm" # Node.js package manager
