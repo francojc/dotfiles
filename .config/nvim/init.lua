@@ -56,6 +56,8 @@ require("paq")({
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
+	"NickvanDyke/opencode.nvim", -- OpenCode
+	"folke/snacks.nvim", -- Snacks
 })
 
 ---| Options ------------------------------------------------------
@@ -376,6 +378,32 @@ map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
 map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
 map("n", "<leader>os", "<Cmd>Obsidian search<Cr>", { desc = "Search" })
 map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
+
+-- Opencode ---------------------------
+map("n", "<leader>aA", "<Cmd>lua require('opencode').ask()<Cr>", { desc = "Ask opencode" })
+map("n", "<leader>aa", "<Cmd>lua require('opencode').ask('@cursor: ')<Cr>", { desc = "Ask opencode about this" })
+map(
+	"v",
+	"<leader>aa",
+	"<Cmd>lua require('opencode').ask('@selection: ')<Cr>",
+	{ desc = "Ask opencode about selection" }
+)
+map("n", "<leader>at", "<Cmd>lua require('opencode').toggle()<Cr>", { desc = "Toggle opencode" })
+map("n", "<leader>an", "<Cmd>lua require('opencode').command('session_new')<Cr>", { desc = "New session" })
+map("n", "<leader>ay", "<Cmd>lua require('opencode').command('messages_copy')<Cr>", { desc = "Copy last message" })
+map(
+	"n",
+	"<S-C-u>",
+	"<Cmd>lua require('opencode').command('messages_half_page_up')<Cr>",
+	{ desc = "Scroll messages up" }
+)
+map(
+	"n",
+	"<S-C-d>",
+	"<Cmd>lua require('opencode').command('messages_half_page_down')<Cr>",
+	{ desc = "Scroll messages down" }
+)
+map({ "n", "v" }, "<leader>ap", "<Cmd>lua require('opencode').select_prompt()<Cr>", { desc = "Select prompt" })
 
 -- Persistence ---------------------------
 -- Sessions
@@ -1245,6 +1273,7 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
+	{ "<leader>a", group = "Assistant", icon = " " },
 	{ "<leader>b", group = "Buffer", icon = " " },
 	{ "<leader>c", group = "Code", icon = " " },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
@@ -1255,6 +1284,7 @@ wk.add({
 	{ "<leader>l", group = "LSP", icon = " " },
 	{ "<leader>m", group = "Markdown", icon = " " },
 	{ "<leader>o", group = "Obsidian", icon = "" },
+	{ "<leader>p", group = "Persistence", icon = "" },
 	{ "<leader>q", group = "Quarto", icon = " " },
 	{ "<leader>r", group = "Run", icon = " " },
 	{ "<leader>s", group = "Search", icon = " " },
