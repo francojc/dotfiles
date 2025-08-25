@@ -1,9 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": [
-      "mcp__zen"
-    ],
+    "allow": [],
     "deny": [
       "Read(.env)",
       "Read(.aider.chat.history.md)",
@@ -43,3 +41,4 @@
     "lastShownTime": 1754255023538
   }
 }
+
