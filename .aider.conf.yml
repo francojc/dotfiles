@@ -23,7 +23,7 @@ alias:
   - "econo:openai/gpt-4.1"
 
 # Models
-model: power
+model: gpt-4.1
 editor-model: power
 weak-model: econo
 
