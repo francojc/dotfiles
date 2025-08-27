@@ -21,6 +21,7 @@
       "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
+      "doxx" # MS Docx viewer
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
