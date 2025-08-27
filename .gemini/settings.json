@@ -1,0 +1,71 @@
+{
+  "theme": "Atom One",
+  "preferredEditor": "vim",
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "mcp-scholarly": {
+      "command": "uvx",
+      "args": [
+        "mcp-scholarly"
+      ]
+    },
+    "Context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "obsidian": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "obsidian-mcp",
+        "/Users/francojc/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes"
+      ]
+    },
+    "zotero": {
+      "command": "zotero-mcp",
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    },
+    "canvas-api": {
+      "command": "/Users/francojc/.local/mcp/prod/canvas-mcp/.venv/bin/python",
+      "args": [
+        "-m",
+        "canvas_mcp.server"
+      ],
+      "cwd": "/Users/francojc/.local/mcp/prod/canvas-mcp",
+      "env": {
+        "PYTHONPATH": "/Users/francojc/.local/mcp/prod/canvas-mcp/src"
+      }
+    },
+    "google_workspace": {
+      "command": "uvx",
+      "args": [
+        "workspace-mcp"
+      ],
+      "env": {
+        "OAUTHLIB_INSECURE_TRANSPORT": "1",
+        "GOOGLE_CLIENT_SECRETS": "/Users/francojc/.google/workspace_client_secret.json",
+        "HOME": "/Users/francojc"
+      }
+    },
+    "zen": {
+      "command": "/Users/francojc/.local/mcp/prod/zen-mcp-server/zen-mcp-server"
+    }
+  },
+  "selectedAuthType": "oauth-personal",
+  "hideBanner": true,
+  "showMemoryUsage": true,
+  "vimMode": true,
+  "showLineNumbers": true
+}
+
