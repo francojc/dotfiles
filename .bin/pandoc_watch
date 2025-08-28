@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+SCRIPT_NAME="pandoc_watch"
+SCRIPT_VERSION="1.0.2"
+. "$(dirname "$0")/common"
+
+require entr pandoc
+
+if [ -z "${1-}" ]; then
+  die "Usage: $SCRIPT_NAME <format>\nExample: $SCRIPT_NAME html"
+fi
+
+FORMAT="$1"
+
+log_info "Watching for markdown file changes..."
+# Find markdown files and pipe them to entr
+# When a file changes, run pandoc to convert it to the specified format
+find . -maxdepth 1 -name '*.md' -o -name '*.markdown' | entr -c /usr/bin/env FORMAT="$FORMAT" sh -c '
+  FILE="$1"
+  OUTPUT_FILE="${FILE%.*}.$FORMAT"
+  # We are in a subshell, so log_info is not available without more work.
+  # Using printf for consistency with log functions from common.
+  printf "INFO Rebuilding %%s -> %%s\n" "$FILE" "$OUTPUT_FILE"
+  pandoc "$FILE" -o "$OUTPUT_FILE"
+' -- /_

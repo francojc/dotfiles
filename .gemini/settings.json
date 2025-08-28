@@ -62,10 +62,8 @@
       "command": "/Users/francojc/.local/mcp/prod/zen-mcp-server/zen-mcp-server"
     }
   },
-  "selectedAuthType": "oauth-personal",
   "hideBanner": true,
   "showMemoryUsage": true,
   "vimMode": true,
   "showLineNumbers": true
 }
-
