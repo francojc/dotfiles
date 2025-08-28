@@ -68,6 +68,7 @@
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
         export ZSH_AI_PROVIDER="gemini"
+        export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#5c6370'
 
         # --- SECRETS (from `pass`) ---
         source ${config.home.homeDirectory}/.variables.env
