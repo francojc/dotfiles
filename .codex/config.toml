@@ -165,7 +165,7 @@ include_only = []
 # Tools (optional)
 # -------------------------
 [tools]
-web_search = tru
+web_search = true
 
 # -------------------------
 # MCP servers (optional)
