@@ -62,7 +62,7 @@
         _FXShowPosixPathInTitle = false;
         AppleShowAllExtensions = true;
         FXEnableExtensionChangeWarning = false;
-        FXPreferredViewStyle = "Nlsv";
+        FXPreferredViewStyle = "clmv";
         QuitMenuItem = true;
         ShowPathbar = true;
         ShowStatusBar = true;
