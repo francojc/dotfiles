@@ -60,6 +60,7 @@
     pass # Password manager
     repgrep # ripgrep across files
     ripgrep # grep replacement
+    ruby # Programming language
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt

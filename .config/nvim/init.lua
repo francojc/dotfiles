@@ -277,7 +277,7 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
 -- Copilot
-g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" } -- INFO: this works, but there only seems to be one model available 2025-07-01
+g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" } -- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
 map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 g.copilot_no_tab_map = true -- Disable default tab mapping
 
