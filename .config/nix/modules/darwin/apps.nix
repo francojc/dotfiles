@@ -60,6 +60,7 @@
       "obs" # OBS Studio for streaming and recording
       "obsidian"
       "orbstack" # Docker alternative
+      "orion" # web browser
       "parallels" # virtualization
       "raycast"
       "rectangle"
