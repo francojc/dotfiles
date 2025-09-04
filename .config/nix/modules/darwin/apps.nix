@@ -22,7 +22,6 @@
       "borders" # jankyborders
       "chawan" # TUI web browser
       "doxx" # MS Docx viewer
-      "handbrake" # Video transcoder
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
@@ -54,6 +53,7 @@
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"
+      "handbrake" # Video transcoder
       "kap" # screen recording
       "keycastr" # keystroke visualizer
       "loopback" # audio routing
