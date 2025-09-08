@@ -2,22 +2,26 @@
 
 ## Key points
 
-- DO NOT always praise the user's work. Provide constructive feedback and push back when necessary. This is to ensure that the user is challenged and that the work is of high quality. 
-- When using Markdown, ENSURE THAT THERE IS A CARRIAGE RETURN BETWEEN HEADERS AND BODY TEXT, AND BETWEEN BODY TEXT AND BULLET LISTS!
+- DO NOT always praise the user's work. Provide constructive feedback and push back when necessary. This is to ensure that the user is challenged and that the work is of high quality.
+- When using Markdown/ Quarto, ENSURE THAT THERE IS A CARRIAGE RETURN BETWEEN HEADERS AND BODY TEXT, AND BETWEEN BODY TEXT AND BULLET LISTS!
 
+```markdown
+# Header
+
+Body text.
+
+A description of an upcoming bullet list:
+
+- Bullet item 1
+- Bullet item 2
+
+
+```
 ## Professional Context
 
-**Role:** University Professor, Spanish Department  
+**Role:** University Professor, Spanish Department
 **Research:** Corpus Linguistics, Computational Linguistics (NLP), Hispanic Linguistics
 **Teaching:** Spanish language, linguistics, and computational, quantitative methods
-
-## Project Planning Framework
-
-Use `specs/` directory for systematic project development:
-
-- Planning Documents, Progress Tracking, Analysis Reports, Specifications
-- Centralized organization with version control integration
-- Living documentation with clear status indicators
 
 ## Coding Standards
 
@@ -30,12 +34,12 @@ Use `specs/` directory for systematic project development:
 - **Line limit**: 80 characters (except Markdown)
 - **Naming**: snake_case (functions/variables), PascalCase (Python classes)
 - **Lists**: Use `-` not `*` or `+`
-- CRITICAL: In Markdown (md) and Quarto (qmd) documents, make sure to add a carriage return between: 
+- CRITICAL: In Markdown (md) and Quarto (qmd) documents, make sure to add a carriage return between:
     - headers and body
     - body and bullet lists
 
-    ```markdown 
-    # Header 
+    ```markdown
+    # Header
 
     Body text.
 
@@ -98,6 +102,30 @@ outputs = { nixpkgs, flake-utils, ... }:
 - Long-term data preservation
 - Balance computational efficiency with linguistic validity
 
-## Spanish Language Guidelines
+## Avoid overused patterns
 
-- Avoid excessive capitalization in Spanish in titles and headings. Only capitalize when it is a proper noun, an acronym, etc.
+Language patterns:
+
+    Overuse of promotional phrases like "rich cultural heritage," "breathtaking," "stands as a testament"
+    Excessive connecting words ("moreover," "furthermore")
+    Formula endings like "In conclusion" or "Despite challenges..."
+    Fake expertise claims and superficial analysis
+
+Style issues:
+
+    Title case in headings (Capitalizing Every Word)
+    Excessive bold text for emphasis
+    Overuse of em dashes and curly quotes
+
+Technical problems:
+
+    Broken wikitext mixed with Markdown formatting
+    Garbled citation codes like "turn0search0" or ":contentReference"
+    Made-up references with invalid DOIs/ISBNs
+    Letter-like formatting ("Dear Wikipedia Editors...")
+
+Citations red flags:
+
+    Multiple broken external links
+    Fabricated academic sources that don't exist
+    Incorrect reference formatting
