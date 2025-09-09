@@ -26,5 +26,33 @@
       "${0:}"
     ],
     "description": "HTML block comment"
+  },
+  "Inline TODO comment": {
+    "prefix": "todo",
+    "body": [
+      "<!-- TODO: ${0} -->"
+    ],
+    "description": "Inline TODO HTML comment"
+  },
+  "Inline INFO comment": {
+    "prefix": "info",
+    "body": [
+      "<!-- INFO: ${0} -->"
+    ],
+    "description": "Inline INFO HTML comment"
+  },
+  "Inline WARNING comment": {
+    "prefix": "warning",
+    "body": [
+      "<!-- WARNING: ${0} -->"
+    ],
+    "description": "Inline WARNING HTML comment"
+  },
+  "Inline BUG comment": {
+    "prefix": "bug",
+    "body": [
+      "<!-- BUG: ${0} -->"
+    ],
+    "description": "Inline BUG HTML comment"
   }
 }

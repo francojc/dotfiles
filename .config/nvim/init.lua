@@ -353,10 +353,10 @@ map("v", "<leader>ms", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
 map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
 map("v", "<leader>mC", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
 -- Headings
-map("n", "<leader>m1", "I# ", { desc = "Heading 1" })
-map("n", "<leader>m2", "I## ", { desc = "Heading 2" })
-map("n", "<leader>m3", "I### ", { desc = "Heading 3" })
-map("n", "<leader>m4", "I#### ", { desc = "Heading 4" })
+map("n", "<leader>m1", "I# <Esc>", { desc = "Heading 1" })
+map("n", "<leader>m2", "I## <Esc>", { desc = "Heading 2" })
+map("n", "<leader>m3", "I### <Esc>", { desc = "Heading 3" })
+map("n", "<leader>m4", "I#### <Esc>", { desc = "Heading 4" })
 -- Links
 map("v", "<leader>ml", 'c[<C-r>"]()<Left>', { desc = "Add link" })
 -- Paste image

@@ -1,4 +1,4 @@
-# Claude Code Guidelines
+# Codex Guidelines
 
 ## KEY POINTS
 
@@ -130,6 +130,5 @@ These are patterns to avoid in academic writing.
 - Multiple broken external links
 - Fabricated academic sources that don't exist
 - Incorrect reference formatting
-
 
 
