@@ -6,6 +6,7 @@ alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
 # llm aliases
 alias llmb='llm -t briefly' # uses the template 'briefly'
 alias codexo='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID codex'
+alias codero='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID coder'
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
