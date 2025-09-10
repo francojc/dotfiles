@@ -14,8 +14,7 @@
     extraConfig = {
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
-      pull.rebase = false;
-      pull.ff = "only";
+      pull.rebase = true;
       credential.helper = "osxkeychain";
 
       # Diff and merge tools
