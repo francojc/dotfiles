@@ -47,6 +47,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "blackhole-2ch" # virtual audio driver
+      "calibre" # eBook management
       "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
@@ -60,11 +61,9 @@
       "obs" # OBS Studio for streaming and recording
       "obsidian"
       "orbstack" # Docker alternative
-      "orion" # web browser
       "parallels" # virtualization
       "raycast"
       "rectangle"
-      "rocket" # emoji picker
       "signal" # messaging
       "spotify" # music streaming
       "transcribe"
