@@ -140,8 +140,8 @@ format = " docker [$symbol$context]($style)"
 [memory_usage]
 disabled = false
 threshold = -1
-symbol = "▪▫▪ "
-format = " mem [${ram_pct}]($style)"
+symbol = " "
+format = "[$symbol${ram_pct}]($style)"
 
 [nix_shell]
 style = 'bold italic dimmed blue'
