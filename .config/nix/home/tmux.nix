@@ -25,8 +25,10 @@
       # True color support and terminal overrides
       set -ga terminal-overrides "xterm-ghostty"
 
+      # Base index
+      set -g base-index 1
       # Pane base index
-      set -g pane-base-index 1
+      setw -g pane-base-index 1
 
       # Server behavior
       set -s focus-events on

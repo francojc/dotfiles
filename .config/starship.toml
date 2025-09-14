@@ -12,7 +12,6 @@ $username\
 $character"""
 
 right_format = """
-$kubernetes\
 $directory\
 $git_branch\
 $git_commit\
@@ -20,8 +19,6 @@ $git_state\
 $git_status\
 $docker_context\
 $package\
-$haskell\
-$julia\
 $lua\
 $nodejs\
 $perl\
@@ -30,15 +27,8 @@ $python\
 $quarto\
 $rlang\
 $rust\
-$swift\
-$terraform\
-$zig\
 $buf\
 $memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$azure\
 $custom\
 $status\
 $battery"""
@@ -89,11 +79,6 @@ format = "[$symbol$number]($style) "
 style = "white"
 symbol = "[▶](blue italic)"
 
-[localip]
-ssh_only = true
-format = " ◯[$localipv4](bold magenta)"
-disabled = false
-
 [time]
 disabled = false
 format = "[ $time]($style)"
@@ -114,16 +99,11 @@ threshold = 20
 style = "italic bold red"
 
 [[battery.display]]
-threshold = 60
-style = "italic dimmed bright-purple"
-
-[[battery.display]]
 threshold = 70
 style = "italic dimmed yellow"
 
 [git_branch]
 format = " [$branch(:$remote_branch)]($style)"
-# symbol = " "
 symbol = "[](bold italic bright-blue)"
 style = "italic bright-red"
 truncation_symbol = "⋯"
@@ -133,7 +113,7 @@ only_attached = true
 
 [git_status]
 format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
-style = "cyan"
+style = "bright-red"
 stashed = ""
 
 [git_state]
@@ -161,10 +141,6 @@ style = "dimmed yellow italic bold"
 [docker_context]
 symbol = "◧ "
 format = " docker [$symbol$context]($style)"
-
-[julia]
-symbol = "◎ "
-format = " jl [$symbol($version )]($style)"
 
 [memory_usage]
 symbol = "▪▫▪ "
