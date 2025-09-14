@@ -7,10 +7,8 @@
     enable = true;
     terminal = "tmux-256color";
     historyLimit = 100000;
-    keyMode = "vi";
     mouse = true;
     prefix = "C-a";
-    baseIndex = 1;
 
     extraConfig = ''
       # -------------------------------------------------
@@ -81,6 +79,9 @@
       # Kill window
       bind q kill-window
 
+      # kill pane
+      bind x kill-pane
+
       # Rename session/window
       bind \" command-prompt -p "rename-session:" "rename-session '%%'"
       bind \' command-prompt -p "rename window:" "rename-window %%"
@@ -109,7 +110,7 @@
 
       # Status bar
       set -g status on
-      set -g status-position bottom
+      set -g status-position top # top/bottom
       set -g status-style bg='${theme.colors.bg1}',fg='${theme.colors.fg1}'
       set -g status-justify left
 
@@ -122,7 +123,7 @@
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
-      set -g status-right '#[fg=${theme.colors.accent}]▌   #P #[fg=${theme.colors.blue}]▌   #h #[fg=default]▐'
+      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h ▐'
       set -g status-right-length 50
 
       # Pane border colors
