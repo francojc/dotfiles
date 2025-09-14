@@ -1265,7 +1265,6 @@ require("nvim-treesitter.configs").setup({
 
 --- WhichKey -----------------------------------
 require("which-key").setup({
-	preset = "helix",
 	icons = {
 		group = " ",
 	},
@@ -1273,24 +1272,24 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "Assistant", icon = " " },
-	{ "<leader>b", group = "Buffer", icon = " " },
-	{ "<leader>c", group = "Code", icon = " " },
-	{ "<leader>d", group = "Diagnostics/Debug", icon = " " },
-	{ "<leader>e", group = "Explore", icon = " " },
-	{ "<leader>f", group = "Files", icon = " " },
-	{ "<leader>g", group = "Git", icon = " " },
-	{ "<leader>h", group = "Help", icon = " " },
-	{ "<leader>l", group = "LSP", icon = " " },
-	{ "<leader>m", group = "Markdown", icon = " " },
+	{ "<leader>a", group = "Assistant", icon = "" },
+	{ "<leader>b", group = "Buffer", icon = "" },
+	{ "<leader>c", group = "Code", icon = "" },
+	{ "<leader>d", group = "Diagnostics/Debug", icon = "" },
+	{ "<leader>e", group = "Explore", icon = "" },
+	{ "<leader>f", group = "Files", icon = "" },
+	{ "<leader>g", group = "Git", icon = "" },
+	{ "<leader>h", group = "Help", icon = "" },
+	{ "<leader>l", group = "LSP", icon = "" },
+	{ "<leader>m", group = "Markdown", icon = "" },
 	{ "<leader>o", group = "Obsidian", icon = "" },
 	{ "<leader>p", group = "Persistence", icon = "" },
-	{ "<leader>q", group = "Quarto", icon = " " },
-	{ "<leader>r", group = "Run", icon = " " },
-	{ "<leader>s", group = "Search", icon = " " },
-	{ "<leader>t", group = "Toggle", icon = " " },
-	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = " " },
-	{ "<leader>x", desc = "Quit", icon = " " },
+	{ "<leader>q", group = "Quarto", icon = "" },
+	{ "<leader>r", group = "Run", icon = "" },
+	{ "<leader>s", group = "Search", icon = "" },
+	{ "<leader>t", group = "Toggle", icon = "" },
+	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "" },
+	{ "<leader>x", desc = "Quit", icon = "" },
 })
 
 -- Yazi -----------------------------------
