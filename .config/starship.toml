@@ -12,7 +12,6 @@ $character"""
 right_format = """
 $directory\
 $git_branch\
-$git_state\
 $git_status\
 $docker_context\
 $package\
@@ -107,12 +106,8 @@ only_attached = true
 
 [git_status]
 format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
-style = "bright-red"
+style = "blue"
 stashed = ""
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
 
 [lua]
 format = " [lua](italic) [${symbol}${version}]($style)"
