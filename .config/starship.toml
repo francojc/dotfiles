@@ -1,5 +1,3 @@
-# version: 1.0.0
-
 add_newline = true
 continuation_prompt = "[▸▹ ](dimmed white)"
 
@@ -26,12 +24,9 @@ $php\
 $python\
 $quarto\
 $rlang\
-$rust\
-$buf\
-$memory_usage\
-$custom\
 $status\
-$battery"""
+$battery\
+$memory_usage"""
 
 [fill]
 symbol = ' '
@@ -143,8 +138,10 @@ symbol = "◧ "
 format = " docker [$symbol$context]($style)"
 
 [memory_usage]
+disabled = false
+threshold = -1
 symbol = "▪▫▪ "
-format = " mem [${ram}( ${swap})]($style)"
+format = " mem [${ram_pct}]($style)"
 
 [nix_shell]
 style = 'bold italic dimmed blue'
@@ -168,5 +165,5 @@ Alpine = " "
 symbol = " "
 
 [quarto]
-format = "[$symbol $version]($style) "
+format = "[$symbol$version]($style) "
 
