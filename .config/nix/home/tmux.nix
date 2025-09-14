@@ -7,6 +7,7 @@
     enable = true;
     terminal = "tmux-256color";
     historyLimit = 100000;
+    baseIndex = 1;
     mouse = true;
     prefix = "C-a";
 
@@ -25,8 +26,6 @@
       # True color support and terminal overrides
       set -ga terminal-overrides "xterm-ghostty"
 
-      # Base index
-      set -g base-index 1
       # Pane base index
       setw -g pane-base-index 1
 

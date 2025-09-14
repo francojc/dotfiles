@@ -14,12 +14,12 @@ alias taa=' tmux attach-session -t' # attach to a specific session
 alias tka='tmux kill-session -t' # kill a specific session
 alias tko='tmux kill-server' # kill all tmux sessions
 
-# Attach to a tmux session or create a new one if none exists
+# Attach to a named tmux session (1-based); create if absent
 t() {
   if [ $# -eq 0 ]; then
-    tmux attach-session 2>/dev/null || tmux new-session
+    tmux new-session -As 1
   else
-    tmux attach-session -t "$1" 2>/dev/null || tmux new-session -s "$1"
+    tmux new-session -As "$1"
   fi
 }
 
