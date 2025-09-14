@@ -109,8 +109,8 @@ disabled = false
 format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 
 [git_status]
-disabled = true
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+disabled = false
+format = "[($ahead_behind$stashed)]($style)"
 style = "blue"
 stashed = ""
 
