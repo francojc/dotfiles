@@ -119,7 +119,7 @@
       set -g status-left-length 50
 
       # Window status format with theme colors
-      set -g window-status-format '#[fg=${theme.colors.fg2},bg=default] #I #[fg=${theme.colors.fg0},bg=default]#W'
+      set -g window-status-format '#[fg=${theme.colors.bg3},bg=default] #I #[fg=${theme.colors.bg3},bg=default]#W'
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
