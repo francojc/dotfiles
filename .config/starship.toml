@@ -11,8 +11,9 @@ $character"""
 
 right_format = """
 $directory\
-$git_branch\
 $git_status\
+$git_branch\
+$git_metrics\
 $docker_context\
 $package\
 $lua\
@@ -23,7 +24,6 @@ $python\
 $quarto\
 $rlang\
 $status\
-$battery\
 $memory_usage"""
 
 [fill]
@@ -104,7 +104,12 @@ truncation_length = 11
 ignore_branches = ["main", "master"]
 only_attached = true
 
+[git_metrics]
+disabled = false
+format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
+
 [git_status]
+disabled = true
 format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
 style = "blue"
 stashed = ""
