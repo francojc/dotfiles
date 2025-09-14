@@ -115,7 +115,7 @@
       set -g status-justify left
 
       # Status bar configuration with theme colors
-      set -g status-left '#[fg=${theme.colors.accent},bg=default]▌   #S #[fg=${theme.colors.yellow},bg=default] ▌  '
+      set -g status-left '#[fg=${theme.colors.accent},bg=default]   #S #[fg=${theme.colors.yellow},bg=default] ▌  '
       set -g status-left-length 50
 
       # Window status format with theme colors
@@ -123,7 +123,7 @@
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
-      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h ▐'
+      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h '
       set -g status-right-length 50
 
       # Pane border colors
