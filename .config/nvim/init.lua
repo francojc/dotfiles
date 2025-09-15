@@ -366,10 +366,58 @@ map(
 	"<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
 	{ desc = "Paste image" }
 )
+
+-- Custom checkbox toggle function for multiple lines
+function toggle_checkboxes()
+	local start_line, end_line
+	local mode = vim.fn.mode()
+
+	if mode:find("[vV]") then
+		-- Visual mode: get selected range
+		start_line = vim.fn.line("'<")
+		end_line = vim.fn.line("'>")
+	else
+		-- Normal mode: only current line
+		start_line = vim.fn.line(".")
+		end_line = start_line
+	end
+
+	for line_num = start_line, end_line do
+		local line = vim.fn.getline(line_num)
+		local new_line
+
+		-- Check for different checkbox patterns and toggle them
+		if line:match("^%s*- %[ %]") then
+			-- Unchecked: [ ] -> [x]
+			new_line = line:gsub("^(%s*- )%[ %]", "%1[x]")
+		elseif line:match("^%s*- %[x%]") then
+			-- Checked: [x] -> [ ]
+			new_line = line:gsub("^(%s*- )%[x%]", "%1[ ]")
+		elseif line:match("^%s*- ") then
+			-- Regular list item: add checkbox
+			new_line = line:gsub("^(%s*- )", "%1[ ] ")
+		elseif line:match("^%s*%S") then
+			-- Regular line: convert to checkbox list item
+			new_line = line:gsub("^(%s*)", "%1- [ ] ")
+		else
+			-- Empty or whitespace-only line: skip
+			new_line = line
+		end
+
+		if new_line ~= line then
+			vim.fn.setline(line_num, new_line)
+		end
+	end
+
+	-- Exit visual mode if we were in it
+	if mode:find("[vV]") then
+		vim.cmd("normal! <Esc>")
+	end
+end
 -- Obsidian -----------------------------------
 map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
 map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Backlinks" })
-map("n", "<leader>oc", "<Cmd>Obsidian toggle_checkbox<Cr>", { desc = "Toggle checkbox" })
+map({ "n", "v" }, "<leader>oc", "<Cmd>lua toggle_checkboxes()<Cr>", { desc = "Toggle checkbox" })
 map("n", "<leader>od", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily note" })
 map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" })
 map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
