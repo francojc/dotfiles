@@ -29,7 +29,6 @@ require("paq")({
 	"folke/flash.nvim", -- Flash jump
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
-	"folke/persistence.nvim", -- Session management
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
 	"hakonharnes/img-clip.nvim", -- Image pasting
@@ -56,7 +55,6 @@ require("paq")({
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"NickvanDyke/opencode.nvim", -- OpenCode
 	"folke/snacks.nvim", -- Snacks
 })
 
@@ -427,37 +425,10 @@ map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
 map("n", "<leader>os", "<Cmd>Obsidian search<Cr>", { desc = "Search" })
 map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
 
--- Opencode ---------------------------
-map("n", "<leader>aA", "<Cmd>lua require('opencode').ask()<Cr>", { desc = "Ask opencode" })
-map("n", "<leader>aa", "<Cmd>lua require('opencode').ask('@cursor: ')<Cr>", { desc = "Ask opencode about this" })
-map(
-	"v",
-	"<leader>aa",
-	"<Cmd>lua require('opencode').ask('@selection: ')<Cr>",
-	{ desc = "Ask opencode about selection" }
-)
-map("n", "<leader>at", "<Cmd>lua require('opencode').toggle()<Cr>", { desc = "Toggle opencode" })
-map("n", "<leader>an", "<Cmd>lua require('opencode').command('session_new')<Cr>", { desc = "New session" })
-map("n", "<leader>ay", "<Cmd>lua require('opencode').command('messages_copy')<Cr>", { desc = "Copy last message" })
-map(
-	"n",
-	"<S-C-u>",
-	"<Cmd>lua require('opencode').command('messages_half_page_up')<Cr>",
-	{ desc = "Scroll messages up" }
-)
-map(
-	"n",
-	"<S-C-d>",
-	"<Cmd>lua require('opencode').command('messages_half_page_down')<Cr>",
-	{ desc = "Scroll messages down" }
-)
-map({ "n", "v" }, "<leader>ap", "<Cmd>lua require('opencode').select_prompt()<Cr>", { desc = "Select prompt" })
-
--- Persistence ---------------------------
--- Sessions
-map("n", "<leader>pl", "<Cmd>lua require('persistence').load()<Cr>", { desc = "Load session" })
-map("n", "<leader>ps", "<Cmd>lua require('persistence').select()<Cr>", { desc = "Select session" })
-map("n", "<leader>ps", "<Cmd>lua require('persistence').load(last = true )<Cr>", { desc = "Load last session" })
+--- Session persistence -------------------------------
+map("n", "<leader>ps", "<Cmd>lua Session_save_prompt()<Cr>", { desc = "Save session" })
+map("n", "<leader>pl", "<Cmd>lua Session_load_last()<Cr>", { desc = "Load last session" })
+map("n", "<leader>pS", "<Cmd>lua Session_select()<Cr>", { desc = "Select session" })
 
 -- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
@@ -505,6 +476,108 @@ map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })
 
 ---| Functions --------------------------------------------
+
+-- Session management helpers using core session commands
+local session_dir = vim.fn.stdpath("state") .. "/sessions"
+
+local function ensure_session_dir()
+	if vim.fn.isdirectory(session_dir) == 0 then
+		vim.fn.mkdir(session_dir, "p")
+	end
+end
+
+local function normalize_session_name(name)
+	local normalized = (name or "last"):gsub("%.vim$", "")
+	normalized = normalized:gsub("%s+", "_")
+	normalized = normalized:gsub("[^%w%._%-]", "")
+	if normalized == "" then
+		normalized = "last"
+	end
+	return normalized
+end
+
+local function session_path(name)
+	ensure_session_dir()
+	local normalized = normalize_session_name(name)
+	return session_dir .. "/" .. normalized .. ".vim"
+end
+
+local function session_save(name, opts)
+	opts = opts or {}
+	local target = session_path(name)
+	local ok, err = pcall(vim.cmd, "mksession! " .. vim.fn.fnameescape(target))
+	if not ok then
+		if not opts.silent then
+			vim.notify("Session save failed: " .. err, vim.log.levels.ERROR)
+		end
+		return
+	end
+	if not opts.silent then
+		vim.notify("Session saved to " .. target, vim.log.levels.INFO)
+	end
+	return target
+end
+
+local function session_load(name, opts)
+	opts = opts or {}
+	local target = session_path(name)
+	if vim.fn.filereadable(target) == 0 then
+		if not opts.silent then
+			vim.notify("Session not found: " .. target, vim.log.levels.WARN)
+		end
+		return
+	end
+	local ok, err = pcall(vim.cmd, "source " .. vim.fn.fnameescape(target))
+	if not ok then
+		if not opts.silent then
+			vim.notify("Session load failed: " .. err, vim.log.levels.ERROR)
+		end
+		return
+	end
+	if not opts.silent then
+		vim.notify("Session loaded from " .. target, vim.log.levels.INFO)
+	end
+end
+
+local function session_list()
+	ensure_session_dir()
+	local files = vim.fn.readdir(session_dir, function(file)
+		return file:sub(-4) == ".vim"
+	end)
+	table.sort(files)
+	return files
+end
+
+function _G.Session_save_prompt()
+	local name = vim.fn.input("Save session name (last): ", "", "file")
+	if name == "" then
+		name = "last"
+	end
+	session_save(name)
+end
+
+function _G.Session_load_last()
+	session_load("last")
+end
+
+function _G.Session_select()
+	local files = session_list()
+	if vim.tbl_isempty(files) then
+		vim.notify("No sessions saved in " .. session_dir, vim.log.levels.INFO)
+		return
+	end
+	vim.ui.select(files, { prompt = "Select session" }, function(choice)
+		if choice then
+			session_load(choice)
+		end
+	end)
+end
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	callback = function()
+		session_save("last", { silent = true })
+	end,
+})
 
 -- Notification helper function
 local function notify_toggle(enabled, feature)
@@ -1229,17 +1302,13 @@ require("obsidian").setup({
 		blink = true,
 	},
 })
-
--- Persistence -------------------------------
--- Session management
-require("persistence").setup({ need = 0 })
-
 -- Quarto -----------------------------------
 require("otter").setup({})
 require("quarto").setup({})
 
 -- Render-Markdown ---------------------------
 require("render-markdown").setup({
+	latex = { enabled = false },
 	bullet = {
 		icons = { "■ ", "□ ", "▪ ", "▫ " },
 		left_pad = 0,
@@ -1285,6 +1354,9 @@ require("render-markdown").setup({
 		preset = "round",
 	},
 })
+
+-- Snacks -----------------------------------
+require("snacks").setup({})
 
 -- Todo-comments -----------------------------------
 require("todo-comments").setup({})
