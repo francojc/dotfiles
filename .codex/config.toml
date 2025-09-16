@@ -16,16 +16,6 @@ model = "gpt-5"
 # -------------------------
 # CHOOSE ONE:
 model_provider = "openai"
-# model_provider = "openai-chat-completions"   # if you define that provider below
-# model_provider = "ollama"                     # local
-# model_provider = "azure"                      # Azure OpenAI
-
-# -------------------------
-# Reasoning effort (string)
-# -------------------------
-# CHOOSE ONE:
-# model_reasoning_effort = "high"
-model_reasoning_effort = "medium"
 # model_reasoning_effort = "low"
 # model_reasoning_effort = "minimal"
 
@@ -88,6 +78,7 @@ sandbox_mode = "workspace-write"     # writes allowed in cwd/tmp only
 # -------------------------
 # CHOOSE ONE:
 disable_response_storage = false
+model_reasoning_effort = "medium"
 # disable_response_storage = true   # use for ZDR / no caching
 
 # -------------------------
