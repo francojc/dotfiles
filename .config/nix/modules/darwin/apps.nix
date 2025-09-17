@@ -17,6 +17,7 @@
     ];
 
     brews = [
+      "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "aider" # AI code assistant
       "borders" # jankyborders
