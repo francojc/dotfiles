@@ -11,7 +11,8 @@
   services.flatpak = {
     enable = true;
 
-    updateOnActivation = true;
+    # Auto-update Flatpak packages on activation
+    update.onActivation = true;
 
     # Remotes (equivalent to homebrew.taps)
     remotes = lib.mkOptionDefault [
