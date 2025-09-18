@@ -611,11 +611,10 @@ function _G.Toggle_r_language_server()
 	else
 		-- LSP is not running for this buffer, start it
 		-- We need configuration details to start the client manually
-		local lspconfig_util = require("lspconfig.util")
 		local bufname = vim.api.nvim_buf_get_name(0)
-		local root_dir = lspconfig_util.root_pattern("DESCRIPTION")(bufname)
-			or lspconfig_util.find_git_ancestor(bufname)
-			or lspconfig_util.path.dirname(bufname)
+		local root_dir = vim.fs.root(bufname, "DESCRIPTION")
+			or vim.fs.root(bufname, ".git")
+			or vim.fs.dirname(bufname)
 
 		if root_dir then
 			vim.lsp.start({
@@ -1077,20 +1076,17 @@ require("img-clip").setup({
 	},
 })
 
--- Lspconfig --------------------------------
--- LSP
-local lspconfig = require("lspconfig")
-
+-- LSP Configuration --------------------------------
 -- Get enhanced LSP capabilities from blink.cmp
 -- Define capabilities early so the toggle function can access it
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 -- Bash
 -- bash-language-server
-lspconfig.bashls.setup({ capabilities = capabilities })
+vim.lsp.config.bashls = { capabilities = capabilities }
 -- Lua
--- lua-lanuage-server
-lspconfig.lua_ls.setup({ capabilities = capabilities })
+-- lua-language-server
+vim.lsp.config.lua_ls = { capabilities = capabilities }
 -- Nix
 -- nixd
 
@@ -1102,7 +1098,7 @@ local function get_hostname()
 	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
 end
 
-lspconfig.nixd.setup({
+vim.lsp.config.nixd = {
 	cmd = { "nixd" },
 	capabilities = capabilities,
 	settings = {
@@ -1128,12 +1124,12 @@ lspconfig.nixd.setup({
 			},
 		},
 	},
-})
+}
 -- Python
-lspconfig.pyright.setup({ capabilities = capabilities })
+vim.lsp.config.pyright = { capabilities = capabilities }
 
 -- R
-lspconfig.r_language_server.setup({
+vim.lsp.config.r_language_server = {
 	on_attach = function(client, _)
 		client.server_capabilities.documentFormattingProvider = false
 		client.server_capabilities.documentRangeFormattingProvider = false
@@ -1142,9 +1138,9 @@ lspconfig.r_language_server.setup({
 	filetypes = { "r" },
 	capabilities = capabilities,
 	root_dir = function(fname)
-		return lspconfig.util.root_pattern("DESCRIPTION")(fname)
-			or lspconfig.util.find_git_ancestor(fname)
-			or lspconfig.util.path.dirname(fname)
+		return vim.fs.root(fname, "DESCRIPTION")
+			or vim.fs.root(fname, ".git")
+			or vim.fs.dirname(fname)
 	end,
 	settings = {
 		r = {
@@ -1154,7 +1150,7 @@ lspconfig.r_language_server.setup({
 			},
 		},
 	},
-})
+}
 
 -- YAML
 -- yaml-language-server
@@ -1185,7 +1181,7 @@ local resource_path = get_quarto_resource_path()
 local quarto_schema_path = resource_path and (resource_path .. "/schemas/quarto-schema.json") or nil
 
 if quarto_schema_path then
-	lspconfig.yamlls.setup({
+	vim.lsp.config.yamlls = {
 		capabilities = capabilities,
 		settings = {
 			yaml = {
@@ -1196,9 +1192,9 @@ if quarto_schema_path then
 				validate = true,
 			},
 		},
-	})
+	}
 else
-	lspconfig.yamlls.setup({ capabilities = capabilities })
+	vim.lsp.config.yamlls = { capabilities = capabilities }
 end
 
 -- Lualine ----------------------------------------------------------------
