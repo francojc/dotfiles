@@ -29,6 +29,15 @@
         aqua = "#b0c4de";
         orange = "#ffa500";
 
+        # Bright colors
+        bright_red = "#ff6b6b";
+        bright_green = "#a0d490";
+        bright_yellow = "#ffcc5c";
+        bright_blue = "#87ceeb";
+        bright_purple = "#f0e68c";
+        bright_aqua = "#e0ffff";
+        bright_orange = "#ffd700";
+
         # Special
         cursor = "#ffa500";
         accent = "#ffa500";
