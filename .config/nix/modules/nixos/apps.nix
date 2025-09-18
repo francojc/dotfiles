@@ -29,7 +29,7 @@
       "org.chromium.Chromium" # Chromium browser
 
       # Communication
-      "org.signal.Signal" # Signal messenger
+      # "org.signal.Signal" # Signal messenger - not available in Flathub
       "us.zoom.Zoom" # Zoom
 
       # Media & Entertainment
