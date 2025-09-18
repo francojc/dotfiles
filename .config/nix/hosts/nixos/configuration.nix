@@ -26,6 +26,17 @@
 
   programs.zsh.enable = true; # Enable Zsh
 
+  # --- Flatpak Support ---
+  services.flatpak.enable = true;
+
+  # XDG portal for Flatpak integration
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
+
   # Define the primary user for NixOS
   users.users.${username} = {
     isNormalUser = true;

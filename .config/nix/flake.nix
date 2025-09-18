@@ -12,6 +12,9 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak";
+    };
   };
 
   outputs = inputs @ {
@@ -19,6 +22,7 @@
     nixpkgs,
     darwin,
     home-manager,
+    nix-flatpak,
     ...
   }: let
     # Import system definitions and host configurations
@@ -102,6 +106,9 @@
             ++ [
               # NixOS-specific modules
               ./modules/nixos/apps.nix
+
+              # nix-flatpak system module
+              nix-flatpak.nixosModules.nix-flatpak
 
               # Home Manager integration for NixOS
               home-manager.nixosModules.home-manager

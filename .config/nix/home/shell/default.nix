@@ -46,6 +46,10 @@
         # OLLAMA
         export OLLAMA_HOST="0.0.0.0"
 
+        # --- FLATPAK INTEGRATION ---
+        # Ensure Flatpak apps can find system fonts and themes
+        export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/${username}/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+
 
         # --- CLAUDE CODE ---
         # Install claude-code, if not already installed
@@ -99,6 +103,15 @@
         ll = "ls --long --time-style=relative --ignore-glob='.git|.DS_Store'";
         lt = "ll --tree --level=2 --ignore-glob='.git|.DS_Store'";
         lg = "lazygit";
+
+        # Flatpak aliases (similar to brew workflow)
+        flat = "flatpak";
+        flat-install = "flatpak install flathub";
+        flat-search = "flatpak search";
+        flat-list = "flatpak list";
+        flat-update = "flatpak update";
+        flat-remove = "flatpak uninstall";
+        flat-info = "flatpak info";
       };
     };
 

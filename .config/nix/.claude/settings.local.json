@@ -7,7 +7,11 @@
       "Bash(nix search:*)",
       "Bash(brew search:*)",
       "Bash(hostname)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "mcp__zen__chat",
+      "WebSearch",
+      "mcp__zen__challenge",
+      "mcp__zen__planner"
     ],
     "deny": []
   }
