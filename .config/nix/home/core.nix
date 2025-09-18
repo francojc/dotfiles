@@ -43,6 +43,7 @@
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
+    aider-chat # AI code assistant
     _7zz # Archive compression
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone

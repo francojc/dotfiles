@@ -19,7 +19,7 @@
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
-      "aider" # AI code assistant
+      # "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
       "doxx" # MS Docx viewer
