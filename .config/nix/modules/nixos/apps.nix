@@ -30,7 +30,7 @@
 
       # Communication
       # "org.signal.Signal" # Signal messenger - not available in Flathub
-      "us.zoom.Zoom" # Zoom
+      # "us.zoom.Zoom" # Zoom
 
       # Media & Entertainment
       "com.spotify.Client" # Spotify
