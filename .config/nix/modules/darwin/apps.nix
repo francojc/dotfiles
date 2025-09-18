@@ -29,6 +29,7 @@
       "matheusml/zsh-ai/zsh-ai" # AI shell plugin
       "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
+      "geekbench" # system benchmarking
       "nmap"
       "npm" # Node.js package manager
       "ollama" # AI model management

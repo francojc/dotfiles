@@ -27,6 +27,7 @@
       # Development Tools
       "app.zen_browser.zen" # Privacy-focused browser
       "org.chromium.Chromium" # Chromium browser
+      "com.geekbench.Geekbench6" # System benchmarking
 
       # Communication
 
