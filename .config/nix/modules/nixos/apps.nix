@@ -29,18 +29,13 @@
       "org.chromium.Chromium" # Chromium browser
 
       # Communication
-      # "org.signal.Signal" # Signal messenger - not available in Flathub
-      # "us.zoom.Zoom" # Zoom
 
       # Media & Entertainment
-      "com.spotify.Client" # Spotify
-      "org.videolan.VLC" # VLC media player
-      "org.audacityteam.Audacity" # Audio editor
-      "fr.handbrake.ghb" # HandBrake video converter
+      # "org.videolan.VLC" # VLC media player
 
       # Productivity
-      "md.obsidian.Obsidian" # Note taking
-      "org.zotero.Zotero" # Reference manager
+      # "md.obsidian.Obsidian" # Note taking
+      # "org.zotero.Zotero" # Reference manager
 
       # System Tools
       # "org.gnome.FileRoller" # Archive manager
@@ -49,7 +44,7 @@
 
       # File Management
       # "org.gnome.Nautilus" # File manager
-      "com.dropbox.Client" # Dropbox
+      # "com.dropbox.Client" # Dropbox
     ];
 
     # Uninstall packages not managed by nix-flatpak
@@ -63,9 +58,8 @@
     gcc
     ghostty
     gnome-tweaks
-    gnomeExtensions.awesome-tiles
+    gnomeExtensions.paperwm
     gnomeExtensions.clipboard-indicator
-    gnomeExtensions.dash-to-dock
     gnomeExtensions.extension-list
     pinentry-tty
     wl-clipboard
