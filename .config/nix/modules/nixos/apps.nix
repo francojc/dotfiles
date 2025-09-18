@@ -73,6 +73,7 @@
     gnomeExtensions.clipboard-indicator
     gnomeExtensions.dash-to-dock
     gnomeExtensions.extension-list
+    pinentry-tty
     wl-clipboard
     xclip
   ];
