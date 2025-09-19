@@ -29,7 +29,6 @@
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
-        export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
