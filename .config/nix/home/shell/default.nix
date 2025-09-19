@@ -75,7 +75,7 @@
           if command -v npm &> /dev/null; then
             npm install -g @openai@codex
           else
-            echo "npm not found. Please install Node.js and npm to use codex.
+            echo "npm not found. Please install Node.js and npm to use codex."
           fi
         fi
 
@@ -84,7 +84,7 @@
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
         export ZSH_AI_PROVIDER="gemini"
-        export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#5c6370'
+        export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#5c6370"
 
         # --- SECRETS (from `pass`) ---
         source ${config.home.homeDirectory}/.variables.env
