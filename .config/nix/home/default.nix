@@ -5,15 +5,21 @@
   ...
 }: {
   # Accept standard HM args
-  imports = [
-    ./themes.nix
-    ./core.nix
-    ./git.nix
-    ./ghostty.nix
-    ./shell/default.nix
-    ./tmux.nix
-    ./vim.nix
-  ] ++ (if isLinux then [./hyprland.nix] else []);
+  imports =
+    [
+      ./themes.nix
+      ./core.nix
+      ./git.nix
+      ./ghostty.nix
+      ./shell/default.nix
+      ./tmux.nix
+      ./vim.nix
+    ]
+    ++ (
+      if isLinux
+      then [./hyprland-simple.nix]
+      else []
+    );
 
   home = {
     # Use args passed by Home Manager

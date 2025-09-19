@@ -15,7 +15,10 @@
       "Read(//home/jeridf/.dotfiles/**)",
       "Bash(nix flake check:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(systemctl:*)",
+      "Read(//home/jeridf/Pictures/**)",
+      "WebFetch(domain:wiki.hypr.land)"
     ],
     "deny": []
   }
