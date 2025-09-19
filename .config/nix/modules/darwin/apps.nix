@@ -24,7 +24,6 @@
       "doxx" # MS Docx viewer
       "huggingface-cli"
       "keith/formulae/reminders-cli"
-      "llm"
       "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
       "nmap"
