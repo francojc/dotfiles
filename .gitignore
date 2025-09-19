@@ -23,6 +23,7 @@
 .config/github-copilot
 .config/ncspot/userstate.cbor
 .config/pianobar/state
+.config/pulse/*
 .config/raycast/*
 
 .config/nvim/lua/theme-config.lua

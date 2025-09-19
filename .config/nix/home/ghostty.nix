@@ -14,6 +14,8 @@
         then 20
         else if hostname == "Macbook-Airborne"
         then 16
+        else if hostname == "Nix-Rover"
+        then 14
         else 16
       )}
       cursor-color = ${theme.ghostty.cursor_color}
