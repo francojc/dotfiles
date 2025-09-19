@@ -9,7 +9,12 @@
     settings = {
       # Monitor configuration
       monitor = [
-        ",preferred,auto,auto"
+        # Virtual-1 (current display) - use widescreen resolution
+        "Virtual-1,1920x1080@60,0x0,1"
+        # MacBook Pro retina display (when available)
+        ",2560x1600@59.99,0x0,1.5"
+        # Fallback for any unrecognized monitors
+        ",preferred,auto,1"
       ];
 
       # Input configuration
@@ -93,6 +98,9 @@
       misc = {
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
+        # Optimize for high-DPI displays
+        vfr = true;
+        vrr = 1;
       };
 
       # Keybindings (Mac-like, ported from dconf)
@@ -107,9 +115,9 @@
 
         # Mac application shortcuts
         "$mod, Space, exec, wofi --show drun"           # Cmd+Space (Spotlight)
-        "$mod, T, exec, kitty"                          # Cmd+T (new terminal)
-        "$mod, N, exec, kitty"                          # Cmd+N (new window)
-        "$mod, Return, exec, kitty"                     # Cmd+Enter (terminal)
+        "$mod, T, exec, ghostty"                          # Cmd+T (new terminal)
+        "$mod, N, exec, ghostty"                          # Cmd+N (new window)
+        "$mod, Return, exec, ghostty"                     # Cmd+Enter (terminal)
 
         # File management
         "$mod SHIFT, N, exec, nautilus"                 # Cmd+Shift+N (new finder window)
