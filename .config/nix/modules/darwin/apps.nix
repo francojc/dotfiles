@@ -27,11 +27,9 @@
       "llm"
       "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
-      "geekbench" # system benchmarking
       "nmap"
       "npm" # Node.js package manager
       "ollama" # AI model management
-      "pipx" # Python package manager
       "pngpaste" # paste images
       "poetry" # Python dependency management
       "python@3.11" # Python 3
@@ -52,6 +50,7 @@
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
+      "geekbench" # system benchmarking
       "ghostty" # Terminal emulator
       "google-drive"
       "handbrake" # Video transcoder
