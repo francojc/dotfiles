@@ -15,7 +15,7 @@
       # Input configuration
       input = {
         kb_layout = "us";
-        kb_options = "terminate:ctrl_alt_bksp,lv3:ralt_switch,altwin:swap_lalt_lwin";
+        kb_options = "terminate:ctrl_alt_bksp,lv3:ralt_switch";
 
         follow_mouse = 1;
 
@@ -97,39 +97,35 @@
       "$mod" = "SUPER";
 
       bind = [
-        # Window management (Mac-like)
-        "$mod, W, killactive"
-        "$mod, M, fullscreen, 1"  # Maximize (like Super+M in GNOME)
-        "$mod, F, fullscreen, 0"  # True fullscreen
-        "$mod, D, exec, hyprctl dispatch workspace empty"  # Show desktop equivalent
+        # Core Mac window management
+        "$mod, W, killactive"                           # Cmd+W (close window)
+        "$mod, M, fullscreen, 1"                        # Cmd+M (maximize)
+        "$mod, Q, exit"                                 # Cmd+Q (quit Hyprland)
+        "$mod, H, exec, hyprctl dispatch workspace empty" # Cmd+H (hide/minimize)
 
-        # Applications
-        "$mod, Return, exec, kitty"
-        "$mod, T, exec, kitty"
-        "$mod, E, exec, nautilus"
-        "$mod SHIFT, F, exec, nautilus"
-        "$mod, A, exec, wofi --show drun"
-        "$mod, Space, exec, wofi --show drun"
+        # Mac application shortcuts
+        "$mod, Space, exec, wofi --show drun"           # Cmd+Space (Spotlight)
+        "$mod, T, exec, kitty"                          # Cmd+T (new terminal)
+        "$mod, N, exec, kitty"                          # Cmd+N (new window)
+        "$mod, Return, exec, kitty"                     # Cmd+Enter (terminal)
 
-        # Screenshots (Mac-like)
-        "$mod SHIFT, 3, exec, grim ~/Pictures/screenshot-$(date +'%Y%m%d-%H%M%S').png"
-        "$mod SHIFT, 4, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +'%Y%m%d-%H%M%S').png"
-        "$mod SHIFT, 5, exec, grim -g \"$(slurp)\" - | wl-copy"
+        # File management
+        "$mod SHIFT, N, exec, nautilus"                 # Cmd+Shift+N (new finder window)
+        "$mod, E, exec, nautilus"                       # Cmd+E (file manager)
 
-        # Move focus
-        "$mod, H, movefocus, l"
-        "$mod, L, movefocus, r"
-        "$mod, K, movefocus, u"
-        "$mod, J, movefocus, d"
+        # Mac screenshots
+        "$mod SHIFT, 3, exec, grim ~/Pictures/screenshot-$(date +'%Y%m%d-%H%M%S').png"        # Cmd+Shift+3 (full screen)
+        "$mod SHIFT, 4, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +'%Y%m%d-%H%M%S').png"  # Cmd+Shift+4 (selection)
+        "$mod SHIFT, 5, exec, grim -g \"$(slurp)\" - | wl-copy"                               # Cmd+Shift+5 (to clipboard)
 
-        # Move windows
-        "$mod SHIFT, H, movewindow, l"
-        "$mod SHIFT, L, movewindow, r"
-        "$mod SHIFT, K, movewindow, u"
-        "$mod SHIFT, J, movewindow, d"
+        # Mission Control / Spaces (Mac workspaces)
+        "$mod, UP, exec, hyprctl dispatch overview"     # Cmd+Up (Mission Control-like)
+        "$mod, F3, exec, hyprctl dispatch overview"     # F3 (Mission Control)
 
-        # Workspace switching (like GNOME)
-        "$mod, 1, workspace, 1"
+        # Workspace switching (Mac Spaces style)
+        "CTRL, left, workspace, e-1"                    # Ctrl+Left (previous space)
+        "CTRL, right, workspace, e+1"                   # Ctrl+Right (next space)
+        "$mod, 1, workspace, 1"                         # Cmd+1-9 (direct space access)
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
         "$mod, 4, workspace, 4"
@@ -138,9 +134,8 @@
         "$mod, 7, workspace, 7"
         "$mod, 8, workspace, 8"
         "$mod, 9, workspace, 9"
-        "$mod, 0, workspace, 10"
 
-        # Move active window to workspace
+        # Move windows between spaces
         "$mod SHIFT, 1, movetoworkspace, 1"
         "$mod SHIFT, 2, movetoworkspace, 2"
         "$mod SHIFT, 3, movetoworkspace, 3"
@@ -150,20 +145,21 @@
         "$mod SHIFT, 7, movetoworkspace, 7"
         "$mod SHIFT, 8, movetoworkspace, 8"
         "$mod SHIFT, 9, movetoworkspace, 9"
-        "$mod SHIFT, 0, movetoworkspace, 10"
 
-        # Window cycling (Mac-like)
-        "$mod, grave, cyclenext"  # Super+` (backtick)
+        # Window cycling (Mac-style)
+        "$mod, grave, cyclenext"                        # Cmd+` (cycle through windows of same app)
         "$mod SHIFT, grave, cyclenext, prev"
+        "$mod, Tab, exec, hyprctl dispatch focuscurrentorlast" # Cmd+Tab (last window)
 
-        # Toggle floating
-        "$mod SHIFT, space, togglefloating"
+        # Mac-like window management
+        "$mod, F, fullscreen, 0"                        # Cmd+F (fullscreen)
+        "$mod SHIFT, F, togglefloating"                 # Cmd+Shift+F (floating)
 
-        # Special workspace
-        "$mod, S, togglespecialworkspace, magic"
-        "$mod SHIFT, S, movetoworkspace, special:magic"
+        # System controls
+        "$mod, comma, exec, gnome-control-center"       # Cmd+, (preferences)
+        "$mod SHIFT, Q, exec, wlogout"                  # Cmd+Shift+Q (logout)
 
-        # Volume and brightness controls
+        # Hardware controls (MacBook specific)
         ", XF86AudioRaiseVolume, exec, pamixer -i 5"
         ", XF86AudioLowerVolume, exec, pamixer -d 5"
         ", XF86AudioMute, exec, pamixer -t"
@@ -174,6 +170,12 @@
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
+
+        # Alternative window focus (for when needed)
+        "ALT, H, movefocus, l"                          # Alt+H/J/K/L for vim-like movement
+        "ALT, J, movefocus, d"
+        "ALT, K, movefocus, u"
+        "ALT, L, movefocus, r"
       ];
 
       # Mouse bindings
