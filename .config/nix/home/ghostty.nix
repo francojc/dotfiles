@@ -21,6 +21,12 @@
       adjust-cursor-thickness = 2
       mouse-hide-while-typing = true
 
+      ${
+        if hostname == "Nix-Rover"
+        then "window-decoration = none\n"
+        else ""
+      }
+
       # Tabs and windows
       # window-padding-x = 5
       # window-padding-y = 3
