@@ -54,17 +54,22 @@
 
   # NixOS System Packages (complementary to Flatpak packages)
   environment.systemPackages = with pkgs; [
-    dconf-editor
-    dconf2nix
+    # Development tools
     gcc
     ghostty
-    gnome-tweaks
-    gnomeExtensions.paperwm
-    gnomeExtensions.clipboard-indicator
-    gnomeExtensions.extension-list
+
+    # System utilities
+    dconf-editor
+    dconf2nix
     pinentry-tty
+
+    # Clipboard tools (Wayland and X11 compatibility)
     wl-clipboard
     xclip
+
+    # Additional Wayland utilities
+    wayland-utils
+    wlr-randr
   ];
 
   # Programs

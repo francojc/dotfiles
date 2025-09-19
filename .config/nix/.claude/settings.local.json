@@ -11,7 +11,11 @@
       "mcp__zen__chat",
       "WebSearch",
       "mcp__zen__challenge",
-      "mcp__zen__planner"
+      "mcp__zen__planner",
+      "Read(//home/jeridf/.dotfiles/**)",
+      "Bash(nix flake check:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

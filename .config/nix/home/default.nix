@@ -1,6 +1,7 @@
 {
   username,
   isDarwin,
+  isLinux,
   ...
 }: {
   # Accept standard HM args
@@ -12,7 +13,7 @@
     ./shell/default.nix
     ./tmux.nix
     ./vim.nix
-  ];
+  ] ++ (if isLinux then [./hyprland.nix] else []);
 
   home = {
     # Use args passed by Home Manager
