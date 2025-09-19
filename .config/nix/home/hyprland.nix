@@ -362,14 +362,16 @@
   # Mako notification daemon
   services.mako = {
     enable = true;
-    backgroundColor = "#2e3440";
-    borderColor = "#88c0d0";
-    borderRadius = 8;
-    borderSize = 2;
-    textColor = "#eceff4";
-    font = "FiraCode Nerd Font 11";
-    defaultTimeout = 5000;
-    ignoreTimeout = true;
+    settings = {
+      background-color = "#2e3440";
+      border-color = "#88c0d0";
+      border-radius = 8;
+      border-size = 2;
+      text-color = "#eceff4";
+      font = "FiraCode Nerd Font 11";
+      default-timeout = 5000;
+      ignore-timeout = true;
+    };
   };
 
   # Hyprpaper for wallpapers
