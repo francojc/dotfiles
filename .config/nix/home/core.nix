@@ -41,6 +41,12 @@
     stow # Symlink manager
   ];
 
+  llm_with_plugins = pkgs.python3.withPackages (ps:
+    with ps; [
+      llm
+      llm-openrouter
+    ]);
+
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
     aider-chat # AI code assistant
@@ -59,6 +65,7 @@
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
+    llm_with_plugins # llm CLI bundled with OpenRouter plugin
     repgrep # ripgrep across files
     ripgrep # grep replacement
     ruby # Programming language

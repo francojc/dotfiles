@@ -19,14 +19,12 @@
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
-      # "aider" # AI code assistant
       "borders" # jankyborders
       "chawan" # TUI web browser
       "doxx" # MS Docx viewer
       "huggingface-cli"
       "keith/formulae/reminders-cli"
       "llm"
-      "matheusml/zsh-ai/zsh-ai" # AI shell plugin
       "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
       "geekbench" # system benchmarking

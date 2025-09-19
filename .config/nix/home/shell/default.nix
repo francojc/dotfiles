@@ -10,8 +10,6 @@
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
-        source /opt/homebrew/share/zsh-ai/zsh-ai.plugin.zsh
-        source <(${config.home.homeDirectory}/.bin/gh-worktree completion)
       '';
       profileExtra = ''
         # zprofile
@@ -82,10 +80,6 @@
         # --- SECRETS (from `pass`) ---
         source ${config.home.homeDirectory}/.variables.env
 
-        # Xan completions
-        function __xan {
-          xan compgen "$1" "$2" "$3"
-        }
         # Set 'pbcopy' if not on darwin
         if [[ "$OSTYPE" != "darwin"* ]]; then
           # Check if xclip is installed

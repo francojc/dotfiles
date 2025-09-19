@@ -7,7 +7,7 @@
 # Model (string)
 # -------------------------
 # CHOOSE ONE:
-model = "gpt-5"
+model = "gpt-5-codex"
 # model = "o3"
 # model = "o4-mini"
 
@@ -78,7 +78,6 @@ sandbox_mode = "workspace-write"     # writes allowed in cwd/tmp only
 # -------------------------
 # CHOOSE ONE:
 disable_response_storage = false
-model_reasoning_effort = "medium"
 # disable_response_storage = true   # use for ZDR / no caching
 
 # -------------------------
