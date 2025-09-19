@@ -29,6 +29,7 @@
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
+        export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
@@ -68,6 +69,15 @@
           fi
         fi
 
+        # --- CODEX AI ---
+        # Install codex, if not already installed
+        if ! command -v codex &> /dev/null; then
+          if command -v npm &> /dev/null; then
+            npm install -g @openai@codex
+          else
+            echo "npm not found. Please install Node.js and npm to use codex.
+          fi
+        fi
 
         # --- ZSH ---
         # ZSH plugins

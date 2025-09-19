@@ -27,7 +27,6 @@
       "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
       "nmap"
-      "npm" # Node.js package manager
       "ollama" # AI model management
       "pngpaste" # paste images
       "poetry" # Python dependency management
