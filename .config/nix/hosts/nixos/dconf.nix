@@ -63,10 +63,10 @@ with lib.hm.gvariant; {
       secondary-color = "#2f302f";
     };
 
-    # Input sources configuration (Mac-native layout)
+    # Updated input sources to include Alt/Super key swap for Mac-like behavior
     "org/gnome/desktop/input-sources" = {
       sources = [(mkTuple ["xkb" "us"])];
-      xkb-options = ["terminate:ctrl_alt_bksp" "lv3:ralt_switch"];
+      xkb-options = ["terminate:ctrl_alt_bksp" "lv3:ralt_switch" "altwin:swap_lalt_lwin"];
     };
 
     # Merge with your existing interface settings + Mac-like additions
