@@ -67,7 +67,7 @@
 
     # File manager and terminal
     nautilus
-    ghostty
+    kitty
 
     # System utilities
     brightnessctl

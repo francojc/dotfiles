@@ -49,7 +49,7 @@
     slurp
 
     # Terminal and file manager
-    ghostty
+    kitty
     nautilus
 
     # System utilities

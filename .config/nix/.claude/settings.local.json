@@ -18,11 +18,7 @@
       "Bash(git commit:*)",
       "Bash(systemctl:*)",
       "Read(//home/jeridf/Pictures/**)",
-      "WebFetch(domain:wiki.hypr.land)",
-      "Bash(hyprctl:*)",
-      "Bash(xrandr:*)",
-      "Read(//proc/**)",
-      "Bash(dmesg:*)"
+      "WebFetch(domain:wiki.hypr.land)"
     ],
     "deny": []
   }
