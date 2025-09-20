@@ -29,12 +29,11 @@
   # --- Flatpak Support ---
   services.flatpak.enable = true;
 
-  # XDG portal for Flatpak and Wayland integration
+  # XDG portal for Flatpak integration
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
     ];
   };
 
@@ -47,7 +46,6 @@
     home = "/home/${username}"; # Standard Linux home
   };
 
-  # X11 support for XWayland
   services.xserver = {
     enable = true;
     xkb = {
@@ -55,6 +53,28 @@
       variant = "";
     };
   };
+
+  # --- Display Manager & Desktop Environment ---
+  services = {
+    # GDM display manager with auto-login
+    displayManager = {
+      gdm = {
+        enable = true;
+        wayland = true; # Enable Wayland support
+      };
+      autoLogin = {
+        enable = true;
+        user = username; # Use username from specialArgs
+      };
+    };
+
+    # GNOME desktop environment
+    desktopManager.gnome.enable = true;
+  };
+
+  # Workaround for GNOME autologin
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
 
   # --- Sound (from original config) ---
   # services.pulseaudio.enable = false; # Default anyway if pipewire is enabled
