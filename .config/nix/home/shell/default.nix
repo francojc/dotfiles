@@ -73,9 +73,19 @@
         # Install codex, if not already installed
         if ! command -v codex &> /dev/null; then
           if command -v npm &> /dev/null; then
-            npm install -g @openai@codex
+            npm install -g @openai/codex@latest
           else
             echo "npm not found. Please install Node.js and npm to use codex."
+          fi
+        fi
+
+        # --- GEMINI CLI ---
+        # Install gemini-cli, if not already installed
+        if ! command -v gemini &> /dev/null; then
+          if command -v npm &> /dev/null; then
+            npm install -g @google/gemini-cli@latest
+          else
+            echo "npm not found. Please install Node.js and npm to use gemini."
           fi
         fi
 
