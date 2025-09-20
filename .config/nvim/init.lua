@@ -20,7 +20,6 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"akinsho/bufferline.nvim", -- Bufferline
 	"akinsho/toggleterm.nvim", -- Toggle terminal
-	"MagicDuck/grug-far.nvim", -- Grug far plugin (search/replace)
 	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
@@ -44,7 +43,6 @@ require("paq")({
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
-	"neovim/nvim-lspconfig", -- LSP
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
@@ -55,7 +53,6 @@ require("paq")({
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/aerial.nvim", -- Code outline
 	"stevearc/conform.nvim", -- Formatter
-	"folke/snacks.nvim", -- Snacks
 })
 
 ---| Options ------------------------------------------------------
@@ -452,7 +449,6 @@ map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" 
 map({ "n", "v" }, "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
 -- Search -----------------------------------
-map("n", "<leader>sg", "<Cmd>GrugFar<Cr>", { desc = "Grug far" })
 map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
 map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
@@ -612,9 +608,7 @@ function _G.Toggle_r_language_server()
 		-- LSP is not running for this buffer, start it
 		-- We need configuration details to start the client manually
 		local bufname = vim.api.nvim_buf_get_name(0)
-		local root_dir = vim.fs.root(bufname, "DESCRIPTION")
-			or vim.fs.root(bufname, ".git")
-			or vim.fs.dirname(bufname)
+		local root_dir = vim.fs.root(bufname, "DESCRIPTION") or vim.fs.root(bufname, ".git") or vim.fs.dirname(bufname)
 
 		if root_dir then
 			vim.lsp.start({
@@ -765,9 +759,6 @@ end
 alpha.setup(dashboard.config)
 
 -- Blink ----------------------------------
--- Timer for delayed auto_show
-local completion_timer = nil
-
 require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
@@ -780,27 +771,8 @@ require("blink.cmp").setup({
 			},
 		},
 		menu = {
-			auto_show = function(ctx)
-				-- Don't show if we're at the end of a line with only whitespace after cursor
-				local line = vim.api.nvim_get_current_line()
-				local col = vim.api.nvim_win_get_cursor(0)[2]
-				local after_cursor = line:sub(col + 1)
-				if after_cursor:match("^%s*$") then
-					return false
-				end
-				-- Cancel any existing timer
-				if completion_timer then
-					vim.fn.timer_stop(completion_timer)
-					completion_timer = nil
-				end
-				-- Start a new timer for 1000ms delay
-				completion_timer = vim.fn.timer_start(1000, function()
-					require("blink.cmp").show()
-					completion_timer = nil
-				end)
-				-- Return false to prevent immediate showing
-				return false
-			end,
+			auto_show = true,
+			auto_show_delay_ms = 1000,
 			draw = {
 				columns = {
 					{ "kind_icon", "label", "label_description", gap = 1 },
@@ -1138,9 +1110,7 @@ vim.lsp.config.r_language_server = {
 	filetypes = { "r" },
 	capabilities = capabilities,
 	root_dir = function(fname)
-		return vim.fs.root(fname, "DESCRIPTION")
-			or vim.fs.root(fname, ".git")
-			or vim.fs.dirname(fname)
+		return vim.fs.root(fname, "DESCRIPTION") or vim.fs.root(fname, ".git") or vim.fs.dirname(fname)
 	end,
 	settings = {
 		r = {
@@ -1351,9 +1321,6 @@ require("render-markdown").setup({
 	},
 })
 
--- Snacks -----------------------------------
-require("snacks").setup({})
-
 -- Todo-comments -----------------------------------
 require("todo-comments").setup({})
 
@@ -1388,8 +1355,8 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "Assistant", icon = "" },
-	{ "<leader>b", group = "Buffer", icon = "" },
+	{ "<leader>a", group = "Assistant", icon = " " },
+	{ "<leader>b", group = "Buffer", icon = " " },
 	{ "<leader>c", group = "Code", icon = "" },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = "" },
 	{ "<leader>e", group = "Explore", icon = "" },
