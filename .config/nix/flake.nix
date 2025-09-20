@@ -106,7 +106,7 @@
             ++ [
               # NixOS-specific modules
               ./modules/nixos/apps.nix
-              ./modules/nixos/hyprland-simple.nix
+              ./modules/nixos/hyprland.nix
 
               # nix-flatpak system module
               nix-flatpak.nixosModules.nix-flatpak
