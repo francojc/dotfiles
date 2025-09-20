@@ -66,8 +66,9 @@ alias path='echo -e ${PATH//:/\\n}'
 # SSH aliases
 alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore'
 alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
-alias home='TERM=xterm-256color ssh root@home'
-alias docker-lxc='TERM=xterm-256color ssh jeridf@docker-lxc'
+alias proxmox='TERM=xterm-256color ssh root@minis-proxmox'
+alias services='TERM=xterm-256color ssh jeridf@minis-services'
+alias ai='TERM=xterm-256color ssh root@minis-ai'
 
 # Git aliases
 alias ga='git add'
