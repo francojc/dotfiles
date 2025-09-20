@@ -51,7 +51,7 @@
       "geekbench" # system benchmarking
       "ghostty" # Terminal emulator
       "google-drive"
-      "handbrake" # Video transcoder
+      # "handbrake" # Video transcoder
       "kap" # screen recording
       "keycastr" # keystroke visualizer
       "loopback" # audio routing

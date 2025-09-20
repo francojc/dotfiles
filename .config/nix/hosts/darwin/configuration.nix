@@ -101,12 +101,14 @@
 
       CustomUserPreferences = {
         NSGlobalDomain = {
+          "com.apple.LaunchServices.LSQuarantine" = false;
+          "com.apple.mouse.scaling" = -1;
           AppleReduceDesktopTinting = true;
+          AppleShowScrollBars = "Always";
+          NSRecentDocumentsLimit = 100;
           NSWindowAutomaticWindowAnimationsEnabled = false;
+          NSWindowResizeTime = 0.001;
           WebKitDeveloperExtras = true;
-        };
-        ".GlobalPreferences" = {
-          AppleSpacesSwitchOnActivate = true;
         };
         "com.apple.AdLib" = {
           allowApplePersonalizedAdvertising = false;

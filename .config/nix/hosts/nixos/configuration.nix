@@ -33,7 +33,7 @@
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
     ];
   };
 
@@ -46,35 +46,19 @@
     home = "/home/${username}"; # Standard Linux home
   };
 
-  services.xserver = {
+  # --- Sway Window Manager ---
+  programs.sway = {
     enable = true;
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
+    wrapperFeatures.gtk = true; # so that gtk apps have a uniform theme
   };
 
-  # --- Display Manager & Desktop Environment ---
-  services = {
-    # GDM display manager with auto-login
-    displayManager = {
-      gdm = {
-        enable = true;
-        wayland = true; # Enable Wayland support
-      };
-      autoLogin = {
-        enable = true;
-        user = username; # Use username from specialArgs
-      };
-    };
-
-    # GNOME desktop environment
-    desktopManager.gnome.enable = true;
-  };
-
-  # Workaround for GNOME autologin
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  # Add sway and related packages to the environment
+  environment.systemPackages = with pkgs; [
+    sway
+    waybar
+    wofi
+    ghostty
+  ];
 
   # --- Sound (from original config) ---
   # services.pulseaudio.enable = false; # Default anyway if pipewire is enabled

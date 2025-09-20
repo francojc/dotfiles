@@ -1,6 +1,7 @@
 {
-  "theme": "Atom One",
-  "preferredEditor": "vim",
+  "hideBanner": true,
+  "showMemoryUsage": true,
+  "showLineNumbers": true,
   "mcpServers": {
     "sequential-thinking": {
       "command": "npx",
@@ -62,9 +63,8 @@
       "command": "/Users/francojc/.local/mcp/prod/zen-mcp-server/zen-mcp-server"
     }
   },
-  "hideBanner": true,
-  "showMemoryUsage": true,
-  "vimMode": true,
-  "showLineNumbers": true,
-  "selectedAuthType": "oauth-personal"
+  "preferredEditor": "vim",
+  "selectedAuthType": "oauth-personal",
+  "theme": "Atom One",
+  "vimMode": true
 }
