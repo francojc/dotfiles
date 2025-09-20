@@ -20,22 +20,17 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "borders" # jankyborders
-      "chawan" # TUI web browser
-      "doxx" # MS Docx viewer
       "huggingface-cli"
       "keith/formulae/reminders-cli"
-      "mcp-get" # manage mcp servers
       "ncspot" # ncurses Spotify client
       "nmap"
       "ollama" # AI model management
       "pngpaste" # paste images
-      "poetry" # Python dependency management
       "python@3.11" # Python 3
       "rename" # file renaming utility
       "sqly" #
       "transmission-cli" # command-line torrent client
       "uv"
-      "wget"
     ];
 
     casks = [
