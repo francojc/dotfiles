@@ -2,7 +2,6 @@
   environment.systemPackages = with pkgs; [
     age # Encryption
     alejandra # Formatter
-    browsh
     carapace
     codespell
     curl
