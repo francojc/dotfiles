@@ -61,6 +61,7 @@
       finder = {
         _FXShowPosixPathInTitle = false;
         AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
         FXEnableExtensionChangeWarning = false;
         FXPreferredViewStyle = "clmv";
         QuitMenuItem = true;
@@ -135,9 +136,6 @@
         };
         "com.apple.ImageCapture" = {
           disableHotPlug = true;
-        };
-        "com.apple.LaunchServices" = {
-          LSQuarantine = true;
         };
         "com.apple.Siri".StatusMenuVisible = false;
         "com.apple.screensaver" = {
