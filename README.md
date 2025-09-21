@@ -111,25 +111,21 @@ Before restoring the dotfiles, ensure you have the following installed:
 
 # NixOS
 
-This repository supports NixOS systems with two pre-configured host examples and a flexible module system that mirrors the macOS setup.
+This repository supports NixOS systems with a modular configuration system and flexible desktop environment profiles that mirror the macOS setup approach.
 
 ## Available Host Configurations
 
-This dotfiles repository includes two NixOS host examples with different desktop environments:
+This dotfiles repository includes a NixOS host example with a modular desktop environment system:
 
-### `nixos` Host (Modern Wayland Setup)
-
-- **Desktop Environment**: Sway (Wayland compositor)
-- **Applications**: GNOME ecosystem, Flatpak integration
-- **Features**: Modern Wayland workflow, touchpad-friendly
-- **Best for**: Laptops, modern hardware, Wayland-compatible workflows
-
-### `minirover` Host (Traditional X11 Setup)
+### `Mini-Rover` Host (Traditional X11 Setup)
 
 - **Desktop Environment**: i3 (X11 window manager)
 - **Applications**: Traditional Linux desktop applications
 - **Features**: XRDP remote desktop support, X11 compatibility
-- **Best for**: Servers, older hardware, remote access scenarios
+- **Best for**: Servers, older hardware, remote access scenarios, Mac Mini 2011
+
+> [!NOTE]
+> This configuration uses a modular profile system with separate desktop environment configurations in `profiles/nixos/`
 
 ## Prerequisites
 
@@ -173,15 +169,15 @@ Before setting up the NixOS configuration, ensure you have the following:
 
 4a. **Review available configurations**:
 
-   - For modern Wayland setup: Use `nixos` host configuration
-   - For traditional X11 setup: Use `minirover` host configuration
+   - Current example: `Mini-Rover` host configuration (i3/X11 setup)
+   - Desktop environment profiles available: `sway.nix` (Wayland) and `i3.nix` (X11)
 
 5a. **Update host configuration** (optional):
 
-   Edit `.config/nix/hosts/nixos/default.nix` (or `minirover`) to customize:
+   Edit `.config/nix/hosts/Mini-Rover/default.nix` to customize:
 
    ```bash
-   nano .config/nix/hosts/nixos/default.nix
+   nano .config/nix/hosts/Mini-Rover/default.nix
    ```
 
    Update the username and email:
@@ -215,7 +211,7 @@ Before setting up the NixOS configuration, ensure you have the following:
    hosts = {
      "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
      "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
-     "minirover" = import ./hosts/minirover/default.nix;
+     "Mini-Rover" = import ./hosts/Mini-Rover/default.nix;
      "yourhostname" = import ./hosts/yourhostname/default.nix;  # Add this line
    };
    ```
@@ -229,8 +225,7 @@ Before setting up the NixOS configuration, ensure you have the following:
    ```
 
    Replace `yourhostname` with:
-   - `nixos` for the Sway/Wayland setup
-   - `minirover` for the i3/X11 setup
+   - `Mini-Rover` for the existing i3/X11 setup
    - Your custom hostname if you created a new configuration
 
    > [!NOTE]
@@ -247,17 +242,18 @@ Before setting up the NixOS configuration, ensure you have the following:
 
 ### Desktop Environment Setup
 
-**For Sway (nixos host)**:
+**For i3 (Mini-Rover host)**:
+
+- i3 will be available in your display manager
+- XRDP is configured for remote desktop access (port 3389)
+- Traditional X11 applications are prioritized
+- LightDM display manager included
+
+**For Sway (if using sway.nix profile)**:
 
 - Sway will be available in your display manager
 - Waybar and Wofi are pre-configured
-- GNOME applications and extensions are included
-
-**For i3 (minirover host)**:
-
-- i3 will be available in your display manager
-- XRDP is configured for remote desktop access
-- Traditional X11 applications are prioritized
+- Wayland-compatible applications and XDG portals included
 
 ### Application Management
 
@@ -266,6 +262,9 @@ Before setting up the NixOS configuration, ensure you have the following:
 - Flatpak is automatically configured and enabled
 - Pre-configured remotes include Flathub and Flathub Beta
 - Applications are managed through the nix configuration in `modules/nixos/apps.nix`
+
+> [!NOTE]
+> The configuration now uses a modular profile system. Desktop environments are defined in `profiles/nixos/` with `sway.nix` for Wayland and `i3.nix` for X11 setups.
 
 ### Customization
 
