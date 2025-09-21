@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   useremail,
   ...
 }: {
@@ -15,7 +16,10 @@
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
       pull.rebase = true;
-      credential.helper = "osxkeychain";
+      credential.helper =
+        if pkgs.stdenv.isDarwin
+        then "osxkeychain"
+        else "${pkgs.git.override { withLibsecret = true; }}/bin/git-credential-libsecret";
 
       # Diff and merge tools
       diff.tool = "nvimdiff";
