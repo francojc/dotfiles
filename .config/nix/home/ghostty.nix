@@ -14,7 +14,7 @@
         then 20
         else if hostname == "Macbook-Airborne"
         then 16
-        else if hostname == "Nix-Rover"
+        else if hostname == "Mini-Rover"
         then 14
         else 16
       )}
@@ -24,7 +24,7 @@
       mouse-hide-while-typing = true
 
       ${
-        if hostname == "Nix-Rover"
+        if hostname == "Mini-Rover"
         then "window-decoration = none\n"
         else ""
       }
