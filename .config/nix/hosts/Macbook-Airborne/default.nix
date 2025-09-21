@@ -12,7 +12,7 @@
 
   # Host-specific modules
   hostModules = [
-    ../darwin/configuration.nix
+    ../../profiles/darwin/configuration.nix
   ];
 
   # Home Manager host-specific modules (if any)

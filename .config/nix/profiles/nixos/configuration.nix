@@ -4,9 +4,6 @@
   username,
   ...
 }: {
-  imports = [
-    ./hardware-configuration.nix
-  ];
 
   # --- Core NixOS Settings ---
   networking.hostName = hostname;
@@ -26,17 +23,6 @@
 
   programs.zsh.enable = true; # Enable Zsh
 
-  # --- Flatpak Support ---
-  services.flatpak.enable = true;
-
-  # XDG portal for Flatpak integration
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-    ];
-  };
-
   # Define the primary user for NixOS
   users.users.${username} = {
     isNormalUser = true;
@@ -46,17 +32,8 @@
     home = "/home/${username}"; # Standard Linux home
   };
 
-  # --- Sway Window Manager ---
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true; # so that gtk apps have a uniform theme
-  };
-
-  # Add sway and related packages to the environment
+  # --- System Packages (Common) ---
   environment.systemPackages = with pkgs; [
-    sway
-    waybar
-    wofi
     ghostty
   ];
 
@@ -71,28 +48,11 @@
     # jack.enable = true; # Enable if you need JACK support
   };
 
-  # --- Other System Services (from original config) ---
+  # --- Other System Services (shared across NixOS hosts) ---
   networking.networkmanager.enable = true;
-  # services.printing.enable = true; # CUPS - Let's make this shared too potentially? Or keep host specific. Keep here for now.
-  # services.printing.enable = true;
-  programs.firefox.enable = true; # Firefox system-wide
-
-  # Example: Bootloader (adjust for your system, e.g., UEFI or BIOS)
-  boot.loader.systemd-boot.enable = true; # For UEFI systems
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # --- !! Home Manager is configured via the flake !! ---
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s important to update this value
-  # when upgrading NixOS -> see nixos-rebuild switch documentation. Make consistent with HM.
-  # Original was 24.11 (likely typo), HM is 24.05.
-  system.stateVersion = "24.05";
-
-  # Optional: Enable SSH server if needed
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = true;
-  };
+  # Note: stateVersion should be set in host-specific configuration
+  # Note: bootloader and SSH settings should be host-specific
 }

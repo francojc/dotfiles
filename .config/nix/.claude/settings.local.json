@@ -11,7 +11,12 @@
       "mcp__zen__chat",
       "WebSearch",
       "mcp__zen__challenge",
-      "mcp__zen__planner"
+      "mcp__zen__planner",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(nix flake check:*)",
+      "Bash(nix flake show:*)",
+      "Bash(nix-instantiate:*)"
     ],
     "deny": []
   }

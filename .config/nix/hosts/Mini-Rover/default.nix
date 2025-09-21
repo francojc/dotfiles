@@ -1,4 +1,4 @@
-# Host-specific configuration for minirover (Mac Mini 2011)
+# Host-specific configuration for Mini-Rover (Mac Mini 2011)
 {
   # System configuration
   system = "x86_64-linux";
@@ -12,6 +12,8 @@
 
   # Host-specific modules
   hostModules = [
+    ../../profiles/nixos/configuration.nix
+    ../../profiles/nixos/i3.nix
     ./configuration.nix
     ./hardware-configuration.nix
   ];
