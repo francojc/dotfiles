@@ -14,7 +14,7 @@
       # Key bindings
       keybindings = lib.mkOptionDefault {
         # Terminal
-        "Mod4+Return" = "exec ${pkgs.alacritty}/bin/alacritty";
+        "Mod4+Return" = "exec ${pkgs.ghostty}/bin/ghostty";
         # Application launcher
         "Mod4+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
         # File manager
@@ -155,3 +155,4 @@
     };
   };
 }
+

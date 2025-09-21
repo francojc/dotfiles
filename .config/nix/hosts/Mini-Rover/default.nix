@@ -8,7 +8,7 @@
   useremail = "francojc@wfu.edu";
 
   # Theme selection for this host
-  theme = "gruvbox"; # options: gruvbox, nightfox, arthur, onedark
+  theme = "autumn"; # options: arthur, autumn, blackmetal, gruvbox, nightfox, arthur, onedark
 
   # Host-specific modules
   hostModules = [
@@ -24,4 +24,3 @@
     # i3 configuration is now included in main home config for Linux hosts
   ];
 }
-
