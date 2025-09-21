@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # --- X11 + i3 Desktop Environment ---
   services.xserver = {
     enable = true;
@@ -14,6 +11,11 @@
 
     # Video drivers for older hardware (can be overridden in host-specific configs)
     videoDrivers = ["intel" "modesetting"];
+
+    # Avoid tearing
+    deviceSection = ''
+      Option "TearFree" "true"
+    '';
 
     # Enable touchpad support (if needed)
     # libinput.enable = true;
@@ -40,3 +42,4 @@
     i3
   ];
 }
+
