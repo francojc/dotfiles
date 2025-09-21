@@ -8,7 +8,7 @@
   useremail = "francojc@wfu.edu";
 
   # Theme selection for this host
-  theme = "autumn"; # options: arthur, autumn, blackmetal, gruvbox, nightfox, arthur, onedark
+  theme = "nightfox"; # options: arthur, autumn, blackmetal, gruvbox, nightfox, arthur, onedark
 
   # Host-specific modules
   hostModules = [
