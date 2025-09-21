@@ -16,7 +16,10 @@
       "Bash(git add:*)",
       "Bash(nix flake check:*)",
       "Bash(nix flake show:*)",
-      "Bash(nix-instantiate:*)"
+      "Bash(nix-instantiate:*)",
+      "Bash(git config:*)",
+      "Read(//home/jeridf/**)",
+      "Bash(ssh-add:*)"
     ],
     "deny": []
   }
