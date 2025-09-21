@@ -32,7 +32,7 @@
     hosts = {
       "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
       "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
-      "Nix-Rover" = import ./hosts/Nix-Rover/default.nix;
+      "minirover" = import ./hosts/minirover/default.nix;
     };
 
     # Unified configuration builder for both Darwin and NixOS

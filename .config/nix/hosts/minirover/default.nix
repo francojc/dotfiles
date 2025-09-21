@@ -1,7 +1,7 @@
-# Host-specific configuration for Nix-Rover
+# Host-specific configuration for minirover (Mac Mini 2011)
 {
   # System configuration
-  system = "aarch64-linux";
+  system = "x86_64-linux";
 
   # User configuration
   username = "jeridf";
@@ -12,16 +12,14 @@
 
   # Host-specific modules
   hostModules = [
-    ../nixos/configuration.nix
+    ./configuration.nix
+    ./hardware-configuration.nix
   ];
 
   # Home Manager host-specific modules (if any)
   homeModules = [
-    ../nixos/dconf.nix
-    ../../home/sway/sway.nix
-    ../../home/sway/waybar.nix
-    ../../home/sway/wofi.nix
-    # Add other host-specific home manager modules here if needed
+    # X11/i3 compatible modules - no Wayland/Sway modules
+    # Add i3-specific home manager modules here if needed
   ];
 }
 
