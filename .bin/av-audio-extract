@@ -1,15 +1,38 @@
 #!/usr/bin/env bash
 # Extract audio track from a video file using ffmpeg
-# Usage: av-audio-extract INPUT [OUTPUT]
+# Usage: av-audio-extract INPUT [OUTPUT|OUTPUT_DIR]
 
-SCRIPT_NAME="av-audio-extract"; SCRIPT_VERSION="1.0.0"
+SCRIPT_NAME="av-audio-extract"; SCRIPT_VERSION="1.3.0"
 . "$(dirname "$0")/common"
 
 usage(){ cat <<EOF
-Usage: av-audio-extract INPUT [OUTPUT]
+Usage: av-audio-extract INPUT [OUTPUT|OUTPUT_DIR]
 
-Extract audio track (m4a) from a video file using ffmpeg.
+Extract audio from a video. Default format: mp3.
+
+- If OUTPUT ends with an extension, that extension is used.
+- If OUTPUT is a directory or omitted, outputs INPUT-basename with
+  default extension (mp3). Set env `AV_AUDIO_EXT` to override default.
+
+Copy vs. transcode:
+- `mp3`: copy only when input is MP3; else transcode with libmp3lame.
+- `m4a`: copy AAC/ALAC; else transcode to AAC 192 kb/s.
+- `opus`: copy Opus/Vorbis; else transcode to Opus 128 kb/s.
 EOF
+}
+
+_audio_codec(){
+  ffprobe -v error -select_streams a:0 -show_entries \
+    stream=codec_name -of default=nw=1:nk=1 -- "$1"
+}
+
+_ext_from_codec(){
+  case "$1" in
+    aac|alac) printf m4a ;;
+    opus|vorbis) printf opus ;;
+    mp3) printf mp3 ;;
+    *) printf m4a ;;
+  esac
 }
 
 main(){
@@ -30,15 +53,79 @@ main(){
   [[ $show_help -eq 1 ]] && { usage; exit 0; }
   [[ $show_version -eq 1 ]] && { print_version; exit 0; }
 
-  require ffmpeg
-  local input="${1:-}" output="${2:-}"
+  require ffmpeg ffprobe
+  local input="${1:-}" output_arg="${2:-}" output codec ext default_ext
   [[ -n "$input" ]] || die "INPUT is required"
   [[ -f "$input" ]] || die "File not found: $input"
-  if [[ -z "$output" ]]; then
-    output="${input%.*}.m4a"
+
+  codec="$(_audio_codec "$input" | tr 'A-Z' 'a-z' | tr -d '\r')"
+  [[ -n "$codec" ]] || die "Could not detect audio codec in: $input"
+  default_ext="${AV_AUDIO_EXT:-mp3}"
+
+  if [[ -z "$output_arg" ]]; then
+    ext="$default_ext"
+    output="${input%.*}.$ext"
+  elif [[ -d "$output_arg" ]]; then
+    ext="$default_ext"
+    output="$output_arg/$(basename "${input%.*}").$ext"
+  else
+    output="$output_arg"
+    ext="${output##*.}"; ext="${ext,,}"
   fi
 
-  run ffmpeg -i "$input" -vn -acodec copy "$output"
+  # Decide copy vs transcode based on codec + chosen extension
+  local -a ffmpeg_args=(-vn -map 0:a:0)
+  case "$ext" in
+    m4a)
+      if [[ "$codec" == "aac" || "$codec" == "alac" ]]; then
+        ffmpeg_args+=(-c:a copy)
+      else
+        # Transcode anything non-mp4-compatible to AAC
+        ffmpeg_args+=(-c:a aac -b:a 192k)
+      fi
+      ;;
+    opus)
+      if [[ "$codec" == "opus" || "$codec" == "vorbis" ]]; then
+        ffmpeg_args+=(-c:a copy)
+      else
+        # User explicitly forced .opus or auto-picked but codec not copyable
+        ffmpeg_args+=(-c:a libopus -b:a 128k)
+      fi
+      ;;
+    mp3)
+      if [[ "$codec" == "mp3" ]]; then
+        ffmpeg_args+=(-c:a copy)
+      else
+        ffmpeg_args+=(-c:a libmp3lame -q:a 2)
+      fi
+      ;;
+    *)
+      # Unknown extension: fallback to default (mp3)
+      ext="$default_ext"
+      output="${output%.*}.$ext"
+      if [[ "$ext" == "mp3" ]]; then
+        if [[ "$codec" == "mp3" ]]; then
+          ffmpeg_args+=(-c:a copy)
+        else
+          ffmpeg_args+=(-c:a libmp3lame -q:a 2)
+        fi
+      elif [[ "$ext" == "m4a" ]]; then
+        if [[ "$codec" == "aac" || "$codec" == "alac" ]]; then
+          ffmpeg_args+=(-c:a copy)
+        else
+          ffmpeg_args+=(-c:a aac -b:a 192k)
+        fi
+      else
+        # final safety: transcode to mp3
+        ext=mp3
+        output="${output%.*}.mp3"
+        ffmpeg_args+=(-c:a libmp3lame -q:a 2)
+      fi
+      ;;
+  esac
+
+  log_info "Input codec: $codec; Output: $output"
+  run ffmpeg -i "$input" "${ffmpeg_args[@]}" "$output"
   log_info "Audio saved to $output"
 }
 

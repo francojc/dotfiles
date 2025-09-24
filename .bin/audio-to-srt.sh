@@ -114,12 +114,12 @@ main() {
     echo "Error: Input file '$input_file' does not exist" >&2
     exit 1
   fi
-  
+
   if [[ ! -r "$input_file" ]]; then
     echo "Error: Input file '$input_file' is not readable" >&2
     exit 1
   fi
-  
+
   local file_size
   file_size=$(stat -f%z "$input_file" 2>/dev/null || stat -c%s "$input_file" 2>/dev/null)
   if [[ -n "$file_size" && "$file_size" -gt 1073741824 ]]; then
@@ -129,25 +129,25 @@ main() {
 
   echo "Converting '$input_file' to SRT format..."
   echo "Output file: $output_file"
-  
+
   convert_audio_to_srt "$input_file" "$output_file" "$api_key" "$language_code" "$diarize" "$chunk_duration" "$model"
 }
 
 check_dependencies() {
   local missing_deps=()
-  
+
   if ! command -v curl >/dev/null 2>&1; then
     missing_deps+=("curl")
   fi
-  
+
   if ! command -v jq >/dev/null 2>&1; then
     missing_deps+=("jq")
   fi
-  
+
   if ! command -v bc >/dev/null 2>&1; then
     missing_deps+=("bc")
   fi
-  
+
   if [[ ${#missing_deps[@]} -gt 0 ]]; then
     echo "Error: Missing required dependencies: ${missing_deps[*]}" >&2
     echo "Please install the missing tools and try again." >&2
@@ -161,51 +161,51 @@ call_elevenlabs_api() {
   local language_code="$3"
   local diarize="$4"
   local model="$5"
-  
+
   local curl_args=(
     -X POST
     -H "xi-api-key: $api_key"
     -F "file=@$input_file"
     -F "model_id=$model"
   )
-  
+
   if [[ -n "$language_code" ]]; then
     curl_args+=(-F "language_code=$language_code")
   fi
-  
+
   if [[ "$diarize" == "true" ]]; then
     curl_args+=(-F "diarize=true")
   fi
-  
+
   echo "Sending request to ElevenLabs API..." >&2
-  
+
   local response
   response=$(curl -s "${curl_args[@]}" "$API_ENDPOINT")
   local curl_exit_code=$?
-  
+
   if [[ $curl_exit_code -ne 0 ]]; then
     echo "Error: Failed to connect to ElevenLabs API (curl exit code: $curl_exit_code)" >&2
     return 1
   fi
-  
+
   if [[ -z "$response" ]]; then
     echo "Error: Empty response from ElevenLabs API" >&2
     return 1
   fi
-  
+
   local error_message status_code
   error_message=$(echo "$response" | jq -r '.detail.message // .error // empty' 2>/dev/null)
   if [[ -n "$error_message" ]]; then
     echo "Error: API returned error: $error_message" >&2
     return 1
   fi
-  
+
   status_code=$(echo "$response" | jq -r '.status_code // empty' 2>/dev/null)
   if [[ -n "$status_code" && "$status_code" != "200" ]]; then
     echo "Error: API returned status code: $status_code" >&2
     return 1
   fi
-  
+
   echo "$response"
 }
 
@@ -217,33 +217,33 @@ convert_audio_to_srt() {
   local diarize="$5"
   local chunk_duration="$6"
   local model="$7"
-  
+
   check_dependencies
-  
+
   local api_response
   api_response=$(call_elevenlabs_api "$input_file" "$api_key" "$language_code" "$diarize" "$model")
   if [[ $? -ne 0 ]]; then
     exit 1
   fi
-  
+
   echo "Transcription completed successfully. Processing response..." >&2
-  
+
   process_transcription_to_srt "$api_response" "$output_file" "$chunk_duration" "$diarize"
 }
 
 format_timestamp() {
   local seconds="$1"
   local hours minutes secs milliseconds
-  
+
   # Convert to integer calculations to avoid printf issues
   local total_ms
   total_ms=$(echo "scale=0; $seconds * 1000 / 1" | bc)
-  
+
   hours=$(echo "scale=0; $total_ms / 3600000" | bc)
   minutes=$(echo "scale=0; ($total_ms % 3600000) / 60000" | bc)
   secs=$(echo "scale=0; ($total_ms % 60000) / 1000" | bc)
   milliseconds=$(echo "scale=0; $total_ms % 1000" | bc)
-  
+
   printf "%02d:%02d:%02d,%03d" "$hours" "$minutes" "$secs" "$milliseconds"
 }
 
@@ -252,14 +252,14 @@ process_transcription_to_srt() {
   local output_file="$2"
   local chunk_duration="$3"
   local diarize="$4"
-  
+
   local transcript
   transcript=$(echo "$api_response" | jq -r '.text // empty')
   if [[ -z "$transcript" ]]; then
     echo "Error: No transcript text found in API response" >&2
     exit 1
   fi
-  
+
   local words_data
   words_data=$(echo "$api_response" | jq -c '.words[]? // empty')
   if [[ -z "$words_data" ]]; then
@@ -273,14 +273,14 @@ process_transcription_to_srt() {
 create_simple_srt() {
   local transcript="$1"
   local output_file="$2"
-  
+
   {
     echo "1"
     echo "00:00:00,000 --> 00:00:10,000"
     echo "$transcript"
     echo ""
   } > "$output_file"
-  
+
   echo "Created basic SRT file: $output_file"
 }
 
@@ -289,44 +289,44 @@ create_timed_srt() {
   local output_file="$2"
   local chunk_duration="$3"
   local diarize="$4"
-  
+
   local subtitle_num=1
   local current_text=""
   local chunk_start=""
   local chunk_end=""
   local current_speaker=""
-  
+
   {
     while IFS= read -r word_json; do
       local word_type
       word_type=$(echo "$word_json" | jq -r '.type // "word"')
-      
+
       # Skip spacing tokens
       if [[ "$word_type" == "spacing" ]]; then
         continue
       fi
-      
+
       local word start_time end_time speaker
       word=$(echo "$word_json" | jq -r '.text')
       start_time=$(echo "$word_json" | jq -r '.start')
       end_time=$(echo "$word_json" | jq -r '.end')
-      
+
       if [[ "$diarize" == "true" ]]; then
         speaker=$(echo "$word_json" | jq -r '.speaker // ""')
       fi
-      
+
       if [[ -z "$chunk_start" ]]; then
         chunk_start="$start_time"
         current_speaker="$speaker"
       fi
-      
+
       if [[ -n "$current_text" ]]; then
         current_text="$current_text $word"
       else
         current_text="$word"
       fi
       chunk_end="$end_time"
-      
+
       local should_break=false
       if [[ -n "$chunk_start" && -n "$chunk_end" ]]; then
         local duration
@@ -335,33 +335,33 @@ create_timed_srt() {
           should_break=true
         fi
       fi
-      
+
       if [[ "$diarize" == "true" && -n "$speaker" && "$speaker" != "$current_speaker" ]]; then
         should_break=true
       fi
-      
+
       if [[ "$should_break" == "true" && -n "$current_text" ]]; then
         echo "$subtitle_num"
         echo "$(format_timestamp "$chunk_start") --> $(format_timestamp "$chunk_end")"
-        
+
         if [[ "$diarize" == "true" && -n "$current_speaker" ]]; then
           echo "Speaker $current_speaker: $current_text"
         else
           echo "$current_text"
         fi
         echo ""
-        
+
         subtitle_num=$((subtitle_num + 1))
         current_text=""
         chunk_start="$start_time"
         current_speaker="$speaker"
       fi
     done <<< "$words_data"
-    
+
     if [[ -n "$current_text" ]]; then
       echo "$subtitle_num"
       echo "$(format_timestamp "$chunk_start") --> $(format_timestamp "$chunk_end")"
-      
+
       if [[ "$diarize" == "true" && -n "$current_speaker" ]]; then
         echo "Speaker $current_speaker: $current_text"
       else
@@ -370,7 +370,7 @@ create_timed_srt() {
       echo ""
     fi
   } > "$output_file"
-  
+
   echo "Created SRT file with timed subtitles: $output_file"
 }
 
