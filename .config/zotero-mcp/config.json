@@ -1,0 +1,17 @@
+{
+  "semantic_search": {
+    "embedding_model": "gemini",
+    "embedding_config": {
+      "model_name": "models/text-embedding-004"
+    },
+    "update_config": {
+      "auto_update": true,
+      "update_frequency": "startup",
+      "last_update": "2025-09-24T23:38:51.870867",
+      "update_days": 7
+    },
+    "extraction": {
+      "pdf_max_pages": 10
+    }
+  }
+}

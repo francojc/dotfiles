@@ -136,10 +136,6 @@ include_only = []
 # -------------------------
 # MCP servers (optional)
 # -------------------------
-# [mcp_servers.example]
-# command = "npx"
-# args = ["-y", "mcp-server"]
-# env = { API_KEY = "value" }
 
 # -------------------------
 # Profiles (optional)
@@ -161,6 +157,29 @@ web_search = true
 # -------------------------
 # MCP servers (optional)
 # -------------------------
+[mcp_servers.zotero]
+command = "/Users/francojc/.local/bin/zotero-mcp"
+[mcp_servers.zotero.env]
+ZOTERO_LOCAL = "true"
+ZOTERO_EMBEDDING_MODEL = "gemini"
+GEMINI_EMBEDDING_MODEL = "models/text-embedding-004"
+
 [mcp_servers.sequential-thinking]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+
+[mcp_servers.zen]
+command = "bash"
+args = ["-c", "for p in $(which uvx 2>/dev/null) $HOME/.local/bin/uvx /opt/homebrew/bin/uvx /usr/local/bin/uvx uvx; do [ -x \"$p\" ] && exec \"$p\" --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server; done; echo 'uvx not found' >&2; exit 1"]
+
+[mcp_servers.zen.env]
+PATH = "/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin"
+DEFAULT_MODEL = "auto"
+DEFAULT_THINKING_MODE_THINKDEEP = "high"
+CONVERSATION_TIMEOUT_HOURS = "3"
+MAX_CONVERSATION_TURNS = "20"
+LOG_LEVEL = "DEBUG"
+DISABLED_TOOLS = "analyze,refactor,testgen,secaudit,docgen,tracer"
+COMPOSE_PROJECT_NAME = "zen-mcp"
+TZ = "UTC"
+LOG_MAX_SIZE = "10MB"
