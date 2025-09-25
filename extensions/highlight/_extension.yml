@@ -1,0 +1,13 @@
+title: Highlight Controls
+author: francojc
+version: 0.1.1
+quarto-required: ">=1.4.0"
+contributes:
+  filters:
+    - highlight.lua
+  formats:
+    html:
+      css: highlight.css
+      from: markdown+mark
+  metadata:
+    from: markdown+mark

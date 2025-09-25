@@ -340,10 +340,11 @@ map("v", "<leader>mo", ":s/^/1. /g<CR>gv", { desc = "Ordered list item" })
 --- Task list item
 map("n", "<leader>mt", "I- [ ] ", { desc = "Task list item" })
 map("v", "<leader>mt", ":s/^/- [ ] /<CR>gv", { desc = "Task list item" })
--- Styled text
 map("v", "<leader>mb", 'c**<C-r>"**<Esc>', { desc = "Bold" })
 map("v", "<leader>mi", 'c*<C-r>"*<Esc>', { desc = "Italic" })
 map("v", "<leader>ms", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
+-- Highlight (Pandoc mark ==…==)
+map("v", "<leader>mh", 'c==<C-r>"==<Esc>', { desc = "Highlight (==mark==)" })
 --- Code blocks
 map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
 map("v", "<leader>mC", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
@@ -1232,6 +1233,22 @@ local mini_modules = { "icons", "pairs", "indentscope", "surround" }
 for _, module in ipairs(mini_modules) do
 	require("mini." .. module).setup({})
 end
+
+-- Configure MiniSurround custom "h" to add ==…==
+pcall(function()
+	require("mini.surround").setup({
+		custom_surroundings = {
+			h = {
+				-- Add with:  sa h  (then motion)
+				-- Change:    sc h  (works when cursor inside ==…== if recognized)
+				-- Delete:    sd h
+				output = function()
+					return { left = "==", right = "==" }
+				end,
+			},
+		},
+	})
+end)
 
 -- Obsidian -----------------------------------
 require("obsidian").setup({

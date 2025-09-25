@@ -1,0 +1,19 @@
+/* Quarto Highlight Extension (HTML only) */
+
+/* Default highlight styles */
+mark, .mark {
+  background-color: var(--hl-color, #fff3a3);
+  color: inherit;
+  padding: 0 .1em;
+  border-radius: .15em;
+}
+
+/* Optional palette using data-hl attribute when writing <mark data-hl="…"> */
+mark[data-hl="yellow"], .mark[data-hl="yellow"] { --hl-color: #fff3a3; }
+mark[data-hl="orange"], .mark[data-hl="orange"] { --hl-color: #ffe8a3; }
+mark[data-hl="green"],  .mark[data-hl="green"]  { --hl-color: #c8f7c5; }
+mark[data-hl="blue"],   .mark[data-hl="blue"]   { --hl-color: #cfe8ff; }
+
+/* If author uses Pandoc span attrs with ==…== like [==text==]{data-hl="green"} */
+[data-hl] mark, [data-hl] .mark { background-color: var(--hl-color); }
+
