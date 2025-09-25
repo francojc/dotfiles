@@ -33,9 +33,9 @@ history_filter = [
 # Sync and Backup
 [sync]
 records = true
-# Uncomment and configure as needed
-# auto_sync = true
-# sync_frequency = "10m"
+auto_sync = true
+sync_frequency = "10m"
+sync_address = "https://atuin.gerbil-matrix.ts.net"
 
 # Statistics Tracking
 [stats]
