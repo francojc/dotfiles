@@ -132,6 +132,9 @@
     atuin = {
       enable = true;
       enableZshIntegration = true;
+      flags = [
+        "--disable-up-arrow" # Disable up arrow to search history, conflicts with zsh-autosuggestions
+      ];
     };
     carapace = {
       enable = true;
