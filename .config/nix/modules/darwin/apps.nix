@@ -24,6 +24,7 @@
       "keith/formulae/reminders-cli"
       "ncspot" # ncurses Spotify client
       "nmap"
+      "node" # Node.js
       "ollama" # AI model management
       "pngpaste" # paste images
       "python@3.11" # Python 3
