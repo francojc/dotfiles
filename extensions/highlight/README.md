@@ -18,19 +18,19 @@ filters:
   - ./highlight
 ```
 
-## Use
 
-```markdown
-This is ==highlighted==.
+## Configure
 
-<mark>Also highlighted</mark>.
+The 'mark' element must be turned on in the output format. If using
+`==text==`, the `markdown+mark` extension must be enabled.
 
-Palette: <mark data-hl="green">methodologically salient</mark>.
-
-[==scoped color==]{data-hl="blue"}
+```yaml
+filters: [highlight]
+from: markdown+mark
+format: html
 ```
 
-## Configure (YAML)
+This can be set at the project or document level.
 
 Project- or document-level default color:
 
@@ -43,4 +43,17 @@ highlight:
 
 The extension injects a CSS variable `--hl-color` for HTML; CSS targets
 both `<mark>` and `.mark` for compatibility across Pandoc versions.
+
+## Use
+
+```markdown
+This is ==highlighted==.
+
+<mark>Also highlighted</mark>.
+
+Palette: <mark data-hl="green">methodologically salient</mark>.
+
+[==scoped color==]{data-hl="blue"}
+```
+
 
