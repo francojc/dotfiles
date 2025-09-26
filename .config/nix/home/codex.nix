@@ -1,5 +1,5 @@
 {config, ...}: {
-  xdg.configFile."codex/config.toml".text = ''
+  home.file.".codex/config.toml".text = ''
     # =========================
     # Codex CLI config.toml
     # =========================
