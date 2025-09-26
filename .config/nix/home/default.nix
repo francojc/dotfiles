@@ -13,6 +13,7 @@
     ./shell/default.nix
     ./tmux.nix
     ./vim.nix
+    ./codex.nix
   ] ++ (if isLinux then [
     ./i3/default.nix
   ] else []);
