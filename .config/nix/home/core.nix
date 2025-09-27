@@ -48,8 +48,8 @@
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
-    aider-chat # AI code assistant
     _7zz # Archive compression
+    aider-chat # AI code assistant
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     duf # Disk usage utility
@@ -62,15 +62,16 @@
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
+    llm_with_plugins # llm CLI bundled with OpenRouter plugin
     ncdu # Disk usage analyzer
     pass # Password manager
-    llm_with_plugins # llm CLI bundled with OpenRouter plugin
     repgrep # ripgrep across files
     ripgrep # grep replacement
     ruby # Programming language
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
+    syncthing # Continuous file synchronization
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
