@@ -71,7 +71,6 @@
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
-    syncthing # Continuous file synchronization
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool

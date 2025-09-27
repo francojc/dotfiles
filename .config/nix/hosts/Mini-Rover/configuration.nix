@@ -18,6 +18,15 @@
     settings.PasswordAuthentication = true;
   };
 
+  # --- Syncthing Service ---
+  services.syncthing = {
+    enable = true;
+    user = username;
+    dataDir = "/home/${username}/.local/share/syncthing";
+    configDir = "/home/${username}/.config/syncthing";
+    openDefaultPorts = true;
+  };
+
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [
     firefox

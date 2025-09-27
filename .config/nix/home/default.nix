@@ -14,6 +14,7 @@
     ./tmux.nix
     ./vim.nix
     ./codex.nix
+    ./syncthing.nix
   ] ++ (if isLinux then [
     ./i3/default.nix
   ] else []);
