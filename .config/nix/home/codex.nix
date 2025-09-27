@@ -1,5 +1,6 @@
 {config, ...}: {
-  home.file.".codex/config.toml".text = ''
+  home.file.".codex/config.toml" = {
+    text = ''
     # =========================
     # Codex CLI config.toml
     # =========================
@@ -199,5 +200,8 @@
     [mcp_servers.obsidian]
     command = "npx"
     args = ["-y", "obsidian-mcp", "${config.home.homeDirectory}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes", "${config.home.homeDirectory}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal"]
-  '';
+    '';
+    force = true;
+  };
+
 }
