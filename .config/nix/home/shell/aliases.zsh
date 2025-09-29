@@ -32,7 +32,6 @@ alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hos
 # Aider-chat aliases
 
 alias aider-copilot='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY"'
-
 alias aider-proj='aider --model power --editor-model power --architect --watch-files'
 alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
 
@@ -47,7 +46,7 @@ alias c='clear'
 
 alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"'
 alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
-alias lt='la icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
+alias lt='la --icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
 
 # Use fd instead of find
 alias fd="fd --hidden --exclude '.git'"
@@ -66,10 +65,10 @@ alias path='echo -e ${PATH//:/\\n}'
 # SSH aliases
 alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore'
 alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
-alias minirover='TERM=xterm-256color ssh jeridf@mini-rover'
+alias rover='TERM=xterm-256color ssh jeridf@mini-rover'
 alias proxmox='TERM=xterm-256color ssh root@minis-proxmox'
 alias services='TERM=xterm-256color ssh jeridf@minis-services'
-alias ai='TERM=xterm-256color ssh root@minis-ai'
+alias ai='TERM=xterm-256color ssh jerid@minis-ai'
 
 # Git aliases
 alias ga='git add'
@@ -135,7 +134,7 @@ function icloud() {
 # Notes
 function on() {
   if [ -z "$1" ]; then
-    cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Notes/ && nvim
+    cd ~/Obsidian/Notes/ && nvim
   else
     cd "$1" && nvim
   fi
@@ -143,7 +142,7 @@ function on() {
 # Personal
 function op() {
   if [ -z "$1" ]; then
-    cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Personal/ && nvim
+    cd ~/Obsidian/Personal/ && nvim
   else
     cd "$1" && nvim
   fi

@@ -1259,11 +1259,11 @@ require("obsidian").setup({
 	workspaces = {
 		{
 			name = "Notes",
-			path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/",
+			path = "~/Obsidian/Notes/",
 		},
 		{
 			name = "Personal",
-			path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/",
+			path = "~/Obsidian/Personal/",
 		},
 	},
 	daily_notes = {
