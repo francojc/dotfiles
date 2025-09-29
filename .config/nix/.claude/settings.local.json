@@ -22,5 +22,6 @@
       "Bash(ssh-add:*)"
     ],
     "deny": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }

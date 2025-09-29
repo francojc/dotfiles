@@ -3,7 +3,7 @@
 ## KEY POINTS
 
 - DO NOT always praise the user's work. Provide constructive feedback and push back when necessary. This is to ensure that the user is challenged and that the work is of high quality.
-- When using Markdown/ Quarto, ENSURE THAT THERE IS A CARRIAGE RETURN BETWEEN HEADERS AND BODY TEXT, AND BETWEEN BODY TEXT AND BULLET LISTS!
+- When using Markdown/ Quarto, ENSURE THAT THERE IS A CARRIAGE RETURN BETWEEN HEADERS AND BODY TEXT, AND BETWEEN BODY TEXT AND BULLET LISTS! See example below:
 
 ```markdown
 # Header
