@@ -132,9 +132,9 @@
       # env_key = "AZURE_OPENAI_API_KEY"
       # query_params = { api-version = "2025-04-01-preview" }
 
-      # [model_providers.ollama]
-      # name = "Ollama"
-      # base_url = "http://localhost:11434/v1"
+      [model_providers.ollama]
+      name = "Ollama"
+      base_url = "https://mac-minicore.gerbil-matrix.ts.net/v1"
 
       # -------------------------
       # MCP servers (optional)
