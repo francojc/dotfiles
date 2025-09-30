@@ -71,7 +71,7 @@ alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
 alias rover='TERM=xterm-256color ssh jeridf@mini-rover'
 alias proxmox='TERM=xterm-256color ssh root@minis-proxmox'
 alias services='TERM=xterm-256color ssh jeridf@minis-services'
-alias ai='TERM=xterm-256color ssh jerid@minis-ai'
+alias ai='TERM=xterm-256color ssh jeridf@minis-ai'
 
 # Git aliases
 alias ga='git add'
