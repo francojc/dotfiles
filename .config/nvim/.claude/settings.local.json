@@ -9,5 +9,6 @@
       "Bash(find:*)"
     ],
     "deny": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }
