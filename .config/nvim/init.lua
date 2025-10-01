@@ -38,13 +38,13 @@ require("paq")({
 	"jmbuhr/otter.nvim", -- Otter for Quarto
 	"jpalardy/vim-slime", -- Slime integration
 	"kdheepak/lazygit.nvim", -- Lazygit integration (* X)
-	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"lewis6991/gitsigns.nvim", -- Git signs
 	"lilydjwg/colorizer", -- Colorizer
 	"mikavilpas/yazi.nvim", -- Yazi file manager integration
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
+	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"obsidian-nvim/obsidian.nvim", -- Obsidian integration
 	"quarto-dev/quarto-nvim", -- Quarto integration
@@ -1251,43 +1251,55 @@ pcall(function()
 end)
 
 -- Obsidian -----------------------------------
-require("obsidian").setup({
-	legacy_commands = false, -- Use legacy commands for compatibility
-	ui = {
-		enable = false,
-	},
-	workspaces = {
-		{
-			name = "Notes",
-			path = "~/Obsidian/Notes/",
+-- Only setup if not already configured to avoid duplicate provider registration
+if not vim.g.obsidian_setup_done then
+	require("obsidian").setup({
+		legacy_commands = false, -- Use legacy commands for compatibility
+		ui = {
+			enable = false,
 		},
-		{
-			name = "Personal",
-			path = "~/Obsidian/Personal/",
+		workspaces = {
+			{
+				name = "Notes",
+				path = "~/Obsidian/Notes/",
+			},
+			{
+				name = "Personal",
+				path = "~/Obsidian/Personal/",
+			},
 		},
-	},
-	daily_notes = {
-		folder = "Daily",
-		template = "Assets/Templates/Daily.md",
-	},
-	templates = {
-		folder = "Assets/Templates",
-	},
-	new_notes_location = "Inbox",
-	picker = {
-		name = "fzf-lua",
-	},
-	attachments = {
-		img_folder = "Assets/Attachments",
-	},
-	completion = {
-		nvim_cmp = false,
-		blink = true,
-	},
-})
+		daily_notes = {
+			folder = "Daily",
+			template = "Assets/Templates/Daily.md",
+		},
+		templates = {
+			folder = "Assets/Templates",
+		},
+		new_notes_location = "Inbox",
+		picker = {
+			name = "fzf-lua",
+		},
+		attachments = {
+			img_folder = "Assets/Attachments",
+		},
+		completion = {
+			nvim_cmp = false,
+			blink = true,
+		},
+	})
+	vim.g.obsidian_setup_done = true
+end
+
 -- Quarto -----------------------------------
-require("otter").setup({})
-require("quarto").setup({})
+if not vim.g.otter_setup_done then
+	require("otter").setup({})
+	vim.g.otter_setup_done = true
+end
+
+if not vim.g.quarto_setup_done then
+	require("quarto").setup({})
+	vim.g.quarto_setup_done = true
+end
 
 -- Render-Markdown ---------------------------
 require("render-markdown").setup({
