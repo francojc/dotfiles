@@ -13,6 +13,7 @@
       '';
       profileExtra = ''
         # zprofile
+        ulimit -n 10240 # Increase max open files
 
         # --- Hombrew ---
         # Brew binary (Apple Silicon)
