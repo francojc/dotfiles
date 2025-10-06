@@ -49,7 +49,7 @@
     ];
 
     # Uninstall packages not managed by nix-flatpak
-    uninstallUnmanaged = false; # Set to true for strict management
+    uninstallUnmanaged = true; # Set to true for strict management
   };
 
   # NixOS System Packages (complementary to Flatpak packages)

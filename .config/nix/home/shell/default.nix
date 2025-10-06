@@ -47,7 +47,7 @@
 
         # --- FLATPAK INTEGRATION ---
         # Ensure Flatpak apps can find system fonts and themes
-        export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${config.home.homeDirectory}/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+        export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/usr/share:$XDG_DATA_DIRS"
 
 
         # --- CLAUDE CODE ---
