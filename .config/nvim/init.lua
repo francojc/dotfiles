@@ -419,9 +419,11 @@ map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" }
 map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
 map("n", "<leader>ol", "<Cmd>Obsidian link_new<Cr>", { desc = "New link" })
 map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
+map("n", "<leader>oq", "<Cmd>Obsidian quick_switch<Cr>", { desc = "Quick switch" })
 map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
 map("n", "<leader>os", "<Cmd>Obsidian search<Cr>", { desc = "Search" })
 map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
+map("n", "<leader>ow", "<Cmd>Obsidian workspace<Cr>", { desc = "Select workspace" })
 
 --- Session persistence -------------------------------
 map("n", "<leader>ps", "<Cmd>lua Session_save_prompt()<Cr>", { desc = "Save session" })
