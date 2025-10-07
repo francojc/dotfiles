@@ -14,6 +14,6 @@
   // MCP servers
   "mcp": {},
   // Theme configuration
-  "theme": "opencode",
+  "theme": "system",
   "autoupdate": true
 }
