@@ -11,7 +11,7 @@ alias llms='llm -t summarize' # uses the template 'summarize'
 alias codexo='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID codex'
 alias codero='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID coder'
 # Secure Claude alias that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
-alias claudo='if [ -z "$ZAI_BASE_URL" ] || [ -z "$ZAI_API_KEY" ]; then echo "Error: ZAI_BASE_URL and ZAI_API_KEY environment variables must be set"; return 1; fi; env ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY claude'
+alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
