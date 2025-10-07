@@ -5,11 +5,12 @@
   "disabled_providers": ["openai", "mistral", "gemini", "perplexity", "deepseek", "google-vertex-anthropic", "google-vertex", "opencode"],
   // Preferred models
   // "model": "main-model-here",
-  // "small_model": "small-model-here",
+  "small_model": "claude-3-5-haiku-20241022",
   // Custom keybinds
   "keybinds": {
     "messages_page_up": "ctrl+u",
     "messages_page_down": "ctrl+d",
+    "input_newline": "alt+enter"
   },
   // MCP servers
   "mcp": {},
