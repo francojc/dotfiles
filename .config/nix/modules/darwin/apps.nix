@@ -30,6 +30,7 @@
       "python@3.11" # Python 3
       "rename" # file renaming utility
       "sqly" #
+      "terminal-notifier" # macOS notifications from CLI
       "transmission-cli" # command-line torrent client
       "uv"
     ];
