@@ -10,6 +10,7 @@ alias llms='llm -t summarize' # uses the template 'summarize'
 # Agentic AI aliases
 alias codexo='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID codex'
 alias codero='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID coder'
+alias claudo='env ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY claude'
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
