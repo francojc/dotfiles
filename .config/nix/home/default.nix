@@ -5,19 +5,24 @@
   ...
 }: {
   # Accept standard HM args
-  imports = [
-    ./themes.nix
-    ./core.nix
-    ./git.nix
-    ./ghostty.nix
-    ./shell/default.nix
-    ./tmux.nix
-    ./vim.nix
-    ./codex.nix
-    ./syncthing.nix
-  ] ++ (if isLinux then [
-    ./i3/default.nix
-  ] else []);
+  imports =
+    [
+      ./themes.nix
+      ./core.nix
+      ./git.nix
+      ./ghostty.nix
+      ./shell/default.nix
+      ./tmux.nix
+      ./vim.nix
+      ./syncthing.nix
+    ]
+    ++ (
+      if isLinux
+      then [
+        ./i3/default.nix
+      ]
+      else []
+    );
 
   home = {
     # Use args passed by Home Manager

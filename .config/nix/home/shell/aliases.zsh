@@ -8,8 +8,6 @@ alias llmb='llm -t briefly' # uses the template 'briefly'
 alias llms='llm -t summarize' # uses the template 'summarize'
 
 # Agentic AI aliases
-alias codexo='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID codex'
-alias codero='env -u OPENAI_API_KEY -u OPENAI_BASE_URL -u OPENAI_API_HOST -u OPENAI_ORG_ID coder'
 # Secure Claude alias that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
 alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
 
