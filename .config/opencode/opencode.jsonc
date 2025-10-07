@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Providers
+  "provider": {},
+  "disabled_providers": ["openai", "mistral", "gemini", "perplexity", "deepseek", "google-vertex-anthropic", "google-vertex", "opencode"],
+  // Preferred models
+  // "model": "main-model-here",
+  // "small_model": "small-model-here",
+  // Custom keybinds
+  "keybinds": {
+    "messages_page_up": "ctrl+u",
+    "messages_page_down": "ctrl+d",
+  },
+  // MCP servers
+  "mcp": {},
+  // Theme configuration
+  "theme": "opencode",
+  "autoupdate": true
+}
