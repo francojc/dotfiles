@@ -6,3 +6,4 @@ statsig/*
 todos/*
 shell-snapshots/*
 history.jsonl
+debug/
