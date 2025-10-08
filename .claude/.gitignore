@@ -7,3 +7,4 @@ todos/*
 shell-snapshots/*
 history.jsonl
 debug/
+file-history/
