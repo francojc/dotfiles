@@ -26,6 +26,7 @@ require("paq")({
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"folke/flash.nvim", -- Flash jump
+	"folke/snacks.nvim", -- Input and terminal utils
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
@@ -1386,7 +1387,7 @@ require("which-key").setup({
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "Assistant", icon = " " },
+
 	{ "<leader>b", group = "Buffer", icon = " " },
 	{ "<leader>c", group = "Code", icon = "" },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = "" },
