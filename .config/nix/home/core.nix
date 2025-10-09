@@ -25,6 +25,11 @@
     # Build dependencies for Neovim plugins (e.g., blink.cmp)
     rustc # Rust compiler, needed for many Neovim plugins
     cargo # Rust package manager, needed for many Neovim plugins
+
+    # Academic/document rendering (for Quarto, markdown, snacks.nvim)
+    tectonic # LaTeX rendering for math expressions
+    nodePackages.mermaid-cli # Mermaid diagram rendering (provides mmdc)
+    chafa # Terminal image viewer (optional, enhances image support)
   ];
 
   # Development and system tools
@@ -52,6 +57,7 @@
     aider-chat # AI code assistant
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
+    coreutils # GNU core utilities (provides grealpath for yazi)
     duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement

@@ -1013,6 +1013,24 @@ require("fidget").setup({
 -- Flash ----------------------------------
 require("flash").setup({})
 
+-- Snacks ----------------------------------
+require("snacks").setup({
+	bigfile = { enabled = false },
+	dashboard = { enabled = false }, -- Using alpha-nvim
+	explorer = { enabled = false }, -- Using yazi
+	image = { enabled = false }, -- Using image.nvim
+	input = { enabled = true }, -- Useful UI input helpers
+	notifier = { enabled = false }, -- Using fidget/notify
+	picker = { enabled = false }, -- Using fzf-lua
+	quickfile = { enabled = false },
+	scope = { enabled = false },
+	scroll = { enabled = false },
+	statuscolumn = { enabled = false },
+	terminal = { enabled = true }, -- Terminal utilities
+	toggle = { enabled = true }, -- Complements toggle functions
+	words = { enabled = false },
+})
+
 -- FZF ----------------------------------
 require("fzf-lua").setup({
 	file_icon_padding = " ",

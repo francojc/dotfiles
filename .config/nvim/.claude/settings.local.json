@@ -6,7 +6,8 @@
       "Bash(nvim:*)",
       "Bash(true)",
       "mcp__airtable__list_bases",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Read(//Users/francojc/.config/nix/**)"
     ],
     "deny": []
   },
