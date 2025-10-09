@@ -26,6 +26,7 @@ require("paq")({
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
 	"folke/flash.nvim", -- Flash jump
+	"folke/sidekick.nvim", -- AI sidekick (NES + CLI)
 	"folke/snacks.nvim", -- Input and terminal utils
 	"folke/todo-comments.nvim", -- Todo comments highlighting/searching
 	"folke/which-key.nvim", -- Keymaps popup
@@ -282,6 +283,20 @@ map("i", "<C-d>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
+
+-- Assistant (Sidekick) --------------------------
+-- NES (Next Edit Suggestions)
+map("n", "<leader>an", "<Cmd>Sidekick nes update<Cr>", { desc = "NES: trigger update" })
+map("n", "<leader>aa", "<Cmd>Sidekick nes accept<Cr>", { desc = "NES: accept suggestion" })
+map("n", "<leader>ad", "<Cmd>Sidekick nes dismiss<Cr>", { desc = "NES: dismiss" })
+map("n", "<leader>ah", "<Cmd>Sidekick nes accept_hunk<Cr>", { desc = "NES: accept hunk" })
+map("n", "<leader>aj", "<Cmd>Sidekick nes next_hunk<Cr>", { desc = "NES: next hunk" })
+map("n", "<leader>ak", "<Cmd>Sidekick nes prev_hunk<Cr>", { desc = "NES: previous hunk" })
+-- CLI Terminal
+map("n", "<leader>at", "<Cmd>Sidekick cli toggle<Cr>", { desc = "CLI: toggle terminal" })
+map("n", "<leader>as", "<Cmd>Sidekick cli send<Cr>", { desc = "CLI: send selection" })
+map("v", "<leader>as", "<Cmd>Sidekick cli send<Cr>", { desc = "CLI: send selection" })
+map("n", "<leader>ac", "<Cmd>Sidekick cli select<Cr>", { desc = "CLI: select tool" })
 
 -- Buffers --------------------------
 -- Bufferline
@@ -1031,6 +1046,27 @@ require("snacks").setup({
 	words = { enabled = false },
 })
 
+-- Sidekick ----------------------------------
+require("sidekick").setup({
+	nes = {
+		enabled = true, -- Next Edit Suggestions
+		auto_trigger = true, -- Automatically trigger suggestions
+		delay = 2000, -- Delay before auto-trigger (ms)
+	},
+	cli = {
+		enabled = true, -- AI CLI terminal
+		mux = {
+			backend = "tmux", -- Use tmux for persistent sessions
+			enabled = true,
+		},
+		-- Pre-configured AI tools (aider, claude, etc.)
+		tools = {
+			-- Tools will be auto-detected from PATH
+			-- You can customize them here if needed
+		},
+	},
+})
+
 -- FZF ----------------------------------
 require("fzf-lua").setup({
 	file_icon_padding = " ",
@@ -1142,6 +1178,13 @@ vim.lsp.config.r_language_server = {
 			},
 		},
 	},
+}
+
+-- Copilot
+-- copilot-language-server (for sidekick.nvim NES feature)
+vim.lsp.config.copilot = {
+	capabilities = capabilities,
+	filetypes = { "*" }, -- Enable for all filetypes
 }
 
 -- YAML
@@ -1406,6 +1449,7 @@ require("which-key").setup({
 local wk = require("which-key")
 wk.add({
 
+	{ "<leader>a", group = "Assistant", icon = "🤖" },
 	{ "<leader>b", group = "Buffer", icon = " " },
 	{ "<leader>c", group = "Code", icon = "" },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = "" },

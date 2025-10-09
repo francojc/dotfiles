@@ -30,6 +30,9 @@
     tectonic # LaTeX rendering for math expressions
     nodePackages.mermaid-cli # Mermaid diagram rendering (provides mmdc)
     chafa # Terminal image viewer (optional, enhances image support)
+
+    # AI assistance (for sidekick.nvim)
+    copilot-language-server # Copilot LSP for Next Edit Suggestions
   ];
 
   # Development and system tools

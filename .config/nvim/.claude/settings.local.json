@@ -7,7 +7,13 @@
       "Bash(true)",
       "mcp__airtable__list_bases",
       "Bash(find:*)",
-      "Read(//Users/francojc/.config/nix/**)"
+      "Read(//Users/francojc/.config/nix/**)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "Bash(node:*)",
+      "WebFetch(domain:search.nixos.org)",
+      "Bash(nix-env:*)",
+      "Bash(nix search:*)"
     ],
     "deny": []
   },
