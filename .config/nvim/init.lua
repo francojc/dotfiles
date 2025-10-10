@@ -1003,6 +1003,8 @@ require("csvview").setup({})
 -- Fidget ----------------------------------
 require("fidget").setup({
 	notification = {
+		-- Route vim.notify through fidget
+		override_vim_notify = true,
 		window = {
 			winblend = 80, -- 80% transparency
 			border = "none", -- Clean look without borders
@@ -1024,6 +1026,9 @@ require("fidget").setup({
 		},
 	},
 })
+
+-- Ensure any vim.notify calls use fidget's notifier
+vim.notify = require("fidget").notify
 
 -- Flash ----------------------------------
 require("flash").setup({})
