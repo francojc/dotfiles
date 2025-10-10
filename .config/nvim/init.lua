@@ -286,17 +286,36 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- Assistant (Sidekick) --------------------------
 -- NES (Next Edit Suggestions)
-map("n", "<leader>an", "<Cmd>Sidekick nes update<Cr>", { desc = "NES: trigger update" })
-map("n", "<leader>aa", "<Cmd>Sidekick nes accept<Cr>", { desc = "NES: accept suggestion" })
-map("n", "<leader>ad", "<Cmd>Sidekick nes dismiss<Cr>", { desc = "NES: dismiss" })
-map("n", "<leader>ah", "<Cmd>Sidekick nes accept_hunk<Cr>", { desc = "NES: accept hunk" })
-map("n", "<leader>aj", "<Cmd>Sidekick nes next_hunk<Cr>", { desc = "NES: next hunk" })
-map("n", "<leader>ak", "<Cmd>Sidekick nes prev_hunk<Cr>", { desc = "NES: previous hunk" })
+vim.keymap.set("n", "<leader>an", function()
+  require("sidekick.nes").update()
+end, { desc = "NES: trigger update" })
+
+vim.keymap.set("n", "<leader>aa", function()
+  require("sidekick.nes").apply()
+end, { desc = "NES: apply suggestion" })
+
+vim.keymap.set("n", "<leader>ad", function()
+  require("sidekick.nes").clear()
+end, { desc = "NES: clear/dismiss" })
+
+vim.keymap.set("n", "<leader>aj", function()
+  if not require("sidekick").nes_jump_or_apply() then
+    vim.notify("No more NES suggestions", vim.log.levels.INFO)
+  end
+end, { desc = "NES: jump to next or apply" })
+
 -- CLI Terminal
-map("n", "<leader>at", "<Cmd>Sidekick cli toggle<Cr>", { desc = "CLI: toggle terminal" })
-map("n", "<leader>as", "<Cmd>Sidekick cli send<Cr>", { desc = "CLI: send selection" })
-map("v", "<leader>as", "<Cmd>Sidekick cli send<Cr>", { desc = "CLI: send selection" })
-map("n", "<leader>ac", "<Cmd>Sidekick cli select<Cr>", { desc = "CLI: select tool" })
+vim.keymap.set("n", "<leader>at", function()
+  require("sidekick.cli").toggle()
+end, { desc = "CLI: toggle terminal" })
+
+vim.keymap.set({ "n", "v" }, "<leader>as", function()
+  require("sidekick.cli").send({ msg = "{selection}" })
+end, { desc = "CLI: send selection" })
+
+vim.keymap.set("n", "<leader>ac", function()
+  require("sidekick.cli").select()
+end, { desc = "CLI: select tool" })
 
 -- Buffers --------------------------
 -- Bufferline
@@ -1173,16 +1192,16 @@ vim.lsp.config.r_language_server = {
 		client.server_capabilities.documentRangeFormattingProvider = false
 	end,
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
-	filetypes = { "r" },
+	filetypes = { "r", "rmd", "quarto" },
 	capabilities = capabilities,
 	root_dir = function(fname)
 		return vim.fs.root(fname, "DESCRIPTION") or vim.fs.root(fname, ".git") or vim.fs.dirname(fname)
 	end,
 	settings = {
 		r = {
-			diagnostics = {
-				enable = true,
-				globals = { "vim" },
+			lsp = {
+				diagnostics = true,
+				rich_documentation = true, -- Enhanced hover documentation
 			},
 		},
 	},
@@ -1364,12 +1383,47 @@ end
 
 -- Quarto -----------------------------------
 if not vim.g.otter_setup_done then
-	require("otter").setup({})
+	require("otter").setup({
+		lsp = {
+			diagnostic_update_events = { "BufWritePost" },
+			root_dir = function(_, bufnr)
+				return vim.fs.root(bufnr or 0, {
+					".git",
+					"_quarto.yml",
+					"DESCRIPTION", -- For R packages
+				}) or vim.fn.getcwd(0)
+			end,
+		},
+		buffers = {
+			set_filetype = true,
+			write_to_disk = false,
+		},
+		handle_leading_whitespace = true, -- Important for R/Python indentation
+	})
 	vim.g.otter_setup_done = true
 end
 
 if not vim.g.quarto_setup_done then
-	require("quarto").setup({})
+	require("quarto").setup({
+		lspFeatures = {
+			enabled = true,
+			chunks = "curly",
+			languages = { "r", "python", "julia", "bash", "html" },
+			diagnostics = {
+				enabled = true,
+				triggers = { "BufWritePost" },
+			},
+			completion = {
+				enabled = true,
+			},
+		},
+		codeRunner = {
+			enabled = true,
+			default_method = "slime", -- Integrates with existing slime setup
+			never_run = { "yaml" },
+		},
+		keymap = false, -- Use custom keymaps already defined
+	})
 	vim.g.quarto_setup_done = true
 end
 
