@@ -4,7 +4,6 @@ require("bootstrap").ensure_paq()
 
 ---| Paq: plugins -------------------------------------------------
 require("paq")({
-
 	-- themes
 	"thenewvu/vim-colors-arthur", -- Arthur theme
 	"wolloda/vim-autumn", -- Autumn theme
@@ -58,6 +57,7 @@ require("paq")({
 })
 
 ---| Options ------------------------------------------------------
+--- Locals -----
 local a = vim.api
 local opt = vim.opt
 
@@ -1034,7 +1034,7 @@ require("snacks").setup({
 	dashboard = { enabled = false }, -- Using alpha-nvim
 	explorer = { enabled = false }, -- Using yazi
 	image = { enabled = false }, -- Using image.nvim
-	input = { enabled = true }, -- Useful UI input helpers
+	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
 	notifier = { enabled = false }, -- Using fidget/notify
 	picker = { enabled = false }, -- Using fzf-lua
 	quickfile = { enabled = false },
@@ -1055,6 +1055,9 @@ require("sidekick").setup({
 	},
 	cli = {
 		enabled = true, -- AI CLI terminal
+		win = {
+			style = "float", -- Use floating window for terminal
+		},
 		mux = {
 			backend = "tmux", -- Use tmux for persistent sessions
 			enabled = true,
@@ -1442,31 +1445,30 @@ require("nvim-treesitter.configs").setup({
 --- WhichKey -----------------------------------
 require("which-key").setup({
 	icons = {
-		group = " ",
+		group = "",
 	},
 })
 -- add keymap groups
 local wk = require("which-key")
 wk.add({
-
-	{ "<leader>a", group = "Assistant", icon = "🤖" },
-	{ "<leader>b", group = "Buffer", icon = " " },
-	{ "<leader>c", group = "Code", icon = "" },
-	{ "<leader>d", group = "Diagnostics/Debug", icon = "" },
-	{ "<leader>e", group = "Explore", icon = "" },
-	{ "<leader>f", group = "Files", icon = "" },
-	{ "<leader>g", group = "Git", icon = "" },
-	{ "<leader>h", group = "Help", icon = "" },
-	{ "<leader>l", group = "LSP", icon = "" },
-	{ "<leader>m", group = "Markdown", icon = "" },
-	{ "<leader>o", group = "Obsidian", icon = "" },
-	{ "<leader>p", group = "Persistence", icon = "" },
-	{ "<leader>q", group = "Quarto", icon = "" },
-	{ "<leader>r", group = "Run", icon = "" },
-	{ "<leader>s", group = "Search", icon = "" },
-	{ "<leader>t", group = "Toggle", icon = "" },
-	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "" },
-	{ "<leader>x", desc = "Quit", icon = "" },
+	{ "<leader>a", group = "Assistant", icon = "󰚩 " },
+	{ "<leader>b", group = "Buffer", icon = "󰓩 " },
+	{ "<leader>c", group = "Code", icon = "󰌗" },
+	{ "<leader>d", group = "Diagnostics/Debug", icon = "󰒡" },
+	{ "<leader>e", group = "Explore", icon = "󰥩" },
+	{ "<leader>f", group = "Files", icon = "󰈔" },
+	{ "<leader>g", group = "Git", icon = "󰊢" },
+	{ "<leader>h", group = "Help", icon = "󰋗" },
+	{ "<leader>l", group = "LSP", icon = "󰅩" },
+	{ "<leader>m", group = "Markdown", icon = "󰉫" },
+	{ "<leader>o", group = "Obsidian", icon = "󱞁" },
+	{ "<leader>p", group = "Persistence", icon = "󰆓" },
+	{ "<leader>q", group = "Quarto", icon = "󰠮" },
+	{ "<leader>r", group = "Run", icon = "󰒋" },
+	{ "<leader>s", group = "Search", icon = "󰢶" },
+	{ "<leader>t", group = "Toggle", icon = "󰔡" },
+	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "󰪷" },
+	{ "<leader>x", desc = "Quit", icon = "󰗼" },
 })
 
 -- Yazi -----------------------------------

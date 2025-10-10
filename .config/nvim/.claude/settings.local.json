@@ -13,7 +13,8 @@
       "Bash(node:*)",
       "WebFetch(domain:search.nixos.org)",
       "Bash(nix-env:*)",
-      "Bash(nix search:*)"
+      "Bash(nix search:*)",
+      "Bash(tmux:*)"
     ],
     "deny": []
   },
