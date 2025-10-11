@@ -1115,7 +1115,7 @@ require("sidekick").setup({
 	nes = {
 		enabled = true, -- Next Edit Suggestions
 		auto_trigger = false, -- Disable automatic triggering
-		delay = 2000, -- Delay before auto-trigger (ms)
+		-- delay = 2000, -- Delay before auto-trigger (ms)
 	},
 	cli = {
 		enabled = true, -- AI CLI terminal
