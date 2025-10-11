@@ -257,10 +257,10 @@ map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
 map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
 
 -- Resize
-map("n", "<leader>wk", "<C-w>5-", { desc = "Resize window up" })
-map("n", "<leader>wj", "<C-w>5+", { desc = "Resize window down" })
-map("n", "<leader>wh", "<C-w>5<", { desc = "Resize window left" })
-map("n", "<leader>wl", "<C-w>5>", { desc = "Resize window right" })
+map("n", "<leader>wk", "<C-w>10-", { desc = "Resize window up" })
+map("n", "<leader>wj", "<C-w>10+", { desc = "Resize window down" })
+map("n", "<leader>wh", "<C-w>10<", { desc = "Resize window left" })
+map("n", "<leader>wl", "<C-w>10>", { desc = "Resize window right" })
 -- Go to
 -- Beginning of line
 map({ "n", "v" }, "gh", "^", { desc = "Go to beginning of line" })
@@ -283,7 +283,7 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
 -- Copilot
-g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" } -- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
+g.copilot_settings = { selectedCompletionModel = "gpt-4.1-copilot" } -- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
 map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 g.copilot_no_tab_map = true -- Disable default tab mapping
 
@@ -312,6 +312,10 @@ vim.keymap.set("n", "<leader>aj", function()
 		vim.notify("No more NES suggestions", vim.log.levels.INFO)
 	end
 end, { desc = "NES: jump to next or apply" })
+
+vim.keymap.set("n", "<leader>ai", function()
+	require("sidekick.nes").update()
+end, { desc = "NES: trigger suggestions manually" })
 
 -- CLI Terminal
 vim.keymap.set("n", "<leader>at", function()
@@ -369,11 +373,22 @@ map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
 -- LSP -----------------------------------
+-- Navigation
+map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<Cr>", { desc = "Hover documentation" })
+map("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<Cr>", { desc = "Go to declaration" })
+map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
+map("n", "<leader>lt", "<Cmd>FzfLua lsp_typedefs<Cr>", { desc = "Type definitions" })
+map("n", "<leader>li", "<Cmd>FzfLua lsp_implementations<Cr>", { desc = "Implementations" })
+map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
+-- Symbols
 map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
-map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
-map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
+-- Actions
 map("n", "<leader>ln", "<Cmd>lua vim.lsp.buf.rename()<Cr>", { desc = "Rename" })
+map("n", "<leader>lh", "<Cmd>lua vim.lsp.buf.signature_help()<Cr>", { desc = "Signature help" })
+-- Call hierarchy
+map("n", "<leader>lci", "<Cmd>FzfLua lsp_incoming_calls<Cr>", { desc = "Incoming calls" })
+map("n", "<leader>lco", "<Cmd>FzfLua lsp_outgoing_calls<Cr>", { desc = "Outgoing calls" })
 -- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
@@ -1099,7 +1114,7 @@ require("snacks").setup({
 require("sidekick").setup({
 	nes = {
 		enabled = true, -- Next Edit Suggestions
-		auto_trigger = true, -- Automatically trigger suggestions
+		auto_trigger = false, -- Disable automatic triggering
 		delay = 2000, -- Delay before auto-trigger (ms)
 	},
 	cli = {
@@ -1131,6 +1146,9 @@ require("fzf-lua").setup({
 		include_current_session = true,
 	},
 })
+
+-- Register fzf-lua as the vim.ui.select backend
+require("fzf-lua").register_ui_select()
 
 -- Gitsigns -------------------------------
 require("gitsigns").setup()
@@ -1544,6 +1562,7 @@ wk.add({
 	{ "<leader>g", group = "Git", icon = "󰊢" },
 	{ "<leader>h", group = "Help", icon = "󰋗" },
 	{ "<leader>l", group = "LSP", icon = "󰅩" },
+	{ "<leader>lc", group = "Call Hierarchy", icon = "󰘦" },
 	{ "<leader>m", group = "Markdown", icon = "󰉫" },
 	{ "<leader>o", group = "Obsidian", icon = "󱞁" },
 	{ "<leader>p", group = "Persistence", icon = "󰆓" },

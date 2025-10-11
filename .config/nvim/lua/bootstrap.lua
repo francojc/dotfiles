@@ -1,5 +1,5 @@
 --| Bootstrap paq-nvim -------------------------------------------
-
+--| local M
 local M = {}
 
 function M.ensure_paq()
