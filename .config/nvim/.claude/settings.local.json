@@ -21,7 +21,13 @@
       "Bash(timeout:*)",
       "Bash(cat:*)",
       "Read(//Users/francojc/.dotfiles/.config/nix/**)",
-      "Read(//Users/francojc/.dotfiles/.config/nvim/lua/**)"
+      "Read(//Users/francojc/.dotfiles/.config/nvim/lua/**)",
+      "Read(//home/jeridf/.dotfiles/.config/nix/**)",
+      "Bash(readlink:*)",
+      "Bash(ping:*)",
+      "Bash(curl -I https://syncthing.gerbil-matrix.ts.net)",
+      "Bash(lsof:*)",
+      "Bash(tailscale:*)"
     ],
     "deny": []
   },
