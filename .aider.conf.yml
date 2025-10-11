@@ -1,26 +1,10 @@
-# Aliases
-alias:
-  # OpenRouter
-  - "sonnet:openrouter/anthropic/claude-sonnet-4"
-  - "deepseek-chat:openrouter/deepseek/deepseek-chat-v3-0324"
-  - "gemini-pro:openrouter/google/gemini-2.5-pro-preview"
-  - "gemini-flash:openrouter/google/gemini-2.5-flash-preview-05-20"
-  - "gemma:openrouter/google/gemma-3n-e4b-it:free"
-
-  # GitHub Copilot
-  - "claude-sonnet-4.5:openai/claude-sonnet-4.5"
-  - "gemini-pro-2.5:openai/gemini-2.5-pro"
-  - "gpt-4.1:openai/gpt-4.1"
-  - "gpt-4o:openai/gpt-4o"
-  - "gpt-5:openai/gpt-5"
-  - "o4-mini:openai/o4-mini"
-
-# Models
-model: claude-sonnet-4.5
-editor-model: gpt-5
-weak-model: gpt-4o
-
+# Aider Configuration File
+# Github Copilot: openai completion endpoint
 openai-api-base: https://api.githubcopilot.com
+# Models
+model: openai/gemini-2.5-pro
+editor-model: openai/gpt-5
+weak-model: openai/gpt-4o
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
 architect: false

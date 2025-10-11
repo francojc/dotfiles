@@ -15,7 +15,13 @@
       "Bash(nix-env:*)",
       "Bash(nix search:*)",
       "Bash(tmux:*)",
-      "WebFetch(domain:petejon.es)"
+      "WebFetch(domain:petejon.es)",
+      "Bash(R:*)",
+      "Bash(direnv:*)",
+      "Bash(timeout:*)",
+      "Bash(cat:*)",
+      "Read(//Users/francojc/.dotfiles/.config/nix/**)",
+      "Read(//Users/francojc/.dotfiles/.config/nvim/lua/**)"
     ],
     "deny": []
   },

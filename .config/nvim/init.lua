@@ -206,6 +206,15 @@ a.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Auto-activate otter for Quarto files
+a.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = "quarto",
+	callback = function()
+		require("otter").activate()
+	end,
+})
+
 --| Keymaps ------------------------------------------------------
 local g = vim.g
 
@@ -287,34 +296,34 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 -- Assistant (Sidekick) --------------------------
 -- NES (Next Edit Suggestions)
 vim.keymap.set("n", "<leader>an", function()
-  require("sidekick.nes").update()
+	require("sidekick.nes").update()
 end, { desc = "NES: trigger update" })
 
 vim.keymap.set("n", "<leader>aa", function()
-  require("sidekick.nes").apply()
+	require("sidekick.nes").apply()
 end, { desc = "NES: apply suggestion" })
 
 vim.keymap.set("n", "<leader>ad", function()
-  require("sidekick.nes").clear()
+	require("sidekick.nes").clear()
 end, { desc = "NES: clear/dismiss" })
 
 vim.keymap.set("n", "<leader>aj", function()
-  if not require("sidekick").nes_jump_or_apply() then
-    vim.notify("No more NES suggestions", vim.log.levels.INFO)
-  end
+	if not require("sidekick").nes_jump_or_apply() then
+		vim.notify("No more NES suggestions", vim.log.levels.INFO)
+	end
 end, { desc = "NES: jump to next or apply" })
 
 -- CLI Terminal
 vim.keymap.set("n", "<leader>at", function()
-  require("sidekick.cli").toggle()
+	require("sidekick.cli").toggle()
 end, { desc = "CLI: toggle terminal" })
 
 vim.keymap.set({ "n", "v" }, "<leader>as", function()
-  require("sidekick.cli").send({ msg = "{selection}" })
+	require("sidekick.cli").send({ msg = "{selection}" })
 end, { desc = "CLI: send selection" })
 
 vim.keymap.set("n", "<leader>ac", function()
-  require("sidekick.cli").select()
+	require("sidekick.cli").select()
 end, { desc = "CLI: select tool" })
 
 -- Buffers --------------------------
@@ -986,6 +995,9 @@ require("vague").setup({})
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 
+-- Custom Sidekick NES Highlights (Copilot-style ghost text)
+require("sidekick-highlights").setup()
+
 -- Conform ----------------------------------
 require("conform").setup({
 	default_format_ops = {
@@ -999,8 +1011,21 @@ require("conform").setup({
 		markdown = { "mdformat" },
 		nix = { "alejandra" },
 		python = { "ruff", lsp_format = "fallback" },
+		quarto = { "injected" },
 		r = { "air" },
 		["*"] = { "trim_whitespace" },
+	},
+	formatters = {
+		injected = {
+			options = {
+				ignore_errors = false,
+				lang_to_ext = {
+					bash = "sh",
+					python = "py",
+					r = "r",
+				},
+			},
+		},
 	},
 	format_on_save = function()
 		-- Do not format markdown/quarto files on save
