@@ -18,7 +18,8 @@
       "Bash(/bin/df -h /)",
       "Bash(vm_stat:*)",
       "Bash(launchctl limit:*)",
-      "Bash(defaults read:*)"
+      "Bash(defaults read:*)",
+      "Bash(atuin account:*)"
     ],
     "deny": []
   }
