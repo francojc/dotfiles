@@ -1,13 +1,18 @@
 {
   isDarwin,
   isLinux,
+  username,
   ...
 }: {
   # Enable Syncthing service for Home Manager
+  # This configuration works consistently across Darwin and Linux
   services.syncthing = {
     enable = true;
-    # Home Manager handles the service configuration automatically
-    # On macOS, this creates a LaunchAgent
-    # On Linux, this creates a user systemd service
   };
+
+  # Platform-specific package additions for better desktop integration
+  home.packages =
+    if isLinux
+    then [ /* Can add syncthingtray or other Linux GUI tools here */ ]
+    else [ /* Can add macOS-specific tools here if needed */ ];
 }

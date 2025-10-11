@@ -18,14 +18,8 @@
     settings.PasswordAuthentication = true;
   };
 
-  # --- Syncthing Service ---
-  services.syncthing = {
-    enable = true;
-    user = username;
-    dataDir = "/home/${username}/.local/share/syncthing";
-    configDir = "/home/${username}/.config/syncthing";
-    openDefaultPorts = true;
-  };
+  # Syncthing is now managed by Home Manager for consistency across platforms
+  # This ensures the same configuration works on both Darwin and Linux
 
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [

@@ -33,7 +33,7 @@
     "command": "npx -y ccusage statusline",
     "padding": 0
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754255023538
   }
