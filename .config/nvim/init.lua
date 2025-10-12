@@ -153,6 +153,7 @@ vim.diagnostic.config({
 -- Create an autocommand group
 -- personal group
 a.nvim_create_augroup("personal", { clear = true })
+
 -- Remove trailing whitespace on save
 a.nvim_create_autocmd("BufWritePre", {
 	group = "personal",
@@ -249,13 +250,6 @@ map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
---- Window  -----
--- Move between editor/terminal windows
-map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<Cr>", { desc = "Move to left window" })
-map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<Cr>", { desc = "Move to bottom window" })
-map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<Cr>", { desc = "Move to top window" })
-map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<Cr>", { desc = "Move to right window" })
-
 -- Resize
 map("n", "<leader>wk", "<C-w>10-", { desc = "Resize window up" })
 map("n", "<leader>wj", "<C-w>10+", { desc = "Resize window down" })
@@ -271,8 +265,8 @@ map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 -- Next visual line
-map("n", "j", "gj", { desc = "Next visual line" })
-map("n", "k", "gk", { desc = "Previous visual line" })
+-- map("n", "j", "gj", { desc = "Next visual line" })
+-- map("n", "k", "gk", { desc = "Previous visual line" })
 -- Window-centered movement
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
@@ -283,7 +277,9 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
 -- Plugin keymaps ----------------
 -- Copilot
-g.copilot_settings = { selectedCompletionModel = "gpt-4.1-copilot" } -- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
+-- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
+g.copilot_settings = { selectedCompletionModel = "gpt-4.1-copilot" }
+
 map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 g.copilot_no_tab_map = true -- Disable default tab mapping
 
@@ -295,7 +291,15 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
 -- Assistant (Sidekick) --------------------------
 -- NES (Next Edit Suggestions)
-vim.keymap.set("n", "<leader>an", function()
+vim.keymap.set("n", "<leader>ae", function()
+	require("sidekick.nes").enable()
+end, { desc = "NES: enable" })
+
+vim.keymap.set("n", "<leader>ad", function()
+	require("sidekick.nes").disable()
+end, { desc = "NES: disable" })
+
+vim.keymap.set("n", "<leader>at", function()
 	require("sidekick.nes").update()
 end, { desc = "NES: trigger update" })
 
@@ -303,32 +307,20 @@ vim.keymap.set("n", "<leader>aa", function()
 	require("sidekick.nes").apply()
 end, { desc = "NES: apply suggestion" })
 
-vim.keymap.set("n", "<leader>ad", function()
-	require("sidekick.nes").clear()
-end, { desc = "NES: clear/dismiss" })
-
 vim.keymap.set("n", "<leader>aj", function()
 	if not require("sidekick").nes_jump_or_apply() then
 		vim.notify("No more NES suggestions", vim.log.levels.INFO)
 	end
 end, { desc = "NES: jump to next or apply" })
 
-vim.keymap.set("n", "<leader>ai", function()
-	require("sidekick.nes").update()
-end, { desc = "NES: trigger suggestions manually" })
-
 -- CLI Terminal
-vim.keymap.set("n", "<leader>at", function()
+vim.keymap.set("n", "<leader>ac", function()
 	require("sidekick.cli").toggle()
 end, { desc = "CLI: toggle terminal" })
 
 vim.keymap.set({ "n", "v" }, "<leader>as", function()
 	require("sidekick.cli").send({ msg = "{selection}" })
 end, { desc = "CLI: send selection" })
-
-vim.keymap.set("n", "<leader>ac", function()
-	require("sidekick.cli").select()
-end, { desc = "CLI: select tool" })
 
 -- Buffers --------------------------
 -- Bufferline
@@ -422,53 +414,6 @@ map(
 	{ desc = "Paste image" }
 )
 
--- Custom checkbox toggle function for multiple lines
-function toggle_checkboxes()
-	local start_line, end_line
-	local mode = vim.fn.mode()
-
-	if mode:find("[vV]") then
-		-- Visual mode: get selected range
-		start_line = vim.fn.line("'<")
-		end_line = vim.fn.line("'>")
-	else
-		-- Normal mode: only current line
-		start_line = vim.fn.line(".")
-		end_line = start_line
-	end
-
-	for line_num = start_line, end_line do
-		local line = vim.fn.getline(line_num)
-		local new_line
-
-		-- Check for different checkbox patterns and toggle them
-		if line:match("^%s*- %[ %]") then
-			-- Unchecked: [ ] -> [x]
-			new_line = line:gsub("^(%s*- )%[ %]", "%1[x]")
-		elseif line:match("^%s*- %[x%]") then
-			-- Checked: [x] -> [ ]
-			new_line = line:gsub("^(%s*- )%[x%]", "%1[ ]")
-		elseif line:match("^%s*- ") then
-			-- Regular list item: add checkbox
-			new_line = line:gsub("^(%s*- )", "%1[ ] ")
-		elseif line:match("^%s*%S") then
-			-- Regular line: convert to checkbox list item
-			new_line = line:gsub("^(%s*)", "%1- [ ] ")
-		else
-			-- Empty or whitespace-only line: skip
-			new_line = line
-		end
-
-		if new_line ~= line then
-			vim.fn.setline(line_num, new_line)
-		end
-	end
-
-	-- Exit visual mode if we were in it
-	if mode:find("[vV]") then
-		vim.cmd("normal! <Esc>")
-	end
-end
 -- Obsidian -----------------------------------
 map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
 map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Backlinks" })
@@ -537,32 +482,25 @@ map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap"
 
 -- Custom Todo Search with Filetype Filtering
 function _G.TodoSearchFzfLua()
-	-- Configure which filetypes to include in todo search
-	-- Modify this table to include/exclude filetypes as needed
-	local allowed_filetypes = {
-		"lua",
-		"python",
-		"r",
-		"markdown",
-		"quarto",
-		"nix",
-		"bash",
-		"sh",
-		"vim",
-		"yaml",
-		"toml",
-		"css",
-		"html",
-		"javascript",
-		"typescript",
-		"tex",
-		"sql",
-		"dockerfile",
+	-- Configure which filetypes to EXCLUDE from todo search
+	-- Modify this table to add filetypes you want to exclude
+	local disallowed_filetypes = {
+		"json",
 	}
 
-	-- Create file extensions pattern for ripgrep
-	local extensions = table.concat(allowed_filetypes, ",")
-	local rg_opts = string.format("--glob '*.{%s}' --hidden --line-number --column", extensions)
+	-- Create exclusion pattern for ripgrep
+	local exclusions = {}
+	for _, filetype in ipairs(disallowed_filetypes) do
+		table.insert(exclusions, "--glob '!*." .. filetype .. "'")
+	end
+
+	-- Add additional common exclusions
+	table.insert(exclusions, "--glob '!.git/*'")
+	table.insert(exclusions, "--glob '!node_modules/*'")
+	table.insert(exclusions, "--glob '!.DS_Store'")
+	table.insert(exclusions, "--glob '!.tags'")
+
+	local rg_opts = table.concat(exclusions, " ") .. " --hidden --line-number --column"
 
 	-- Call TodoFzfLua with custom ripgrep options to filter by filetype
 	require("todo-comments.fzf").todo({
@@ -1047,9 +985,6 @@ require("vague").setup({})
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 
--- Custom Sidekick NES Highlights (Copilot-style ghost text)
-require("sidekick-highlights").setup()
-
 -- Conform ----------------------------------
 require("conform").setup({
 	default_format_ops = {
@@ -1148,11 +1083,12 @@ require("snacks").setup({
 })
 
 -- Sidekick ----------------------------------
+-- Custom Sidekick NES Highlights (Copilot-style ghost text)
+require("sidekick-highlights").setup()
+
 require("sidekick").setup({
 	nes = {
-		enabled = true, -- Next Edit Suggestions
-		auto_trigger = false, -- Disable automatic triggering
-		-- delay = 2000, -- Delay before auto-trigger (ms)
+		enabled = false, -- Next Edit Suggestions - start disabled for manual control
 	},
 	cli = {
 		enabled = true, -- AI CLI terminal
