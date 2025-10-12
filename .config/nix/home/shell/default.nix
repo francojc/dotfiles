@@ -7,11 +7,11 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       defaultKeymap = "viins";
-      initExtra = ''
+      initContent = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
 
-        bindkey '^I' autosuggest-accept
+        bindkey '^F' autosuggest-accept # Ctrl+F to accept autosuggestion
       '';
       profileExtra = ''
         # zprofile
@@ -76,7 +76,6 @@
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
-        export ZSH_AI_PROVIDER="gemini"
         export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#5c6370"
 
         # --- SECRETS (from `pass`) ---
