@@ -161,14 +161,8 @@ else
   vim.lsp.config.yamlls = { capabilities = capabilities }
 end
 
----| Aerial ----------------------------------
-require("aerial").setup({
-  on_attach = function(bufnr)
-    -- Jump forwards/backwards with '{' and '}'
-    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-  end,
-})
+---| Aerial (lazy-loaded via commands.lua) ----------------------------------
+-- Configuration moved to lua/plugins/commands.lua
 
 ---| Alpha ----------------------------------
 local alpha = require("alpha")
@@ -455,11 +449,11 @@ require("conform").setup({
   notify_on_error = false,
 })
 
----| csvview ----------------------------------
-require("csvview").setup({})
+---| csvview (lazy-loaded via commands.lua and filetype.lua) ----------------------------------
+-- Configuration moved to lazy-loading specs
 
----| Flash ----------------------------------
-require("flash").setup({})
+---| Flash (lazy-loaded via editor.lua) ----------------------------------
+-- Configuration moved to lua/plugins/editor.lua
 
 ---| Snacks ----------------------------------
 require("snacks").setup({
@@ -520,31 +514,14 @@ require("fzf-lua").setup({
 -- Register fzf-lua as the vim.ui.select backend
 require("fzf-lua").register_ui_select()
 
----| Gitsigns -------------------------------
-require("gitsigns").setup()
+---| Gitsigns (lazy-loaded via editor.lua) -------------------------------
+-- Configuration moved to lua/plugins/editor.lua
 
----| Image ----------------------------------
-require("image").setup({
-  processor = "magick_cli",
-  integrations = {
-    markdown = {
-      -- clear_in_insert_mode = true, -- Disable this to test flicker
-      clear_in_insert_mode = false,
-      filetypes = { "markdown", "quarto" },
-      -- only_render_image_at_cursor = true, -- Disable this to test flicker
-      only_render_image_at_cursor = false,
-    },
-  },
-})
+---| Image (lazy-loaded via filetype.lua) ----------------------------------
+-- Configuration moved to lua/plugins/filetype.lua
 
----| Img-Clip ----------------------------------
-require("img-clip").setup({
-  default = {
-    dir_path = "./images",
-    relative_to_current_file = true,
-    show_dir_path_in_prompt = true,
-  },
-})
+---| Img-Clip (lazy-loaded via filetype.lua) ----------------------------------
+-- Configuration moved to lua/plugins/filetype.lua
 
 ---| Lualine ----------------------------------------------------------------
 -- Lualine setup
@@ -628,146 +605,20 @@ pcall(function()
   })
 end)
 
----| Obsidian -----------------------------------
--- Only setup if not already configured to avoid duplicate provider registration
-if not vim.g.obsidian_setup_done then
-  require("obsidian").setup({
-    legacy_commands = false, -- Use legacy commands for compatibility
-    ui = {
-      enable = false,
-    },
-    workspaces = {
-      {
-        name = "Notes",
-        path = "~/Obsidian/Notes/",
-      },
-      {
-        name = "Personal",
-        path = "~/Obsidian/Personal/",
-      },
-    },
-    daily_notes = {
-      folder = "Daily",
-      template = "Assets/Templates/Daily.md",
-    },
-    templates = {
-      folder = "Assets/Templates",
-    },
-    new_notes_location = "Inbox",
-    picker = {
-      name = "fzf-lua",
-    },
-    attachments = {
-      img_folder = "Assets/Attachments",
-    },
-    completion = {
-      nvim_cmp = false,
-      blink = true,
-    },
-  })
-  vim.g.obsidian_setup_done = true
-end
+---| Obsidian (lazy-loaded via filetype.lua) -----------------------------------
+-- Configuration moved to lua/plugins/filetype.lua
 
----| Quarto -----------------------------------
-if not vim.g.otter_setup_done then
-  require("otter").setup({
-    lsp = {
-      diagnostic_update_events = { "BufWritePost" },
-      root_dir = function(_, bufnr)
-        return vim.fs.root(bufnr or 0, {
-          ".git",
-          "_quarto.yml",
-          "DESCRIPTION", -- For R packages
-        }) or vim.fn.getcwd(0)
-      end,
-    },
-    buffers = {
-      set_filetype = true,
-      write_to_disk = false,
-    },
-    handle_leading_whitespace = true, -- Important for R/Python indentation
-  })
-  vim.g.otter_setup_done = true
-end
+---| Quarto & Otter (lazy-loaded via filetype.lua) -----------------------------------
+-- Configurations moved to lua/plugins/filetype.lua
 
-if not vim.g.quarto_setup_done then
-  require("quarto").setup({
-    lspFeatures = {
-      enabled = true,
-      chunks = "curly",
-      languages = { "r", "python", "julia", "bash", "html" },
-      diagnostics = {
-        enabled = true,
-        triggers = { "BufWritePost" },
-      },
-      completion = {
-        enabled = true,
-      },
-    },
-    codeRunner = {
-      enabled = true,
-      default_method = "slime", -- Integrates with existing slime setup
-      never_run = { "yaml" },
-    },
-    keymap = false, -- Use custom keymaps already defined
-  })
-  vim.g.quarto_setup_done = true
-end
+---| Render-Markdown (lazy-loaded via filetype.lua) ---------------------------
+-- Configuration moved to lua/plugins/filetype.lua
 
----| Render-Markdown ---------------------------
-require("render-markdown").setup({
-  latex = { enabled = false },
-  bullet = {
-    icons = { "■ ", "□ ", "▪ ", "▫ " },
-    left_pad = 0,
-    right_pad = 2,
-  },
-  checkbox = {
-    unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-    checked = { icon = " ", highlight = "RenderMarkdownChecked" },
-    custom = {
-      todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
-      forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
-      important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
-    },
-  },
-  code = {
-    language_icon = false,
-    width = "block",
-    min_width = 80,
-  },
-  completions = { lsp = { enabled = true } },
-  -- conceal = { level = 1 }, -- Disable conceal entirely
-  dash = { enabled = false },
-  file_types = { "markdown", "quarto" },
-  heading = {
-    backgrounds = {},
-    left_pad = 0,
-    position = "inline",
-    right_pad = 3,
-    icons = {
-      "# ",
-      "## ",
-      "### ",
-      "#### ",
-      "##### ",
-      "###### ",
-    },
-  },
-  html = {
-    enabled = true,
-    comment = { conceal = false },
-  },
-  pipe_table = {
-    preset = "round",
-  },
-})
+---| Todo-comments (lazy-loaded via commands.lua) -----------------------------------
+-- Configuration moved to lua/plugins/commands.lua
 
----| Todo-comments -----------------------------------
-require("todo-comments").setup({})
-
----| Toggleterm -----------------------------------
-require("toggleterm").setup({})
+---| Toggleterm (lazy-loaded via commands.lua) -----------------------------------
+-- Configuration moved to lua/plugins/commands.lua
 
 ---| Treesitter -----------------------------------
 require("nvim-treesitter.configs").setup({
@@ -818,5 +669,5 @@ wk.add({
   { "<leader>x", desc = "Quit", icon = "󰗼" },
 })
 
----| Yazi -----------------------------------
-require("yazi").setup({})
+---| Yazi (lazy-loaded via commands.lua) -----------------------------------
+-- Configuration moved to lua/plugins/commands.lua

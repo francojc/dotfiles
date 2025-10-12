@@ -8,7 +8,11 @@ require("bootstrap").ensure_paq()
 
 ---| Load Plugins ------------------------------------------------
 -- Install plugins (paq declaration)
-require("plugins")
+require("plugins-paq")
+
+---| Lazy-loading Setup -------------------------------------------
+-- Setup lazy-loading with lz.n (auto-discovers lua/plugins/*.lua)
+require("lz.n").load("plugins")
 
 ---| Core Configuration -----------------------------------------
 -- Load core settings in order
@@ -18,5 +22,5 @@ require("core.keymaps")      -- key mappings
 require("core.functions")    -- helper functions
 
 ---| Plugin Configuration ---------------------------------------
--- Configure all plugins
-require("plugins.config")
+-- Configure eager-loaded plugins
+require("plugins-config")
