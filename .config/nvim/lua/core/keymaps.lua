@@ -7,17 +7,17 @@ g.maplocalleader = " "
 
 -- map() function -----
 local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  if type(mode) == "table" then
-    for _, m in ipairs(mode) do
-      vim.api.nvim_set_keymap(m, lhs, rhs, options)
-    end
-  else
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-  end
+	local options = { noremap = true, silent = true }
+	if opts then
+		options = vim.tbl_extend("force", options, opts)
+	end
+	if type(mode) == "table" then
+		for _, m in ipairs(mode) do
+			vim.api.nvim_set_keymap(m, lhs, rhs, options)
+		end
+	else
+		vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	end
 end
 
 -- Vim -----------------
@@ -73,34 +73,34 @@ map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 -- Assistant (Sidekick) --------------------------
 -- NES (Next Edit Suggestions)
 vim.keymap.set("n", "<leader>ae", function()
-  require("sidekick.nes").enable()
+	require("sidekick.nes").enable()
 end, { desc = "NES: enable" })
 
 vim.keymap.set("n", "<leader>ad", function()
-  require("sidekick.nes").disable()
+	require("sidekick.nes").disable()
 end, { desc = "NES: disable" })
 
 vim.keymap.set("n", "<leader>at", function()
-  require("sidekick.nes").update()
+	require("sidekick.nes").update()
 end, { desc = "NES: trigger update" })
 
 vim.keymap.set("n", "<leader>aa", function()
-  require("sidekick.nes").apply()
+	require("sidekick.nes").apply()
 end, { desc = "NES: apply suggestion" })
 
 vim.keymap.set("n", "<leader>aj", function()
-  if not require("sidekick").nes_jump_or_apply() then
-    vim.notify("No more NES suggestions", vim.log.levels.INFO)
-  end
+	if not require("sidekick").nes_jump_or_apply() then
+		vim.notify("No more NES suggestions", vim.log.levels.INFO)
+	end
 end, { desc = "NES: jump to next or apply" })
 
 -- CLI Terminal
 vim.keymap.set("n", "<leader>ac", function()
-  require("sidekick.cli").toggle()
+	require("sidekick.cli").toggle()
 end, { desc = "CLI: toggle terminal" })
 
 vim.keymap.set({ "n", "v" }, "<leader>as", function()
-  require("sidekick.cli").send({ msg = "{selection}" })
+	require("sidekick.cli").send({ msg = "{selection}" })
 end, { desc = "CLI: send selection" })
 
 -- Buffers --------------------------
@@ -118,10 +118,10 @@ map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
 -- Code -----------------------------
 map("n", "<leader>ca", "<Cmd>lua require('fzf-lua').lsp_code_actions()<Cr>", { desc = "Code actions" })
 map(
-  { "n", "v" },
-  "<leader>cf",
-  "<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
-  { desc = "Code format" }
+	{ "n", "v" },
+	"<leader>cf",
+	"<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
+	{ desc = "Code format" }
 )
 map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (current line)" })
 map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
@@ -189,16 +189,15 @@ map("n", "<leader>m4", "I#### <Esc>", { desc = "Heading 4" })
 map("v", "<leader>ml", 'c[<C-r>"]()<Left>', { desc = "Add link" })
 -- Paste image
 map(
-  "n",
-  "<leader>mp",
-  "<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
-  { desc = "Paste image" }
+	"n",
+	"<leader>mp",
+	"<Cmd>lua require('img-clip').paste_image({dir_path = 'images', relative_to_current_file = true })<Cr>",
+	{ desc = "Paste image" }
 )
 
 -- Obsidian -----------------------------------
 map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
 map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Backlinks" })
-map({ "n", "v" }, "<leader>oc", "<Cmd>lua toggle_checkboxes()<Cr>", { desc = "Toggle checkbox" })
 map("n", "<leader>od", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily note" })
 map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" })
 map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
