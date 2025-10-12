@@ -516,7 +516,7 @@ map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
-map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
+map("n", "<leader>st", "<Cmd>lua TodoSearchFzfLua()<Cr>", { desc = "Search todos" })
 -- Flash search
 map({ "n", "x", "o" }, "<leader>sf", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
@@ -534,6 +534,43 @@ map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })
 
 ---| Functions --------------------------------------------
+
+-- Custom Todo Search with Filetype Filtering
+function _G.TodoSearchFzfLua()
+	-- Configure which filetypes to include in todo search
+	-- Modify this table to include/exclude filetypes as needed
+	local allowed_filetypes = {
+		"lua",
+		"python",
+		"r",
+		"markdown",
+		"quarto",
+		"nix",
+		"bash",
+		"sh",
+		"vim",
+		"yaml",
+		"toml",
+		"css",
+		"html",
+		"javascript",
+		"typescript",
+		"tex",
+		"sql",
+		"dockerfile",
+	}
+
+	-- Create file extensions pattern for ripgrep
+	local extensions = table.concat(allowed_filetypes, ",")
+	local rg_opts = string.format("--glob '*.{%s}' --hidden --line-number --column", extensions)
+
+	-- Call TodoFzfLua with custom ripgrep options to filter by filetype
+	require("todo-comments.fzf").todo({
+		cwd = vim.fn.getcwd(),
+		rg_opts = rg_opts,
+		silent = true, -- Hide FZF-lua warning messages
+	})
+end
 
 -- Session management helpers using core session commands
 local session_dir = vim.fn.stdpath("state") .. "/sessions"

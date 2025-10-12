@@ -44,7 +44,7 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    shunit2 # Shell testing
+    # shunit2 # Shell testing
     stow # Symlink manager
   ];
 
@@ -56,35 +56,35 @@
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
-    _7zz # Archive compression
+    # _7zz # Archive compression
     aider-chat # AI code assistant
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     coreutils # GNU core utilities (provides grealpath for yazi)
-    duf # Disk usage utility
+    # duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement
-    fastfetch # System information tool
+    # fastfetch # System information tool
     fd # find replacement
-    file # File type identification
+    # file # File type identification
     fzf # General fuzzy finder
-    glances # System monitoring tool
+    # glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
-    llm_with_plugins # llm CLI bundled with OpenRouter plugin
+    llm_with_plugins # llm CLI bundled with OpenRouter plugin (see above)
     ncdu # Disk usage analyzer
     pass # Password manager
     repgrep # ripgrep across files
     ripgrep # grep replacement
-    ruby # Programming language
-    speedtest-cli # Internet speed test
+    # ruby # Programming language
+    # speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
-    typtea # Terminal-based typing test
-    unp # Archive unpacker
+    # typtea # Terminal-based typing test
+    # unp # Archive unpacker
     which # Command location utility
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
@@ -94,18 +94,18 @@
   # Media and document processing
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
-    drawio # Diagramming tool
+    # drawio # Diagramming tool
     ffmpeg # Multimedia framework
-    ghostscript # PostScript/PDF interpreter
-    gv # Ghostview - PostScript/PDF viewer
-    haskellPackages.pandoc-crossref # Pandoc filter
+    # ghostscript # PostScript/PDF interpreter
+    # gv # Ghostview - PostScript/PDF viewer
+    # haskellPackages.pandoc-crossref # Pandoc filter
     imagemagick # Image manipulation
     khal # Calendar
     mpv-unwrapped # Media player
     pandoc # Document converter
     pianobar # Pandora client
-    poppler_utils # PDF utilities (pdftotext, etc.)
-    qpdf # PDF manipulation tool
+    # poppler_utils # PDF utilities (pdftotext, etc.)
+    # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     vdirsyncer # CalDAV/CardDAV sync
     yt-dlp # Video downloader
@@ -113,7 +113,7 @@
 
   # YouTube content creation and streaming
   youtubeContentPackages = with pkgs; [
-    audacity # Audio editing and recording
+    # audacity # Audio editing and recording
   ];
 
   # Combined package list

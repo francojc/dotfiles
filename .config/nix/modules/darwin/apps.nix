@@ -26,7 +26,7 @@
       "ncspot" # ncurses Spotify client
       "nmap"
       "node" # Node.js
-      "ollama" # AI model management
+      # "ollama" # AI model management
       "pngpaste" # paste images
       "python@3.11" # Python 3
       "rename" # file renaming utility
@@ -39,18 +39,18 @@
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
-      "blackhole-2ch" # virtual audio driver
+      # "blackhole-2ch" # virtual audio driver
       "calibre" # eBook management
-      "camo-studio" # webcam software
+      # "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"
       "kap" # screen recording
-      "keycastr" # keystroke visualizer
-      "loopback" # audio routing
-      "obs" # OBS Studio for streaming and recording
+      # "keycastr" # keystroke visualizer
+      # "loopback" # audio routing
+      # "obs" # OBS Studio for streaming and recording
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization

@@ -20,9 +20,11 @@
       "Bash(git config:*)",
       "Read(//home/jeridf/**)",
       "Bash(ssh-add:*)",
-      "Read(//Users/francojc/.dotfiles/**)"
+      "Read(//Users/francojc/.dotfiles/**)",
+      "mcp__mcp-zen__listmodels",
+      "mcp__mcp-zen__consensus"
     ],
     "deny": []
   },
-  "outputStyle": "Explanatory"
+  "outputStyle": "Learning"
 }
