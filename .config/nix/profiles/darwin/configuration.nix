@@ -42,15 +42,8 @@
         autohide-delay = 0.0;
         expose-group-apps = true;
         orientation = "bottom";
-        persistent-apps = [
-          "/Applications/Zen.app"
-          "/Applications/Ghostty.app"
-          "/System/Applications/Utilities/Screen Sharing.app"
-        ];
-        persistent-others = [
-          "/Users/${username}/"
-          "/Users/${username}/Downloads/"
-        ];
+        persistent-apps = [];
+        persistent-others = [];
         show-recents = false;
         wvous-bl-corner = 2;
         wvous-br-corner = 3;
