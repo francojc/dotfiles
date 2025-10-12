@@ -7,9 +7,11 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       defaultKeymap = "viins";
-      initContent = ''
+      initExtra = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
+
+        bindkey '^I' autosuggest-accept
       '';
       profileExtra = ''
         # zprofile
