@@ -280,11 +280,10 @@ map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 -- INFO: this works, but there only seems to be one [model available](https://docs.github.com/en/copilot/concepts/completions/code-suggestions) 2025-07-01
 g.copilot_settings = { selectedCompletionModel = "gpt-4.1-copilot" }
 
-map("i", "<C-f>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 g.copilot_no_tab_map = true -- Disable default tab mapping
-
-map("i", "<Tab>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
-map("i", "<C-d>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
+map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
+map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
+map("i", "<C-g>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
 map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
