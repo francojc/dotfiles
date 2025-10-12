@@ -271,6 +271,168 @@ Add configuration to the appropriate spec file in **`lua/plugins/`**:
 }
 ```
 
+### Step 2.5: Discovering Plugin Triggers
+
+When adding a lazy-loaded plugin, you need to know what triggers to use (`cmd`, `ft`, `keys`, or `event`). Here's how to find them:
+
+#### Finding Commands (`cmd`)
+
+For plugins that load on commands (e.g., `:LazyGit`, `:Yazi`):
+
+1. **Check the plugin's README/documentation**:
+   - Look for a "Commands" or "Usage" section
+   - Example: [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim) lists `:LazyGit`, `:LazyGitLog`
+
+2. **Check the plugin's help documentation**:
+
+   ```vim
+   :help plugin-name
+   :help plugin-name-commands
+   ```
+
+3. **Browse the plugin's source code**:
+   - Look in `plugin/*.vim` or `plugin/*.lua` files
+   - Search for `vim.api.nvim_create_user_command` (Lua) or `command!` (Vimscript)
+   - Example: In `aerial.nvim/plugin/aerial.lua`, you'll find `AerialToggle`, `AerialOpen`, etc.
+
+4. **Load the plugin temporarily and list commands**:
+
+   ```vim
+   :packadd plugin-name
+   :command
+   ```
+   Then search for commands related to the plugin (usually capitalized with the plugin name)
+
+5. **Check GitHub Issues/Discussions**:
+   - Other users often ask about available commands
+   - The plugin author may have documented them in issue responses
+
+#### Finding Filetypes (`ft`)
+
+For plugins that load on specific filetypes:
+
+1. **Check the plugin's documentation** for supported file types
+2. **Identify the filetype** you want to trigger on:
+   ```vim
+   :set filetype?
+   ```
+   While editing the file type in question
+
+3. **Common filetypes**:
+   - `markdown`, `quarto`, `python`, `lua`, `r`, `csv`, `json`, `yaml`
+
+#### Finding Keys (`keys`)
+
+For plugins that should load on specific key mappings:
+
+1. **Check the plugin's documentation** for default keybindings
+2. **Decide which keys should trigger loading**:
+   - If you want the plugin available when you press `<leader>sf`, add that to `keys`
+3. **Specify the mode**:
+   ```lua
+   keys = {
+     { "<leader>sf", mode = { "n", "x", "o" } },  -- normal, visual, operator-pending
+   }
+   ```
+
+#### Finding Events (`event`)
+
+For plugins that should load on Neovim events (autocmd triggers):
+
+**When to use events:**
+
+- Plugins that enhance editing but aren't needed immediately at startup
+- Plugins that monitor file changes, cursor movement, or mode changes
+- Plugins that provide functionality after files are loaded (e.g., git integration)
+
+**How to discover which events to use:**
+
+1. **Check the plugin's documentation**:
+
+   - Look for "lazy-loading" or "performance" sections
+   - Some plugins explicitly recommend events for lazy-loading
+   - Example: Many git plugins recommend `BufReadPre` or `BufNewFile`
+
+2. **Check the plugin's autocommands**:
+
+   - Look in `plugin/*.lua` or `plugin/*.vim` for `vim.api.nvim_create_autocmd` or `autocmd`
+   - The events they use internally are good candidates for lazy-loading triggers
+   - Example: If a plugin sets up autocommands on `BufWritePost`, consider loading it on `BufReadPre`
+
+3. **Examine similar plugin configurations**:
+
+   - Check lazy.nvim or other dotfiles repositories
+   - See what events others use for similar plugins
+   - Example: Git plugins typically use `{ "BufReadPre", "BufNewFile" }`
+
+4. **Test and observe**:
+
+   - Load the plugin on a broad event (e.g., `BufReadPre`)
+   - Check `:messages` to see when it actually activates
+   - Refine to more specific events if needed
+
+**Common event patterns:**
+
+| Event(s)                     | When to Use                                                  | Example Plugins                 |
+| ---------------------------- | ------------------------------------------------------------ | ------------------------------- |
+| `BufReadPre`, `BufNewFile`   | File-related plugins that should load when opening any file  | gitsigns.nvim, file watchers    |
+| `BufReadPost`                | Plugins that need the buffer content to be loaded            | Syntax/indent plugins           |
+| `InsertEnter`                | Completion or snippet plugins (if not needed immediately)    | Alternative completion sources  |
+| `CmdlineEnter`               | Command-line enhancement plugins                             | Command-line completion helpers |
+| `VeryLazy`                   | Plugins that can wait until after startup is complete        | Non-essential UI enhancements   |
+| `BufWritePre`, `BufWritePost`| Auto-formatting, linting, or save hooks                      | Formatters (if not using conform)|
+| `VimEnter`                   | Plugins needed after Neovim fully initializes                | Dashboard plugins (use commands)|
+| `FileType <type>`            | Same as `ft`, but more explicit                              | Use `ft` parameter instead      |
+
+**View all available events:**
+
+```vim
+:help autocmd-events
+```
+
+**Example from this config:**
+
+In `lua/plugins/editor.lua`, gitsigns uses events:
+
+```lua
+{
+  "gitsigns.nvim",
+  event = { "BufReadPre", "BufNewFile" },
+  after = function()
+    require("gitsigns").setup()
+  end,
+}
+```
+
+This loads gitsigns when you open any file (before reading or when creating new), which is ideal because:
+
+- It doesn't slow down startup (only loads when you open a file)
+- It's available immediately when you need git information
+- `BufReadPre` triggers before the buffer is displayed, so git signs appear instantly
+
+**Tips:**
+
+- Use multiple events with `event = { "Event1", "Event2" }` for flexibility
+- Earlier events (like `BufReadPre`) are better for visual plugins to avoid flicker
+- Later events (like `BufReadPost`) are fine for background processing
+- Avoid `VimEnter` for lazy-loading (defeats the purpose)
+- When in doubt, start with `BufReadPre` for file-related plugins
+
+#### Example: Discovering lazygit.nvim Commands
+
+1. Visit [https://github.com/kdheepak/lazygit.nvim](https://github.com/kdheepak/lazygit.nvim)
+2. Read the README - it lists:
+   - `:LazyGit` - Open lazygit
+   - `:LazyGitLog` - Open git log
+
+3. Add to `lua/plugins/commands.lua`:
+   ```lua
+   {
+     "lazygit.nvim",
+     cmd = { "LazyGit", "LazyGitLog" },
+   }
+   ```
+
 ### Step 3: Add Keybindings (if needed)
 
 Add keybindings to **`lua/core/keymaps.lua`**:

@@ -137,7 +137,7 @@ map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Files -----------------------------------
 -- Fzf-lua
 map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
-map("n", "<leader>fg", "<Cmd>FzfLua live_grep resume=true<Cr>", { desc = "Live grep" })
+map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
 map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
 map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
 map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
@@ -234,7 +234,7 @@ map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
 map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
-map("n", "<leader>st", "<Cmd>lua TodoSearchFzfLua()<Cr>", { desc = "Search todos" })
+map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
 -- Flash search
 map({ "n", "x", "o" }, "<leader>sf", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })

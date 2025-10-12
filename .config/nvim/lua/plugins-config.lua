@@ -13,7 +13,7 @@ require("fidget").setup({
 		override_vim_notify = true,
 		window = {
 			winblend = 80, -- 80% transparency
-			border = "none", -- Clean look without borders
+			border = "rounded", -- Rounded border
 		},
 	},
 
@@ -59,8 +59,8 @@ dashboard.section.header.val = {
 local dashboard_buttons = {
 	{ "r", "  Recent files", ":FzfLua oldfiles<CR>" },
 	{ "f", "  Find file", ":FzfLua files<CR>" },
-	{ "g", "  Find text", ":FzfLua live_grep <CR>" },
-	{ "n", "  New file", ":ene <BAR> startinsert <CR>" },
+	{ "g", "  Find text", ":FzfLua live_grep<CR>" },
+	{ "n", "  New file", ":ene <BAR> startinsert<CR>" },
 	{ "q", "  Quit Neovim", ":qa<CR>" },
 }
 dashboard.section.buttons.val = {}
