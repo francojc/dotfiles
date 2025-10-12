@@ -22,7 +22,9 @@
       "Bash(ssh-add:*)",
       "Read(//Users/francojc/.dotfiles/**)",
       "mcp__mcp-zen__listmodels",
-      "mcp__mcp-zen__consensus"
+      "mcp__mcp-zen__consensus",
+      "Bash(source:*)",
+      "Bash(zle:*)"
     ],
     "deny": []
   },

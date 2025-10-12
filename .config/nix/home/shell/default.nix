@@ -11,8 +11,7 @@
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
 
-        bindkey '^F' autosuggest-accept # Ctrl+F to accept autosuggestion
-        bindkey '^X' '^[[1;5C' # Ctrl+X triggers Ctrl+Right (word-by-word)
+        bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''
         # zprofile
