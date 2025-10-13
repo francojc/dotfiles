@@ -7,7 +7,6 @@
     "update_config": {
       "auto_update": true,
       "update_frequency": "startup",
-      "last_update": "2025-09-27T14:59:49.991945",
       "update_days": 7
     },
     "extraction": {
@@ -15,3 +14,4 @@
     }
   }
 }
+
