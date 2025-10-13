@@ -20,6 +20,7 @@ require("paq")({
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.surround", -- Surround
+	"folke/flash.nvim", -- Flash jump
 	"folke/sidekick.nvim", -- AI sidekick (NES + CLI)
 	"folke/snacks.nvim", -- Input and terminal utils
 	"folke/which-key.nvim", -- Keymaps popup
@@ -45,7 +46,6 @@ require("paq")({
 	{ "3rd/image.nvim", opt = true }, -- Image support (lazy: ft markdown/quarto)
 	{ "MeanderingProgrammer/render-markdown.nvim", opt = true }, -- Render-Markdown (lazy: ft markdown/quarto)
 	{ "akinsho/toggleterm.nvim", opt = true }, -- Toggle terminal (lazy: cmd)
-	{ "folke/flash.nvim", opt = true }, -- Flash jump (lazy: keys)
 	{ "folke/todo-comments.nvim", opt = true }, -- Todo comments (lazy: cmd)
 	{ "hakonharnes/img-clip.nvim", opt = true }, -- Image pasting (lazy: ft markdown)
 	{ "hat0uma/csvview.nvim", opt = true }, -- CSV viewer (lazy: ft csv)

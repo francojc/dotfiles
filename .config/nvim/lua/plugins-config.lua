@@ -547,6 +547,9 @@ pcall(function()
 	})
 end)
 
+---| Flash ----------------------------------
+require("flash").setup({})
+
 ---| Sidekick ----------------------------------
 -- Custom Sidekick NES Highlights (Copilot-style ghost text)
 require("sidekick-highlights").setup()
