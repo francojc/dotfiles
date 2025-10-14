@@ -16,7 +16,6 @@ require("fidget").setup({
 			border = "rounded", -- Rounded border
 		},
 	},
-
 	progress = {
 		display = {
 			done_icon = "✓", -- Clean checkmark for completed tasks
@@ -90,8 +89,31 @@ end
 -- Send config to alpha
 alpha.setup(dashboard.config)
 
+---| Snippets (LuaSnip) ----------------------------------
+-- Load VSCode-style snippets (friendly + personal)
+local ok_luasnip, luasnip = pcall(require, "luasnip")
+if ok_luasnip then
+	-- friendly-snippets
+	pcall(function()
+		require("luasnip.loaders.from_vscode").lazy_load()
+	end)
+	-- personal snippets
+	pcall(function()
+		require("luasnip.loaders.from_vscode").lazy_load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
+	end)
+	luasnip.config.setup({ enable_autosnippets = false })
+end
+
 ---| Blink ----------------------------------
 require("blink.cmp").setup({
+	snippet = {
+		expand = function(item)
+			local ok, ls = pcall(require, "luasnip")
+			if ok then
+				ls.lsp_expand(item.insert_text or item.label)
+			end
+		end,
+	},
 	fuzzy = {
 		implementation = "lua",
 	},
