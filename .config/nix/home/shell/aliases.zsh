@@ -11,6 +11,8 @@ alias llms='llm -t summarize' # uses the template 'summarize'
 # Secure Claude alias that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
 alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
 
+alias claudi='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-5 claude'
+
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
 alias taa=' tmux attach-session -t' # attach to a specific session
