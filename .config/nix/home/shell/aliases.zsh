@@ -8,12 +8,20 @@ alias llmb='llm -t briefly' # uses the template 'briefly'
 alias llms='llm -t summarize' # uses the template 'summarize'
 
 # Agentic AI aliases
-# Secure Claude alias that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
-alias claudz='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
+# Secure Claude function that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
+# Usage: claudz [model_name] - defaults to glm-4.6 if no model specified
+claudz() {
+  local model="${1:-glm-4.6}"
+  env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL="$ZAI_BASE_URL" ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
+}
 
-# Secure Claude alias that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
+# Secure Claude function that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
+# Usage: claudo [model_name] - defaults to gpt-4o if no model specified
 # TODO: if the mac-mincore server is stable, change the ANTHROPIC_BASE_URL to point to it. For now, use the hardcoded URL.
-alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-4o claude'
+claudo() {
+  local model="${1:-gpt-4o}"
+  env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
+}
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
