@@ -8,74 +8,44 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.stdenv.mkDerivation {
-        pname = "copilot-api";
-        version = "0.7.0";
+      default = pkgs.writeShellScriptBin "copilot-api" ''
+        # Path to npm global installation
+        NPM_GLOBAL_LIB="$HOME/.npm-global/lib/node_modules/copilot-api"
 
-        src = pkgs.fetchurl {
-          url = "https://registry.npmjs.org/copilot-api/-/copilot-api-0.7.0.tgz";
-          hash = "sha256-H8z9K/6L+74AwapTX/uitxMfx7yR64MOPUx4v+TwYiA=";
-        };
+        # Check if copilot-api is installed
+        if [ ! -d "$NPM_GLOBAL_LIB" ]; then
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+          echo "ERROR: copilot-api is not installed in npm global packages" >&2
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+          echo "" >&2
+          echo "Expected location: $NPM_GLOBAL_LIB" >&2
+          echo "" >&2
+          echo "To install copilot-api manually, run:" >&2
+          echo "  npm install -g copilot-api" >&2
+          echo "" >&2
+          echo "Or if using a custom npm prefix (~/.npm-global):" >&2
+          echo "  npm config set prefix ~/.npm-global" >&2
+          echo "  npm install -g copilot-api" >&2
+          echo "" >&2
+          echo "After installation, rebuild your system:" >&2
+          echo "  darwin-rebuild switch --flake ~/.dotfiles" >&2
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+          exit 1
+        fi
 
-        nativeBuildInputs = [ pkgs.nodejs pkgs.makeWrapper ];
+        # Verify the executable exists
+        if [ ! -f "$NPM_GLOBAL_LIB/dist/main.js" ]; then
+          echo "ERROR: copilot-api installation appears corrupt" >&2
+          echo "Expected: $NPM_GLOBAL_LIB/dist/main.js" >&2
+          echo "Try reinstalling: npm install -g copilot-api" >&2
+          exit 1
+        fi
 
-        # Skip build phase - use pre-built dist from npm package
-        dontBuild = true;
-
-        installPhase = ''
-          mkdir -p $out/lib/node_modules/copilot-api
-
-          # Extract the npm tarball directly
-          cp -r package/* $out/lib/node_modules/copilot-api/ 2>/dev/null || \
-            cp -r * $out/lib/node_modules/copilot-api/
-
-          # Verify the pre-built dist exists
-          if [ ! -f "$out/lib/node_modules/copilot-api/dist/index.js" ]; then
-            echo "ERROR: Pre-built dist/index.js not found in npm package!"
-            echo "The copilot-api npm package structure may have changed."
-            echo "Please update the package definition in copilot-api.nix"
-            echo "or switch to a full build approach with npm install."
-            exit 1
-          fi
-
-          # Install runtime dependencies only (no build needed)
-          cd $out/lib/node_modules/copilot-api
-          export HOME=$TMPDIR
-          ${pkgs.nodejs}/bin/npm install --production --no-fund --no-audit --ignore-scripts
-
-          # Create wrapper script with error handling
-          mkdir -p $out/bin
-          cat > $out/bin/copilot-api <<'WRAPPER'
-          #!/usr/bin/env bash
-          NODE_BIN="${pkgs.nodejs}/bin/node"
-          SCRIPT_PATH="$out/lib/node_modules/copilot-api/dist/index.js"
-
-          if [ ! -f "$SCRIPT_PATH" ]; then
-            echo "ERROR: copilot-api runtime files not found at $SCRIPT_PATH"
-            echo "This may indicate a problem with the Nix package installation."
-            echo "Try rebuilding your system configuration: darwin-rebuild switch"
-            exit 1
-          fi
-
-          export NODE_PATH="$out/lib/node_modules"
-          exec "$NODE_BIN" "$SCRIPT_PATH" "$@"
-          WRAPPER
-
-          chmod +x $out/bin/copilot-api
-
-          # Replace template variables
-          substituteInPlace $out/bin/copilot-api \
-            --replace '$out' "$out"
-        '';
-
-        meta = {
-          description = "A wrapper around GitHub Copilot API to make it OpenAI compatible";
-          homepage = "https://github.com/ericc-ch/copilot-api";
-          license = pkgs.lib.licenses.mit;
-        };
-      };
-      defaultText = "copilot-api npm package (pre-built)";
-      description = "The copilot-api package from npm (uses pre-built dist)";
+        # Execute copilot-api with all arguments
+        exec ${pkgs.nodejs}/bin/node "$NPM_GLOBAL_LIB/dist/main.js" "$@"
+      '';
+      defaultText = "Wrapper script for manually installed copilot-api";
+      description = "Wrapper for npm global copilot-api installation";
     };
 
     user = mkOption {
@@ -104,11 +74,8 @@ in {
       home = "/Users/${cfg.user}";
     };
 
-    # Add to system profile for easier access
-    environment.systemPackages = [
-      pkgs.nodejs
-      cfg.package
-    ];
+    # Ensure nodejs is available for the wrapper script
+    environment.systemPackages = [ pkgs.nodejs ];
 
     # Create launchd agent for copilot-api using nix-darwin's interface
     launchd.user.agents.copilot-api = {
