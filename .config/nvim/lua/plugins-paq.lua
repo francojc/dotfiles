@@ -50,7 +50,7 @@ require("paq")({
 	{ "folke/todo-comments.nvim", opt = true }, -- Todo comments (lazy: cmd)
 	{ "hakonharnes/img-clip.nvim", opt = true }, -- Image pasting (lazy: ft markdown)
 	{ "hat0uma/csvview.nvim", opt = true }, -- CSV viewer (lazy: ft csv)
-	{ "jmbuhr/otter.nvim", opt = true }, -- Otter for Quarto (lazy: ft quarto)
+	"jmbuhr/otter.nvim", -- Otter for Quarto (eager-load)
 	{ "kdheepak/lazygit.nvim", opt = true }, -- Lazygit integration (lazy: cmd)
 	{ "lewis6991/gitsigns.nvim", opt = true }, -- Git signs (lazy: event)
 	{ "mikavilpas/yazi.nvim", opt = true }, -- Yazi file manager (lazy: cmd)

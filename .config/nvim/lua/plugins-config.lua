@@ -642,6 +642,26 @@ require("nvim-treesitter.configs").setup({
 	indent = { enable = false },
 })
 
+---| Otter ----------------------------------
+-- Otter needs to be setup eagerly for Quarto support
+require("otter").setup({
+	lsp = {
+		diagnostic_update_events = { "BufWritePost" },
+		root_dir = function(_, bufnr)
+			return vim.fs.root(bufnr or 0, {
+				".git",
+				"_quarto.yml",
+				"DESCRIPTION",
+			}) or vim.fn.getcwd(0)
+		end,
+	},
+	buffers = {
+		set_filetype = true,
+		write_to_disk = false,
+	},
+	handle_leading_whitespace = true,
+})
+
 ---| WhichKey -----------------------------------
 require("which-key").setup({
 	icons = {
