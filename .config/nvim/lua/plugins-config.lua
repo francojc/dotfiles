@@ -168,6 +168,14 @@ require("blink.cmp").setup({
 			quarto = { "path", "snippets", "lsp", "references", "emoji" },
 		},
 		providers = {
+			snippets = {
+				name = "snippets",
+				module = "blink.cmp.sources.snippets",
+				opts = {
+					friendly_snippets = true,
+					search_paths = { vim.fn.stdpath("config") .. "/snippets" },
+				},
+			},
 			emoji = {
 				name = "Emoji",
 				module = "blink-emoji",
