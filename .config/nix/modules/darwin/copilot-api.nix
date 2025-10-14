@@ -95,7 +95,16 @@ in {
           fi
 
           # Pass the token to copilot-api via --github-token flag
-          exec ${pkgs.nodejs}/bin/node "$NPM_GLOBAL_LIB/dist/main.js" --github-token "$GITHUB_TOKEN" "$@"
+          # Note: The subcommand must come first, then flags
+          if [ $# -gt 0 ]; then
+            # Extract subcommand (first argument)
+            SUBCOMMAND="$1"
+            shift
+            exec ${pkgs.nodejs}/bin/node "$NPM_GLOBAL_LIB/dist/main.js" "$SUBCOMMAND" --github-token "$GITHUB_TOKEN" "$@"
+          else
+            # No subcommand provided, just pass the token
+            exec ${pkgs.nodejs}/bin/node "$NPM_GLOBAL_LIB/dist/main.js" --github-token "$GITHUB_TOKEN"
+          fi
         else
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
           echo "ERROR: GitHub Copilot token file not found" >&2
@@ -144,8 +153,8 @@ in {
       home = "/Users/${cfg.user}";
     };
 
-    # Ensure nodejs is available for the wrapper script
-    environment.systemPackages = [ pkgs.nodejs ];
+    # Ensure nodejs and our copilot-api wrapper are available
+    environment.systemPackages = [ pkgs.nodejs cfg.package ];
 
     # Create launchd agent for copilot-api using nix-darwin's interface
     launchd.user.agents.copilot-api = {
