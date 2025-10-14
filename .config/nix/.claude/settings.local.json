@@ -24,7 +24,12 @@
       "mcp__mcp-zen__listmodels",
       "mcp__mcp-zen__consensus",
       "Bash(source:*)",
-      "Bash(zle:*)"
+      "Bash(zle:*)",
+      "Bash(echo:*)",
+      "Bash(lsof:*)",
+      "Read(//Users/francojc/**)",
+      "Bash(launchctl:*)",
+      "Bash(tailscale:*)"
     ],
     "deny": []
   },

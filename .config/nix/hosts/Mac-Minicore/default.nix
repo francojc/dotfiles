@@ -13,6 +13,7 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
+    ../../modules/darwin/copilot-api.nix
   ];
 
   # Home Manager host-specific modules (if any)
@@ -20,4 +21,13 @@
     # Add host-specific home manager modules here if needed
     # ./home.nix
   ];
+
+  # Enable services specific to this host
+  services = {
+    copilot-api = {
+      enable = true;
+      port = 4141;
+      host = "0.0.0.0"; # Make accessible via Tailscale
+    };
+  };
 }
