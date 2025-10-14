@@ -9,9 +9,11 @@ alias llms='llm -t summarize' # uses the template 'summarize'
 
 # Agentic AI aliases
 # Secure Claude alias that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
-alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
+alias claudz='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=glm-4.6 claude'
 
-alias claudi='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-5 claude'
+# Secure Claude alias that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
+# TODO: if the mac-mincore server is stable, change the ANTHROPIC_BASE_URL to point to it. For now, use the hardcoded URL.
+alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-5 claude'
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
