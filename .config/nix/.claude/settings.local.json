@@ -43,7 +43,10 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:github.com)",
       "Bash(nix log:*)",
-      "Bash(~/.npm-global/bin/copilot-api check-usage:*)"
+      "Bash(~/.npm-global/bin/copilot-api check-usage:*)",
+      "Read(//Users/jeridf/.dotfiles/**)",
+      "Read(//Users/jeridf/.dotfiles/.config/github-copilot/**)",
+      "Bash(~/.npm-global/bin/copilot-api:*)"
     ],
     "deny": []
   },
