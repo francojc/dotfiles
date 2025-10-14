@@ -106,14 +106,6 @@ end
 
 ---| Blink ----------------------------------
 require("blink.cmp").setup({
-	snippet = {
-		expand = function(item)
-			local ok, ls = pcall(require, "luasnip")
-			if ok then
-				ls.lsp_expand(item.insert_text or item.label)
-			end
-		end,
-	},
 	fuzzy = {
 		implementation = "lua",
 	},

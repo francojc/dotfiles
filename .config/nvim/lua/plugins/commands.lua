@@ -38,11 +38,26 @@ return {
 	{
 		"todo-comments.nvim",
 		cmd = { "TodoFzfLua", "TodoTelescope", "TodoTrouble", "TodoQuickFix", "TodoLocList" },
+		event = { "BufReadPost", "BufNewFile" },
 		after = function()
-			require("todo-comments").setup({})
+			require("todo-comments").setup({
+				-- Explicit labels and their colors
+				keywords = {
+					FIX = { color = "error", alt = { "FIXME", "BUG", "FIXIT", "ISSUE" } },
+					TODO = { color = "info", alt = { "NOTE" } },
+					WARN = { color = "warning", alt = { "WARNING", "XXX" } },
+				},
+				-- Inline highlighting behavior
+				highlight = {
+					before = "",
+					after = "fg",
+					keyword = "wide",
+					comments_only = true,
+					multiline = false,
+				},
+			})
 		end,
 	},
-
 	-- Terminal
 	{
 		"toggleterm.nvim",

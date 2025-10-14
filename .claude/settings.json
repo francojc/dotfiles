@@ -4,6 +4,7 @@
     "allow": [],
     "deny": []
   },
+  "model": "gpt-4o",
   "hooks": {
     "Stop": [
       {
