@@ -32,7 +32,16 @@
       "Bash(tailscale:*)",
       "Read(//Users/jeridf/Library/LaunchAgents/**)",
       "Bash(cat:*)",
-      "Bash(nix-store:*)"
+      "Bash(nix-store:*)",
+      "Bash(ollama:*)",
+      "Bash(curl -s http://0.0.0.0:11434/api/version)",
+      "Read(//Users/jeridf/.local/share/**)",
+      "Bash(nix-prefetch-url:*)",
+      "Bash(nix hash to-sri:*)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   },
