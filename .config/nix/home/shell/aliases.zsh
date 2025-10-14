@@ -13,7 +13,7 @@ alias claudz='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=$ZAI_BASE_URL ANTHROPI
 
 # Secure Claude alias that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
 # TODO: if the mac-mincore server is stable, change the ANTHROPIC_BASE_URL to point to it. For now, use the hardcoded URL.
-alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-5 claude'
+alias claudo='env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN=$GITHUB_COPILOT_API_KEY ANTHROPIC_DEFAULT_SONNET_MODEL=gpt-4o claude'
 
 # Tmux aliases
 alias tl='tmux list-sessions' # list all tmux sessions
