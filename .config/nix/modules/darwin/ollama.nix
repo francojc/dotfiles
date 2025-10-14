@@ -76,80 +76,45 @@ in {
     # Add ollama to system packages
     environment.systemPackages = [ cfg.package ];
 
-    # Create launchd agent for ollama
-    environment.etc."launchd/user/ollama.plist".text = ''
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.ollama.server</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>${cfg.package}/bin/ollama</string>
-        <string>serve</string>
-    </array>
-
-    <key>RunAtLoad</key>
-    <true/>
-
-    <key>KeepAlive</key>
-    <true/>
-
-    <key>StandardOutPath</key>
-    <string>/Users/${cfg.user}/.local/share/ollama.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>/Users/${cfg.user}/.local/share/ollama.error.log</string>
-
-    <key>UserName</key>
-    <string>${cfg.user}</string>
-
-    <key>WorkingDirectory</key>
-    <string>/Users/${cfg.user}</string>
-
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>OLLAMA_HOST</key>
-        <string>${cfg.host}:${toString cfg.port}</string>
-        <key>OLLAMA_MODELS</key>
-        <string>${cfg.modelsPath}</string>
-        ${optionalString cfg.flashAttention ''
-        <key>OLLAMA_FLASH_ATTENTION</key>
-        <string>1</string>
-        ''}
-        ${optionalString (cfg.kvCacheType != "") ''
-        <key>OLLAMA_KV_CACHE_TYPE</key>
-        <string>${cfg.kvCacheType}</string>
-        ''}
-        ${optionalString cfg.keepModelLoaded ''
-        <key>OLLAMA_KEEP_ALIVE</key>
-        <string>-1</string>
-        ''}
-        ${concatStringsSep "\n        " (mapAttrsToList (name: value: ''
-        <key>${name}</key>
-        <string>${value}</string>
-        '') cfg.extraEnvironment)}
-    </dict>
-
-    <key>SoftResourceLimits</key>
-    <dict>
-        <key>NumberOfFiles</key>
-        <integer>65536</integer>
-    </dict>
-
-    <key>LimitLoadToSessionType</key>
-    <array>
-        <string>Aqua</string>
-        <string>Background</string>
-        <string>LoginWindow</string>
-        <string>StandardIO</string>
-        <string>System</string>
-    </array>
-</dict>
-</plist>
-    '';
+    # Create launchd agent for ollama using nix-darwin's interface
+    launchd.user.agents.ollama = {
+      serviceConfig = {
+        Label = "com.ollama.server";
+        ProgramArguments = [
+          "${cfg.package}/bin/ollama"
+          "serve"
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        StandardOutPath = "/Users/${cfg.user}/.local/share/ollama.log";
+        StandardErrorPath = "/Users/${cfg.user}/.local/share/ollama.error.log";
+        WorkingDirectory = "/Users/${cfg.user}";
+        EnvironmentVariables = {
+          OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
+          OLLAMA_MODELS = cfg.modelsPath;
+        }
+        // optionalAttrs cfg.flashAttention {
+          OLLAMA_FLASH_ATTENTION = "1";
+        }
+        // optionalAttrs (cfg.kvCacheType != "") {
+          OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
+        }
+        // optionalAttrs cfg.keepModelLoaded {
+          OLLAMA_KEEP_ALIVE = "-1";
+        }
+        // cfg.extraEnvironment;
+        SoftResourceLimits = {
+          NumberOfFiles = 65536;
+        };
+        LimitLoadToSessionType = [
+          "Aqua"
+          "Background"
+          "LoginWindow"
+          "StandardIO"
+          "System"
+        ];
+      };
+    };
 
     # Create necessary directories
     system.activationScripts.postActivation = {

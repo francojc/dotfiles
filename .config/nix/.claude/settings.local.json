@@ -29,7 +29,10 @@
       "Bash(lsof:*)",
       "Read(//Users/francojc/**)",
       "Bash(launchctl:*)",
-      "Bash(tailscale:*)"
+      "Bash(tailscale:*)",
+      "Read(//Users/jeridf/Library/LaunchAgents/**)",
+      "Bash(cat:*)",
+      "Bash(nix-store:*)"
     ],
     "deny": []
   },
