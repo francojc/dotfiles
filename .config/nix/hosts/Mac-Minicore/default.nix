@@ -14,6 +14,7 @@
   hostModules = [
     ../../profiles/darwin/configuration.nix
     ../../modules/darwin/copilot-api.nix
+    ../../modules/darwin/ollama.nix
   ];
 
   # Home Manager host-specific modules (if any)
@@ -28,6 +29,19 @@
       enable = true;
       port = 4141;
       host = "0.0.0.0"; # Make accessible via Tailscale
+    };
+
+    ollama = {
+      enable = true;
+      port = 11434;
+      host = "0.0.0.0"; # Make accessible via Tailscale
+      flashAttention = true;
+      kvCacheType = "q8_0";
+      # Optional: Additional settings
+      # keepModelLoaded = true;
+      # extraEnvironment = {
+      #   OLLAMA_NUM_PARALLEL = "4";
+      # };
     };
   };
 }

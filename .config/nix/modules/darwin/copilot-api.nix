@@ -8,9 +8,43 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.nodePackages.copilot-api or (pkgs.writeShellScriptBin "copilot-api" "exec ${pkgs.nodejs}/bin/node ${pkgs.npm}/bin/npm global exec copilot-api \"$@\"");
-      defaultText = "copilot-api from npm";
-      description = "The copilot-api package to use";
+      default = pkgs.stdenv.mkDerivation {
+        pname = "copilot-api";
+        version = "0.7.0";
+
+        src = pkgs.fetchurl {
+          url = "https://registry.npmjs.org/copilot-api/-/copilot-api-0.7.0.tgz";
+          hash = "sha256-Y3LqJvJkR7kHv2lFzWqGzJvNqXqMqJqNqMqJqNqMqJqNqMqJqNqMqJqNqMqJqNqMqJqNq";
+        };
+
+        nativeBuildInputs = [ pkgs.nodejs ];
+        buildInputs = [ pkgs.nodejs ];
+
+        buildPhase = ''
+          export HOME=$TMPDIR
+          tar -xzf $src
+          cd package
+          npm install --production --prefix=$out
+        '';
+
+        installPhase = ''
+          mkdir -p $out/bin
+          cat > $out/bin/copilot-api << 'EOF'
+          #!/bin/sh
+          export NODE_PATH="$out/lib/node_modules:$NODE_PATH"
+          exec ${pkgs.nodejs}/bin/node $out/lib/node_modules/copilot-api/dist/index.js "$@"
+          EOF
+          chmod +x $out/bin/copilot-api
+        '';
+
+        meta = {
+          description = "A wrapper around GitHub Copilot API to make it OpenAI compatible";
+          homepage = "https://github.com/ericc-ch/copilot-api";
+          license = pkgs.lib.licenses.mit;
+        };
+      };
+      defaultText = "copilot-api npm package";
+      description = "The copilot-api package from npm";
     };
 
     user = mkOption {
@@ -50,11 +84,7 @@ in {
 
     <key>ProgramArguments</key>
     <array>
-        <string>${pkgs.nodejs}/bin/node</string>
-        <string>${pkgs.npm}/bin/npm</string>
-        <string>global</string>
-        <string>exec</string>
-        <string>copilot-api</string>
+        <string>${cfg.package}/bin/copilot-api</string>
         <string>start</string>
         <string>--host</string>
         <string>${cfg.host}</string>
@@ -83,9 +113,9 @@ in {
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>${pkgs.nodejs}/bin:${pkgs.npm}/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <string>${cfg.package}/bin:${pkgs.nodejs}/bin:/usr/local/bin:/usr/bin:/bin</string>
         <key>NODE_PATH</key>
-        <string>${pkgs.nodejs}/lib/node_modules</string>
+        <string>${cfg.package}/lib/node_modules:${pkgs.nodejs}/lib/node_modules</string>
     </dict>
 
     <key>SoftResourceLimits</key>
@@ -110,6 +140,7 @@ in {
     environment.systemPackages = with pkgs; [
       nodejs
       npm
+      cfg.package
     ];
 
     # Service information
