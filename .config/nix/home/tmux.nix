@@ -40,9 +40,13 @@
       set-window-option -g automatic-rename on
       set-option -g set-titles on
 
+      # Image preview for Yazi
+      set -gq allow-passthrough on
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
+
       # Misc settings
       set -g allow-rename off
-      set -gq allow-passthrough on
       set -g visual-activity off
       set -g display-time 1500
       set -g status-keys vi
