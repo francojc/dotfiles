@@ -91,7 +91,6 @@ return {
 		end,
 	},
 
-	
 	-- Quarto document support
 	{
 		"quarto-nvim",
@@ -122,6 +121,15 @@ return {
 			end
 		end,
 	},
+
+	-- {
+	-- 	"vim-markdown",
+	-- 	ft = { "markdown", "quarto" },
+	-- 	after = function()
+	-- 		vim.g.vim_markdown_autowrite = 0
+	-- 		vim.g.vim_markdown_follow_anchor = 1
+	-- 	end,
+	-- },
 
 	-- Render Markdown for Markdown/Quarto
 	{

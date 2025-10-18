@@ -46,6 +46,7 @@ require("paq")({
 	-- These will be loaded by lz.n based on triggers (see ./plugins/)
 	{ "3rd/image.nvim", opt = true }, -- Image support (lazy: ft markdown/quarto)
 	{ "MeanderingProgrammer/render-markdown.nvim", opt = true }, -- Render-Markdown (lazy: ft markdown/quarto)
+	-- { "preservim/vim-markdown", opt = true }, -- Extended Markdown support (lazy: ft markdown)
 	{ "akinsho/toggleterm.nvim", opt = true }, -- Toggle terminal (lazy: cmd)
 	{ "folke/todo-comments.nvim", opt = true }, -- Todo comments (lazy: cmd)
 	{ "hakonharnes/img-clip.nvim", opt = true }, -- Image pasting (lazy: ft markdown)

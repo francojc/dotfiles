@@ -19,6 +19,12 @@ scrolloff      = 5
 mouse_events   = [ "click", "scroll" ]
 title_format   = "Yazi"
 
+# Prepend keymap to jump to char plugin (jump-to-char plugin must be installed)
+[[mgr.prepend_keymap]]
+on   = "f"
+run  = "plugin jump-to-char"
+desc = "Jump to char"
+
 [preview]
 wrap            = "no"
 tab_size        = 2
@@ -195,7 +201,7 @@ previewers = [
 ]
 
 [input]
-cursor_blink = false
+cursor_blink = true
 
 # cd
 cd_title  = "Change directory:"
@@ -265,4 +271,16 @@ sort_by      	 = "none"
 sort_sensitive = false
 sort_reverse 	 = false
 sort_translit  = false
+
+# Prepend git fetcher to all files and folders (git plugin must be installed)
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"
 
