@@ -47,8 +47,8 @@ map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 -- Next visual line
--- map("n", "j", "gj", { desc = "Next visual line" })
--- map("n", "k", "gk", { desc = "Previous visual line" })
+map("n", "j", "gj", { desc = "Next visual line" })
+map("n", "k", "gk", { desc = "Previous visual line" })
 -- Window-centered movement
 map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })

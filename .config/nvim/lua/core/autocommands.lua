@@ -25,14 +25,14 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- -- Tread .qmd files as markdown for editing features
--- a.nvim_create_autocmd("FileType", {
--- 	group = "personal",
--- 	pattern = "quarto",
--- 	callback = function()
--- 		vim.bo.filetype = "markdown"
--- 	end,
--- })
+-- Tread .qmd files as markdown for editing features
+a.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = "quarto",
+	callback = function()
+		vim.bo.filetype = "markdown"
+	end,
+})
 
 -- Ensure .qmd files are treated as markdown for navigation and features
 a.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {

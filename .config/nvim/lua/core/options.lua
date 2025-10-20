@@ -64,24 +64,25 @@ opt.showmode = false
 opt.cmdheight = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
 opt.autoread = true -- auto read files when changed outside of Neovim
-
+opt.foldmethod = "indent"
+opt.foldlevel = 99 -- start with all folds open
 opt.laststatus = 2 -- show statusline always
 
 -- Diagnostics
 vim.diagnostic.config({
-  severity_sort = true,
-  update_in_insert = false,
-  virtual_text = {
-    severity = {
-      min = vim.diagnostic.severity.INFO,
-      max = vim.diagnostic.severity.WARN,
-    },
-  },
-  virtual_lines = {
-    current_line = true,
-    severity = {
-      min = vim.diagnostic.severity.ERROR,
-      max = vim.diagnostic.severity.ERROR,
-    },
-  },
+	severity_sort = true,
+	update_in_insert = false,
+	virtual_text = {
+		severity = {
+			min = vim.diagnostic.severity.INFO,
+			max = vim.diagnostic.severity.WARN,
+		},
+	},
+	virtual_lines = {
+		current_line = true,
+		severity = {
+			min = vim.diagnostic.severity.ERROR,
+			max = vim.diagnostic.severity.ERROR,
+		},
+	},
 })
