@@ -4,7 +4,7 @@
     "allow": [],
     "deny": []
   },
-  "model": "gemini-2.5-pro",
+  "model": "gpt-5",
   "hooks": {
     "Stop": [
       {
@@ -34,7 +34,7 @@
     "command": "npx -y ccusage statusline",
     "padding": 0
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754255023538
   }

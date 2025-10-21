@@ -31,20 +31,94 @@ Create the assessment JSON file with all student submissions and rubric structur
 
 ## Step 2: Generate Assessment Structure
 
-Use `mcp__mcp-canvas__generate_rubric_assessments` with:
+Fetch data from Canvas using three separate API calls:
 
+### 2a. Get Assignment Details
+
+Call `mcp__mcp-canvas__get_assignment_details`:
 - `course_identifier`: the course_id
 - `assignment_id`: the assignment_id
-- `output_dir`: current directory (`.`)
-- `exclude_graded`: true (default: skips already-graded submissions)
+
+This returns assignment metadata (name, due date, points possible, submission type).
+
+### 2b. Get Rubric Structure
+
+Call `mcp__mcp-canvas__get_assignment_rubric_details`:
+- `course_identifier`: the course_id
+- `assignment_id`: the assignment_id
+
+This returns complete rubric with all criteria and rating levels.
+
+### 2c. Get Student Submissions
+
+Call `mcp__mcp-canvas__get_submissions_with_content`:
+- `course_identifier`: the course_id
+- `assignment_id`: the assignment_id
+- `include_unsubmitted`: false
+- `exclude_graded`: true (skips already-graded submissions)
+
+This returns all student submissions with extracted text content from uploaded files (DOCX, PDF).
+
+### 2d. Construct Assessment JSON
+
+Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestamp}.json` using the `Write` tool with this structure:
+
+```json
+{
+  "metadata": {
+    "course_id": "...",
+    "course_name": "...",
+    "assignment_id": "...",
+    "assignment_name": "...",
+    "due_date": "...",
+    "points_possible": ...,
+    "total_submissions": ...,
+    "created_at": "...",
+    "workflow_version": "1.0"
+  },
+  "rubric": {
+    "total_points": ...,
+    "criteria_count": ...,
+    "criteria": {
+      "criterion_id": {
+        "description": "...",
+        "max_points": ...,
+        "ratings": [...]
+      }
+    }
+  },
+  "assessments": [
+    {
+      "user_id": ...,
+      "user_name": "...",
+      "user_email": "...",
+      "submission_id": ...,
+      "submitted_at": "...",
+      "late": false,
+      "word_count": ...,
+      "submission_text": "...",
+      "rubric_assessment": {
+        "criterion_id": {
+          "points": null,
+          "rating_id": null,
+          "justification": ""
+        }
+      },
+      "overall_comment": "",
+      "reviewed": false,
+      "approved": false
+    }
+  ],
+  "ai_instructions": "..."
+}
+```
 
 This will:
 
-- Fetch assignment details and rubric criteria. Make sure to include the apprpriate attributes that conform to the Canvas API.
-- Retrieve all student submissions with text content
+- Combine data from all three API calls into one assessment file
 - Skip already-graded submissions (workflow_state = "graded")
-- Create JSON file: `assessments_{course_id}_{assignment_id}_{timestamp}.json`
 - Skip students without submissions automatically
+- Extract text from uploaded DOCX and PDF files
 
 ## Step 3: Display Summary
 
@@ -106,7 +180,8 @@ This allows subsequent commands to auto-discover the assessment file.
 
 ## Important Notes
 
-- Only processes assignments with online_text_entry submission type
+- Supports `online_upload` submission types with automatic text extraction from DOCX and PDF files
+- Supports `online_text_entry` submission types
 - Automatically skips students who haven't submitted
 - **Excludes already-graded submissions by default** to prevent overwriting existing grades
 - Creates fresh assessment file each time (timestamped to avoid conflicts)
