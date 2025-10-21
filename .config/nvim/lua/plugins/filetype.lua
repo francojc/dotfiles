@@ -148,11 +148,22 @@ return {
 					unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
 					checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 					custom = {
-						todo = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+						waiting = {
+							raw = "[-]",
+							rendered = " ",
+							highlight = "DiagnosticInfo",
+							scope_highlight = nil,
+						},
 						forward = {
 							raw = "[>]",
 							rendered = " ",
 							highlight = "DiagnosticError",
+							scope_highlight = nil,
+						},
+						progress = {
+							raw = "[/]",
+							rendered = " ",
+							highlight = "DiagnosticWarn",
 							scope_highlight = nil,
 						},
 						cancel = {

@@ -78,6 +78,30 @@
         export ZVM_KEYTIMEOUT=1 # 1 second
         export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#5c6370"
 
+        # Press 'v' in normal mode to open current file in $EDITOR
+
+        autoload edit-command-line
+        zle -N edit-command-line
+        bindkey -M vicmd v edit-command-line
+        export VI_MODE_SET_CURSOR=true
+
+        function zle-keymap-select {
+          if [[ $KEYMAP == vicmd ]]; then
+            echo -ne '\e[2 q' # block cursor
+          else
+            echo -ne '\e[6 q' # beam cursor
+          fi
+        }
+        zle -N zle-keymap-select
+
+        # Yank to system clipboard
+        function vi-yank-clipboard {
+            zli vi-yank
+            echo "$CUTBUFFER" | pbcopy -i
+          }
+        zle -N vi-yank-clipboard
+        bindkey -M vicmd y vi-yank-clipboard
+
         # --- SECRETS (from `pass`) ---
         source ${config.home.homeDirectory}/.variables.env
 
