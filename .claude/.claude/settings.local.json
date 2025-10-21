@@ -9,7 +9,9 @@
       "Bash(bash:*)",
       "Bash(echo:*)",
       "Bash(find:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }
