@@ -30,6 +30,7 @@ map("n", "<Esc>", "<Esc><Cmd>nohlsearch<Cr>")
 -- Save file
 map("n", "<C-s>", ":w<Cr>", { desc = "Save file" })
 map("n", "<C-a>", ":wa<Cr>", { desc = "Save all files" })
+map("n", "<C-x>", ":wqa!<Cr>", { desc = "Save all files and quit" })
 -- Quit
 map("n", "<leader>x", ":qa<Cr>", { desc = "Quit" })
 -- Resize
