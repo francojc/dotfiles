@@ -5,7 +5,7 @@
       {
         "id": "1",
         "type": "model",
-        "color": "cyan"
+        "color": "brightRed"
       },
       {
         "id": "2",
@@ -13,30 +13,64 @@
       },
       {
         "id": "3",
-        "type": "context-length",
+        "type": "context-percentage-usable",
+        "color": "brightGreen",
+        "metadata": {
+          "inverse": "false"
+        }
+      },
+      {
+        "id": "f2d20e20-7144-42c2-b581-39274029e942",
+        "type": "separator"
+      },
+      {
+        "id": "f7dd0915-0625-4854-ba80-86bde6b643f0",
+        "type": "block-timer",
+        "metadata": {
+          "display": "progress-short"
+        }
+      }
+    ],
+    [
+      {
+        "id": "e16dcd09-b240-483c-8624-fb0e25d6bb06",
+        "type": "git-branch",
+        "color": "brightMagenta"
+      },
+      {
+        "id": "cea00ad4-801f-41ff-bb1f-44188db180e8",
+        "type": "separator"
+      },
+      {
+        "id": "1f35747b-9600-4218-9eb7-37edc96d6680",
+        "type": "git-worktree"
+      },
+      {
+        "id": "fa854ed1-48f1-4147-940b-20151d53392a",
+        "type": "separator"
+      },
+      {
+        "id": "0654cc54-de41-433d-843f-3406b3c4340d",
+        "type": "git-changes",
+        "color": "brightYellow"
+      }
+    ],
+    [
+      {
+        "id": "fc1b1470-c84f-408c-b0a6-e99772c874cd",
+        "type": "output-style",
         "color": "brightBlack"
       },
       {
-        "id": "4",
+        "id": "38e6fd75-7fef-4f23-b2d3-5eee5d724953",
         "type": "separator"
       },
       {
-        "id": "5",
-        "type": "git-branch",
-        "color": "magenta"
-      },
-      {
-        "id": "6",
-        "type": "separator"
-      },
-      {
-        "id": "7",
-        "type": "git-changes",
-        "color": "yellow"
+        "id": "74c81c85-97f5-4998-ad9e-21852628b3c9",
+        "type": "session-clock",
+        "color": "brightBlack"
       }
-    ],
-    [],
-    []
+    ]
   ],
   "flexMode": "full-minus-40",
   "compactThreshold": 60,
@@ -56,4 +90,3 @@
     "autoAlign": true
   }
 }
-
