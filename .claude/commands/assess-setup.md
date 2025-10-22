@@ -35,7 +35,8 @@ Fetch data from Canvas using three separate API calls:
 
 ### 2a. Get Assignment Details
 
-Call `mcp__mcp-canvas__get_assignment_details`:
+Use `mcp__mcp-canvas__get_assignment_details`:
+
 - `course_identifier`: the course_id
 - `assignment_id`: the assignment_id
 
@@ -43,7 +44,8 @@ This returns assignment metadata (name, due date, points possible, submission ty
 
 ### 2b. Get Rubric Structure
 
-Call `mcp__mcp-canvas__get_assignment_rubric_details`:
+Use `mcp__mcp-canvas__get_assignment_rubric_details`:
+
 - `course_identifier`: the course_id
 - `assignment_id`: the assignment_id
 
@@ -51,7 +53,8 @@ This returns complete rubric with all criteria and rating levels.
 
 ### 2c. Get Student Submissions
 
-Call `mcp__mcp-canvas__get_submissions_with_content`:
+Use `mcp__mcp-canvas__get_submissions_with_content`:
+
 - `course_identifier`: the course_id
 - `assignment_id`: the assignment_id
 - `include_unsubmitted`: false
