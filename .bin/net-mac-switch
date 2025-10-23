@@ -95,109 +95,90 @@ VERSION="2.0"
 
 # Function to display help information
 show_help() {
-    cat << EOF
-${BOLD}${BLUE}$SCRIPT_NAME v$VERSION${NC}
-
-${BOLD}SYNOPSIS${NC}
-    $(basename "$0") [OPTIONS]
-
-${BOLD}DESCRIPTION${NC}
-    A comprehensive network testing tool that discovers MAC addresses from your
-    local network and tests router rules, connectivity, and access controls by
-    spoofing different MAC addresses.
-
-${BOLD}OPTIONS${NC}
-    -h, --help      Show this help message and exit
-    -v, --version   Show version information
-    -r, --restore   Restore MAC address to original/permanent address
-
-${BOLD}FEATURES${NC}
-    • Auto-detects active network interface and configuration
-    • Dynamically calculates broadcast addresses for any subnet
-    • Discovers real MAC addresses from network devices using ARP
-    • Tests internet connectivity with different MAC addresses
-    • Scans and identifies network devices
-    • Tests router MAC-based filtering and access rules
-    • Safely restores original MAC address on exit
-
-${BOLD}TESTING MODES${NC}
-    ${GREEN}1) Basic Connectivity Test${NC}
-       • Tests internet connectivity using your current MAC address
-       • Useful for: Basic network troubleshooting, verifying current access
-       • Safe: No MAC address changes, read-only testing
-       
-    ${GREEN}2) Full Router Rules Test${NC}
-       • Discovers real MAC addresses from your network via ARP
-       • Tests connectivity with each discovered MAC address
-       • Changes MAC to discovered addresses and reconnects Wi-Fi
-       • Scans network for device visibility with each MAC
-       • Useful for: Bypassing MAC filtering, testing access controls
-       • Security testing: Router rule validation, penetration testing
-       
-    ${GREEN}3) Network Scan Only${NC}
-       • Scans your network to identify active devices and IP addresses
-       • Useful for: Network discovery, device inventory, reconnaissance
-       • Safe: No MAC changes, discovery mode only
-       
-    ${GREEN}4) Discover Network MACs Only${NC}
-       • Shows MAC addresses of devices on your network
-       • Useful for: MAC address research, target identification
-       • Planning: Identify MACs before testing in mode 2
-       
-    ${GREEN}5) Restore MAC Address${NC}
-       • Restores your network interface to its permanent MAC
-       • Useful for: Cleanup after testing, reverting changes
-       • Recovery: Fix connectivity issues from previous tests
-
-${BOLD}REQUIREMENTS${NC}
-    • ${YELLOW}macOS${NC} (tested on macOS 10.15+)
-    • ${YELLOW}sudo privileges${NC} (required for MAC address changes)
-    • ${YELLOW}macchanger${NC} (will be auto-installed via Homebrew if missing)
-    • ${YELLOW}nmap${NC} (for network scanning)
-    • ${YELLOW}Active network connection${NC}
-
-${BOLD}USAGE EXAMPLES${NC}
-    # Show help
-    $(basename "$0") --help
-    
-    # Show version
-    $(basename "$0") --version
-    
-    # Restore MAC address to original
-    sudo $(basename "$0") --restore
-    
-    # Run with sudo (required for MAC changes)
-    sudo $(basename "$0")
-    
-    # Quick connectivity test
-    sudo $(basename "$0")  # Choose option 1
-    
-    # Full router testing
-    sudo $(basename "$0")  # Choose option 2
-
-${BOLD}SAFETY FEATURES${NC}
-    • Automatically restores original MAC address on script exit
-    • Handles Ctrl+C interruption gracefully
-    • Validates network configuration before testing
-    • Provides clear status indicators throughout testing
-
-${BOLD}SECURITY NOTICE${NC}
-    This tool is intended for legitimate network testing and security auditing
-    purposes only. Ensure you have proper authorization before testing networks
-    that you do not own or administer.
-
-${BOLD}TROUBLESHOOTING${NC}
-    • If macchanger is missing, the script will attempt to install it
-    • If no MAC addresses are discovered, fallback addresses will be used
-    • Interface detection failures will fall back to common interfaces
-    • Network connectivity issues will be clearly reported
-
-${BOLD}VERSION HISTORY${NC}
-    v2.0 - Dynamic MAC discovery, auto-interface detection, broadcast calculation
-    v1.0 - Initial version with hardcoded MAC addresses
-
-For more information and updates, check the script header comments.
-EOF
+    printf "${BOLD}${BLUE}%s v%s${NC}\n\n" "$SCRIPT_NAME" "$VERSION"
+    printf "${BOLD}SYNOPSIS${NC}\n"
+    printf "    %s [OPTIONS]\n\n" "$(basename "$0")"
+    printf "${BOLD}DESCRIPTION${NC}\n"
+    printf "    A comprehensive network testing tool that discovers MAC addresses from your\n"
+    printf "    local network and tests router rules, connectivity, and access controls by\n"
+    printf "    spoofing different MAC addresses.\n\n"
+    printf "${BOLD}OPTIONS${NC}\n"
+    printf "    -h, --help      Show this help message and exit\n"
+    printf "    -v, --version   Show version information\n"
+    printf "    -r, --restore   Restore MAC address to original/permanent address\n\n"
+    printf "${BOLD}FEATURES${NC}\n"
+    printf "    • Auto-detects active network interface and configuration\n"
+    printf "    • Dynamically calculates broadcast addresses for any subnet\n"
+    printf "    • Discovers real MAC addresses from network devices using ARP\n"
+    printf "    • Tests internet connectivity with different MAC addresses\n"
+    printf "    • Scans and identifies network devices\n"
+    printf "    • Tests router MAC-based filtering and access rules\n"
+    printf "    • Safely restores original MAC address on exit\n\n"
+    printf "${BOLD}TESTING MODES${NC}\n"
+    printf "    ${GREEN}1) Basic Connectivity Test${NC}\n"
+    printf "       • Tests internet connectivity using your current MAC address\n"
+    printf "       • Useful for: Basic network troubleshooting, verifying current access\n"
+    printf "       • Safe: No MAC address changes, read-only testing\n"
+    printf "\n"
+    printf "    ${GREEN}2) Full Router Rules Test${NC}\n"
+    printf "       • Discovers real MAC addresses from your network via ARP\n"
+    printf "       • Tests connectivity with each discovered MAC address\n"
+    printf "       • Changes MAC to discovered addresses and reconnects Wi-Fi\n"
+    printf "       • Scans network for device visibility with each MAC\n"
+    printf "       • Useful for: Bypassing MAC filtering, testing access controls\n"
+    printf "       • Security testing: Router rule validation, penetration testing\n"
+    printf "\n"
+    printf "    ${GREEN}3) Network Scan Only${NC}\n"
+    printf "       • Scans your network to identify active devices and IP addresses\n"
+    printf "       • Useful for: Network discovery, device inventory, reconnaissance\n"
+    printf "       • Safe: No MAC changes, discovery mode only\n"
+    printf "\n"
+    printf "    ${GREEN}4) Discover Network MACs Only${NC}\n"
+    printf "       • Shows MAC addresses of devices on your network\n"
+    printf "       • Useful for: MAC address research, target identification\n"
+    printf "       • Planning: Identify MACs before testing in mode 2\n"
+    printf "\n"
+    printf "    ${GREEN}5) Restore MAC Address${NC}\n"
+    printf "       • Restores your network interface to its permanent MAC\n"
+    printf "       • Useful for: Cleanup after testing, reverting changes\n"
+    printf "       • Recovery: Fix connectivity issues from previous tests\n\n"
+    printf "${BOLD}REQUIREMENTS${NC}\n"
+    printf "    • ${YELLOW}macOS${NC} (tested on macOS 10.15+)\n"
+    printf "    • ${YELLOW}sudo privileges${NC} (required for MAC address changes)\n"
+    printf "    • ${YELLOW}macchanger${NC} (will be auto-installed via Homebrew if missing)\n"
+    printf "    • ${YELLOW}nmap${NC} (for network scanning)\n"
+    printf "    • ${YELLOW}Active network connection${NC}\n\n"
+    printf "${BOLD}USAGE EXAMPLES${NC}\n"
+    printf "    # Show help\n"
+    printf "    %s --help\n\n" "$(basename "$0")"
+    printf "    # Show version\n"
+    printf "    %s --version\n\n" "$(basename "$0")"
+    printf "    # Restore MAC address to original\n"
+    printf "    sudo %s --restore\n\n" "$(basename "$0")"
+    printf "    # Run with sudo (required for MAC changes)\n"
+    printf "    sudo %s\n\n" "$(basename "$0")"
+    printf "    # Quick connectivity test\n"
+    printf "    sudo %s  # Choose option 1\n\n" "$(basename "$0")"
+    printf "    # Full router testing\n"
+    printf "    sudo %s  # Choose option 2\n\n" "$(basename "$0")"
+    printf "${BOLD}SAFETY FEATURES${NC}\n"
+    printf "    • Automatically restores original MAC address on script exit\n"
+    printf "    • Handles Ctrl+C interruption gracefully\n"
+    printf "    • Validates network configuration before testing\n"
+    printf "    • Provides clear status indicators throughout testing\n\n"
+    printf "${BOLD}SECURITY NOTICE${NC}\n"
+    printf "    This tool is intended for legitimate network testing and security auditing\n"
+    printf "    purposes only. Ensure you have proper authorization before testing networks\n"
+    printf "    that you do not own or administer.\n\n"
+    printf "${BOLD}TROUBLESHOOTING${NC}\n"
+    printf "    • If macchanger is missing, the script will attempt to install it\n"
+    printf "    • If no MAC addresses are discovered, fallback addresses will be used\n"
+    printf "    • Interface detection failures will fall back to common interfaces\n"
+    printf "    • Network connectivity issues will be clearly reported\n\n"
+    printf "${BOLD}VERSION HISTORY${NC}\n"
+    printf "    v2.0 - Dynamic MAC discovery, auto-interface detection, broadcast calculation\n"
+    printf "    v1.0 - Initial version with hardcoded MAC addresses\n\n"
+    printf "For more information and updates, check the script header comments.\n"
 }
 
 # Function to display version information
