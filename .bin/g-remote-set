@@ -24,8 +24,6 @@ EOF
 
 main(){
   local name="" url="" show_help=0 show_version=0
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local OPTIND=1 opt
   while getopts ":hvnqC:r:u:-:" opt; do
     case "$opt" in

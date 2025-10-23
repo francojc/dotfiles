@@ -1,19 +1,38 @@
 #!/usr/bin/env bash
-# Quarto render watcher wrapper
+# Monitor and auto-render Quarto projects on file changes
 
 SCRIPT_NAME="q-render"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
 usage(){ cat <<EOF
-Usage: q-render [options]
+Usage: q-render FORMAT
 
-Run Quarto render (delegates to render_watch).
+Monitor and auto-render Quarto project when files change.
+
+Uses 'ag' to monitor changes in .qmd, .tex, .bib, .cls, and .yml files,
+and 'entr' to trigger quarto render on changes.
+
+Arguments:
+  FORMAT    Output format: 'html' or 'pdf'
+
+Options:
+  -h, --help       Show this help message
+  -v, --verbose    Enable verbose output
+  -q, --quiet      Suppress informational output
+  --version        Show version information
+
+Requirements:
+  - ag (the_silver_searcher): brew install ag
+  - entr: brew install entr
+  - quarto: https://quarto.org
+
+Example:
+  q-render html
+  q-render pdf
 EOF
 }
 
 main(){
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local show_help=0 show_version=0
   local OPTIND=1 opt
   while getopts ":hvq-:" opt; do
@@ -21,7 +40,13 @@ main(){
       h) show_help=1 ;;
       v) VERBOSE=$((VERBOSE+1)) ;;
       q) QUIET=1 ;;
-      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           *) die "Unknown long option --$OPTARG";;
+         esac ;;
       \?) die "Unknown option -$OPTARG" ;;
     esac
   done
@@ -29,13 +54,17 @@ main(){
   [[ $show_help -eq 1 ]] && { usage; exit 0; }
   [[ $show_version -eq 1 ]] && { print_version; exit 0; }
 
-  if command -v render_watch >/dev/null 2>&1; then
-    run render_watch "$@"
-  elif [[ -x "$(dirname "$0")/render_watch" ]]; then
-    run "$(dirname "$0")/render_watch" "$@"
-  else
-    die "render_watch not found"
+  local format="${1:-}"
+  [[ -n "$format" ]] || die "Please provide the output format as an argument (html or pdf)"
+
+  if [[ "$format" != "html" && "$format" != "pdf" ]]; then
+    die "The output format should be either 'html' or 'pdf'"
   fi
+
+  require ag entr quarto
+
+  log_info "Monitoring for changes... (render to $format)"
+  ag -g '\.(qmd|tex|bib|cls|yml)$' | entr quarto render --to "$format"
 }
 
 main "$@"

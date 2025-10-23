@@ -13,8 +13,6 @@ EOF
 }
 
 main(){
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local show_help=0 show_version=0 output=""
   local files=()
   while (($#)); do
@@ -22,9 +20,11 @@ main(){
       -o) shift; output="${1:-}" ;;
       -h|--help) show_help=1 ;;
       --version) show_version=1 ;;
-      -q) QUIET=1 ;;
-      -v) VERBOSE=$((VERBOSE+1)) ;;
-      -n) DRY_RUN=1 ;;
+      -q|--quiet) QUIET=1 ;;
+      -v|--verbose) VERBOSE=$((VERBOSE+1)) ;;
+      -n|--dry-run) DRY_RUN=1 ;;
+      --) shift; files+=("$@"); break ;;
+      -*) die "Unknown option: $1" ;;
       *) files+=("$1") ;;
     esac; shift || true
   done

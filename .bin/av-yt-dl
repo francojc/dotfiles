@@ -14,8 +14,6 @@ EOF
 }
 
 main(){
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local show_help=0 show_version=0
   local OPTIND=1 opt
   while getopts ":hvq-:" opt; do
@@ -23,7 +21,13 @@ main(){
       h) show_help=1 ;;
       v) VERBOSE=$((VERBOSE+1)) ;;
       q) QUIET=1 ;;
-      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           *) die "Unknown long option --$OPTARG";;
+         esac ;;
       \?) die "Unknown option -$OPTARG" ;;
     esac
   done

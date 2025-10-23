@@ -26,7 +26,6 @@
       "ncspot" # ncurses Spotify client
       "nmap"
       "node" # Node.js
-      # "ollama" # Managed by Nix Darwin module
       "pngpaste" # paste images
       "python@3.11" # Python 3
       "rename" # file renaming utility

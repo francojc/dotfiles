@@ -1,15 +1,239 @@
 #!/usr/bin/env bash
-# Wrapper for setup-mcp-repos-gh.sh
+# Set up MCP development environment using GitHub CLI
 
 SCRIPT_NAME="gh-mcp-setup"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
+usage(){ cat <<EOF
+Usage: gh-mcp-setup [OPTIONS] <owner/repo>
+
+Set up a Model Context Protocol (MCP) development environment with:
+- Bare git repository for efficient storage
+- Two worktrees: dev/ (development) and prod/ (production)
+- Automatic fork creation if needed
+- Upstream remote configuration
+
+Arguments:
+  owner/repo          GitHub repository in format 'owner/repository'
+
+Options:
+  -h, --help          Show this help message and exit
+  -v, --verbose       Enable verbose output
+  -q, --quiet         Suppress informational output
+  --version           Show version information
+  -d, --dir <path>    Custom base directory (default: \$HOME/.local/mcp)
+  -n, --no-fork       Skip fork creation (assumes fork exists)
+
+Examples:
+  # Set up a new MCP server project
+  gh-mcp-setup handle/mcp-server-example
+
+  # Use custom directory
+  gh-mcp-setup --dir ~/projects/mcp handle/mcp-server-sqlite
+
+  # Skip fork creation (if you already have a fork)
+  gh-mcp-setup --no-fork anthropics/mcp-server-demo
+
+Directory Structure:
+  After setup, you'll have:
+  \${MCP_DIR}/
+  ├── dev/           # Development worktrees
+  │   └── project/   # Main/master branch
+  ├── prod/          # Production worktrees
+  │   └── project/   # Production branch
+  └── repos/         # Bare repositories
+      └── project.git/
+
+Requirements:
+  - GitHub CLI (gh) installed and authenticated
+  - Git version 2.15+ (for worktree support)
+  - Write access to the base directory
+
+Environment Variables:
+  MCP_DIR     Base directory for MCP projects (default: \$HOME/.local/mcp)
+EOF
+}
+
 main(){
-  if [[ -x "$(dirname "$0")/setup-mcp-repos-gh.sh" ]]; then
-    "$(dirname "$0")/setup-mcp-repos-gh.sh" "$@"
-  else
-    die "setup-mcp-repos-gh.sh not found"
+  local show_help=0 show_version=0
+  local base_dir="${MCP_DIR:-$HOME/.local/mcp}"
+  local skip_fork=false
+  local repo_slug=""
+
+  # Parse options
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      --version)
+        print_version
+        exit 0
+        ;;
+      -v|--verbose)
+        VERBOSE=$((VERBOSE+1))
+        shift
+        ;;
+      -q|--quiet)
+        QUIET=1
+        shift
+        ;;
+      -d|--dir)
+        base_dir="$2"
+        shift 2
+        ;;
+      -n|--no-fork)
+        skip_fork=true
+        shift
+        ;;
+      -*)
+        die "Unknown option: $1. Use --help for usage information."
+        ;;
+      *)
+        repo_slug="$1"
+        shift
+        ;;
+    esac
+  done
+
+  # Validate that repo slug was provided
+  [[ -n "$repo_slug" ]] || die "Repository argument required. Use --help for usage information."
+
+  # Check for gh CLI
+  require gh
+
+  # Check gh auth status
+  if ! gh auth status &> /dev/null; then
+    die "Not authenticated with GitHub. Run 'gh auth login' first"
   fi
+
+  # Validate repo slug format
+  if [[ ! "$repo_slug" =~ ^[^/]+/[^/]+$ ]]; then
+    die "Invalid repository format. Use 'owner/repo' format"
+  fi
+
+  # Extract owner and repo name
+  local owner="${repo_slug%/*}"
+  local project="${repo_slug#*/}"
+
+  # Get authenticated user
+  local your_username
+  your_username=$(gh api user -q .login) || die "Failed to get GitHub username"
+
+  log_info "Setting up MCP development environment for $repo_slug"
+  log_info "Your GitHub username: $your_username"
+
+  # Check if directories already exist
+  if [[ -d "$base_dir/repos/$project.git" ]]; then
+    die "Repository already exists at $base_dir/repos/$project.git"
+  fi
+
+  # Check if upstream repo exists
+  log_info "Checking upstream repository..."
+  if ! gh repo view "$repo_slug" &> /dev/null; then
+    die "Repository $repo_slug not found or not accessible"
+  fi
+
+  # Check if fork exists, create if needed
+  if [[ "$skip_fork" == "false" ]]; then
+    log_info "Checking for existing fork..."
+    if ! gh repo view "$your_username/$project" &> /dev/null; then
+      log_info "Fork not found. Creating fork..."
+      gh repo fork "$repo_slug" --clone=false || die "Failed to create fork"
+      log_info "Fork created successfully"
+      # Give GitHub a moment to process the fork
+      sleep 2
+    else
+      log_info "Fork already exists"
+    fi
+  else
+    log_info "Skipping fork check (--no-fork specified)"
+    # Verify fork exists when skipping
+    if ! gh repo view "$your_username/$project" &> /dev/null; then
+      die "Fork $your_username/$project does not exist. Remove --no-fork flag to create it."
+    fi
+  fi
+
+  # Create directory structure
+  log_info "Creating directory structure..."
+  mkdir -p "$base_dir"/{prod,repos,dev} || die "Failed to create directories"
+
+  # Navigate to repos directory
+  cd "$base_dir/repos/" || die "Failed to change to repos directory"
+
+  # Clone fork as bare repository
+  log_info "Cloning your fork as bare repository..."
+  if ! gh repo clone "$your_username/$project" -- --bare; then
+    die "Failed to clone repository"
+  fi
+
+  cd "$project.git" || die "Failed to enter repository directory"
+
+  # Add upstream remote
+  log_info "Configuring upstream remote..."
+  if git remote get-url upstream &>/dev/null; then
+    log_info "Upstream remote already exists, updating URL..."
+    git remote set-url upstream "https://github.com/$owner/$project.git"
+  else
+    log_info "Adding upstream remote..."
+    git remote add upstream "https://github.com/$owner/$project.git" || \
+      die "Failed to add upstream remote"
+  fi
+
+  # Fetch both remotes
+  log_info "Fetching from origin..."
+  git fetch origin || die "Failed to fetch from origin"
+
+  log_info "Fetching from upstream..."
+  git fetch upstream || die "Failed to fetch from upstream"
+
+  # Check default branch name
+  local default_branch
+  default_branch=$(gh repo view "$your_username/$project" --json defaultBranchRef -q .defaultBranchRef.name)
+  default_branch=${default_branch:-main}
+
+  # Create production branch before setting up worktrees
+  log_info "Creating production branch from $default_branch..."
+  if ! git show-ref --verify --quiet refs/heads/production; then
+    git branch production "$default_branch" || die "Failed to create production branch"
+    log_info "Production branch created"
+  else
+    log_info "Production branch already exists"
+  fi
+
+  # Set up worktrees
+  log_info "Setting up development worktree..."
+  if ! git worktree add "../../dev/$project" "$default_branch"; then
+    die "Failed to create development worktree"
+  fi
+
+  log_info "Setting up production worktree..."
+  if ! git worktree add "../../prod/$project" production; then
+    # Clean up dev worktree if prod fails
+    log_warn "Cleaning up development worktree..."
+    git worktree remove "../../dev/$project" 2>/dev/null || true
+    rm -rf "../../dev/$project" 2>/dev/null || true
+    die "Failed to create production worktree - branch 'production' may not exist"
+  fi
+
+  # Success message
+  log_info "Setup complete!"
+  printf "\nRepository info:\n"
+  printf "  Upstream: https://github.com/$owner/$project\n"
+  printf "  Your fork: https://github.com/$your_username/$project\n"
+  printf "\nDirectory structure:\n"
+  printf "  $base_dir/dev/$project  - Development worktree ($default_branch branch)\n"
+  printf "  $base_dir/prod/$project - Production worktree (production branch)\n"
+  printf "  $base_dir/repos/$project.git - Bare repository\n"
+  printf "\nNext steps:\n"
+  printf "  1. cd $base_dir/dev/$project\n"
+  printf "  2. git pull upstream $default_branch\n"
+  printf "  3. Start developing!\n"
+  printf "\nUseful commands:\n"
+  printf "  gh pr create - Create a pull request\n"
+  printf "  gh pr view   - View pull request in browser\n"
+  printf "  gh repo sync - Sync your fork with upstream\n"
 }
 
 main "$@"

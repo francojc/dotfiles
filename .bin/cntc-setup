@@ -1,15 +1,147 @@
 #!/usr/bin/env bash
-# Wrapper for personal-contacts-setup.sh
+# Setup script for Google Contacts to Emailbook integration
 
 SCRIPT_NAME="cntc-setup"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
+usage(){ cat <<EOF
+Usage: cntc-setup [OPTIONS]
+
+Set up Google Contacts to Emailbook integration.
+
+This script:
+1. Checks for required Python packages
+2. Creates necessary config directories
+3. Optionally sets up a cron job for automatic updates
+4. Provides instructions for OAuth setup
+
+Options:
+  -h, --help       Show this help message
+  -v, --verbose    Enable verbose output
+  -q, --quiet      Suppress informational output
+  --version        Show version information
+
+Requirements:
+  - Python 3 with google-api-python-client, google-auth, google-auth-oauthlib
+  - Available via: nix develop ~/.dotfiles/.bin -c bash
+EOF
+}
+
 main(){
-  if [[ -x "$(dirname "$0")/personal-contacts-setup.sh" ]]; then
-    "$(dirname "$0")/personal-contacts-setup.sh" "$@"
-  else
-    die "personal-contacts-setup.sh not found"
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           *) die "Unknown long option --$OPTARG";;
+         esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  log_info "Setting up Google Contacts to Emailbook integration"
+
+  # Check for required Python packages
+  log_info "Checking for required Python packages..."
+  if ! python3 -c "import googleapiclient, google.auth, google_auth_oauthlib" 2>/dev/null; then
+    log_error "Required Python packages not found."
+    log_error "Please enter the nix development shell first:"
+    log_error "  nix develop ~/.dotfiles/.bin -c bash"
+    log_error "Then re-run this setup script from within the nix shell."
+    exit 1
   fi
+
+  # Create config directories
+  log_info "Creating config directories"
+  mkdir -p ~/.config
+  mkdir -p ~/.local/share/emailbook
+
+  # Check for the fetcher script
+  SCRIPT_PATH="$HOME/.bin/cntc-fetch"
+  if [ ! -f "$SCRIPT_PATH" ]; then
+    log_warn "The contacts fetcher script was not found at $SCRIPT_PATH"
+    log_error "Please ensure cntc-fetch exists in your .bin directory"
+    exit 1
+  fi
+
+  # Set up cron job
+  log_info "Cron job setup"
+  printf "\nHow often would you like to update contacts?\n"
+  printf "1) Daily\n"
+  printf "2) Weekly\n"
+  printf "3) Monthly\n"
+  printf "4) No cron job (manual updates only)\n"
+  read -p "Enter your choice (1-4): " CRON_CHOICE
+
+  CRON_CMD="$SCRIPT_PATH --output ~/.emailbook.txt > ~/.emailbook.log 2>&1"
+
+  case $CRON_CHOICE in
+    1)
+      CRON_SCHEDULE="0 5 * * *"  # 5 AM daily
+      CRON_DESC="daily at 5 AM"
+      ;;
+    2)
+      CRON_SCHEDULE="0 5 * * 0"  # 5 AM on Sundays
+      CRON_DESC="weekly on Sundays at 5 AM"
+      ;;
+    3)
+      CRON_SCHEDULE="0 5 1 * *"  # 5 AM on the 1st of each month
+      CRON_DESC="monthly on the 1st at 5 AM"
+      ;;
+    4)
+      CRON_SCHEDULE=""
+      log_info "No cron job will be set up. You can run the script manually when needed."
+      ;;
+    *)
+      log_error "Invalid choice. No cron job will be set up."
+      CRON_SCHEDULE=""
+      ;;
+  esac
+
+  if [ -n "$CRON_SCHEDULE" ]; then
+    # Check if crontab exists
+    crontab -l > /tmp/current_crontab 2>/dev/null || echo "" > /tmp/current_crontab
+
+    # Check if the cron job already exists
+    if grep -q "$SCRIPT_PATH" /tmp/current_crontab; then
+      # Update existing cron job
+      sed -i.bak "\|$SCRIPT_PATH|c\\
+$CRON_SCHEDULE $CRON_CMD" /tmp/current_crontab
+    else
+      # Add new cron job
+      echo "$CRON_SCHEDULE $CRON_CMD" >> /tmp/current_crontab
+    fi
+
+    # Install new crontab
+    crontab /tmp/current_crontab
+    rm /tmp/current_crontab /tmp/current_crontab.bak 2>/dev/null || true
+
+    log_info "Cron job set up to run $CRON_DESC"
+  fi
+
+  # Instructions for OAuth credentials
+  printf "\n==== NEXT STEPS ====\n"
+  printf "1. Go to the Google Cloud Console (https://console.cloud.google.com/)\n"
+  printf "2. Create a new project for personal contacts sync\n"
+  printf "3. Enable the People API: https://console.cloud.google.com/apis/library/people.googleapis.com\n"
+  printf "4. Configure OAuth consent screen: https://console.cloud.google.com/apis/credentials/consent\n"
+  printf "5. Create OAuth credentials (Desktop application type)\n"
+  printf "6. Download the JSON credentials file\n"
+  printf "7. Save the file as: ~/.config/aerc/google-aerc-credentials.json\n"
+  printf "8. Run the script once to authenticate: $SCRIPT_PATH\n"
+  printf "\nContacts will be saved to: ~/.emailbook.txt\n"
+
+  log_info "Setup complete!"
 }
 
 main "$@"

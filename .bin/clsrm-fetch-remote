@@ -1,15 +1,79 @@
 #!/usr/bin/env bash
-# Wrapper for fetch-student-remote
+# Fetch student's remote repository and create tracking branch
 
 SCRIPT_NAME="clsrm-fetch-remote"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
+usage(){ cat <<EOF
+Usage: clsrm-fetch-remote CLONE_URL
+
+Fetch a student's remote repository and create a tracking branch.
+
+This script:
+1. Extracts the GitHub username from the clone URL
+2. Adds the student's repository as a remote
+3. Fetches the student's main branch
+4. Creates and checks out a new branch named after the student
+
+Arguments:
+  CLONE_URL    GitHub clone URL (e.g., https://github.com/username/repo.git)
+
+Options:
+  -h, --help       Show this help message
+  -v, --verbose    Enable verbose output
+  -q, --quiet      Suppress informational output
+  --version        Show version information
+
+Example:
+  clsrm-fetch-remote https://github.com/student123/assignment.git
+EOF
+}
+
 main(){
-  if [[ -x "$(dirname "$0")/fetch-student-remote" ]]; then
-    "$(dirname "$0")/fetch-student-remote" "$@"
-  else
-    die "fetch-student-remote not found"
-  fi
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           *) die "Unknown long option --$OPTARG";;
+         esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  local clone_url="${1:-}"
+  [[ -n "$clone_url" ]] || die "Please provide the clone URL"
+
+  # Extract student's GitHub username from URL
+  local student_username
+  student_username=$(echo "$clone_url" | cut -d'/' -f4)
+  [[ -n "$student_username" ]] || die "Could not extract username from URL: $clone_url"
+
+  log_info "Student username: $student_username"
+
+  # Add the clone URL to the remotes list
+  log_info "Adding remote for $student_username"
+  run git remote add "$student_username" "$clone_url"
+
+  # Fetch the student's remote repository from 'main'
+  log_info "Fetching $student_username's main branch"
+  run git fetch "$student_username" "main:$student_username"
+
+  # Switch to the new branch
+  log_info "Checking out $student_username branch"
+  run git checkout "$student_username"
+
+  log_info "Successfully set up tracking branch for $student_username"
 }
 
 main "$@"

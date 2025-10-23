@@ -28,14 +28,16 @@ EOF
 main() {
   local pr_msg="" base="main" remote="origin" show_help=0 show_version=0
 
-  # Preprocess long options
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   # Manually handle --remote before getopts as it takes an argument
   local pre_out=() ;
   while (($#)); do
     case "$1" in
       --remote) shift; [[ -n "${1:-}" ]] || die "--remote requires a value"; remote="$1" ;;
+      --help) pre_out+=("-h") ;;
+      --version) pre_out+=("--version") ;;
+      --verbose) pre_out+=("-v") ;;
+      --quiet) pre_out+=("-q") ;;
+      --dry-run) pre_out+=("-n") ;;
       *) pre_out+=("$1") ;;
     esac; shift || true
   done
@@ -51,8 +53,11 @@ main() {
       q) QUIET=1 ;;
       n) DRY_RUN=1 ;;
       C) CHANGE_DIR="$OPTARG" ;;
-      -) case "$OPTARG" in
+      -) case "" in
+           help) show_help=1 ;;
            version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
            *) die "Unknown long option --$OPTARG" ;;
          esac ;;
       :) die "Option -$OPTARG requires an argument" ;;

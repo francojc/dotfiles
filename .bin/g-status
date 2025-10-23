@@ -12,8 +12,6 @@ EOF
 }
 
 main(){
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local show_help=0 show_version=0
   local OPTIND=1 opt
   while getopts ":hvnqC:-:" opt; do

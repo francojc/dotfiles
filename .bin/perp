@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
 # Description: This script leverages the Perplexica API to query and return results to the command line.
-# Usage: perp.sh <prompt>
+# Usage: perp.sh [--mode <focusMode>] <prompt>
+# Valid focus modes: web, academic, writing, wolfram, youtube, reddit
+# Example with academic mode:
+# perp.sh --mode academic "What are the latest advancements in quantum computing?"
+# Example with default web mode:
+# perp.sh "Find news related to climate change."
+# Environment setup:
+# GITHUB_COPILOT_API_KEY must be set to authenticate API requests.
 # Example: perp "What is the latest news on AI?"
 #          "AI is making significant strides in various fields, including healthcare, finance, and transportation. Recent advancements include..."
 #          Sources: [1] [AI News Today](https://ainewstoday.com), [2] [TechCrunch](https://techcrunch.com), [3] [MIT Technology Review](https://technologyreview.com)
@@ -10,12 +17,12 @@
 # --- Configuration ---
 # Set the URL for your Perplexica API instance
 
-PERPLEXICA_API_URL="https://perplexica.gerbil-matrix.ts.net/api/search" # <-- ADJUST THIS URL TO YOUR PERPLEXICA INSTANCE
+PERPLEXICA_API_URL="https://ai-search.gerbil-matrix.ts.net/api/search" # <-- ADJUST THIS URL TO YOUR PERPLEXICA INSTANCE
 
 # --- Model Configuration ---
 # Chat Model (Using Custom OpenAI settings)
 CHAT_PROVIDER="custom_openai" # <-- VERIFY THIS PROVIDER NAME
-CHAT_MODEL_NAME="claude-sonnet-4"
+CHAT_MODEL_NAME="gpt-4o" # <-- ADJUST IF NEEDED
 # IMPORTANT: Set this to your custom OpenAI-compatible endpoint URL (e.g., OpenRouter)
 CUSTOM_OPENAI_BASE_URL="https://api.githubcopilot.com" # <-- ADJUST IF NEEDED
 CUSTOM_OPENAI_API_KEY="${GITHUB_COPILOT_API_KEY}" # <-- Set this to your OpenRouter API key or similar
@@ -134,6 +141,7 @@ EOF
 )
 
 # Make the API call using curl and capture the response
+echo "Debug: JSON Payload Sent: $JSON_PAYLOAD" >&2
 API_RESPONSE=$(curl -s -S -X POST \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
@@ -143,7 +151,11 @@ CURL_EXIT_CODE=$?
 
 # Check if curl command was successful
 if [ $CURL_EXIT_CODE -ne 0 ]; then
-  echo "Error: Failed to connect to Perplexica API at $PERPLEXICA_API_URL (curl exit code: $CURL_EXIT_CODE)" >&2
+  if [ "$CURL_EXIT_CODE" -eq 22 ]; then
+    echo "Error: Method Not Allowed (405). Verify the request method and endpoint permissions." >&2
+  else
+    echo "Error: Failed to connect to Perplexica API at $PERPLEXICA_API_URL (curl exit code: $CURL_EXIT_CODE)" >&2
+  fi
   # Optionally print the raw response if available
   if [ -n "$API_RESPONSE" ]; then
     echo "API Response: $API_RESPONSE" >&2
@@ -166,6 +178,7 @@ if echo "$API_RESPONSE" | jq -e '.error' > /dev/null; then
   echo "Error from API: $ERROR_MSG" >&2
   exit 1
 elif echo "$API_RESPONSE" | jq -e 'if .message and (.sources | length == 0) then true else false end' > /dev/null; then
+  echo "Note: This response has no sources but includes a valid message." >&2
   # Sometimes errors might just be a message without sources
   ERROR_MSG=$(echo "$API_RESPONSE" | jq -r '.message')
   # Check for common connection refused or model not found errors in the message
@@ -174,7 +187,8 @@ elif echo "$API_RESPONSE" | jq -e 'if .message and (.sources | length == 0) then
      exit 1
   fi
   # If it's not a clear error, proceed to print the message but warn
-  echo "Warning: Received a message but no sources. Potential API issue or simple response." >&2
+  echo "API Warning: Received a vague error response: \"$MESSAGE\". This may indicate an API-side issue. Verify your API key, payload, or contact support if the issue persists." >&2
+  echo "Full API Response: $API_RESPONSE" >&2
 fi
 
 

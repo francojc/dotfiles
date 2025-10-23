@@ -99,8 +99,6 @@ main() {
   done
   set -- "${args[@]}"
 
-  # shellcheck disable=SC2046
-  set -- $(canonicalize_long_opts "$@")
   local OPTIND=1 opt
   while getopts ":hvnqC:l:u:-:" opt; do
     case "$opt" in
@@ -111,8 +109,11 @@ main() {
       q) QUIET=1 ;;
       n) DRY_RUN=1 ;;
       C) CHANGE_DIR="$OPTARG" ;;
-      -) case "$OPTARG" in
+      -) case "" in
+           help) show_help=1 ;;
            version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
            *) die "Unknown long option --$OPTARG" ;;
          esac ;;
       :) die "Option -$OPTARG requires an argument" ;;

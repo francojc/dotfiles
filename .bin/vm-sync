@@ -1,15 +1,166 @@
 #!/usr/bin/env bash
-# Wrapper for vm_sync_tool.sh
+# Sync Parallels VMs between macOS hosts via Tailscale + rsync
 
 SCRIPT_NAME="vm-sync"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
-main(){
-  if [[ -x "$(dirname "$0")/vm_sync_tool.sh" ]]; then
-    "$(dirname "$0")/vm_sync_tool.sh" "$@"
-  else
-    die "vm_sync_tool.sh not found"
+# Configuration
+LOCAL_VM_PATH="$HOME/Parallels"
+REMOTE_HOST_MACMINI="jeridf@mac-minicore.gerbil-matrix.ts.net"
+REMOTE_HOST_MACBOOK="francojc@macbook-airborne.gerbil-matrix.ts.net"
+REMOTE_VM_PATH="~/Parallels"
+LOGFILE="$HOME/rsync_vm_sync.log"
+
+usage(){ cat <<EOF
+Usage: vm-sync [VM_NAME]
+
+Sync Parallels .pvm files between macOS hosts via Tailscale + rsync.
+
+Arguments:
+  VM_NAME    Name of the .pvm file to sync (default: macOS.macvm)
+
+Options:
+  -h, --help       Show this help message
+  -v, --verbose    Enable verbose output
+  -q, --quiet      Suppress informational output
+  --version        Show version information
+
+Example:
+  vm-sync macOS.macvm
+  vm-sync nixOS.pvm
+
+Configuration:
+  Local VM path: $LOCAL_VM_PATH
+  Remote Mac mini: $REMOTE_HOST_MACMINI
+  Remote MacBook: $REMOTE_HOST_MACBOOK
+  Log file: $LOGFILE
+EOF
+}
+
+check_directories() {
+  if [[ ! -d "$LOCAL_VM_PATH" ]]; then
+    log_info "Creating local Parallels directory: $LOCAL_VM_PATH"
+    mkdir -p "$LOCAL_VM_PATH"
   fi
+}
+
+check_remote_directories() {
+  local remote_host=$1
+  local host_display=$(echo "$remote_host" | cut -d'@' -f2)
+  log_info "Checking remote Parallels directory on $host_display..."
+  ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no "$remote_host" "mkdir -p \$HOME/Parallels"
+  log_info "Remote directory verified on $host_display"
+}
+
+check_vm_shutdown() {
+  printf "\n⚠️  Ensure that the VM is fully shut down before syncing.\n"
+  read -r -p "Have you shut down the VM? (y/n): " confirm
+  if [[ "$confirm" != "y" ]]; then
+    die "Aborting sync. Please shut down the VM first."
+  fi
+}
+
+sync_to_remote() {
+  local remote_host=$1
+  local host_display=$(echo "$remote_host" | cut -d'@' -f2)
+  local remote_user=$(echo "$remote_host" | cut -d'@' -f1)
+  log_info "Syncing $VM_NAME to $host_display (user: $remote_user)..."
+  rsync -avh --progress --delete -e "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no" \
+    "$LOCAL_VM_PATH/$VM_NAME/" \
+    "$remote_host:$REMOTE_VM_PATH/$VM_NAME/" | tee -a "$LOGFILE"
+  log_info "Sync complete to $host_display"
+}
+
+sync_from_remote() {
+  local remote_host=$1
+  local host_display=$(echo "$remote_host" | cut -d'@' -f2)
+  local remote_user=$(echo "$remote_host" | cut -d'@' -f1)
+  log_info "Syncing $VM_NAME from $host_display (user: $remote_user) to local machine..."
+  rsync -avh --progress --delete -e "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no" \
+    "$remote_host:$REMOTE_VM_PATH/$VM_NAME/" \
+    "$LOCAL_VM_PATH/$VM_NAME/" | tee -a "$LOGFILE"
+  log_info "Sync from $host_display complete"
+}
+
+show_menu() {
+  clear
+  printf "🖥  VM Sync CLI Tool\n"
+  printf "=======================\n"
+  printf "VM: $VM_NAME\n"
+  printf "=======================\n"
+  printf "1. Push VM → Mac mini\n"
+  printf "2. Pull VM ← Mac mini\n"
+  printf "3. Push VM → MacBook\n"
+  printf "4. Pull VM ← MacBook\n"
+  printf "5. Exit\n"
+  printf "=======================\n"
+  read -p "Choose an option [1-5]: " choice
+
+  case $choice in
+    1)
+      check_directories
+      check_remote_directories $REMOTE_HOST_MACMINI
+      check_vm_shutdown
+      sync_to_remote $REMOTE_HOST_MACMINI
+      ;;
+    2)
+      check_directories
+      check_remote_directories $REMOTE_HOST_MACMINI
+      check_vm_shutdown
+      sync_from_remote $REMOTE_HOST_MACMINI
+      ;;
+    3)
+      check_directories
+      check_remote_directories $REMOTE_HOST_MACBOOK
+      check_vm_shutdown
+      sync_to_remote $REMOTE_HOST_MACBOOK
+      ;;
+    4)
+      check_directories
+      check_remote_directories $REMOTE_HOST_MACBOOK
+      check_vm_shutdown
+      sync_from_remote $REMOTE_HOST_MACBOOK
+      ;;
+    5)
+      log_info "Exiting"
+      exit 0
+      ;;
+    *)
+      log_error "Invalid option. Try again."
+      ;;
+  esac
+}
+
+main(){
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+  while getopts ":hvq-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           *) die "Unknown long option --$OPTARG";;
+         esac ;;
+      \?) die "Unknown option -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  VM_NAME="${1:-macOS.macvm}"
+  require rsync ssh
+
+  # Main loop
+  while true; do
+    show_menu
+    read -r -p "Press Enter to continue..." _
+  done
 }
 
 main "$@"

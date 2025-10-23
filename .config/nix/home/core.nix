@@ -61,14 +61,14 @@
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     coreutils # GNU core utilities (provides grealpath for yazi)
-    # duf # Disk usage utility
+    duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement
-    # fastfetch # System information tool
+    fastfetch # System information tool
     fd # find replacement
-    # file # File type identification
+    file # File type identification
     fzf # General fuzzy finder
-    # glances # System monitoring tool
+    glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
     llm_with_plugins # llm CLI bundled with OpenRouter plugin (see above)
@@ -77,7 +77,7 @@
     repgrep # ripgrep across files
     ripgrep # grep replacement
     # ruby # Programming language
-    # speedtest-cli # Internet speed test
+    speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
     tldr # Simplified man pages
