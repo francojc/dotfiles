@@ -40,7 +40,7 @@
       "bettermouse" # mouse tweaks
       # "blackhole-2ch" # virtual audio driver
       "calibre" # eBook management
-      # "camo-studio" # webcam software
+      "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
