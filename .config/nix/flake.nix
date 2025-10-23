@@ -58,6 +58,7 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         verbose = true;
+        backupFileExtension = "backup";
         extraSpecialArgs = commonSpecialArgs;
         users.${hostConfig.username} = {
           imports =
