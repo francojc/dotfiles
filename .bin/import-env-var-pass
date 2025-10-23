@@ -5,15 +5,69 @@
 # KEY=VALUE
 # The script will prompt for the password to be used to encrypt the values in the password store.
 #
-# Usage: ./import-env-var-pass <.env file path>
+# Usage: import-env-var-pass [--help|-h] <.env file path>
 #
-# Example: ./import-env-var-pass.sh ~/.variables.env
+# Example: import-env-var-pass ~/.variables.env
+
+show_help() {
+    cat << EOF
+import-env-var-pass - Import environment variables to pass password store
+
+USAGE:
+    import-env-var-pass [--help|-h] <.env file path>
+
+DESCRIPTION:
+    Imports environment variables from a .env file into the pass password
+    manager store. Each KEY=VALUE pair becomes a password entry with the
+    key as the entry name and the value as the password.
+
+    The script handles pass initialization if needed and GPG key setup.
+    Existing entries are updated, new entries are created.
+
+DEPENDENCIES:
+    - pass: Password store manager
+    - gpg: GNU Privacy Guard for encryption
+
+FEATURES:
+    - Automatic pass store initialization
+    - GPG key selection and validation
+    - Updates existing entries
+    - Handles export prefixes in .env files
+    - Skips comments and empty lines
+
+SECURITY:
+    - Values are encrypted using GPG
+    - Uses secure pass password store
+    - Validates GPG key availability
+
+EXAMPLES:
+    import-env-var-pass ~/.variables.env
+    # Import variables from .env file
+
+    import-env-var-pass --help
+    # Show this help message
+
+NOTES:
+    - .env file should contain KEY=VALUE pairs
+    - Lines starting with # are ignored (comments)
+    - 'export ' prefix is automatically stripped
+    - Existing pass entries will be updated
+    - GPG key selection if multiple keys exist
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
 
 # Check if the pass command is installed,
 # if not, stop and prompt the user to install it.
 
 if ! command -v pass &> /dev/null; then
-    echo "pass command could not be found. Please install pass password manager."
+    echo "pass command could not be found. Please install pass password manager." >&2
     exit 1
 fi
 

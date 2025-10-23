@@ -4,10 +4,60 @@
 # to sync the calendar files and then using `khal` to import an `ics` file
 # which is the export from `reminders-cli` in JSON format converted to `ics`
 # for this import specifically.
-# Usage: ical.sh
+# Usage: ical.sh [--help|-h]
 # Dependencies: vdirsyncer, khal, reminders-cli
 
 set -euo pipefail
+
+show_help() {
+    cat << EOF
+ical - Sync Apple Reminders with khal calendar system
+
+USAGE:
+    ical [--help|-h]
+
+DESCRIPTION:
+    Synchronizes Apple Reminders with the khal calendar system by:
+    1. Running vdirsyncer to sync calendar files
+    2. Exporting reminders from reminders-cli in JSON format
+    3. Converting JSON to ICS format using jq
+    4. Importing the ICS file into khal
+    5. Opening interactive khal (ikhal)
+
+DEPENDENCIES:
+    - vdirsyncer: Calendar synchronization
+    - khal: Calendar system
+    - reminders-cli: Apple Reminders access
+    - jq: JSON processing
+    - ikhal: Interactive khal interface
+
+FEATURES:
+    - Converts Apple Reminders to khal format
+    - Handles both all-day and time-specific events
+    - Preserves reminder notes and descriptions
+    - Automatic UTC time handling
+    - Error handling and validation
+
+EXAMPLES:
+    ical
+    # Sync reminders and open khal interface
+
+    ical --help
+    # Show this help message
+
+NOTES:
+    - Only imports incomplete (non-completed) reminders
+    - Requires proper vdirsyncer configuration
+    - Creates reminders.ics in ~/.calendars/local/reminders/
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
 
 # Define constants
 readonly REMINDERS_CALENDAR_NAME="Reminders"

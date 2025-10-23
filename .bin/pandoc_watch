@@ -4,6 +4,61 @@ SCRIPT_NAME="pandoc_watch"
 SCRIPT_VERSION="1.0.2"
 . "$(dirname "$0")/common"
 
+show_help() {
+    cat << EOF
+pandoc_watch - Watch and auto-convert markdown files
+
+USAGE:
+    pandoc_watch [--help|-h] <format>
+
+DESCRIPTION:
+    Watches for changes to markdown files in the current directory and
+    automatically converts them to the specified format using pandoc.
+
+    Uses entr to monitor file changes and triggers pandoc conversion
+    whenever a markdown file is modified.
+
+DEPENDENCIES:
+    - entr: File system event monitor
+    - pandoc: Universal document converter
+    - common: Shared script utilities
+
+SUPPORTED FORMATS:
+    Any format supported by pandoc, such as:
+    - html: HTML output
+    - pdf: PDF output
+    - docx: Word document
+    - odt: OpenDocument text
+    - epub: EPUB ebook
+
+EXAMPLES:
+    pandoc_watch html
+    # Convert .md files to .html automatically
+
+    pandoc_watch pdf
+    # Convert .md files to .pdf automatically
+
+    pandoc_watch docx
+    # Convert .md files to .docx automatically
+
+    pandoc_watch --help
+    # Show this help message
+
+NOTES:
+    - Monitors .md and .markdown files in current directory only
+    - Output files have same base name as source files
+    - Continuous monitoring until interrupted (Ctrl+C)
+    - Requires entr and pandoc to be installed
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
 require entr pandoc
 
 if [ -z "${1-}" ]; then

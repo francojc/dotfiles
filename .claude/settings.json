@@ -4,6 +4,7 @@
     "allow": [],
     "deny": []
   },
+  "model": "claude-haiku-4.5",
   "hooks": {
     "Stop": [
       {
@@ -33,7 +34,7 @@
     "command": "npx -y ccstatusline@latest",
     "padding": 0
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754255023538
   }

@@ -2,7 +2,51 @@
 
 # Description: This script is used to syncronize my Google Calendar with vdirsyncer
 # and my local calendar. It is called by a cron job every 15 minutes.
-# Usage: ~/.bin/vdirsyncer-sync.sh
+# Usage: vds [--help|-h]
+
+show_help() {
+    cat << EOF
+vds - Vdirsyncer calendar synchronization utility
+
+USAGE:
+    vds [--help|-h]
+
+DESCRIPTION:
+    Synchronizes Google Calendar with local calendar using vdirsyncer.
+    This script sets up the required environment and runs vdirsyncer sync.
+
+    Designed to be called by cron jobs every 15 minutes to keep
+    calendars synchronized.
+
+ENVIRONMENT:
+    - Sets up PATH for Nix-managed binaries
+    - Configures GNUPGHOME for encryption
+    - Uses system vdirsyncer from user profile
+
+DEPENDENCIES:
+    - vdirsyncer: Calendar synchronization tool
+    - Proper vdirsyncer configuration
+
+EXAMPLES:
+    vds
+    # Synchronize calendars
+
+    vds --help
+    # Show this help message
+
+NOTES:
+    - Requires vdirsyncer configuration in ~/.config/vdirsyncer/
+    - Often used with cron: */15 * * * * ~/.bin/vds
+    - Runs silently unless errors occur
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
 
 USERNAME=$(whoami)
 

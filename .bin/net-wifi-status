@@ -43,7 +43,7 @@ main() {
       h) show_help=1 ;;
       v) VERBOSE=$((VERBOSE+1)) ;;
       q) QUIET=1 ;;
-      -) case "" in
+      -) case "$OPTARG" in
            help) show_help=1 ;;
            version) show_version=1 ;;
            verbose) VERBOSE=$((VERBOSE+1)) ;;
@@ -58,15 +58,27 @@ main() {
   [[ $show_help -eq 1 ]] && { usage; exit 0; }
   [[ $show_version -eq 1 ]] && { print_version; exit 0; }
 
-  local airport="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
-  [[ -x "$airport" ]] || die "airport tool not found on this system"
-
   local info
-  info=$("$airport" -I) || die "airport -I failed"
+  info=$(system_profiler SPAirPortDataType -json 2>/dev/null) || die "system_profiler SPAirPortDataType failed"
 
-  local ssid rssi
-  ssid=$(printf '%s\n' "$info" | awk -F': ' '/ SSID/ {print substr($0,index($0,": ")+2)}' | sed 's/^ *//')
-  rssi=$(printf '%s\n' "$info" | awk -F': ' '/ agrCtlRSSI/ {print $2}' | tr -d ' ') 
+  local ssid rssi status
+  # Parse JSON output using sed/awk for portability
+  status=$(printf '%s\n' "$info" | sed -n 's/.*"spairport_status_information" : "\([^"]*\)".*/\1/p')
+
+  if [[ "$status" != "spairport_status_connected" ]]; then
+    ssid=""
+    rssi=""
+  else
+    # Extract SSID (redacted in output for privacy)
+    ssid=$(printf '%s\n' "$info" | sed -n 's/.*"spairport_current_network_information" : {[^}]*"_name" : "\([^"]*\)".*/\1/p')
+    # If SSID extraction failed or shows as redacted, set to generic connected state
+    if [[ -z "$ssid" || "$ssid" == "<redacted>" ]]; then
+      ssid="Connected"
+    fi
+
+    # Extract signal strength from "spairport_signal_noise" : "-63 dBm / -94 dBm" format
+    rssi=$(printf '%s\n' "$info" | sed -n 's/.*"spairport_signal_noise" : "\(-[0-9]*\) dBm.*/\1/p' | head -1)
+  fi 
 
   local bars; bars=$(bars_from_rssi "$rssi")
   local icon

@@ -2,6 +2,63 @@
 
 set -euo pipefail
 
+show_help() {
+    cat << EOF
+pass-to-env - Convert pass passwords to environment variables
+
+USAGE:
+    pass-to-env [--help|-h]
+
+DESCRIPTION:
+    Extracts passwords from the pass password store and converts them
+    to shell environment variables. Creates a .variables.env file
+    with export statements for each password.
+
+    Only the first line (password) of each pass entry is exported.
+    Non-password files like private keys are automatically skipped.
+
+DEPENDENCIES:
+    - pass: Password store manager
+    - gpg: GNU Privacy Guard for encryption
+
+OUTPUT:
+    - Creates ~/.variables.env with exported variables
+    - File permissions set to 600 (secure)
+    - Variables sorted alphabetically
+    - Timestamp and header included
+
+SECURITY NOTES:
+    - Output file contains sensitive password data
+    - File is created with restrictive permissions (600)
+    - Consider security implications carefully
+    - Use only when necessary
+
+ENVIRONMENT:
+    PASSWORD_STORE_DIR: Custom password store directory
+                        (default: ~/.password-store)
+
+EXAMPLES:
+    pass-to-env
+    # Extract passwords to ~/.variables.env
+
+    pass-to-env --help
+    # Show this help message
+
+NOTES:
+    - Skips .asc files (like private keys)
+    - Overwrites existing ~/.variables.env file
+    - Only extracts the password (first line) of each entry
+    - Uses base filename as variable name
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
 ENV_FILE="$HOME/.variables.env"
 
 extract_passwords() {

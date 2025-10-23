@@ -1,14 +1,49 @@
 #!/usr/bin/env bash
 
 # extracty: Extract text from images using OpenAI GPT-4o-mini vision model
-# Usage: extracty [-h] IMAGE_FILE
+# Usage: extracty [-h|--help] IMAGE_FILE
 
 set -euo pipefail
 
 # Function to display help message
 show_help() {
-    echo "Usage: $0 [-h] IMAGE_FILE"
-    echo "Extract text from images using OpenAI GPT-4o-mini vision model"
+    cat << EOF
+extracty - Extract text from images using AI vision
+
+USAGE:
+    extracty [-h|--help] IMAGE_FILE
+
+DESCRIPTION:
+    Extracts text from images using OpenAI's GPT-4o-mini vision model.
+    The script processes images and returns extracted text in markdown format,
+    preserving original formatting, layout, and structure.
+
+DEPENDENCIES:
+    - curl: For making API requests
+    - jq: For JSON processing
+    - base64: For image encoding
+    - OPENAI_API_KEY environment variable
+
+ENVIRONMENT:
+    OPENAI_API_KEY: Required API key for OpenAI access
+
+EXAMPLES:
+    extracty screenshot.png
+    # Extract text from PNG image
+
+    extracty document.jpg
+    # Extract text from JPEG image
+
+    extracty --help
+    # Show this help message
+
+NOTES:
+    - Requires valid OPENAI_API_KEY environment variable
+    - Supports common image formats (PNG, JPEG, etc.)
+    - Output is in markdown format only
+    - API usage may incur costs based on OpenAI pricing
+
+EOF
     exit 0
 }
 
@@ -16,6 +51,12 @@ show_help() {
 command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
 command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
 command -v base64 >/dev/null 2>&1 || { echo "Error: base64 is required" >&2; exit 1; }
+
+# Check for --help flag before getopts
+if [[ "${1:-}" == "--help" ]]; then
+    show_help
+    exit 0
+fi
 
 # Parse options
 while getopts ":h" opt; do

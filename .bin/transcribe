@@ -1,16 +1,56 @@
 #!/usr/bin/env bash
 
 # transcribe: Transcribe an audio file using OpenAI's Whisper
-# Usage: transcribe -f FILE_PATH
+# Usage: transcribe [-h|--help] -f FILE_PATH
 # Example: transcribe -f "audio.mp3"
 
 set -euo pipefail
 
 # Function to display help message
 show_help() {
-  echo "Usage: $0 [-h] -f FILE_PATH"
-  echo "Transcribe an audio file using OpenAI Whisper-1"
-  echo "Supported formats: mp3, mp4, mpeg, mpga, m4a, wav, webm"
+  cat << EOF
+transcribe - Audio transcription using OpenAI Whisper
+
+USAGE:
+    transcribe [-h|--help] -f FILE_PATH
+
+DESCRIPTION:
+    Transcribes audio files using OpenAI's Whisper-1 model. The script
+    processes audio files and saves the transcribed text to a .txt file
+    with the same base name as the input file.
+
+DEPENDENCIES:
+    - curl: For making API requests
+    - jq: For JSON processing
+    - pass: For password store access to API keys
+
+ENVIRONMENT:
+    Uses pass password store for API key: API/OPENAI_API_KEY
+
+SUPPORTED FORMATS:
+    - mp3, mp4, mpeg, mpga, m4a, wav, webm
+
+OPTIONS:
+    -f FILE_PATH    Audio file to transcribe (required)
+    -h, --help      Show this help message
+
+EXAMPLES:
+    transcribe -f recording.mp3
+    # Transcribe MP3 file to recording.txt
+
+    transcribe -f podcast.m4a
+    # Transcribe M4A file to podcast.txt
+
+    transcribe --help
+    # Show this help message
+
+NOTES:
+    - Output file is saved as {filename}.txt in the same directory
+    - Requires valid API key in pass store at API/OPENAI_API_KEY
+    - API usage may incur costs based on OpenAI pricing
+    - Transcription quality depends on audio quality and clarity
+
+EOF
   exit 0
 }
 
@@ -26,6 +66,12 @@ get_pass() {
         exit 1
     }
 }
+
+# Check for --help flag before getopts
+if [[ "${1:-}" == "--help" ]]; then
+    show_help
+    exit 0
+fi
 
 # Check API key using pass
 OPENAI_API_KEY=$(get_pass OPENAI_API_KEY)

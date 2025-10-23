@@ -4,6 +4,50 @@
 SCRIPT_NAME="cntc-fetch"; SCRIPT_VERSION="1.0.0"
 . "$(dirname "$0")/common"
 
+show_help() {
+    cat << EOF
+cntc-fetch - Personal contacts fetcher wrapper
+
+USAGE:
+    cntc-fetch [--help|-h] [OPTIONS]
+
+DESCRIPTION:
+    Wrapper script for personal-contacts-fetcher.py that handles contact
+    fetching operations. This script forwards all arguments to the
+    Python script while providing consistent error handling.
+
+    The actual functionality and options depend on the underlying
+    personal-contacts-fetcher.py script.
+
+DEPENDENCIES:
+    - personal-contacts-fetcher.py: Main contact fetching script
+    - common: Shared script utilities and functions
+
+EXAMPLES:
+    cntc-fetch
+    # Run contacts fetcher with default options
+
+    cntc-fetch --help
+    # Show this help message
+
+    cntc-fetch [python-script-options]
+    # Pass options directly to the Python script
+
+NOTES:
+    - This is a wrapper script; see personal-contacts-fetcher.py for
+      detailed usage options and functionality
+    - All arguments are passed through to the underlying Python script
+    - Requires the Python script to be executable and in the same directory
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
 main(){
   if [[ -x "$(dirname "$0")/personal-contacts-fetcher.py" ]]; then
     "$(dirname "$0")/personal-contacts-fetcher.py" "$@"

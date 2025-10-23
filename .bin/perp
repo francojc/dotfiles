@@ -45,11 +45,72 @@ AVAILABLE_FOCUS_MODES=("web" "academic" "writing" "wolfram" "youtube" "reddit")
 
 # --- Functions ---
 
-# Function to display usage information
+# Function to display help information
+show_help() {
+    cat << EOF
+perp - Perplexica AI search client
+
+USAGE:
+    perp [--help|-h] [--mode|-m <focusMode>] <prompt>
+    echo "<prompt>" | perp [--mode|-m <focusMode>]
+
+DESCRIPTION:
+    Queries the Perplexica API to perform AI-powered searches with different
+    focus modes. Returns results with sources and formatted output.
+
+    The script supports multiple search modes and can read prompts from
+    command line arguments or standard input.
+
+ENVIRONMENT:
+    GITHUB_COPILOT_API_KEY: Required API key for authentication
+
+FOCUS MODES:
+    - web: Standard web search (default)
+    - academic: Academic/scholarly search
+    - writing: Writing assistant search
+    - wolfram: Wolfram Alpha computational search
+    - youtube: YouTube video search
+    - reddit: Reddit discussion search
+
+OPTIONS:
+    --mode, -m <mode>  Set search focus mode
+    --help, -h         Show this help message
+
+EXAMPLES:
+    perp "What is the latest news on AI?"
+    # Web search with default mode
+
+    perp --mode academic "Quantum computing advancements"
+    # Academic search mode
+
+    perp -m youtube "Machine learning tutorials"
+    # YouTube search mode
+
+    echo "Climate change solutions" | perp
+    # Read prompt from standard input
+
+    perp --help
+    # Show this help message
+
+DEPENDENCIES:
+    - curl: For API requests
+    - jq: For JSON processing
+
+CONFIGURATION:
+    Edit the script to configure:
+    - PERPLEXICA_API_URL: API endpoint
+    - CHAT_MODEL_NAME: AI model to use
+    - CUSTOM_OPENAI_BASE_URL: OpenAI-compatible endpoint
+
+EOF
+}
+
+# Function to display usage information (for errors)
 usage() {
   echo "Usage: $(basename "$0") [--mode <focusMode>] <prompt>"
   echo "       $(basename "$0") [--mode <focusMode>] -m <focusMode> <prompt>"
   echo "       echo \"<prompt>\" | $(basename "$0") [--mode <focusMode>]"
+  echo "       $(basename "$0") --help"
   echo
   echo "Available focus modes: ${AVAILABLE_FOCUS_MODES[*]}"
   echo "Example: $(basename "$0") --mode academic \"What is the latest in AI research?\""
@@ -69,6 +130,10 @@ PROMPT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --help|-h)
+      show_help
+      exit 0
+      ;;
     --mode|-m)
       shift
       if [[ -z "$1" ]]; then

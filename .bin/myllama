@@ -9,18 +9,53 @@ declare -A model_aliases=(
 
 # Function to display help information
 show_help() {
-    echo "Usage: $0 <model-shortname>"
-    echo ""
-    echo "Model Shortnames and their full names:"
-    for alias in "${!model_aliases[@]}"; do
-        echo "  $alias -> ${model_aliases[$alias]}"
-    done
+    cat << EOF
+myllama - Ollama model launcher with short aliases
+
+USAGE:
+    myllama <model-shortname>|--help|-h
+
+DESCRIPTION:
+    Launches Ollama models using convenient short aliases instead of full model names.
+    This wrapper simplifies running complex Ollama models by providing memorable
+    short names for frequently used models.
+
+AVAILABLE MODELS:
+    mistral-small -> mistral-small:22b-instruct-2409-q3_K_S
+    qwen-r1        -> deepseek-r1:14b
+    s1             -> hf.co/brittlewis12/s1-32B-GGUF:Q4_K_M
+
+DEPENDENCIES:
+    - ollama: Local AI model runner
+
+EXAMPLES:
+    myllama mistral-small
+    # Run mistral-small model
+
+    myllama qwen-r1
+    # Run deepseek-r1:14b model
+
+    myllama --help
+    # Show this help message
+
+NOTES:
+    - Requires Ollama to be running and accessible
+    - Models must be pulled first with 'ollama pull <full-model-name>'
+    - Add new aliases by modifying the model_aliases array
+
+EOF
 }
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
 
 # Validate input arguments
 if [[ $# -ne 1 ]]; then
-    echo "Error: Incorrect number of arguments."
-    show_help
+    echo "Error: Incorrect number of arguments." >&2
+    show_help >&2
     exit 1
 fi
 

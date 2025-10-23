@@ -3,6 +3,42 @@
 # Utility to check battery status
 # Uses pmset and pretty prints the output
 
+show_help() {
+    cat << EOF
+battery_status - Display battery status with visual indicators
+
+USAGE:
+    battery_status [--help|-h]
+
+DESCRIPTION:
+    Displays current battery percentage, charging status, and time remaining
+    with colored icons for quick visual reference.
+
+    The script uses pmset to get battery information and formats the output
+    with appropriate icons and colors based on battery level.
+
+FEATURES:
+    - Shows battery percentage with colored icon
+    - Displays charging/discharging status
+    - Shows time remaining until full/empty
+    - Color-coded output (green/yellow/red)
+
+EXAMPLES:
+    battery_status
+    # Output: 󰁹 85%  [Discharging] | Time remaining: 3:45
+
+    battery_status --help
+    # Show this help message
+
+EOF
+}
+
+# Check for help flags
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
 # Function to get battery icon based on percentage
 get_battery_icon() {
     local percentage=$1

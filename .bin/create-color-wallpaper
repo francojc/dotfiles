@@ -5,9 +5,64 @@
 # are read in hex format (e.g. #FF0000) from
 # a piped list.
 # Requires ImageMagick.
-# Usage: create-color-wallpaper < colors.txt
+# Usage: create-color-wallpaper [--help|-h] < colors.txt
 #
 # colors.txt should be a list of colors in hex format, one per line.
+
+show_help() {
+    cat << EOF
+create-color-wallpaper - Generate solid color wallpaper images
+
+USAGE:
+    create-color-wallpaper [--help|-h] < colors.txt
+
+DESCRIPTION:
+    Creates solid color wallpaper images from hex color values read from
+    standard input. Each color generates a 1920x1080 PNG file with the
+    naming pattern: color-{hex_value}.png
+
+    Colors should be provided in hex format (e.g., #FF0000, #00FF00, #0000FF).
+
+DEPENDENCIES:
+    - magick (ImageMagick): For image creation
+
+INPUT:
+    Reads hex color values from standard input, one per line.
+    Colors should be in hex format with or without the # prefix.
+
+OUTPUT:
+    - Creates PNG files in current directory
+    - File names: color-{hex_value}.png
+    - Image size: 1920x1080 pixels
+    - Format: PNG
+
+EXAMPLES:
+    echo "#FF0000" | create-color-wallpaper
+    # Creates color-#FF0000.png (red wallpaper)
+
+    cat colors.txt | create-color-wallpaper
+    # Process multiple colors from file
+
+    printf "#FF0000\n#00FF00\n#0000FF\n" | create-color-wallpaper
+    # Creates three wallpaper files
+
+    create-color-wallpaper --help
+    # Show this help message
+
+NOTES:
+    - Colors must be valid hex color values
+    - Output files are created in current directory
+    - Default resolution is 1920x1080 (Full HD)
+    - Overwrites existing files with same names
+
+EOF
+}
+
+# Check for help flags
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    show_help
+    exit 0
+fi
 
 while read color; do
     magick -size 1920x1080 xc:"${color}" "color-${color}.png"
