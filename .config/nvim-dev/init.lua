@@ -56,7 +56,6 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 3
 vim.opt.sidescrolloff = 5
 vim.opt.wrap = true
-vim.opt.colorcolumn = "80"
 vim.opt.showmode = false
 vim.opt.cmdheight = 0
 vim.opt.laststatus = 2
@@ -97,24 +96,44 @@ vim.opt.mouse = "a"
 vim.opt.background = "dark"
 
 -- =============================================================================
--- 2. NEW NVIM 0.12 FEATURES
+-- 2. NEW NVIM 0.12 FEATURES (requires Neovim 0.12+)
 -- =============================================================================
 
--- Built-in auto-completion (NEW in 0.12!)
-vim.opt.autocomplete = true
+-- Check Neovim version for 0.12+ features
+local nvim_version = vim.version()
+local is_012_or_later = nvim_version.major > 0 or (nvim_version.major == 0 and nvim_version.minor >= 12)
 
--- Fuzzy completion collection (NEW in 0.12!)
--- Enable fuzzy matching for keyword completion
-vim.opt.completefuzzycollect = "keyword"
+if is_012_or_later then
+	-- Built-in auto-completion (NEW in 0.12!)
+	pcall(function()
+		vim.opt.autocomplete = true
+	end)
 
--- Completion options with distance-based sorting (NEW in 0.12!)
-vim.opt.completeopt = "menu,menuone,noselect,nearest"
+	-- Fuzzy completion collection (NEW in 0.12!)
+	pcall(function()
+		vim.opt.completefuzzycollect = "keyword"
+	end)
 
--- Popup menu border (NEW in 0.12!)
-vim.opt.pumborder = "single"
+	-- Completion options with distance-based sorting (NEW in 0.12!)
+	vim.opt.completeopt = "menu,menuone,noselect,nearest"
 
--- Maximum popup menu width (NEW in 0.12!)
-vim.opt.pummaxwidth = 60
+	-- Popup menu border (NEW in 0.12!)
+	pcall(function()
+		vim.opt.pumborder = "single"
+	end)
+
+	-- Maximum popup menu width (NEW in 0.12!)
+	pcall(function()
+		vim.opt.pummaxwidth = 60
+	end)
+else
+	-- Fallback for 0.11 and earlier
+	vim.opt.completeopt = "menu,menuone,noselect"
+	vim.notify(
+		"Neovim 0.12+ required for full feature set. Current version: " .. vim.fn.execute("version"):match("NVIM v[%d.]+"),
+		vim.log.levels.WARN
+	)
+end
 
 -- =============================================================================
 -- 3. PLUGIN MANAGEMENT WITH VIM.PACK (NEW IN 0.12!)
@@ -207,6 +226,11 @@ plugins_installed = install_opt_plugin(
 ) or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/preservim/vim-markdown", "vim-markdown") or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/jmbuhr/cmp-pandoc-references", "cmp-pandoc-references")
+	or plugins_installed
+
+-- Image rendering plugins (Phase 5: Advanced Features)
+plugins_installed = install_opt_plugin("https://github.com/3rd/image.nvim", "image.nvim") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/HakonHarnes/img-clip.nvim", "img-clip.nvim")
 	or plugins_installed
 
 -- Utility plugins
@@ -600,6 +624,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Otter.nvim: Load on quarto filetype (for embedded language LSP)
+-- Note: Otter provides LSP features for code blocks embedded in markdown/quarto
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "quarto",
 	callback = function()
@@ -614,10 +639,41 @@ vim.api.nvim_create_autocmd("FileType", {
 				buffers = {
 					set_filetype = true,
 				},
+				handle_leading_whitespace = true,
 			})
-			-- Activate otter for the buffer
-			require("otter").activate({ "r", "python", "julia", "bash" })
 		end)
+
+		-- Manual activation keymap (only activate when you need it)
+		-- Note: <leader>mo is used for ordered lists, so we use <leader>mO (capital O)
+		vim.keymap.set("n", "<leader>mO", function()
+			local ok, otter = pcall(require, "otter")
+			if not ok then
+				vim.notify("Otter not loaded", vim.log.levels.ERROR)
+				return
+			end
+
+			-- Try to activate with common languages
+			local activated, err = pcall(function()
+				otter.activate({ "r", "python", "julia", "bash", "lua" })
+			end)
+
+			if activated then
+				vim.notify("Otter activated for embedded code blocks", vim.log.levels.INFO)
+			else
+				vim.notify("Otter activation failed: " .. tostring(err), vim.log.levels.WARN)
+			end
+		end, { buffer = true, desc = "Activate Otter LSP for code blocks" })
+
+		-- Optionally, try auto-activation with a delay to allow treesitter parsing
+		vim.defer_fn(function()
+			local ok, otter = pcall(require, "otter")
+			if ok then
+				-- Silent activation attempt (won't error if no code blocks found)
+				pcall(function()
+					otter.activate({ "r", "python", "julia", "bash", "lua" }, true)
+				end)
+			end
+		end, 500) -- 500ms delay for treesitter to parse
 	end,
 	once = true,
 })
@@ -699,6 +755,91 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		vim.cmd.packadd("cmp-pandoc-references")
 		-- No setup needed - works with nvim-cmp
+	end,
+	once = true,
+})
+
+-- Image.nvim: Load on markdown and quarto filetypes for image rendering
+-- NOTE: Requires terminal with image protocol support (Kitty, iTerm2, WezTerm, etc.)
+-- or ueberzug for X11. In tmux, ensure tmux.conf has: set -gq allow-passthrough on
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.cmd.packadd("image.nvim")
+		pcall(function()
+			-- Auto-detect best backend based on environment
+			local backend = "kitty" -- default to kitty protocol
+			if vim.fn.executable("ueberzug") == 1 then
+				backend = "ueberzug"
+			end
+
+			require("image").setup({
+				backend = backend,
+				integrations = {
+					markdown = {
+						enabled = true,
+						clear_in_insert_mode = false,
+						download_remote_images = true,
+						only_render_image_at_cursor = false,
+						filetypes = { "markdown", "quarto", "vimwiki" },
+					},
+				},
+				max_width = nil,
+				max_height = nil,
+				max_width_window_percentage = nil,
+				max_height_window_percentage = 50,
+				window_overlap_clear_enabled = false,
+				window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+				editor_only_render_when_focused = false,
+				tmux_show_only_in_active_window = true,
+				hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp" },
+			})
+		end)
+	end,
+	once = true,
+})
+
+-- Img-clip.nvim: Load on markdown and quarto filetypes for image pasting
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.cmd.packadd("img-clip.nvim")
+		pcall(function()
+			require("img-clip").setup({
+				default = {
+					embed_image_as_base64 = false,
+					prompt_for_file_name = true,
+					drag_and_drop = {
+						insert_mode = true,
+					},
+					use_absolute_path = false,
+				},
+				filetypes = {
+					markdown = {
+						url_encode_path = true,
+						template = "![$CURSOR]($FILE_PATH)",
+						drag_and_drop = {
+							download_images = false,
+						},
+					},
+					quarto = {
+						url_encode_path = true,
+						template = "![$CURSOR]($FILE_PATH)",
+						drag_and_drop = {
+							download_images = false,
+						},
+					},
+				},
+			})
+
+			-- Keymap for pasting images from clipboard
+			vim.keymap.set(
+				"n",
+				"<leader>mp",
+				"<cmd>PasteImage<CR>",
+				{ buffer = true, desc = "Paste image from clipboard" }
+			)
+		end)
 	end,
 	once = true,
 })
@@ -797,23 +938,21 @@ local on_attach = function(client, bufnr)
 end
 
 -- Configure language servers using new vim.lsp.config API (0.12+)
+-- Note: This section requires Neovim 0.12+. For 0.11, use nvim-lspconfig plugin instead.
+
+if not is_012_or_later then
+	vim.notify(
+		"LSP configuration requires Neovim 0.12+ with vim.lsp.config() API. Please upgrade or use nvim-lspconfig.",
+		vim.log.levels.WARN
+	)
+end
 
 -- R Language Server
-vim.lsp.config("r_language_server", {
-	cmd = { "R", "--slave", "-e", "languageserver::run()" },
-	filetypes = { "r", "rmd" },
-	root_markers = { ".git", "DESCRIPTION", ".Rproj.user" },
-	on_attach = on_attach,
-	settings = {
-		r = {
-			lsp = {
-				diagnostics = true,
-			},
-		},
-	},
-})
+-- NOTE: R LSP is NOT auto-started because R is only available in nix shell environments.
+-- Use <leader>tr to manually toggle R LSP when working in a nix shell project.
 
 -- TypeScript/JavaScript
+if is_012_or_later then
 vim.lsp.config("ts_ls", {
 	cmd = { "typescript-language-server", "--stdio" },
 	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
@@ -911,10 +1050,9 @@ vim.lsp.config("yamlls", {
 })
 
 -- Enable language servers for their respective filetypes
+-- Note: R LSP is manually toggled with <leader>tr, not auto-started
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
-		"r",
-		"rmd",
 		"javascript",
 		"javascriptreact",
 		"typescript",
@@ -929,8 +1067,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	},
 	callback = function(args)
 		local server_map = {
-			r = "r_language_server",
-			rmd = "r_language_server",
 			javascript = "ts_ls",
 			javascriptreact = "ts_ls",
 			typescript = "ts_ls",
@@ -949,6 +1085,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 	end,
 })
+end -- Close the if is_012_or_later block for LSP configuration
 
 -- =============================================================================
 -- 6. TREESITTER CONFIGURATION
@@ -1135,6 +1272,7 @@ vim.keymap.set("n", "<leader>pS", "<cmd>lua Session_select()<CR>", { desc = "Sel
 -- Toggle functions -----
 vim.keymap.set("n", "<leader>ts", "<cmd>lua Toggle_spell()<CR>", { desc = "Toggle spell" })
 vim.keymap.set("n", "<leader>tw", "<cmd>lua Toggle_wrap()<CR>", { desc = "Toggle wrap" })
+vim.keymap.set("n", "<leader>tr", "<cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" })
 
 -- Git (lazygit.nvim - lazy-loaded) -----
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
@@ -1265,6 +1403,75 @@ function _G.Toggle_wrap()
 	vim.opt.wrap = not vim.opt.wrap:get()
 	local status = vim.opt.wrap:get() and "enabled" or "disabled"
 	vim.notify("Word wrap " .. status, vim.log.levels.INFO)
+end
+
+-- Toggle R language server (for nix shell environments)
+function _G.Toggle_r_language_server()
+	-- Check if R LSP is currently running for this buffer
+	local clients = vim.lsp.get_clients({ bufnr = 0, name = "r_language_server" })
+	local is_running = #clients > 0
+
+	if is_running then
+		-- LSP is running, stop all R clients for this buffer
+		for _, client in ipairs(clients) do
+			vim.lsp.stop_client(client.id)
+		end
+		vim.notify("R LSP disabled", vim.log.levels.INFO)
+	else
+		-- LSP is not running, start it manually
+		local bufname = vim.api.nvim_buf_get_name(0)
+
+		-- Find project root: DESCRIPTION (R package) → .git → current directory
+		local root_dir = vim.fs.root(bufname, "DESCRIPTION")
+			or vim.fs.root(bufname, ".git")
+			or vim.fs.dirname(bufname)
+
+		if root_dir then
+			-- Get capabilities for native 0.12 completion
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+			-- Start R language server
+			vim.lsp.start({
+				name = "r_language_server",
+				cmd = { "R", "--slave", "-e", "languageserver::run()" },
+				root_dir = root_dir,
+				capabilities = capabilities,
+				filetypes = { "r", "rmd", "quarto" },
+				on_attach = function(client, bufnr)
+					-- Disable formatting (use conform.nvim instead)
+					client.server_capabilities.documentFormattingProvider = false
+					client.server_capabilities.documentRangeFormattingProvider = false
+
+					-- Set up LSP keymaps for this buffer (same as other LSPs)
+					local opts = { buffer = bufnr, silent = true }
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+					vim.keymap.set("n", "grt", vim.lsp.buf.type_definition, opts)
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+					vim.keymap.set("n", "<leader>f", function()
+						vim.lsp.buf.format({ async = true })
+					end, opts)
+					vim.keymap.set("n", "an", vim.lsp.buf.selection_range, opts)
+				end,
+				settings = {
+					r = {
+						lsp = {
+							diagnostics = true,
+							rich_documentation = true, -- Enhanced hover documentation
+						},
+					},
+				},
+			})
+			vim.notify("R LSP enabled", vim.log.levels.INFO)
+		else
+			vim.notify("Could not determine project root for R LSP", vim.log.levels.WARN)
+		end
+	end
 end
 
 -- =============================================================================
