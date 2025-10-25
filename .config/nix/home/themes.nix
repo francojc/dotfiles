@@ -58,6 +58,25 @@
           yellow = "#e8ae5b";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light yellow";
+        playing = "light yellow";
+        playing_selected = "yellow";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#484848";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light yellow";
+        statusbar_bg = "light yellow";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     autumn = {
@@ -114,6 +133,25 @@
           yellow = "#daa520";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light yellow";
+        playing = "light yellow";
+        playing_selected = "yellow";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#664200";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light yellow";
+        statusbar_bg = "light yellow";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     blackmetal = {
@@ -169,6 +207,25 @@
           fg = "#c1c1c1";
           yellow = "#a0a0a0";
         };
+      };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light white";
+        playing = "light white";
+        playing_selected = "white";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#333333";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light white";
+        statusbar_bg = "light white";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
       };
     };
 
@@ -231,6 +288,25 @@
           yellow = "#fabd2f";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light yellow";
+        playing = "light yellow";
+        playing_selected = "yellow";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#504945";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light yellow";
+        statusbar_bg = "light yellow";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     nightfox = {
@@ -286,6 +362,25 @@
           fg = "#cdcecf";
           yellow = "#dbc074";
         };
+      };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#29394f";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
       };
     };
 
@@ -349,6 +444,25 @@
           yellow = "#e5c07b";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#393f4a";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     tokyonight = {
@@ -404,6 +518,25 @@
           fg = "#c0caf5";
           yellow = "#e0af68";
         };
+      };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#24283b";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
       };
     };
 
@@ -461,6 +594,25 @@
           yellow = "#f9e2af";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#313244";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     vscode = {
@@ -517,6 +669,25 @@
           yellow = "#dcdcaa";
         };
       };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#2d2d30";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
+      };
     };
 
     vague = {
@@ -572,6 +743,25 @@
           fg = "#b9b9b9";
           yellow = "#e6c792";
         };
+      };
+      ncspot = {
+        background = "black";
+        primary = "light white";
+        secondary = "light black";
+        title = "light blue";
+        playing = "light blue";
+        playing_selected = "blue";
+        playing_bg = "black";
+        highlight = "light white";
+        highlight_bg = "#2a2d2e";
+        error = "light white";
+        error_bg = "red";
+        statusbar = "black";
+        statusbar_progress = "light blue";
+        statusbar_bg = "light blue";
+        cmdline = "light white";
+        cmdline_bg = "black";
+        search_match = "light red";
       };
     };
   };

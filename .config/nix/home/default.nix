@@ -11,6 +11,7 @@
       ./core.nix
       ./git.nix
       ./ghostty.nix
+      ./ncspot.nix
       ./shell/default.nix
       ./tmux.nix
       ./vim.nix
