@@ -502,7 +502,7 @@
         accent = "#569cd6";
       };
       ghostty = {
-        theme = "VSCodeDark";
+        theme = "Dark+";
         cursor_color = "#569cd6";
       };
       vim = {

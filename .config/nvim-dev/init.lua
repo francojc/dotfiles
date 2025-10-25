@@ -191,7 +191,7 @@ end
 -- Options: "tokyonight", "arthur", "autumn", "black-metal", "gruvbox",
 --          "nightfox", "onedark", "vague"
 local theme_config = {
-	colorscheme = "nightfox",
+	colorscheme = "black-metal",
 	colors = {
 		bg = "#212e3f",
 		fg = "#cdcecf",
