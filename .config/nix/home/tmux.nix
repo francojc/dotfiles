@@ -66,6 +66,10 @@
       bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
       bind-key -T copy-mode-vi Escape send-keys -X cancel
 
+      # Session bindings
+      bind-key n switch-client -n   # Go to the next session
+      bind-key p switch-client -p   # Go to the previous session
+
       # Window bindings
       bind W new-window -c "#{pane_current_path}"
       bind -r Tab next-window
