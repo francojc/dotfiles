@@ -120,7 +120,7 @@ vim.opt.pummaxwidth = 60
 -- 3. PLUGIN MANAGEMENT WITH VIM.PACK (NEW IN 0.12!)
 -- =============================================================================
 
--- Helper function to install plugins using vim.pack
+-- Helper function to install plugins using vim.pack (eager-loaded)
 local function install_plugin(url, name)
 	local install_path = vim.fn.stdpath("data") .. "/site/pack/plugins/start/" .. name
 
@@ -134,6 +134,24 @@ local function install_plugin(url, name)
 			install_path,
 		})
 		vim.cmd("packloadall")
+		return true
+	end
+	return false
+end
+
+-- Helper function to install opt plugins (lazy-loaded)
+local function install_opt_plugin(url, name)
+	local install_path = vim.fn.stdpath("data") .. "/site/pack/plugins/opt/" .. name
+
+	if vim.fn.isdirectory(install_path) == 0 then
+		print("Installing " .. name .. " (lazy)...")
+		vim.fn.system({
+			"git",
+			"clone",
+			"--depth=1",
+			url,
+			install_path,
+		})
 		return true
 	end
 	return false
@@ -175,6 +193,23 @@ plugins_installed = install_plugin("https://github.com/folke/which-key.nvim", "w
 plugins_installed = install_plugin("https://github.com/christoomey/vim-tmux-navigator", "vim-tmux-navigator")
 	or plugins_installed
 plugins_installed = install_plugin("https://github.com/nvim-tree/nvim-web-devicons", "nvim-web-devicons")
+	or plugins_installed
+
+-- Phase 4: Lazy-Loaded Plugins (optional plugins loaded on demand)
+
+-- Academic writing plugins
+plugins_installed = install_opt_plugin("https://github.com/quarto-dev/quarto-nvim", "quarto-nvim") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/jmbuhr/otter.nvim", "otter.nvim") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/epwalsh/obsidian.nvim", "obsidian.nvim") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/MeanderingProgrammer/render-markdown.nvim", "render-markdown.nvim")
+	or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/preservim/vim-markdown", "vim-markdown") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/jmbuhr/cmp-pandoc-references", "cmp-pandoc-references")
+	or plugins_installed
+
+-- Utility plugins
+plugins_installed = install_opt_plugin("https://github.com/kdheepak/lazygit.nvim", "lazygit.nvim") or plugins_installed
+plugins_installed = install_opt_plugin("https://github.com/NvChad/nvim-colorizer.lua", "nvim-colorizer.lua")
 	or plugins_installed
 
 -- Reload config if plugins were just installed
@@ -527,6 +562,185 @@ end)
 -- Vim-tmux-navigator (Seamless vim/tmux navigation)
 -- No configuration needed - works out of the box with default keybindings
 -- <C-h>, <C-j>, <C-k>, <C-l> to navigate between vim and tmux panes
+
+-- =============================================================================
+-- 5a. LAZY-LOADED PLUGIN CONFIGURATIONS
+-- =============================================================================
+
+-- Quarto-nvim: Load on quarto filetype
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "quarto",
+	callback = function()
+		vim.cmd.packadd("quarto-nvim")
+		pcall(function()
+			require("quarto").setup({
+				debug = false,
+				closePreviewOnExit = true,
+				lspFeatures = {
+					enabled = true,
+					languages = { "r", "python", "julia", "bash" },
+					diagnostics = {
+						enabled = true,
+						triggers = { "BufWritePost" },
+					},
+					completion = {
+						enabled = true,
+					},
+				},
+				codeRunner = {
+					enabled = false,
+					default_method = nil,
+				},
+			})
+		end)
+	end,
+	once = true,
+})
+
+-- Otter.nvim: Load on quarto filetype (for embedded language LSP)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "quarto",
+	callback = function()
+		vim.cmd.packadd("otter.nvim")
+		pcall(function()
+			require("otter").setup({
+				lsp = {
+					hover = {
+						border = "single",
+					},
+				},
+				buffers = {
+					set_filetype = true,
+				},
+			})
+			-- Activate otter for the buffer
+			require("otter").activate({ "r", "python", "julia", "bash" })
+		end)
+	end,
+	once = true,
+})
+
+-- Obsidian.nvim: Load on markdown filetype
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.cmd.packadd("obsidian.nvim")
+		pcall(function()
+			require("obsidian").setup({
+				workspaces = {
+					{
+						name = "notes",
+						path = "~/Documents/notes",
+					},
+				},
+				completion = {
+					nvim_cmp = false,
+				},
+				ui = {
+					enable = false,
+				},
+			})
+		end)
+	end,
+	once = true,
+})
+
+-- Render-markdown.nvim: Load on markdown and quarto filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.cmd.packadd("render-markdown.nvim")
+		pcall(function()
+			require("render-markdown").setup({
+				enabled = true,
+				heading = {
+					enabled = true,
+					sign = true,
+					icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+				},
+				code = {
+					enabled = true,
+					sign = true,
+					style = "full",
+					left_pad = 0,
+					right_pad = 0,
+				},
+				bullet = {
+					enabled = true,
+					icons = { "●", "○", "◆", "◇" },
+				},
+			})
+		end)
+	end,
+	once = true,
+})
+
+-- Vim-markdown: Load on markdown and quarto filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.cmd.packadd("vim-markdown")
+		-- Vim-markdown configuration (global variables)
+		vim.g.vim_markdown_folding_disabled = 1
+		vim.g.vim_markdown_frontmatter = 1
+		vim.g.vim_markdown_toml_frontmatter = 1
+		vim.g.vim_markdown_json_frontmatter = 1
+		vim.g.vim_markdown_math = 1
+		vim.g.vim_markdown_strikethrough = 1
+	end,
+	once = true,
+})
+
+-- CMP-pandoc-references: Load on markdown and quarto filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.cmd.packadd("cmp-pandoc-references")
+		-- No setup needed - works with nvim-cmp
+	end,
+	once = true,
+})
+
+-- LazyGit: Load on command
+vim.api.nvim_create_user_command("LazyGit", function()
+	vim.cmd.packadd("lazygit.nvim")
+	pcall(function()
+		require("lazygit").lazygit()
+	end)
+end, { desc = "Open LazyGit" })
+
+-- LazyGitCurrentFile: Load on command
+vim.api.nvim_create_user_command("LazyGitCurrentFile", function()
+	vim.cmd.packadd("lazygit.nvim")
+	pcall(function()
+		require("lazygit").lazygit_current_file()
+	end)
+end, { desc = "Open LazyGit for current file" })
+
+-- LazyGitFilter: Load on command
+vim.api.nvim_create_user_command("LazyGitFilter", function(opts)
+	vim.cmd.packadd("lazygit.nvim")
+	pcall(function()
+		require("lazygit").lazygit_filter(opts.args)
+	end)
+end, { nargs = 1, desc = "Open LazyGit with filter" })
+
+-- LazyGitFilterCurrentFile: Load on command
+vim.api.nvim_create_user_command("LazyGitFilterCurrentFile", function()
+	vim.cmd.packadd("lazygit.nvim")
+	pcall(function()
+		require("lazygit").lazygit_filter_current_file()
+	end)
+end, { desc = "Open LazyGit filter for current file" })
+
+-- Nvim-colorizer: Load on command
+vim.api.nvim_create_user_command("ColorizerToggle", function()
+	vim.cmd.packadd("nvim-colorizer.lua")
+	pcall(function()
+		require("colorizer").setup()
+		vim.cmd("ColorizerToggle")
+	end)
+end, { desc = "Toggle colorizer" })
 
 -- =============================================================================
 -- 5. LSP CONFIGURATION
@@ -920,12 +1134,13 @@ vim.keymap.set("n", "<leader>pS", "<cmd>lua Session_select()<CR>", { desc = "Sel
 vim.keymap.set("n", "<leader>ts", "<cmd>lua Toggle_spell()<CR>", { desc = "Toggle spell" })
 vim.keymap.set("n", "<leader>tw", "<cmd>lua Toggle_wrap()<CR>", { desc = "Toggle wrap" })
 
--- Placeholder keymaps for plugins not yet installed -----
--- These will be activated when plugins are added in later phases
+-- Git (lazygit.nvim - lazy-loaded) -----
+vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
+vim.keymap.set("n", "<leader>gf", "<cmd>LazyGitCurrentFile<CR>", { desc = "LazyGit current file" })
+vim.keymap.set("n", "<leader>gF", "<cmd>LazyGitFilterCurrentFile<CR>", { desc = "LazyGit filter current file" })
 
--- Git (Phase 4: lazygit.nvim)
--- vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
--- vim.keymap.set("n", "<leader>gl", "<cmd>LazyGitLog<CR>", { desc = "LazyGit log" })
+-- Colorizer (nvim-colorizer - lazy-loaded) -----
+vim.keymap.set("n", "<leader>tc", "<cmd>ColorizerToggle<CR>", { desc = "Toggle colorizer" })
 
 -- =============================================================================
 -- 8. UI AND AESTHETICS

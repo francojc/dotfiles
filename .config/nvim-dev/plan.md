@@ -357,7 +357,7 @@ Once stable, you can modularize later if desired.
 - [ ] Phase 1: Foundation
 - [ ] Phase 2: Snippet System
 - [x] Phase 3: Essential Plugins
-- [ ] Phase 4: Lazy-Loaded Plugins
+- [x] Phase 4: Lazy-Loaded Plugins
 - [ ] Phase 5: Advanced Features
 - [ ] Phase 6: Filetype Configurations
 - [ ] Phase 7: Theme Integration

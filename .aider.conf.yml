@@ -37,13 +37,13 @@ show-model-warnings: false
 auto-commits: false
 no-attribute-author: true
 no-attribute-committer: true
-show-diffs: false  # Optional, but useful to review changes
+show-diffs: false # Optional, but useful to review changes
 
 # Input Mode
 suggest-shell-commands: false
 vim: true
-multiline: false  # Often useful with vim mode
-restore-chat-history: false  # Helps maintain context between sessions
+multiline: false # Often useful with vim mode
+restore-chat-history: false # Helps maintain context between sessions
 
 # Disable automatic linting/testing as requested
 auto-lint: false
