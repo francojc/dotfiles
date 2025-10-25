@@ -24,6 +24,10 @@
       "keith/formulae/reminders-cli"
       "navi" # terminal cheat sheet
       "ncspot" # ncurses Spotify client
+      {
+        name = "neovim";
+        args = ["HEAD"];
+      }
       "nmap"
       "node" # Node.js
       "pngpaste" # paste images
