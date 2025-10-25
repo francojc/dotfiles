@@ -403,6 +403,8 @@ end)
 -- =============================================================================
 -- 7. KEY MAPPINGS
 -- =============================================================================
+-- Return to normal mode
+vim.keymap.set("i", "jj", "<Esc>")
 
 -- Clear search highlight
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
