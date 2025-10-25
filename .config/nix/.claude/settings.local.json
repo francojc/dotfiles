@@ -46,7 +46,8 @@
       "Bash(~/.npm-global/bin/copilot-api check-usage:*)",
       "Read(//Users/jeridf/.dotfiles/**)",
       "Read(//Users/jeridf/.dotfiles/.config/github-copilot/**)",
-      "Bash(~/.npm-global/bin/copilot-api:*)"
+      "Bash(~/.npm-global/bin/copilot-api:*)",
+      "Bash(/etc/profiles/per-user/francojc/bin/nvim:*)"
     ],
     "deny": []
   },

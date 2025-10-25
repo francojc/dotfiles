@@ -1,0 +1,12 @@
+{
+  "at": {
+    "prefix": "at",
+    "body": ["= {", "  $1", "};"],
+    "description": "new attrset"
+  },
+  "ate": {
+    "prefix": "ate",
+    "body": ["= {", "  enable = true;", "  $1", "};"],
+    "description": "new attrset with enable set to true"
+  }
+}

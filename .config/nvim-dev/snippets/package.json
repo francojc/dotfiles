@@ -1,0 +1,38 @@
+{
+  "name": "personal-snips",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "nix"
+        ],
+        "path": "./nix.json"
+      },
+      {
+        "language": [
+          "markdown",
+          "quarto"
+        ],
+        "path": "./markdown.json"
+      },
+      {
+        "language": [
+          "quarto"
+        ],
+        "path": "./quarto.json"
+      },
+      {
+        "language": [
+          "r"
+        ],
+        "path": "./r.json"
+      },
+      {
+        "language": [
+          "all"
+        ],
+        "path": "./all.json"
+      }
+    ]
+  }
+}
