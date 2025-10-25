@@ -11,11 +11,11 @@ architect: false
 
 # Theme: Black Metal
 # Main text colors
-user-input-color: "#f8f8f2" # "#ff79c6"
+user-input-color: "#f8f8f2"
 assistant-output-color: "#f8f8f2"
-tool-output-color: "#608787"
+tool-output-color: "#f8f8f2"
 tool-error-color: "#ff5555"
-tool-warning-color: "#CBC983"
+tool-warning-color: "#f8f8f2"
 
 # Completion menu colors (terminal-based)
 completion-menu-color: "#f8f8f2"
@@ -24,7 +24,7 @@ completion-menu-current-color: "#f8f8f2"
 completion-menu-current-bg-color: "#44475a"
 
 # Code theme for markdown syntax highlighting
-code-theme: "coffee"
+code-theme: "monokai"
 
 # Editor Configuration
 editor: nvim

@@ -201,8 +201,10 @@ plugins_installed = install_plugin("https://github.com/nvim-tree/nvim-web-devico
 plugins_installed = install_opt_plugin("https://github.com/quarto-dev/quarto-nvim", "quarto-nvim") or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/jmbuhr/otter.nvim", "otter.nvim") or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/epwalsh/obsidian.nvim", "obsidian.nvim") or plugins_installed
-plugins_installed = install_opt_plugin("https://github.com/MeanderingProgrammer/render-markdown.nvim", "render-markdown.nvim")
-	or plugins_installed
+plugins_installed = install_opt_plugin(
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
+	"render-markdown.nvim"
+) or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/preservim/vim-markdown", "vim-markdown") or plugins_installed
 plugins_installed = install_opt_plugin("https://github.com/jmbuhr/cmp-pandoc-references", "cmp-pandoc-references")
 	or plugins_installed
@@ -226,7 +228,7 @@ end
 -- Options: "tokyonight", "arthur", "autumn", "black-metal", "gruvbox",
 --          "nightfox", "onedark", "vague"
 local theme_config = {
-	colorscheme = "black-metal",
+	colorscheme = "tokyonight",
 	colors = {
 		bg = "#212e3f",
 		fg = "#cdcecf",
