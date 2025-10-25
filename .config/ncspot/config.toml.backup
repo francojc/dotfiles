@@ -1,0 +1,79 @@
+# NCSPOT
+# Core settings
+use_nerdfont = true
+gapless = true
+notify = true
+bitrate = 320
+
+# Audio/UI settings
+cover_max_scale = 2.0
+initial_screen = "queue"
+repeat = "off"
+flip_status_indicators = true
+hide_display_names = true
+
+[keybindings]
+# Navigation (Vim-like)
+"j" = "move down"
+"k" = "move up"
+"h" = "move left"
+"l" = "move right"
+"g" = "move top"
+"G" = "move bottom"
+
+# Playback controls
+"Space" = "playpause"
+"Enter" = "play"
+"n" = "next"
+"p" = "previous"
+
+# Volume control
+"+" = "volup 5"
+"-" = "voldown 5"
+"=" = "volup 5"
+
+# Seeking
+"Right" = "seek +5000"
+"Left" = "seek -5000"
+"Shift+Right" = "seek +30000"
+"Shift+Left" = "seek -30000"
+
+# Saving
+"s" = "save"
+
+# Modes
+"r" = "repeat"
+"z" = "shuffle"
+
+# Navigation/Search
+"/" = "search"
+"?" = "help"
+"o" = "open selected"
+
+# Quick tab switching
+"1" = "focus queue"
+"2" = "focus library"
+"3" = "focus search"
+
+# Utility
+"q" = "quit"
+"Esc" = "back"
+
+[theme]
+background = "black"
+primary = "light white"
+secondary = "light black"
+title = "green"
+playing = "green"
+playing_selected = "light green"
+playing_bg = "black"
+highlight = "light white"
+highlight_bg = "#484848"
+error = "light white"
+error_bg = "red"
+statusbar = "black"
+statusbar_progress = "green"
+statusbar_bg = "green"
+cmdline = "light white"
+cmdline_bg = "black"
+search_match = "light red"

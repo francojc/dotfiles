@@ -4,8 +4,7 @@
   ...
 }: let
   themes = {
-    arthur = {
-      name = "arthur";
+    arthur = let
       colors = {
         # Background colors
         bg0 = "#1c1c1c";
@@ -42,6 +41,9 @@
         cursor = "#ffa500";
         accent = "#ffa500";
       };
+    in {
+      name = "arthur";
+      inherit colors;
       ghostty = {
         theme = "Desert";
         cursor_color = "#ffa500";
@@ -59,28 +61,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light yellow";
-        playing = "light yellow";
-        playing_selected = "yellow";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#484848";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light yellow";
-        statusbar_bg = "light yellow";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_orange;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg3;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    autumn = {
-      name = "autumn";
+    autumn = let
       colors = {
         # Background colors
         bg0 = "#2d1b00";
@@ -117,6 +118,9 @@
         cursor = "#ff8c00";
         accent = "#ff8c00";
       };
+    in {
+      name = "autumn";
+      inherit colors;
       ghostty = {
         theme = "autumn";
         cursor_color = "#ff8c00";
@@ -134,28 +138,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light yellow";
-        playing = "light yellow";
-        playing_selected = "yellow";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#664200";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light yellow";
-        statusbar_bg = "light yellow";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_orange;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg3;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    blackmetal = {
-      name = "blackmetal";
+    blackmetal = let
       colors = {
         # Background colors
         bg0 = "#000000";
@@ -192,6 +195,9 @@
         cursor = "#c1c1c1";
         accent = "#c1c1c1";
       };
+    in {
+      name = "blackmetal";
+      inherit colors;
       ghostty = {
         theme = "blackmetal";
         cursor_color = "#c1c1c1";
@@ -209,28 +215,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light white";
-        playing = "light white";
-        playing_selected = "white";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#333333";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light white";
-        statusbar_bg = "light white";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.fg0;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg3;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    gruvbox = {
-      name = "gruvbox";
+    gruvbox = let
       colors = {
         # Background colors
         bg0_hard = "#1d2021";
@@ -272,6 +277,9 @@
         cursor = "#fe8019";
         accent = "#fe8019";
       };
+    in {
+      name = "gruvbox";
+      inherit colors;
       ghostty = {
         theme = "Gruvbox Dark Hard";
         cursor_color = "#fe8019";
@@ -289,28 +297,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light yellow";
-        playing = "light yellow";
-        playing_selected = "yellow";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#504945";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light yellow";
-        statusbar_bg = "light yellow";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_orange;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    nightfox = {
-      name = "nightfox";
+    nightfox = let
       colors = {
         # Background colors
         bg0 = "#192330";
@@ -347,6 +354,9 @@
         cursor = "#719cd6";
         accent = "#719cd6";
       };
+    in {
+      name = "nightfox";
+      inherit colors;
       ghostty = {
         theme = "nightfox";
         cursor_color = "#719cd6";
@@ -364,28 +374,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#29394f";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    onedark = {
-      name = "onedark";
+    onedark = let
       colors = {
         # Background colors
         bg0 = "#282c34";
@@ -428,6 +437,9 @@
         cursor = "#61afef";
         accent = "#61afef";
       };
+    in {
+      name = "onedark";
+      inherit colors;
       ghostty = {
         theme = "OneHalfDark";
         cursor_color = "#61afef";
@@ -445,28 +457,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#393f4a";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    tokyonight = {
-      name = "tokyonight";
+    tokyonight = let
       colors = {
         # Background colors
         bg0 = "#1a1b26";
@@ -503,6 +514,9 @@
         cursor = "#7aa2f7";
         accent = "#7aa2f7";
       };
+    in {
+      name = "tokyonight";
+      inherit colors;
       ghostty = {
         theme = "tokyonight";
         cursor_color = "#7aa2f7";
@@ -520,28 +534,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#24283b";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    catppuccin = {
-      name = "catppuccin";
+    catppuccin = let
       colors = {
         # Background colors
         bg0 = "#11111b";
@@ -578,6 +591,9 @@
         cursor = "#f5e0dc";
         accent = "#89b4fa";
       };
+    in {
+      name = "catppuccin";
+      inherit colors;
       ghostty = {
         theme = "Catppuccin Mocha";
         cursor_color = "#f5e0dc";
@@ -595,28 +611,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#313244";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg3;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    vscode = {
-      name = "vscode";
+    vscode = let
       colors = {
         # Background colors
         bg0 = "#1f1f1f";
@@ -653,6 +668,9 @@
         cursor = "#569cd6";
         accent = "#569cd6";
       };
+    in {
+      name = "vscode";
+      inherit colors;
       ghostty = {
         theme = "Dark+";
         cursor_color = "#569cd6";
@@ -670,28 +688,27 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#2d2d30";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
 
-    vague = {
-      name = "vague";
+    vague = let
       colors = {
         # Background colors
         bg0 = "#18191a";
@@ -728,6 +745,9 @@
         cursor = "#8db4d4";
         accent = "#8db4d4";
       };
+    in {
+      name = "vague";
+      inherit colors;
       ghostty = {
         theme = "vague";
         cursor_color = "#8db4d4";
@@ -745,23 +765,23 @@
         };
       };
       ncspot = {
-        background = "black";
-        primary = "light white";
-        secondary = "light black";
-        title = "light blue";
-        playing = "light blue";
-        playing_selected = "blue";
-        playing_bg = "black";
-        highlight = "light white";
-        highlight_bg = "#2a2d2e";
-        error = "light white";
-        error_bg = "red";
-        statusbar = "black";
-        statusbar_progress = "light blue";
-        statusbar_bg = "light blue";
-        cmdline = "light white";
-        cmdline_bg = "black";
-        search_match = "light red";
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_blue;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
   };
