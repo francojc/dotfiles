@@ -155,7 +155,18 @@ plugins_installed = install_plugin("https://github.com/L3MON4D3/LuaSnip", "LuaSn
 plugins_installed = install_plugin("https://github.com/rafamadriz/friendly-snippets", "friendly-snippets")
 	or plugins_installed
 
--- Phase 3: Essential Plugins (eager-loaded)
+-- Phase 3: Colorschemes (eager-loaded for theme switching)
+plugins_installed = install_plugin("https://github.com/thenewvu/vim-colors-arthur", "vim-colors-arthur")
+	or plugins_installed
+plugins_installed = install_plugin("https://github.com/wolloda/vim-autumn", "vim-autumn") or plugins_installed
+plugins_installed = install_plugin("https://github.com/metalelf0/black-metal-theme-neovim", "black-metal-theme-neovim")
+	or plugins_installed
+plugins_installed = install_plugin("https://github.com/ellisonleao/gruvbox.nvim", "gruvbox.nvim") or plugins_installed
+plugins_installed = install_plugin("https://github.com/EdenEast/nightfox.nvim", "nightfox.nvim") or plugins_installed
+plugins_installed = install_plugin("https://github.com/navarasu/onedark.nvim", "onedark.nvim") or plugins_installed
+plugins_installed = install_plugin("https://github.com/vague2k/vague.nvim", "vague.nvim") or plugins_installed
+
+-- Phase 4: Essential Plugins (eager-loaded)
 plugins_installed = install_plugin("https://github.com/stevearc/conform.nvim", "conform.nvim") or plugins_installed
 plugins_installed = install_plugin("https://github.com/echasnovski/mini.nvim", "mini.nvim") or plugins_installed
 plugins_installed = install_plugin("https://github.com/folke/flash.nvim", "flash.nvim") or plugins_installed
@@ -172,10 +183,63 @@ if plugins_installed then
 end
 
 -- =============================================================================
--- 4. PLUGIN CONFIGURATION
+-- 4. THEME CONFIGURATION
 -- =============================================================================
 
--- Colorscheme: Tokyonight
+-- Theme selection and configuration
+-- Change the colorscheme value to switch themes:
+-- Options: "tokyonight", "arthur", "autumn", "black-metal", "gruvbox",
+--          "nightfox", "onedark", "vague"
+local theme_config = {
+	colorscheme = "nightfox",
+	colors = {
+		bg = "#212e3f",
+		fg = "#cdcecf",
+		yellow = "#dbc074",
+	},
+}
+
+-- =============================================================================
+-- 5. PLUGIN CONFIGURATION
+-- =============================================================================
+
+-- Colorscheme configurations
+-- Arthur (no setup needed - simple colorscheme)
+-- Autumn (no setup needed - simple colorscheme)
+
+-- Black Metal
+pcall(function()
+	require("black-metal").setup()
+end)
+
+-- Gruvbox
+pcall(function()
+	require("gruvbox").setup({
+		invert_selection = true,
+		contrast = "hard",
+		overrides = {},
+	})
+end)
+
+-- Nightfox
+pcall(function()
+	require("nightfox").setup({
+		styles = {
+			comments = "italic",
+			keywords = "bold",
+			functions = "bold",
+		},
+	})
+end)
+
+-- OneDark
+pcall(function()
+	require("onedark").setup({
+		style = "darker",
+	})
+end)
+
+-- Tokyonight
 pcall(function()
 	require("tokyonight").setup({
 		style = "night",
@@ -186,7 +250,16 @@ pcall(function()
 			keywords = { italic = true },
 		},
 	})
-	vim.cmd.colorscheme("tokyonight")
+end)
+
+-- Vague
+pcall(function()
+	require("vague").setup({})
+end)
+
+-- Apply selected colorscheme
+pcall(function()
+	vim.cmd.colorscheme(theme_config.colorscheme)
 end)
 
 -- Gitsigns

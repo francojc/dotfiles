@@ -117,7 +117,7 @@
   ];
 
   # Combined package list
-  generalPackages = developmentPackages ++ cliUtilities ++ mediaDocumentPackages ++ youtubeContentPackages;
+  generalPackages = neovimPackages ++ developmentPackages ++ cliUtilities ++ mediaDocumentPackages ++ youtubeContentPackages;
 in {
   # Install general packages globally for the user
   home.packages = generalPackages;
@@ -125,18 +125,6 @@ in {
   # Configure Neovim using the dedicated home-manager module
   programs.neovim = {
     enable = true;
-    # Specify the unwrapped Neovim package. The home-manager module
-    # should handle necessary wrapping steps itself, potentially avoiding
-    # the issue in the default pkgs.neovim wrapper.
     package = pkgs.neovim-unwrapped;
-
-    # Add packages that Neovim depends on or integrates with
-    # This makes the dependency explicit and keeps the main packages list cleaner
-    extraPackages = neovimPackages;
-
-    # Your existing Neovim configuration (likely managed via home.file or similar
-    # pointing to ~/.config/nvim) will be used.
-    # No need for extraConfig or plugin management here unless you want to
-    # migrate your Lua config fully into Nix.
   };
 }

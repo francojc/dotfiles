@@ -351,6 +351,174 @@
       };
     };
 
+    tokyonight = {
+      name = "tokyonight";
+      colors = {
+        # Background colors
+        bg0 = "#1a1b26";
+        bg1 = "#1f2335";
+        bg2 = "#24283b";
+        bg3 = "#292e42";
+        bg4 = "#3b4261";
+
+        # Foreground colors
+        fg0 = "#c0caf5";
+        fg1 = "#a9b1d6";
+        fg2 = "#9aa5ce";
+        fg3 = "#828bb8";
+
+        # Accent colors
+        red = "#f7768e";
+        green = "#9ece6a";
+        yellow = "#e0af68";
+        blue = "#7aa2f7";
+        purple = "#bb9af7";
+        aqua = "#7dcfff";
+        orange = "#ff9e64";
+
+        # Bright colors
+        bright_red = "#ff7a93";
+        bright_green = "#b9f27c";
+        bright_yellow = "#ff9e64";
+        bright_blue = "#7da6ff";
+        bright_purple = "#c0a5f9";
+        bright_aqua = "#89ddff";
+        bright_orange = "#ffc777";
+
+        # Special
+        cursor = "#7aa2f7";
+        accent = "#7aa2f7";
+      };
+      ghostty = {
+        theme = "tokyonight";
+        cursor_color = "#7aa2f7";
+      };
+      vim = {
+        colorscheme = "tokyonight";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "tokyonight-night";
+        colors = {
+          bg = "#1f2335";
+          fg = "#c0caf5";
+          yellow = "#e0af68";
+        };
+      };
+    };
+
+    catppuccin = {
+      name = "catppuccin";
+      colors = {
+        # Background colors
+        bg0 = "#11111b";
+        bg1 = "#181825";
+        bg2 = "#1e1e2e";
+        bg3 = "#313244";
+        bg4 = "#45475a";
+
+        # Foreground colors
+        fg0 = "#cdd6f4";
+        fg1 = "#bac2de";
+        fg2 = "#a6adc8";
+        fg3 = "#9399b2";
+
+        # Accent colors
+        red = "#f38ba8";
+        green = "#a6e3a1";
+        yellow = "#f9e2af";
+        blue = "#89b4fa";
+        purple = "#cba6f7";
+        aqua = "#94e2d5";
+        orange = "#fab387";
+
+        # Bright colors
+        bright_red = "#f38ba8";
+        bright_green = "#a6e3a1";
+        bright_yellow = "#f9e2af";
+        bright_blue = "#89b4fa";
+        bright_purple = "#cba6f7";
+        bright_aqua = "#94e2d5";
+        bright_orange = "#fab387";
+
+        # Special
+        cursor = "#f5e0dc";
+        accent = "#89b4fa";
+      };
+      ghostty = {
+        theme = "Catppuccin Mocha";
+        cursor_color = "#f5e0dc";
+      };
+      vim = {
+        colorscheme = "catppuccin";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "catppuccin-mocha";
+        colors = {
+          bg = "#1e1e2e";
+          fg = "#cdd6f4";
+          yellow = "#f9e2af";
+        };
+      };
+    };
+
+    vscode = {
+      name = "vscode";
+      colors = {
+        # Background colors
+        bg0 = "#1f1f1f";
+        bg1 = "#252526";
+        bg2 = "#2d2d30";
+        bg3 = "#37373d";
+        bg4 = "#404040";
+
+        # Foreground colors
+        fg0 = "#d4d4d4";
+        fg1 = "#bbbbbb";
+        fg2 = "#9d9d9d";
+        fg3 = "#808080";
+
+        # Accent colors
+        red = "#f44747";
+        green = "#6a9955";
+        yellow = "#dcdcaa";
+        blue = "#569cd6";
+        purple = "#c586c0";
+        aqua = "#4ec9b0";
+        orange = "#ce9178";
+
+        # Bright colors
+        bright_red = "#f48771";
+        bright_green = "#b5cea8";
+        bright_yellow = "#d7ba7d";
+        bright_blue = "#9cdcfe";
+        bright_purple = "#c586c0";
+        bright_aqua = "#4fc1ff";
+        bright_orange = "#d16969";
+
+        # Special
+        cursor = "#569cd6";
+        accent = "#569cd6";
+      };
+      ghostty = {
+        theme = "VSCodeDark";
+        cursor_color = "#569cd6";
+      };
+      vim = {
+        colorscheme = "vscode";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "vscode";
+        colors = {
+          bg = "#1f1f1f";
+          fg = "#d4d4d4";
+          yellow = "#dcdcaa";
+        };
+      };
+    };
+
     vague = {
       name = "vague";
       colors = {

@@ -279,6 +279,53 @@ require("bufferline").setup({
 -- Autumn
 -- Black Metal
 require("black-metal").setup()
+-- Catppuccin
+require("catppuccin").setup({
+	flavour = "mocha", -- latte, frappe, macchiato, mocha
+	background = { -- :h background
+		light = "latte",
+		dark = "mocha",
+	},
+	transparent_background = false,
+	show_end_of_buffer = false,
+	term_colors = false,
+	compile_path = vim.fn.stdpath("cache") .. "/catppuccin",
+	styles = {
+		comments = { "italic" },
+		conditionals = { "italic" },
+		loops = {},
+		functions = {},
+		keywords = {},
+		strings = {},
+		variables = {},
+		numbers = {},
+		booleans = {},
+		properties = {},
+		types = {},
+		operators = {},
+	},
+	integrations = {
+		treesitter = true,
+		native_lsp = {
+			enabled = true,
+			virtual_text = {
+				errors = { "italic" },
+				hints = { "italic" },
+				warnings = { "italic" },
+				information = { "italic" },
+			},
+			underlines = {
+				errors = { "underline" },
+				hints = { "underline" },
+				warnings = { "underline" },
+				information = { "underline" },
+			},
+			inlay_hints = {
+				background = true,
+			},
+		},
+	},
+})
 -- Gruvbox
 require("gruvbox").setup({
 	invert_selection = true,
@@ -297,8 +344,52 @@ require("nightfox").setup({
 require("onedark").setup({
 	style = "darker",
 })
+-- Tokyo Night
+require("tokyonight").setup({
+	style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night`, and `day`
+	light_style = "day", -- The theme is used when the background is set to light
+	transparent = false, -- Enable this to disable setting the background color
+	terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+	styles = {
+		-- Style to be applied to different syntax groups
+		-- Value is any valid attr-list value for `:highlight` command
+		comments = { italic = true },
+		keywords = { italic = true },
+		functions = {},
+		variables = {},
+		-- Background styles. Can be "dark", "transparent" or "normal"
+		sidebars = "dark", -- style for sidebars, see below
+		floats = "dark", -- style for floating windows
+	},
+	sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+	day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+	hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **StatusLineNC** highlights
+	dim_inactive = false, -- dims inactive windows
+	lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
+})
 -- Vague
 require("vague").setup({})
+-- VS Code
+require("vscode").setup({
+	-- Alternatively set style in setup
+	style = "dark",
+	-- Enable transparent background
+	transparent = false,
+	-- Enable italic comment
+	italic_comments = false,
+	-- Disable nvim-tree background color
+	disable_nvimtree_bg = true,
+	-- Override colors (see ./lua/vscode/colors.lua)
+	color_overrides = {
+		vscLineNumber = "#FFFFFF",
+	},
+	-- Override highlight groups (see ./lua/vscode/theme.lua)
+	group_overrides = {
+		-- this supports the same val table as vim.api.nvim_set_hl
+		-- example:
+		Comment = { fg = "#FF0000", bg = "#0000FF", italic = true },
+	},
+})
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 

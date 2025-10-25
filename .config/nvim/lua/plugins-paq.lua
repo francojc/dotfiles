@@ -7,10 +7,13 @@ require("paq")({
 	"thenewvu/vim-colors-arthur", -- Arthur theme
 	"wolloda/vim-autumn", -- Autumn theme
 	"metalelf0/black-metal-theme-neovim", -- Black Metal theme
+	"catppuccin/nvim", -- Catppuccin theme
 	"ellisonleao/gruvbox.nvim", -- Gruvbox theme
 	"EdenEast/nightfox.nvim", -- theme
 	"navarasu/onedark.nvim", -- One Dark theme
+	"folke/tokyonight.nvim", -- Tokyo Night theme
 	"vague2k/vague.nvim", -- Vague theme
+	"Mofiqul/vscode.nvim", -- VS Code theme
 
 	-- Eager-loaded plugins (core functionality)
 	"Saghen/blink.cmp", -- Blink completion
