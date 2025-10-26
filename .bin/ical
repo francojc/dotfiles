@@ -176,9 +176,21 @@ generate_ics_file() {
   # Ensure the target directory exists
   mkdir -p "$(dirname "$target_file")" || die "Failed to create directory $(dirname "$target_file")"
 
-  if ! reminders show-all --format json | jq -r "$filter" > "$target_file"; then
+  # Check if reminders-cli has access first
+  local reminders_output
+  if ! reminders_output=$(reminders show-all --format json 2>&1); then
+      die "reminders-cli access denied: $reminders_output. Please grant reminders access in System Settings."
+  fi
+
+  # Check if output looks like JSON (starts with [ or {)
+  if [[ ! "$reminders_output" =~ ^[\[\{] ]]; then
+      die "reminders-cli did not return valid JSON: $reminders_output"
+  fi
+
+  # Process the JSON with jq
+  if ! echo "$reminders_output" | jq -r "$filter" > "$target_file"; then
       # Preserve potentially incomplete file for debugging, but report error
-      die "Failed during reminders export or jq conversion or file saving to $target_file."
+      die "Failed during jq conversion or file saving to $target_file."
   fi
 }
 

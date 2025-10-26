@@ -595,7 +595,7 @@
       name = "catppuccin";
       inherit colors;
       ghostty = {
-        theme = "Catppuccin Mocha";
+        theme = "catppuccin-mocha";
         cursor_color = "#f5e0dc";
       };
       vim = {
@@ -603,7 +603,7 @@
         background = "dark";
       };
       neovim = {
-        colorscheme = "catppuccin-mocha";
+        colorscheme = "catppuccin";
         colors = {
           bg = "#1e1e2e";
           fg = "#cdd6f4";
