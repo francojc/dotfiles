@@ -53,7 +53,7 @@ return {
 			-- Only setup if not already configured
 			if not vim.g.obsidian_setup_done then
 				require("obsidian").setup({
-					legacy_commands = false,
+					legacy_commands = true,
 					ui = {
 						enable = false,
 					},
