@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mail --help)"
+      "Bash(mail --help)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
