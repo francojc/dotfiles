@@ -6,7 +6,9 @@
       "Read(//Users/francojc/.config/aerc/templates/**)",
       "Bash(cat:*)",
       "Bash(stat:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Read(//Users/francojc/Library/Preferences/**)",
+      "Bash(pandoc:*)"
     ],
     "deny": [],
     "ask": []

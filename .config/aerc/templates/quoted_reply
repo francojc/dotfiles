@@ -9,7 +9,9 @@ On {{dateFormat (.OriginalDate | toLocal) "Mon Jan 2, 2006 at 3:04 PM MST"}}, {{
 {{- else -}}
 {{- trimSignature .OriginalText | quote -}}
 {{- end}}
+{{- if not (.OriginalHeader "In-Reply-To") -}}
 {{- with .Signature }}
 
 {{.}}
 {{- end }}
+{{- end -}}
