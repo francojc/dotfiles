@@ -3,7 +3,10 @@
     "allow": [
       "Bash(mail --help)",
       "WebSearch",
-      "Read(//Users/francojc/.config/aerc/templates/**)"
+      "Read(//Users/francojc/.config/aerc/templates/**)",
+      "Bash(cat:*)",
+      "Bash(stat:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []
