@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(mail --help)",
-      "WebSearch"
+      "WebSearch",
+      "Read(//Users/francojc/.config/aerc/templates/**)"
     ],
     "deny": [],
     "ask": []
