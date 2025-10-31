@@ -1,5 +1,5 @@
 {...}: {
-  xdg.configFile."reddix/config.yaml" = {
+  home.file.".config/reddix/config.yaml" = {
     text = ''
       # Reddix configuration
       # Managed by Nix - see ~/.dotfiles/.config/nix/home/reddix.nix

@@ -99,8 +99,8 @@
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
             echo "" >&2
             echo "Please store your Reddit API credentials in pass:" >&2
-            echo "  pass insert reddit/client_id" >&2
-            echo "  pass insert reddit/client_secret" >&2
+            echo "  pass insert USER/REDDIT_CLIENT_ID" >&2
+            echo "  pass insert SECRET/REDDIT_CLIENT_SECRET" >&2
             echo "" >&2
             echo "To obtain Reddit API credentials:" >&2
             echo "  1. Go to https://www.reddit.com/prefs/apps" >&2
