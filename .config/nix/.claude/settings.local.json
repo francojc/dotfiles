@@ -49,7 +49,10 @@
       "Bash(~/.npm-global/bin/copilot-api:*)",
       "Bash(/etc/profiles/per-user/francojc/bin/nvim:*)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "/Users/francojc/.config/reddix/"
+    ]
   },
   "outputStyle": "default"
 }
