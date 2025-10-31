@@ -5,7 +5,7 @@
 }: {
   programs.tmux = {
     enable = true;
-    terminal = "tmux-256color";
+    terminal = "xterm-kitty";
     historyLimit = 100000;
     baseIndex = 1;
     mouse = true;
@@ -23,8 +23,11 @@
       # Clipboard support
       set -g set-clipboard on
 
-      # True color support and terminal overrides
-      set -ga terminal-overrides "xterm-ghostty"
+      # True color support and terminal overrides for Kitty
+      set -ga terminal-overrides ",xterm-kitty:RGB"
+      set -ga terminal-overrides ",xterm-kitty:Tc"
+      set -ga terminal-overrides ",*:Smulx=\E[4::%p1%dm"
+      set -ga terminal-overrides ",*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m"
 
       # Pane base index
       setw -g pane-base-index 1
