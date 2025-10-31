@@ -89,25 +89,15 @@ end
 -- Send config to alpha
 alpha.setup(dashboard.config)
 
----| Snippets (LuaSnip) ----------------------------------
--- Load VSCode-style snippets (friendly + personal)
-local ok_luasnip, luasnip = pcall(require, "luasnip")
-if ok_luasnip then
-	-- friendly-snippets
-	pcall(function()
-		require("luasnip.loaders.from_vscode").lazy_load()
-	end)
-	-- personal snippets
-	pcall(function()
-		require("luasnip.loaders.from_vscode").lazy_load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
-	end)
-	luasnip.config.setup({ enable_autosnippets = false })
-end
-
 ---| Blink ----------------------------------
 require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
+	},
+	snippets = {
+		expand = function(snippet)
+			vim.snippet.expand(snippet)
+		end,
 	},
 	completion = {
 		list = {

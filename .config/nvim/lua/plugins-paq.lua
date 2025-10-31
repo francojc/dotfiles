@@ -39,7 +39,6 @@ require("paq")({
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
-	"L3MON4D3/LuaSnip", -- Snippet engine
 	"rafamadriz/friendly-snippets", -- Snippets
 	"rcarriga/nvim-notify", -- Notifications
 	"savq/paq-nvim", -- Paq manages itself
