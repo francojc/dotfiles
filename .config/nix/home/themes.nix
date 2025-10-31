@@ -456,7 +456,7 @@
       name = "onedark";
       inherit colors;
       ghostty = {
-        theme = "OneHalfDark";
+        theme = "One Half Dark";
         cursor_color = "#61afef";
       };
       kitty = {
