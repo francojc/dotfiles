@@ -10,6 +10,8 @@
       # ~/.dotfiles/.config/nix/modules/darwin/reddix.nix
       #
       reddit:
+        client_id: ""
+        client_secret: ""
         user_agent: "reddix/0.1 (+https://github.com/ck-zhang/reddix)"
         scopes:
           - identity
