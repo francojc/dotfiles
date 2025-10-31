@@ -15,6 +15,7 @@
     ../../profiles/darwin/configuration.nix
     ../../modules/darwin/copilot-api.nix
     ../../modules/darwin/ollama.nix
+    ../../modules/darwin/reddix.nix
 
     # Inline module for host-specific service configuration
     {

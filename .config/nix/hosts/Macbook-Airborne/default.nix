@@ -13,6 +13,7 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
+    ../../modules/darwin/reddix.nix
   ];
 
   # Home Manager host-specific modules (if any)

@@ -1,14 +1,15 @@
-{...}: let
-  clientId = builtins.getEnv "REDDIT_CLIENT_ID";
-  clientSecret = builtins.getEnv "REDDIT_CLIENT_SECRET";
-in {
+{...}: {
   xdg.configFile."reddix/config.yaml" = {
     text = ''
       # Reddix configuration
       # Managed by Nix - see ~/.dotfiles/.config/nix/home/reddix.nix
+      #
+      # CREDENTIALS NOTE:
+      # Reddit API credentials (client_id and client_secret) are populated at runtime
+      # by the reddix wrapper script from the pass password manager. See:
+      # ~/.dotfiles/.config/nix/modules/darwin/reddix.nix
+      #
       reddit:
-        client_id: "${clientId}"
-        client_secret: "${clientSecret}"
         user_agent: "reddix/0.1 (+https://github.com/ck-zhang/reddix)"
         scopes:
           - identity
