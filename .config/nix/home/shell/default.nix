@@ -33,6 +33,7 @@
         export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
         export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
+        export PATH="${config.home.homeDirectory}/.cargo/bin:$PATH" # rust cargo
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
