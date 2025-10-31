@@ -22,7 +22,6 @@
       "borders" # jankyborders
       "huggingface-cli"
       "keith/formulae/reminders-cli"
-      "navi" # terminal cheat sheet
       "ncspot" # ncurses Spotify client
       {
         name = "neovim";
