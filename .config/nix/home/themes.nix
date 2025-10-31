@@ -48,6 +48,9 @@
         theme = "Desert";
         cursor_color = "#ffa500";
       };
+      kitty = {
+        theme_name = "arthur";
+      };
       vim = {
         colorscheme = "desert";
         background = "dark";
@@ -125,6 +128,9 @@
         theme = "autumn";
         cursor_color = "#ff8c00";
       };
+      kitty = {
+        theme_name = "autumn";
+      };
       vim = {
         colorscheme = "autumn";
         background = "dark";
@@ -201,6 +207,9 @@
       ghostty = {
         theme = "blackmetal";
         cursor_color = "#c1c1c1";
+      };
+      kitty = {
+        theme_name = "blackmetal";
       };
       vim = {
         colorscheme = "blackmetal";
@@ -284,6 +293,9 @@
         theme = "Gruvbox Dark Hard";
         cursor_color = "#fe8019";
       };
+      kitty = {
+        theme_name = "gruvbox";
+      };
       vim = {
         colorscheme = "gruvbox";
         background = "dark";
@@ -360,6 +372,9 @@
       ghostty = {
         theme = "nightfox";
         cursor_color = "#719cd6";
+      };
+      kitty = {
+        theme_name = "nightfox";
       };
       vim = {
         colorscheme = "nightfox";
@@ -444,6 +459,9 @@
         theme = "OneHalfDark";
         cursor_color = "#61afef";
       };
+      kitty = {
+        theme_name = "onedark";
+      };
       vim = {
         colorscheme = "onedark";
         background = "dark";
@@ -520,6 +538,9 @@
       ghostty = {
         theme = "tokyonight";
         cursor_color = "#7aa2f7";
+      };
+      kitty = {
+        theme_name = "tokyonight";
       };
       vim = {
         colorscheme = "tokyonight";
@@ -598,6 +619,9 @@
         theme = "catppuccin-mocha";
         cursor_color = "#f5e0dc";
       };
+      kitty = {
+        theme_name = "catppuccin";
+      };
       vim = {
         colorscheme = "catppuccin";
         background = "dark";
@@ -675,6 +699,9 @@
         theme = "Dark+";
         cursor_color = "#569cd6";
       };
+      kitty = {
+        theme_name = "vscode";
+      };
       vim = {
         colorscheme = "vscode";
         background = "dark";
@@ -751,6 +778,9 @@
       ghostty = {
         theme = "vague";
         cursor_color = "#8db4d4";
+      };
+      kitty = {
+        theme_name = "vague";
       };
       vim = {
         colorscheme = "vague";

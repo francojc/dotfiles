@@ -20,17 +20,18 @@
 
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [
-    firefox
     # Essential desktop utilities for i3
-    i3status # Status bar for i3
-    dmenu # Application launcher
-    alacritty # Terminal emulator
-    pcmanfm # File manager
-    feh # Image viewer and wallpaper setter
     # Network and system utilities
+    alacritty # Terminal emulator
+    dmenu # Application launcher
+    feh # Image viewer and wallpaper setter
+    firefox
+    flameshot # Screenshot tool
+    i3status # Status bar for i3
+    kitty # Terminal emulator
     networkmanagerapplet # Network manager GUI
     pavucontrol # PulseAudio volume control
-    flameshot # Screenshot tool
+    pcmanfm # File manager
     xfce.mousepad # Simple text editor
   ];
 
@@ -42,4 +43,3 @@
   # settings for stateful data were taken. Important for stability.
   system.stateVersion = "24.05"; # Keep consistent with original
 }
-
