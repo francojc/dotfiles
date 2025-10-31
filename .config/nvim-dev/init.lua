@@ -130,7 +130,8 @@ else
 	-- Fallback for 0.11 and earlier
 	vim.opt.completeopt = "menu,menuone,noselect"
 	vim.notify(
-		"Neovim 0.12+ required for full feature set. Current version: " .. vim.fn.execute("version"):match("NVIM v[%d.]+"),
+		"Neovim 0.12+ required for full feature set. Current version: "
+			.. vim.fn.execute("version"):match("NVIM v[%d.]+"),
 		vim.log.levels.WARN
 	)
 end
@@ -953,138 +954,138 @@ end
 
 -- TypeScript/JavaScript
 if is_012_or_later then
-vim.lsp.config("ts_ls", {
-	cmd = { "typescript-language-server", "--stdio" },
-	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
-	on_attach = on_attach,
-})
+	vim.lsp.config("ts_ls", {
+		cmd = { "typescript-language-server", "--stdio" },
+		filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+		root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
+		on_attach = on_attach,
+	})
 
--- Lua
-vim.lsp.config("lua_ls", {
-	cmd = { "lua-language-server" },
-	filetypes = { "lua" },
-	root_markers = {
-		".luarc.json",
-		".luarc.jsonc",
-		".luacheckrc",
-		".stylua.toml",
-		"stylua.toml",
-		"selene.toml",
-		"selene.yml",
-		".git",
-	},
-	on_attach = on_attach,
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			diagnostics = {
-				globals = { "vim" },
-			},
-			workspace = {
-				library = vim.api.nvim_get_runtime_file("", true),
-				checkThirdParty = false,
-			},
-			telemetry = { enable = false },
+	-- Lua
+	vim.lsp.config("lua_ls", {
+		cmd = { "lua-language-server" },
+		filetypes = { "lua" },
+		root_markers = {
+			".luarc.json",
+			".luarc.jsonc",
+			".luacheckrc",
+			".stylua.toml",
+			"stylua.toml",
+			"selene.toml",
+			"selene.yml",
+			".git",
 		},
-	},
-})
-
--- Bash
-vim.lsp.config("bashls", {
-	cmd = { "bash-language-server", "start" },
-	filetypes = { "sh", "bash" },
-	root_markers = { ".git" },
-	on_attach = on_attach,
-})
-
--- Nix
-vim.lsp.config("nil_ls", {
-	cmd = { "nil" },
-	filetypes = { "nix" },
-	root_markers = { "flake.nix", "default.nix", ".git" },
-	on_attach = on_attach,
-	settings = {
-		["nil"] = {
-			formatting = {
-				command = { "nixpkgs-fmt" },
+		on_attach = on_attach,
+		settings = {
+			Lua = {
+				runtime = { version = "LuaJIT" },
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					library = vim.api.nvim_get_runtime_file("", true),
+					checkThirdParty = false,
+				},
+				telemetry = { enable = false },
 			},
 		},
-	},
-})
+	})
 
--- Python
-vim.lsp.config("pyright", {
-	cmd = { "pyright-langserver", "--stdio" },
-	filetypes = { "python" },
-	root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git" },
-	on_attach = on_attach,
-	settings = {
-		python = {
-			analysis = {
-				autoSearchPaths = true,
-				diagnosticMode = "workspace",
-				useLibraryCodeForTypes = true,
+	-- Bash
+	vim.lsp.config("bashls", {
+		cmd = { "bash-language-server", "start" },
+		filetypes = { "sh", "bash" },
+		root_markers = { ".git" },
+		on_attach = on_attach,
+	})
+
+	-- Nix
+	vim.lsp.config("nil_ls", {
+		cmd = { "nil" },
+		filetypes = { "nix" },
+		root_markers = { "flake.nix", "default.nix", ".git" },
+		on_attach = on_attach,
+		settings = {
+			["nil"] = {
+				formatting = {
+					command = { "nixpkgs-fmt" },
+				},
 			},
 		},
-	},
-})
+	})
 
--- YAML with Quarto schema support
-vim.lsp.config("yamlls", {
-	cmd = { "yaml-language-server", "--stdio" },
-	filetypes = { "yaml", "yml" },
-	root_markers = { ".git" },
-	on_attach = on_attach,
-	settings = {
-		yaml = {
-			schemas = {
-				-- Quarto schema for .qmd YAML headers
-				["https://raw.githubusercontent.com/quarto-dev/quarto-cli/main/src/resources/yaml-intelligence-resources/quarto-editor-schema.json"] = "*.qmd",
+	-- Python
+	vim.lsp.config("pyright", {
+		cmd = { "pyright-langserver", "--stdio" },
+		filetypes = { "python" },
+		root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git" },
+		on_attach = on_attach,
+		settings = {
+			python = {
+				analysis = {
+					autoSearchPaths = true,
+					diagnosticMode = "workspace",
+					useLibraryCodeForTypes = true,
+				},
 			},
-			validate = true,
-			hover = true,
-			completion = true,
 		},
-	},
-})
+	})
 
--- Enable language servers for their respective filetypes
--- Note: R LSP is manually toggled with <leader>tr, not auto-started
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = {
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"lua",
-		"sh",
-		"bash",
-		"nix",
-		"python",
-		"yaml",
-		"yml",
-	},
-	callback = function(args)
-		local server_map = {
-			javascript = "ts_ls",
-			javascriptreact = "ts_ls",
-			typescript = "ts_ls",
-			typescriptreact = "ts_ls",
-			lua = "lua_ls",
-			sh = "bashls",
-			bash = "bashls",
-			nix = "nil_ls",
-			python = "pyright",
-			yaml = "yamlls",
-			yml = "yamlls",
-		}
-		local server = server_map[vim.bo[args.buf].filetype]
-		if server then
-			vim.lsp.enable(server)
-		end
-	end,
-})
+	-- YAML with Quarto schema support
+	vim.lsp.config("yamlls", {
+		cmd = { "yaml-language-server", "--stdio" },
+		filetypes = { "yaml", "yml" },
+		root_markers = { ".git" },
+		on_attach = on_attach,
+		settings = {
+			yaml = {
+				schemas = {
+					-- Quarto schema for .qmd YAML headers
+					["https://raw.githubusercontent.com/quarto-dev/quarto-cli/main/src/resources/yaml-intelligence-resources/quarto-editor-schema.json"] = "*.qmd",
+				},
+				validate = true,
+				hover = true,
+				completion = true,
+			},
+		},
+	})
+
+	-- Enable language servers for their respective filetypes
+	-- Note: R LSP is manually toggled with <leader>tr, not auto-started
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = {
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+			"lua",
+			"sh",
+			"bash",
+			"nix",
+			"python",
+			"yaml",
+			"yml",
+		},
+		callback = function(args)
+			local server_map = {
+				javascript = "ts_ls",
+				javascriptreact = "ts_ls",
+				typescript = "ts_ls",
+				typescriptreact = "ts_ls",
+				lua = "lua_ls",
+				sh = "bashls",
+				bash = "bashls",
+				nix = "nil_ls",
+				python = "pyright",
+				yaml = "yamlls",
+				yml = "yamlls",
+			}
+			local server = server_map[vim.bo[args.buf].filetype]
+			if server then
+				vim.lsp.enable(server)
+			end
+		end,
+	})
 end -- Close the if is_012_or_later block for LSP configuration
 
 -- =============================================================================
@@ -1422,9 +1423,7 @@ function _G.Toggle_r_language_server()
 		local bufname = vim.api.nvim_buf_get_name(0)
 
 		-- Find project root: DESCRIPTION (R package) → .git → current directory
-		local root_dir = vim.fs.root(bufname, "DESCRIPTION")
-			or vim.fs.root(bufname, ".git")
-			or vim.fs.dirname(bufname)
+		local root_dir = vim.fs.root(bufname, "DESCRIPTION") or vim.fs.root(bufname, ".git") or vim.fs.dirname(bufname)
 
 		if root_dir then
 			-- Get capabilities for native 0.12 completion

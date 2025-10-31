@@ -80,60 +80,60 @@ Both markdown.lua and quarto.lua are version-agnostic and can be copied directly
 **Academic Writing (8 plugins):**
 
 1. `quarto-nvim` - Quarto document support [LAZY: ft=quarto]
-2. `obsidian.nvim` - Note management [LAZY: ft=markdown]
-3. `render-markdown.nvim` - Live markdown rendering [LAZY: ft=markdown,quarto]
-4. `otter.nvim` - Embedded code LSP [LAZY: ft=quarto]
-5. `vim-markdown` - Markdown navigation [LAZY: ft=markdown]
-6. `cmp-pandoc-references` - Citation completion [LAZY: ft=markdown,quarto]
-7. `image.nvim` - Image rendering [LAZY: ft=markdown,quarto]
-8. `img-clip.nvim` - Image pasting [LAZY: ft=markdown,quarto]
+1. `obsidian.nvim` - Note management [LAZY: ft=markdown]
+1. `render-markdown.nvim` - Live markdown rendering [LAZY: ft=markdown,quarto]
+1. `otter.nvim` - Embedded code LSP [LAZY: ft=quarto]
+1. `vim-markdown` - Markdown navigation [LAZY: ft=markdown]
+1. `cmp-pandoc-references` - Citation completion [LAZY: ft=markdown,quarto]
+1. `image.nvim` - Image rendering [LAZY: ft=markdown,quarto]
+1. `img-clip.nvim` - Image pasting [LAZY: ft=markdown,quarto]
 
 **AI Tools (2 plugins):**
 
 1. `copilot.vim` - GitHub Copilot [EAGER]
-2. `sidekick.nvim` - Claude AI assistant [EAGER]
+1. `sidekick.nvim` - Claude AI assistant [EAGER]
 
 **Advanced Editing (5 plugins):**
 
 1. `conform.nvim` - Code formatting [EAGER]
-2. `mini.nvim` (icons, pairs, surround, indentscope) [EAGER]
-3. `flash.nvim` - Enhanced jump motions [EAGER]
-4. `nvim-colorizer.lua` - Color code visualization [LAZY: cmd]
-5. `which-key.nvim` - Keymap help [EAGER]
+1. `mini.nvim` (icons, pairs, surround, indentscope) [EAGER]
+1. `flash.nvim` - Enhanced jump motions [EAGER]
+1. `nvim-colorizer.lua` - Color code visualization [LAZY: cmd]
+1. `which-key.nvim` - Keymap help [EAGER]
 
 **Git Tools (2 plugins):**
 
 1. `lazygit.nvim` - Git UI [LAZY: cmd=LazyGit]
-2. ✅ Already have: gitsigns.nvim [EAGER]
+1. ✅ Already have: gitsigns.nvim [EAGER]
 
 **Supporting Libraries:**
 
 1. `vim-tmux-navigator` - Seamless vim/tmux navigation [EAGER]
-2. `friendly-snippets` - VSCode snippet library [EAGER]
-3. ✅ Already have: plenary.nvim, nvim-web-devicons
+1. `friendly-snippets` - VSCode snippet library [EAGER]
+1. ✅ Already have: plenary.nvim, nvim-web-devicons
 
 ### ❌ WON'T PORT (Redundant or Not Needed)
 
 1. **paq-nvim** - Replaced by native `vim.pack`
-2. **lz.n** - Use simpler native lazy loading with `packadd`
-3. **blink.cmp** - Using native 0.12 completion
-4. **nvim-lspconfig** - Replaced by native `vim.lsp.config()`
-5. **bufferline.nvim** - Keep it minimal (use FzfLua for buffer switching)
-6. **alpha-nvim** - Keep startup fast for testing
-7. **fidget.nvim / nvim-notify** - Use native notifications for now
-8. **toggleterm.nvim** - Already have Yazi, keep it simple
-9. **aerial.nvim** - Can use FzfLua symbols instead
-10. **todo-comments.nvim** - Can add later if needed
-11. **csvview.nvim** - Specialized, add if needed
-12. **snacks.nvim** - Not essential for testing
+1. **lz.n** - Use simpler native lazy loading with `packadd`
+1. **blink.cmp** - Using native 0.12 completion
+1. **nvim-lspconfig** - Replaced by native `vim.lsp.config()`
+1. **bufferline.nvim** - Keep it minimal (use FzfLua for buffer switching)
+1. **alpha-nvim** - Keep startup fast for testing
+1. **fidget.nvim / nvim-notify** - Use native notifications for now
+1. **toggleterm.nvim** - Already have Yazi, keep it simple
+1. **aerial.nvim** - Can use FzfLua symbols instead
+1. **todo-comments.nvim** - Can add later if needed
+1. **csvview.nvim** - Specialized, add if needed
+1. **snacks.nvim** - Not essential for testing
 
 ### 🟡 QUESTIONABLE (Need Compatibility Check)
 
 These plugins might have 0.12 compatibility issues:
 
 1. **image.nvim** - Uses ImageMagick, might need testing
-2. **render-markdown.nvim** - Heavy UI manipulation, test carefully
-3. **obsidian.nvim** - Complex plugin, verify 0.12 compatibility
+1. **render-markdown.nvim** - Heavy UI manipulation, test carefully
+1. **obsidian.nvim** - Complex plugin, verify 0.12 compatibility
 
 **Strategy:** Add these last, one at a time, and test thoroughly
 
@@ -157,20 +157,20 @@ These plugins might have 0.12 compatibility issues:
 ### Phase 1: Foundation (Core Enhancements) ✅ COMPLETE
 
 1. **Add improved vim options** from 0.11 (breakindent, cmdheight, undodir, etc.) ✅
-2. **Port all keymaps** organized by prefix (`<leader>f`, `<leader>g`, etc.) ✅
-3. **Add custom functions** (toggle functions, session management) ✅
-4. **Enhanced autocmds** (spell language detection, markdown navigation) ✅
-5. **Add Python LSP** (pyright) and **YAML LSP** (yamlls) to existing LSP configs ✅
+1. **Port all keymaps** organized by prefix (`<leader>f`, `<leader>g`, etc.) ✅
+1. **Add custom functions** (toggle functions, session management) ✅
+1. **Enhanced autocmds** (spell language detection, markdown navigation) ✅
+1. **Add Python LSP** (pyright) and **YAML LSP** (yamlls) to existing LSP configs ✅
 
 All foundation elements are in place with 100+ keymaps, comprehensive autocmds, and full LSP coverage.
 
 ### Phase 2: Snippet System ✅ COMPLETE
 
 1. **Create `snippets/` directory structure** in nvim-dev ✅
-2. **Copy all 6 snippet files** from 0.11 config ✅
-3. **Configure LuaSnip** to load VSCode-style snippets from directory ✅
-4. **Add friendly-snippets** plugin for additional snippet library ✅
-5. **Keep native completion** for keyword/fuzzy matching ✅
+1. **Copy all 6 snippet files** from 0.11 config ✅
+1. **Configure LuaSnip** to load VSCode-style snippets from directory ✅
+1. **Add friendly-snippets** plugin for additional snippet library ✅
+1. **Keep native completion** for keyword/fuzzy matching ✅
 
 All snippets are loaded and working with native 0.12 completion. Custom snippets in snippets/ directory, friendly-snippets provides additional library.
 
@@ -179,13 +179,13 @@ All snippets are loaded and working with native 0.12 completion. Custom snippets
 Add core plugins that should always be available:
 
 1. `conform.nvim` - Formatting with shfmt, stylua, mdformat, alejandra, ruff ✅
-2. `mini.nvim` (4 modules) - Icons, pairs, surround, indentscope ✅
-3. `flash.nvim` - Jump motions ✅
-4. `copilot.vim` - AI assistance ✅
-5. `sidekick.nvim` - Claude AI ❌ NOT INSTALLED
-6. `which-key.nvim` - Keymap help ✅
-7. `vim-tmux-navigator` - Tmux integration ✅
-8. `nvim-web-devicons` - File icons ✅
+1. `mini.nvim` (4 modules) - Icons, pairs, surround, indentscope ✅
+1. `flash.nvim` - Jump motions ✅
+1. `copilot.vim` - AI assistance ✅
+1. `sidekick.nvim` - Claude AI ❌ NOT INSTALLED
+1. `which-key.nvim` - Keymap help ✅
+1. `vim-tmux-navigator` - Tmux integration ✅
+1. `nvim-web-devicons` - File icons ✅
 
 Note: sidekick.nvim is optional. All other essential plugins are installed and configured.
 
@@ -194,7 +194,7 @@ Note: sidekick.nvim is optional. All other essential plugins are installed and c
 Implement opt plugin loading system:
 
 1. **Create helper function** for lazy loading with `packadd` ✅
-2. **Add lazy plugins:**
+1. **Add lazy plugins:**
    - `lazygit.nvim` (cmd: LazyGit) ✅
    - `quarto-nvim` (ft: quarto) ✅
    - `otter.nvim` (ft: quarto) ✅
@@ -211,7 +211,7 @@ All lazy-loaded plugins are configured with proper FileType and Command triggers
 Both image plugins installed and configured:
 
 1. `image.nvim` - Image rendering in terminal ✅ INSTALLED (init.lua:712-748)
-2. `img-clip.nvim` - Image pasting from clipboard ✅ INSTALLED (init.lua:750-785)
+1. `img-clip.nvim` - Image pasting from clipboard ✅ INSTALLED (init.lua:750-785)
 
 **Important Notes:**
 
@@ -230,17 +230,17 @@ Both image plugins installed and configured:
 ### Phase 6: Filetype Configurations ⏸️ OPTIONAL
 
 1. **Create `ftplugin/` directory** ❌ NOT CREATED
-2. **Copy markdown.lua** and **quarto.lua** from 0.11 ❌ NOT CREATED
-3. **Verify behavior** with Quarto documents
+1. **Copy markdown.lua** and **quarto.lua** from 0.11 ❌ NOT CREATED
+1. **Verify behavior** with Quarto documents
 
 Note: Currently all markdown/quarto functionality is handled via autocmds (init.lua:1318-1345). Filetype plugins are optional organizational preference. The ftplugin approach would be cleaner but functionally equivalent to current autocmd approach.
 
 ### Phase 7: Theme Integration 3/4 COMPLETE
 
 1. **Add gruvbox.nvim** (your preferred theme from 0.11) ✅
-2. **Configure hard contrast + inverted selection** ✅
-3. **Set up theme-specific highlights** for Copilot/Sidekick ❌ NOT CONFIGURED
-4. **Keep tokyonight** as fallback option ✅
+1. **Configure hard contrast + inverted selection** ✅
+1. **Set up theme-specific highlights** for Copilot/Sidekick ❌ NOT CONFIGURED
+1. **Keep tokyonight** as fallback option ✅
 
 Multiple themes are installed and configured (tokyonight, gruvbox, nightfox, onedark, vague, arthur, autumn, black-metal). Gruvbox has hard contrast and invert_selection configured. Theme-specific AI assistant highlights are optional polish items.
 
@@ -454,9 +454,9 @@ Note: Markdown/Quarto functionality is currently handled via autocmds (init.lua:
 ### Optional Components Not Added
 
 1. **sidekick.nvim** - Claude AI assistant plugin (optional)
-2. **ftplugin/markdown.lua** - Markdown-specific settings (optional - functionality in autocmds)
-3. **ftplugin/quarto.lua** - Quarto-specific settings (optional - functionality in autocmds)
-4. **Theme-specific highlights** - Custom highlights for AI assistant suggestions (polish item)
+1. **ftplugin/markdown.lua** - Markdown-specific settings (optional - functionality in autocmds)
+1. **ftplugin/quarto.lua** - Quarto-specific settings (optional - functionality in autocmds)
+1. **Theme-specific highlights** - Custom highlights for AI assistant suggestions (polish item)
 
 ## 0.12+ Specific Enhancements
 
