@@ -1,7 +1,14 @@
-#  Reddix configuration
+# Reddix configuration
+# Managed by Nix - see ~/.dotfiles/.config/nix/home/reddix.nix
+#
+# CREDENTIALS NOTE:
+# Reddit API credentials (client_id and client_secret) are populated at runtime
+# by the reddix wrapper script from the pass password manager. See:
+# ~/.dotfiles/.config/nix/modules/darwin/reddix.nix
+#
 reddit:
-  client_id: "your-client-id"
-  client_secret: "your-client-secret"
+  client_id: "l-dxOF5WdfHeX3ALjDAqHA"
+  client_secret: "Tq_WLS13buw1n0Je5wa7rOQEA919ew"
   user_agent: "reddix/0.1 (+https://github.com/ck-zhang/reddix)"
   scopes:
     - identity

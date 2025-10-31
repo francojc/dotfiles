@@ -1,42 +1,4 @@
 # Reddix Wrapper with pass Integration
-#
-# This module provides a wrapper for the reddix Reddit terminal client that
-# automatically populates Reddit API credentials from the pass password manager.
-#
-# AUTHENTICATION APPROACH:
-# ========================
-# Reddit API credentials (client_id and client_secret) are sensitive and should
-# not be stored in the Nix store. This wrapper implements runtime secret injection
-# using the pass password manager.
-#
-# SOLUTION: Runtime Secret Population
-# ------------------------------------
-# Instead of baking secrets into the Nix configuration, this module:
-# 1. Generates a base config template with empty credential fields
-# 2. Wraps the reddix binary to check for missing credentials on startup
-# 3. Retrieves credentials from pass and updates the config if needed
-# 4. Then executes the actual reddix command
-#
-# SETUP REQUIREMENTS:
-# -------------------
-# Store your Reddit API credentials in pass before first use:
-#   pass insert USER/REDDIT_CLIENT_ID
-#   pass insert SECRET/REDDIT_CLIENT_SECRET
-#
-# To obtain Reddit API credentials:
-# 1. Go to https://www.reddit.com/prefs/apps
-# 2. Click "create another app..." or "are you a developer? create an app..."
-# 3. Select "script" as the app type
-# 4. Set redirect URI to: http://127.0.0.1:65010/reddix/callback
-# 5. Copy the client_id (string under app name) and client_secret
-#
-# WORKFLOW:
-# ---------
-# 1. Store credentials in pass (one-time setup)
-# 2. Rebuild your Darwin configuration
-# 3. Run reddix - the wrapper will auto-populate credentials on first use
-# 4. Credentials persist in ~/.config/reddix/config.yaml until changed
-#
 {
   pkgs,
   username,

@@ -111,8 +111,8 @@
       bell_on_tab " "
 
       # Window Management (Minimal - Tmux handles most) --------
-      initial_window_width 800
-      initial_window_height 1000
+      initial_window_width 600
+      initial_window_height 600
       draw_minimal_borders yes
       window_padding_width 2 2 0 2
       placement_strategy center
