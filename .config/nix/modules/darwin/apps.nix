@@ -51,6 +51,7 @@
       "ghostty" # Terminal emulator
       "google-drive"
       "kap" # screen recording
+      "kitty" # terminal emulator
       # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
