@@ -1,15 +1,5 @@
 {...}: {
-<<<<<<< HEAD
   home.file.".config/reddix/config.yaml" = {
-||||||| parent of 755f13a (feat: add reddix wrapper with pass integration and update configs)
-{...}: let
-  clientId = builtins.getEnv "REDDIT_CLIENT_ID";
-  clientSecret = builtins.getEnv "REDDIT_CLIENT_SECRET";
-in {
-  xdg.configFile."reddix/config.yaml" = {
-=======
-  xdg.configFile."reddix/config.yaml" = {
->>>>>>> 755f13a (feat: add reddix wrapper with pass integration and update configs)
     text = ''
       # Reddix configuration
       # Managed by Nix - see ~/.dotfiles/.config/nix/home/reddix.nix
@@ -20,14 +10,8 @@ in {
       # ~/.dotfiles/.config/nix/modules/darwin/reddix.nix
       #
       reddit:
-<<<<<<< HEAD
         client_id: ""
         client_secret: ""
-||||||| parent of 755f13a (feat: add reddix wrapper with pass integration and update configs)
-        client_id: "${clientId}"
-        client_secret: "${clientSecret}"
-=======
->>>>>>> 755f13a (feat: add reddix wrapper with pass integration and update configs)
         user_agent: "reddix/0.1 (+https://github.com/ck-zhang/reddix)"
         scopes:
           - identity
