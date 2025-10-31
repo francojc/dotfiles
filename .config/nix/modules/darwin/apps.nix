@@ -39,6 +39,7 @@
     ];
 
     casks = [
+      "vladdoster/formulae/vimari" # Vimari browser extension
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
