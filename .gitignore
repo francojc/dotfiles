@@ -67,3 +67,4 @@ _freeze
 conversation.toml
 .gemini/installation_id
 .config/reddix/config.yaml
+.claude/settings.json
