@@ -22,7 +22,6 @@
       "borders" # jankyborders
       "huggingface-cli"
       "keith/formulae/reminders-cli"
-      "ncspot" # ncurses Spotify client
       {
         name = "neovim";
         args = ["HEAD"];

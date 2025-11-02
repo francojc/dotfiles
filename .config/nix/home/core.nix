@@ -102,6 +102,7 @@
     imagemagick # Image manipulation
     khal # Calendar
     mpv-unwrapped # Media player
+    ncspot # Spotify TUI client
     pandoc # Document converter
     pianobar # Pandora client
     poppler_utils # PDF utilities (pdftotext, etc.)
