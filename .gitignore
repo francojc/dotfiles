@@ -68,3 +68,4 @@ conversation.toml
 .gemini/installation_id
 .config/reddix/config.yaml
 .claude/settings.json
+.config/nix/.claude/settings.local.json
