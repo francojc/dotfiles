@@ -106,9 +106,9 @@
       config.initial_cols = 80
       config.initial_rows = 40
       config.window_padding = {
-        left = 2,
-        right = 2,
-        top = 0,
+        left = 4,
+        right = 4,
+        top = 2,
         bottom = 2,
       }
       config.window_decorations = 'RESIZE'
@@ -120,12 +120,12 @@
       config.window_frame = {
         font = wezterm.font({ family = 'JetBrainsMono Nerd Font Mono', weight = 'Bold' }),
         font_size = ${toString (
-          if hostname == "Mac-Minicore"
-          then 18
-          else if hostname == "Macbook-Airborne"
-          then 14
-          else 12
-        )},
+        if hostname == "Mac-Minicore"
+        then 18
+        else if hostname == "Macbook-Airborne"
+        then 14
+        else 12
+      )},
       }
 
       -- Window borders
@@ -170,9 +170,9 @@
       ${
         if isDarwin
         then ''
-      config.quit_when_all_windows_are_closed = true
-      config.native_macos_fullscreen_mode = false
-      config.macos_window_background_blur = 0
+          config.quit_when_all_windows_are_closed = true
+          config.native_macos_fullscreen_mode = false
+          config.macos_window_background_blur = 0
         ''
         else ""
       }
