@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "plugins": {
+    "explanatory-output-style@claude-code-plugins": {
+      "version": "1.0.0",
+      "installedAt": "2025-11-02T01:24:14.302Z",
+      "lastUpdated": "2025-11-02T01:24:14.302Z",
+      "installPath": "/Users/francojc/.claude/plugins/marketplaces/claude-code-plugins/plugins/explanatory-output-style",
+      "gitCommitSha": "b42fd9928c8f80ead5ca43e4e0673da22faca6bd",
+      "isLocal": true
+    },
+    "document-skills@anthropic-agent-skills": {
+      "version": "unknown",
+      "installedAt": "2025-11-02T01:29:29.161Z",
+      "lastUpdated": "2025-11-02T01:29:29.161Z",
+      "installPath": "/Users/francojc/.claude/plugins/marketplaces/anthropic-agent-skills/",
+      "gitCommitSha": "c74d647e56e6daa12029b6acb11a821348ad044b",
+      "isLocal": true
+    }
+  }
+}
