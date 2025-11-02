@@ -64,6 +64,7 @@
       "spotify" # music streaming
       "transcribe"
       "transmission"
+      "wezterm@nightly" # terminal emulator
       "zen" # browser
       "zoom"
       "zotero@beta" # reference manager
