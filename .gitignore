@@ -70,3 +70,5 @@ conversation.toml
 .config/reddix/config.yaml
 .claude/settings.json
 .config/nix/.claude/settings.local.json
+.config/kitty/kitty.conf
+.config/wezterm/wezterm.lua
