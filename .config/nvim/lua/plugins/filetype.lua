@@ -181,9 +181,8 @@ return {
 					},
 				},
 				code = {
-					language_icon = false,
-					width = "block",
-					min_width = 80,
+					sign = false,
+					language_border = " ",
 				},
 				completions = {
 					lsp = { enabled = true },
