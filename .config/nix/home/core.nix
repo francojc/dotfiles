@@ -81,6 +81,7 @@
     sqlite # SQLite database engine
     starship # Shell prompt
     tldr # Simplified man pages
+    ttyper # Typing test
     tmux # Terminal multiplexer
     tree # Directory listing tool
     # typtea # Terminal-based typing test
