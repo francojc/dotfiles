@@ -154,12 +154,6 @@
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToControl = true;
-      userKeyMapping = [
-        {
-          HIDKeyboardModifierMappingSrc = 1095216660483; # Fn key
-          HIDKeyboardModifierMappingDst = 30064771302; # Right Option
-        }
-      ];
     };
     startup.chime = false;
   };
