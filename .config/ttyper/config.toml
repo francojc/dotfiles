@@ -3,56 +3,56 @@ default_language = "english200"
 
 [theme]
 # default style (this includes empty cells)
-default = "none"
+default = "282828"
 
 # title text styling
-title = "white;bold"
+title = "b16286;bold"
 
 ## test styles ##
 
 # input box border
-input_border = "cyan"
+input_border = "458588"
 # prompt box border
-prompt_border = "green"
+prompt_border = "cc241d"
 
 # border type
 border_type = "rounded"
 
 # correctly typed words
-prompt_correct = "green"
+prompt_correct = "98971a"
 # incorrectly typed words
-prompt_incorrect = "red"
+prompt_incorrect = "cc241d"
 # untyped words
-prompt_untyped = "gray"
+prompt_untyped = "a89984"
 
 # correctly typed letters in current word
-prompt_current_correct = "green;bold"
+prompt_current_correct = "98971a;bold"
 # incorrectly typed letters in current word
-prompt_current_incorrect = "red;bold"
+prompt_current_incorrect = "cc241d;bold"
 # untyped letters in current word
-prompt_current_untyped = "blue;bold"
+prompt_current_untyped = "458588;bold"
 
 # cursor character
-prompt_cursor = "none;underlined"
+prompt_cursor = "ebdbb2;underlined"
 
 ## results styles ##
 
 # overview text
-results_overview = "cyan;bold"
+results_overview = "d79921;bold"
 # overview border
-results_overview_border = "cyan"
+results_overview_border = "d79921"
 
 # worst keys text
-results_worst_keys = "cyan;bold"
+results_worst_keys = "d65d0e;bold"
 # worst keys border
-results_worst_keys_border = "cyan"
+results_worst_keys_border = "d65d0e"
 
 # results chart default (includes plotted data)
-results_chart = "cyan"
+results_chart = "458588"
 # results chart x-axis label
-results_chart_x = "cyan"
+results_chart_x = "458588"
 # results chart y-axis label
-results_chart_y = "gray;italic"
+results_chart_y = "a89984;italic"
 
 # restart/quit prompt in results ui
-results_restart_prompt = "gray;italic"
+results_restart_prompt = "a89984;italic"
