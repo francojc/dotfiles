@@ -1,0 +1,263 @@
+#!/usr/bin/env bash
+
+# qrp.sh - Quarto Render and Preview
+# Watch for changes in Quarto files and automatically render and preview them.
+#
+# Author: Jerid Francom
+# License: MIT
+
+set -euo pipefail
+
+# ============================================================================
+# CONSTANTS AND CONFIGURATION
+# ============================================================================
+
+readonly SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
+readonly VERSION="1.0.0"
+
+# Required tools
+readonly REQUIRED_TOOLS=("fd" "entr" "quarto")
+
+# Exit codes
+readonly EXIT_SUCCESS=0
+readonly EXIT_INVALID_ARGS=1
+readonly EXIT_MISSING_TOOLS=2
+readonly EXIT_NO_FILES_FOUND=3
+
+# ============================================================================
+# FUNCTIONS
+# ============================================================================
+
+# Print usage information
+usage() {
+  cat << EOF
+Usage: $SCRIPT_NAME [OPTIONS] [file_expression]
+
+Watch for changes in Quarto files and automatically render and preview them.
+Performs an initial full project render, then watches for file changes.
+
+ARGUMENTS:
+  [file_expression]    Optional file pattern to match (default: "*.qmd")
+                       Supports glob patterns and regular expressions
+
+OPTIONS:
+  -h, --help          Show this help message and exit
+  -v, --version       Show version information and exit
+  -r, --recursive     Watch files recursively in subdirectories (default)
+  -d, --dir <path>    Directory to watch (default: current directory)
+  -n, --no-clear      Don't clear screen between runs
+
+EXAMPLES:
+  # Watch all .qmd files in current directory (default)
+  $SCRIPT_NAME
+
+  # Watch a specific file
+  $SCRIPT_NAME "my-report.qmd"
+
+  # Watch .qmd files in a specific directory
+  $SCRIPT_NAME -d ~/projects/report
+
+  # Watch multiple file types (use regex)
+  $SCRIPT_NAME ".*\.(qmd|Rmd)$"
+
+DEPENDENCIES:
+  This script requires the following tools to be installed:
+  - fd:     Fast file finder (https://github.com/sharkdp/fd)
+  - entr:   File watcher (https://eradman.com/entrproject/)
+  - quarto: Document rendering system (https://quarto.org/)
+
+NOTES:
+  - On startup, performs a full project render (quarto render)
+  - Then watches for file changes and re-renders individual files
+  - Press Ctrl+C to stop watching
+  - If preview is already running, it will update automatically
+
+EOF
+}
+
+# Print version information
+version() {
+  echo "$SCRIPT_NAME version $VERSION"
+}
+
+# Print error message to stderr
+error() {
+  echo "Error: $*" >&2
+}
+
+# Print warning message to stderr
+warning() {
+  echo "Warning: $*" >&2
+}
+
+# Print info message
+info() {
+  echo "Info: $*"
+}
+
+# Check if a command exists
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Check for required tools
+check_dependencies() {
+  local missing_tools=()
+
+  for tool in "${REQUIRED_TOOLS[@]}"; do
+    if ! command_exists "$tool"; then
+      missing_tools+=("$tool")
+    fi
+  done
+
+  if [ ${#missing_tools[@]} -gt 0 ]; then
+    error "Missing required tools: ${missing_tools[*]}"
+    echo >&2
+    echo "Installation instructions:" >&2
+    for tool in "${missing_tools[@]}"; do
+      case "$tool" in
+        fd)
+          echo "  - fd: brew install fd (macOS) or see https://github.com/sharkdp/fd" >&2
+          ;;
+        entr)
+          echo "  - entr: brew install entr (macOS) or see https://eradman.com/entrproject/" >&2
+          ;;
+        quarto)
+          echo "  - quarto: See installation instructions at https://quarto.org/docs/get-started/" >&2
+          ;;
+      esac
+    done
+    return 1
+  fi
+
+  return 0
+}
+
+# Validate file expression
+validate_file_expression() {
+  local expression="$1"
+
+  if [ -z "$expression" ]; then
+    error "File expression cannot be empty"
+    return 1
+  fi
+
+  return 0
+}
+
+# ============================================================================
+# MAIN LOGIC
+# ============================================================================
+
+main() {
+  local target="*.qmd"
+  local search_dir="."
+  local clear_flag="-c"
+
+  # Parse command-line arguments
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -h|--help)
+        usage
+        exit $EXIT_SUCCESS
+        ;;
+      -v|--version)
+        version
+        exit $EXIT_SUCCESS
+        ;;
+      -r|--recursive)
+        # Recursive is default for fd, but we'll keep the flag for clarity
+        shift
+        ;;
+      -d|--dir)
+        if [ -z "${2-}" ]; then
+          error "Option $1 requires an argument"
+          usage
+          exit $EXIT_INVALID_ARGS
+        fi
+        search_dir="$2"
+        shift 2
+        ;;
+      -n|--no-clear)
+        clear_flag=""
+        shift
+        ;;
+      -*)
+        error "Unknown option: $1"
+        usage
+        exit $EXIT_INVALID_ARGS
+        ;;
+      *)
+        if [ "$target" != "*.qmd" ]; then
+          error "Multiple file expressions provided. Please provide only one."
+          usage
+          exit $EXIT_INVALID_ARGS
+        fi
+        target="$1"
+        shift
+        ;;
+    esac
+  done
+
+  # Validate file expression
+  if ! validate_file_expression "$target"; then
+    exit $EXIT_INVALID_ARGS
+  fi
+
+  # Check for required dependencies
+  if ! check_dependencies; then
+    exit $EXIT_MISSING_TOOLS
+  fi
+
+  # Validate search directory
+  if [ ! -d "$search_dir" ]; then
+    error "Directory does not exist: $search_dir"
+    exit $EXIT_INVALID_ARGS
+  fi
+
+  # Find matching files
+  info "Searching for files matching '$target' in '$search_dir'..."
+  local file_count
+  file_count=$(fd --glob "$target" "$search_dir" | wc -l | tr -d ' ')
+
+  if [ "$file_count" -eq 0 ]; then
+    error "No files found matching '$target' in '$search_dir'"
+    exit $EXIT_NO_FILES_FOUND
+  fi
+
+  info "Found $file_count file(s) to watch"
+  echo
+
+  # Perform initial project render
+  info "Performing initial project render..."
+  if quarto render "$search_dir"; then
+    info "Initial render complete"
+  else
+    warning "Initial render failed, but continuing to watch for changes"
+  fi
+  echo
+
+  echo "Watching for changes... (Press Ctrl+C to stop)"
+  echo
+
+  # Watch for changes and render/preview
+  # shellcheck disable=SC2086
+  fd --glob "$target" "$search_dir" | entr $clear_flag bash -c '
+    FILE="$1"
+    echo "==> Change detected in: $FILE"
+    echo "==> Rendering..."
+    if quarto render "$FILE"; then
+      echo "==> Render complete. Starting preview..."
+      quarto preview "$FILE"
+    else
+      echo "==> Render failed. Waiting for next change..."
+      exit 0
+    fi
+  ' _
+}
+
+# ============================================================================
+# SCRIPT ENTRY POINT
+# ============================================================================
+
+main "$@"
