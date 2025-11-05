@@ -39,6 +39,7 @@ require("paq")({
 	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
+	"abecodes/tabout.nvim", -- Tab out of brackets/quotes
 	"rafamadriz/friendly-snippets", -- Snippets
 	"rcarriga/nvim-notify", -- Notifications
 	"savq/paq-nvim", -- Paq manages itself

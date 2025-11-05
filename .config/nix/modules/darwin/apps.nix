@@ -45,6 +45,7 @@
       "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
+      "google-chrome"
       "dropbox"
       "ghostty" # Terminal emulator
       "google-drive"

@@ -650,6 +650,28 @@ pcall(function()
 	})
 end)
 
+---| Tabout ----------------------------------
+require("tabout").setup({
+	tabkey = "<Tab>",
+	backwards_tabkey = "<S-Tab>",
+	act_as_tab = true, -- Use tab normally when tabout is unavailable
+	act_as_shift_tab = false,
+	default_tab = "<C-t>", -- Fallback for indent
+	default_shift_tab = "<C-d>", -- Fallback for dedent
+	enable_backwards = true,
+	completion = true, -- Handle completion popups (blink.cmp)
+	tabouts = {
+		{ open = "'", close = "'" },
+		{ open = '"', close = '"' },
+		{ open = "`", close = "`" },
+		{ open = "(", close = ")" },
+		{ open = "[", close = "]" },
+		{ open = "{", close = "}" },
+	},
+	ignore_beginning = true, -- Allow tabout from the beginning of brackets
+	exclude = {}, -- No filetype exclusions
+})
+
 ---| Flash ----------------------------------
 require("flash").setup({})
 
