@@ -27,6 +27,8 @@ return {
 					},
 				},
 			})
+			-- Disable by default to match the global flag
+			require("image").disable()
 		end,
 	},
 
