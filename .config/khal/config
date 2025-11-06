@@ -3,32 +3,32 @@
 [[francojc]]
 path = ~/.calendars/google/francojc@wfu.edu
 type = discover
-color = "#A5661A"
+color = "#D79921"
 
 [[jerid.francom]]
 path = ~/.calendars/google/jerid.francom@gmail.com
 type = discover
-color = "#0E480D"
+color = "#689D6A"
 
 [[holidays]]
 path = ~/.calendars/google/cln2stbjc4hmgrrcd5i62ua0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual
 type = discover
-color = "#636363"
+color = "#928374"
 
 [[spanish.department]]
 path = ~/.calendars/google/wfu.edu_27uakldtgi42knb0bbcs50flgk@group.calendar.google.com
 type = discover
-color = "#6C5B1A"
+color = "#FE8019"
 
 [[deans.office]]
 path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.google.com
 type = discover
-color = "#7F3027"
+color = "#CC241D"
 
 [[Reminders]]
 path = ~/.calendars/local/reminders/
 type = calendar
-color = "#793889"
+color = "#B16286"
 readonly = false
 
 [default]
@@ -53,5 +53,68 @@ longdateformat = %Y-%m-%d
 datetimeformat = %Y-%m-%d %H:%M
 longdatetimeformat = %Y-%m-%d %H:%M
 weeknumbers = right
+
+[palette]
+# Gruvbox Dark Hard theme
+# Format: foreground, background, mono, foreground_high, background_high
+
+# General UI elements
+header = light gray, '', '', '#EBDBB2', '#282828'
+footer = light gray, '', '', '#EBDBB2', '#282828'
+line header = light gray, '', '', '#EBDBB2', ''
+alt header = light gray, '', '', '#FBF1C7', '#282828'
+bright = white, '', 'bold', '#FBF1C7', ''
+
+# List elements
+list = light gray, '', '', '#EBDBB2', ''
+list focused = white, dark blue, 'bold', '#FBF1C7', '#458588'
+
+# Edit mode
+edit = light gray, '', '', '#EBDBB2', ''
+edit focus = white, dark blue, '', '#FBF1C7', '#458588'
+
+# Buttons
+button = light gray, '', '', '#EBDBB2', ''
+button focused = white, dark blue, 'bold', '#FBF1C7', '#458588'
+
+# Focus and highlighting
+reveal focus = white, dark blue, '', '#FBF1C7', '#458588'
+today focus = black, yellow, 'bold', '#282828', '#FABD2F'
+today = white, dark green, 'bold', '#FBF1C7', '#98971A'
+
+# Date headers
+date header = light gray, '', '', '#EBDBB2', ''
+date header focused = white, dark blue, '', '#FBF1C7', '#458588'
+date header selected = white, dark blue, 'bold', '#FBF1C7', '#458588'
+
+# Calendar elements
+dayname = light gray, '', '', '#EBDBB2', ''
+monthname = light gray, '', 'bold', '#EBDBB2', ''
+weeknumber_right = dark gray, '', '', '#928374', ''
+
+# Alerts and marks
+alert = light red, '', 'bold', '#FB4934', ''
+mark = yellow, '', '', '#FABD2F', ''
+
+# Frames
+frame = dark gray, '', '', '#928374', ''
+frame focus = light gray, '', '', '#EBDBB2', ''
+frame focus color = '', '', '', '', '#282828'
+frame focus top = light gray, '', 'bold', '#EBDBB2', ''
+
+# Event display
+eventcolumn = light gray, '', '', '#EBDBB2', ''
+eventcolumn focus = white, dark blue, '', '#FBF1C7', '#458588'
+
+# Calendar view
+calendar = light gray, '', '', '#EBDBB2', ''
+calendar focus = white, dark blue, '', '#FBF1C7', '#282828'
+
+# Popups and dialogs
+editbx = light gray, '', '', '#EBDBB2', '#282828'
+editcp = light gray, '', '', '#EBDBB2', '#282828'
+popupbg = light gray, '', '', '#EBDBB2', '#282828'
+popupper = light gray, '', '', '#EBDBB2', '#282828'
+caption = light gray, '', '', '#EBDBB2', ''
 
 
