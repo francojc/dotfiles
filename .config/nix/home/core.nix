@@ -97,7 +97,7 @@
     aerc # Email client
     # drawio # Diagramming tool
     ffmpeg # Multimedia framework
-    # ghostscript # PostScript/PDF interpreter
+    ghostscript # PostScript/PDF interpreter (used by Snacks.image)
     # gv # Ghostview - PostScript/PDF viewer
     # haskellPackages.pandoc-crossref # Pandoc filter
     imagemagick # Image manipulation

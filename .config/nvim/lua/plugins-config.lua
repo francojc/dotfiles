@@ -261,6 +261,14 @@ require("bufferline").setup({
 			style = "icon",
 			icon = "▎",
 		},
+		custom_filter = function(buf_number)
+			local buf_name = vim.api.nvim_buf_get_name(buf_number)
+			-- Hide buffers with no name (empty string or whitespace)
+			if buf_name == "" or buf_name:match("^%s*$") then
+				return false
+			end
+			return true
+		end,
 	},
 })
 

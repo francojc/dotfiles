@@ -45,6 +45,8 @@ map({ "n", "v" }, "gh", "^", { desc = "Go to beginning of line" })
 -- End of line
 map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
 map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
+map({ "n", "v" }, "gO", "O<Esc>", { desc = "Add line above current line" })
+map("n", "gt", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", { desc = "Show LSP document symbols" })
 -- Line up/down
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
