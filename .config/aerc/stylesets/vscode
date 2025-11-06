@@ -1,0 +1,46 @@
+#
+# aerc vscode styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#f44747
+warning.fg=#dcdcaa
+success.fg=#6a9955
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: VS Code Dark+
+
+*.selected.bg=#2d2d30
+
+msglist_marked.bg=#ce9178
+msglist_flagged.fg=#dcdcaa
+msglist_flagged.bold=true
+
+msglist_unread.fg=#6a9955
+msglist_unread.selected.bg=#37373d
+
+statusline_default.fg=#d4d4d4
+statusline_error.fg=#f44747
+
+tab.fg=#d4d4d4
+tab.bg=#252526
+tab.selected.bg=#d4d4d4
+tab.selected.fg=#1f1f1f
+
+dirlist_unread.fg=#569cd6
+dirlist_recent.fg=#4ec9b0

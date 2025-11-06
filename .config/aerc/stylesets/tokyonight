@@ -1,0 +1,47 @@
+#
+# aerc tokyonight styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#f7768e
+warning.fg=#e0af68
+success.fg=#9ece6a
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: TokyoNight
+# Based on the tokyonight theme from themes.nix
+
+*.selected.bg=#292e42
+
+msglist_marked.bg=#ff9e64
+msglist_flagged.fg=#e0af68
+msglist_flagged.bold=true
+
+msglist_unread.fg=#9ece6a
+msglist_unread.selected.bg=#3b4261
+
+statusline_default.fg=#a9b1d6
+statusline_error.fg=#f7768e
+
+tab.fg=#c0caf5
+tab.bg=#24283b
+tab.selected.bg=#c0caf5
+tab.selected.fg=#1a1b26
+
+dirlist_unread.fg=#7aa2f7
+dirlist_recent.fg=#7dcfff

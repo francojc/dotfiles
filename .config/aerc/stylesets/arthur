@@ -1,0 +1,46 @@
+#
+# aerc arthur styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=false
+
+*error.bold=false
+error.fg=#cd5c5c
+warning.fg=#e8ae5b
+success.fg=#86af80
+
+statusline*.default=true
+statusline_default.reverse=false
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=false
+
+# Colors: Arthur (Desert-inspired theme)
+
+*.selected.bg=#3a3a3a
+
+msglist_marked.bg=#ffa500
+msglist_flagged.fg=#e8ae5b
+msglist_flagged.bold=false
+
+msglist_unread.fg=#86af80
+msglist_unread.selected.bg=#3a3a3a
+
+statusline_default.fg=#a8a8a8
+statusline_error.fg=#cd5c5c
+
+tab.fg=#feffff
+tab.bg=#303030
+tab.selected.bg=#feffff
+tab.selected.fg=#262626
+
+dirlist_unread.fg=#6495ed
+dirlist_recent.fg=#b0c4de

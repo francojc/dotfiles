@@ -1,0 +1,47 @@
+#
+# aerc gruvbox-dark styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=red
+warning.fg=yellow
+success.fg=green
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: Gruvbox Dark (Hard)
+
+*.selected.bg=#7c6f64
+
+msglist_marked.bg=#d65d0e
+msglist_flagged.fg=#98971a
+msglist_flagged.bold=true
+
+msglist_unread.fg=#8ec07c
+msglist_unread.selected.bg=#bdae93
+
+statusline_default.fg=#7c6f64
+statusline_error.fg=#fb4934
+
+tab.fg=#ebdbb2
+tab.bg=#3c3836
+tab.selected.bg=#fbf1c7
+tab.selected.fg=#3c3836
+
+dirlist_unread.fg=#83a598
+dirlist_recent.fg=#83a598
+

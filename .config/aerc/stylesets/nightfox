@@ -1,0 +1,46 @@
+#
+# aerc nightfox styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#c94f6d
+warning.fg=#dbc074
+success.fg=#81b29a
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: Nightfox
+
+*.selected.bg=#29394f
+
+msglist_marked.bg=#f4a261
+msglist_flagged.fg=#dbc074
+msglist_flagged.bold=true
+
+msglist_unread.fg=#81b29a
+msglist_unread.selected.bg=#29394f
+
+statusline_default.fg=#cdcecf
+statusline_error.fg=#c94f6d
+
+tab.fg=#cdcecf
+tab.bg=#212e3f
+tab.selected.bg=#cdcecf
+tab.selected.fg=#192330
+
+dirlist_unread.fg=#719cd6
+dirlist_recent.fg=#63cdcf

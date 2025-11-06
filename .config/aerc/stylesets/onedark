@@ -1,0 +1,46 @@
+#
+# aerc onedark styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#e86671
+warning.fg=#e5c07b
+success.fg=#98c379
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: One Dark
+
+*.selected.bg=#393f4a
+
+msglist_marked.bg=#d19a66
+msglist_flagged.fg=#e5c07b
+msglist_flagged.bold=true
+
+msglist_unread.fg=#98c379
+msglist_unread.selected.bg=#3b3f4c
+
+statusline_default.fg=#abb2bf
+statusline_error.fg=#e86671
+
+tab.fg=#abb2bf
+tab.bg=#31353f
+tab.selected.bg=#abb2bf
+tab.selected.fg=#282c34
+
+dirlist_unread.fg=#61afef
+dirlist_recent.fg=#56b6c2

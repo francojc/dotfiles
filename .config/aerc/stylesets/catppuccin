@@ -1,0 +1,46 @@
+#
+# aerc catppuccin styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#f38ba8
+warning.fg=#f9e2af
+success.fg=#a6e3a1
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: Catppuccin Mocha
+
+*.selected.bg=#313244
+
+msglist_marked.bg=#fab387
+msglist_flagged.fg=#f9e2af
+msglist_flagged.bold=true
+
+msglist_unread.fg=#a6e3a1
+msglist_unread.selected.bg=#313244
+
+statusline_default.fg=#cdd6f4
+statusline_error.fg=#f38ba8
+
+tab.fg=#cdd6f4
+tab.bg=#181825
+tab.selected.bg=#cdd6f4
+tab.selected.fg=#11111b
+
+dirlist_unread.fg=#89b4fa
+dirlist_recent.fg=#94e2d5

@@ -1,0 +1,46 @@
+#
+# aerc vague styleset
+#
+
+*.default=true
+
+title.reverse=true
+header.bold=true
+
+*error.bold=true
+error.fg=#d2788c
+warning.fg=#e6c792
+success.fg=#a6b89d
+
+statusline*.default=true
+statusline_default.reverse=true
+statusline_error.reverse=true
+
+completion_pill.reverse=true
+
+border.reverse = false
+
+selector_focused.reverse=true
+selector_chooser.bold=true
+
+# Colors: Vague
+
+*.selected.bg=#2a2d2e
+
+msglist_marked.bg=#d99669
+msglist_flagged.fg=#e6c792
+msglist_flagged.bold=true
+
+msglist_unread.fg=#a6b89d
+msglist_unread.selected.bg=#2a2d2e
+
+statusline_default.fg=#cdcdcd
+statusline_error.fg=#d2788c
+
+tab.fg=#cdcdcd
+tab.bg=#1c1d1e
+tab.selected.bg=#cdcdcd
+tab.selected.fg=#18191a
+
+dirlist_unread.fg=#8db4d4
+dirlist_recent.fg=#87ceeb
