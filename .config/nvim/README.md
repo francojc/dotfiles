@@ -575,15 +575,6 @@ This configuration emphasizes:
 4. **Minimal UI**: Clean interface without startup screens or buffer tabs
 5. **Productivity Focus**: Balance powerful features with simplicity and performance
 
-Recent removals for streamlining:
-- alpha-nvim (startup dashboard) → Direct file opening
-- bufferline.nvim (buffer tabs) → Native buffer commands
-- toggleterm.nvim (terminal manager) → Snacks terminal
-- flash.nvim (enhanced navigation) → Native motions
-- nvim-notify (notifications) → fidget.nvim integration
-- nvim-web-devicons (icons) → mini.icons
-- vim-markdown (markdown support) → render-markdown.nvim
-
 ## License
 
 This configuration is provided as-is.
