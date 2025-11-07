@@ -124,16 +124,6 @@ return {
 		end,
 	},
 
-	{
-		"vim-markdown",
-		ft = { "markdown", "quarto" },
-		after = function()
-			vim.g.vim_markdown_autowrite = 0
-			vim.g.vim_markdown_follow_anchor = 1
-			vim.g.vim_markdown_folding_level = 1 -- effectively disable
-		end,
-	},
-
 	-- Render Markdown for Markdown/Quarto
 	{
 		"render-markdown.nvim",

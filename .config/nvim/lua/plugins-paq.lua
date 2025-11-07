@@ -17,19 +17,16 @@ require("paq")({
 
 	-- Eager-loaded plugins (core functionality)
 	"Saghen/blink.cmp", -- Blink completion
-	"akinsho/bufferline.nvim", -- Bufferline
 	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.pick", -- Picker (for Obsidian compatibility)
 	"echasnovski/mini.surround", -- Surround
-	"folke/flash.nvim", -- Flash jump
 	"folke/sidekick.nvim", -- AI sidekick (NES + CLI)
 	"folke/snacks.nvim", -- Input and terminal utils
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
-	"goolord/alpha-nvim", -- Alpha dashboard
 	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jpalardy/vim-slime", -- Slime integration
@@ -37,11 +34,9 @@ require("paq")({
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
-	"nvim-tree/nvim-web-devicons", -- Web devicons
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"abecodes/tabout.nvim", -- Tab out of brackets/quotes
 	"rafamadriz/friendly-snippets", -- Snippets
-	"rcarriga/nvim-notify", -- Notifications
 	"savq/paq-nvim", -- Paq manages itself
 	"stevearc/conform.nvim", -- Formatter
 
@@ -49,8 +44,6 @@ require("paq")({
 	-- These will be loaded by lz.n based on triggers (see ./plugins/)
 	{ "3rd/image.nvim", opt = true }, -- Image support (lazy: ft markdown/quarto)
 	{ "MeanderingProgrammer/render-markdown.nvim", opt = true }, -- Render-Markdown (lazy: ft markdown/quarto)
-	{ "preservim/vim-markdown", opt = true }, -- Extended Markdown support (lazy: ft markdown)
-	{ "akinsho/toggleterm.nvim", opt = true }, -- Toggle terminal (lazy: cmd)
 	{ "folke/todo-comments.nvim", opt = true }, -- Todo comments (lazy: cmd)
 	{ "hakonharnes/img-clip.nvim", opt = true }, -- Image pasting (lazy: ft markdown)
 	{ "hat0uma/csvview.nvim", opt = true }, -- CSV viewer (lazy: ft csv)

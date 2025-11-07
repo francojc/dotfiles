@@ -91,6 +91,8 @@
       # Kill window
       bind q kill-window
 
+      bind-key f popup -w 80% -h 60% -E "zsh"
+
       # kill pane
       bind x kill-pane
 

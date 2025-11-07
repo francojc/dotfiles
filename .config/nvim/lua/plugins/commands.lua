@@ -58,14 +58,6 @@ return {
 			})
 		end,
 	},
-	-- Terminal
-	{
-		"toggleterm.nvim",
-		cmd = "ToggleTerm",
-		after = function()
-			require("toggleterm").setup({})
-		end,
-	},
 
 	-- Yazi file manager
 	{

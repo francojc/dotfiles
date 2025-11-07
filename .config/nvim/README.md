@@ -1,10 +1,10 @@
 # Neovim Configuration
 
-A comprehensive, modular Neovim configuration tailored for academic writing and computational linguistics research, with lazy-loading support for optimal startup performance.
+A streamlined, modular Neovim configuration with lazy-loading support for optimal startup performance. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
 
 ## Features
 
-### Academic Writing Focus
+### Document Editing
 
 - **Quarto Integration**: Full support for Quarto documents with code execution
 - **Markdown Enhancement**: Custom keybindings for formatting, lists, and headers
@@ -26,9 +26,16 @@ A comprehensive, modular Neovim configuration tailored for academic writing and 
 - **LSP**: Comprehensive language server protocol support
 - **Completion**: Blink.cmp with emoji and reference completion
 - **Git Integration**: Lazygit, Gitsigns, and Diffview
-- **File Management**: FZF fuzzy finding and Yazi file explorer
-- **Terminal**: Integrated toggleterm with tmux navigation
+- **File Management**: Snacks picker and Yazi file explorer
+- **Terminal**: Integrated Snacks terminal with tmux navigation
 - **Lazy-loading**: lz.n plugin for optimized startup performance
+
+### Configuration Stats
+
+- **Total Plugins**: 46 (including 10 colorschemes)
+- **Eager-loaded**: 25 core plugins
+- **Lazy-loaded**: 11 document/tool plugins
+- **Philosophy**: Native Vim functionality preferred over plugin dependencies
 
 ## Installation
 
@@ -59,16 +66,16 @@ A comprehensive, modular Neovim configuration tailored for academic writing and 
 
 ### File Operations
 
-- `<leader>ff` - Find files (FZF)
+- `<leader>ff` - Find files (Snacks picker)
 - `<leader>fg` - Live grep search
 - `<leader>fr` - Recent files
 - `<leader>fn` - New file
 
 ### Buffer Management
 
-- `<Tab>` / `<S-Tab>` - Cycle through buffers
+- `<Tab>` / `<S-Tab>` - Navigate to next/previous buffer
 - `<leader>bd` - Delete buffer
-- `<leader>bo` - Close other buffers
+- `<leader>bf` - Find buffer (Snacks picker)
 
 ### Git Integration
 
@@ -76,7 +83,7 @@ A comprehensive, modular Neovim configuration tailored for academic writing and 
 - `<leader>gd` - Diffview open
 - `<leader>gh` - File history
 
-### Academic Writing
+### Markdown Editing
 
 - `<leader>m1-4` - Insert markdown headings
 - `<leader>mu` - Unordered list item
@@ -106,10 +113,10 @@ A comprehensive, modular Neovim configuration tailored for academic writing and 
 
 ### Toggles
 
-- `<leader>ta` - Toggle Aerial (lazy-loaded on command)
+- `<leader>ta` - Toggle Aerial code outline (lazy-loaded on command)
 - `<leader>ti` - Toggle image rendering
 - `<leader>tm` - Toggle markdown rendering
-- `<leader>tt` - Toggle terminal (lazy-loaded on command)
+- `<leader>tt` - Toggle floating terminal (Snacks)
 
 ## Plugin Management
 
@@ -121,12 +128,12 @@ This configuration uses [paq-nvim](https://github.com/savq/paq-nvim) for plugin 
 
 - **Completion**: blink.cmp with emoji and pandoc references
 - **LSP**: nvim-lspconfig with multiple language servers
-- **UI**: lualine, bufferline, which-key, alpha-nvim
-- **Navigation**: fzf-lua, flash.nvim
+- **UI**: lualine, which-key
+- **Navigation**: Snacks picker
 - **Git**: gitsigns.nvim (lazy-loaded on file open)
 - **Editing**: mini.nvim suite, copilot.vim, treesitter
 
-**Academic (Lazy-loaded)**:
+**Documents (Lazy-loaded)**:
 
 - **quarto-nvim, otter.nvim**: Loaded on `.qmd` files
 - **obsidian.nvim**: Loaded on markdown files
@@ -137,7 +144,6 @@ This configuration uses [paq-nvim](https://github.com/savq/paq-nvim) for plugin 
 
 - **lazygit.nvim**: Loaded on `:LazyGit` command
 - **yazi.nvim**: Loaded on `:Yazi` command
-- **toggleterm.nvim**: Loaded on `:ToggleTerm` command
 - **aerial.nvim**: Loaded on `:AerialToggle` command
 - **todo-comments.nvim**: Loaded on search commands
 
@@ -202,7 +208,7 @@ require("paq")({
 **Keep eager-loaded if**:
 
 - Core editing functionality (LSP, completion, treesitter)
-- UI essentials (statusline, bufferline)
+- UI essentials (statusline)
 - Used immediately on startup
 
 ### Step 2: Choose Configuration Location
@@ -520,7 +526,7 @@ Current theme is set in `lua/theme-config.lua` (Nix-managed). Available themes:
 
 LSP configurations are in `lua/plugins-config.lua`. Modify as needed for your development environment. LSP capabilities are defined early in the file and used by all language server configs.
 
-### Academic Settings
+### Document Settings
 
 Quarto and R integration settings can be found in `lua/plugins/filetype.lua`. Obsidian workspace paths may need adjustment for your setup in the same file.
 
@@ -559,6 +565,25 @@ Quarto and R integration settings can be found in `lua/plugins/filetype.lua`. Ob
 - Most plugins are lazy-loaded for optimal performance
 - Disable unused plugins in `lua/plugins-paq.lua`
 
+## Design Philosophy
+
+This configuration emphasizes:
+
+1. **Native First**: Use built-in Vim/Neovim functionality when possible (`:bnext/:bprevious` instead of buffer tabs)
+2. **Plugin Efficiency**: Avoid duplicate functionality (Snacks.nvim for both terminal and picker)
+3. **Lazy Loading**: Load plugins only when needed to optimize startup time
+4. **Minimal UI**: Clean interface without startup screens or buffer tabs
+5. **Productivity Focus**: Balance powerful features with simplicity and performance
+
+Recent removals for streamlining:
+- alpha-nvim (startup dashboard) → Direct file opening
+- bufferline.nvim (buffer tabs) → Native buffer commands
+- toggleterm.nvim (terminal manager) → Snacks terminal
+- flash.nvim (enhanced navigation) → Native motions
+- nvim-notify (notifications) → fidget.nvim integration
+- nvim-web-devicons (icons) → mini.icons
+- vim-markdown (markdown support) → render-markdown.nvim
+
 ## License
 
-This configuration is provided as-is for educational and research purposes.
+This configuration is provided as-is.

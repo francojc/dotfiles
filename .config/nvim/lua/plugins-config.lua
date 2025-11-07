@@ -36,58 +36,6 @@ vim.notify = require("fidget").notify
 
 ---| CONFIG ---------------------------------------------------
 
----| Alpha ----------------------------------
-local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
-
--- Set header
-
-dashboard.section.header.val = {
-	-- NEOVIM
-	"                                                     ",
-	"  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
-	"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
-	"  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
-	"  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
-	"  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
-	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-	"                                                     ",
-}
--- Set menu
-local dashboard_buttons = {
-	{ "r", "  Recent files", ":lua Snacks.picker.recent()<CR>" },
-	{ "f", "  Find file", ":lua Snacks.picker.files()<CR>" },
-	{ "g", "  Find text", ":lua Snacks.picker.grep()<CR>" },
-	{ "n", "  New file", ":ene <BAR> startinsert<CR>" },
-	{ "q", "  Quit Neovim", ":qa<CR>" },
-}
-dashboard.section.buttons.val = {}
-for _, btn in ipairs(dashboard_buttons) do
-	table.insert(dashboard.section.buttons.val, dashboard.button(unpack(btn)))
-end
-
--- Set footer
-dashboard.section.footer.val = function()
-	local end_time = vim.loop.hrtime()
-	local start_time = _G.nvim_config_start_time or end_time -- Fallback if start time wasn't set
-	local duration_ns = end_time - start_time
-	local ms = math.floor(duration_ns / 1000000 + 0.5) -- Convert ns to ms and round
-	return " Welcome back, " .. os.getenv("USER") .. "! Loaded in " .. ms .. "ms"
-end
-
--- Configure alpha options to handle UI automatically
-dashboard.config.opts.setup = function()
-	vim.opt_local.foldenable = false
-	vim.opt_local.number = false
-	vim.opt_local.relativenumber = false
-	vim.opt_local.signcolumn = "no"
-	vim.b.ministatusline_disable = true
-	vim.b.miniindentscope_disable = true
-end
-
--- Send config to alpha
-alpha.setup(dashboard.config)
-
 ---| Blink ----------------------------------
 require("blink.cmp").setup({
 	fuzzy = {
@@ -178,96 +126,6 @@ require("blink.cmp").setup({
 		keymap = {
 			preset = "inherit",
 		},
-	},
-})
-
----| Bufferline ----------------------------------
-require("bufferline").setup({
-	highlights = {
-		fill = {
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		close_button = {
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		close_button_visible = {
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		close_button_selected = {
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		background = {
-			italic = false,
-			bold = false,
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		buffer_visible = {
-			italic = false,
-			bold = false,
-			fg = colors.fg,
-			bg = colors.bg,
-		},
-		buffer_selected = {
-			italic = false,
-			bold = true,
-			fg = colors.yellow,
-			bg = colors.bg,
-		},
-		modified = {
-			bg = colors.bg,
-		},
-		modified_selected = {
-			bg = colors.bg,
-		},
-		separator = {
-			bg = colors.bg,
-		},
-		separator_visible = {
-			bg = colors.bg,
-		},
-		separator_selected = {
-			bg = colors.yellow,
-			fg = colors.yellow,
-		},
-		offset_separator = {
-			bg = colors.bg,
-		},
-		pick_selected = {
-			bg = colors.bg,
-		},
-		pick_visible = {
-			bg = colors.bg,
-		},
-		pick = {
-			bg = colors.bg,
-			bold = true,
-			italic = true,
-		},
-		indicator_selected = {
-			fg = colors.yellow,
-			bg = colors.bg,
-		},
-	},
-	options = {
-		color_icons = true,
-		separator_style = "thin",
-		indicator = {
-			style = "icon",
-			icon = "▎",
-		},
-		custom_filter = function(buf_number)
-			local buf_name = vim.api.nvim_buf_get_name(buf_number)
-			-- Hide buffers with no name (empty string or whitespace)
-			if buf_name == "" or buf_name:match("^%s*$") then
-				return false
-			end
-			return true
-		end,
 	},
 })
 
@@ -662,9 +520,6 @@ require("tabout").setup({
 	ignore_beginning = true, -- Allow tabout from the beginning of brackets
 	exclude = {}, -- No filetype exclusions
 })
-
----| Flash ----------------------------------
-require("flash").setup({})
 
 ---| Sidekick ----------------------------------
 -- Custom Sidekick NES Highlights (Copilot-style ghost text)
