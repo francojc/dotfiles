@@ -549,29 +549,18 @@ require("sidekick").setup({
 ---| Snacks ----------------------------------
 require("snacks").setup({
 	bigfile = { enabled = false },
-	dashboard = { enabled = false }, -- Using alpha-nvim
+	dashboard = { enabled = false },
 	explorer = { enabled = false }, -- Using yazi
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
 	notifier = { enabled = false }, -- Using fidget/notify
-	picker = {
-		enabled = true,
-		win = {
-			input = {
-				-- Disable blink.cmp in picker input to prevent interference
-				keys = {
-					["<C-n>"] = false, -- Disable to allow picker's native navigation
-					["<C-p>"] = false,
-				},
-			},
-		},
-	},
+	picker = { enabled = true },
 	quickfile = { enabled = false },
 	scope = { enabled = false },
 	scroll = { enabled = false },
 	gh = { enabled = true },
 	statuscolumn = { enabled = false },
-	terminal = { enabled = true }, -- Terminal utilities
+	terminal = { enabled = false },
 	toggle = { enabled = true }, -- Complements toggle functions
 	words = { enabled = false },
 })
@@ -634,6 +623,8 @@ wk.add({
 	{ "<leader>e", group = "Explore", icon = "󰥩" },
 	{ "<leader>f", group = "Files", icon = "󰈔" },
 	{ "<leader>g", group = "Git", icon = "󰊢" },
+	{ "<leader>gi", group = "GitHub issues", icon = "󰌚" },
+	{ "<leader>gp", group = "GitHub PRs", icon = "󰓁" },
 	{ "<leader>h", group = "Help", icon = "󰋗" },
 	{ "<leader>l", group = "LSP", icon = "󰅩" },
 	{ "<leader>lc", group = "Call Hierarchy", icon = "󰘦" },
