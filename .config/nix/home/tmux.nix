@@ -91,7 +91,8 @@
       # Kill window
       bind q kill-window
 
-      bind-key f popup -w 80% -h 60% -E "zsh"
+      # Floating terminal popup
+      bind-key f popup -w 80% -h 60% -E "zsh -c 'cd #{pane_current_path} && exec zsh'"
 
       # kill pane
       bind x kill-pane

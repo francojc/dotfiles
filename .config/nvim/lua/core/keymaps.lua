@@ -145,11 +145,111 @@ map("n", "<leader>fc", "<Cmd>lua Snacks.picker.resume()<Cr>", { desc = "Resume p
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
 -- GitHub (Snacks gh)
-map("n", "<leader>gi", "<Cmd>lua Snacks.picker.gh_issue({ state = 'all' })<Cr>", { desc = "GitHub issues (all)" })
 map("n", "<leader>gio", "<Cmd>lua Snacks.picker.gh_issue({ state = 'open' })<Cr>", { desc = "GitHub issues (open)" })
-map("n", "<leader>gp", "<Cmd>lua Snacks.picker.gh_pr({ state = 'all' })<Cr>", { desc = "GitHub PRs (all)" })
 map("n", "<leader>gpo", "<Cmd>lua Snacks.picker.gh_pr({ state = 'open' })<Cr>", { desc = "GitHub PRs (open)" })
-map("n", "<leader>gc", "<Cmd>!gh issue create<Cr>", { desc = "Create GitHub issue" })
+-- GitHub create/open helpers
+vim.keymap.set("n", "<leader>gic", function()
+	vim.ui.input({ prompt = "Issue title: " }, function(title)
+		if not title or title == "" then
+			return
+		end
+		vim.ui.input({ prompt = "Body (optional): " }, function(body)
+			local args = { "gh", "issue", "create", "-t", title }
+			if body and body ~= "" then
+				table.insert(args, "-b")
+				table.insert(args, body)
+			end
+			vim.system(args, { text = true }, function(res)
+				if res.code == 0 then
+					vim.schedule(function()
+						vim.notify("Issue created", vim.log.levels.INFO)
+					end)
+				else
+					vim.schedule(function()
+						vim.notify("gh issue create failed:\n" .. (res.stderr or ""), vim.log.levels.ERROR)
+					end)
+				end
+			end)
+		end)
+	end)
+end, { desc = "GitHub: create issue" })
+
+vim.keymap.set("n", "<leader>gpc", function()
+	-- Create draft PR to base main using commit messages
+	local args = { "gh", "pr", "create", "--draft", "--base", "main", "--fill" }
+	vim.system(args, { text = true }, function(res)
+		if res.code == 0 then
+			vim.schedule(function()
+				vim.notify("Draft PR created (base=main)", vim.log.levels.INFO)
+			end)
+		else
+			vim.schedule(function()
+				vim.notify("gh pr create failed:\n" .. (res.stderr or ""), vim.log.levels.ERROR)
+			end)
+		end
+	end)
+end, { desc = "GitHub: create PR (draft, base=main)" })
+
+vim.keymap.set("n", "<leader>gpC", function()
+	-- Prompted PR creation
+	local function notify(msg, level)
+		vim.schedule(function()
+			vim.notify(msg, level or vim.log.levels.INFO)
+		end)
+	end
+
+	vim.ui.input({ prompt = "Base branch (default: main): " }, function(base)
+		base = (base and base ~= "") and base or "main"
+		vim.ui.select({ "Draft", "Normal" }, { prompt = "PR type:" }, function(kind)
+			if not kind then
+				return
+			end
+			local args = { "gh", "pr", "create", "--base", base }
+			if kind == "Draft" then
+				table.insert(args, "--draft")
+			end
+			vim.ui.select(
+				{ "Use commit messages (--fill)", "Prompt for title/body" },
+				{ prompt = "PR content:" },
+				function(mode)
+					if not mode then
+						return
+					end
+					local function run()
+						vim.system(args, { text = true }, function(res)
+							if res.code == 0 then
+								notify("PR created (base=" .. base .. ")")
+							else
+								notify("gh pr create failed:\n" .. (res.stderr or ""), vim.log.levels.ERROR)
+							end
+						end)
+					end
+
+					if mode:find("fill", 1, true) then
+						table.insert(args, "--fill")
+						run()
+					else
+						vim.ui.input({ prompt = "Title: " }, function(title)
+							if not title or title == "" then
+								return
+							end
+							table.insert(args, "-t")
+							table.insert(args, title)
+							vim.ui.input({ prompt = "Body (optional): " }, function(body)
+								if body and body ~= "" then
+									table.insert(args, "-b")
+									table.insert(args, body)
+								end
+								run()
+							end)
+						end)
+					end
+				end
+			)
+		end)
+	end)
+end, { desc = "GitHub: create PR (prompt)" })
+
 -- LSP -----------------------------------
 -- Navigation
 map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<Cr>", { desc = "Hover documentation" })
