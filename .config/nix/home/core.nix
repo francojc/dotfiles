@@ -106,7 +106,7 @@
     ncspot # Spotify TUI client
     pandoc # Document converter
     pianobar # Pandora client
-    poppler_utils # PDF utilities (pdftotext, etc.)
+    poppler-utils # PDF utilities (pdftotext, etc.)
     # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     vdirsyncer # CalDAV/CardDAV sync
