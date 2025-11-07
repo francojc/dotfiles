@@ -3,12 +3,12 @@
 -- lz.n will automatically merge this with other plugin specs
 
 return {
-  -- Gitsigns (load when opening files in git repos)
-  {
-    "gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    after = function()
-      require("gitsigns").setup()
-    end,
-  },
+	-- Gitsigns (load when opening files in git repos)
+	{
+		"gitsigns.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		after = function()
+			require("gitsigns").setup()
+		end,
+	},
 }

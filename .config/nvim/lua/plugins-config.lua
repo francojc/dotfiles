@@ -549,7 +549,12 @@ require("sidekick").setup({
 ---| Snacks ----------------------------------
 require("snacks").setup({
 	bigfile = { enabled = false },
-	dashboard = { enabled = false },
+	dashboard = {
+		enabled = true,
+		sections = {
+			{ section = "header" },
+		},
+	},
 	explorer = { enabled = false }, -- Using yazi
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
@@ -558,7 +563,13 @@ require("snacks").setup({
 	quickfile = { enabled = false },
 	scope = { enabled = false },
 	scroll = { enabled = false },
-	gh = { enabled = true },
+	gh = {
+		enabled = true,
+		win = {
+			zindex = 50,
+			style = "minimal",
+		},
+	},
 	statuscolumn = { enabled = false },
 	terminal = { enabled = false },
 	toggle = { enabled = true }, -- Complements toggle functions
@@ -586,8 +597,6 @@ require("nvim-treesitter.configs").setup({
 	},
 	indent = { enable = false },
 })
-
----| Otter ----------------------------------
 -- Otter needs to be setup eagerly for Quarto support
 require("otter").setup({
 	lsp = {
