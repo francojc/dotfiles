@@ -91,8 +91,8 @@
       # Kill window
       bind q kill-window
 
-      # Floating terminal popup
-      bind-key f popup -w 80% -h 60% -E "zsh -c 'cd #{pane_current_path} && exec zsh'"
+      # Floating session popup (in current path), use detach to close
+      bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
       # kill pane
       bind x kill-pane
