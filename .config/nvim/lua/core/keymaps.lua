@@ -236,7 +236,12 @@ map("n", "<leader>sk", "<Cmd>lua Snacks.picker.keymaps()<Cr>", { desc = "Search 
 map("n", "<leader>sm", "<Cmd>lua Snacks.picker.marks()<Cr>", { desc = "Search marks" })
 map("n", "<leader>sr", "<Cmd>lua Snacks.picker.registers()<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelling suggestions" })
-map("n", "<leader>st", "<Cmd>lua Snacks.picker.grep({ search = 'TODO|FIXME|FIX|HACK|WARN|PERF|NOTE' })<Cr>", { desc = "Search todos" })
+map(
+	"n",
+	"<leader>st",
+	"<Cmd>lua Snacks.picker.grep({ search = 'TODO|FIXME|FIX|HACK|WARN|PERF|NOTE' })<Cr>",
+	{ desc = "Search todos" }
+)
 
 -- Toggle ------------------------------------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<Cr>", { desc = "Toggle aerial" })
