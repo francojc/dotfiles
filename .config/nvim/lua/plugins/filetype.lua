@@ -78,7 +78,7 @@ return {
 					},
 					new_notes_location = "Inbox",
 					picker = {
-						name = "fzf-lua",
+						name = "mini.pick",
 					},
 					attachments = {
 						img_folder = "Assets/Attachments",

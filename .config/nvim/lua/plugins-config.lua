@@ -9,7 +9,6 @@ local colors = theme_config.colors
 -- Setup fidget early since we override vim.notify
 require("fidget").setup({
 	notification = {
-		-- Route vim.notify through fidget
 		override_vim_notify = true,
 		window = {
 			winblend = 80, -- 80% transparency
@@ -56,9 +55,9 @@ dashboard.section.header.val = {
 }
 -- Set menu
 local dashboard_buttons = {
-	{ "r", "  Recent files", ":FzfLua oldfiles<CR>" },
-	{ "f", "  Find file", ":FzfLua files<CR>" },
-	{ "g", "  Find text", ":FzfLua live_grep<CR>" },
+	{ "r", "  Recent files", ":lua Snacks.picker.recent()<CR>" },
+	{ "f", "  Find file", ":lua Snacks.picker.files()<CR>" },
+	{ "g", "  Find text", ":lua Snacks.picker.grep()<CR>" },
 	{ "n", "  New file", ":ene <BAR> startinsert<CR>" },
 	{ "q", "  Quit Neovim", ":qa<CR>" },
 }
@@ -434,22 +433,6 @@ require("conform").setup({
 	notify_on_error = false,
 })
 
----| FZF ----------------------------------
-require("fzf-lua").setup({
-	file_icon_padding = " ",
-	files = {
-		git_icons = true,
-		formatter = "path.filename_first",
-	},
-	oldfiles = {
-		cwd_only = true,
-		include_current_session = true,
-	},
-})
-
--- Register fzf-lua as the vim.ui.select backend
-require("fzf-lua").register_ui_select()
-
 ---| LSP Configuration --------------------------------
 -- Get enhanced LSP capabilities from blink.cmp
 -- Define capabilities early so other LSP configs can access it
@@ -637,7 +620,7 @@ require("lualine").setup({
 })
 
 ---| Mini -----------------------------------
-local mini_modules = { "icons", "pairs", "indentscope", "surround" }
+local mini_modules = { "icons", "pairs", "indentscope", "pick", "surround" }
 for _, module in ipairs(mini_modules) do
 	require("mini." .. module).setup({})
 end
@@ -716,15 +699,19 @@ require("snacks").setup({
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
 	notifier = { enabled = false }, -- Using fidget/notify
-	picker = { enabled = false }, -- Using fzf-lua
+	picker = { enabled = true }, -- Fuzzy finder + GitHub integration
 	quickfile = { enabled = false },
 	scope = { enabled = false },
 	scroll = { enabled = false },
+	gh = { enabled = true },
 	statuscolumn = { enabled = false },
 	terminal = { enabled = true }, -- Terminal utilities
 	toggle = { enabled = true }, -- Complements toggle functions
 	words = { enabled = false },
 })
+
+-- Register Snacks picker as the vim.ui.select backend
+vim.ui.select = Snacks.picker.ui_select
 
 ---| Treesitter -----------------------------------
 require("nvim-treesitter.configs").setup({

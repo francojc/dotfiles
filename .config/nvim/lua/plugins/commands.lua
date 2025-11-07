@@ -37,7 +37,7 @@ return {
 	-- Todo comments
 	{
 		"todo-comments.nvim",
-		cmd = { "TodoFzfLua", "TodoTelescope", "TodoTrouble", "TodoQuickFix", "TodoLocList" },
+		cmd = { "TodoTrouble", "TodoQuickFix", "TodoLocList" },
 		event = { "BufReadPost", "BufNewFile" },
 		after = function()
 			require("todo-comments").setup({

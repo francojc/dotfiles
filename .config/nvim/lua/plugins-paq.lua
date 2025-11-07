@@ -22,6 +22,7 @@ require("paq")({
 	"echasnovski/mini.icons", -- Icons
 	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
+	"echasnovski/mini.pick", -- Picker (for Obsidian compatibility)
 	"echasnovski/mini.surround", -- Surround
 	"folke/flash.nvim", -- Flash jump
 	"folke/sidekick.nvim", -- AI sidekick (NES + CLI)
@@ -29,7 +30,6 @@ require("paq")({
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
 	"goolord/alpha-nvim", -- Alpha dashboard
-	"ibhagwan/fzf-lua", -- FZF fuzzy finder
 	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jpalardy/vim-slime", -- Slime integration

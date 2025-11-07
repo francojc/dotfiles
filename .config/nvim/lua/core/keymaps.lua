@@ -117,10 +117,10 @@ map("n", "<leader>bS", "<Cmd>BufferLineSortByExtension<Cr>", { desc = "Sort by e
 map("n", "<leader>bd", "<Cmd>BufferLinePickClose<Cr>", { desc = "Delete buffer" })
 map("n", "<leader>bl", "<Cmd>BufferLineCloseRight<Cr>", { desc = "Keep left buffer(s)" })
 map("n", "<leader>bh", "<Cmd>BufferLineCloseLeft<Cr>", { desc = "Keep right buffer(s)" })
-map("n", "<leader>bf", "<Cmd>FzfLua buffers<Cr>", { desc = "Buffer find" })
+map("n", "<leader>bf", "<Cmd>lua Snacks.picker.buffers()<Cr>", { desc = "Buffer find" })
 
 -- Code -----------------------------
-map("n", "<leader>ca", "<Cmd>lua require('fzf-lua').lsp_code_actions()<Cr>", { desc = "Code actions" })
+map("n", "<leader>ca", "<Cmd>lua Snacks.picker.lsp_code_actions()<Cr>", { desc = "Code actions" })
 map(
 	{ "n", "v" },
 	"<leader>cf",
@@ -139,33 +139,36 @@ map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Sho
 map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Files -----------------------------------
--- Fzf-lua
-map("n", "<leader>ff", "<Cmd>FzfLua files<Cr>", { desc = "Find files" })
-map("n", "<leader>fg", "<Cmd>FzfLua live_grep<Cr>", { desc = "Live grep" })
+-- Snacks picker
+map("n", "<leader>ff", "<Cmd>lua Snacks.picker.files()<Cr>", { desc = "Find files" })
+map("n", "<leader>fg", "<Cmd>lua Snacks.picker.grep()<Cr>", { desc = "Live grep" })
 map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
-map("n", "<leader>fr", "<Cmd>FzfLua oldfiles<Cr>", { desc = "Recent files" })
-map("n", "<leader>fc", "<Cmd>FzfLua resume<Cr>", { desc = "Resume fzf" })
+map("n", "<leader>fr", "<Cmd>lua Snacks.picker.recent()<Cr>", { desc = "Recent files" })
+map("n", "<leader>fc", "<Cmd>lua Snacks.picker.resume()<Cr>", { desc = "Resume picker" })
 -- Git -----------------------------------
 -- Lazygit
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
+-- GitHub (Snacks gh)
+map("n", "<leader>gi", "<Cmd>lua Snacks.picker.gh_issue({ state = 'all' })<Cr>", { desc = "GitHub issues (all)" })
+map("n", "<leader>gio", "<Cmd>lua Snacks.picker.gh_issue({ state = 'open' })<Cr>", { desc = "GitHub issues (open)" })
+map("n", "<leader>gp", "<Cmd>lua Snacks.picker.gh_pr({ state = 'all' })<Cr>", { desc = "GitHub PRs (all)" })
+map("n", "<leader>gpo", "<Cmd>lua Snacks.picker.gh_pr({ state = 'open' })<Cr>", { desc = "GitHub PRs (open)" })
+map("n", "<leader>gc", "<Cmd>!gh issue create<Cr>", { desc = "Create GitHub issue" })
 -- LSP -----------------------------------
 -- Navigation
 map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<Cr>", { desc = "Hover documentation" })
 map("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<Cr>", { desc = "Go to declaration" })
-map("n", "<leader>lD", "<Cmd>FzfLua lsp_definitions<Cr>", { desc = "Definitions" })
-map("n", "<leader>lt", "<Cmd>FzfLua lsp_typedefs<Cr>", { desc = "Type definitions" })
-map("n", "<leader>li", "<Cmd>FzfLua lsp_implementations<Cr>", { desc = "Implementations" })
-map("n", "<leader>lr", "<Cmd>FzfLua lsp_references<Cr>", { desc = "References" })
+map("n", "<leader>lD", "<Cmd>lua Snacks.picker.lsp_definitions()<Cr>", { desc = "Definitions" })
+map("n", "<leader>lt", "<Cmd>lua Snacks.picker.lsp_type_definitions()<Cr>", { desc = "Type definitions" })
+map("n", "<leader>li", "<Cmd>lua Snacks.picker.lsp_implementations()<Cr>", { desc = "Implementations" })
+map("n", "<leader>lr", "<Cmd>lua Snacks.picker.lsp_references()<Cr>", { desc = "References" })
 -- Symbols
-map("n", "<leader>ls", "<Cmd>FzfLua lsp_document_symbols<Cr>", { desc = "Document symbols" })
-map("n", "<leader>lS", "<Cmd>FzfLua lsp_workspace_symbols<Cr>", { desc = "Workspace symbols" })
+map("n", "<leader>ls", "<Cmd>lua Snacks.picker.lsp_symbols()<Cr>", { desc = "Document symbols" })
+map("n", "<leader>lS", "<Cmd>lua Snacks.picker.lsp_workspace_symbols()<Cr>", { desc = "Workspace symbols" })
 -- Actions
 map("n", "<leader>ln", "<Cmd>lua vim.lsp.buf.rename()<Cr>", { desc = "Rename" })
 map("n", "<leader>lh", "<Cmd>lua vim.lsp.buf.signature_help()<Cr>", { desc = "Signature help" })
--- Call hierarchy
-map("n", "<leader>lci", "<Cmd>FzfLua lsp_incoming_calls<Cr>", { desc = "Incoming calls" })
-map("n", "<leader>lco", "<Cmd>FzfLua lsp_outgoing_calls<Cr>", { desc = "Outgoing calls" })
 -- Markdown -----------------------------------
 -- Unordered list item
 map("n", "<leader>mu", "I- ", { desc = "Unordered list item" })
@@ -233,12 +236,12 @@ map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" 
 map({ "n", "v" }, "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
 -- Search -----------------------------------
-map("n", "<leader>sh", "<Cmd>FzfLua helptags<Cr>", { desc = "Search help tags" })
-map("n", "<leader>sk", "<Cmd>FzfLua keymaps<Cr>", { desc = "Search keymaps" })
-map("n", "<leader>sm", "<Cmd>FzfLua marks<Cr>", { desc = "Search marks" })
-map("n", "<leader>sr", "<Cmd>FzfLua registers<Cr>", { desc = "Search registers" })
-map("n", "<leader>ss", "<Cmd>FzfLua spell_suggest<Cr>", { desc = "Spelling suggestions" })
-map("n", "<leader>st", "<Cmd>TodoFzfLua<Cr>", { desc = "Search todos" })
+map("n", "<leader>sh", "<Cmd>lua Snacks.picker.help()<Cr>", { desc = "Search help tags" })
+map("n", "<leader>sk", "<Cmd>lua Snacks.picker.keymaps()<Cr>", { desc = "Search keymaps" })
+map("n", "<leader>sm", "<Cmd>lua Snacks.picker.marks()<Cr>", { desc = "Search marks" })
+map("n", "<leader>sr", "<Cmd>lua Snacks.picker.registers()<Cr>", { desc = "Search registers" })
+map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelling suggestions" })
+map("n", "<leader>st", "<Cmd>lua Snacks.picker.grep({ search = 'TODO|FIXME|FIX|HACK|WARN|PERF|NOTE' })<Cr>", { desc = "Search todos" })
 -- Flash search
 map({ "n", "x", "o" }, "<leader>sf", "<Cmd>lua require('flash').jump()<Cr>", { desc = "Flash" })
 map({ "n", "x", "o" }, "<leader>sF", "<Cmd>lua require('flash').treesitter()<Cr>", { desc = "Flash treesitter" })
