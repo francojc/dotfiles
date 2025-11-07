@@ -554,7 +554,18 @@ require("snacks").setup({
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
 	notifier = { enabled = false }, -- Using fidget/notify
-	picker = { enabled = true }, -- Fuzzy finder + GitHub integration
+	picker = {
+		enabled = true,
+		win = {
+			input = {
+				-- Disable blink.cmp in picker input to prevent interference
+				keys = {
+					["<C-n>"] = false, -- Disable to allow picker's native navigation
+					["<C-p>"] = false,
+				},
+			},
+		},
+	},
 	quickfile = { enabled = false },
 	scope = { enabled = false },
 	scroll = { enabled = false },

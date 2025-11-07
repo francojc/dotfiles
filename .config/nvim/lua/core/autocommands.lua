@@ -120,7 +120,24 @@ end
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
-		load_spell_lang()
+		-- Skip special buffers (picker, terminal, etc.)
+		local buftype = vim.bo.buftype
+		local bufname = vim.api.nvim_buf_get_name(0)
+
+		-- Only run for normal file buffers
+		if buftype == "" and bufname ~= "" and not bufname:match("^%s*$") then
+			load_spell_lang()
+		end
+	end,
+})
+
+-- Disable blink.cmp in Snacks picker buffers
+vim.api.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = "snacks_picker_input",
+	callback = function()
+		-- Disable blink.cmp for picker input buffers
+		vim.b.blink_cmp_enabled = false
 	end,
 })
 
