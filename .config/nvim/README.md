@@ -41,22 +41,26 @@ A streamlined, modular Neovim configuration with lazy-loading support for optima
 
 ### Prerequisites
 
-- Neovim >= 0.9.0
+- Neovim >= 0.12+
 - Git
 - Node.js (for some LSP servers)
 - Required formatters and language servers (installed automatically via LSP)
 
 ### Setup
 
-1. Clone or symlink this configuration to your Neovim config directory:
-   ```bash
-   # If part of a dotfiles setup
-   ln -sf ~/.dotfiles/.config/nvim ~/.config/nvim
-   ```
+1. Clone, symlink, or `stow` this configuration to your Neovim config directory.
 
 2. Start Neovim - plugins will be installed automatically via vim.pack
 
 The first launch may take a moment as vim.pack downloads plugins in parallel
+
+### Updating
+
+To update plugins, open `nvim` and on the command line run:
+
+```vim
+:lua vim.pack.update()
+```
 
 ## Key Bindings
 
