@@ -3,6 +3,15 @@
 -- lz.n will automatically merge this with other plugin specs
 
 return {
+	-- Aerial toggle
+	{
+		"aerial.nvim",
+		cmd = { "AerialToggle", "AerialOpen", "AerialClose" },
+		after = function()
+			require("aerial").setup({})
+		end,
+	},
+
 	-- CSV toggle
 	{
 		"csvview.nvim",

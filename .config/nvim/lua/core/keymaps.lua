@@ -262,7 +262,12 @@ map("n", "<leader>li", "<Cmd>lua Snacks.picker.lsp_implementations()<Cr>", { des
 map("n", "<leader>lr", "<Cmd>lua Snacks.picker.lsp_references()<Cr>", { desc = "References" })
 -- Incremental selection (Neovim 0.12+ LSP textDocument/selectionRange)
 map({ "n", "v" }, "an", "<Cmd>lua vim.lsp.buf.range_selection()<Cr>", { desc = "LSP: expand selection range" })
-map({ "n", "v" }, "in", "<Cmd>lua vim.lsp.buf.range_selection({ direction = 'shrink' })<Cr>", { desc = "LSP: shrink selection range" })
+map(
+	{ "n", "v" },
+	"in",
+	"<Cmd>lua vim.lsp.buf.range_selection({ direction = 'shrink' })<Cr>",
+	{ desc = "LSP: shrink selection range" }
+)
 -- Symbols
 map("n", "<leader>ls", "<Cmd>lua Snacks.picker.lsp_symbols()<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>lua Snacks.picker.lsp_workspace_symbols()<Cr>", { desc = "Workspace symbols" })
@@ -349,6 +354,7 @@ map(
 )
 
 -- Toggle ------------------------------------
+map("n", "<leader>ta", "<Cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
 map("n", "<leader>tb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
 map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle word diff" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
