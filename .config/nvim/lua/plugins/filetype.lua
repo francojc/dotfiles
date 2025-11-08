@@ -47,7 +47,51 @@ return {
 		end,
 	},
 
-
+	-- Obsidian notes
+	{
+		"obsidian.nvim",
+		ft = "markdown",
+		after = function()
+			-- Only setup if not already configured
+			if not vim.g.obsidian_setup_done then
+				require("obsidian").setup({
+					legacy_commands = true,
+					ui = {
+						enable = false,
+					},
+					workspaces = {
+						{
+							name = "Notes",
+							path = "~/Obsidian/Notes/",
+						},
+						{
+							name = "Personal",
+							path = "~/Obsidian/Personal/",
+						},
+					},
+					daily_notes = {
+						folder = "Daily",
+						template = "Assets/Templates/Daily.md",
+					},
+					templates = {
+						folder = "Assets/Templates",
+					},
+					new_notes_location = "Inbox",
+					picker = {
+						name = "mini.pick",
+					},
+					attachments = {
+						img_folder = "Assets/Attachments",
+					},
+					completion = {
+						nvim_cmp = false,
+						blink = true,
+					},
+				})
+				vim.g.obsidian_setup_done = true
+			end
+		end,
+	},
 
 	-- Quarto document support
 	{

@@ -603,42 +603,6 @@ require("otter").setup({
 	handle_leading_whitespace = true,
 })
 
----| Obsidian ----------------------------------
-require("obsidian").setup({
-	legacy_commands = false,
-	ui = {
-		enable = false,
-	},
-	workspaces = {
-		{
-			name = "Notes",
-			path = "~/Obsidian/Notes/",
-		},
-		{
-			name = "Personal",
-			path = "~/Obsidian/Personal/",
-		},
-	},
-	daily_notes = {
-		folder = "Daily",
-		template = "Assets/Templates/Daily.md",
-	},
-	templates = {
-		folder = "Assets/Templates",
-	},
-	new_notes_location = "Inbox",
-	picker = {
-		name = "mini.pick",
-	},
-	attachments = {
-		img_folder = "Assets/Attachments",
-	},
-	completion = {
-		nvim_cmp = false,
-		blink = true,
-	},
-})
-
 ---| WhichKey -----------------------------------
 require("which-key").setup({
 	icons = {
