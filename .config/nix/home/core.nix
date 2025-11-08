@@ -123,10 +123,4 @@
 in {
   # Install general packages globally for the user
   home.packages = generalPackages;
-
-  # Configure Neovim using the dedicated home-manager module
-  programs.neovim = {
-    enable = true;
-    package = pkgs.neovim-unwrapped;
-  };
 }

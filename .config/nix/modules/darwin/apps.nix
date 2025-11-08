@@ -24,7 +24,7 @@
       "keith/formulae/reminders-cli"
       {
         name = "neovim";
-        args = ["HEAD"];
+        args = ["HEAD"]; # pre-release version
       }
       "nmap"
       "node" # Node.js
