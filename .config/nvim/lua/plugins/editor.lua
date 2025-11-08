@@ -8,7 +8,9 @@ return {
 		"gitsigns.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		after = function()
-			require("gitsigns").setup()
+			require("gitsigns").setup({
+				word_diff = true,
+			})
 		end,
 	},
 }

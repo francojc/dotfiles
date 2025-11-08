@@ -167,3 +167,25 @@ function _G.Toggle_wrap()
 	vim.opt.wrap = not vim.opt.wrap:get()
 	notify_toggle(vim.opt.wrap:get(), "Word wrap")
 end
+
+-- Buffer management function
+function _G.Close_other_buffers()
+	local current_buf = vim.fn.bufnr("%")
+	local buffers = vim.api.nvim_list_bufs()
+	local closed_count = 0
+
+	for _, buf in ipairs(buffers) do
+		if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) then
+			local ok = pcall(vim.api.nvim_buf_delete, buf, { force = true })
+			if ok then
+				closed_count = closed_count + 1
+			end
+		end
+	end
+
+	require("fidget").notify(
+		closed_count .. " buffer(s) closed",
+		vim.log.levels.INFO,
+		{ title = "Buffers" }
+	)
+end

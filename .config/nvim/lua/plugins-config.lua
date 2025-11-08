@@ -452,11 +452,21 @@ require("lualine").setup({
 	},
 	sections = {
 		lualine_a = { "mode" },
-		lualine_b = { "branch", "diff", "diagnostics" },
-		lualine_c = {
-			{ "filename", path = 1 },
+		lualine_b = {
+			{ "branch", icon = "" },
+			"diff",
+			"diagnostics",
 		},
-		lualine_x = {},
+		lualine_c = {
+			-- { "filename", path = 1 },
+			{
+				"buffers",
+				symbols = { modified = " ●", alternate_file = "#", current_file = "*" },
+			},
+		},
+		lualine_x = {
+			{ "lsp_status", ignore_lsp = { "GitHub Copilot" } },
+		},
 		lualine_y = {
 			search_match_status, -- Custom function to show search match status
 			{ "filetype", colored = true, icon_only = true, icon = { align = "right" } },

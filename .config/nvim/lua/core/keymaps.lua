@@ -112,6 +112,7 @@ end, { desc = "CLI: send selection" })
 map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<S-Tab>", ":bprevious<CR>", { desc = "Previous buffer" })
 map("n", "<leader>bd", ":bdelete<CR>", { desc = "Delete buffer" })
+map("n", "<leader>bo", "<Cmd>lua Close_other_buffers()<Cr>", { desc = "Close other buffers" })
 map("n", "<leader>bf", "<Cmd>lua Snacks.picker.buffers()<Cr>", { desc = "Buffer find" })
 
 -- Code -----------------------------
@@ -349,7 +350,7 @@ map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle wo
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tm", "<Cmd>RenderMarkdown toggle<Cr>", { desc = "Toggle markdown rendering" })
-map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" }) -- Call the Lua function
+map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" })
 map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })
