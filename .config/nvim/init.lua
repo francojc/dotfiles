@@ -2,13 +2,10 @@
 -- Modular configuration for Neovim
 -- This file orchestrates loading all configuration modules
 
----| Bootstrap paq-nvim -------------------------------------------
--- Ensure paq-nvim is installed before trying to use it
-require("bootstrap").ensure_paq()
-
----| Load Plugins ------------------------------------------------
--- Install plugins (paq declaration)
-require("plugins-paq")
+---| Plugin Management (vim.pack) ---------------------------------
+-- Install and declare plugins using Neovim 0.12+ native vim.pack
+-- This automatically installs missing plugins on first run
+require("plugins-pack")
 
 ---| Lazy-loading Setup -------------------------------------------
 -- Setup lazy-loading with lz.n (auto-discovers lua/plugins/*.lua)

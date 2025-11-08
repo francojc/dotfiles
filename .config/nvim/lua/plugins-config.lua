@@ -570,7 +570,7 @@ vim.ui.select = Snacks.picker.ui_select
 
 ---| Treesitter -----------------------------------
 require("nvim-treesitter.configs").setup({
-	auto_install = true, -- Key for the `paq` approach to get parsers
+	auto_install = true, -- Automatically install missing parsers
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
