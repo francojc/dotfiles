@@ -54,9 +54,9 @@ A streamlined, modular Neovim configuration with lazy-loading support for optima
    ln -sf ~/.dotfiles/.config/nvim ~/.config/nvim
    ```
 
-2. Start Neovim - plugins will be installed automatically via paq-nvim bootstrap
+2. Start Neovim - plugins will be installed automatically via vim.pack
 
-3. Run `:PaqInstall` to ensure all plugins are installed (including lazy-loaded ones in `opt` directory)
+The first launch may take a moment as vim.pack downloads plugins in parallel
 
 ## Key Bindings
 
@@ -120,7 +120,7 @@ A streamlined, modular Neovim configuration with lazy-loading support for optima
 
 ## Plugin Management
 
-This configuration uses [paq-nvim](https://github.com/savq/paq-nvim) for plugin installation and [lz.n](https://github.com/nvim-neorocks/lz.n) for lazy-loading. Plugins are automatically bootstrapped on first run.
+This configuration uses vim.pack (Neovim 0.12+ native package manager) for plugin installation and [lz.n](https://github.com/nvim-neorocks/lz.n) for lazy-loading. Plugins are automatically installed on first run.
 
 ### Main Plugins
 
@@ -156,7 +156,7 @@ This configuration uses [paq-nvim](https://github.com/savq/paq-nvim) for plugin 
 │   ├── bootstrap.lua             # Paq-nvim bootstrap
 │   ├── theme-config.lua          # Theme configuration (Nix-managed)
 │   ├── sidekick-highlights.lua   # Custom highlight groups
-│   ├── plugins-paq.lua           # Paq plugin declarations
+│   ├── plugins-pack.lua          # vim.pack plugin declarations
 │   ├── plugins-config.lua        # Eager-loaded plugin configs
 │   ├── core/
 │   │   ├── options.lua           # Vim options & diagnostics
@@ -176,25 +176,25 @@ This configuration uses [paq-nvim](https://github.com/savq/paq-nvim) for plugin 
 ### Module Responsibilities
 
 - **`init.lua`**: Orchestrates loading of all modules in correct order
-- **`plugins-paq.lua`**: Declares all plugins with paq (marks lazy ones with `opt = true`)
+- **`plugins-pack.lua`**: Declares all plugins with vim.pack (marks lazy ones with `load = false`)
 - **`plugins-config.lua`**: Configures eager-loaded plugins
 - **`lua/plugins/*.lua`**: lz.n lazy-loading specs (auto-discovered)
 - **`lua/core/*.lua`**: Core Neovim settings (options, keymaps, autocommands, functions)
 
 ## Adding New Plugins
 
-### Step 1: Declare the Plugin in `lua/plugins-paq.lua`
+### Step 1: Declare the Plugin in `lua/plugins-pack.lua`
 
-Add the plugin to the paq declaration:
+Add the plugin to the vim.pack declaration:
 
 ```lua
-require("paq")({
+vim.pack.add({
   -- Existing plugins...
 
   -- Add your plugin:
-  "author/plugin-name", -- For eager-loading
+  { src = "https://github.com/author/plugin-name", load = true }, -- For eager-loading
   -- OR
-  { "author/plugin-name", opt = true }, -- For lazy-loading
+  { src = "https://github.com/author/plugin-name", load = false }, -- For lazy-loading
 })
 ```
 
@@ -454,7 +454,7 @@ map("n", "<leader>key", "<Cmd>PluginCommand<Cr>", { desc = "Description" })
 ### Step 4: Install the Plugin
 
 ```vim
-:PaqInstall
+:lua vim.pack.add()
 ```
 
 Restart Neovim to load the configuration.

@@ -4,6 +4,7 @@
 -- Load theme config early for colors used by plugins
 local theme_config = require("theme-config")
 local colors = theme_config.colors
+
 ---| CONFIG ---------------------------------------------------
 
 ---| Blink ----------------------------------
@@ -190,7 +191,6 @@ require("tokyonight").setup({
 	day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
 	hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **StatusLineNC** highlights
 	dim_inactive = false, -- dims inactive windows
-	lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
 })
 -- Vague
 require("vague").setup({})
@@ -260,7 +260,6 @@ require("conform").setup({
 	end,
 	notify_on_error = false,
 })
-
 
 ---| LSP Configuration --------------------------------
 -- Get enhanced LSP capabilities from blink.cmp
@@ -465,7 +464,6 @@ vim.lsp.enable({
 	"yamlls",
 })
 
-
 ---| Mini -----------------------------------
 local mini_modules = { "icons", "pairs", "pick", "surround" }
 for _, module in ipairs(mini_modules) do
@@ -547,7 +545,7 @@ require("snacks").setup({
 	explorer = { enabled = false }, -- Using yazi
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
-	notifier = { enabled = false }, -- Using fidget/notify
+	notifier = { enabled = false }, -- Using standard vim.notify
 	picker = { enabled = true },
 	quickfile = { enabled = false },
 	scope = { enabled = false },

@@ -88,11 +88,13 @@ Successfully overhauled Neovim configuration to leverage 0.12+ native features w
 ## Final Configuration State
 
 ### Plugin Count
+
 - **Before**: 40 plugins
 - **After**: 36 plugins
 - **Reduction**: 4 plugins (-10%)
 
 ### Retained Core Functionality
+
 ✅ **LSP**: All language servers enhanced with 0.12+ features
 ✅ **Completion**: blink.cmp with native UI enhancements
 ✅ **Document editing**: quarto, obsidian, render-markdown, otter, image handling
@@ -104,6 +106,7 @@ Successfully overhauled Neovim configuration to leverage 0.12+ native features w
 ✅ **Treesitter**: Enhanced syntax highlighting
 
 ### Key Files Modified
+
 ```
 lua/
 ├── plugins-pack.lua          # NEW: vim.pack plugin declarations
@@ -116,6 +119,7 @@ lua/
 ```
 
 ### Files Backed Up
+
 - `lua/bootstrap.lua.old` (can be deleted after testing)
 - `lua/plugins-paq.lua.old` (can be deleted after testing)
 
@@ -124,6 +128,7 @@ lua/
 ## Performance Improvements
 
 **Estimated Benefits:**
+
 - 🚀 **15-30% faster startup** (4 fewer plugins, native package manager)
 - ⚡ **Reduced memory footprint** (no lualine/fidget overhead)
 - 🎯 **Native features** (better integration, less overhead)
@@ -134,18 +139,21 @@ lua/
 ## Testing Checklist
 
 ### Essential Functionality
+
 - [ ] Neovim starts without errors
 - [ ] Plugins install automatically on first run (if fresh)
 - [ ] Statusline displays correctly with diagnostics
 - [ ] Notifications appear properly
 
 ### LSP Features (0.12+)
+
 - [ ] `an`/`in` - Incremental selection works
 - [ ] `gf` - Diagnostic related location navigation
 - [ ] Completion popup has rounded border
 - [ ] All LSP servers attach correctly
 
 ### Research Workflows
+
 - [ ] **Quarto**: Cell execution, preview, formatting
 - [ ] **R**: LSP, formatting with air, REPL integration
 - [ ] **Python**: LSP, ruff formatting, type checking
@@ -153,16 +161,19 @@ lua/
 - [ ] **Markdown**: render-markdown, image pasting, pandoc references
 
 ### Git Integration
+
 - [ ] Gitsigns: blame, diff, hunk navigation
 - [ ] LazyGit: opens and functions correctly
 - [ ] GitHub CLI: issue/PR creation
 
 ### AI Assistants
+
 - [ ] Copilot: completions work
 - [ ] Sidekick NES: suggestions appear
 - [ ] Sidekick CLI: terminal integration
 
 ### Navigation & Editing
+
 - [ ] Snacks picker: file/grep/symbols search
 - [ ] Yazi: file manager integration
 - [ ] which-key: keybinding discovery
@@ -180,6 +191,7 @@ git checkout 1caaf9f  # Commit before migration
 ```
 
 Or restore paq-nvim:
+
 ```bash
 mv lua/bootstrap.lua.old lua/bootstrap.lua
 mv lua/plugins-paq.lua.old lua/plugins-paq.lua
@@ -191,11 +203,13 @@ mv lua/plugins-paq.lua.old lua/plugins-paq.lua
 ## Known Considerations
 
 ⚠️ **vim.pack Status**: Marked "WORK IN PROGRESS" by Neovim team
+
 - May have breaking changes in future releases
 - Functional and stable in current testing
 - Monitor Neovim changelog for updates
 
 ✅ **Stability**: All changes tested on stable configuration
+
 - No experimental features beyond vim.pack
 - Core workflows preserved
 - Easy rollback available
@@ -207,6 +221,7 @@ mv lua/plugins-paq.lua.old lua/plugins-paq.lua
 1. **Test thoroughly** - Run through testing checklist
 2. **Monitor startup** - Verify performance improvements
 3. **Delete backups** - After confirming stability:
+
    ```bash
    rm lua/bootstrap.lua.old lua/plugins-paq.lua.old
    ```
@@ -222,6 +237,7 @@ mv lua/plugins-paq.lua.old lua/plugins-paq.lua
 **Selected:** Direction 2 - Balanced Modernization
 
 **Rationale:**
+
 - Removes redundant UI plugins without sacrificing usability
 - Adopts proven 0.12+ features (incremental selection, native completion UI)
 - Maintains productivity tools (which-key, blink.cmp)

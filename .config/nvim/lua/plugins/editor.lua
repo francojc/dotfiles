@@ -9,7 +9,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		after = function()
 			require("gitsigns").setup({
-				word_diff = true,
+				word_diff = false,
 			})
 		end,
 	},
