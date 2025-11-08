@@ -291,6 +291,12 @@ require("conform").setup({
 	notify_on_error = false,
 })
 
+---| Highlight Colors -----------------------------
+
+require("nvim-highlight-colors").setup({
+	virtual_symbol_position = "eow", -- Position of virtual text
+})
+
 ---| LSP Configuration --------------------------------
 -- Get enhanced LSP capabilities from blink.cmp
 -- Define capabilities early so other LSP configs can access it
@@ -298,7 +304,10 @@ local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 -- Bash
 -- bash-language-server
-vim.lsp.config.bashls = { capabilities = capabilities }
+vim.lsp.config.bashls = {
+	capabilities = capabilities,
+	filetypes = { "sh", "bash" },
+}
 
 -- Copilot
 -- copilot-language-server (for sidekick.nvim NES feature)
@@ -309,7 +318,37 @@ vim.lsp.config.copilot = {
 
 -- Lua
 -- lua-language-server
-vim.lsp.config.lua_ls = { capabilities = capabilities }
+vim.lsp.config.lua_ls = {
+	on_attach = function(client, _)
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
+	end,
+	capabilities = capabilities,
+	filetypes = { "lua" },
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+					vim.fn.stdpath("config"),
+				},
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
+	root_dir = function(fname)
+		return vim.fs.root(fname, { ".git", ".luarc.json", "init.lua" }) or vim.fs.dirname(fname)
+	end,
+}
 
 -- Nix
 -- nixd
@@ -324,6 +363,7 @@ end
 vim.lsp.config.nixd = {
 	cmd = { "nixd" },
 	capabilities = capabilities,
+	filetypes = { "nix" },
 	settings = {
 		nixd = {
 			nixpkgs = { expr = "import <nixpkgs> {}" },
@@ -350,7 +390,26 @@ vim.lsp.config.nixd = {
 }
 
 -- Python
-vim.lsp.config.pyright = { capabilities = capabilities }
+-- pyright
+vim.lsp.config.pyright = {
+	capabilities = capabilities,
+	filetypes = { "python" },
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "basic",
+				diagnosticMode = "workspace",
+				autoImportCompletions = true,
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+			},
+		},
+	},
+	root_dir = function(fname)
+		return vim.fs.root(fname, { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" })
+			or vim.fs.dirname(fname)
+	end,
+}
 
 -- R
 vim.lsp.config.r_language_server = {
@@ -405,6 +464,7 @@ local quarto_schema_path = resource_path and (resource_path .. "/schemas/quarto-
 if quarto_schema_path then
 	vim.lsp.config.yamlls = {
 		capabilities = capabilities,
+		filetypes = { "yaml", "yml" },
 		settings = {
 			yaml = {
 				schemas = {
@@ -416,7 +476,10 @@ if quarto_schema_path then
 		},
 	}
 else
-	vim.lsp.config.yamlls = { capabilities = capabilities }
+	vim.lsp.config.yamlls = {
+		capabilities = capabilities,
+		filetypes = { "yaml", "yml" },
+	}
 end
 
 ---| Lualine ----------------------------------
@@ -430,6 +493,25 @@ local function search_match_status()
 		return ""
 	end
 	return string.format(" %d/%d", search_count.current, search_count.total)
+end
+
+-- LSP clients component for lualine
+local function lsp_attached()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+	if #clients == 0 then
+		return ""
+	end
+	local names = {}
+	for _, c in ipairs(clients) do
+		if c.name ~= "copilot" and c.name ~= "GitHub Copilot" then
+			table.insert(names, c.name)
+		end
+	end
+	if #names == 0 then
+		return ""
+	end
+	return "  " .. table.concat(names, ",")
 end
 
 require("lualine").setup({
@@ -458,14 +540,10 @@ require("lualine").setup({
 			"diagnostics",
 		},
 		lualine_c = {
-			-- { "filename", path = 1 },
-			{
-				"buffers",
-				symbols = { modified = " ●", alternate_file = "#", current_file = "*" },
-			},
+			{ "filename", path = 4, symbols = { modified = "  ", readonly = "  ", unnamed = "" } },
 		},
 		lualine_x = {
-			{ "lsp_status", ignore_lsp = { "GitHub Copilot" } },
+			lsp_attached,
 		},
 		lualine_y = {
 			search_match_status, -- Custom function to show search match status

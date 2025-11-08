@@ -30,7 +30,7 @@ require("paq")({
 	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jpalardy/vim-slime", -- Slime integration
-	"lilydjwg/colorizer", -- Colorizer
+	"brenoprata10/nvim-highlight-colors", -- Highlight colors
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
 	"nvim-lualine/lualine.nvim", -- Statusline
