@@ -344,6 +344,8 @@ map(
 )
 
 -- Toggle ------------------------------------
+map("n", "<leader>tb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
+map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle word diff" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tm", "<Cmd>RenderMarkdown toggle<Cr>", { desc = "Toggle markdown rendering" })
