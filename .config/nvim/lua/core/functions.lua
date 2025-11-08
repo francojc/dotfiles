@@ -99,7 +99,7 @@ end
 -- Notification helper function
 local function notify_toggle(enabled, feature)
 	local status = enabled and "enabled" or "disabled"
-	require("fidget").notify(feature .. " " .. status, vim.log.levels.INFO, { title = feature })
+	vim.notify(feature .. " " .. status, vim.log.levels.INFO)
 end
 
 -- Image Rendering Toggle Functionality
@@ -148,11 +148,7 @@ function _G.Toggle_r_language_server()
 			})
 			notify_toggle(true, "R LSP")
 		else
-			require("fidget").notify(
-				"Could not determine project root for R LSP.",
-				vim.log.levels.WARN,
-				{ title = "R LSP" }
-			)
+			vim.notify("Could not determine project root for R LSP.", vim.log.levels.WARN)
 		end
 	end
 end
@@ -183,9 +179,5 @@ function _G.Close_other_buffers()
 		end
 	end
 
-	require("fidget").notify(
-		closed_count .. " buffer(s) closed",
-		vim.log.levels.INFO,
-		{ title = "Buffers" }
-	)
+	vim.notify(closed_count .. " buffer(s) closed", vim.log.levels.INFO)
 end

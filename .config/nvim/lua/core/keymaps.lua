@@ -127,8 +127,9 @@ map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (c
 map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
 
 -- Diagnostics/Debug -----------------------------
---
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
+-- Neovim 0.12+: gf in diagnostic float jumps to related locations
+map("n", "gf", "<Cmd>lua vim.diagnostic.goto_related()<Cr>", { desc = "Go to related diagnostic" })
 
 -- Explore -------------------------------
 -- Yazi
@@ -259,6 +260,9 @@ map("n", "<leader>lD", "<Cmd>lua Snacks.picker.lsp_definitions()<Cr>", { desc = 
 map("n", "<leader>lt", "<Cmd>lua Snacks.picker.lsp_type_definitions()<Cr>", { desc = "Type definitions" })
 map("n", "<leader>li", "<Cmd>lua Snacks.picker.lsp_implementations()<Cr>", { desc = "Implementations" })
 map("n", "<leader>lr", "<Cmd>lua Snacks.picker.lsp_references()<Cr>", { desc = "References" })
+-- Incremental selection (Neovim 0.12+ LSP textDocument/selectionRange)
+map({ "n", "v" }, "an", "<Cmd>lua vim.lsp.buf.range_selection()<Cr>", { desc = "LSP: expand selection range" })
+map({ "n", "v" }, "in", "<Cmd>lua vim.lsp.buf.range_selection({ direction = 'shrink' })<Cr>", { desc = "LSP: shrink selection range" })
 -- Symbols
 map("n", "<leader>ls", "<Cmd>lua Snacks.picker.lsp_symbols()<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>lua Snacks.picker.lsp_workspace_symbols()<Cr>", { desc = "Workspace symbols" })

@@ -19,7 +19,6 @@ require("paq")({
 	"Saghen/blink.cmp", -- Blink completion
 	"christoomey/vim-tmux-navigator", -- nav through vim/tmux
 	"echasnovski/mini.icons", -- Icons
-	"echasnovski/mini.indentscope", -- Indent guides
 	"echasnovski/mini.pairs", -- Pairs
 	"echasnovski/mini.pick", -- Picker (for Obsidian compatibility)
 	"echasnovski/mini.surround", -- Surround
@@ -27,13 +26,10 @@ require("paq")({
 	"folke/snacks.nvim", -- Input and terminal utils
 	"folke/which-key.nvim", -- Keymaps popup
 	"github/copilot.vim", -- Copilot
-	"j-hui/fidget.nvim", -- LSP progress indicator
 	"jmbuhr/cmp-pandoc-references", -- Pandoc references
 	"jpalardy/vim-slime", -- Slime integration
-	"brenoprata10/nvim-highlight-colors", -- Highlight colors
 	"moyiz/blink-emoji.nvim", -- Blink emoji
 	"nvim-lua/plenary.nvim", -- Plenary for Lua functions
-	"nvim-lualine/lualine.nvim", -- Statusline
 	"nvim-treesitter/nvim-treesitter", -- Treesitter
 	"abecodes/tabout.nvim", -- Tab out of brackets/quotes
 	"rafamadriz/friendly-snippets", -- Snippets

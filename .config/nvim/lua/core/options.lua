@@ -15,6 +15,9 @@ opt.clipboard:append("unnamedplus") --- Use system clipboard
 -- Completions
 opt.completeopt = "menu,menuone,noselect" -- Completion options
 opt.path:append("**") -- Search subdirectories
+-- Neovim 0.12+ native completion UI enhancements
+opt.pumborder = "rounded" -- Popup menu border
+opt.pummaxwidth = 60 -- Maximum width for popup menu
 -- Window
 opt.splitbelow = true
 opt.splitright = true
@@ -67,6 +70,22 @@ opt.autoread = true -- auto read files when changed outside of Neovim
 opt.foldmethod = "indent"
 opt.foldlevel = 99 -- start with all folds open
 opt.laststatus = 2 -- show statusline always
+
+-- Statusline (native, leveraging Neovim 0.12+ vim.diagnostic.status())
+vim.o.statusline = table.concat({
+	"%#StatusLine#",
+	" %{toupper(mode())} ", -- Mode
+	"%#StatusLineNC#",
+	"%{&modified?'[+]':''}%{&readonly?'[]':''} ", -- Modified/Readonly indicators
+	"%#StatusLine#",
+	"%f ", -- Filename with path
+	"%=", -- Right align
+	"%{v:lua.vim.diagnostic.status()} ", -- Diagnostic count (0.12+ native)
+	"%#StatusLineNC#",
+	" %Y ", -- File type
+	"%#StatusLine#",
+	" %3l:%-2c ", -- Line:Column
+}, "")
 
 -- Diagnostics
 vim.diagnostic.config({

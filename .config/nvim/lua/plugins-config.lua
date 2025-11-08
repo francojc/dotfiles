@@ -4,36 +4,6 @@
 -- Load theme config early for colors used by plugins
 local theme_config = require("theme-config")
 local colors = theme_config.colors
-
----| Fidget ----------------------------------
--- Setup fidget early since we override vim.notify
-require("fidget").setup({
-	notification = {
-		override_vim_notify = true,
-		window = {
-			winblend = 80, -- 80% transparency
-			border = "rounded", -- Rounded border
-		},
-	},
-	progress = {
-		display = {
-			done_icon = "✓", -- Clean checkmark for completed tasks
-			done_style = "DiagnosticOk", -- Green styling for completed
-			progress_icon = {
-				pattern = "dots_pulse", -- Smooth pulsing animation
-				period = 1,
-			},
-			progress_style = "DiagnosticInfo", -- Blue styling for progress
-			group_style = "Title", -- Bold styling for LSP server names
-			render_limit = 8, -- Limit notifications to avoid clutter
-			done_ttl = 2, -- Show completed tasks for 2 seconds
-		},
-	},
-})
-
--- Ensure any vim.notify calls use fidget's notifier
-vim.notify = require("fidget").notify
-
 ---| CONFIG ---------------------------------------------------
 
 ---| Blink ----------------------------------
@@ -291,11 +261,6 @@ require("conform").setup({
 	notify_on_error = false,
 })
 
----| Highlight Colors -----------------------------
-
-require("nvim-highlight-colors").setup({
-	virtual_symbol_position = "eow", -- Position of virtual text
-})
 
 ---| LSP Configuration --------------------------------
 -- Get enhanced LSP capabilities from blink.cmp
@@ -500,104 +465,9 @@ vim.lsp.enable({
 	"yamlls",
 })
 
----| Lualine ----------------------------------
--- Create a Lua function that will match status for lualine
-local function search_match_status()
-	if vim.v.hlsearch == 0 then
-		return ""
-	end
-	local search_count = vim.fn.searchcount({ recompute = true, maxcount = 999 })
-	if search_count.total == 0 then
-		return ""
-	end
-	return string.format(" %d/%d", search_count.current, search_count.total)
-end
-
--- LSP clients component for lualine
-local function lsp_attached()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
-	if #clients == 0 then
-		return ""
-	end
-	local names = {}
-	for _, c in ipairs(clients) do
-		if c.name ~= "copilot" and c.name ~= "GitHub Copilot" then
-			table.insert(names, c.name)
-		end
-	end
-	if #names == 0 then
-		return ""
-	end
-	return "  " .. table.concat(names, ",")
-end
-
-require("lualine").setup({
-	options = {
-		icons_enabled = true,
-		theme = "auto",
-		component_separators = { left = " ", right = " " },
-		section_separators = { left = " ", right = " " },
-		disabled_filetypes = {
-			statusline = { "toggleterm", "alpha", "aerial" },
-			winbar = { "alpha" },
-		},
-		always_divide_middle = true,
-		globalstatus = false, -- conflicts with statusline = 2
-		refresh = {
-			statusline = 100, -- Refresh more frequently to catch LSP attach events
-			tabline = 1000,
-			winbar = 1000,
-		},
-	},
-	sections = {
-		lualine_a = { "mode" },
-		lualine_b = {
-			{ "branch", icon = "" },
-			"diff",
-			"diagnostics",
-		},
-		lualine_c = {
-			{ "filename", path = 4, symbols = { modified = "  ", readonly = "  ", unnamed = "" } },
-		},
-		lualine_x = {
-			lsp_attached,
-		},
-		lualine_y = {
-			search_match_status, -- Custom function to show search match status
-			{ "filetype", colored = true, icon_only = true, icon = { align = "right" } },
-		},
-		lualine_z = { "progress" },
-	},
-	inactive_sections = {
-		lualine_a = {},
-		lualine_b = {},
-		lualine_c = { "filename" },
-		lualine_x = { "location" },
-		lualine_y = {},
-		lualine_z = {},
-	},
-	tabline = {},
-	winbar = {},
-	inactive_winbar = {},
-	extensions = {},
-})
-
--- Refresh lualine when LSP clients attach or detach
-vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function()
-		require("lualine").refresh()
-	end,
-})
-
-vim.api.nvim_create_autocmd("LspDetach", {
-	callback = function()
-		require("lualine").refresh()
-	end,
-})
 
 ---| Mini -----------------------------------
-local mini_modules = { "icons", "pairs", "indentscope", "pick", "surround" }
+local mini_modules = { "icons", "pairs", "pick", "surround" }
 for _, module in ipairs(mini_modules) do
 	require("mini." .. module).setup({})
 end
