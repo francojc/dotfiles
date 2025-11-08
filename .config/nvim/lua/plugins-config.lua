@@ -274,7 +274,7 @@ vim.lsp.config.bashls = {
 }
 
 -- Copilot
--- copilot-language-server (for sidekick.nvim NES feature)
+-- copilot-language-server
 vim.lsp.config.copilot = {
 	capabilities = capabilities,
 	filetypes = { "*" }, -- Enable for all filetypes
@@ -506,31 +506,6 @@ require("tabout").setup({
 	},
 	ignore_beginning = true, -- Allow tabout from the beginning of brackets
 	exclude = {}, -- No filetype exclusions
-})
-
----| Sidekick ----------------------------------
--- Custom Sidekick NES Highlights (Copilot-style ghost text)
-require("sidekick-highlights").setup()
-
-require("sidekick").setup({
-	nes = {
-		enabled = false, -- Next Edit Suggestions - start disabled for manual control
-	},
-	cli = {
-		enabled = true, -- AI CLI terminal
-		win = {
-			style = "float", -- Use floating window for terminal
-		},
-		mux = {
-			backend = "tmux", -- Use tmux for persistent sessions
-			enabled = true,
-		},
-		-- Pre-configured AI tools (aider, claude, etc.)
-		tools = {
-			-- Tools will be auto-detected from PATH
-			-- You can customize them here if needed
-		},
-	},
 })
 
 ---| Snacks ----------------------------------
