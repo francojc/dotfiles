@@ -350,6 +350,12 @@ vim.lsp.config.lua_ls = {
 	end,
 }
 
+-- Markdown (marksman)
+vim.lsp.config.marksman = {
+	capabilities = capabilities,
+	filetypes = { "markdown" },
+}
+
 -- Nix
 -- nixd
 local function get_home_dir()
@@ -482,6 +488,18 @@ else
 	}
 end
 
+-- Enable all configured LSP servers
+vim.lsp.enable({
+	"bashls",
+	"copilot",
+	"lua_ls",
+	"marksman",
+	"nixd",
+	"pyright",
+	"r_language_server",
+	"yamlls",
+})
+
 ---| Lualine ----------------------------------
 -- Create a Lua function that will match status for lualine
 local function search_match_status()
@@ -527,7 +545,7 @@ require("lualine").setup({
 		always_divide_middle = true,
 		globalstatus = false, -- conflicts with statusline = 2
 		refresh = {
-			statusline = 1000,
+			statusline = 100, -- Refresh more frequently to catch LSP attach events
 			tabline = 1000,
 			winbar = 1000,
 		},
@@ -563,6 +581,19 @@ require("lualine").setup({
 	winbar = {},
 	inactive_winbar = {},
 	extensions = {},
+})
+
+-- Refresh lualine when LSP clients attach or detach
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function()
+		require("lualine").refresh()
+	end,
+})
+
+vim.api.nvim_create_autocmd("LspDetach", {
+	callback = function()
+		require("lualine").refresh()
+	end,
 })
 
 ---| Mini -----------------------------------
