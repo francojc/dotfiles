@@ -73,18 +73,26 @@ opt.laststatus = 2 -- show statusline always
 
 -- Statusline (native, leveraging Neovim 0.12+ vim.diagnostic.status())
 vim.o.statusline = table.concat({
+	"%#StatusLineModeNormal#",
+	" %{v:lua.Get_mode_name()} ", -- Mode (full name)
+	"%#StatusLineModified#",
+	"%{&modified?' [+]':''}", -- Modified indicator
 	"%#StatusLine#",
-	" %{toupper(mode())} ", -- Mode
-	"%#StatusLineNC#",
-	"%{&modified?'[+]':''}%{&readonly?'[]':''} ", -- Modified/Readonly indicators
+	"%{&readonly?' []':''} ", -- Readonly indicator
+	"%#StatusLineGit#",
+	"%{v:lua.Get_git_branch()}", -- Git branch
+	"%#StatusLineFilename#",
+	" %f ", -- Filename with path
 	"%#StatusLine#",
-	"%f ", -- Filename with path
 	"%=", -- Right align
 	"%{v:lua.vim.diagnostic.status()} ", -- Diagnostic count (0.12+ native)
-	"%#StatusLineNC#",
+	"%#StatusLineModeNormal#",
 	" %Y ", -- File type
 	"%#StatusLine#",
 	" %3l:%-2c ", -- Line:Column
+	"%#StatusLineModeNormal#",
+	" %p%% ", -- Percentage through file
+	"%#StatusLine#",
 }, "")
 
 -- Diagnostics

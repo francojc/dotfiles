@@ -74,39 +74,6 @@ map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
 map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
 map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
 
--- Assistant (Sidekick) --------------------------
--- NES (Next Edit Suggestions)
-vim.keymap.set("n", "<leader>ae", function()
-	require("sidekick.nes").enable()
-end, { desc = "NES: enable" })
-
-vim.keymap.set("n", "<leader>ad", function()
-	require("sidekick.nes").disable()
-end, { desc = "NES: disable" })
-
-vim.keymap.set("n", "<leader>at", function()
-	require("sidekick.nes").update()
-end, { desc = "NES: trigger update" })
-
-vim.keymap.set("n", "<leader>aa", function()
-	require("sidekick.nes").apply()
-end, { desc = "NES: apply suggestion" })
-
-vim.keymap.set("n", "<leader>aj", function()
-	if not require("sidekick").nes_jump_or_apply() then
-		vim.notify("No more NES suggestions", vim.log.levels.INFO)
-	end
-end, { desc = "NES: jump to next or apply" })
-
--- CLI Terminal
-vim.keymap.set("n", "<leader>ac", function()
-	require("sidekick.cli").toggle()
-end, { desc = "CLI: toggle terminal" })
-
-vim.keymap.set({ "n", "v" }, "<leader>as", function()
-	require("sidekick.cli").send({ msg = "{selection}" })
-end, { desc = "CLI: send selection" })
-
 -- Buffers --------------------------
 -- Buffer navigation (native commands)
 map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
@@ -305,18 +272,28 @@ map(
 )
 
 -- Obsidian -----------------------------------
-map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "New from template" })
-map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Backlinks" })
-map("n", "<leader>od", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily note" })
-map("n", "<leader>of", "<Cmd>Obsidian follow_link<Cr>", { desc = "Follow link" })
-map("n", "<leader>oi", "<Cmd>Obsidian paste_img<Cr>", { desc = "Paste image" })
-map("n", "<leader>ol", "<Cmd>Obsidian link_new<Cr>", { desc = "New link" })
-map("n", "<leader>on", "<Cmd>Obsidian new<Cr>", { desc = "New note" })
-map("n", "<leader>oq", "<Cmd>Obsidian quick_switch<Cr>", { desc = "Quick switch" })
-map("n", "<leader>or", "<Cmd>Obsidian rename<Cr>", { desc = "Rename note" })
-map("n", "<leader>os", "<Cmd>Obsidian search<Cr>", { desc = "Search" })
-map("n", "<leader>ot", "<Cmd>Obsidian tomorrow<Cr>", { desc = "Tomorrow note" })
-map("n", "<leader>ow", "<Cmd>Obsidian workspace<Cr>", { desc = "Select workspace" })
+map("n", "<leader>oC", "<Cmd>ObsidianTOC<Cr>", { desc = "Table of contents" })
+map("n", "<leader>oD", "<Cmd>ObsidianDailies<Cr>", { desc = "Daily notes picker" })
+map("n", "<leader>oL", "<Cmd>ObsidianLinks<Cr>", { desc = "Show all links in buffer" })
+map("n", "<leader>oN", "<Cmd>ObsidianNewFromTemplate<Cr>", { desc = "Create new note from template" })
+map("n", "<leader>oT", "<Cmd>ObsidianTags<Cr>", { desc = "Search tags" })
+map("n", "<leader>oT", "<Cmd>ObsidianTemplate<Cr>", { desc = "Insert template" })
+map("n", "<leader>ob", "<Cmd>ObsidianBacklinks<Cr>", { desc = "Show backlinks" })
+map("n", "<leader>oc", "<Cmd>ObsidianToggleCheckbox<Cr>", { desc = "Toggle checkbox" })
+map("n", "<leader>od", "<Cmd>ObsidianToday<Cr>", { desc = "Today's daily note" })
+map("n", "<leader>of", "<Cmd>ObsidianFollowLink<Cr>", { desc = "Follow link under cursor" })
+map("n", "<leader>oi", "<Cmd>ObsidianPasteImg<Cr>", { desc = "Paste image from clipboard" })
+map("n", "<leader>on", "<Cmd>ObsidianNew<Cr>", { desc = "Create new note" })
+map("n", "<leader>oo", "<Cmd>ObsidianOpen<Cr>", { desc = "Open note in Obsidian app" })
+map("n", "<leader>oq", "<Cmd>ObsidianQuickSwitch<Cr>", { desc = "Quick switch notes" })
+map("n", "<leader>or", "<Cmd>ObsidianRename<Cr>", { desc = "Rename note" })
+map("n", "<leader>os", "<Cmd>ObsidianSearch<Cr>", { desc = "Search notes" })
+map("n", "<leader>ot", "<Cmd>ObsidianTomorrow<Cr>", { desc = "Tomorrow's daily note" })
+map("n", "<leader>ow", "<Cmd>ObsidianWorkspace<Cr>", { desc = "Switch workspace" })
+map("n", "<leader>oy", "<Cmd>ObsidianYesterday<Cr>", { desc = "Yesterday's daily note" })
+map("v", "<leader>oL", "<Cmd>ObsidianLinkNew<Cr>", { desc = "Create new note from selection" })
+map("v", "<leader>oe", "<Cmd>ObsidianExtractNote<Cr>", { desc = "Extract selection to new note" })
+map("v", "<leader>ol", "<Cmd>ObsidianLink<Cr>", { desc = "Link selection to note" })
 
 --- Session persistence -------------------------------
 map("n", "<leader>ps", "<Cmd>lua Session_save_prompt()<Cr>", { desc = "Save session" })
@@ -351,7 +328,7 @@ map(
 )
 
 -- Toggle ------------------------------------
-map("n", "<leader>ta", "<Cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
+map("n", "<leader>ta", "<Cmd>AerialToggle<CR>", { desc = "Toggle Aerial" })
 map("n", "<leader>tb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
 map("n", "<leader>tc", "<Cmd>HighlightColors Toggle<CR>", { desc = "Toggle color highlights" })
 map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle word diff" })

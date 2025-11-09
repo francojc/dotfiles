@@ -104,7 +104,11 @@ require("blink.cmp").setup({
 -- Arthur
 -- Autumn
 -- Black Metal
-require("black-metal").setup()
+require("black-metal").setup({
+	diagnostics = {
+		darker = false,
+	},
+})
 -- Catppuccin
 require("catppuccin").setup({
 	flavour = "mocha", -- latte, frappe, macchiato, mocha
@@ -217,6 +221,18 @@ require("vscode").setup({
 })
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
+
+-- Setup statusline highlights (theme-adaptive)
+require("statusline-highlights").setup()
+
+-- Re-apply statusline highlights when colorscheme changes
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "*",
+	callback = function()
+		require("statusline-highlights").setup()
+	end,
+	desc = "Update statusline highlights when colorscheme changes",
+})
 
 -- Set Neovim 0.12+ highlight groups
 -- These are new highlight groups introduced in 0.12 for enhanced UI
@@ -549,7 +565,7 @@ require("snacks").setup({
 	},
 	explorer = { enabled = false }, -- Using yazi
 	image = { enabled = false }, -- Using image.nvim
-	input = { enabled = false }, -- DISABLED: May conflict with sidekick CLI
+	input = { enabled = false },
 	notifier = { enabled = false }, -- Using standard vim.notify
 	picker = { enabled = true },
 	quickfile = { enabled = false },
@@ -817,7 +833,6 @@ vim.api.nvim_create_autocmd("FileType", {
 					blink = true,
 				},
 			})
-			vim.g.obsidian_setup_done = true
 		end
 	end,
 	once = true,
@@ -871,35 +886,35 @@ vim.api.nvim_create_autocmd("FileType", {
 			},
 			checkbox = {
 				unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-				checked = { icon = " ", highlight = "RenderMarkdownChecked" },
+				checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 				custom = {
 					waiting = {
 						raw = "[-]",
-						rendered = " ",
+						rendered = " ",
 						highlight = "DiagnosticInfo",
 						scope_highlight = nil,
 					},
 					forward = {
 						raw = "[>]",
-						rendered = " ",
+						rendered = " ",
 						highlight = "DiagnosticError",
 						scope_highlight = nil,
 					},
 					progress = {
 						raw = "[/]",
-						rendered = " ",
+						rendered = " ",
 						highlight = "DiagnosticWarn",
 						scope_highlight = nil,
 					},
 					cancel = {
 						raw = "[~]",
-						rendered = " ",
+						rendered = " ",
 						highlight = "DiagnosticError",
 						scope_highlight = nil,
 					},
 					important = {
 						raw = "[!]",
-						rendered = " ",
+						rendered = " ",
 						highlight = "DiagnosticWarn",
 						scope_highlight = nil,
 					},

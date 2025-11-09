@@ -181,3 +181,67 @@ function _G.Close_other_buffers()
 
 	vim.notify(closed_count .. " buffer(s) closed", vim.log.levels.INFO)
 end
+
+-- Workaround for vim.pack.update() sha_target error in Neovim 0.12 pre-release
+-- The update function works but fails when displaying results due to a bug
+-- This wrapper suppresses the error and shows a simple success message
+function _G.Pack_update()
+	vim.notify("Updating plugins...", vim.log.levels.INFO)
+
+	local ok, err = pcall(vim.pack.update)
+
+	if not ok then
+		if string.match(tostring(err), "sha_target") then
+			vim.notify("Plugins updated successfully (display error suppressed)", vim.log.levels.INFO)
+			vim.notify("Check :messages or ~/.local/state/nvim/nvim-pack.log for details", vim.log.levels.INFO)
+		else
+			vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
+		end
+	else
+		vim.notify("Plugins updated successfully", vim.log.levels.INFO)
+	end
+end
+
+-- Git branch helper for statusline
+function _G.Get_git_branch()
+	-- Check if we're in a git repository by looking for .git directory
+	local git_dir = vim.fn.finddir(".git", vim.fn.expand("%:p:h") .. ";")
+	if git_dir == "" then
+		return ""
+	end
+
+	-- Get the current branch name
+	local branch = vim.fn.system("git branch --show-current 2>/dev/null")
+	if vim.v.shell_error ~= 0 then
+		return ""
+	end
+
+	-- Trim whitespace and return with icon
+	branch = vim.trim(branch)
+	if branch ~= "" then
+		return " " .. branch .. " "
+	end
+
+	return ""
+end
+
+-- Get full mode name for statusline
+function _G.Get_mode_name()
+	local mode_map = {
+		n = "NORMAL",
+		i = "INSERT",
+		v = "VISUAL",
+		V = "V-LINE",
+		["\22"] = "V-BLOCK", -- Ctrl-V
+		c = "COMMAND",
+		s = "SELECT",
+		S = "S-LINE",
+		["\19"] = "S-BLOCK", -- Ctrl-S
+		R = "REPLACE",
+		r = "REPLACE",
+		["!"] = "SHELL",
+		t = "TERMINAL",
+	}
+	local current_mode = vim.fn.mode()
+	return mode_map[current_mode] or current_mode:upper()
+end

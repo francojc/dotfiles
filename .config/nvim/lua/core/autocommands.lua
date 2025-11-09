@@ -161,3 +161,8 @@ vim.api.nvim_create_user_command("SpellLang", function()
 		end
 	end)
 end, {})
+
+-- User command for updating plugins (workaround for vim.pack.update() display bug)
+vim.api.nvim_create_user_command("PackUpdate", function()
+	Pack_update()
+end, { desc = "Update all plugins via vim.pack" })
