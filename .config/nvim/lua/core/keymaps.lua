@@ -230,8 +230,9 @@ map("n", "<leader>li", "<Cmd>lua Snacks.picker.lsp_implementations()<Cr>", { des
 map("n", "<leader>lr", "<Cmd>lua Snacks.picker.lsp_references()<Cr>", { desc = "References" })
 -- Incremental selection (Neovim 0.12+ LSP textDocument/selectionRange)
 -- Uses integer direction: 0 (or omitted) = expand outward, -1 = shrink inward
-map({ "n", "v" }, "an", "<Cmd>lua vim.lsp.buf.selection_range(0)<Cr>", { desc = "LSP: expand selection range" })
-map({ "n", "v" }, "in", "<Cmd>lua vim.lsp.buf.selection_range(-1)<Cr>", { desc = "LSP: shrink selection range" })
+-- Changed from 'an'/'in' to 'vn'/'vs' to avoid conflicting with 'a'/'i' insert mode keys
+map({ "n", "v" }, "vn", "<Cmd>lua vim.lsp.buf.selection_range(0)<Cr>", { desc = "LSP: expand selection (next)" })
+map({ "n", "v" }, "vs", "<Cmd>lua vim.lsp.buf.selection_range(-1)<Cr>", { desc = "LSP: shrink selection" })
 -- Symbols
 map("n", "<leader>ls", "<Cmd>lua Snacks.picker.lsp_symbols()<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>lua Snacks.picker.lsp_workspace_symbols()<Cr>", { desc = "Workspace symbols" })

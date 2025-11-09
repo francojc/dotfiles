@@ -202,27 +202,69 @@ function _G.Pack_update()
 	end
 end
 
--- Git branch helper for statusline
-function _G.Get_git_branch()
+-- Git branch helper for statusline with caching
+-- Cache structure: { [bufnr] = { branch = string, git_dir = string } }
+local git_branch_cache = {}
+
+-- Update git branch asynchronously for current buffer
+local function update_git_branch_async()
+	local bufnr = vim.api.nvim_get_current_buf()
+
 	-- Check if we're in a git repository by looking for .git directory
 	local git_dir = vim.fn.finddir(".git", vim.fn.expand("%:p:h") .. ";")
 	if git_dir == "" then
-		return ""
+		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
+		return
 	end
 
-	-- Get the current branch name
-	local branch = vim.fn.system("git branch --show-current 2>/dev/null")
-	if vim.v.shell_error ~= 0 then
-		return ""
+	-- Store git_dir to detect directory changes
+	if not git_branch_cache[bufnr] then
+		git_branch_cache[bufnr] = { branch = "", git_dir = git_dir }
+	else
+		git_branch_cache[bufnr].git_dir = git_dir
 	end
 
-	-- Trim whitespace and return with icon
-	branch = vim.trim(branch)
-	if branch ~= "" then
-		return " " .. branch .. " "
+	-- Get current branch asynchronously using vim.system (Neovim 0.12+)
+	vim.system({ "git", "branch", "--show-current" }, {
+		text = true,
+		cwd = vim.fn.expand("%:p:h"),
+	}, function(result)
+		-- Callback runs asynchronously
+		if result.code == 0 and result.stdout then
+			local branch = vim.trim(result.stdout)
+			if branch ~= "" then
+				git_branch_cache[bufnr] = {
+					branch = " " .. branch .. " ",
+					git_dir = git_dir,
+				}
+			else
+				git_branch_cache[bufnr] = { branch = "", git_dir = git_dir }
+			end
+			-- Trigger statusline redraw
+			vim.schedule(function()
+				vim.cmd("redrawstatus")
+			end)
+		end
+	end)
+end
+
+-- Get git branch from cache (non-blocking)
+function _G.Get_git_branch()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local cached = git_branch_cache[bufnr]
+
+	if cached then
+		return cached.branch or ""
 	end
 
+	-- Cache miss - trigger async update and return empty for now
+	update_git_branch_async()
 	return ""
+end
+
+-- Expose update function globally for autocommands
+function _G.Update_git_branch_cache()
+	update_git_branch_async()
 end
 
 -- Get full mode name for statusline

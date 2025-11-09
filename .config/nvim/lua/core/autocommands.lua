@@ -166,3 +166,16 @@ end, {})
 vim.api.nvim_create_user_command("PackUpdate", function()
 	Pack_update()
 end, { desc = "Update all plugins via vim.pack" })
+
+-- Git branch cache updates for statusline performance
+-- Update cache on buffer enter, directory change, and focus gained
+vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged", "FocusGained" }, {
+	group = "personal",
+	callback = function()
+		-- Skip special buffers (terminal, picker, etc.)
+		local buftype = vim.bo.buftype
+		if buftype == "" then
+			Update_git_branch_cache()
+		end
+	end,
+})

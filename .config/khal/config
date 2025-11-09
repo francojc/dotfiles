@@ -103,12 +103,11 @@ frame focus color = '', '', '', '', '#282828'
 frame focus top = light gray, '', 'bold', '#EBDBB2', ''
 
 # Event display
-eventcolumn = light gray, '', '', '#EBDBB2', ''
+eventcolumn = dark red, '', '', '#EBDBB2', ''
 eventcolumn focus = white, dark blue, '', '#FBF1C7', '#458588'
 
 # Calendar view
 calendar = light gray, '', '', '#EBDBB2', ''
-calendar focus = white, dark blue, '', '#FBF1C7', '#282828'
 
 # Popups and dialogs
 editbx = light gray, '', '', '#EBDBB2', '#282828'

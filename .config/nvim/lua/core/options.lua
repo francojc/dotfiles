@@ -70,7 +70,6 @@ opt.autoread = true -- auto read files when changed outside of Neovim
 opt.foldmethod = "indent"
 opt.foldlevel = 99 -- start with all folds open
 opt.laststatus = 2 -- show statusline always
-
 -- Statusline (native, leveraging Neovim 0.12+ vim.diagnostic.status())
 vim.o.statusline = table.concat({
 	"%#StatusLineModeNormal#",
