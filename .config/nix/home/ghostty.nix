@@ -9,15 +9,13 @@
       # Ghostty config
 
       # UI
-      font-family = "Aporetic Sans Mono"
+      font-family = "JetBrainsMono Nerd Font Mono"
       font-size = ${toString (
         if hostname == "Mac-Minicore"
         then 20
         else if hostname == "Macbook-Airborne"
         then 16
-        else if hostname == "Mini-Rover"
-        then 14
-        else 16
+        else 14
       )}
       cursor-color = ${theme.ghostty.cursor_color}
       cursor-style = bar

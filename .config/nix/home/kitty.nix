@@ -1,7 +1,6 @@
 {
   hostname,
   theme,
-  isDarwin,
   ...
 }: {
   xdg.configFile."kitty/kitty.conf" = {
@@ -24,25 +23,27 @@
 
       font_size ${toString (
         if hostname == "Mac-Minicore"
-        then 16
+        then 19
         else if hostname == "Macbook-Airborne"
-        then 14
-        else 12
+        then 15
+        else 13
       )}
 
       ## Advanced Font Rendering
-      modify_font cell_width 100%
-      modify_font cell_height 1px
+      modify_font cell_width 105%
+      # modify_font cell_height 0px
+      # font_features JetBrainsMono-NerdFont-Mono -liga -hint
 
       # Text Rendering -----------------------------------------
       ## Drawing and Composition
-      box_drawing_scale 0.001, 0.85, 1, 1.5
-      text_composition_strategy 1.0 0
-      text_fg_override_threshold 3
+      # box_drawing_scale 0.001, 0.85, 1, 1.5
+      # text_composition_strategy 1.0 30
+      # text_fg_override_threshold 3
 
       # Performance Tuning -------------------------------------
-      input_delay 2
-      sync_to_monitor no
+      # input_delay 2
+      # sync_to_monitor no
+      # repaint_delay 5
 
       # Visual Appearance --------------------------------------
       ## Theme Colors (Generated from Nix theme: ${theme.name})

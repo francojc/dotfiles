@@ -201,7 +201,7 @@
       name = "blackmetal";
       inherit colors;
       ghostty = {
-        theme = "blackmetal";
+        theme = "Black Metal (Marduk)";
         cursor_color = "#c1c1c1";
       };
       kitty = {
