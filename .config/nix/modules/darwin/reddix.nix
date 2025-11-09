@@ -1,9 +1,5 @@
 # Reddix Wrapper with pass Integration
-{
-  pkgs,
-  username,
-  ...
-}: {
+{pkgs, ...}: {
   # Create wrapper script that injects credentials from pass
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "reddix" ''

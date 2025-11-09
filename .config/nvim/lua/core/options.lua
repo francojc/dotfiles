@@ -82,7 +82,7 @@ vim.o.statusline = table.concat({
 	"%#StatusLineGit#",
 	"%{v:lua.Get_git_branch()}", -- Git branch
 	"%#StatusLineFilename#",
-	" %f ", -- Filename with path
+	" %t ", -- Filename (tail)
 	"%#StatusLine#",
 	"%=", -- Right align
 	"%{v:lua.vim.diagnostic.status()} ", -- Diagnostic count (0.12+ native)
