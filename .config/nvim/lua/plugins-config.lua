@@ -218,6 +218,11 @@ require("vscode").setup({
 
 vim.cmd("colorscheme " .. theme_config.colorscheme) -- Set colorscheme from theme
 
+-- Set Neovim 0.12+ highlight groups
+-- These are new highlight groups introduced in 0.12 for enhanced UI
+vim.api.nvim_set_hl(0, "DiffTextAdd", { bg = "#3d5213", fg = "#b4fa72" }) -- Added text within changed line
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.blue or "#7aa2f7" }) -- Popup menu border
+
 ---| Conform ----------------------------------
 require("conform").setup({
 	default_format_ops = {
@@ -452,15 +457,42 @@ else
 	}
 end
 
--- Enable all configured LSP servers
--- vim.lsp.enable({
--- 	"bashls",
--- 	"lua_ls",
--- 	"marksman",
--- 	"nixd",
--- 	"pyright",
--- 	"yamlls",
--- })
+-- Enable LSP servers based on filetype (Neovim 0.12+ pattern)
+-- This replaces the need for lspconfig and uses native vim.lsp.enable()
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"sh",
+		"bash",
+		"lua",
+		"markdown",
+		"nix",
+		"python",
+		"r",
+		"rmd",
+		"quarto",
+		"yaml",
+		"yml",
+	},
+	callback = function(args)
+		local server_map = {
+			sh = "bashls",
+			bash = "bashls",
+			lua = "lua_ls",
+			markdown = "marksman",
+			nix = "nixd",
+			python = "pyright",
+			r = "r_language_server",
+			rmd = "r_language_server",
+			quarto = "r_language_server",
+			yaml = "yamlls",
+			yml = "yamlls",
+		}
+		local server = server_map[vim.bo[args.buf].filetype]
+		if server then
+			vim.lsp.enable(server)
+		end
+	end,
+})
 
 ---| Mini -----------------------------------
 local mini_modules = { "icons", "pairs", "pick", "surround" }
@@ -606,4 +638,305 @@ wk.add({
 	{ "<leader>t", group = "Toggle", icon = "󰔡" },
 	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "󰪷" },
 	{ "<leader>x", desc = "Quit", icon = "󰗼" },
+})
+
+---| LAZY-LOADED PLUGINS ---------------------------------------------------
+-- Native lazy-loading using vim.pack optional plugins and autocommands
+-- Replaces lz.n with Neovim 0.12+ native capabilities
+
+---| Event-triggered plugins -----------------------------------
+
+-- Gitsigns (load when opening files in git repos)
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+	group = vim.api.nvim_create_augroup("LazyGitsigns", { clear = true }),
+	callback = function()
+		vim.cmd.packadd("gitsigns.nvim")
+		require("gitsigns").setup({
+			word_diff = false,
+		})
+	end,
+	once = true,
+})
+
+---| Command-triggered plugins -----------------------------------
+
+-- Aerial code outline
+vim.api.nvim_create_user_command("AerialToggle", function()
+	vim.cmd.packadd("aerial.nvim")
+	require("aerial").setup({})
+	vim.cmd("AerialToggle")
+end, {})
+
+vim.api.nvim_create_user_command("AerialOpen", function()
+	vim.cmd.packadd("aerial.nvim")
+	require("aerial").setup({})
+	vim.cmd("AerialOpen")
+end, {})
+
+vim.api.nvim_create_user_command("AerialClose", function()
+	vim.cmd.packadd("aerial.nvim")
+	require("aerial").setup({})
+	vim.cmd("AerialClose")
+end, {})
+
+-- CSV viewer
+vim.api.nvim_create_user_command("CsvViewEnable", function()
+	vim.cmd.packadd("csvview.nvim")
+	require("csvview").setup({})
+	vim.cmd("CsvViewEnable")
+end, {})
+
+vim.api.nvim_create_user_command("CsvViewDisable", function()
+	vim.cmd.packadd("csvview.nvim")
+	require("csvview").setup({})
+	vim.cmd("CsvViewDisable")
+end, {})
+
+vim.api.nvim_create_user_command("CsvViewToggle", function()
+	vim.cmd.packadd("csvview.nvim")
+	require("csvview").setup({})
+	vim.cmd("CsvViewToggle")
+end, {})
+
+-- Highlight colors
+vim.api.nvim_create_user_command("HighlightColors", function()
+	vim.cmd.packadd("nvim-highlight-colors")
+	require("nvim-highlight-colors").setup({})
+	vim.cmd("HighlightColors")
+end, {})
+
+-- LazyGit
+vim.api.nvim_create_user_command("LazyGit", function()
+	vim.cmd.packadd("lazygit.nvim")
+	vim.cmd("LazyGit")
+end, {})
+
+vim.api.nvim_create_user_command("LazyGitLog", function()
+	vim.cmd.packadd("lazygit.nvim")
+	vim.cmd("LazyGitLog")
+end, {})
+
+-- Yazi file manager
+vim.api.nvim_create_user_command("Yazi", function()
+	vim.cmd.packadd("yazi.nvim")
+	require("yazi").setup({})
+	vim.cmd("Yazi")
+end, {})
+
+---| FileType-triggered plugins -----------------------------------
+
+-- CSV viewer (also triggered by filetype)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "csv",
+	group = vim.api.nvim_create_augroup("LazyCsv", { clear = true }),
+	callback = function()
+		vim.cmd.packadd("csvview.nvim")
+		require("csvview").setup({})
+	end,
+	once = true,
+})
+
+-- Image viewer for Markdown/Quarto
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	group = vim.api.nvim_create_augroup("LazyImage", { clear = true }),
+	callback = function()
+		vim.cmd.packadd("image.nvim")
+		require("image").setup({
+			processor = "magick_cli",
+			integrations = {
+				markdown = {
+					clear_in_insert_mode = false,
+					filetypes = { "markdown", "quarto" },
+					only_render_image_at_cursor = false,
+				},
+			},
+		})
+		-- Disable by default to match the global flag
+		require("image").disable()
+	end,
+	once = true,
+})
+
+-- Image clipboard for Markdown/Quarto
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	group = vim.api.nvim_create_augroup("LazyImgClip", { clear = true }),
+	callback = function()
+		vim.cmd.packadd("img-clip.nvim")
+		require("img-clip").setup({
+			default = {
+				dir_path = "./images",
+				relative_to_current_file = true,
+				show_dir_path_in_prompt = true,
+			},
+		})
+	end,
+	once = true,
+})
+
+-- Obsidian notes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	group = vim.api.nvim_create_augroup("LazyObsidian", { clear = true }),
+	callback = function()
+		-- Only setup if not already configured
+		if not vim.g.obsidian_setup_done then
+			vim.cmd.packadd("obsidian.nvim")
+			require("obsidian").setup({
+				legacy_commands = true,
+				ui = {
+					enable = false,
+				},
+				workspaces = {
+					{
+						name = "Notes",
+						path = "~/Obsidian/Notes/",
+					},
+					{
+						name = "Personal",
+						path = "~/Obsidian/Personal/",
+					},
+				},
+				daily_notes = {
+					folder = "Daily",
+					template = "Assets/Templates/Daily.md",
+				},
+				templates = {
+					folder = "Assets/Templates",
+				},
+				new_notes_location = "Inbox",
+				picker = {
+					name = "mini.pick",
+				},
+				attachments = {
+					img_folder = "Assets/Attachments",
+				},
+				completion = {
+					nvim_cmp = false,
+					blink = true,
+				},
+			})
+			vim.g.obsidian_setup_done = true
+		end
+	end,
+	once = true,
+})
+
+-- Quarto document support
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "quarto",
+	group = vim.api.nvim_create_augroup("LazyQuarto", { clear = true }),
+	callback = function()
+		if not vim.g.quarto_setup_done then
+			vim.cmd.packadd("quarto-nvim")
+			require("quarto").setup({
+				lspFeatures = {
+					enabled = true,
+					chunks = "curly",
+					languages = { "r", "python", "julia", "bash", "html" },
+					diagnostics = {
+						enabled = true,
+						triggers = { "BufWritePost" },
+					},
+					completion = {
+						enabled = true,
+					},
+				},
+				codeRunner = {
+					enabled = true,
+					default_method = "slime",
+					never_run = { "yaml" },
+				},
+				keymap = false,
+			})
+			vim.g.quarto_setup_done = true
+		end
+	end,
+	once = true,
+})
+
+-- Render Markdown for Markdown/Quarto
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "quarto" },
+	group = vim.api.nvim_create_augroup("LazyRenderMarkdown", { clear = true }),
+	callback = function()
+		vim.cmd.packadd("render-markdown.nvim")
+		require("render-markdown").setup({
+			latex = { enabled = false },
+			bullet = {
+				icons = { "■ ", "□ ", "▪ ", "▫ " },
+				left_pad = 0,
+				right_pad = 2,
+			},
+			checkbox = {
+				unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
+				checked = { icon = " ", highlight = "RenderMarkdownChecked" },
+				custom = {
+					waiting = {
+						raw = "[-]",
+						rendered = " ",
+						highlight = "DiagnosticInfo",
+						scope_highlight = nil,
+					},
+					forward = {
+						raw = "[>]",
+						rendered = " ",
+						highlight = "DiagnosticError",
+						scope_highlight = nil,
+					},
+					progress = {
+						raw = "[/]",
+						rendered = " ",
+						highlight = "DiagnosticWarn",
+						scope_highlight = nil,
+					},
+					cancel = {
+						raw = "[~]",
+						rendered = " ",
+						highlight = "DiagnosticError",
+						scope_highlight = nil,
+					},
+					important = {
+						raw = "[!]",
+						rendered = " ",
+						highlight = "DiagnosticWarn",
+						scope_highlight = nil,
+					},
+				},
+			},
+			code = {
+				sign = false,
+				language_border = " ",
+			},
+			completions = {
+				lsp = { enabled = true },
+				blink = { enabled = true },
+			},
+			dash = { enabled = false },
+			file_types = { "markdown", "quarto" },
+			heading = {
+				backgrounds = {},
+				left_pad = 0,
+				position = "inline",
+				right_pad = 3,
+				icons = {
+					"# ",
+					"## ",
+					"### ",
+					"#### ",
+					"##### ",
+					"###### ",
+				},
+			},
+			html = {
+				enabled = true,
+				comment = { conceal = false },
+			},
+			pipe_table = {
+				preset = "round",
+			},
+		})
+	end,
+	once = true,
 })

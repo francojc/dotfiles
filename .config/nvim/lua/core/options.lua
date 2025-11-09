@@ -13,11 +13,11 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 -- Clipboard
 opt.clipboard:append("unnamedplus") --- Use system clipboard
 -- Completions
-opt.completeopt = "menu,menuone,noselect" -- Completion options
+opt.completeopt = "menu,menuone,noselect,nearest" -- Completion options (nearest = distance-based sorting in 0.12+)
 opt.path:append("**") -- Search subdirectories
 -- Neovim 0.12+ native completion UI enhancements
-opt.pumborder = "rounded" -- Popup menu border
-opt.pummaxwidth = 60 -- Maximum width for popup menu
+opt.pumborder = "rounded" -- Popup menu border (0.12+)
+opt.pummaxwidth = 60 -- Maximum width for popup menu (0.12+)
 -- Window
 opt.splitbelow = true
 opt.splitright = true

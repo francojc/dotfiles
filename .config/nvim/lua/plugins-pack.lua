@@ -1,13 +1,10 @@
 ---| Plugin Management with vim.pack ---------------------------------
 -- This file declares all plugins using Neovim 0.12+ native vim.pack
--- Plugins are installed to pack/core/opt and loaded via lz.n or eagerly
+-- Plugins are installed to pack/core/start (eager) or pack/core/opt (lazy)
 
 -- Eager-loaded plugins (load immediately at startup)
--- These provide core functionality needed before lazy-loading kicks in
+-- These provide core functionality needed at startup
 local eager_plugins = {
-	-- Lazy-loading framework
-	{ src = "https://github.com/nvim-neorocks/lz.n" },
-
 	-- Themes (needed early for colorscheme)
 	{ src = "https://github.com/thenewvu/vim-colors-arthur" },
 	{ src = "https://github.com/wolloda/vim-autumn" },
@@ -41,8 +38,8 @@ local eager_plugins = {
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
 }
 
--- Lazy-loaded plugins (managed by lz.n)
--- These plugins are installed but not loaded until triggered
+-- Lazy-loaded plugins (optional - loaded on demand via autocommands/commands)
+-- These plugins are installed to pack/core/opt/ and loaded with vim.cmd.packadd()
 local lazy_plugins = {
 	{ src = "https://github.com/3rd/image.nvim" },
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
@@ -58,10 +55,9 @@ local lazy_plugins = {
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 }
 
--- Install and load eager plugins
--- load = true means packadd them immediately
+-- Install and load eager plugins immediately
 vim.pack.add(eager_plugins, { load = true, confirm = false })
 
--- Install lazy plugins but don't load them yet
--- load = false means lz.n will handle loading based on triggers
+-- Install lazy plugins as optional (to pack/core/opt/)
+-- They will be loaded on-demand via vim.cmd.packadd() in autocommands
 vim.pack.add(lazy_plugins, { load = false, confirm = false })
