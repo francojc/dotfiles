@@ -17,12 +17,14 @@ Successfully overhauled Neovim configuration to leverage 0.12+ native features w
 ### Phase 1: UI Plugin Removal ✅
 
 **Removed Plugins (4 total):**
+
 - `lualine.nvim` → Native statusline with `vim.diagnostic.status()`
 - `fidget.nvim` → Standard `vim.notify()`
 - `mini.indentscope` → Visual indent guides (pure UI)
 - `nvim-highlight-colors` → Color preview (pure UI)
 
 **Configuration Changes:**
+
 - `lua/core/options.lua`: Added native statusline configuration
 - `lua/core/functions.lua`: Updated notifications to use `vim.notify`
 - `lua/plugins-paq.lua`: Removed UI plugin declarations

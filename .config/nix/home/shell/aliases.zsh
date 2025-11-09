@@ -114,9 +114,7 @@ alias gst='git stash'           # Quick stash
 alias gstp='git stash pop'      # Quick stash pop
 
 # Neovim aliases
-# alias nvim="/etc/profiles/per-user/$(whoami)/bin/nvim"
-# alias nvim-dev='/opt/homebrew/bin/nvim'
-# alias v='NVIM_APPNAME="nvim" nvim'
+alias v='nvim'
 # alias b='NVIM_APPNAME="nvim-dev" nvim-dev'
 
 # Quarto aliases

@@ -84,6 +84,10 @@
       "rev": "ba47d4b",
       "src": "https://github.com/EdenEast/nightfox.nvim"
     },
+    "nvim-highlight-colors": {
+      "rev": "e0c4a58",
+      "src": "https://github.com/brenoprata10/nvim-highlight-colors"
+    },
     "nvim-treesitter": {
       "rev": "42fc28ba",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"

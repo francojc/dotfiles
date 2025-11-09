@@ -21,6 +21,15 @@ return {
 		end,
 	},
 
+	-- Highlight Colors
+	{
+		"nvim-highlight-colors",
+		cmd = { "HighlightColors" },
+		after = function()
+			require("nvim-highlight-colors").setup({})
+		end,
+	},
+
 	-- LazyGit
 	{
 		"lazygit.nvim",

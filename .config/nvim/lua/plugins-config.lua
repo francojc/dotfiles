@@ -453,16 +453,14 @@ else
 end
 
 -- Enable all configured LSP servers
-vim.lsp.enable({
-	"bashls",
-	"copilot",
-	"lua_ls",
-	"marksman",
-	"nixd",
-	"pyright",
-	"r_language_server",
-	"yamlls",
-})
+-- vim.lsp.enable({
+-- 	"bashls",
+-- 	"lua_ls",
+-- 	"marksman",
+-- 	"nixd",
+-- 	"pyright",
+-- 	"yamlls",
+-- })
 
 ---| Mini -----------------------------------
 local mini_modules = { "icons", "pairs", "pick", "surround" }

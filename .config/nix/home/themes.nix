@@ -1,8 +1,4 @@
-{
-  lib,
-  themeName,
-  ...
-}: let
+{themeName, ...}: let
   themes = {
     arthur = let
       colors = {
@@ -191,14 +187,14 @@
         # Bright colors
         bright_red = "#5f8787";
         bright_green = "#dd9999";
-        bright_yellow = "#a0a0a0";
-        bright_blue = "#888888";
-        bright_purple = "#999999";
-        bright_aqua = "#aaaaaa";
-        bright_orange = "#999999";
+        bright_yellow = "#6b4a2e";
+        bright_blue = "#3a526b";
+        bright_purple = "#543c5f";
+        bright_aqua = "#4f6767";
+        bright_orange = "#8B5A2B";
 
         # Special
-        cursor = "#c1c1c1";
+        cursor = "#8B5A2B";
         accent = "#c1c1c1";
       };
     in {
@@ -212,11 +208,11 @@
         theme_name = "blackmetal";
       };
       vim = {
-        colorscheme = "blackmetal";
+        colorscheme = "marduk";
         background = "dark";
       };
       neovim = {
-        colorscheme = "blackmetal";
+        colorscheme = "marduk";
         colors = {
           bg = "#121212";
           fg = "#c1c1c1";

@@ -53,6 +53,7 @@ local lazy_plugins = {
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },
 	{ src = "https://github.com/obsidian-nvim/obsidian.nvim" },
+	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 	{ src = "https://github.com/quarto-dev/quarto-nvim" },
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 }

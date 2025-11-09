@@ -356,6 +356,7 @@ map(
 -- Toggle ------------------------------------
 map("n", "<leader>ta", "<Cmd>AerialToggle!<CR>", { desc = "Toggle Aerial" })
 map("n", "<leader>tb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
+map("n", "<leader>tc", "<Cmd>HighlightColors Toggle<CR>", { desc = "Toggle color highlights" })
 map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle word diff" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
