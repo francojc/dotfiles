@@ -208,7 +208,7 @@
         theme_name = "blackmetal";
       };
       vim = {
-        colorscheme = "marduk";
+        colorscheme = "zenbones";
         background = "dark";
       };
       neovim = {

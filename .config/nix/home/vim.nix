@@ -1,23 +1,34 @@
-{pkgs, theme, ...}: {
+{
+  pkgs,
+  theme,
+  ...
+}: {
   programs = {
     # Enable some useful shells
     vim = {
       enable = true;
-      plugins = with pkgs.vimPlugins; [
-        # Add your favorite plugins here
-        copilot-vim # Copilot
-        fzf-vim # FZF
-        vim-airline # Status bar
-        vim-commentary # Commenting
-        vim-markdown # Markdown support
-        vim-sensible # Sensible defaults
-        vim-surround # Surround text objects
-        vim-which-key # Keybindings
-        # Theme plugins
-        gruvbox # Gruvbox colorscheme
-      ] ++ (if theme.vim.colorscheme == "nightfox" then [ 
-        pkgs.vimPlugins.nightfox-nvim 
-      ] else []);
+      plugins = with pkgs.vimPlugins;
+        [
+          # Add your favorite plugins here
+          copilot-vim # Copilot
+          fzf-vim # FZF
+          vim-airline # Status bar
+          vim-commentary # Commenting
+          vim-markdown # Markdown support
+          vim-sensible # Sensible defaults
+          vim-surround # Surround text objects
+          vim-which-key # Keybindings
+          # Theme plugins
+          gruvbox # Gruvbox colorscheme
+          zenbones-nvim # Zenbones colorscheme
+        ]
+        ++ (
+          if theme.vim.colorscheme == "nightfox"
+          then [
+            pkgs.vimPlugins.nightfox-nvim
+          ]
+          else []
+        );
       extraConfig = ''
         " GENERAL --------------------------------------------------
         set number              " Show line numbers
@@ -30,7 +41,7 @@
         set incsearch           " Incremental search
         set ignorecase          " Case-insensitive searching
         set smartcase           " Case-sensitive if uppercase used
-
+        # set clipboard=unnamedplus " Use system clipboard FIXME: not correct
         syntax on               " Syntax highlighting
         set mouse=a             " Enable mouse support
         set clipboard=unnamed   " Use system clipboard
