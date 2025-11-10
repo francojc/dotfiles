@@ -83,6 +83,8 @@ Overall Comments: {final summary of all criteria in Spanish, 30-40 words}
 - Directly address the specific criterion
 - Provide actionable insight
 
+*Note: no need to report the word count in your feedback, only mention it if the student's submission is very short or very long.*
+
 ## Evaluation Guidelines
 
 - Use the language of the rubric levels to guide your scoring and justification feedback
