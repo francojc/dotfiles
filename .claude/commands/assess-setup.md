@@ -123,6 +123,8 @@ This will:
 - Skip students without submissions automatically
 - Extract text from uploaded DOCX and PDF files
 
+Write this file to `.claude/assessments_{course_id}_{assignment_id}_{timestamp}.json`.
+
 ## Step 3: Display Summary
 
 Report the following information:
