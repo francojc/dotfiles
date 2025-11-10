@@ -612,7 +612,7 @@
       name = "catppuccin";
       inherit colors;
       ghostty = {
-        theme = "catppuccin-mocha";
+        theme = "Catppuccin Mocha";
         cursor_color = "#f5e0dc";
       };
       kitty = {

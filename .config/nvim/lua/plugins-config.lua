@@ -626,8 +626,13 @@ require("otter").setup({
 
 ---| WhichKey -----------------------------------
 require("which-key").setup({
+	preset = "modern",
 	icons = {
 		group = "",
+	},
+	plugins = {
+		marks = false,
+		registers = false,
 	},
 })
 -- add keymap groups
