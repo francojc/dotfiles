@@ -565,8 +565,8 @@ require("snacks").setup({
 		},
 	},
 	explorer = { enabled = false }, -- Using yazi
-	git = { enabled = true },
-	gitbrowse = { enabled = true },
+	git = { enabled = false },
+	gitbrowse = { enabled = false },
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false },
 	notifier = { enabled = false }, -- Using standard vim.notify
