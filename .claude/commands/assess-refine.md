@@ -56,7 +56,7 @@ and preserving Canvas rubric validity. Optionally rewrite criterion feedback
 
 If `course_id` and `assignment_id` provided:
 
-- Look for `assessments_{{course_id}}_{{assignment_id}}_*.json` in current directory
+- Look for `.claude/assessments/{{course_id}}_{{assignment_id}}_*.json` in the current repository
 - Use most recent file matching that pattern
 
 If no arguments provided:

@@ -21,7 +21,7 @@ Process each submission chronologically, using the agent to provide rubric-based
 
 **If course_id and assignment_id provided**:
 
-- Look for `assessments_{{course_id}}_{{assignment_id}}_*.json` in current directory
+- Look for `.claude/assessments/{{course_id}}_{{assignment_id}}_*.json` in the current repository
 - Use most recent file matching that pattern
 
 **If no arguments provided**:

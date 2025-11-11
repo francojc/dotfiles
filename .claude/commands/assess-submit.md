@@ -21,7 +21,7 @@ Review approved assessments, preview submission, and send grades to Canvas with 
 
 **If course_id and assignment_id provided**:
 
-- Look for `assessments_{{course_id}}_{{assignment_id}}_*.json` in current directory
+- Look for `./claude/assessments/{{course_id}}_{{assignment_id}}_*.json` in the current repository
 - Use most recent file matching that pattern
 
 **If no arguments provided**:

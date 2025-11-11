@@ -561,9 +561,12 @@ require("snacks").setup({
 		enabled = true,
 		sections = {
 			{ section = "header" },
+			{ section = "keys", gap = 1, padding = 1 },
 		},
 	},
 	explorer = { enabled = false }, -- Using yazi
+	git = { enabled = true },
+	gitbrowse = { enabled = true },
 	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false },
 	notifier = { enabled = false }, -- Using standard vim.notify
