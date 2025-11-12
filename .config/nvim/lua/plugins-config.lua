@@ -799,51 +799,40 @@ vim.api.nvim_create_autocmd("FileType", {
 	once = true,
 })
 
--- Obsidian notes
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "markdown",
-	group = vim.api.nvim_create_augroup("LazyObsidian", { clear = true }),
-	callback = function()
-		-- Only setup if not already configured
-		if not vim.g.obsidian_setup_done then
-			vim.cmd.packadd("obsidian.nvim")
-			require("obsidian").setup({
-				legacy_commands = true,
-				ui = {
-					enable = false,
-				},
-				workspaces = {
-					{
-						name = "Notes",
-						path = "~/Obsidian/Notes/",
-					},
-					{
-						name = "Personal",
-						path = "~/Obsidian/Personal/",
-					},
-				},
-				daily_notes = {
-					folder = "Daily",
-					template = "Assets/Templates/Daily.md",
-				},
-				templates = {
-					folder = "Assets/Templates",
-				},
-				new_notes_location = "Inbox",
-				picker = {
-					name = "mini.pick",
-				},
-				attachments = {
-					img_folder = "Assets/Attachments",
-				},
-				completion = {
-					nvim_cmp = false,
-					blink = true,
-				},
-			})
-		end
-	end,
-	once = true,
+-- Obsidian notes (eagerly loaded)
+require("obsidian").setup({
+	legacy_commands = true,
+	ui = {
+		enable = false,
+	},
+	workspaces = {
+		{
+			name = "Notes",
+			path = "~/Obsidian/Notes/",
+		},
+		{
+			name = "Personal",
+			path = "~/Obsidian/Personal/",
+		},
+	},
+	daily_notes = {
+		folder = "Daily",
+		template = "Assets/Templates/Daily.md",
+	},
+	templates = {
+		folder = "Assets/Templates",
+	},
+	new_notes_location = "Inbox",
+	picker = {
+		name = "mini.pick",
+	},
+	attachments = {
+		img_folder = "Assets/Attachments",
+	},
+	completion = {
+		nvim_cmp = false,
+		blink = true,
+	},
 })
 
 -- Quarto document support

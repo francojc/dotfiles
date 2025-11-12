@@ -36,6 +36,7 @@ local eager_plugins = {
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
+	{ src = "https://github.com/obsidian-nvim/obsidian.nvim" },
 }
 
 -- Lazy-loaded plugins (optional - loaded on demand via autocommands/commands)
@@ -49,7 +50,6 @@ local lazy_plugins = {
 	{ src = "https://github.com/kdheepak/lazygit.nvim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },
-	{ src = "https://github.com/obsidian-nvim/obsidian.nvim" },
 	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 	{ src = "https://github.com/quarto-dev/quarto-nvim" },
 	{ src = "https://github.com/stevearc/aerial.nvim" },

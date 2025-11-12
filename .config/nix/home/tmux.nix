@@ -96,6 +96,12 @@
       # Floating session popup (in current path), use detach to close
       bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
+      # Floating session popup
+      # Open Obsidian vault (~/Obsidian/Notes/) in nvim
+      # The :ObsidianToday command is run on startup to open today's note
+      # session stays alive until detached
+      bind-key o display-popup -w 80% -h 60% -E "cd ~/Obsidian/Notes/ && exec tmux new-session -s obsidian \\; send-keys 'nvim +:ObsidianToday' C-m \\; set-option destroy-unattached on"
+
       # kill pane
       bind x kill-pane
 
@@ -177,4 +183,7 @@
 
   # Create tmux config directory
   xdg.configFile."tmux/.keep".text = "";
+
+  # Create Obsidian directory structure
+  home.file."Obsidian/Notes/.keep".text = "";
 }
