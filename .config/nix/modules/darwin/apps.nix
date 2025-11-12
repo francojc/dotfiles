@@ -26,6 +26,7 @@
         name = "neovim";
         args = ["HEAD"]; # pre-release version
       }
+      "ncspot" # spotify TUI client
       "nmap"
       "node" # Node.js
       "pngpaste" # paste images
