@@ -7,6 +7,12 @@ if vim.version().minor < 12 then
   return
 end
 
+-- Plugins 
+vim.pack.add({
+	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
+})
+
+
 -- Standard Settings 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -115,7 +121,6 @@ vim.opt.completeopt = "menu,menuone,preview,noselect,nearest"
 
 -- Statusline Configuration
 vim.opt.statusline = "%!v:lua.require'my_statusline'.active()"
-
 -- Create statusline module
 local function create_statusline_module()
   local M = {}
