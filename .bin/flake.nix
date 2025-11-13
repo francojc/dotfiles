@@ -25,11 +25,11 @@
         quarto
         R
         radianWrapper
-        python3
+        python312
       ];
 
       # Python packages
-      pyPackages = with pkgs.python3Packages; [
+      pyPackages = with pkgs.python312Packages; [
         ipython
         jupyter
         openai

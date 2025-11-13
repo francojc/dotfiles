@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+# Wrapper script to convert various document formats using Pandoc + Marker
+
+set -e
+
+usage() {
+    cat <<EOF
+Usage: marker-convert <input_file> [--output_dir <dir>] [marker options...]
+
+Converts DOCX, PPTX, XLSX, HTML, EPUB, and other formats to markdown using:
+  - Pandoc for DOCX/PPTX/EPUB/HTML → PDF conversion
+  - Marker for PDF → Markdown conversion (with ML/OCR)
+
+Examples:
+  marker-convert document.docx
+  marker-convert presentation.pptx --output_dir ./output
+  marker-convert document.pdf --use_llm --gemini_api_key "\$GEMINI_API_KEY"
+
+Options:
+  --output_dir <dir>    Output directory (default: ./marker_output)
+  --keep-pdf            Keep intermediate PDF file
+  All other options are passed directly to marker_single
+
+Supported formats: PDF, DOCX, PPTX, EPUB, HTML, ODT, RST, and more
+EOF
+    exit 1
+}
+
+# Check for input file
+if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    usage
+fi
+
+INPUT_FILE="$1"
+shift
+
+# Check if file exists
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: File '$INPUT_FILE' not found"
+    exit 1
+fi
+
+# Parse options
+OUTPUT_DIR="./marker_output"
+KEEP_PDF=false
+MARKER_OPTS=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --output_dir|--output-dir)
+            OUTPUT_DIR="$2"
+            shift 2
+            ;;
+        --keep-pdf)
+            KEEP_PDF=true
+            shift
+            ;;
+        *)
+            MARKER_OPTS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Get file extension
+EXT="${INPUT_FILE##*.}"
+EXT_LOWER=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
+BASENAME=$(basename "$INPUT_FILE" ."$EXT")
+
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
+
+# Determine if we need to convert to PDF first
+case "$EXT_LOWER" in
+    pdf)
+        echo "→ Input is PDF, processing directly with Marker..."
+        marker_single "$INPUT_FILE" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
+        ;;
+    docx|doc|pptx|ppt|odt)
+        # Marker has built-in DOCX/PPTX/ODT support via WeasyPrint
+        # Just pass directly to Marker - it handles the conversion internally
+        echo "→ Processing $EXT_LOWER with Marker (built-in conversion)..."
+        marker_single "$INPUT_FILE" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
+        ;;
+    epub|html|htm|rtf|rst)
+        # For these formats, convert to PDF first with Pandoc
+        TEMP_PDF="/tmp/${BASENAME}_temp.pdf"
+        echo "→ Converting $EXT_LOWER to PDF with Pandoc..."
+
+        if pandoc "$INPUT_FILE" --pdf-engine=tectonic -o "$TEMP_PDF" 2>/dev/null; then
+            echo "✓ Conversion successful with Tectonic"
+        else
+            echo "Error: Pandoc conversion failed for $EXT_LOWER"
+            echo "Suggestion: Export as PDF manually and use: marker-convert file.pdf"
+            exit 1
+        fi
+
+        echo "→ Processing PDF with Marker..."
+        marker_single "$TEMP_PDF" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
+
+        if [ "$KEEP_PDF" = false ]; then
+            rm -f "$TEMP_PDF"
+            echo "✓ Cleaned up temporary PDF"
+        else
+            mv "$TEMP_PDF" "$OUTPUT_DIR/${BASENAME}.pdf"
+            echo "✓ Kept PDF: $OUTPUT_DIR/${BASENAME}.pdf"
+        fi
+        ;;
+    xlsx|xls)
+        echo "Error: Excel files require special handling"
+        echo "Suggestion: Export to CSV and process separately, or use a spreadsheet-to-PDF converter"
+        exit 1
+        ;;
+    *)
+        echo "Error: Unsupported file format: .$EXT"
+        echo "Supported: PDF, DOCX, PPTX, EPUB, HTML, ODT, RTF, RST"
+        exit 1
+        ;;
+esac
+
+echo "✓ Conversion complete! Output in: $OUTPUT_DIR"

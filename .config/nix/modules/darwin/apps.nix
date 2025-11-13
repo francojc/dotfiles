@@ -12,15 +12,12 @@
       upgrade = true;
     };
 
-    taps = [
-      "FelixKratz/formulae" # for jankyborders
-    ];
+    taps = [];
 
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
-      "borders" # jankyborders
-      "huggingface-cli"
+      "FelixKratz/formulae/borders" # jankyborders
       "keith/formulae/reminders-cli"
       {
         name = "neovim";
@@ -30,11 +27,15 @@
       "nmap"
       "node" # Node.js
       "pngpaste" # paste images
-      "python@3.11" # Python 3
       "rename" # file renaming utility
       "sqly" #
       "transmission-cli" # command-line torrent client
-      "uv"
+
+      # WeasyPrint dependencies for Marker's DOCX/PPTX support
+      "cairo"
+      "pango"
+      "gdk-pixbuf"
+      "libffi"
     ];
 
     casks = [

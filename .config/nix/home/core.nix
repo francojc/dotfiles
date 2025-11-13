@@ -44,11 +44,13 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
+    # python312 provided via llm_with_plugins below
     # shunit2 # Shell testing
     stow # Symlink manager
+    uv # Modern Python package and project manager
   ];
 
-  llm_with_plugins = pkgs.python3.withPackages (ps:
+  llm_with_plugins = pkgs.python312.withPackages (ps:
     with ps; [
       llm
       llm-openrouter

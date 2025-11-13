@@ -1,4 +1,4 @@
-{config, ...}: {
+{config, username, ...}: {
   programs = {
     # Enable some useful shells
     zsh = {
@@ -43,7 +43,11 @@
         export MANPAGER="less -R"
         export PAGER='bat'
         export USER=$(whoami)
+        export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
         export VISUAL='nvim'
+
+        # WeasyPrint/Cairo library paths for Marker DOCX/PPTX support
+        export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib:$DYLD_FALLBACK_LIBRARY_PATH"
 
         # OLLAMA
         export OLLAMA_HOST="0.0.0.0"
