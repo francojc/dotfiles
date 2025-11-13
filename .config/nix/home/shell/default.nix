@@ -43,11 +43,17 @@
         export MANPAGER="less -R"
         export PAGER='bat'
         export USER=$(whoami)
-        export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
         export VISUAL='nvim'
+
+        # Python/UV configuration
+        export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
+        # Set for GUI apps (like Claude Desktop with MCP servers)
+        launchctl setenv UV_PYTHON "/etc/profiles/per-user/${username}/bin/python3" 2>/dev/null || true
 
         # WeasyPrint/Cairo library paths for Marker DOCX/PPTX support
         export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+        # Set for GUI apps
+        launchctl setenv DYLD_FALLBACK_LIBRARY_PATH "/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib" 2>/dev/null || true
 
         # OLLAMA
         export OLLAMA_HOST="0.0.0.0"
