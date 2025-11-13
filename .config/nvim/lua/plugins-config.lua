@@ -316,7 +316,7 @@ vim.lsp.config.lua_ls = {
 				version = "LuaJIT",
 			},
 			diagnostics = {
-				globals = { "vim" },
+				globals = { "vim", "require" },
 			},
 			workspace = {
 				checkThirdParty = false,
