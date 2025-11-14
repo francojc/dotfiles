@@ -103,6 +103,7 @@ map("n", "<leader>ey", "<Cmd>Yazi<Cr>", { desc = "Yazi" })
 map("n", "<leader>ec", "<Cmd>Yazi cwd<Cr>", { desc = "Yazi cwd" })
 -- Files -----------------------------------
 -- Snacks picker
+map("n", "<leader><leader>", "<Cmd>lua Snacks.picker.smart()<Cr>", { desc = "Smart find files" })
 map("n", "<leader>ff", "<Cmd>lua Snacks.picker.files()<Cr>", { desc = "Find files" })
 map("n", "<leader>fg", "<Cmd>lua Snacks.picker.grep()<Cr>", { desc = "Live grep" })
 map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
@@ -316,8 +317,10 @@ map({ "n", "v" }, "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send regi
 
 -- Search -----------------------------------
 map("n", "<leader>sh", "<Cmd>lua Snacks.picker.help()<Cr>", { desc = "Search help tags" })
+map("n", "<leader>sj", "<Cmd>lua Snacks.picker.jumps()<Cr>", { desc = "Search jumps" })
 map("n", "<leader>sk", "<Cmd>lua Snacks.picker.keymaps()<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>lua Snacks.picker.marks()<Cr>", { desc = "Search marks" })
+map("n", "<leader>sn", "<Cmd>lua Snacks.picker.notifications()<Cr>", { desc = "Search notifications" })
 map("n", "<leader>sr", "<Cmd>lua Snacks.picker.registers()<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelling suggestions" })
 map(

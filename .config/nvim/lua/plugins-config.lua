@@ -594,16 +594,24 @@ require("snacks").setup({
 		enabled = true,
 		sections = {
 			{ section = "header" },
-			{ section = "keys", gap = 1, padding = 1 },
+			-- { section = "keys", gap = 1, padding = 1 },
 		},
 	},
 	explorer = { enabled = false }, -- Using yazi
 	git = { enabled = false },
 	gitbrowse = { enabled = false },
-	image = { enabled = false }, -- Using image.nvim
+	image = { enabled = true }, -- Using image.nvim
 	input = { enabled = false },
 	notifier = { enabled = false }, -- Using standard vim.notify
-	picker = { enabled = true },
+	picker = {
+		enabled = true,
+		formatters = {
+			file = {
+				filename_first = true,
+			},
+		},
+		layout = {},
+	},
 	quickfile = { enabled = false },
 	scope = { enabled = false },
 	scroll = { enabled = false },
@@ -854,35 +862,35 @@ require("render-markdown").setup({
 	},
 	checkbox = {
 		unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-		checked = { icon = " ", highlight = "RenderMarkdownChecked" },
+		checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 		custom = {
 			waiting = {
 				raw = "[-]",
-				rendered = " ",
+				rendered = " ",
 				highlight = "DiagnosticInfo",
 				scope_highlight = nil,
 			},
 			forward = {
 				raw = "[>]",
-				rendered = " ",
+				rendered = " ",
 				highlight = "DiagnosticError",
 				scope_highlight = nil,
 			},
 			progress = {
 				raw = "[/]",
-				rendered = " ",
+				rendered = " ",
 				highlight = "DiagnosticWarn",
 				scope_highlight = nil,
 			},
 			cancel = {
 				raw = "[~]",
-				rendered = " ",
+				rendered = " ",
 				highlight = "DiagnosticError",
 				scope_highlight = nil,
 			},
 			important = {
 				raw = "[!]",
-				rendered = " ",
+				rendered = " ",
 				highlight = "DiagnosticWarn",
 				scope_highlight = nil,
 			},

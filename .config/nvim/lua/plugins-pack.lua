@@ -19,7 +19,7 @@ local eager_plugins = {
 	{ src = "https://github.com/ayu-theme/ayu-vim" },
 
 	-- Core functionality plugins (eager-loaded)
-	{ src = "https://github.com/3rd/image.nvim" },
+	{ src = "https://github.com/3rd/image.nvim" }, -- Snacks.image may replace (temp)
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/Saghen/blink.cmp" },
 	{ src = "https://github.com/abecodes/tabout.nvim" },

@@ -809,84 +809,85 @@
         cmdline_bg = colors.bg0;
         search_match = colors.bright_red;
       };
-      ayu = let
+    };
+
+    ayu = let
+      colors = {
+        # Background colors
+        bg0 = "#212733";
+        bg1 = "#272D38";
+        bg2 = "#2D3640";
+        bg3 = "#343F4C";
+        bg4 = "#3D4751";
+
+        # Foreground colors
+        fg0 = "#D9D7CE";
+        fg1 = "#D9D7CE";
+        fg2 = "#607080";
+        fg3 = "#5C6773";
+
+        # Accent colors
+        red = "#F07178";
+        green = "#BBE67E";
+        yellow = "#FFD57F";
+        blue = "#80D4FF";
+        purple = "#D4BFFF";
+        aqua = "#5CCFE6";
+        orange = "#FFAE57";
+
+        # Bright colors
+        bright_red = "#F07178";
+        bright_green = "#BBE67E";
+        bright_yellow = "#FFD57F";
+        bright_blue = "#80D4FF";
+        bright_purple = "#D4BFFF";
+        bright_aqua = "#5CCFE6";
+        bright_orange = "#FFAE57";
+
+        # Special
+        cursor = "#FFCC66";
+        accent = "#FFCC66";
+      };
+    in {
+      name = "ayu";
+      inherit colors;
+      ghostty = {
+        theme = "Ayu Mirage";
+        cursor_color = "#FFCC66";
+      };
+      kitty = {
+        theme_name = "Ayu Mirage";
+      };
+      vim = {
+        colorscheme = "ayu";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "ayu";
         colors = {
-          # Background colors
-          bg0 = "#212733";
-          bg1 = "#272D38";
-          bg2 = "#2D3640";
-          bg3 = "#343F4C";
-          bg4 = "#3D4751";
-
-          # Foreground colors
-          fg0 = "#D9D7CE";
-          fg1 = "#D9D7CE";
-          fg2 = "#607080";
-          fg3 = "#5C6773";
-
-          # Accent colors
-          red = "#F07178";
-          green = "#BBE67E";
+          bg = "#272D38";
+          fg = "#D9D7CE";
           yellow = "#FFD57F";
-          blue = "#80D4FF";
-          purple = "#D4BFFF";
-          aqua = "#5CCFE6";
-          orange = "#FFAE57";
-
-          # Bright colors
-          bright_red = "#F07178";
-          bright_green = "#BBE67E";
-          bright_yellow = "#FFD57F";
-          bright_blue = "#80D4FF";
-          bright_purple = "#D4BFFF";
-          bright_aqua = "#5CCFE6";
-          bright_orange = "#FFAE57";
-
-          # Special
-          cursor = "#FFCC66";
-          accent = "#FFCC66";
         };
-      in {
-        name = "ayu";
-        inherit colors;
-        ghostty = {
-          theme = "Ayu Mirage";
-          cursor_color = "#FFCC66";
-        };
-        kitty = {
-          theme_name = "Ayu Mirage";
-        };
-        vim = {
-          colorscheme = "ayu";
-          background = "dark";
-        };
-        neovim = {
-          colorscheme = "ayu";
-          colors = {
-            bg = "#272D38";
-            fg = "#D9D7CE";
-            yellow = "#FFD57F";
-          };
-        };
-        ncspot = {
-          background = colors.bg0;
-          primary = colors.fg0;
-          secondary = colors.fg3;
-          title = colors.accent;
-          playing = colors.accent;
-          playing_selected = colors.bright_orange;
-          playing_bg = colors.bg0;
-          highlight = colors.fg0;
-          highlight_bg = colors.bg2;
-          error = colors.fg0;
-          error_bg = colors.red;
-          statusbar = colors.bg0;
-          statusbar_progress = colors.accent;
-          statusbar_bg = colors.accent;
-          cmdline = colors.fg0;
-          cmdline_bg = colors.bg0;
-          search_match = colors.bright_red;
-        };
+      };
+      ncspot = {
+        background = colors.bg0;
+        primary = colors.fg0;
+        secondary = colors.fg3;
+        title = colors.accent;
+        playing = colors.accent;
+        playing_selected = colors.bright_orange;
+        playing_bg = colors.bg0;
+        highlight = colors.fg0;
+        highlight_bg = colors.bg2;
+        error = colors.fg0;
+        error_bg = colors.red;
+        statusbar = colors.bg0;
+        statusbar_progress = colors.accent;
+        statusbar_bg = colors.accent;
+        cmdline = colors.fg0;
+        cmdline_bg = colors.bg0;
+        search_match = colors.bright_red;
       };
     };
   };
