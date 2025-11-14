@@ -185,22 +185,22 @@ end
 -- Workaround for vim.pack.update() sha_target error in Neovim 0.12 pre-release
 -- The update function works but fails when displaying results due to a bug
 -- This wrapper suppresses the error and shows a simple success message
-function _G.Pack_update()
-	vim.notify("Updating plugins...", vim.log.levels.INFO)
-
-	local ok, err = pcall(vim.pack.update)
-
-	if not ok then
-		if string.match(tostring(err), "sha_target") then
-			vim.notify("Plugins updated successfully (display error suppressed)", vim.log.levels.INFO)
-			vim.notify("Check :messages or ~/.local/state/nvim/nvim-pack.log for details", vim.log.levels.INFO)
-		else
-			vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
-		end
-	else
-		vim.notify("Plugins updated successfully", vim.log.levels.INFO)
-	end
-end
+-- function _G.Pack_update()
+-- 	vim.notify("Updating plugins...", vim.log.levels.INFO)
+--
+-- 	local ok, err = pcall(vim.pack.update)
+--
+-- 	if not ok then
+-- 		if string.match(tostring(err), "sha_target") then
+-- 			vim.notify("Plugins updated successfully (display error suppressed)", vim.log.levels.INFO)
+-- 			vim.notify("Check :messages or ~/.local/state/nvim/nvim-pack.log for details", vim.log.levels.INFO)
+-- 		else
+-- 			vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
+-- 		end
+-- 	else
+-- 		vim.notify("Plugins updated successfully", vim.log.levels.INFO)
+-- 	end
+-- end
 
 -- Git branch helper for statusline with caching
 -- Cache structure: { [bufnr] = { branch = string, git_dir = string } }

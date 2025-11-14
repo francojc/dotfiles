@@ -544,7 +544,7 @@ vim.api.nvim_create_autocmd("FileType", {
 ---==========================================================
 
 ---| Mini Modules ----------------------------------
-local mini_modules = { "icons", "pairs", "pick", "surround" }
+local mini_modules = { "icons", "pairs", "surround" }
 for _, module in ipairs(mini_modules) do
 	require("mini." .. module).setup({})
 end
@@ -796,7 +796,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Obsidian notes
 require("obsidian").setup({
-	legacy_commands = true,
+	legacy_commands = false,
 	ui = {
 		enable = false,
 	},

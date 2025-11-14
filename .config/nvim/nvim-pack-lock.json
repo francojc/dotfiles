@@ -17,7 +17,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "40380e7",
+      "rev": "de57322",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -64,10 +64,6 @@
       "rev": "2305dee",
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
-    "lz.n": {
-      "rev": "5a80de1",
-      "src": "https://github.com/nvim-neorocks/lz.n"
-    },
     "mini.icons": {
       "rev": "ff2e4f1",
       "src": "https://github.com/echasnovski/mini.icons"
@@ -75,10 +71,6 @@
     "mini.pairs": {
       "rev": "b316e68",
       "src": "https://github.com/echasnovski/mini.pairs"
-    },
-    "mini.pick": {
-      "rev": "08a7220",
-      "src": "https://github.com/echasnovski/mini.pick"
     },
     "mini.surround": {
       "rev": "88c5229",
@@ -97,11 +89,11 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "fcb33fb",
+      "rev": "933379f",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
-      "rev": "918e89e",
+      "rev": "6c10964",
       "src": "https://github.com/navarasu/onedark.nvim"
     },
     "otter.nvim": {
@@ -117,24 +109,16 @@
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
     "render-markdown.nvim": {
-      "rev": "060c911",
+      "rev": "f58c05f",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
-    "sidekick.nvim": {
-      "rev": "c2bdf8c",
-      "src": "https://github.com/folke/sidekick.nvim"
-    },
     "snacks.nvim": {
-      "rev": "eee204d",
+      "rev": "dec29f5",
       "src": "https://github.com/folke/snacks.nvim"
     },
     "tabout.nvim": {
       "rev": "9a34994",
       "src": "https://github.com/abecodes/tabout.nvim"
-    },
-    "todo-comments.nvim": {
-      "rev": "411503d",
-      "src": "https://github.com/folke/todo-comments.nvim"
     },
     "tokyonight.nvim": {
       "rev": "5da1b76",
@@ -169,7 +153,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "b506f78",
+      "rev": "3f68e2f",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
