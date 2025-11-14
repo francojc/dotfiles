@@ -4,6 +4,10 @@
       "rev": "5e687b5",
       "src": "https://github.com/stevearc/aerial.nvim"
     },
+    "ayu-vim": {
+      "rev": "01faacb",
+      "src": "https://github.com/ayu-theme/ayu-vim"
+    },
     "black-metal-theme-neovim": {
       "rev": "6d02078",
       "src": "https://github.com/metalelf0/black-metal-theme-neovim"

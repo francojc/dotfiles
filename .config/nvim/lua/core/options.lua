@@ -4,9 +4,6 @@ local a = vim.api
 local opt = vim.opt
 
 -- Globals -----
--- Record start time for startup duration
-_G.nvim_config_start_time = vim.loop.hrtime()
-
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Locals -----
