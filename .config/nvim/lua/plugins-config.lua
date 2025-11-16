@@ -801,7 +801,7 @@ require("obsidian").setup({
 		enable = false,
 	},
 	checkbox = {
-		order = { " ", "x", ">", "~", "!" },
+		order = { " ", "x", ">", "-", "~", "!", "?" },
 	},
 	workspaces = {
 		{
@@ -865,6 +865,12 @@ require("render-markdown").setup({
 		checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 		custom = {
 			waiting = {
+				raw = "[?]",
+				rendered = " ",
+				highlight = "DiagnosticInfo",
+				scope_highlight = nil,
+			},
+			stale = {
 				raw = "[-]",
 				rendered = " ",
 				highlight = "DiagnosticInfo",

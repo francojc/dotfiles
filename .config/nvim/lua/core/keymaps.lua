@@ -40,9 +40,9 @@ map("n", "<leader>wh", "<C-w>10<", { desc = "Resize window left" })
 map("n", "<leader>wl", "<C-w>10>", { desc = "Resize window right" })
 -- Go to
 -- Beginning of line
-map({ "n", "v" }, "gh", "^", { desc = "Go to beginning of line" })
+map({ "n", "v" }, "gh", "^", { desc = "Go to first character of line" })
 -- End of line
-map({ "n", "v" }, "gl", "$", { desc = "Go to end of line" })
+map({ "n", "v" }, "gl", "g_", { desc = "Go to last character of line" })
 map({ "n", "v" }, "go", "o<Esc>", { desc = "Add line below current line" })
 map({ "n", "v" }, "gO", "O<Esc>", { desc = "Add line above current line" })
 map("n", "gt", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", { desc = "Show LSP document symbols" })
@@ -321,6 +321,7 @@ map("n", "<leader>sj", "<Cmd>lua Snacks.picker.jumps()<Cr>", { desc = "Search ju
 map("n", "<leader>sk", "<Cmd>lua Snacks.picker.keymaps()<Cr>", { desc = "Search keymaps" })
 map("n", "<leader>sm", "<Cmd>lua Snacks.picker.marks()<Cr>", { desc = "Search marks" })
 map("n", "<leader>sn", "<Cmd>lua Snacks.picker.notifications()<Cr>", { desc = "Search notifications" })
+map("n", "<leader>sq", "<Cmd>lua Snacks.picker.qflist()<Cr>", { desc = "Quickfix List" })
 map("n", "<leader>sr", "<Cmd>lua Snacks.picker.registers()<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelling suggestions" })
 map(
