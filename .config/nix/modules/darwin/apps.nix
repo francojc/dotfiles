@@ -18,15 +18,18 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "FelixKratz/formulae/borders" # jankyborders
-      "keith/formulae/reminders-cli"
+      "huggingface-cli" # Hugging Face CLI
+      "llama.cpp" # LLaMA model inference
       {
         name = "neovim";
         args = ["HEAD"]; # pre-release version
       }
       "ncspot" # spotify TUI client
+      "ninja" # ...
       "nmap"
       "node" # Node.js
       "pngpaste" # paste images
+      "keith/formulae/reminders-cli"
       "rename" # file renaming utility
       "sqly" #
       "transmission-cli" # command-line torrent client

@@ -64,6 +64,10 @@
       "rev": "2305dee",
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
+    "llama.vim": {
+      "rev": "ade8966",
+      "src": "https://github.com/ggml-org/llama.vim"
+    },
     "mini.icons": {
       "rev": "ff2e4f1",
       "src": "https://github.com/echasnovski/mini.icons"
