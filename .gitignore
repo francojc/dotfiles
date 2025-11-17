@@ -15,6 +15,7 @@
 
 # Application configuration directories
 .config/aerc/accounts.conf
+.config/aerc/accounts.conf-backup
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
 .config/containers/*
