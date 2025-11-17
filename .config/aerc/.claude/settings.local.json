@@ -8,7 +8,12 @@
       "Bash(stat:*)",
       "Bash(pkill:*)",
       "Read(//Users/francojc/Library/Preferences/**)",
-      "Bash(pandoc:*)"
+      "Bash(pandoc:*)",
+      "mcp__github__get_file_contents",
+      "mcp__github__list_commits",
+      "Bash(git fetch:*)",
+      "mcp__github__get_commit",
+      "Bash(git rev-list:*)"
     ],
     "deny": [],
     "ask": []
