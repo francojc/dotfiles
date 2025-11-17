@@ -5,8 +5,10 @@ local opt = vim.opt
 
 -- Globals -----
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
 -- Locals -----
+-- Autowrite
+opt.autowrite = true
+opt.autowriteall = true -- tmp: to avoid losing work with 0.12 pre-release bugs
 -- Clipboard
 opt.clipboard:append("unnamedplus") --- Use system clipboard
 -- Completions
