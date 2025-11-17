@@ -1,5 +1,5 @@
----| PLUGINS CONFIGURATION ----------------------------------
----
+---| PLUGINS CONFIGURATION ------------------------------------------------
+
 ---| UPFRONT ---------------------------------------------------
 -- Load theme config early for colors used by plugins
 local theme_config = require("theme-config")
@@ -36,8 +36,8 @@ vim.g.llama_config = {
 	enable_at_startup = false,
 }
 
--- Llama.vim highlights (theme-adaptive)
-vim.api.nvim_set_hl(0, "llama_hl_hint", { link = "Comment", default = true })
+-- Llama.vim highlights
+vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#393B42", ctermfg = 202, default = true })
 vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#77ff2f", ctermfg = 119, default = true })
 
 ---| Blink.cmp ----------------------------------
