@@ -419,7 +419,7 @@ vim.lsp.config.pyright = {
 }
 
 -- Copilot (copilot-language-server)
-vim.g.copilot_enabled = false -- Disable Copilot by default
+vim.g.copilot_enabled = true -- Disable Copilot by default
 vim.lsp.config.copilot = {
 	capabilities = capabilities,
 	filetypes = { "*" }, -- Enable for all filetypes
