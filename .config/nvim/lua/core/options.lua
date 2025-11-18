@@ -84,6 +84,8 @@ vim.o.statusline = table.concat({
 	"%#StatusLine#",
 	"%=", -- Right align
 	"%{v:lua.vim.diagnostic.status()} ", -- Diagnostic count (0.12+ native)
+	"%#StatusLineSearch#",
+	"%{v:lua.Get_search_count()}", -- Search count
 	"%#StatusLineModeNormal#",
 	" %Y ", -- File type
 	"%#StatusLine#",

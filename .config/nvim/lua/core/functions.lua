@@ -287,3 +287,119 @@ function _G.Get_mode_name()
 	local current_mode = vim.fn.mode()
 	return mode_map[current_mode] or current_mode:upper()
 end
+
+-- Search count helper for statusline with caching
+-- Cache structure: { [bufnr] = { count = string, pattern = string, hlsearch = boolean } }
+local search_count_cache = {}
+
+-- Debouncing variables
+local last_update_time = 0
+local last_cursor_pos = nil
+local DEBOUNCE_DELAY = 50 -- ms between updates
+
+-- Update search count asynchronously for current buffer
+local function update_search_count_async()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local current_time = vim.loop.hrtime() / 1000000 -- Convert to milliseconds
+
+	-- Check if search highlighting is active
+	local hlsearch = vim.o.hlsearch
+	if not hlsearch then
+		search_count_cache[bufnr] = { count = "", pattern = "", hlsearch = false }
+		return
+	end
+
+	-- Get current search pattern
+	local pattern = vim.fn.getreg("/")
+	if pattern == "" then
+		search_count_cache[bufnr] = { count = "", pattern = "", hlsearch = false }
+		return
+	end
+
+	-- Get current cursor position
+	local current_cursor = { vim.fn.line('.'), vim.fn.col('.') }
+	local cursor_str = string.format("%d,%d", current_cursor[1], current_cursor[2])
+
+	-- Debouncing: only update if enough time has passed or cursor moved significantly
+	if current_time - last_update_time < DEBOUNCE_DELAY then
+		if last_cursor_pos and cursor_str == last_cursor_pos then
+			return -- Skip update for same position within debounce window
+		end
+	end
+
+	-- Update tracking variables
+	last_update_time = current_time
+	last_cursor_pos = cursor_str
+
+	-- Get search count with error handling
+	local ok, result = pcall(vim.fn.searchcount, {
+		maxcount = 9999, -- Set high limit to get most results
+		timeout = 100,   -- Quick timeout to avoid blocking
+	})
+
+	if ok and result and result.total and result.total > 0 then
+		local current = result.current or 0
+		local total = result.total or 0
+		local new_count = string.format(" %d/%d ", current, total)
+
+		-- Only update if count actually changed (to avoid unnecessary redraws)
+		local cached = search_count_cache[bufnr]
+		if not cached or cached.count ~= new_count or cached.pattern ~= pattern or cached.hlsearch ~= hlsearch then
+			search_count_cache[bufnr] = {
+				count = new_count,
+				pattern = pattern,
+				hlsearch = hlsearch,
+			}
+			-- Trigger statusline redraw only when count changes
+			vim.schedule(function()
+				vim.cmd("redrawstatus")
+			end)
+		end
+	else
+		-- No matches or error - clear display
+		local cached = search_count_cache[bufnr]
+		if not cached or cached.count ~= "" then
+			search_count_cache[bufnr] = {
+				count = "",
+				pattern = pattern,
+				hlsearch = hlsearch,
+			}
+			vim.schedule(function()
+				vim.cmd("redrawstatus")
+			end)
+		end
+	end
+end
+
+-- Get search count from cache (non-blocking)
+function _G.Get_search_count()
+	local bufnr = vim.api.nvim_get_current_buf()
+
+	-- Always check hlsearch state and search pattern first
+	if not vim.o.hlsearch then
+		-- Clear cache when hlsearch is disabled
+		search_count_cache[bufnr] = nil
+		return ""
+	end
+
+	-- Check if search pattern exists
+	local pattern = vim.fn.getreg("/")
+	if pattern == "" then
+		search_count_cache[bufnr] = nil
+		return ""
+	end
+
+	local cached = search_count_cache[bufnr]
+	if cached and cached.hlsearch and cached.pattern == pattern then
+		return cached.count or ""
+	end
+
+	-- Cache miss - trigger async update and return empty for now
+	update_search_count_async()
+	return ""
+end
+
+-- Expose update function globally for autocommands
+function _G.Update_search_count_cache()
+	update_search_count_async()
+end
