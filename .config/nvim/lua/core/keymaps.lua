@@ -263,7 +263,7 @@ map("n", "<leader>m2", "I## <Esc>", { desc = "Heading 2" })
 map("n", "<leader>m3", "I### <Esc>", { desc = "Heading 3" })
 map("n", "<leader>m4", "I#### <Esc>", { desc = "Heading 4" })
 -- Links
-map("v", "<leader>ml", 'c[<C-r>"]()<Left>', { desc = "Add link" })
+map("v", "<leader>ml", 'c["<C-r>""]()<Left>', { desc = "Add link" })
 -- Paste image
 map(
 	"n",
