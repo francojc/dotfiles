@@ -75,7 +75,7 @@
     ];
 
     masApps = {
-      memorydiag = "748212890";
+      # memorydiag = 748212890;
       # JustFocus = 1142151959;
       # Suggester = 1106482294;
       # iMovie = 408981434;
