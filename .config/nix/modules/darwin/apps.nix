@@ -75,6 +75,7 @@
     ];
 
     masApps = {
+      # `mas` is not currently compatible with my OS
       # memorydiag = 748212890;
       # JustFocus = 1142151959;
       # Suggester = 1106482294;

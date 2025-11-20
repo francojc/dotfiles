@@ -306,15 +306,14 @@ map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
 map("n", "<leader>qa", "<Cmd>QuartoSendAbove<Cr>", { desc = "Quarto: send above" })
 map("n", "<leader>qb", "<Cmd>QuartoSendBelow<Cr>", { desc = "Quarto: send below" })
 map("n", "<leader>qf", "<Cmd>QuartoSendAll<Cr>", { desc = "Quarto: send file" })
-
--- Run -----------------------------------
 -- Slime
 g.slime_target = "tmux"
-
 -- vim.b.slime_cell_delimiter = "```"
-map("n", "<leader>rl", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
-map({ "n", "v" }, "<leader>rr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
+map("n", "<leader>ql", "<Plug>SlimeLineSend<Cr>", { desc = "Send line to Slime" })
+map({ "n", "v" }, "<leader>qr", "<Plug>SlimeRegionSend<Cr>", { desc = "Send region to Slime" })
 
+-- References -----------------------------------
+-- Bibtex
 -- Search -----------------------------------
 map("n", "<leader>sh", "<Cmd>lua Snacks.picker.help()<Cr>", { desc = "Search help tags" })
 map("n", "<leader>sj", "<Cmd>lua Snacks.picker.jumps()<Cr>", { desc = "Search jumps" })
@@ -340,6 +339,7 @@ map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tm", "<Cmd>RenderMarkdown toggle<Cr>", { desc = "Toggle markdown rendering" })
 map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" })
+map("n", "<leader>tR", "<Cmd>lua Toggle_citation_format()<CR>", { desc = "Toggle citation format (Pandoc/LaTeX)" })
 map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })

@@ -66,8 +66,8 @@ require("blink.cmp").setup({
 	sources = {
 		default = { "path", "snippets", "lsp", "buffer" },
 		per_filetype = {
-			markdown = { "path", "snippets", "lsp", "references", "emoji" },
-			quarto = { "path", "snippets", "lsp", "references", "emoji" },
+			markdown = { "path", "snippets", "lsp", "emoji" },
+			quarto = { "path", "snippets", "lsp", "emoji" },
 		},
 		providers = {
 			snippets = {
@@ -81,10 +81,6 @@ require("blink.cmp").setup({
 			emoji = {
 				name = "Emoji",
 				module = "blink-emoji",
-			},
-			references = {
-				name = "pandoc_references",
-				module = "cmp-pandoc-references.blink",
 			},
 		},
 	},
@@ -710,7 +706,8 @@ wk.add({
 	{ "<leader>o", group = "Obsidian", icon = "󱞁" },
 	{ "<leader>p", group = "Persistence", icon = "󰆓" },
 	{ "<leader>q", group = "Quarto", icon = "󰠮" },
-	{ "<leader>r", group = "Run", icon = "󰒋" },
+	{ "<leader>r", group = "References", icon = "󰒋" },
+	{ "<leader>rb", desc = "BibTeX citations" },
 	{ "<leader>s", group = "Search", icon = "󰢶" },
 	{ "<leader>t", group = "Toggle", icon = "󰔡" },
 	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "󰪷" },
@@ -802,7 +799,7 @@ require("obsidian").setup({
 		enable = false,
 	},
 	checkbox = {
-		order = { " ", "x", ">", "-", "~", "!", "?" },
+		order = { " ", "x", "/", "-", ">", "~", "!", "?" },
 	},
 	workspaces = {
 		{
@@ -935,3 +932,66 @@ require("render-markdown").setup({
 		preset = "round",
 	},
 })
+
+---==========================================================
+---| REFERENCES & CITATIONS - SNACKS BIBTEX
+---==========================================================
+
+-- Pandoc citation command definitions
+local pandoc_citations = {
+	{ cmd = "pandoc cite", template = "[@{{key}}]", desc = "Pandoc inline citation" },
+	{ cmd = "pandoc in-text", template = "@{{key}}", desc = "Pandoc in-text author citation" },
+	{ cmd = "pandoc suppress author", template = "[-@{{key}}]", desc = "Pandoc citation (suppress author)" },
+	{ cmd = "pandoc with page", template = "[@{{key}}, p. ]", desc = "Pandoc citation with page locator" },
+	{ cmd = "pandoc with prefix", template = "[see @{{key}}]", desc = "Pandoc citation with prefix" },
+	{ cmd = "pandoc multiple", template = "[@{{key}}; @]", desc = "Pandoc multiple citations" },
+}
+
+-- Setup configuration
+local cfg = require("snacks-bibtex.config").get()
+
+-- Disable default LaTeX commands, add Pandoc commands
+for _, cmd in ipairs(cfg.citation_commands) do
+	cmd.enabled = false
+end
+for _, p in ipairs(pandoc_citations) do
+	table.insert(cfg.citation_commands, {
+		command = p.cmd,
+		template = p.template,
+		description = p.desc,
+		packages = "pandoc",
+		enabled = true,
+	})
+end
+
+cfg.depth = 1 -- Search project root for .bib files
+cfg.format = "[@%s]" -- Default format when pressing Enter
+require("snacks-bibtex").setup(cfg)
+
+-- Keybinding
+vim.keymap.set("n", "<leader>rb", function()
+	require("snacks-bibtex").bibtex()
+end, { desc = "BibTeX citations" })
+
+-- Toggle between Pandoc and LaTeX citation formats
+_G.Toggle_citation_format = function()
+	local config = require("snacks-bibtex.config").get()
+	local is_pandoc = vim.tbl_contains(
+		vim.tbl_map(
+			function(c)
+				return c.command
+			end,
+			vim.tbl_filter(function(c)
+				return c.enabled
+			end, config.citation_commands)
+		),
+		"pandoc cite"
+	)
+
+	for _, cmd in ipairs(config.citation_commands) do
+		cmd.enabled = cmd.command:match("^pandoc") and not is_pandoc or is_pandoc
+	end
+
+	require("snacks-bibtex").setup(config)
+	vim.notify("Citation format: " .. (is_pandoc and "LaTeX" or "Pandoc"), vim.log.levels.INFO)
+end

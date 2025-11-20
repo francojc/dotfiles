@@ -1,7 +1,7 @@
 {
   "plugins": {
     "aerial.nvim": {
-      "rev": "5e687b5",
+      "rev": "3c42785",
       "src": "https://github.com/stevearc/aerial.nvim"
     },
     "ayu-vim": {
@@ -17,11 +17,11 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "de57322",
+      "rev": "73ea297",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
-      "rev": "234fc04",
+      "rev": "da33755",
       "src": "https://github.com/catppuccin/nvim"
     },
     "cmp-pandoc-references": {
@@ -29,7 +29,7 @@
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
     },
     "conform.nvim": {
-      "rev": "cde4da5",
+      "rev": "1bf8b5b",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "20ad441",
+      "rev": "cdafc32",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "gruvbox.nvim": {
@@ -93,7 +93,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "933379f",
+      "rev": "0f43749",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -113,11 +113,15 @@
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
     "render-markdown.nvim": {
-      "rev": "f58c05f",
+      "rev": "6e0e890",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
+    "snacks-bibtex.nvim": {
+      "rev": "574dd28",
+      "src": "https://github.com/krissen/snacks-bibtex.nvim"
+    },
     "snacks.nvim": {
-      "rev": "dec29f5",
+      "rev": "fe7cfe9",
       "src": "https://github.com/folke/snacks.nvim"
     },
     "tabout.nvim": {
@@ -157,7 +161,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "3f68e2f",
+      "rev": "9c22c94",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
