@@ -48,6 +48,7 @@ local eager_plugins = {
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
+	{ src = "https://github.com/stevearc/quicker.nvim" },
 }
 
 -- Install and load all plugins immediately

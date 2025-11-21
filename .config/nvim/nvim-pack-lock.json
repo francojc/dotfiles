@@ -112,6 +112,10 @@
       "rev": "0e94915",
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
+    "quicker.nvim": {
+      "rev": "12a2291",
+      "src": "https://github.com/stevearc/quicker.nvim"
+    },
     "render-markdown.nvim": {
       "rev": "6e0e890",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"

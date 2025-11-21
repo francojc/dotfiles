@@ -562,6 +562,9 @@ pcall(function()
 	})
 end)
 
+---| Quicker ----------------------------------
+require("quicker").setup()
+
 ---| Tabout ----------------------------------
 require("tabout").setup({
 	tabkey = "<Tab>",
