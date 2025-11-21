@@ -45,20 +45,17 @@
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
-      # "blackhole-2ch" # virtual audio driver
       "calibre" # eBook management
       "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
-      "google-chrome"
       "dropbox"
       "ghostty" # Terminal emulator
+      "google-chrome"
       "google-drive"
       "kap" # screen recording
       "kitty" # terminal emulator
-      # "keycastr" # keystroke visualizer
-      # "loopback" # audio routing
-      # "obs" # OBS Studio for streaming and recording
+      "lm-studio" # LLM model gui/cli
       "obsidian"
       "orbstack" # Docker alternative
       "parallels" # virtualization
@@ -72,6 +69,10 @@
       "zen" # browser
       "zoom"
       "zotero@beta" # reference manager
+      # "blackhole-2ch" # virtual audio driver
+      # "keycastr" # keystroke visualizer
+      # "loopback" # audio routing
+      # "obs" # OBS Studio for streaming and recording
     ];
 
     masApps = {

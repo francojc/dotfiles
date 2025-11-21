@@ -183,6 +183,9 @@
         { key = 'c', mods = 'CMD', action = wezterm.action.CopyTo('Clipboard') },
         { key = 'v', mods = 'CMD', action = wezterm.action.PasteFrom('Clipboard') },
 
+        -- Disable fullscreen toggle to avoid conflicts with terminal apps
+        { key = 'Return', mods = 'ALT', action = wezterm.action.DisableDefaultAssignment },
+
         -- Configuration
         { key = ',', mods = 'CMD', action = wezterm.action.SpawnCommandInNewTab({
           args = { os.getenv('EDITOR') or 'nvim', wezterm.config_file },

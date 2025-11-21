@@ -30,6 +30,7 @@
 .config/nvim/lua/theme-config.lua
 .config/opencode/opencode.json
 .config/reddix/config.yaml.backup
+.config/reddix/reddix-receipt.json
 .config/kitty/kitty.conf
 .config/tmux/*
 
