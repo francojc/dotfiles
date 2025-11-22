@@ -2,18 +2,29 @@
 
 /* Default highlight styles */
 mark, .mark {
-  background-color: var(--hl-color, #fff3a3);
+  position: relative;
+  background: transparent;
   color: inherit;
   padding: 0 .1em;
-  border-radius: .15em;
 }
 
-/* Optional palette using data-hl attribute when writing <mark data-hl="…"> */
-mark[data-hl="yellow"], .mark[data-hl="yellow"] { --hl-color: #fff3a3; }
-mark[data-hl="orange"], .mark[data-hl="orange"] { --hl-color: #ffe8a3; }
-mark[data-hl="green"],  .mark[data-hl="green"]  { --hl-color: #c8f7c5; }
-mark[data-hl="blue"],   .mark[data-hl="blue"]   { --hl-color: #cfe8ff; }
+mark::before,
+.mark::before {
+    content: "";
+    position: absolute;
+    background-color: var(--hl-color, #fff3a3);
+    z-index: -1;
+    left: -0.3em;
+    right: -0.3em;
+    top: -0.1em;
+    bottom: -0.1em;
+    transform: skewX(-14deg) rotate(-1deg);
+    border-radius: 0.3em;
+}
 
-/* If author uses Pandoc span attrs with ==…== like [==text==]{data-hl="green"} */
-[data-hl] mark, [data-hl] .mark { background-color: var(--hl-color); }
+/* Optional palette using data-hl attribute when writing <mark data-hl="…"> or [text]{data-hl="…"} */
+[data-hl="yellow"] { --hl-color: #fff3a3; }
+[data-hl="orange"] { --hl-color: #ffe8a3; }
+[data-hl="green"]  { --hl-color: #c8f7c5; }
+[data-hl="blue"]   { --hl-color: #cfe8ff; }
 
