@@ -93,7 +93,7 @@ extract_passwords() {
       # Extract just the key name (last part of the path)
       local key_name
       key_name=$(basename "$entry_path")
-      echo "export $key_name=\"$password\"" >> "$temp_exports"
+      printf "export %s=%q\n" "$key_name" "$password" >> "$temp_exports"
     fi
   done < <(find "$pass_dir" -name "*.gpg" -type f | sort)
 
