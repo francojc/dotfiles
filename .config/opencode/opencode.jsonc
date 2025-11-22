@@ -11,6 +11,12 @@
       "models": {
         "gemma3:4b": {
           "name": "Gemma 3 4B",
+        },
+        "qwen3-vl:8b": {
+          "name": "Qwen 3 VL 8B",
+        },
+        "gpt-oss:latest": {
+          "name": "GPT-OSS Latest",
         }
       }
     }
