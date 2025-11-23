@@ -147,6 +147,19 @@ function icloud() {
   fi
 }
 
+# Open Google Drive: arguments 'my' or 'shared' to go to respective folders, default is 'My Drive'
+function gdrive() {
+  if [ -z "$1" ]; then
+    cd ~/Google\ Drive/My\ Drive
+  elif [ "$1" = "shared" ]; then
+    cd ~/Google\ Drive/Shared\ drives
+  elif [ "$1" = "my" ]; then
+    cd ~/Google\ Drive/My\ Drive
+  else
+    echo "Usage: gdrive [my|shared]"
+  fi
+}
+
 # Obsidian
 # Notes
 function on() {

@@ -680,13 +680,14 @@ require("otter").setup({
 
 ---| WhichKey ----------------------------------
 require("which-key").setup({
-	preset = "modern",
+	preset = "helix",
+	delay = 2000,
 	icons = {
 		group = "",
 	},
 	plugins = {
-		marks = false,
-		registers = false,
+		marks = true,
+		registers = true,
 	},
 })
 
