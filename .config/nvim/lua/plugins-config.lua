@@ -491,12 +491,20 @@ else
 	}
 end
 
----| Documentation ----------------------------------
+---| Typesetting & Markup Languages --------------------------
 
 -- Markdown (marksman)
 vim.lsp.config.marksman = {
 	capabilities = capabilities,
 	filetypes = { "markdown" },
+}
+
+-- Typst (tinymist)
+vim.lsp.config.tinymist = {
+	capabilities = capabilities,
+	cmd = { "tinymist" },
+	filetypes = { "typst" },
+	settings = {},
 }
 
 ---| LSP Auto-Enable by FileType ----------------------------------
@@ -512,6 +520,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		"r",
 		"rmd",
 		"quarto",
+		"typst",
 		"yaml",
 		"yml",
 	},
@@ -526,6 +535,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			r = "r_language_server",
 			rmd = "r_language_server",
 			quarto = "r_language_server",
+			typst = "tinymist",
 			yaml = "yamlls",
 			yml = "yamlls",
 		}
@@ -564,6 +574,14 @@ end)
 
 ---| Quicker ----------------------------------
 require("quicker").setup()
+
+---| Typst Preview ----------------------------
+require("typst-preview").setup({
+	dependencies_bin = {
+		["tinymist"] = "tinymist",
+		["websocat"] = "websocat",
+	},
+})
 
 ---| Tabout ----------------------------------
 require("tabout").setup({

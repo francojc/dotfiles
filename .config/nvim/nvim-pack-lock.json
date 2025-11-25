@@ -136,6 +136,10 @@
       "rev": "5da1b76",
       "src": "https://github.com/folke/tokyonight.nvim"
     },
+    "typst-preview.nvim": {
+      "rev": "87d0f3a",
+      "src": "https://github.com/chomosuke/typst-preview.nvim"
+    },
     "vague.nvim": {
       "rev": "dba2805",
       "src": "https://github.com/vague2k/vague.nvim"

@@ -29,14 +29,15 @@ local eager_plugins = {
 	{ src = "https://github.com/echasnovski/mini.pairs" },
 	{ src = "https://github.com/echasnovski/mini.surround" },
 	{ src = "https://github.com/folke/snacks.nvim" },
-	{ src = "https://github.com/krissen/snacks-bibtex.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
+	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/github/copilot.vim" },
 	{ src = "https://github.com/hakonharnes/img-clip.nvim" },
 	{ src = "https://github.com/hat0uma/csvview.nvim" },
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
 	{ src = "https://github.com/jpalardy/vim-slime" },
 	{ src = "https://github.com/kdheepak/lazygit.nvim" },
+	{ src = "https://github.com/krissen/snacks-bibtex.nvim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },
 	{ src = "https://github.com/moyiz/blink-emoji.nvim" },
@@ -47,8 +48,8 @@ local eager_plugins = {
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
-	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/stevearc/quicker.nvim" },
+	{ src = "https://github.com/chomosuke/typst-preview.nvim" },
 }
 
 -- Install and load all plugins immediately

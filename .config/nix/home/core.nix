@@ -6,11 +6,13 @@
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
+    copilot-language-server # Copilot LSP for Next Edit Suggestions
     lua-language-server # Lua LSP
     marksman # Markdown LSP
     nix-doc # Nix documentation server
     nixd # Nix LSP
     pyright # Python LSP
+    tinymist # Typst LSP
     yaml-language-server # YAML LSP
 
     # Formatters & Linters commonly integrated with Neovim
@@ -30,9 +32,7 @@
     tectonic # LaTeX rendering for math expressions
     nodePackages.mermaid-cli # Mermaid diagram rendering (provides mmdc)
     chafa # Terminal image viewer (optional, enhances image support)
-
-    # AI assistance (for sidekick.nvim)
-    copilot-language-server # Copilot LSP for Next Edit Suggestions
+    websocat # WebSocket client
   ];
 
   # Development and system tools
