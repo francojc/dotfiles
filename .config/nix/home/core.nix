@@ -30,7 +30,6 @@
 
     # Academic/document rendering (for Quarto, markdown, snacks.nvim)
     tectonic # LaTeX rendering for math expressions
-    nodePackages.mermaid-cli # Mermaid diagram rendering (provides mmdc)
     chafa # Terminal image viewer (optional, enhances image support)
     websocat # WebSocket client
   ];
@@ -111,6 +110,7 @@
     poppler-utils # PDF utilities (pdftotext, etc.)
     # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
+    typst # Document preparation system
     vdirsyncer # CalDAV/CardDAV sync
     yt-dlp # Video downloader
   ];

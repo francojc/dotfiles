@@ -97,6 +97,7 @@ vim.o.statusline = table.concat({
 
 -- Diagnostics
 vim.diagnostic.config({
+	underline = false,
 	severity_sort = true,
 	update_in_insert = false,
 	virtual_text = {
@@ -107,9 +108,5 @@ vim.diagnostic.config({
 	},
 	virtual_lines = {
 		current_line = true,
-		severity = {
-			min = vim.diagnostic.severity.ERROR,
-			max = vim.diagnostic.severity.ERROR,
-		},
 	},
 })

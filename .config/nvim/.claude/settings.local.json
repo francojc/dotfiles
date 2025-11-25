@@ -5,7 +5,6 @@
       "Bash(grep:*)",
       "Bash(nvim:*)",
       "Bash(true)",
-      "mcp__airtable__list_bases",
       "Bash(find:*)",
       "Read(//Users/francojc/.config/nix/**)",
       "WebFetch(domain:raw.githubusercontent.com)",

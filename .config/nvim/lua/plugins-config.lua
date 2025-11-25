@@ -359,13 +359,17 @@ vim.lsp.config.nixd = {
 ---| Lua Development ----------------------------------
 
 -- Lua (lua-language-server)
-vim.lsp.config.lua_ls = {
-	on_attach = function(client, _)
-		client.server_capabilities.documentFormattingProvider = false
-		client.server_capabilities.documentRangeFormattingProvider = false
-	end,
+vim.lsp.config("lua_ls", {
 	capabilities = capabilities,
+	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
+	root_markers = {
+		".luarc.json",
+		".luarc.jsonc",
+		".luacheckrc",
+		".stylua.toml",
+		".git",
+	},
 	settings = {
 		Lua = {
 			runtime = {
@@ -374,22 +378,45 @@ vim.lsp.config.lua_ls = {
 			diagnostics = {
 				globals = { "vim", "require" },
 			},
-			workspace = {
-				checkThirdParty = false,
-				library = {
-					vim.env.VIMRUNTIME,
-					vim.fn.stdpath("config"),
-				},
-			},
 			telemetry = {
 				enable = false,
 			},
 		},
 	},
-	root_dir = function(fname)
-		return vim.fs.root(fname, { ".git", ".luarc.json", "init.lua" }) or vim.fs.dirname(fname)
-	end,
-}
+})
+
+-- vim.lsp.config.lua_ls = {
+-- 	on_attach = function(client, _)
+-- 		client.server_capabilities.documentFormattingProvider = false
+-- 		client.server_capabilities.documentRangeFormattingProvider = false
+-- 	end,
+-- 	capabilities = capabilities,
+-- 	cmd = { "lua-language-server" },
+-- 	filetypes = { "lua" },
+-- 	settings = {
+-- 		Lua = {
+-- 			runtime = {
+-- 				version = "LuaJIT",
+-- 			},
+-- 			diagnostics = {
+-- 				globals = { "vim", "require" },
+-- 			},
+-- 			workspace = {
+-- 				checkThirdParty = false,
+-- 				library = {
+-- 					vim.env.VIMRUNTIME,
+-- 					vim.fn.stdpath("config"),
+-- 				},
+-- 			},
+-- 			telemetry = {
+-- 				enable = false,
+-- 			},
+-- 		},
+-- 	},
+-- 	root_dir = function(fname)
+-- 		return vim.fs.root(fname, { ".git", ".luarc.json", "init.lua" }) or vim.fs.dirname(fname)
+-- 	end,
+-- }
 
 ---| Python Development ----------------------------------
 
