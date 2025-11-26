@@ -35,7 +35,7 @@
         pandoc
         quarto
         typst
-        typst-lsp
+        tinymist
         ruff
       ];
 

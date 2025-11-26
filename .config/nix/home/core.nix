@@ -69,6 +69,7 @@
     with ps; [
       llm
       llm-openrouter
+      huggingface-hub
     ]);
 
   # Command-line utilities and system monitoring
@@ -76,7 +77,6 @@
     # _7zz # Archive compression
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
-    (python312.withPackages (ps: with ps; [ huggingface-hub ])) # Hugging Face Hub CLI
     coreutils # GNU core utilities (provides grealpath for yazi)
     duf # Disk usage utility
     entr # Event notify tool
@@ -88,7 +88,7 @@
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
-    llm_with_plugins # llm CLI bundled with OpenRouter plugin (see above)
+    llm_with_plugins # llm CLI with OpenRouter plugin + huggingface-hub (see above)
     ncdu # Disk usage analyzer
     pass # Password manager
     repgrep # ripgrep across files
