@@ -1,3 +1,18 @@
+# Python Tools Managed by UV (not nix)
+#
+# Intentionally NOT in home.packages because UV provides:
+# - Faster updates (no waiting for nixpkgs)
+# - Isolated environments per tool
+# - Consistent Python version (nix 3.12.11)
+#
+# Current UV tools:
+# - aider-chat    (AI code assistant)
+# - marker-pdf    (PDF/DOCX converter)
+# - mlx-lm        (Apple MLX language models)
+# - zotero-mcp    (Zotero MCP server)
+#
+# Update: uv tool upgrade --all
+
 {pkgs, ...}: let
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
@@ -43,7 +58,8 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    # python312 provided via llm_with_plugins below
+    # Python 3.12 provided via llm_with_plugins below
+    # Note: Python CLI tools managed via UV, not nix
     # shunit2 # Shell testing
     stow # Symlink manager
     uv # Modern Python package and project manager
@@ -58,9 +74,9 @@
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
     # _7zz # Archive compression
-    aider-chat # AI code assistant
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
+    (python312.withPackages (ps: with ps; [ huggingface-hub ])) # Hugging Face Hub CLI
     coreutils # GNU core utilities (provides grealpath for yazi)
     duf # Disk usage utility
     entr # Event notify tool

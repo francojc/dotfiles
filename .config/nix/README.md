@@ -3,6 +3,7 @@
 <!--toc:start-->
 
 - [My Nix Darwin Configuration](#my-nix-darwin-configuration)
+  - [Python Environment Philosophy](#python-environment-philosophy)
   - [Configuration Structure](#configuration-structure)
   - [Flatpak Configuration](#flatpak-configuration)
   - [Usage Instructions](#usage-instructions)
@@ -10,7 +11,47 @@
 
 <!--toc:end-->
 
-> **Note**: This is a personal configuration, and it may not be suitable for you. You can use it as a reference to build your own configuration. 
+> **Note**: This is a personal configuration, and it may not be suitable for you. You can use it as a reference to build your own configuration.
+
+## Python Environment Philosophy
+
+### Three-Layer System
+
+1. **Nix (Base Python)**: Python 3.12 from nixpkgs
+
+   - System-wide interpreter
+   - Used by UV as base for tool installations
+   - Ensures reproducibility
+
+2. **UV (CLI Tools)**: Modern Python package manager
+
+   - Manages: `aider`, `marker-pdf`, `mlx-lm`, `zotero-mcp`
+   - Uses nix Python via `UV_PYTHON` environment variable
+   - Faster than nix packages for rapidly-updating tools
+
+3. **Homebrew (C Libraries)**: System dependencies
+
+   - Provides: `cairo`, `pango`, `gdk-pixbuf`
+   - Required for `marker-pdf` DOCX/PPTX conversion
+   - Used because UV tools need system-level library paths
+
+### Project Development
+
+Use **nix flakes with direnv** for project environments:
+
+```bash
+# Create new project
+new-project academic my-research
+cd my-research
+# Environment loads automatically via direnv
+```
+
+### When to Use What
+
+- **Nix**: Base packages, LSPs, formatters, CLI utilities
+- **UV**: Python CLI tools, custom tools not in nixpkgs
+- **Nix flakes**: Project development environments
+- **Homebrew**: C libraries for UV tools, GUI apps
 
 ## Configuration Structure
 

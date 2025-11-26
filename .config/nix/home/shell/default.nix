@@ -45,12 +45,20 @@
         export USER=$(whoami)
         export VISUAL='nvim'
 
-        # Python/UV configuration
+        # --- PYTHON/UV CONFIGURATION ---
+        # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
+        #
+        # UV_PYTHON points to nix Python 3.12 for consistent tool installations
+        # Ensures all UV tools use same Python version managed by nix
         export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
         # Set for GUI apps (like Claude Desktop with MCP servers)
         launchctl setenv UV_PYTHON "/etc/profiles/per-user/${username}/bin/python3" 2>/dev/null || true
 
-        # WeasyPrint/Cairo library paths for Marker DOCX/PPTX support
+        # --- MARKER-PDF C LIBRARY PATHS ---
+        # WeasyPrint/Cairo library paths for marker-pdf DOCX/PPTX support
+        # Includes both Homebrew and nix libraries
+        # Note: Homebrew C libs necessary because UV-installed marker-pdf
+        # cannot find nix-isolated libraries due to DYLD security on macOS
         export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib:$DYLD_FALLBACK_LIBRARY_PATH"
         # Set for GUI apps
         launchctl setenv DYLD_FALLBACK_LIBRARY_PATH "/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib" 2>/dev/null || true

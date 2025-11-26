@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# new-project: Initialize project with nix flake template
+
+set -euo pipefail
+
+show_help() {
+  cat << EOF
+Usage: new-project <template> [directory]
+
+Templates:
+  academic      R + Python + Quarto + Typst
+  datascience   Python + Jupyter + data science stack
+
+Examples:
+  new-project academic my-research
+  new-project datascience ./analysis
+EOF
+}
+
+if [[ $# -lt 1 || "$1" == "-h" || "$1" == "--help" ]]; then
+  show_help
+  exit 0
+fi
+
+TEMPLATE="$1"
+PROJECT_DIR="${2:-.}"
+TEMPLATE_DIR="$HOME/.config/nix/templates"
+
+case "$TEMPLATE" in
+  academic)
+    TEMPLATE_PATH="$TEMPLATE_DIR/academic-project"
+    ;;
+  datascience)
+    TEMPLATE_PATH="$TEMPLATE_DIR/data-science"
+    ;;
+  *)
+    echo "Error: Unknown template '$TEMPLATE'"
+    echo "Available: academic, datascience"
+    exit 1
+    ;;
+esac
+
+mkdir -p "$PROJECT_DIR"
+cd "$PROJECT_DIR"
+
+cp "$TEMPLATE_PATH/flake.nix" .
+cp "$TEMPLATE_PATH/.envrc" .
+
+if [[ ! -d .git ]]; then
+  git init
+  echo ".direnv/" >> .gitignore
+  echo "result" >> .gitignore
+fi
+
+direnv allow
+
+echo "Project initialized with $TEMPLATE template"

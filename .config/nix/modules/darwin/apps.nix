@@ -18,7 +18,7 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "FelixKratz/formulae/borders" # jankyborders
-      "huggingface-cli" # Hugging Face CLI
+      # huggingface-hub now via nix (see home/core.nix)
       "llama.cpp" # LLaMA model inference
       {
         name = "neovim";
@@ -34,7 +34,10 @@
       "sqly" #
       "transmission-cli" # command-line torrent client
 
-      # WeasyPrint dependencies for Marker's DOCX/PPTX support
+      # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support
+      # Installed via Homebrew because UV-installed marker-pdf needs
+      # system-level C libraries via DYLD_FALLBACK_LIBRARY_PATH.
+      # Nix's library isolation makes this difficult for UV tools.
       "cairo"
       "pango"
       "gdk-pixbuf"
