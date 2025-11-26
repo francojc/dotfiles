@@ -3,8 +3,8 @@
 <!--toc:start-->
 
 - [My Nix Darwin Configuration](#my-nix-darwin-configuration)
-  - [Python Environment Philosophy](#python-environment-philosophy)
   - [Configuration Structure](#configuration-structure)
+  - [Python Environment](#python-environment)
   - [Flatpak Configuration](#flatpak-configuration)
   - [Usage Instructions](#usage-instructions)
   - [Contributions and License](#contributions-and-license)
@@ -13,7 +13,79 @@
 
 > **Note**: This is a personal configuration, and it may not be suitable for you. You can use it as a reference to build your own configuration.
 
-## Python Environment Philosophy
+## Configuration Structure
+
+```txt
+├── flake.lock
+├── flake.nix
+├── home
+│   ├── core.nix
+│   ├── default.nix
+│   ├── ghostty.nix
+│   ├── git.nix
+│   ├── i3
+│   │   └── default.nix
+│   ├── kitty.nix
+│   ├── ncspot.nix
+│   ├── neovim
+│   │   ├── default.nix
+│   │   ├── init.lua
+│   │   ├── plugin
+│   │   └── snippets
+│   ├── reddix.nix
+│   ├── shell
+│   │   ├── aliases.zsh
+│   │   ├── default.nix
+│   │   └── fzf.zsh
+│   ├── sway
+│   │   ├── sway.nix
+│   │   ├── waybar.nix
+│   │   └── wofi.nix
+│   ├── syncthing.nix
+│   ├── themes.nix
+│   ├── tmux.nix
+│   ├── vim.nix
+│   └── wezterm.nix
+├── hosts
+│   ├── Mac-Minicore
+│   │   └── default.nix
+│   ├── Macbook-Airborne
+│   │   └── default.nix
+│   └── Mini-Rover
+│       ├── configuration.nix
+│       ├── default.nix
+│       └── hardware-configuration.nix
+├── Justfile
+├── lib
+│   └── systems.nix
+├── modules
+│   ├── darwin
+│   │   ├── apps.nix
+│   │   ├── copilot-api.nix
+│   │   ├── ollama.nix
+│   │   └── reddix.nix
+│   ├── nixos
+│   │   └── apps.nix
+│   └── shared
+│       ├── fonts.nix
+│       ├── nix-core.nix
+│       └── packages.nix
+├── profiles
+│   ├── darwin
+│   │   └── configuration.nix
+│   └── nixos
+│       ├── configuration.nix
+│       ├── i3.nix
+│       └── sway.nix
+├── README.md
+└── templates
+    ├── academic-project
+    │   └── flake.nix
+    └── data-science
+        └── flake.nix
+```
+
+## Python Environment
 
 ### Three-Layer System
 
@@ -25,7 +97,7 @@
 
 2. **UV (CLI Tools)**: Modern Python package manager
 
-   - Manages: `aider`, `marker-pdf`, `mlx-lm`, `zotero-mcp`
+   - Manages: `aider`, `marker-pdf`, `mlx-lm`, `zotero-mcp`, etc.
    - Uses nix Python via `UV_PYTHON` environment variable
    - Faster than nix packages for rapidly-updating tools
 
@@ -46,6 +118,8 @@ cd my-research
 # Environment loads automatically via direnv
 ```
 
+*Note*: This the `new-project` command is a custom script defined in and managed by my dotfiles and lives in `~/.bin/`. When adding more project templates, I update this script accordingly.
+
 ### When to Use What
 
 - **Nix**: Base packages, LSPs, formatters, CLI utilities
@@ -53,45 +127,6 @@ cd my-research
 - **Nix flakes**: Project development environments
 - **Homebrew**: C libraries for UV tools, GUI apps
 
-## Configuration Structure
-
-```txt
-├── flake.lock
-├── flake.nix
-├── home
-│   ├── core.nix
-│   ├── default.nix
-│   ├── git.nix
-│   ├── neovim
-│   │   ├── default.nix
-│   │   ├── init.lua
-│   │   ├── plugin
-│   │   └── snippets
-│   ├── shell
-│   │   ├── aliases.zsh
-│   │   ├── default.nix
-│   │   └── fzf.zsh
-│   └── vim.nix
-├── hosts
-│   ├── darwin
-│   │   └── configuration.nix
-│   └── nixos
-│       ├── configuration.nix
-│       ├── dconf.nix
-│       ├── dconf.settings
-│       └── hardware-configuration.nix
-├── Justfile
-├── modules
-│   ├── darwin
-│   │   └── apps.nix
-│   ├── nixos
-│   │   └── apps.nix
-│   └── shared
-│       ├── fonts.nix
-│       ├── nix-core.nix
-│       └── packages.nix
-└── README.md
-```
 
 ### Flatpak Configuration
 
@@ -103,6 +138,8 @@ This configuration includes Flatpak support:
 - **Integration**: Uses `nix-flatpak` for managing Flatpak packages, as defined in `flake.nix`.
 
 ### Usage Instructions
+
+*Note*: This nix configuration is housed within my personal dotfiles repository. If you do not plan to use it as-is, please refer to it for inspiration in building your own configuration instead of cloning it directly.
 
 1. Clone this repository:
    ```bash
