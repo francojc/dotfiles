@@ -18,31 +18,31 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "FelixKratz/formulae/borders" # jankyborders
-      # huggingface-hub now via nix (see home/core.nix)
+      "raine/workmux/workmux" # agentic ai multiplexer
       "llama.cpp" # LLaMA model inference
       {
         name = "neovim";
         args = ["HEAD"]; # pre-release version
       }
       "ncspot" # spotify TUI client
-      "ninja" # ...
-      "nmap"
+      "ninja" # build system
+      "nmap" # network scanner
       "node" # Node.js
       "pngpaste" # paste images
       "keith/formulae/reminders-cli"
       "rename" # file renaming utility
-      "sqly" #
+      "sqly" # interactive SQL client
       "transmission-cli" # command-line torrent client
 
       # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support
       # Installed via Homebrew because UV-installed marker-pdf needs
       # system-level C libraries via DYLD_FALLBACK_LIBRARY_PATH.
       # Nix's library isolation makes this difficult for UV tools.
-      "cairo"
-      "pango"
-      "gdk-pixbuf"
-      "libffi"
-      "weasyprint"
+      "cairo" # 2D graphics library
+      "pango" # text layout library
+      "gdk-pixbuf" # image loading library
+      "libffi" # Foreign Function Interface library
+      "weasyprint" # HTML to PDF converter
     ];
 
     casks = [
@@ -60,18 +60,18 @@
       "kap" # screen recording
       "kitty" # terminal emulator
       "lm-studio" # LLM model gui/cli
-      "obsidian"
+      "obsidian" # note-taking
       "orbstack" # Docker alternative
       "parallels" # virtualization
-      "raycast"
-      "rectangle"
+      "raycast" # productivity launcher
+      "rectangle" # window management
       "signal" # messaging
       "spotify" # music streaming
       "transcribe"
       "transmission"
       "wezterm@nightly" # terminal emulator
       "zen" # browser
-      "zoom"
+      "zoom" # video conferencing
       "zotero@beta" # reference manager
       # "blackhole-2ch" # virtual audio driver
       # "keycastr" # keystroke visualizer
