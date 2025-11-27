@@ -31,6 +31,29 @@ if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     usage
 fi
 
+# Verify marker and marker dependencies are installed
+# Assumes marker_single is in PATH
+if ! command -v marker_single >/dev/null 2>&1; then
+    echo "Error: marker_single command not found. Please install Marker."
+    exit 1
+fi
+# Verify pandoc is installed
+if ! command -v pandoc >/dev/null 2>&1; then
+    echo "Error: pandoc command not found. Please install Pandoc."
+    exit 1
+fi
+# Verify tectonic is installed for PDF generation
+if ! command -v tectonic >/dev/null 2>&1; then
+    echo "Error: tectonic command not found. Please install Tectonic for PDF generation."
+    exit 1
+fi
+# Verify weasyprint is installed for DOCX/PPTX/ODT handling
+if ! command -v weasyprint >/dev/null 2>&1; then
+    echo "Error: weasyprint command not found. Please install WeasyPrint."
+    exit 1
+fi
+
+
 INPUT_FILE="$1"
 shift
 

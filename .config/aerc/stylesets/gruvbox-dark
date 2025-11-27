@@ -30,9 +30,7 @@ selector_chooser.bold=true
 msglist_marked.bg=#d65d0e
 msglist_flagged.fg=#98971a
 msglist_flagged.bold=true
-
-msglist_unread.fg=#8ec07c
-msglist_unread.selected.bg=#bdae93
+msglist_unread.fg=#83a598
 
 statusline_default.fg=#7c6f64
 statusline_error.fg=#fb4934

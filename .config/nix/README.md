@@ -127,7 +127,6 @@ cd my-research
 - **Nix flakes**: Project development environments
 - **Homebrew**: C libraries for UV tools, GUI apps
 
-
 ### Flatpak Configuration
 
 This configuration includes Flatpak support:

@@ -42,6 +42,7 @@
       "pango"
       "gdk-pixbuf"
       "libffi"
+      "weasyprint"
     ];
 
     casks = [

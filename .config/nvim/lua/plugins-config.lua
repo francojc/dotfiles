@@ -274,6 +274,7 @@ require("conform").setup({
 		python = { "ruff", lsp_format = "fallback" },
 		quarto = { "injected" },
 		r = { "air" },
+		typst = { "tinymist" },
 		["*"] = { "trim_whitespace" },
 	},
 	formatters = {
@@ -284,6 +285,7 @@ require("conform").setup({
 					bash = "sh",
 					python = "py",
 					r = "r",
+					typst = "typ",
 				},
 			},
 		},
