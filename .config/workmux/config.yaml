@@ -1,0 +1,13 @@
+window_prefix: wm-
+
+panes:
+  - command: nvim .
+    focus: true
+  - split: horizontal
+
+files:
+  copy:
+    - .env
+    - .env.example
+
+agent: claude

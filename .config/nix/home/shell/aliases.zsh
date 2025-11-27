@@ -8,6 +8,10 @@ alias llmb='llm -t briefly' # uses the template 'briefly'
 alias llms='llm -t summarize' # uses the template 'summarize'
 
 # Agentic AI aliases
+
+# Workmux
+alias wm='workmux'
+
 # Secure Claude function that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
 # Usage: claudz [model_name] - defaults to glm-4.6 if no model specified
 claudz() {
@@ -17,7 +21,6 @@ claudz() {
 
 # Secure Claude function that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
 # Usage: claudo [model_name] - defaults to gpt-4o if no model specified
-# TODO: if the mac-mincore server is stable, change the ANTHROPIC_BASE_URL to point to it. For now, use the hardcoded URL.
 claudo() {
   local model="${1:-gpt-4o}"
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
