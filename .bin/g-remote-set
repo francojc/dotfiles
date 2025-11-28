@@ -3,7 +3,7 @@
 # Usage: g-remote-set -r <name> -u <url> [-C dir]
 
 SCRIPT_NAME="g-remote-set"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common"
+. "common"
 
 usage(){ cat <<EOF
 Usage: g-remote-set -r NAME -u URL [options]

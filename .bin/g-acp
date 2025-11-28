@@ -4,7 +4,7 @@
 
 SCRIPT_NAME="g-acp"; SCRIPT_VERSION="1.0.0"
 # shellcheck source=common
-. "$(dirname "$0")/common.sh"
+. "common"
 
 usage() {
   cat <<EOF
@@ -25,11 +25,8 @@ EOF
 }
 
 main() {
+  # Initialize variables
   local commit_msg="" show_help=0 show_version=0
-  case "$(basename -- "$0")" in
-    git-all-acp)
-      log_warn "Deprecated: use g-acp instead" ;;
-  esac
 
   # Parse common + local flags
   local OPTIND=1 opt

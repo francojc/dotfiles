@@ -2,7 +2,7 @@
 # Fetch available GitHub Copilot models and print IDs
 
 SCRIPT_NAME="gh-cop-models"; SCRIPT_VERSION="1.0.0"
-. "$(dirname "$0")/common"
+. "common"
 
 usage(){ cat <<EOF
 Usage: gh-cop-models
