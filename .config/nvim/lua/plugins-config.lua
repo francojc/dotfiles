@@ -378,7 +378,7 @@ vim.lsp.config("lua_ls", {
 				version = "LuaJIT",
 			},
 			diagnostics = {
-				globals = { "vim", "require" },
+				globals = { "vim", "require", "Snacks" },
 			},
 			telemetry = {
 				enable = false,
