@@ -28,6 +28,7 @@
       "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
+      "ollama" # LLM inference server (temporary replacement for nixpkgs version)
       "pngpaste" # paste images
       "keith/formulae/reminders-cli"
       "rename" # file renaming utility

@@ -1,23 +1,10 @@
 { pkgs, config, lib, username, ... }:
 with lib;
 let
-  cfg = config.services.ollama;
+  cfg = config.custom.services.ollama;
 in {
-  options.services.ollama = {
-    enable = mkEnableOption "ollama service";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.ollama;
-      defaultText = "pkgs.ollama";
-      description = "The ollama package to use";
-    };
-
-    user = mkOption {
-      type = types.str;
-      default = username;
-      description = "User to run the service as";
-    };
+  options.custom.services.ollama = {
+    enable = mkEnableOption "ollama environment configuration (Homebrew-based)";
 
     port = mkOption {
       type = types.int;
@@ -67,69 +54,84 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Ensure the user exists
-    users.users.${cfg.user} = {
-      name = cfg.user;
-      home = "/Users/${cfg.user}";
-    };
+    # Set system-wide environment variables for Ollama (Homebrew-based)
+    # These will be available to the brew services ollama process
+    environment.variables = {
+      OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
+      OLLAMA_MODELS = cfg.modelsPath;
+    }
+    // optionalAttrs cfg.flashAttention {
+      OLLAMA_FLASH_ATTENTION = "1";
+    }
+    // optionalAttrs (cfg.kvCacheType != "") {
+      OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
+    }
+    // optionalAttrs cfg.keepModelLoaded {
+      OLLAMA_KEEP_ALIVE = "-1";
+    }
+    // cfg.extraEnvironment;
 
-    # Add ollama to system packages
-    environment.systemPackages = [ cfg.package ];
+    # MANUAL SETUP REQUIRED AFTER SWITCHING TO HOMEBREW:
+    # ===================================================
+    #
+    # 1. Install Ollama via Homebrew (if not already done):
+    #    brew install ollama
+    #
+    # 2. Start the Ollama service:
+    #    brew services start ollama
+    #
+    # 3. Verify the service is running:
+    #    brew services list | grep ollama
+    #    ollama --version
+    #    curl http://localhost:${toString cfg.port}
+    #
+    # 4. Configure launchd environment for Homebrew service:
+    #    The environment variables above are set system-wide, but if they
+    #    don't take effect for the brew service, you may need to:
+    #
+    #    a. Stop the service: brew services stop ollama
+    #    b. Set per-user launchd environment:
+    #       launchctl setenv OLLAMA_HOST "${cfg.host}:${toString cfg.port}"
+    #       launchctl setenv OLLAMA_MODELS "${cfg.modelsPath}"
+    #       ${if cfg.flashAttention then ''launchctl setenv OLLAMA_FLASH_ATTENTION "1"'' else ""}
+    #       ${if cfg.kvCacheType != "" then ''launchctl setenv OLLAMA_KV_CACHE_TYPE "${cfg.kvCacheType}"'' else ""}
+    #       ${if cfg.keepModelLoaded then ''launchctl setenv OLLAMA_KEEP_ALIVE "-1"'' else ""}
+    #    c. Restart the service: brew services restart ollama
+    #
+    # 5. Test Tailscale access (if host is 0.0.0.0):
+    #    From another device on your Tailscale network:
+    #    curl http://<mac-minicore-tailscale-ip>:${toString cfg.port}
+    #
+    # 6. Check logs if issues occur:
+    #    brew services info ollama
+    #    tail -f $(brew --prefix)/var/log/ollama.log
+    #
+    # DIFFERENCES FROM NIX-MANAGED VERSION:
+    # ======================================
+    # - Service is managed by 'brew services' instead of nix-darwin's launchd
+    # - No automatic log file creation at ~/.local/share/ollama.log
+    # - No automatic models directory creation (but Ollama creates it on first use)
+    # - Updates managed via 'brew upgrade ollama' instead of 'nix flake update'
+    # - Service config at: ~/Library/LaunchAgents/homebrew.mxcl.ollama.plist
+    #
+    # TO MIGRATE BACK TO NIX IN THE FUTURE:
+    # ======================================
+    # 1. Disable this module in hosts/Mac-Minicore/default.nix
+    # 2. Restore from backup: cp ollama-back.nix ollama.nix
+    # 3. Update imports in hosts/Mac-Minicore/default.nix
+    # 4. Remove 'ollama' from the homebrew.brews list in apps.nix
+    # 5. Stop and uninstall: brew services stop ollama && brew uninstall ollama
+    # 6. Rebuild: darwin-rebuild switch --flake ~/.dotfiles/.config/nix
+    #
+    # Your models at ~/.ollama/models will be preserved during migration.
 
-    # Create launchd agent for ollama using nix-darwin's interface
-    launchd.user.agents.ollama = {
-      serviceConfig = {
-        Label = "com.ollama.server";
-        ProgramArguments = [
-          "${cfg.package}/bin/ollama"
-          "serve"
-        ];
-        RunAtLoad = true;
-        KeepAlive = true;
-        StandardOutPath = "/Users/${cfg.user}/.local/share/ollama.log";
-        StandardErrorPath = "/Users/${cfg.user}/.local/share/ollama.error.log";
-        WorkingDirectory = "/Users/${cfg.user}";
-        EnvironmentVariables = {
-          OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
-          OLLAMA_MODELS = cfg.modelsPath;
-        }
-        // optionalAttrs cfg.flashAttention {
-          OLLAMA_FLASH_ATTENTION = "1";
-        }
-        // optionalAttrs (cfg.kvCacheType != "") {
-          OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
-        }
-        // optionalAttrs cfg.keepModelLoaded {
-          OLLAMA_KEEP_ALIVE = "-1";
-        }
-        // cfg.extraEnvironment;
-        SoftResourceLimits = {
-          NumberOfFiles = 65536;
-        };
-        LimitLoadToSessionType = [
-          "Aqua"
-          "Background"
-          "LoginWindow"
-          "StandardIO"
-          "System"
-        ];
-      };
-    };
-
-    # Create necessary directories
+    # Create necessary directories (even for Homebrew version)
     system.activationScripts.postActivation = {
       text = ''
-        # Create log directory for ollama
-        mkdir -p "/Users/${cfg.user}/.local/share"
-        chown ${cfg.user}:staff "/Users/${cfg.user}/.local/share"
-
         # Create models directory if it doesn't exist
         mkdir -p "${cfg.modelsPath}"
-        chown ${cfg.user}:staff "${cfg.modelsPath}"
+        chown ${username}:staff "${cfg.modelsPath}"
       '';
     };
-
-    # Service information
-    system.stateVersion = 4;
   };
 }
