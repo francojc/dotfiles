@@ -25,7 +25,9 @@
           port = 4141;
           host = "0.0.0.0"; # Make accessible via Tailscale
         };
+      };
 
+      custom.services = {
         ollama = {
           enable = true;
           port = 11434;

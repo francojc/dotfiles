@@ -1,6 +1,11 @@
-{ pkgs, config, lib, username, ... }:
-with lib;
-let
+{
+  pkgs,
+  config,
+  lib,
+  username,
+  ...
+}:
+with lib; let
   cfg = config.custom.services.ollama;
 in {
   options.custom.services.ollama = {
@@ -56,26 +61,26 @@ in {
   config = mkIf cfg.enable {
     # Set system-wide environment variables for Ollama (Homebrew-based)
     # These will be available to the brew services ollama process
-    environment.variables = {
-      OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
-      OLLAMA_MODELS = cfg.modelsPath;
-    }
-    // optionalAttrs cfg.flashAttention {
-      OLLAMA_FLASH_ATTENTION = "1";
-    }
-    // optionalAttrs (cfg.kvCacheType != "") {
-      OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
-    }
-    // optionalAttrs cfg.keepModelLoaded {
-      OLLAMA_KEEP_ALIVE = "-1";
-    }
-    // cfg.extraEnvironment;
+    environment.variables =
+      {
+        OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
+        OLLAMA_MODELS = cfg.modelsPath;
+      }
+      // optionalAttrs cfg.flashAttention {
+        OLLAMA_FLASH_ATTENTION = "1";
+      }
+      // optionalAttrs (cfg.kvCacheType != "") {
+        OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
+      }
+      // optionalAttrs cfg.keepModelLoaded {
+        OLLAMA_KEEP_ALIVE = "-1";
+      }
+      // cfg.extraEnvironment;
 
     # MANUAL SETUP REQUIRED AFTER SWITCHING TO HOMEBREW:
     # ===================================================
     #
-    # 1. Install Ollama via Homebrew (if not already done):
-    #    brew install ollama
+    # 1. Install Ollama via Homebrew (./modules/darwin/apps.nix):
     #
     # 2. Start the Ollama service:
     #    brew services start ollama
