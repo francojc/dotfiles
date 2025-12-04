@@ -60,6 +60,11 @@ Use `mcp__mcp-canvas__get_submissions_with_content`:
 - `include_unsubmitted`: false
 - `exclude_graded`: true (skips already-graded submissions)
 
+**IMPORTANT - FERPA Compliance**: This function automatically filters submissions
+to ONLY include students enrolled in the specified course. For cross-listed
+assignments, submissions from other sections are excluded to prevent unauthorized
+access to student data.
+
 This returns all student submissions with extracted text content from uploaded files (DOCX, PDF).
 
 ### 2d. Construct Assessment JSON
@@ -140,11 +145,14 @@ Assignment: [assignment name]
 Due Date: [due date]
 Points Possible: [total points]
 
-Submissions Found: X students
-- On time: Y students
-- Late: Z students
-- Already graded: A students (excluded by default)
-- No submission: W students (skipped)
+Course Enrollment: X students enrolled in this course
+
+Submissions Found: Y students
+- On time: A students
+- Late: B students
+- Already graded: C students (excluded by default)
+- No submission: D students (skipped)
+  Student IDs: [list of student IDs with no submissions]
 
 Rubric Structure:
 - Number of criteria: [count]
@@ -192,6 +200,7 @@ This allows subsequent commands to auto-discover the assessment file.
 - Supports `online_text_entry` submission types
 - Automatically skips students who haven't submitted
 - **Excludes already-graded submissions by default** to prevent overwriting existing grades
+- **FERPA COMPLIANCE: Enrollment filtering enabled** - Only includes submissions from students enrolled in the specified course, preventing cross-section contamination in cross-listed assignments
 - Creates fresh assessment file each time (timestamped to avoid conflicts)
 - Preserves all rubric details for AI evaluation step
 
