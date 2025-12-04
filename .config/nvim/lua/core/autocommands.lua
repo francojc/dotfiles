@@ -58,15 +58,6 @@ a.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Auto-activate otter for Quarto files
-a.nvim_create_autocmd("FileType", {
-	group = "personal",
-	pattern = "quarto",
-	callback = function()
-		require("otter").activate()
-	end,
-})
-
 -- Slime cell delimiter for R, Quarto, Markdown
 vim.api.nvim_create_autocmd("FileType", {
 	-- limit to only certain filetypes
