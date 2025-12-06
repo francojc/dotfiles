@@ -318,6 +318,35 @@ vim.lsp.config.bashls = {
 	filetypes = { "sh", "bash" },
 }
 
+--| Go language server
+-- Go (gopls)
+vim.lsp.config.gopls = {
+	cmd = { "gopls" },
+	capabilities = capabilities,
+	filetypes = { "go" },
+	root_markers = { "go.mod", ".git" },
+	settings = {},
+}
+
+-- Go (golangci-lint-langserver)
+vim.lsp.config.golangci_lint_ls = {
+	cmd = { "golangci-lint-langserver" },
+	capabilities = capabilities,
+	filetypes = { "go", "gomod", "gowork", "gotmpl" },
+	init_options = {
+		command = { "golangci-lint-langserver", "run", "--output.json.path=stdout", "--show-stats=false" },
+	},
+	root_markers = {
+		".golangci.yml",
+		".golangci.yaml",
+		".golangci.toml",
+		".golangci.json",
+		"go.mod",
+		"go.work",
+		".git",
+	},
+}
+
 ---| Nix Ecosystem ----------------------------------
 
 -- Nix (nixd)
@@ -386,39 +415,6 @@ vim.lsp.config("lua_ls", {
 		},
 	},
 })
-
--- vim.lsp.config.lua_ls = {
--- 	on_attach = function(client, _)
--- 		client.server_capabilities.documentFormattingProvider = false
--- 		client.server_capabilities.documentRangeFormattingProvider = false
--- 	end,
--- 	capabilities = capabilities,
--- 	cmd = { "lua-language-server" },
--- 	filetypes = { "lua" },
--- 	settings = {
--- 		Lua = {
--- 			runtime = {
--- 				version = "LuaJIT",
--- 			},
--- 			diagnostics = {
--- 				globals = { "vim", "require" },
--- 			},
--- 			workspace = {
--- 				checkThirdParty = false,
--- 				library = {
--- 					vim.env.VIMRUNTIME,
--- 					vim.fn.stdpath("config"),
--- 				},
--- 			},
--- 			telemetry = {
--- 				enable = false,
--- 			},
--- 		},
--- 	},
--- 	root_dir = function(fname)
--- 		return vim.fs.root(fname, { ".git", ".luarc.json", "init.lua" }) or vim.fs.dirname(fname)
--- 	end,
--- }
 
 ---| Python Development ----------------------------------
 
@@ -553,37 +549,39 @@ vim.lsp.config.jsonls = {
 -- Enable LSP servers based on filetype (Neovim 0.12+ pattern)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
-		"sh",
 		"bash",
+		"go",
+		"json",
+		"jsonc",
 		"lua",
 		"markdown",
 		"nix",
 		"python",
+		"quarto",
 		"r",
 		"rmd",
-		"quarto",
+		"sh",
 		"typst",
 		"yaml",
 		"yml",
-		"json",
-		"jsonc",
 	},
 	callback = function(args)
 		local server_map = {
-			sh = "bashls",
 			bash = "bashls",
+			go = { "gopls", "golangci_lint_ls" },
+			json = "jsonls",
+			jsonc = "jsonls",
 			lua = "lua_ls",
 			markdown = "marksman",
 			nix = "nixd",
 			python = "pyright",
+			quarto = "r_language_server",
 			r = "r_language_server",
 			rmd = "r_language_server",
-			quarto = "r_language_server",
+			sh = "bashls",
 			typst = "tinymist",
 			yaml = "yamlls",
 			yml = "yamlls",
-			json = "jsonls",
-			jsonc = "jsonls",
 		}
 		local server = server_map[vim.bo[args.buf].filetype]
 		if server then

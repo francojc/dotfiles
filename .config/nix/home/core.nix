@@ -21,6 +21,8 @@
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
     copilot-language-server # Copilot LSP for Next Edit Suggestions
+    golangci-lint-langserver # Go linter
+    gopls # Go LSP
     lua-language-server # Lua LSP
     marksman # Markdown LSP
     nix-doc # Nix documentation server
@@ -54,6 +56,7 @@
     cachix # Nix package cache
     gh # GitHub CLI
     git # Version control system
+    go # Go programming language
     home-manager # Essential for this config
     lazygit # TUI Git client
     nix-prefetch-git
@@ -75,6 +78,9 @@
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
     # _7zz # Archive compression
+    # ruby # Programming language
+    # typtea # Terminal-based typing test
+    # unp # Archive unpacker
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     coreutils # GNU core utilities (provides grealpath for yazi)
@@ -93,17 +99,15 @@
     pass # Password manager
     repgrep # ripgrep across files
     ripgrep # grep replacement
-    # ruby # Programming language
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
     tldr # Simplified man pages
-    ttyper # Typing test
     tmux # Terminal multiplexer
     tree # Directory listing tool
-    # typtea # Terminal-based typing test
-    # unp # Archive unpacker
+    ttyper # Typing test
     which # Command location utility
+    xan # data visualization from CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
     zoxide # Smarter cd command

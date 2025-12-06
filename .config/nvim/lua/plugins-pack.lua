@@ -50,6 +50,7 @@ local eager_plugins = {
 	{ src = "https://github.com/stevearc/conform.nvim" },
 	{ src = "https://github.com/stevearc/quicker.nvim" },
 	{ src = "https://github.com/chomosuke/typst-preview.nvim" },
+	{ src = "https://github.com/nametake/golangci-lint-langserver" },
 }
 
 -- Install and load all plugins immediately

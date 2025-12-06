@@ -181,6 +181,9 @@ function op() {
   fi
 }
 
+# Typing test function
+# tt() uses the `tt` command with some default options and allows for optional custom arguments to be added.
+
 # Last command related aliases
 alias last='fc -ln -1'  # Print last command
 alias lastrun='fc -e -'  # Re-execute last command
