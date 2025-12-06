@@ -127,6 +127,7 @@
     # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     typst # Document preparation system
+    tt # CLI typing test
     vdirsyncer # CalDAV/CardDAV sync
     yt-dlp # Video downloader
   ];
