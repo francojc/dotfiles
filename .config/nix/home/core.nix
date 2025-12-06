@@ -12,7 +12,6 @@
 # - zotero-mcp    (Zotero MCP server)
 #
 # Update: uv tool upgrade --all
-
 {pkgs, ...}: let
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
@@ -28,6 +27,7 @@
     nixd # Nix LSP
     pyright # Python LSP
     tinymist # Typst LSP
+    vscode-json-languageserver # JSON LSP
     yaml-language-server # YAML LSP
 
     # Formatters & Linters commonly integrated with Neovim

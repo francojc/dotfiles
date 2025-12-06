@@ -20,7 +20,7 @@
       "Bash(timeout:*)",
       "Bash(cat:*)",
       "Read(//Users/francojc/.dotfiles/.config/nix/**)",
-      "Read(//Users/francojc/.dotfiles/.config/nvim/lua/**)",
+      "Read(//Users/francojc/.dotfiles/.config/nvim/lua/**)"
     ],
     "deny": []
   },

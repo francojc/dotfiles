@@ -3,56 +3,57 @@ default_language = "english200"
 
 [theme]
 # default style (this includes empty cells)
-default = "282828"
+default = "none"
+# default = "282828" # #282828
 
 # title text styling
-title = "b16286;bold"
+title = "b16286;bold" # #b16286
 
 ## test styles ##
 
 # input box border
-input_border = "458588"
+input_border = "458588" # #458788
 # prompt box border
-prompt_border = "cc241d"
+prompt_border = "cc241d" # #cc241d
 
 # border type
 border_type = "rounded"
 
 # correctly typed words
-prompt_correct = "98971a"
+prompt_correct = "98971a" # #98971a
 # incorrectly typed words
-prompt_incorrect = "cc241d"
+prompt_incorrect = "cc241d" # #cc241d
 # untyped words
-prompt_untyped = "a89984"
+prompt_untyped = "a89984" # #a89984
 
 # correctly typed letters in current word
-prompt_current_correct = "98971a;bold"
+prompt_current_correct = "98971a;bold" # #98971a
 # incorrectly typed letters in current word
-prompt_current_incorrect = "cc241d;bold"
+prompt_current_incorrect = "cc241d;bold" # #cc241d
 # untyped letters in current word
-prompt_current_untyped = "458588;bold"
+prompt_current_untyped = "458588;bold" # #458588
 
 # cursor character
-prompt_cursor = "ebdbb2;underlined"
+prompt_cursor = "ebdbb2;underlined" # #ebdbb2
 
 ## results styles ##
 
 # overview text
-results_overview = "d79921;bold"
+results_overview = "white;bold" # #d79921
 # overview border
-results_overview_border = "d79921"
+results_overview_border = "d79921" # #d79921
 
 # worst keys text
-results_worst_keys = "d65d0e;bold"
+results_worst_keys = "white;bold" # #d65d0e
 # worst keys border
-results_worst_keys_border = "d65d0e"
+results_worst_keys_border = "d65d0e" # #d65d0e
 
-# results chart default (includes plotted data)
-results_chart = "458588"
+# results chart default (include plotted data)
+results_chart = "458588" # #458588
 # results chart x-axis label
-results_chart_x = "458588"
+results_chart_x = "458588" # #458588
 # results chart y-axis label
-results_chart_y = "a89984;italic"
+results_chart_y = "a89984;italic" # #a89984
 
 # restart/quit prompt in results ui
-results_restart_prompt = "a89984;italic"
+results_restart_prompt = "a89984;italic" # #a89984

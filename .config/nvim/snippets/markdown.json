@@ -54,5 +54,15 @@
       "<!-- BUG: ${0} -->"
     ],
     "description": "Inline BUG HTML comment"
+  },
+  "Markdown table": {
+    "prefix": "mtable",
+    "body": [
+      "| ${1:Column 1} | ${2:Column 2} | ${3:Column 3} |",
+      "|--------------|--------------|--------------|",
+      "| ${4:Data} | ${5:Data} | ${6:Data} |",
+      "${0}"
+    ],
+    "description": "Basic 3-column markdown table"
   }
 }

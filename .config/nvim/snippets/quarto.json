@@ -105,5 +105,84 @@
       "<!-- BUG: ${0} -->"
     ],
     "description": "Inline BUG HTML comment"
+  },
+  "Two-column layout": {
+    "prefix": "qcol2",
+    "body": [
+      "::: {.columns}",
+      "::: {.column width=\"${1:50}%\"}",
+      "${2:Left content}",
+      ":::",
+      "",
+      "::: {.column width=\"${3:50}%\"}",
+      "${4:Right content}",
+      ":::",
+      ":::",
+      "${0}"
+    ],
+    "description": "Two-column layout for side-by-side content"
+  },
+  "Font Awesome icon": {
+    "prefix": "qfa",
+    "body": [
+      "{{< fa ${1:icon-name} >}} ${0}"
+    ],
+    "description": "Font Awesome icon shortcode"
+  },
+  "R code setup block": {
+    "prefix": "qrsetup",
+    "body": [
+      "```{r}",
+      "#| label: setup",
+      "#| echo: false",
+      "#| message: false",
+      "#| warning: false",
+      "",
+      "${0}",
+      "```"
+    ],
+    "description": "R code block with standard setup options"
+  },
+  "Notes div": {
+    "prefix": "qnotes",
+    "body": [
+      "::: notes",
+      "${0}",
+      ":::"
+    ],
+    "description": "Speaker notes div for presentations"
+  },
+  "Callout block: Note": {
+    "prefix": "qnote",
+    "body": [
+      "::: {.callout-note}",
+      "## ${1:Title}",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "Quarto note callout block"
+  },
+  "Callout block: Important": {
+    "prefix": "qimportant",
+    "body": [
+      "::: {.callout-important}",
+      "## ${1:Title}",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "Quarto important callout block"
+  },
+  "Callout block: Caution": {
+    "prefix": "qcaution",
+    "body": [
+      "::: {.callout-caution}",
+      "## ${1:Title}",
+      "",
+      "${0}",
+      ":::"
+    ],
+    "description": "Quarto caution callout block"
   }
 }

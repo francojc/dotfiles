@@ -536,6 +536,19 @@ vim.lsp.config.tinymist = {
 	settings = {},
 }
 
+-- JSON (vscode-json-language-server)
+vim.lsp.config.jsonls = {
+	cmd = { "vscode-json-language-server", "--stdio" },
+	capabilities = capabilities,
+	filetypes = { "json", "jsonc" },
+	settings = {
+		json = {
+			validate = { enable = true },
+			format = { enable = false }, -- Formatting handled by jq via Conform
+		},
+	},
+}
+
 ---| LSP Auto-Enable by FileType ----------------------------------
 -- Enable LSP servers based on filetype (Neovim 0.12+ pattern)
 vim.api.nvim_create_autocmd("FileType", {
@@ -552,6 +565,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		"typst",
 		"yaml",
 		"yml",
+		"json",
+		"jsonc",
 	},
 	callback = function(args)
 		local server_map = {
@@ -567,6 +582,8 @@ vim.api.nvim_create_autocmd("FileType", {
 			typst = "tinymist",
 			yaml = "yamlls",
 			yml = "yamlls",
+			json = "jsonls",
+			jsonc = "jsonls",
 		}
 		local server = server_map[vim.bo[args.buf].filetype]
 		if server then
