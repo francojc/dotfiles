@@ -19,6 +19,8 @@
           - read
           - vote
           - subscribe
+          - submit
+          - subscribe
         redirect_uri: "http://127.0.0.1:65010/reddix/callback"
       ui:
         theme: default
