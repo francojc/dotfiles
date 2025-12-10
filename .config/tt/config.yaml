@@ -23,7 +23,7 @@ highlight2: false
 raw: false
 multi: false
 csv: true
-csvdir: "~/.local/sharet/tt/results/"
+csvdir: "~/.local/share/tt/results/"
 json: false
 oneshot: false
 noreport: false
