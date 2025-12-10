@@ -1,0 +1,29 @@
+# tt - Typing Test Configuration
+#
+# This file contains default settings for the tt tool.
+# Command-line flags override these settings.
+
+words: 1000en
+quotes: en
+"n": 50
+g: 1
+start: -1
+w: 80
+t: -1
+theme: default
+showwpm: true
+notheme: true
+blockcursor: false
+bold: false
+noskip: true
+nobackspace: false
+nohighlight: false
+highlight1: false
+highlight2: false
+raw: false
+multi: false
+csv: true
+csvdir: "~/.local/sharet/tt/results/"
+json: false
+oneshot: false
+noreport: false
