@@ -1,12 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "plugins": {
-    "explanatory-output-style@claude-code-plugins": {
-      "version": "unknown",
-      "installedAt": "2025-12-04T13:36:44.248Z",
-      "lastUpdated": "2025-12-04T13:36:44.248Z",
-      "installPath": "/Users/francojc/.claude/plugins/cache/claude-code-plugins/explanatory-output-style/unknown",
-      "isLocal": true
-    }
+    "explanatory-output-style@claude-code-plugins": [
+      {
+        "scope": "user",
+        "installPath": "/Users/francojc/.claude/plugins/cache/claude-code-plugins/explanatory-output-style/unknown",
+        "version": "unknown",
+        "installedAt": "2025-12-04T13:36:44.248Z",
+        "lastUpdated": "2025-12-04T13:36:44.248Z",
+        "isLocal": true
+      }
+    ]
   }
 }
