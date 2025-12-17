@@ -28,6 +28,7 @@
     firefox
     flameshot # Screenshot tool
     i3status # Status bar for i3
+    neovim # Text editor
     kitty # Terminal emulator
     networkmanagerapplet # Network manager GUI
     pavucontrol # PulseAudio volume control
