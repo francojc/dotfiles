@@ -5,6 +5,20 @@
       "repo": "anthropics/claude-code"
     },
     "installLocation": "/Users/francojc/.claude/plugins/marketplaces/claude-code-plugins",
+<<<<<<< HEAD
     "lastUpdated": "2025-12-12T14:39:49.205Z"
+||||||| parent of a2d6490 (feat: update plugin structure, add stats cache, and new marketplace)
+    "lastUpdated": "2025-12-09T17:18:30.585Z"
+=======
+    "lastUpdated": "2025-12-16T13:32:44.747Z"
+  },
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "/Users/francojc/.claude/plugins/marketplaces/claude-plugins-official",
+    "lastUpdated": "2025-12-16T15:56:16.381Z"
+>>>>>>> a2d6490 (feat: update plugin structure, add stats cache, and new marketplace)
   }
 }
