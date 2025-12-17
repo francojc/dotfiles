@@ -1,19 +1,21 @@
 # --- ALIASES ---
 
-# Meta-aliases
+# --- META ALIASES ---
+# Git workflow shortcut - combines git add, commit, pull, and push operations
 alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
 
-# llm aliases
-alias llmb='llm -t briefly' # uses the template 'briefly'
-alias llms='llm -t summarize' # uses the template 'summarize'
+# --- AI/LLM ALIASES ---
+# llm template shortcuts for quick text processing
+alias llmb='llm -t briefly' # uses the template 'briefly' for concise summaries
+alias llms='llm -t summarize' # uses the template 'summarize' for detailed summaries
 
-# Agentic AI aliases
-
-# Workmux
+# --- WORKFLOW ALIASES ---
+# Workmux session management for quick workspace switching
 alias wm='workmux'
 
 # Secure Claude function that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
 # Usage: claudz [model_name] - defaults to glm-4.6 if no model specified
+# Environment: ZAI_BASE_URL, ZAI_API_KEY must be set
 claudz() {
   local model="${1:-glm-4.6}"
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL="$ZAI_BASE_URL" ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
@@ -21,18 +23,21 @@ claudz() {
 
 # Secure Claude function that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
 # Usage: claudo [model_name] - defaults to gpt-4o if no model specified
+# Environment: GITHUB_COPILOT_BASE_URL, GITHUB_COPILOT_API_KEY must be set
 claudo() {
   local model="${1:-gpt-4o}"
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
 }
 
-# Tmux aliases
+# --- TMUX ALIASES ---
+# Tmux session management for terminal multiplexing
 alias tl='tmux list-sessions' # list all tmux sessions
 alias taa=' tmux attach-session -t' # attach to a specific session
 alias tka='tmux kill-session -t' # kill a specific session
 alias tko='tmux kill-server' # kill all tmux sessions
 
 # Attach to a named tmux session (1-based); create if absent
+# Usage: t [session_name] - creates or attaches to session
 t() {
   if [ $# -eq 0 ]; then
     tmux new-session -As 1
@@ -41,54 +46,81 @@ t() {
   fi
 }
 
-# Nix aliases
-# -- Uses hostname to determine the flake to switch to
+# --- NIX ALIASES ---
+# System rebuild commands - uses hostname to determine the flake to switch to
+# Usage: dswitch - rebuilds Darwin system configuration
 alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
+# Usage: nswitch - rebuilds NixOS system configuration
 alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
 
-# Aider-chat aliases
-
+# --- AIDER ALIASES ---
+# AI coding assistant configurations for code generation and review
+# Usage: aider-copilot - uses GitHub Copilot API
 alias aider-copilot='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY"'
+# Usage: aider-zai - uses ZAI API with glm-4.6 model
 alias aider-zai='aider --openai-api-base "$ZAI_BASE_URL" --openai-api-key "$ZAI_API_KEY" --model glm-4.6'
+# Usage: aider-commit - specialized for commit message generation
 alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
 
-# Aerc (mail)
+# --- MAIL ALIASES ---
+# Aerc email client configuration with custom config files
+# Usage: mail - launches Aerc email client with configured settings
 alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
 
-# Directory navigation
-alias ..='cd ..'
-alias ...='cd ../..'
+# --- DIRECTORY NAVIGATION ---
+# Basic directory navigation for quick path movement
+alias ..='cd ..'        # Move up one directory level
+alias ...='cd ../..'    # Move up two directory levels
 
 alias c='clear'
 
-alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"'
-alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"'
-alias lt='la --icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"'
+# File listing with eza - enhanced file listing with icons and color
+alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"' # List files with icons, excluding .DS_Store
+alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"' # Detailed list with smart grouping
+alias lt='la --icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"' # Tree view of current directory
 
-# Use fd instead of find
+# Use fd instead of find - faster file searching
 alias fd="fd --hidden --exclude '.git'"
 
-alias tree='tree -C'
-alias cat='bat' # use bat instead of cat
-alias df='duf' # use duf instead of df
+# File utilities - enhanced command replacements
+alias tree='tree -C'    # Colorized tree output
+alias cat='bat'        # Use bat instead of cat for syntax highlighting
+alias df='duf'         # Use duf instead of df for better disk usage display
 
-# More verbose and interactive copy/move
-alias cp='cp -iv'
-alias mv='mv -iv'
+# More verbose and interactive copy/move operations
+alias cp='cp -iv'      # Interactive copy with verbose output
+alias mv='mv -iv'      # Interactive move with verbose output
 
-# Better path display
+# Better path display - shows PATH variable with newlines
 alias path='echo -e ${PATH//:/\\n}'
 
-# SSH aliases
-alias minicore='TERM=xterm-256color ssh jeridf@mac-minicore'
-alias airborne='TERM=xterm-256color ssh francojc@macbook-airborne'
-alias rover='TERM=xterm-256color ssh jeridf@mini-rover'
-alias proxmox='TERM=xterm-256color ssh root@minis-proxmox'
-alias services='TERM=xterm-256color ssh jeridf@minis-services'
-alias ai='TERM=xterm-256color ssh jeridf@minis-ai'
+# --- SSH ALIASES (CONSOLIDATED) ---
+# SSH Aliases - Consolidated with parameterized function
+# Usage: ssh_connect [host] [user] - connects to SSH server with optional user override
+ssh_connect() {
+  local host="$1"
+  local user="$2"
+  [ -z "$user" ] && user="jeridf"
+  TERM=xterm-256color ssh "$user@$host"
+}
 
-# Git aliases
+# Individual aliases (preserve for backward compatibility)
+# Usage: minicore - connect to mac-minicore
+alias minicore='ssh_connect mac-minicore'
+# Usage: airborne - connect to macbook-airborne with francojc user
+alias airborne='ssh_connect macbook-airborne francojc'
+# Usage: rover - connect to mini-rover
+alias rover='ssh_connect mini-rover'
+# Usage: proxmox - connect to minis-proxmox with root user
+alias proxmox='ssh_connect minis-proxmox root'
+# Usage: services - connect to minis-services
+alias services='ssh_connect minis-services'
+# Usage: ai - connect to minis-ai
+alias ai='ssh_connect minis-ai'
+
+# --- GIT ALIASES ---
+# Git workflow shortcuts
 alias ga='git add'
 alias gaa='git add --all'
 alias gba='git branch -a'
@@ -114,72 +146,114 @@ alias grh='git reset HEAD'      # Unstage files
 alias grhh='git reset --hard HEAD'  # Hard reset (use carefully!)
 alias gss='git status'
 alias gst='git stash'           # Quick stash
-alias gstp='git stash pop'      # Quick stash pop
+alias gstp='git stash pop'
 
-# Neovim aliases
-alias v='nvim'
-# alias b='NVIM_APPNAME="nvim-dev" nvim-dev'
+# --- EDITOR ALIASES ---
+# Neovim shortcuts for quick editing
+alias v='nvim'                             # Open Neovim
+# alias b='NVIM_APPNAME="nvim-dev" nvim-dev'  # Alternative Neovim instance (commented out)
 
-# Quarto aliases
-alias q='quarto'
-alias qp='quarto preview'
-alias qph='quarto preview --to html'
-alias qpp='quarto preview --to pdf'
-alias qr='quarto render'
-alias qrh='quarto render --no-clean --to html'
-alias qrp='quarto render --no-clean --to pdf'
-alias qpub='quarto publish gh-pages'
+# --- QUARTO ALIASES ---
+# Academic publishing tools for creating and rendering documents
+alias q='quarto'                              # Main Quarto command
+alias qp='quarto preview'                      # Preview current document
+alias qph='quarto preview --to html'           # Preview as HTML
+alias qpp='quarto preview --to pdf'            # Preview as PDF
+alias qr='quarto render'                      # Render current document
+alias qrh='quarto render --no-clean --to html' # Render as HTML without cleaning
+alias qrp='quarto render --no-clean --to pdf'  # Render as PDF without cleaning
+alias qpub='quarto publish gh-pages'           # Publish to GitHub Pages
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory
+# Usage: zl [path] - changes directory and lists contents with eza
 function zl() {
   z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
 }
 
 # Make and change to a directory
+# Usage: mkcd [directory] - creates directory and changes to it
 function mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
-# Open iCloud Drive
+# Open iCloud Drive with validation
+# Usage: icloud [path] - navigates to iCloud Drive with error checking
 function icloud() {
-  if [ -z "$1" ]; then
-    cd ~/Library/Mobile\ Documents/com\~apple\~CloudDocs
+  local target="$1"
+  local path=""
+
+  if [ -z "$target" ]; then
+    path="~/Library/Mobile Documents/com~apple~CloudDocs"
   else
-    cd "$1"
+    path="$target"
+  fi
+
+  if [ -d "$path" ]; then
+    cd "$path"
+  else
+    echo "Error: Directory '$path' does not exist"
+    return 1
   fi
 }
 
-# Open Google Drive: arguments 'my' or 'shared' to go to respective folders, default is 'My Drive'
+# Open Google Drive with validation
+# Usage: gdrive [my|shared] - navigates to Google Drive folders with error checking
 function gdrive() {
-  if [ -z "$1" ]; then
-    cd ~/Google\ Drive/My\ Drive
-  elif [ "$1" = "shared" ]; then
-    cd ~/Google\ Drive/Shared\ drives
-  elif [ "$1" = "my" ]; then
-    cd ~/Google\ Drive/My\ Drive
+  local type="$1"
+  local path=""
+
+  case "$type" in
+    "my"|"")
+      path="~/Google Drive/My Drive"
+      ;;
+    "shared")
+      path="~/Google Drive/Shared drives"
+      ;;
+    *)
+      echo "Usage: gdrive [my|shared]"
+      return 1
+      ;;
+  esac
+
+  if [ -d "$path" ]; then
+    cd "$path"
   else
-    echo "Usage: gdrive [my|shared]"
+    echo "Error: Directory '$path' does not exist"
+    return 1
   fi
 }
 
-# Obsidian
-# Notes
-function on() {
-  if [ -z "$1" ]; then
-    cd ~/Obsidian/Notes/ && nvim
+# Obsidian - Consolidated function
+# Usage: obsidian [notes|personal] - opens Obsidian notes or personal vault
+obsidian() {
+  local section="$1"
+  local path=""
+
+  case "$section" in
+    "notes"|"n")
+      path="~/Obsidian/Notes/"
+      ;;
+    "personal"|"p")
+      path="~/Obsidian/Personal/"
+      ;;
+    *)
+      echo "Usage: obsidian [notes|personal]"
+      return 1
+      ;;
+  esac
+
+  if [ -d "$path" ]; then
+    cd "$path" && nvim
   else
-    cd "$1" && nvim
+    echo "Error: Directory $path does not exist"
+    return 1
   fi
 }
-# Personal
-function op() {
-  if [ -z "$1" ]; then
-    cd ~/Obsidian/Personal/ && nvim
-  else
-    cd "$1" && nvim
-  fi
-}
+
+# Individual aliases (preserve for backward compatibility)
+alias on='obsidian notes'
+alias op='obsidian personal'
 
 # Typing test function
 # tt() uses the `tt` command with some default options and allows for optional custom arguments to be added.
@@ -188,9 +262,14 @@ function op() {
 alias last='fc -ln -1'  # Print last command
 alias lastrun='fc -e -'  # Re-execute last command
 
-# Recall last command output
+# Recall last command output - Simplified
+# Usage: r [PATTERN] [-p] - recalls last command output with optional filtering
 function r() {
-  if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  local pattern="$1"
+  local print_only="$2"
+
+  # Help output
+  if [[ "$pattern" == "--help" || "$pattern" == "-h" ]]; then
     echo "Usage: r [PATTERN] [-p]"
     echo "Recall last command output and copy to clipboard"
     echo
@@ -201,23 +280,23 @@ function r() {
     return 0
   fi
 
-  if [ -z "$1" ]; then
-    if [ "$2" = "-p" ]; then
-      fc -ln -1  # Print to stdout with -p flag
-    else
-      fc -ln -1 | pbcopy
-    fi
+  # Determine output method
+  local output_cmd="pbcopy"
+  if [[ "$print_only" == "-p" ]]; then
+    output_cmd="cat"
+  fi
+
+  # Execute command
+  if [ -z "$pattern" ]; then
+    fc -ln -1 | $output_cmd
   else
-    if [ "$2" = "-p" ]; then
-      fc -ln -1 | grep "$1"  # Print to stdout with -p flag
-    else
-      fc -ln -1 | grep "$1" | pbcopy
-    fi
+    fc -ln -1 | grep "$pattern" | $output_cmd
   fi
 }
 
 
 # Setup qtree (Quick Tree) command
+# Usage: qtree [directory] [depth] - lists directory tree with custom depth
 # - first argument is the directory to list (default is current directory)
 # - second argument is the -L value (default is 2)
 function qtree() {
@@ -235,6 +314,7 @@ function qtree() {
 }
 
 # -- Setup yazi (Yet Another Zoxide Integration) command
+# Usage: y [arguments] - opens yazi file manager with directory navigation
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   yazi "$@" --cwd-file="$tmp"

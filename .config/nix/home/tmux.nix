@@ -97,10 +97,9 @@
       bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
       # Floating session popup
-      # Open Obsidian vault (~/Obsidian/Notes/) in nvim
-      # The :ObsidianToday command is run on startup to open today's note
-      # session stays alive until detached
-      bind-key o display-popup -w 80% -h 60% -E "cd ~/Obsidian/Notes/ && exec tmux new-session -s obsidian \\; send-keys 'nvim +:ObsidianToday' C-m \\; set-option destroy-unattached on"
+      # Open notes directory in Neovim
+      # Session persists after detaching and can be reattached
+      bind-key o display-popup -w 80% -h 60% -E "cd ~/Obsidian/Notes/ && exec tmux has-session -t notes 2>/dev/null && tmux attach-session -t notes || tmux new-session -s notes \\; send-keys 'nvim' C-m"
 
       # kill pane
       bind x kill-pane
