@@ -55,6 +55,7 @@
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
+      "fbreader" # eBook reader
       "ghostty" # Terminal emulator
       "google-chrome"
       "google-drive"
