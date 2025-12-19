@@ -255,10 +255,8 @@ obsidian() {
 alias on='obsidian notes'
 alias op='obsidian personal'
 
-# Typing test function
-# tt() uses the `tt` command with some default options and allows for optional custom arguments to be added.
-
 # Last command related aliases
+# Reminder: `fc` is a built-in Zsh command to edit the last command in $EDITOR
 alias last='fc -ln -1'  # Print last command
 alias lastrun='fc -e -'  # Re-execute last command
 

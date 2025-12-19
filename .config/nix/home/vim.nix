@@ -41,7 +41,7 @@
         set incsearch           " Incremental search
         set ignorecase          " Case-insensitive searching
         set smartcase           " Case-sensitive if uppercase used
-        # set clipboard=unnamedplus " Use system clipboard FIXME: not correct
+        set clipboard=unnamedplus " Use system clipboard
         syntax on               " Syntax highlighting
         set mouse=a             " Enable mouse support
         set clipboard=unnamed   " Use system clipboard
