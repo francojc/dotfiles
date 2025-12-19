@@ -232,10 +232,10 @@ obsidian() {
 
   case "$section" in
     "notes"|"n")
-      path="~/Obsidian/Notes/"
+      path="$HOME/Obsidian/Notes/"
       ;;
     "personal"|"p")
-      path="~/Obsidian/Personal/"
+      path="$HOME/Obsidian/Personal/"
       ;;
     *)
       echo "Usage: obsidian [notes|personal]"
