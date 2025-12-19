@@ -74,3 +74,4 @@ conversation.toml
 .config/nix/.claude/settings.local.json
 .config/kitty/kitty.conf
 .config/wezterm/wezterm.lua
+.claude/stats-cache.json
