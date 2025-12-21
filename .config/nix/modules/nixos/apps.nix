@@ -54,10 +54,12 @@
 
   # NixOS System Packages (complementary to Flatpak packages)
   environment.systemPackages = with pkgs; [
+    aider-chat
     dconf-editor
     dconf2nix
     gcc
     ghostty
+    glibc
     gnome-tweaks
     gnomeExtensions.paperwm
     gnomeExtensions.clipboard-indicator
