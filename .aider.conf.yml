@@ -3,7 +3,7 @@
 openai-api-base: https://api.githubcopilot.com
 # Models
 model: openai/gemini-2.5-pro
-editor-model: openai/gpt-5
+editor-model: openai/claude-sonnet-4.5
 weak-model: openai/gpt-4o
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
