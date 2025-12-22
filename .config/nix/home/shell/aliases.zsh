@@ -17,7 +17,7 @@ alias wm='workmux'
 # Usage: claudz [model_name] - defaults to glm-4.6v if no model specified
 # Environment: ZAI_BASE_URL, ZAI_API_KEY must be set
 claudz() {
-  local model="${1:-glm-4.6v}"
+  local model="${1:-glm-4.7}"
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL="$ZAI_BASE_URL" ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
 }
 
