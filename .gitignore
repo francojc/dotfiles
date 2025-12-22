@@ -46,10 +46,7 @@
 # Credentials
 .claude/.credentials.json
 *.claude/.settings.local.json
-
 .claude/settings.json
-.config/nix/.claude/settings.local.json
-.claude/stats-cache.json
 
 # Gemini AI
 # CLI config
