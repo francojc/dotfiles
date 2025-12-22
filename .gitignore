@@ -42,12 +42,19 @@
 .aider.input*
 .aider.tags*
 
-# Claude AI credentials
+# CLAUDE AI
+# Credentials
 .claude/.credentials.json
 *.claude/.settings.local.json
 
-# Gemini CLI config
+.claude/settings.json
+.config/nix/.claude/settings.local.json
+.claude/stats-cache.json
+
+# Gemini AI
+# CLI config
 .config/configstore/*
+.gemini/installation_id
 
 # ----------------------------------------------------------
 # R Programming Language
@@ -68,10 +75,6 @@ _freeze
 # Project-Specific Files
 # ----------------------------------------------------------
 conversation.toml
-.gemini/installation_id
 .config/reddix/config.yaml
-.claude/settings.json
-.config/nix/.claude/settings.local.json
 .config/kitty/kitty.conf
 .config/wezterm/wezterm.lua
-.claude/stats-cache.json

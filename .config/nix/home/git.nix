@@ -19,14 +19,14 @@
       credential.helper =
         if pkgs.stdenv.isDarwin
         then "osxkeychain"
-        else "${pkgs.git.override { withLibsecret = true; }}/bin/git-credential-libsecret";
+        else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 
       # Diff and merge tools
       diff.tool = "nvimdiff";
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
       merge.tool = "nvimdiff";
-      mergetool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE $MERGED -c 'wincmd w' -c 'wincmd J'";
+      mergetool.nvimdiff.cmd = "nvim -d $BASE $LOCAL $REMOTE $MERGED";
       mergetool.prompt = false;
       mergetool.keepBackup = false;
 
