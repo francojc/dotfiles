@@ -3,6 +3,7 @@ claude_desktop_config.json
 debug/
 file-history/
 history.jsonl
+image-cache/
 local/
 plans/
 plugins/

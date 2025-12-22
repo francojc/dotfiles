@@ -1,4 +1,8 @@
-{config, username, ...}: {
+{
+  config,
+  username,
+  ...
+}: {
   programs = {
     # Enable some useful shells
     zsh = {
@@ -10,6 +14,9 @@
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
         ${builtins.readFile ./fzf.zsh}
+
+        # Source zsh-ai-cmd plugin
+        source ${config.home.homeDirectory}/.dotfiles/.config/zsh/zsh-ai-cmd/zsh-ai-cmd.plugin.zsh
 
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
@@ -96,6 +103,12 @@
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
         export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#5c6370"
+
+        # zsh-ai-cmd configuration
+        export ZSH_AI_CMD_PROVIDER='copilot'
+        # Uncomment and customize if needed:
+        export ZSH_AI_CMD_COPILOT_MODEL='gpt-4o'
+        export ZSH_AI_CMD_COPILOT_HOST='localhost:4141'
 
         # Press 'v' in normal mode to open current file in $EDITOR
 
