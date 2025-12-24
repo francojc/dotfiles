@@ -210,8 +210,21 @@ local git_branch_cache = {}
 local function update_git_branch_async()
 	local bufnr = vim.api.nvim_get_current_buf()
 
+	-- Get buffer path and verify it's a valid directory
+	local buf_path = vim.api.nvim_buf_get_name(bufnr)
+	if buf_path == "" or buf_path:match("^nvim-pack://") or buf_path:match("^[a-z]+://") then
+		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
+		return
+	end
+
+	local buf_dir = vim.fn.fnamemodify(buf_path, ":h")
+	if not buf_dir or buf_dir == "" or vim.fn.isdirectory(buf_dir) == 0 then
+		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
+		return
+	end
+
 	-- Check if we're in a git repository by looking for .git directory
-	local git_dir = vim.fn.finddir(".git", vim.fn.expand("%:p:h") .. ";")
+	local git_dir = vim.fn.finddir(".git", buf_dir .. ";")
 	if git_dir == "" then
 		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
 		return
@@ -227,7 +240,7 @@ local function update_git_branch_async()
 	-- Get current branch asynchronously using vim.system (Neovim 0.12+)
 	vim.system({ "git", "branch", "--show-current" }, {
 		text = true,
-		cwd = vim.fn.expand("%:p:h"),
+		cwd = buf_dir,
 	}, function(result)
 		-- Callback runs asynchronously
 		if result.code == 0 and result.stdout then
