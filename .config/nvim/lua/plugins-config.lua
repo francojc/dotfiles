@@ -776,6 +776,7 @@ wk.add({
 	{ "<leader>rb", desc = "BibTeX citations" },
 	{ "<leader>s", group = "Search", icon = "󰢶" },
 	{ "<leader>t", group = "Toggle", icon = "󰔡" },
+	{ "<leader>u", group = "Update/Plugins", icon = "󰚰 " },
 	{ "<leader>w", proxy = "<C-w>", group = "Windows", icon = "󰪷" },
 	{ "<leader>x", desc = "Quit", icon = "󰗼" },
 })

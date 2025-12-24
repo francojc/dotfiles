@@ -343,3 +343,12 @@ map("n", "<leader>tR", "<Cmd>lua Toggle_citation_format()<CR>", { desc = "Toggle
 map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })
+
+-- Update / Plugins ------------------------------------
+map("n", "<leader>uc", ":PackCheck<Cr>", { desc = "Check for updates" })
+map("n", "<leader>uu", ":PackUpdate<Cr>", { desc = "Update all plugins" })
+map("n", "<leader>uU", ":PackUpdate!<Cr>", { desc = "Force update all plugins" })
+map("n", "<leader>up", "<Cmd>lua _G.Pack_update_picker()<Cr>", { desc = "Update specific plugin" })
+map("n", "<leader>us", ":PackStatus<Cr>", { desc = "Show plugin status" })
+map("n", "<leader>uC", ":PackClean<Cr>", { desc = "Clean unused plugins" })
+map("n", "<leader>uS", ":PackSync<Cr>", { desc = "Sync plugins" })

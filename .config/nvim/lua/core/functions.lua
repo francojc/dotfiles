@@ -403,3 +403,258 @@ end
 function _G.Update_search_count_cache()
 	update_search_count_async()
 end
+
+---============================================================
+---| PLUGIN MANAGEMENT FUNCTIONS
+---============================================================
+
+-- Update state tracking
+function _G.Save_last_check_date()
+	local state_file = vim.fn.stdpath("state") .. "/plugins_last_check"
+	local date = os.date("%Y-%m-%d")
+	vim.fn.writefile({ date }, state_file)
+end
+
+function _G.Get_last_check_date()
+	local state_file = vim.fn.stdpath("state") .. "/plugins_last_check"
+	if vim.fn.filereadable(state_file) == 0 then
+		return nil
+	end
+	return vim.trim(vim.fn.readfile(state_file)[1])
+end
+
+function _G.Should_check_for_updates()
+	local last_check = _G.Get_last_check_date()
+	if not last_check then
+		return true
+	end
+	local last_seconds = os.time({ year = tonumber(last_check:sub(1, 4)), month = tonumber(last_check:sub(6, 7)), day = tonumber(last_check:sub(9, 10)) })
+	local current_seconds = os.time()
+	local days_passed = (current_seconds - last_seconds) / 86400
+	return days_passed >= 7
+end
+
+-- Check for available updates
+function _G.Pack_check_updates()
+	vim.notify("Checking for plugin updates...", vim.log.levels.INFO)
+
+	local plugins = vim.pack.get()
+	local updatable = {}
+
+	for _, plugin in ipairs(plugins) do
+		if plugin.path and plugin.spec and plugin.spec.src then
+			-- Get latest remote rev asynchronously
+			local repo_url = plugin.spec.src
+			local name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t")
+
+			-- Try to get latest tag or commit from remote
+			vim.system(
+				{ "git", "ls-remote", "--tags", "--heads", repo_url },
+				{ text = true },
+				function(result)
+					if result.code == 0 and result.stdout then
+						local latest_ref = nil
+						local latest_tag = nil
+
+						-- Find latest tag (looks like refs/tags/vX.X.X)
+						for line in result.stdout:gmatch("[^\r\n]+") do
+							if line:match("^%-?%w+%s+refs/tags/") then
+								local ref_name = line:match("refs/tags/(.+)")
+								if ref_name and not ref_name:match("^%^{}$") then
+									if not latest_tag or ref_name > latest_tag then
+										latest_tag = ref_name
+										latest_ref = line:match("^%w+")
+									end
+								end
+							end
+						end
+
+						if latest_ref and plugin.rev ~= latest_ref then
+							table.insert(updatable, {
+								name = name,
+								current = plugin.rev,
+								latest = latest_ref,
+								tag = latest_tag,
+								path = plugin.path,
+							})
+						end
+					end
+				end
+			)
+		end
+	end
+
+	-- Wait a bit for async calls to complete, then return results
+	vim.defer_fn(function()
+		if #updatable > 0 then
+			local msg = string.format("%d plugin(s) have updates available:", #updatable)
+			for _, p in ipairs(updatable) do
+				msg = msg .. string.format("\n  - %s (%s → %s)", p.name, p.current:sub(1, 8), p.tag or p.latest:sub(1, 8))
+			end
+			vim.notify(msg, vim.log.levels.INFO)
+		else
+			vim.notify("All plugins are up to date.", vim.log.levels.INFO)
+		end
+	end, 2000)
+
+	return updatable
+end
+
+-- Update all plugins
+function _G.Pack_update_all(force)
+	if force then
+		vim.notify("Force updating all plugins...", vim.log.levels.INFO)
+	else
+		vim.notify("Updating all plugins...", vim.log.levels.INFO)
+	end
+
+	_G.Save_last_check_date()
+
+	local ok, err = pcall(vim.pack.update)
+
+	if ok then
+		vim.notify("Plugins updated successfully!", vim.log.levels.INFO)
+	else
+		vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
+	end
+end
+
+-- Update specific plugin
+function _G.Pack_update_plugin(plugin_path)
+	if not plugin_path or not vim.fn.isdirectory(plugin_path) then
+		vim.notify("Invalid plugin path: " .. tostring(plugin_path), vim.log.levels.ERROR)
+		return
+	end
+
+	local plugin_name = vim.fn.fnamemodify(plugin_path, ":t")
+	vim.notify("Updating plugin: " .. plugin_name, vim.log.levels.INFO)
+
+	vim.system({ "git", "-C", plugin_path, "pull", "--ff-only" }, { text = true }, function(result)
+		if result.code == 0 then
+			vim.schedule(function()
+				vim.notify("Plugin " .. plugin_name .. " updated successfully!", vim.log.levels.INFO)
+			end)
+		else
+			vim.schedule(function()
+				vim.notify(
+					"Failed to update " .. plugin_name .. ": " .. (result.stderr or "Unknown error"),
+					vim.log.levels.ERROR
+				)
+			end)
+		end
+	end)
+end
+
+-- Update specific plugin via picker
+function _G.Pack_update_picker()
+	local plugins = vim.pack.get()
+	local plugin_list = {}
+
+	for _, plugin in ipairs(plugins) do
+		table.insert(plugin_list, {
+			text = string.format("%-30s | %s", plugin.spec.name, plugin.rev:sub(1, 8)),
+			plugin = plugin,
+		})
+	end
+
+	table.sort(plugin_list, function(a, b)
+		return a.plugin.spec.name < b.plugin.spec.name
+	end)
+
+	Snacks.picker.pick({
+		source = "plugins",
+		items = plugin_list,
+		format = function(item, ctx)
+			local highlight = item.plugin.active and "SnacksPickerListTitle" or "Comment"
+			return { { item.text, highlight }, { item.plugin.path, "Comment" } }
+		end,
+	}, {}, function(selected)
+		if selected then
+			_G.Pack_update_plugin(selected.plugin.path)
+		end
+	end)
+end
+
+-- Clean unused plugins
+function _G.Pack_clean()
+	vim.notify("Checking for unused plugins...", vim.log.levels.INFO)
+
+	local plugins = vim.pack.get()
+	local active_plugins = {}
+	for _, plugin in ipairs(plugins) do
+		active_plugins[vim.fn.fnamemodify(plugin.path, ":t")] = true
+	end
+
+	local pack_dir = vim.fn.stdpath("data") .. "/site/pack/core"
+	local cleaned = 0
+
+	for _, pack_subdir in ipairs({ "start", "opt" }) do
+		local dir = pack_dir .. "/" .. pack_subdir
+		if vim.fn.isdirectory(dir) == 1 then
+			local plugin_dirs = vim.fn.readdir(dir)
+			for _, plugin_dir in ipairs(plugin_dirs) do
+				if not active_plugins[plugin_dir] then
+					local full_path = dir .. "/" .. plugin_dir
+					vim.fn.delete(full_path, "rf")
+					cleaned = cleaned + 1
+					vim.notify("Removed: " .. plugin_dir, vim.log.levels.INFO)
+				end
+			end
+		end
+	end
+
+	if cleaned == 0 then
+		vim.notify("No unused plugins found.", vim.log.levels.INFO)
+	else
+		vim.notify("Cleaned " .. cleaned .. " unused plugin(s).", vim.log.levels.INFO)
+	end
+end
+
+-- Sync (install + update + clean)
+function _G.Pack_sync()
+	vim.notify("Syncing plugins (install + update + clean)...", vim.log.levels.INFO)
+	_G.Pack_update_all(false)
+	vim.defer_fn(function()
+		_G.Pack_clean()
+	end, 1000)
+end
+
+-- Show plugin status
+function _G.Pack_status()
+	local plugins = vim.pack.get()
+	local status_list = {}
+
+	for _, plugin in ipairs(plugins) do
+		local active_status = plugin.active and "active" or "lazy"
+		local status = string.format(
+			"%-30s | %-6s | %s",
+			plugin.spec.name,
+			active_status,
+			plugin.rev:sub(1, 8)
+		)
+		table.insert(status_list, {
+			text = status,
+			plugin = plugin,
+		})
+	end
+
+	table.sort(status_list, function(a, b)
+		return a.plugin.spec.name < b.plugin.spec.name
+	end)
+
+	Snacks.picker.pick({
+		source = "plugin_status",
+		items = status_list,
+		format = function(item, ctx)
+			local active_status = item.plugin.active and "active" or "lazy"
+			local highlight = item.plugin.active and "SnacksPickerListTitle" or "Comment"
+			return {
+				{ item.plugin.spec.name, highlight },
+				{ " | " },
+				{ active_status, highlight },
+				{ " | " },
+				{ item.plugin.rev:sub(1, 8), "Comment" },
+			}
+		end,
+	})
+end

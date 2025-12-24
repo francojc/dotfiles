@@ -154,9 +154,46 @@ vim.api.nvim_create_user_command("SpellLang", function()
 end, {})
 
 -- User command for updating plugins (workaround for vim.pack.update() display bug)
-vim.api.nvim_create_user_command("PackUpdate", function()
-	Pack_update()
-end, { desc = "Update all plugins via vim.pack" })
+vim.api.nvim_create_user_command("PackUpdate", function(opts)
+	local force = opts.bang
+	_G.Pack_update_all(force)
+end, { desc = "Update all plugins", bang = true })
+
+-- Check for available updates
+vim.api.nvim_create_user_command("PackCheck", function()
+	_G.Pack_check_updates()
+end, { desc = "Check for plugin updates" })
+
+-- Update specific plugin
+vim.api.nvim_create_user_command("PackUpdatePlugin", function(opts)
+	if opts.args and opts.args ~= "" then
+		local plugins = vim.pack.get()
+		for _, plugin in ipairs(plugins) do
+			if plugin.spec.name == opts.args or vim.fn.fnamemodify(plugin.path, ":t") == opts.args then
+				_G.Pack_update_plugin(plugin.path)
+				return
+			end
+		end
+		vim.notify("Plugin not found: " .. opts.args, vim.log.levels.ERROR)
+	else
+		_G.Pack_update_picker()
+	end
+end, { desc = "Update specific plugin", nargs = "?" })
+
+-- Clean unused plugins
+vim.api.nvim_create_user_command("PackClean", function()
+	_G.Pack_clean()
+end, { desc = "Clean unused plugins" })
+
+-- Sync plugins
+vim.api.nvim_create_user_command("PackSync", function()
+	_G.Pack_sync()
+end, { desc = "Sync plugins (install + update + clean)" })
+
+-- Show plugin status
+vim.api.nvim_create_user_command("PackStatus", function()
+	_G.Pack_status()
+end, { desc = "Show plugin status" })
 
 -- Git branch cache updates for statusline performance
 -- Update cache on buffer enter, directory change, and focus gained
@@ -186,6 +223,19 @@ vim.api.nvim_create_autocmd({ "CmdlineLeave", "BufEnter" }, {
 				Update_search_count_cache()
 			end
 		end
+	end,
+})
+
+-- Check for plugin updates on startup (weekly)
+vim.api.nvim_create_autocmd("VimEnter", {
+	group = "personal",
+	once = true,
+	callback = function()
+		vim.schedule(function()
+			if _G.Should_check_for_updates() then
+				_G.Pack_check_updates()
+			end
+		end)
 	end,
 })
 
