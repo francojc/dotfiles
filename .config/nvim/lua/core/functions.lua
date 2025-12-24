@@ -448,6 +448,80 @@ function _G.Should_check_for_updates()
 end
 
 -- Check for available updates
+-- Get local tag for a plugin (returns nil if no tag)
+local function get_local_tag(plugin_path)
+	if not plugin_path or vim.fn.isdirectory(plugin_path) == 0 then
+		return nil
+	end
+
+	local result = vim.system(
+		{ "git", "-C", plugin_path, "describe", "--tags", "--abbrev=0", "--exact-match" },
+		{ text = true }
+	):wait()
+
+	if result.code == 0 and result.stdout then
+		local tag = vim.trim(result.stdout)
+		return tag:gsub("%^%{%}%$", "") -- Strip annotated tag suffix {}
+	end
+	return nil
+end
+
+-- Parse semver version string (e.g., "v1.2.3" -> {1, 2, 3})
+local function parse_semver(version_str)
+	if not version_str or version_str == "" then
+		return nil
+	end
+
+	-- Strip leading 'v' if present
+	version_str = version_str:gsub("^v", "")
+
+	-- Extract major.minor.patch
+	local major, minor, patch = version_str:match("^(%d+)%.?(%d*)%.?(%d*)")
+	if major then
+		return {
+			major = tonumber(major) or 0,
+			minor = tonumber(minor) or 0,
+			patch = tonumber(patch) or 0,
+		}
+	end
+	return nil
+end
+
+-- Determine update type between two versions
+local function get_update_type(local_ver, remote_ver)
+	if not local_ver or not remote_ver then
+		return "uncategorized"
+	end
+
+	-- Try to parse as semver if they look like versions
+	if local_ver:match("^v?%d+%.?%d*%.?%d*") and remote_ver:match("^v?%d+%.?%d*%.?%d*") then
+		local local_parsed = parse_semver(local_ver)
+		local remote_parsed = parse_semver(remote_ver)
+
+		if local_parsed and remote_parsed then
+			if remote_parsed.major > local_parsed.major then
+				return "major"
+			elseif remote_parsed.minor > local_parsed.minor then
+				return "minor"
+			elseif remote_parsed.patch > local_parsed.patch then
+				return "patch"
+			end
+		end
+	end
+
+	-- Can't determine update type
+	return "uncategorized"
+end
+
+-- Format version for display (tags get full version, commits get 7 chars)
+local function format_version(version, is_tag)
+	if is_tag and version then
+		return version:gsub("^v", "")
+	else
+		return version and version:sub(1, 7) or "unknown"
+	end
+end
+
 function _G.Pack_check_updates()
 	vim.notify("Checking for plugin updates...", vim.log.levels.INFO)
 
@@ -456,6 +530,10 @@ function _G.Pack_check_updates()
 
 	for _, plugin in ipairs(plugins) do
 		if plugin.path and plugin.spec and plugin.spec.src then
+			-- Get local tag if available
+			local local_tag = get_local_tag(plugin.path)
+			local local_version = local_tag or plugin.rev:sub(1, 8)
+
 			-- Get latest remote rev asynchronously
 			local repo_url = plugin.spec.src
 			local name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t")
@@ -482,14 +560,41 @@ function _G.Pack_check_updates()
 							end
 						end
 
-						if latest_ref and plugin.rev ~= latest_ref then
-							table.insert(updatable, {
-								name = name,
-								current = plugin.rev,
-								latest = latest_ref,
-								tag = latest_tag,
-								path = plugin.path,
-							})
+						-- Strip {} from annotated tags
+						if latest_tag then
+							latest_tag = latest_tag:gsub("%^%{%}%$", "")
+						end
+
+						-- Only proceed if we found a remote reference
+						if latest_ref then
+							-- Check if update is available
+							local has_update = false
+
+							if local_tag then
+								-- If we have a local tag, compare with remote tag
+								has_update = (not latest_tag) or (local_tag ~= latest_tag)
+							else
+								-- If no local tag, compare commits
+								has_update = (plugin.rev ~= latest_ref)
+							end
+
+							if has_update then
+								local local_display_ver = local_tag or local_version:sub(1, 7)
+								local remote_display_ver = latest_tag or latest_ref:sub(1, 7)
+								local local_is_tag = local_tag ~= nil
+								local remote_is_tag = latest_tag ~= nil
+
+								local update_type = get_update_type(local_display_ver, remote_display_ver)
+
+								table.insert(updatable, {
+									name = name,
+									local_version = local_display_ver,
+									remote_version = remote_display_ver,
+									local_is_tag = local_is_tag,
+									remote_is_tag = remote_is_tag,
+									update_type = update_type,
+								})
+							end
 						end
 					end
 				end
@@ -497,18 +602,89 @@ function _G.Pack_check_updates()
 		end
 	end
 
-	-- Wait a bit for async calls to complete, then return results
+	-- Wait for async calls to complete, then display results
 	vim.defer_fn(function()
 		if #updatable > 0 then
-			local msg = string.format("%d plugin(s) have updates available:", #updatable)
+			-- Group updates by type
+			local grouped = {
+				major = {},
+				minor = {},
+				patch = {},
+				uncategorized = {},
+			}
+
 			for _, p in ipairs(updatable) do
-				msg = msg .. string.format("\n  - %s (%s → %s)", p.name, p.current:sub(1, 8), p.tag or p.latest:sub(1, 8))
+				if grouped[p.update_type] then
+					table.insert(grouped[p.update_type], p)
+				else
+					table.insert(grouped.uncategorized, p)
+				end
 			end
+
+			-- Sort each group alphabetically
+			for _, group in pairs(grouped) do
+				table.sort(group, function(a, b)
+					return a.name < b.name
+				end)
+			end
+
+			-- Build message
+			local msg = string.format("%d plugin(s) have updates available:\n", #updatable)
+
+			-- Display Major updates
+			if #grouped.major > 0 then
+				msg = msg .. "\nMajor updates:"
+				for _, p in ipairs(grouped.major) do
+					local local_fmt = format_version(p.local_version, p.local_is_tag)
+					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
+					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
+				end
+			end
+
+			-- Display Minor updates
+			if #grouped.minor > 0 then
+				if #grouped.major > 0 then
+					msg = msg .. "\n"
+				end
+				msg = msg .. "\nMinor updates:"
+				for _, p in ipairs(grouped.minor) do
+					local local_fmt = format_version(p.local_version, p.local_is_tag)
+					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
+					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
+				end
+			end
+
+			-- Display Patch updates
+			if #grouped.patch > 0 then
+				if #grouped.major > 0 or #grouped.minor > 0 then
+					msg = msg .. "\n"
+				end
+				msg = msg .. "\nPatch updates:"
+				for _, p in ipairs(grouped.patch) do
+					local local_fmt = format_version(p.local_version, p.local_is_tag)
+					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
+					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
+				end
+			end
+
+			-- Display Uncategorized updates
+			if #grouped.uncategorized > 0 then
+				if #grouped.major > 0 or #grouped.minor > 0 or #grouped.patch > 0 then
+					msg = msg .. "\n"
+				end
+				msg = msg .. "\nVersion changes (uncategorized):"
+				for _, p in ipairs(grouped.uncategorized) do
+					local local_fmt = format_version(p.local_version, p.local_is_tag)
+					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
+					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
+				end
+			end
+
 			vim.notify(msg, vim.log.levels.INFO)
 		else
 			vim.notify("All plugins are up to date.", vim.log.levels.INFO)
 		end
-	end, 2000)
+	end, 3000)
 
 	return updatable
 end
@@ -574,14 +750,12 @@ function _G.Pack_update_picker()
 		return a.plugin.spec.name < b.plugin.spec.name
 	end)
 
-	Snacks.picker.pick({
-		source = "plugins",
-		items = plugin_list,
-		format = function(item, ctx)
-			local highlight = item.plugin.active and "SnacksPickerListTitle" or "Comment"
-			return { { item.text, highlight }, { item.plugin.path, "Comment" } }
+	vim.ui.select(plugin_list, {
+		prompt = "Select plugin to update",
+		format_item = function(item)
+			return item.text
 		end,
-	}, {}, function(selected)
+	}, function(selected)
 		if selected then
 			_G.Pack_update_plugin(selected.plugin.path)
 		end
@@ -639,14 +813,9 @@ function _G.Pack_status()
 
 	for _, plugin in ipairs(plugins) do
 		local active_status = plugin.active and "active" or "lazy"
-		local status = string.format(
-			"%-30s | %-6s | %s",
-			plugin.spec.name,
-			active_status,
-			plugin.rev:sub(1, 8)
-		)
+		local text = string.format("%-30s | %-6s | %s", plugin.spec.name, active_status, plugin.rev:sub(1, 8))
 		table.insert(status_list, {
-			text = status,
+			text = text,
 			plugin = plugin,
 		})
 	end
@@ -655,19 +824,25 @@ function _G.Pack_status()
 		return a.plugin.spec.name < b.plugin.spec.name
 	end)
 
-	Snacks.picker.pick({
-		source = "plugin_status",
-		items = status_list,
-		format = function(item, ctx)
-			local active_status = item.plugin.active and "active" or "lazy"
-			local highlight = item.plugin.active and "SnacksPickerListTitle" or "Comment"
-			return {
-				{ item.plugin.spec.name, highlight },
-				{ " | " },
-				{ active_status, highlight },
-				{ " | " },
-				{ item.plugin.rev:sub(1, 8), "Comment" },
-			}
+	vim.ui.select(status_list, {
+		prompt = "Plugin Status",
+		format_item = function(item)
+			return item.text
 		end,
-	})
+	}, function(selected)
+		if selected then
+			local plugin = selected.plugin
+			vim.notify(
+				string.format(
+					"Plugin: %s\nStatus: %s\nPath: %s\nRevision: %s",
+					plugin.spec.name,
+					plugin.active and "active" or "lazy",
+					plugin.path,
+					plugin.rev
+				),
+				vim.log.levels.INFO
+			)
+		end
+	end)
 end
+
