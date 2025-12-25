@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-A streamlined, modular Neovim configuration with lazy-loading support for optimal startup performance. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
+A streamlined, modular Neovim configuration built on Neovim 0.12+ native functionality. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
 
 ## Features
 
@@ -17,8 +17,10 @@ A streamlined, modular Neovim configuration with lazy-loading support for optima
 - **R**: Language server with code execution via Slime
 - **Python**: Pyright LSP with Ruff formatting
 - **Bash**: Full LSP support with shfmt formatting
+- **Go**: gopls and golangci-lint-langserver
 - **Lua**: Native Neovim configuration language support
 - **Nix**: NixOS/Home Manager integration with nixd LSP
+- **Typst**: tinymist LSP with preview
 - **YAML**: Quarto schema validation
 
 ### Modern Development Tools
@@ -28,13 +30,12 @@ A streamlined, modular Neovim configuration with lazy-loading support for optima
 - **Git Integration**: Lazygit, Gitsigns, and Diffview
 - **File Management**: Snacks picker and Yazi file explorer
 - **Terminal**: Integrated Snacks terminal with tmux navigation
-- **Lazy-loading**: lz.n plugin for optimized startup performance
+- **GitHub Integration**: Issue/PR management via Snacks picker
 
 ### Configuration Stats
 
-- **Total Plugins**: 46 (including 10 colorschemes)
-- **Eager-loaded**: 25 core plugins
-- **Lazy-loaded**: 11 document/tool plugins
+- **Total Plugins**: 44 (including 11 colorschemes)
+- **Plugin Manager**: Neovim 0.12+ native vim.pack
 - **Philosophy**: Native Vim functionality preferred over plugin dependencies
 
 ## Installation
@@ -56,11 +57,19 @@ The first launch may take a moment as vim.pack downloads plugins in parallel
 
 ### Updating
 
-To update plugins, open `nvim` and on the command line run:
+Plugin management commands:
 
 ```vim
-:lua vim.pack.update()
+:PackUpdate        -- Update all plugins
+:PackUpdate!       -- Force update all plugins
+:PackUpdatePlugin  -- Update specific plugin (with picker if no name given)
+:PackCheck         -- Check for available updates (groups by major/minor/patch)
+:PackStatus        -- Show plugin status
+:PackClean         -- Remove unused plugins
+:PackSync          -- Install + update + clean
 ```
+
+Weekly update checks are performed automatically on startup.
 
 ## Key Bindings
 
@@ -83,9 +92,13 @@ To update plugins, open `nvim` and on the command line run:
 
 ### Git Integration
 
-- `<leader>gg` - Lazygit (lazy-loaded on command)
-- `<leader>gd` - Diffview open
-- `<leader>gh` - File history
+- `<leader>gg` - Lazygit
+- `<leader>gl` - Lazygit log
+- `<leader>gio` - GitHub issues (open)
+- `<leader>gpo` - GitHub PRs (open)
+- `<leader>gic` - Create GitHub issue
+- `<leader>gpc` - Create GitHub PR (draft, base=main)
+- `<leader>gpC` - Create GitHub PR (prompt)
 
 ### Markdown Editing
 
@@ -112,44 +125,73 @@ To update plugins, open `nvim` and on the command line run:
 
 ### File Explorer
 
-- `<leader>ey` - Open Yazi (lazy-loaded on command)
+- `<leader>ey` - Open Yazi
 - `<leader>ec` - Open Yazi in cwd
+
+### Session Management
+
+- `<leader>ps` - Save session (prompts for name)
+- `<leader>pl` - Load last session
+- `<leader>pS` - Select session
 
 ### Toggles
 
-- `<leader>ta` - Toggle Aerial code outline (lazy-loaded on command)
+- `<leader>ta` - Toggle Aerial code outline
+- `<leader>tb` - Toggle line blame
+- `<leader>tc` - Toggle color highlights
+- `<leader>td` - Toggle word diff
 - `<leader>ti` - Toggle image rendering
+- `<leader>tl` - Select spell language (en_us/es)
 - `<leader>tm` - Toggle markdown rendering
-- `<leader>tt` - Toggle floating terminal (Snacks)
+- `<leader>tr` - Toggle R language server
+- `<leader>tR` - Toggle citation format (Pandoc/LaTeX)
+- `<leader>ts` - Toggle spell
+- `<leader>tv` - Toggle CSV view
+- `<leader>tw` - Toggle word wrap
+
+### Spell Language Management
+
+The configuration automatically detects project-specific spell settings:
+
+- Create `.nvim_spell_lang` in your project root with content `en_us` or `es`
+- Use `<leader>tl` to interactively change spell language for current project
+- Spell language persists per project directory
+
+### Session Management
+
+Sessions are automatically saved on exit to `~/.local/state/nvim/sessions/last.vim`. Manual session management available via `<leader>p*` keybindings.
 
 ## Plugin Management
 
-This configuration uses vim.pack (Neovim 0.12+ native package manager) for plugin installation and [lz.n](https://github.com/nvim-neorocks/lz.n) for lazy-loading. Plugins are automatically installed on first run.
+This configuration uses Neovim 0.12+ native **vim.pack** for plugin installation and management. All plugins are eagerly loaded for immediate availability. Plugins are automatically installed on first run.
 
 ### Main Plugins
 
-**Core (Eager-loaded)**:
+**Core Functionality**:
 
 - **Completion**: blink.cmp with emoji and pandoc references
-- **LSP**: nvim-lspconfig with multiple language servers
-- **UI**: lualine, which-key
+- **LSP**: Native vim.lsp with multiple language servers
+- **UI**: which-key, theme-adaptive statusline
 - **Navigation**: Snacks picker
-- **Git**: gitsigns.nvim (lazy-loaded on file open)
-- **Editing**: mini.nvim suite, copilot.vim, treesitter
+- **Git**: gitsigns.nvim, lazygit.nvim
+- **Editing**: mini.nvim suite (icons, pairs, surround), copilot.vim, treesitter
+- **Formatting**: conform.nvim
 
-**Documents (Lazy-loaded)**:
+**Documents & Markup**:
 
-- **quarto-nvim, otter.nvim**: Loaded on `.qmd` files
-- **obsidian.nvim**: Loaded on markdown files
-- **render-markdown.nvim**: Loaded on markdown/quarto files
-- **image.nvim, img-clip.nvim**: Loaded on markdown files
+- **quarto-nvim, otter.nvim**: Quarto document support
+- **obsidian.nvim**: Note-taking and knowledge management
+- **render-markdown.nvim**: Markdown rendering enhancement
+- **image.nvim, img-clip.nvim**: Image handling in documents
+- **snacks-bibtex.nvim**: Citation management
 
-**Tools (Lazy-loaded)**:
+**Development Tools**:
 
-- **lazygit.nvim**: Loaded on `:LazyGit` command
-- **yazi.nvim**: Loaded on `:Yazi` command
-- **aerial.nvim**: Loaded on `:AerialToggle` command
-- **todo-comments.nvim**: Loaded on search commands
+- **yazi.nvim**: File explorer
+- **aerial.nvim**: Code outline
+- **csvview.nvim**: CSV file viewing
+- **typst-preview.nvim**: Typst document preview
+- **quicker.nvim**: Quickfix list enhancement
 
 ## Configuration Structure
 
@@ -157,67 +199,52 @@ This configuration uses vim.pack (Neovim 0.12+ native package manager) for plugi
 .
 ├── init.lua                      # Main orchestrator (loads modules)
 ├── lua/
-│   ├── bootstrap.lua             # Paq-nvim bootstrap
-│   ├── theme-config.lua          # Theme configuration (Nix-managed)
-│   ├── sidekick-highlights.lua   # Custom highlight groups
+│   ├── theme-config.lua          # Theme configuration (Nix-managed symlink)
+│   ├── statusline-highlights.lua # Theme-adaptive statusline highlights
 │   ├── plugins-pack.lua          # vim.pack plugin declarations
-│   ├── plugins-config.lua        # Eager-loaded plugin configs
+│   ├── plugins-config.lua        # Plugin configurations
 │   ├── core/
 │   │   ├── options.lua           # Vim options & diagnostics
-│   │   ├── autocommands.lua      # Autocommands & autocmds
+│   │   ├── autocommands.lua      # Autocommands & user commands
 │   │   ├── keymaps.lua           # All key mappings
-│   │   └── functions.lua         # Helper functions
-│   └── plugins/
-│       ├── commands.lua          # Lazy-load on commands
-│       ├── editor.lua            # Lazy-load on keys/events
-│       └── filetype.lua          # Lazy-load on filetypes
-├── ftplugins/                    # Filetype-specific settings
-│   ├── markdown.lua
-│   └── quarto.lua
+│   │   └── functions.lua         # Helper functions (session, git, plugin mgmt)
+│   └── plugins/                  # Plugin lazy-loading configs (not currently used)
+├── after/
+│   └── ftplugin/                # Filetype-specific settings
+│       ├── markdown.lua
+│       └── quarto.lua
 └── README.md                     # This file
 ```
 
 ### Module Responsibilities
 
-- **`init.lua`**: Orchestrates loading of all modules in correct order
-- **`plugins-pack.lua`**: Declares all plugins with vim.pack (marks lazy ones with `load = false`)
-- **`plugins-config.lua`**: Configures eager-loaded plugins
-- **`lua/plugins/*.lua`**: lz.n lazy-loading specs (auto-discovered)
-- **`lua/core/*.lua`**: Core Neovim settings (options, keymaps, autocommands, functions)
+- **`init.lua`**: Orchestrates loading of all modules, Llama.vim configuration
+- **`plugins-pack.lua`**: Declares all plugins with vim.pack (all eager-loaded)
+- **`plugins-config.lua`**: Configures all plugins and LSP servers
+- **`lua/core/functions.lua`**: Helper functions for sessions, plugin management, git branch caching, search count caching, toggle functions
+- **`lua/core/autocommands.lua`**: Autocommands for git branch/search count updates, spell language, session auto-save, plugin update checks
+- **`lua/core/keymaps.lua`**: All key mappings including new session, spell, GitHub bindings
+- **`lua/statusline-highlights.lua`**: Theme-adaptive highlight groups for custom statusline
+- **`after/ftplugin/*.lua`**: Filetype-specific configurations
 
 ## Adding New Plugins
 
 ### Step 1: Declare the Plugin in `lua/plugins-pack.lua`
 
-Add the plugin to the vim.pack declaration:
+Add the plugin to the vim.pack declaration array:
 
 ```lua
-vim.pack.add({
+local eager_plugins = {
   -- Existing plugins...
 
   -- Add your plugin:
-  { src = "https://github.com/author/plugin-name", load = true }, -- For eager-loading
-  -- OR
-  { src = "https://github.com/author/plugin-name", load = false }, -- For lazy-loading
-})
+  { src = "https://github.com/author/plugin-name" },
+}
+
+vim.pack.add(eager_plugins, { load = true, confirm = false })
 ```
 
-**When to use `opt = true`**:
-
-- Plugin is only needed for specific filetypes (e.g., markdown, quarto)
-- Plugin is accessed via commands (e.g., `:LazyGit`)
-- Plugin is triggered by specific keys
-- Plugin is not essential for startup
-
-**Keep eager-loaded if**:
-
-- Core editing functionality (LSP, completion, treesitter)
-- UI essentials (statusline)
-- Used immediately on startup
-
-### Step 2: Choose Configuration Location
-
-#### For Eager-loaded Plugins
+### Step 2: Configure the Plugin
 
 Add configuration to **`lua/plugins-config.lua`**:
 
@@ -228,296 +255,93 @@ require("your-plugin").setup({
 })
 ```
 
-Place it in alphabetical order among other plugins.
-
-#### For Lazy-loaded Plugins
-
-Add configuration to the appropriate spec file in **`lua/plugins/`**:
-
-**`lua/plugins/commands.lua`** - Load on command:
-
-```lua
-{
-  "plugin-name",
-  cmd = { "CommandName", "OtherCommand" },
-  after = function()
-    require("plugin").setup({
-      -- Configuration here
-    })
-  end,
-}
-```
-
-
-**`lua/plugins/filetype.lua`** - Load on filetype:
-
-```lua
-{
-  "plugin-name",
-  ft = { "markdown", "quarto" },
-  after = function()
-    require("plugin").setup({
-      -- Configuration here
-    })
-  end,
-}
-```
-
-**`lua/plugins/editor.lua`** - Load on keys or events:
-
-```lua
-{
-  "plugin-name",
-  keys = {
-    { "<leader>key", mode = { "n", "v" } },
-  },
-  -- OR
-  event = { "BufReadPre", "BufNewFile" },
-  after = function()
-    require("plugin").setup({
-      -- Configuration here
-    })
-  end,
-}
-```
-
-### Step 2.5: Discovering Plugin Triggers
-
-When adding a lazy-loaded plugin, you need to know what triggers to use (`cmd`, `ft`, `keys`, or `event`). Here's how to find them:
-
-#### Finding Commands (`cmd`)
-
-For plugins that load on commands (e.g., `:LazyGit`, `:Yazi`):
-
-1. **Check the plugin's README/documentation**:
-   - Look for a "Commands" or "Usage" section
-   - Example: [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim) lists `:LazyGit`, `:LazyGitLog`
-
-2. **Check the plugin's help documentation**:
-
-   ```vim
-   :help plugin-name
-   :help plugin-name-commands
-   ```
-
-3. **Browse the plugin's source code**:
-   - Look in `plugin/*.vim` or `plugin/*.lua` files
-   - Search for `vim.api.nvim_create_user_command` (Lua) or `command!` (Vimscript)
-   - Example: In `aerial.nvim/plugin/aerial.lua`, you'll find `AerialToggle`, `AerialOpen`, etc.
-
-4. **Load the plugin temporarily and list commands**:
-
-   ```vim
-   :packadd plugin-name
-   :command
-   ```
-   Then search for commands related to the plugin (usually capitalized with the plugin name)
-
-5. **Check GitHub Issues/Discussions**:
-   - Other users often ask about available commands
-   - The plugin author may have documented them in issue responses
-
-#### Finding Filetypes (`ft`)
-
-For plugins that load on specific filetypes:
-
-1. **Check the plugin's documentation** for supported file types
-2. **Identify the filetype** you want to trigger on:
-   ```vim
-   :set filetype?
-   ```
-   While editing the file type in question
-
-3. **Common filetypes**:
-   - `markdown`, `quarto`, `python`, `lua`, `r`, `csv`, `json`, `yaml`
-
-#### Finding Keys (`keys`)
-
-For plugins that should load on specific key mappings:
-
-1. **Check the plugin's documentation** for default keybindings
-2. **Decide which keys should trigger loading**:
-   - If you want the plugin available when you press `<leader>sf`, add that to `keys`
-3. **Specify the mode**:
-   ```lua
-   keys = {
-     { "<leader>sf", mode = { "n", "x", "o" } },  -- normal, visual, operator-pending
-   }
-   ```
-
-#### Finding Events (`event`)
-
-For plugins that should load on Neovim events (autocmd triggers):
-
-**When to use events:**
-
-- Plugins that enhance editing but aren't needed immediately at startup
-- Plugins that monitor file changes, cursor movement, or mode changes
-- Plugins that provide functionality after files are loaded (e.g., git integration)
-
-**How to discover which events to use:**
-
-1. **Check the plugin's documentation**:
-
-   - Look for "lazy-loading" or "performance" sections
-   - Some plugins explicitly recommend events for lazy-loading
-   - Example: Many git plugins recommend `BufReadPre` or `BufNewFile`
-
-2. **Check the plugin's autocommands**:
-
-   - Look in `plugin/*.lua` or `plugin/*.vim` for `vim.api.nvim_create_autocmd` or `autocmd`
-   - The events they use internally are good candidates for lazy-loading triggers
-   - Example: If a plugin sets up autocommands on `BufWritePost`, consider loading it on `BufReadPre`
-
-3. **Examine similar plugin configurations**:
-
-   - Check lazy.nvim or other dotfiles repositories
-   - See what events others use for similar plugins
-   - Example: Git plugins typically use `{ "BufReadPre", "BufNewFile" }`
-
-4. **Test and observe**:
-
-   - Load the plugin on a broad event (e.g., `BufReadPre`)
-   - Check `:messages` to see when it actually activates
-   - Refine to more specific events if needed
-
-**Common event patterns:**
-
-| Event(s)                     | When to Use                                                  | Example Plugins                 |
-| ---------------------------- | ------------------------------------------------------------ | ------------------------------- |
-| `BufReadPre`, `BufNewFile`   | File-related plugins that should load when opening any file  | gitsigns.nvim, file watchers    |
-| `BufReadPost`                | Plugins that need the buffer content to be loaded            | Syntax/indent plugins           |
-| `InsertEnter`                | Completion or snippet plugins (if not needed immediately)    | Alternative completion sources  |
-| `CmdlineEnter`               | Command-line enhancement plugins                             | Command-line completion helpers |
-| `VeryLazy`                   | Plugins that can wait until after startup is complete        | Non-essential UI enhancements   |
-| `BufWritePre`, `BufWritePost`| Auto-formatting, linting, or save hooks                      | Formatters (if not using conform)|
-| `VimEnter`                   | Plugins needed after Neovim fully initializes                | Dashboard plugins (use commands)|
-| `FileType <type>`            | Same as `ft`, but more explicit                              | Use `ft` parameter instead      |
-
-**View all available events:**
-
-```vim
-:help autocmd-events
-```
-
-**Example from this config:**
-
-In `lua/plugins/editor.lua`, gitsigns uses events:
-
-```lua
-{
-  "gitsigns.nvim",
-  event = { "BufReadPre", "BufNewFile" },
-  after = function()
-    require("gitsigns").setup()
-  end,
-}
-```
-
-This loads gitsigns when you open any file (before reading or when creating new), which is ideal because:
-
-- It doesn't slow down startup (only loads when you open a file)
-- It's available immediately when you need git information
-- `BufReadPre` triggers before the buffer is displayed, so git signs appear instantly
-
-**Tips:**
-
-- Use multiple events with `event = { "Event1", "Event2" }` for flexibility
-- Earlier events (like `BufReadPre`) are better for visual plugins to avoid flicker
-- Later events (like `BufReadPost`) are fine for background processing
-- Avoid `VimEnter` for lazy-loading (defeats the purpose)
-- When in doubt, start with `BufReadPre` for file-related plugins
-
-#### Example: Discovering lazygit.nvim Commands
-
-1. Visit [https://github.com/kdheepak/lazygit.nvim](https://github.com/kdheepak/lazygit.nvim)
-2. Read the README - it lists:
-   - `:LazyGit` - Open lazygit
-   - `:LazyGitLog` - Open git log
-
-3. Add to `lua/plugins/commands.lua`:
-   ```lua
-   {
-     "lazygit.nvim",
-     cmd = { "LazyGit", "LazyGitLog" },
-   }
-   ```
+Place it in the appropriate section based on functionality:
+- Completion & snippets
+- Colorschemes & theming
+- Code formatting
+- Language servers (LSP)
+- Editor enhancements
+- Syntax & parsing
+- UI & navigation
+- References & citations
 
 ### Step 3: Add Keybindings (if needed)
 
 Add keybindings to **`lua/core/keymaps.lua`**:
 
 ```lua
--- For eager-loaded plugins
-map("n", "<leader>key", "<Cmd>PluginCommand<Cr>", { desc = "Description" })
-
--- For lazy-loaded plugins (triggers will load the plugin)
+-- Using the map() helper function
 map("n", "<leader>key", "<Cmd>PluginCommand<Cr>", { desc = "Description" })
 ```
 
 ### Step 4: Install the Plugin
 
+Restart Neovim. Plugins are automatically installed on first run.
+
+To manually trigger installation:
+
 ```vim
-:lua vim.pack.add()
+:PackSync
 ```
 
-Restart Neovim to load the configuration.
+### Example: Adding a New LSP Server
 
-### Example: Adding a New Plugin
+Let's say you want to add support for TypeScript:
 
-Let's say you want to add `neovim/nvim-lspconfig`:
-
-1. **Declare** in `lua/plugins-paq.lua`:
+1. **Configure LSP** in `lua/plugins-config.lua`:
    ```lua
-   "neovim/nvim-lspconfig", -- Eager-load (needed immediately)
+   ---| TypeScript Development ----------------------------------
+   vim.lsp.config.ts_ls = {
+     capabilities = capabilities,
+     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+   }
+   ```
+
+2. **Auto-enable by filetype** (update the FileType autocmd):
+   ```lua
+   -- Add to the filetype list in plugins-config.lua
+   "typescript",
+   "typescriptreact",
+   "javascript",
+   "javascriptreact",
+
+   -- Add to the server_map
+   typescript = "ts_ls",
+   typescriptreact = "ts_ls",
+   javascript = "ts_ls",
+   javascriptreact = "ts_ls",
+   ```
+
+### Example: Adding a New Plugin with Keybindings
+
+Let's say you want to add a test runner plugin:
+
+1. **Declare** in `lua/plugins-pack.lua`:
+   ```lua
+   { src = "https://github.com/author/test-runner.nvim" },
    ```
 
 2. **Configure** in `lua/plugins-config.lua`:
    ```lua
-   ---| LSP Config ----------------------------------
-   require("lspconfig").rust_analyzer.setup({
-     capabilities = capabilities, -- From blink.cmp
+   ---| Test Runner ----------------------------------
+   require("test-runner").setup({
+     adapters = { "jest", "pytest" },
    })
    ```
 
-3. **No keybindings needed** (LSP uses built-in mappings)
-
-4. **Install**: `:PaqInstall`
-
-### Example: Adding a Lazy-loaded Plugin
-
-Let's say you want to add a PDF viewer that loads on `.pdf` files:
-
-1. **Declare** in `lua/plugins-paq.lua`:
+3. **Add keybindings** in `lua/core/keymaps.lua`:
    ```lua
-   { "author/pdf-viewer.nvim", opt = true }, -- Lazy-load
+   map("n", "<leader>tt", "<Cmd>TestRun<Cr>", { desc = "Run nearest test" })
+   map("n", "<leader>tf", "<Cmd>TestFile<Cr>", { desc = "Run test file" })
    ```
 
-2. **Configure** in `lua/plugins/filetype.lua`:
-   ```lua
-   {
-     "pdf-viewer.nvim",
-     ft = "pdf",
-     after = function()
-       require("pdf-viewer").setup({
-         zoom = 1.5,
-       })
-     end,
-   }
-   ```
-
-3. **Add keybinding** in `lua/core/keymaps.lua`:
-   ```lua
-   map("n", "<leader>pz", "<Cmd>PdfZoom<Cr>", { desc = "PDF Zoom" })
-   ```
-
-4. **Install**: `:PaqInstall`
+4. **Restart Neovim** to install the plugin automatically.
 
 ## Customization
 
 ### Themes
 
-Current theme is set in `lua/theme-config.lua` (Nix-managed). Available themes:
+Current theme is set in `lua/theme-config.lua` (Nix-managed symlink). Available themes:
 - Gruvbox (default)
 - Vague
 - OneDark
@@ -525,59 +349,88 @@ Current theme is set in `lua/theme-config.lua` (Nix-managed). Available themes:
 - Arthur
 - Autumn
 - Black Metal
+- Catppuccin
+- Tokyo Night
+- VS Code
+- Ayu
+
+Statusline highlights automatically adapt to active colorscheme via `lua/statusline-highlights.lua`.
 
 ### Language Servers
 
-LSP configurations are in `lua/plugins-config.lua`. Modify as needed for your development environment. LSP capabilities are defined early in the file and used by all language server configs.
+LSP configurations are in `lua/plugins-config.lua`. Currently supported:
+- **Bash**: bash-language-server
+- **Go**: gopls, golangci-lint-langserver
+- **JSON**: vscode-json-language-server
+- **Lua**: lua-language-server
+- **Markdown**: marksman
+- **Nix**: nixd (with NixOS/Darwin/Home Manager options)
+- **Python**: pyright
+- **R**: R Language Server
+- **Typst**: tinymist
+- **YAML**: yaml-language-server (with Quarto schema validation)
+- **Copilot**: copilot-language-server
+
+Modify as needed for your development environment. LSP capabilities are defined early in the file and used by all language server configs.
 
 ### Document Settings
 
-Quarto and R integration settings can be found in `lua/plugins/filetype.lua`. Obsidian workspace paths may need adjustment for your setup in the same file.
+Quarto and R integration settings can be found in `lua/plugins-config.lua`. Obsidian workspace paths may need adjustment for your setup (currently `~/Obsidian/Notes/` and `~/Obsidian/Personal/`).
 
 ### Core Settings
 
-- **Options**: `lua/core/options.lua`
-- **Keymaps**: `lua/core/keymaps.lua`
-- **Autocommands**: `lua/core/autocommands.lua`
-- **Helper Functions**: `lua/core/functions.lua`
+- **Options**: `lua/core/options.lua` - Vim options and diagnostics
+- **Keymaps**: `lua/core/keymaps.lua` - All key mappings
+- **Autocommands**: `lua/core/autocommands.lua` - Autocommands and user commands
+- **Helper Functions**: `lua/core/functions.lua` - Sessions, git caching, plugin management
 
 ## Troubleshooting
 
 ### Plugin Issues
 
-- Run `:PaqClean` then `:PaqInstall` to refresh plugins
+- Run `:PackClean` then `:PackSync` to refresh plugins
 - Check `:checkhealth` for system dependencies
-- Ensure lazy-loaded plugins are in `~/.local/share/nvim/site/pack/paqs/opt/`
-- Ensure eager-loaded plugins are in `~/.local/share/nvim/site/pack/paqs/start/`
-
-### Lazy-loading Issues
-
-- Check loaded plugins: `:lua print(vim.inspect(require("lz.n").loaded))`
-- Verify plugin specs: `:lua print(vim.inspect(require("lz.n").specs))`
-- Check for errors: `:messages`
+- Ensure plugins are in `~/.local/share/nvim/site/pack/core/start/`
+- View plugin status: `:PackStatus`
+- Check for available updates: `:PackCheck`
 
 ### LSP Issues
 
 - Ensure language servers are installed system-wide
-- Check `:LspInfo` for active language servers
+- Check LSP configuration: `:checkhealth vim.lsp`
 - Use `<leader>tr` to toggle R language server
+- Verify filetype association in plugins-config.lua FileType autocmd
 
 ### Performance
 
 - Image rendering can be toggled with `<leader>ti`
 - Check startup time: `nvim --startuptime startup.log`
-- Most plugins are lazy-loaded for optimal performance
-- Disable unused plugins in `lua/plugins-paq.lua`
+- All plugins are eager-loaded for immediate availability
+- Disable unused plugins in `lua/plugins-pack.lua`
+
+### Session Management
+
+- Sessions auto-save on exit to `~/.local/state/nvim/sessions/last.vim`
+- Manual save: `<leader>ps`
+- Load last session: `<leader>pl`
+- Select session: `<leader>pS`
+
+### Spell Language
+
+- Check current spell language: `:set spelllang?`
+- Set project spell language: `<leader>tl` (creates `.nvim_spell_lang` file)
+- Toggle spell: `<leader>ts`
 
 ## Design Philosophy
 
 This configuration emphasizes:
 
 1. **Native First**: Use built-in Vim/Neovim functionality when possible (`:bnext/:bprevious` instead of buffer tabs)
-2. **Plugin Efficiency**: Avoid duplicate functionality (Snacks.nvim for both terminal and picker)
-3. **Lazy Loading**: Load plugins only when needed to optimize startup time
+2. **Plugin Efficiency**: Avoid duplicate functionality (Snacks.nvim for picker, GitHub integration)
+3. **Neovim 0.12+**: Leverage modern Neovim features (vim.lsp, vim.system, native package manager)
 4. **Minimal UI**: Clean interface without startup screens or buffer tabs
 5. **Productivity Focus**: Balance powerful features with simplicity and performance
+6. **Project-Aware**: Spell language per project, auto-saved sessions, git branch caching
 
 ## License
 
