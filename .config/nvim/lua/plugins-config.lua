@@ -595,7 +595,7 @@ vim.api.nvim_create_autocmd("FileType", {
 ---==========================================================
 
 ---| Mini Modules ----------------------------------
-local mini_modules = { "icons", "pairs", "surround" }
+local mini_modules = { "icons", "surround" }
 for _, module in ipairs(mini_modules) do
 	require("mini." .. module).setup({})
 end
