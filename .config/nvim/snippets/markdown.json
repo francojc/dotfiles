@@ -64,5 +64,16 @@
       "${0}"
     ],
     "description": "Basic 3-column markdown table"
+  },
+  "HTML figure with caption": {
+    "prefix": "figure",
+    "body": [
+      "<figure>",
+      "  <img src=\"${1:image_url}\" width=\"${2:width}\">",
+      "  <figcaption>${3:Caption text}</figcaption>",
+      "</figure>",
+      "${0}"
+    ],
+    "description": "HTML figure with caption"
   }
 }
