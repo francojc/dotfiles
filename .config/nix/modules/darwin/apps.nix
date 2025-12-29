@@ -71,6 +71,7 @@
       "spotify" # music streaming
       "transcribe"
       "transmission"
+      "vlc" # media player
       "wezterm@nightly" # terminal emulator
       "zen" # browser
       "zoom" # video conferencing
