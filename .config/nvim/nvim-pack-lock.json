@@ -17,7 +17,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "d0c5196",
+      "rev": "18712d9",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "5813e48",
+      "rev": "130beac",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -69,7 +69,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "ade8966",
+      "rev": "8e7d1d0",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -97,7 +97,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "66af69a",
+      "rev": "a682c2c",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -141,7 +141,7 @@
       "src": "https://github.com/folke/tokyonight.nvim"
     },
     "typst-preview.nvim": {
-      "rev": "291972a",
+      "rev": "e123a7a",
       "src": "https://github.com/chomosuke/typst-preview.nvim"
     },
     "vague.nvim": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "7e2f49b",
+      "rev": "e1b6cb3",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
