@@ -75,3 +75,4 @@ conversation.toml
 .config/reddix/config.yaml
 .config/kitty/kitty.conf
 .config/wezterm/wezterm.lua
+.config/nvim/.claude/settings.local.json
