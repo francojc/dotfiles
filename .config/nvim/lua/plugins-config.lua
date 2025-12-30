@@ -893,10 +893,11 @@ require("obsidian").setup({
 		template = "Daily.md",
 		date_format = "%Y-%m-%d",
 		alias_format = "%B %-d, %Y",
+		workdays_only = false,
 	},
 	templates = {
 		folder = "Assets/Templates",
-		date_format = "%Y-%m-%d",
+		date_format = "%B %-d, %Y",
 		time_format = "%H:%M",
 	},
 	new_notes_location = "Inbox",
