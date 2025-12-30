@@ -605,8 +605,8 @@ pcall(function()
 	require("mini.surround").setup({
 		custom_surroundings = {
 			h = {
-				-- Add with:  sa h  (then motion)
-				-- Change:    sc h  (works when cursor inside ==…== if recognized)
+				-- Add:       sa h  (then motion)
+				-- Replace:   sr h  (works when cursor inside ==…== if recognized)
 				-- Delete:    sd h
 				output = function()
 					return { left = "==", right = "==" }

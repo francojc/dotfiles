@@ -29,7 +29,7 @@
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
     },
     "conform.nvim": {
-      "rev": "5420c4b",
+      "rev": "df83eea",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
@@ -73,7 +73,7 @@
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
-      "rev": "ff2e4f1",
+      "rev": "efc85e4",
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "mini.pairs": {
@@ -81,7 +81,7 @@
       "src": "https://github.com/echasnovski/mini.pairs"
     },
     "mini.surround": {
-      "rev": "88c5229",
+      "rev": "cc7b9d0",
       "src": "https://github.com/echasnovski/mini.surround"
     },
     "nightfox.nvim": {
