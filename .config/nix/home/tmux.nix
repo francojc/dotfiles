@@ -101,6 +101,8 @@
       # Session persists after detaching and can be reattached
       bind-key o display-popup -w 80% -h 60% -E "cd ~/Obsidian/Notes/ && exec tmux has-session -t notes 2>/dev/null && tmux attach-session -t notes || tmux new-session -s notes \\; send-keys 'nvim' C-m"
 
+      bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
+
       # kill pane
       bind x kill-pane
 
