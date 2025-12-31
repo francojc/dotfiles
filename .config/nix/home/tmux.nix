@@ -96,11 +96,11 @@
       # Floating session popup (in current path), use detach to close
       bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
-      # Floating session popup
-      # Open notes directory in Neovim
-      # Session persists after detaching and can be reattached
-      bind-key o display-popup -w 80% -h 60% -E "cd ~/Obsidian/Notes/ && exec tmux has-session -t notes 2>/dev/null && tmux attach-session -t notes || tmux new-session -s notes \\; send-keys 'nvim' C-m"
+      # Popups
+      # Obsidian vault popup which opens `~/Obsidian/Notes/Daily/{current_date}.md` in Neovim
+      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/Daily/$(date +'%Y-%m-%d').md"
 
+      # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
 
       # kill pane
