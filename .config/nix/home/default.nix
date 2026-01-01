@@ -38,6 +38,8 @@
     sessionVariables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
+      LANG = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
     };
     stateVersion = "24.05"; # Keep consistent
   };

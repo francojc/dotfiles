@@ -72,6 +72,10 @@
         "com.apple.sound.beep.feedback" = 0;
         "com.apple.swipescrolldirection" = true;
         AppleICUForce24HourTime = true;
+        AppleLocale = "en_US";
+        AppleFirstWeekday = {
+          gregorian = 2;  # 2 = Monday
+        };
         AppleInterfaceStyleSwitchesAutomatically = true;
         AppleKeyboardUIMode = 3;
         ApplePressAndHoldEnabled = false;
@@ -126,6 +130,9 @@
           ShowRemovableMediaOnDesktop = true;
           ShowStatusBar = true;
           _FXSortFoldersFirst = true;
+        };
+        "com.apple.iCal" = {
+          "first day of week" = 2;  # Monday
         };
         "com.apple.ImageCapture" = {
           disableHotPlug = true;
