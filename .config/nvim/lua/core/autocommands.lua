@@ -46,13 +46,13 @@ a.nvim_create_autocmd("FileType", {
 		vim.keymap.set(
 			"n",
 			"]]",
-			"/^#\\+\\s.*$<CR>:nohlsearch<CR>",
+			"/^#\\+\\s.*$<CR>:nohlsearch<CR>zt",
 			{ buffer = true, silent = true, desc = "Next heading" }
 		)
 		vim.keymap.set(
 			"n",
 			"[[",
-			"?^#\\+\\s.*$<CR>:nohlsearch<CR>",
+			"?^#\\+\\s.*$<CR>:nohlsearch<CR>zt",
 			{ buffer = true, silent = true, desc = "Previous heading" }
 		)
 	end,
