@@ -184,7 +184,7 @@ function icloud() {
   local path=""
 
   if [ -z "$target" ]; then
-    path="~/Library/Mobile Documents/com~apple~CloudDocs"
+    path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
   else
     path="$target"
   fi
@@ -205,10 +205,10 @@ function gdrive() {
 
   case "$type" in
     "my"|"")
-      path="~/Google Drive/My Drive"
+      path="$HOME/Google Drive/My Drive"
       ;;
     "shared")
-      path="~/Google Drive/Shared drives"
+      path="$HOME/Google Drive/Shared drives"
       ;;
     *)
       echo "Usage: gdrive [my|shared]"
@@ -244,7 +244,7 @@ obsidian() {
   esac
 
   if [ -d "$path" ]; then
-    cd "$path" && nvim
+    cd "$path" && /opt/homebrew/bin/nvim
   else
     echo "Error: Directory $path does not exist"
     return 1
