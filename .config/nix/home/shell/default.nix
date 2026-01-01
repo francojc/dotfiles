@@ -51,6 +51,7 @@
         export PAGER='bat'
         export USER=$(whoami)
         export VISUAL='nvim'
+        export GCAL='-s 1 --iso-week-number=yes'
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)

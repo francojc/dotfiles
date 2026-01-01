@@ -153,6 +153,10 @@ alias gstp='git stash pop'
 alias v='nvim'                             # Open Neovim
 # alias b='NVIM_APPNAME="nvim-dev" nvim-dev'  # Alternative Neovim instance (commented out)
 
+# Obsidian notes
+alias on='cd ~/Obsidian/Notes && nvim'
+alias op='cd ~/Obsidian/Personal && nvim'
+
 # --- QUARTO ALIASES ---
 # Academic publishing tools for creating and rendering documents
 alias q='quarto'                              # Main Quarto command
@@ -163,6 +167,17 @@ alias qr='quarto render'                      # Render current document
 alias qrh='quarto render --no-clean --to html' # Render as HTML without cleaning
 alias qrp='quarto render --no-clean --to pdf'  # Render as PDF without cleaning
 alias qpub='quarto publish gh-pages'           # Publish to GitHub Pages
+
+# --- CLOUD ALIASES ---
+# iCloud
+alias icloud='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/'
+# Google Drive
+alias gdrive='cd ~/Google\ Drive/My\ Drive/'
+
+# Last command related aliases
+# Reminder: `fc` is a built-in Zsh command to edit the last command in $EDITOR
+alias last='fc -ln -1'  # Print last command
+alias lastrun='fc -e -'  # Re-execute last command
 
 # --- FUNCTIONS ---
 # list directory contents after changing directory
@@ -176,89 +191,6 @@ function zl() {
 function mkcd() {
   mkdir -p "$1" && cd "$1"
 }
-
-# Open iCloud Drive with validation
-# Usage: icloud [path] - navigates to iCloud Drive with error checking
-function icloud() {
-  local target="$1"
-  local path=""
-
-  if [ -z "$target" ]; then
-    path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-  else
-    path="$target"
-  fi
-
-  if [ -d "$path" ]; then
-    cd "$path"
-  else
-    echo "Error: Directory '$path' does not exist"
-    return 1
-  fi
-}
-
-# Open Google Drive with validation
-# Usage: gdrive [my|shared] - navigates to Google Drive folders with error checking
-function gdrive() {
-  local type="$1"
-  local path=""
-
-  case "$type" in
-    "my"|"")
-      path="$HOME/Google Drive/My Drive"
-      ;;
-    "shared")
-      path="$HOME/Google Drive/Shared drives"
-      ;;
-    *)
-      echo "Usage: gdrive [my|shared]"
-      return 1
-      ;;
-  esac
-
-  if [ -d "$path" ]; then
-    cd "$path"
-  else
-    echo "Error: Directory '$path' does not exist"
-    return 1
-  fi
-}
-
-# Obsidian - Consolidated function
-# Usage: obsidian [notes|personal] - opens Obsidian notes or personal vault
-obsidian() {
-  local section="$1"
-  local path=""
-
-  case "$section" in
-    "notes"|"n")
-      path="$HOME/Obsidian/Notes/"
-      ;;
-    "personal"|"p")
-      path="$HOME/Obsidian/Personal/"
-      ;;
-    *)
-      echo "Usage: obsidian [notes|personal]"
-      return 1
-      ;;
-  esac
-
-  if [ -d "$path" ]; then
-    cd "$path" && /opt/homebrew/bin/nvim
-  else
-    echo "Error: Directory $path does not exist"
-    return 1
-  fi
-}
-
-# Individual aliases (preserve for backward compatibility)
-alias on='obsidian notes'
-alias op='obsidian personal'
-
-# Last command related aliases
-# Reminder: `fc` is a built-in Zsh command to edit the last command in $EDITOR
-alias last='fc -ln -1'  # Print last command
-alias lastrun='fc -e -'  # Re-execute last command
 
 # Recall last command output - Simplified
 # Usage: r [PATTERN] [-p] - recalls last command output with optional filtering
