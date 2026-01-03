@@ -1,17 +1,232 @@
 #!/usr/bin/env bash
-# Fetch available GitHub Copilot models and print IDs
+# Fetch available GitHub Copilot models and usage metrics
 
-SCRIPT_NAME="gh-cop-models"; SCRIPT_VERSION="1.0.0"
+SCRIPT_NAME="gh-cop-models"
 . "common"
+SCRIPT_VERSION="1.1.0"
 
 usage(){ cat <<EOF
-Usage: gh-cop-models
+Usage: gh-cop-models [options]
 
-Fetch available Copilot models using GITHUB_COPILOT_API_KEY (as required by endpoint).
+Fetch GitHub Copilot models and usage metrics.
+
+Options:
+  Models:
+    --ids          Show model IDs only (default)
+    --details      Show detailed model information
+    --json         Output raw JSON response
+
+  Metrics (Enterprise/Business only):
+    --metrics      Fetch organization usage metrics
+    -o, --org ORG  Organization name (required with --metrics)
+    --since DATE   Filter from date (ISO 8601: 2024-06-01T00:00:00Z)
+    --until DATE   Filter to date
+    --days N       Show last N days of metrics
+
+  Note: Individual accounts can view usage at https://github.com/settings/billing
+
+  General:
+    -h, --help     Show this help
+    --version      Show version
+    -v             Verbose (repeatable)
+    -q             Quiet
+
+Environment Variables:
+  GITHUB_COPILOT_API_KEY  For models endpoint
+  GITHUB_TOKEN            For metrics (with appropriate scopes)
+
+Examples:
+  gh-cop-models                      # List model IDs (backward compatible)
+  gh-cop-models --details            # Show detailed table
+  gh-cop-models --json               # Raw JSON output
+  gh-cop-models --metrics -o myorg   # Organization metrics
+  gh-cop-models --metrics -o myorg --days 7
+
+Required Scopes for Metrics:
+  manage_billing:copilot, read:org, or read:enterprise
 EOF
 }
 
+fetch_models() {
+  local endpoint="https://api.githubcopilot.com/models"
+
+  [[ -n "${GITHUB_COPILOT_API_KEY:-}" ]] || \
+    die "GITHUB_COPILOT_API_KEY not set"
+
+  local response
+  response=$(run curl -s "$endpoint" \
+    -H "Authorization: Bearer $GITHUB_COPILOT_API_KEY" \
+    -H "Content-Type: application/json" \
+    -H "Copilot-Integration-Id: vscode-chat") || \
+    die "Failed to fetch models"
+
+  echo "$response"
+}
+
+fetch_metrics() {
+  local org="$1"
+  local since="$2"
+  local until="$3"
+  local token="$4"
+
+  local endpoint="https://api.github.com/orgs/${org}/copilot/metrics"
+  local query=""
+
+  [[ -n "$since" ]] && query="${query}since=${since}&"
+  [[ -n "$until" ]] && query="${query}until=${until}&"
+  [[ -n "$query" ]] && endpoint="${endpoint}?${query%&}"
+
+  [[ "$VERBOSE" -ge 1 ]] && log_info "Fetching metrics from: $endpoint"
+
+  local response
+  response=$(run curl -s -w "\n%{http_code}" "$endpoint" \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer $token" \
+    -H "X-GitHub-Api-Version: 2022-11-28")
+
+  local http_code
+  http_code=$(echo "$response" | tail -n1)
+  response=$(echo "$response" | sed '$d')
+
+  case "$http_code" in
+    200)
+      echo "$response"
+      ;;
+    403)
+      die "Insufficient permissions. Requires: manage_billing:copilot, read:org, or read:enterprise"
+      ;;
+    404)
+      die "Organization '$org' not found or no Copilot license"
+      ;;
+    422)
+      log_error "Metrics API disabled at org/enterprise level"
+      echo "" >&2
+      echo "Note: Organization metrics require Copilot Business or Enterprise." >&2
+      echo "Individual users can view usage at: https://github.com/settings/billing" >&2
+      exit 1
+      ;;
+    500)
+      die "GitHub API error (HTTP 500), try again later"
+      ;;
+    *)
+      die "API request failed with HTTP $http_code"
+      ;;
+  esac
+}
+
+format_ids() {
+  echo "$1" | jq -r '.data[].id'
+}
+
+format_details() {
+  printf "%-35s %-20s %-15s %-15s\n" "MODEL ID" "VENDOR" "CATEGORY" "PREVIEW"
+  printf "%-35s %-20s %-15s %-15s\n" "--------" "------" "--------" "-------"
+  echo "$1" | jq -r '.data[] | [
+    .id,
+    (.vendor // "N/A"),
+    (.model_picker_category // "N/A"),
+    (if .preview then "yes" else "no" end)
+  ] | @tsv' | \
+  while IFS=$'\t' read -r id vendor category preview; do
+    printf "%-35s %-20s %-15s %-15s\n" "$id" "$vendor" "$category" "$preview"
+  done
+}
+
+format_json() {
+  echo "$1" | jq '.'
+}
+
+format_metrics() {
+  local response="$1"
+
+  local days
+  days=$(echo "$response" | jq 'length')
+
+  [[ "$days" -eq 0 ]] && die "No metrics data available for the specified period"
+
+  local first_date last_date
+  first_date=$(echo "$response" | jq -r '.[0].date')
+  last_date=$(echo "$response" | jq -r '.[-1].date')
+
+  local total_active total_engaged
+  total_active=$(echo "$response" | jq '[.[] | select(.total_active_users != null) | .total_active_users] | max // 0')
+  total_engaged=$(echo "$response" | jq '[.[] | select(.total_engaged_users != null) | .total_engaged_users] | max // 0')
+
+  local completions_engaged
+  completions_engaged=$(echo "$response" | jq '[.[] | select(.copilot_ide_code_completions.total_engaged_users != null) | .copilot_ide_code_completions.total_engaged_users] | max // 0')
+
+  local chat_engaged
+  chat_engaged=$(echo "$response" | jq '[.[] | select(.copilot_ide_chat.total_engaged_users != null) | .copilot_ide_chat.total_engaged_users] | max // 0')
+
+  local dotcom_chat_engaged
+  dotcom_chat_engaged=$(echo "$response" | jq '[.[] | select(.copilot_dotcom_chat.total_engaged_users != null) | .copilot_dotcom_chat.total_engaged_users] | max // 0')
+
+  echo "Period: $first_date to $last_date ($days days)"
+  echo ""
+  echo "Active Users: $total_active"
+  echo "Engaged Users: $total_engaged"
+  echo ""
+
+  if [[ "$completions_engaged" -gt 0 ]]; then
+    echo "Code Completions:"
+    echo "  Engaged Users: $completions_engaged"
+
+    local top_languages
+    top_languages=$(echo "$response" | jq -r '
+      [.[] | .copilot_ide_code_completions.editors[]?.models[]?.languages[]? | select(.name != null)] |
+      group_by(.name) |
+      map({name: .[0].name, users: map(.total_engaged_users) | max}) |
+      sort_by(.users) | reverse | .[0:5] |
+      .[] | "    - \(.name): \(.users) users"
+    ')
+
+    if [[ -n "$top_languages" ]]; then
+      echo "  Top Languages:"
+      echo "$top_languages"
+    fi
+    echo ""
+  fi
+
+  if [[ "$chat_engaged" -gt 0 ]]; then
+    echo "IDE Chat:"
+    echo "  Engaged Users: $chat_engaged"
+    echo ""
+  fi
+
+  if [[ "$dotcom_chat_engaged" -gt 0 ]]; then
+    echo "GitHub.com Chat:"
+    echo "  Engaged Users: $dotcom_chat_engaged"
+    echo ""
+  fi
+}
+
 main(){
+  local output_mode="ids"
+  local do_fetch_metrics=0
+  local org=""
+  local since=""
+  local until=""
+  local days=""
+
+  # Two-pass parsing: first handle long options
+  local args=()
+  while (($#)); do
+    case "$1" in
+      --json) output_mode="json" ;;
+      --details) output_mode="details" ;;
+      --ids) output_mode="ids" ;;
+      --metrics) do_fetch_metrics=1 ;;
+      --org|-o) shift; org="$1" ;;
+      --since) shift; since="$1" ;;
+      --until) shift; until="$1" ;;
+      --days) shift; days="$1" ;;
+      *) args+=("$1") ;;
+    esac
+    shift || true
+  done
+  set -- "${args[@]}"
+
+  # Standard getopts for common flags
   local show_help=0 show_version=0
   local OPTIND=1 opt
   while getopts ":hvq-:" opt; do
@@ -19,21 +234,57 @@ main(){
       h) show_help=1 ;;
       v) VERBOSE=$((VERBOSE+1)) ;;
       q) QUIET=1 ;;
-      -) case "$OPTARG" in version) show_version=1 ;; *) die "Unknown long option --$OPTARG";; esac ;;
+      -) case "$OPTARG" in
+           version) show_version=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
       \?) die "Unknown option -$OPTARG" ;;
     esac
   done
   shift $((OPTIND-1)) || true
+
   [[ $show_help -eq 1 ]] && { usage; exit 0; }
   [[ $show_version -eq 1 ]] && { print_version; exit 0; }
 
   require curl jq
-  [[ -n "${OPENAI_API_KEY:-}" ]] || die "OPENAI_API_KEY not set"
 
-  run curl -s https://api.githubcopilot.com/models \
-    -H "Authorization: Bearer $GITHUB_COPILOT_API_KEY" \
-    -H "Content-Type: application/json" \
-    -H "Copilot-Integration-Id: vscode-chat" | jq -r '.data[].id'
+  # Metrics mode
+  if [[ $do_fetch_metrics -eq 1 ]]; then
+    [[ -n "$org" ]] || die "--metrics requires -o/--org <organization>"
+
+    local token="${GITHUB_TOKEN:-${GITHUB_COPILOT_API_KEY:-}}"
+    [[ -n "$token" ]] || \
+      die "GITHUB_TOKEN or GITHUB_COPILOT_API_KEY required for metrics"
+
+    # Handle --days convenience
+    if [[ -n "$days" ]]; then
+      if date --version >/dev/null 2>&1; then
+        # GNU date (Linux)
+        since=$(date -d "$days days ago" -Iseconds)
+      else
+        # BSD date (macOS)
+        since=$(date -v-"${days}d" -Iseconds)
+      fi
+      [[ "$VERBOSE" -ge 1 ]] && log_info "Calculated since date: $since"
+    fi
+
+    local response
+    response=$(fetch_metrics "$org" "$since" "$until" "$token") || exit $?
+    format_metrics "$response"
+    exit 0
+  fi
+
+  # Models mode (default)
+  [[ -n "${GITHUB_COPILOT_API_KEY:-}" ]] || die "GITHUB_COPILOT_API_KEY not set"
+
+  local response
+  response=$(fetch_models)
+
+  case "$output_mode" in
+    ids) format_ids "$response" ;;
+    details) format_details "$response" ;;
+    json) format_json "$response" ;;
+  esac
 }
 
 main "$@"
