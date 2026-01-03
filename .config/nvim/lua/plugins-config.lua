@@ -869,14 +869,8 @@ require("obsidian").setup({
 		order = { " ", "x", "/", "-", ">", "~", "!", "?" },
 	},
 	note_id_func = function(id, dir)
-		-- Construct the daily notes directory path using global Obsidian API
-		local daily_notes_dir = Obsidian.dir / Obsidian.opts.daily_notes.folder
-		-- If creating a note in the daily notes directory, use the date as-is
-		if daily_notes_dir == dir then
-			return id
-		end
-		-- For all other notes, use Zettelkasten ID generation
-		return require("obsidian.builtin").zettel_id()
+		-- Always use manual input as-is for all notes
+		return id
 	end,
 	workspaces = {
 		{
@@ -902,7 +896,7 @@ require("obsidian").setup({
 	},
 	new_notes_location = "Inbox",
 	attachments = {
-		img_folder = "Assets/Attachments",
+		folder = "Assets/Attachments",
 	},
 	completion = {
 		nvim_cmp = false,
