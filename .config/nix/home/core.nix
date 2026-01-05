@@ -61,19 +61,19 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    # Python 3.12 provided via llm_with_plugins below
+    python312 # Python 3.12 for uv and general use
     # Note: Python CLI tools managed via UV, not nix
     # shunit2 # Shell testing
     stow # Symlink manager
     uv # Modern Python package and project manager
   ];
 
-  llm_with_plugins = pkgs.python312.withPackages (ps:
-    with ps; [
-      llm
-      llm-openrouter
-      huggingface-hub
-    ]);
+  # llm_with_plugins = pkgs.python312.withPackages (ps:
+  #   with ps; [
+  #     llm
+  #     llm-openrouter
+  #     huggingface-hub
+  #   ]);
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
@@ -95,7 +95,13 @@
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
-    llm_with_plugins # llm CLI with OpenRouter plugin + huggingface-hub (see above)
+    # llm not building 1/6/26
+    # (python314Packages.llm.withPlugins
+    #   {
+    #     llm-github-copilot = true;
+    #     llm-ollama = true;
+    #     llm-openrouter = true;
+    #   })
     ncdu # Disk usage analyzer
     pass # Password manager
     repgrep # ripgrep across files
