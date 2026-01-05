@@ -17,11 +17,11 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "10c164b",
+      "rev": "6a4914c",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
-      "rev": "ce8d176",
+      "rev": "6efc53e",
       "src": "https://github.com/catppuccin/nvim"
     },
     "cmp-pandoc-references": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/github/copilot.vim"
     },
     "csvview.nvim": {
-      "rev": "1f40995",
+      "rev": "da4106d",
       "src": "https://github.com/hat0uma/csvview.nvim"
     },
     "friendly-snippets": {
@@ -97,7 +97,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "0962f9e",
+      "rev": "6455e1a",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -121,7 +121,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "07d088b",
+      "rev": "da6a7b2",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "aaf3d74",
+      "rev": "e039478",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
