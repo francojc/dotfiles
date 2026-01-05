@@ -51,7 +51,6 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "calibre" # eBook management
-      "camo-studio" # webcam software
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
