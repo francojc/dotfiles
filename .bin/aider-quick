@@ -1,0 +1,213 @@
+#!/bin/bash
+
+# aider-quick: Simple non-interactive CLI wrapper for aider
+# Usage: aider-quick [OPTIONS] <prompt>
+
+set -euo pipefail
+
+# Configuration
+DEFAULT_MODEL="openai/gpt-4o"
+HISTORY_FILE="/tmp/aider-quick-history.txt"
+DRY_RUN=false
+READ_STDIN=false
+READ_FILE=""
+MODEL="$DEFAULT_MODEL"
+VERBOSE=false
+CONTINUE=false
+SHOW_HISTORY=false
+CLEAR_HISTORY=false
+
+# Check for required environment variables
+if [[ -z "${GITHUB_COPILOT_API_KEY:-}" ]]; then
+  echo "Error: GITHUB_COPILOT_API_KEY environment variable not set" >&2
+  exit 1
+fi
+if [[ -z "${GITHUB_COPILOT_BASE_URL:-}" ]]; then
+  echo "Error: GITHUB_COPILOT_BASE_URL environment variable not set" >&2
+  exit 1
+fi
+
+# Help text
+show_help() {
+  cat << 'EOF'
+aider-quick: Non-interactive CLI wrapper for aider
+
+Usage:
+  aider-quick [OPTIONS] <prompt>
+
+Options:
+  -h, --help              Show this help message
+  -r, --stdin             Read context from stdin (prompt still passed as argument)
+  -R, --read-file FILE    Read context from FILE
+  -m, --model MODEL       Specify model (default: openai/gpt-4o)
+  -v, --verbose           Show aider metadata (version, model, tokens, cost)
+  --continue              Continue previous conversation (uses history as context)
+  --show-history          Display conversation history
+  --clear-history         Clear conversation history
+  --dry-run               Show the aider command without executing
+
+Examples:
+  aider-quick "What is the capital of France?"
+  aider-quick --continue "Tell me about its population"
+  aider-quick --show-history
+  aider-quick --clear-history
+EOF
+}
+
+# History management functions
+save_to_history() {
+  local question="$1"
+  local answer="$2"
+  {
+    echo "[Q] $question"
+    echo "[A] $answer"
+    echo ""
+  } >> "$HISTORY_FILE"
+}
+
+get_history_context() {
+  if [[ -f "$HISTORY_FILE" ]]; then
+    cat "$HISTORY_FILE"
+  fi
+}
+
+clear_history_file() {
+  if [[ -f "$HISTORY_FILE" ]]; then
+    rm "$HISTORY_FILE"
+    echo "History cleared."
+  else
+    echo "No history to clear."
+  fi
+}
+
+show_history_file() {
+  if [[ -f "$HISTORY_FILE" ]]; then
+    cat "$HISTORY_FILE"
+  else
+    echo "No conversation history yet."
+  fi
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    -r|--stdin)
+      READ_STDIN=true
+      shift
+      ;;
+    -R|--read-file)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -R/--read-file requires a file argument" >&2
+        exit 1
+      fi
+      READ_FILE="$2"
+      shift 2
+      ;;
+    -m|--model)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: -m/--model requires a model argument" >&2
+        exit 1
+      fi
+      MODEL="$2"
+      shift 2
+      ;;
+    -v|--verbose)
+      VERBOSE=true
+      shift
+      ;;
+    --continue)
+      CONTINUE=true
+      shift
+      ;;
+    --show-history)
+      SHOW_HISTORY=true
+      shift
+      ;;
+    --clear-history)
+      CLEAR_HISTORY=true
+      shift
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    -*)
+      echo "Error: Unknown option: $1" >&2
+      show_help >&2
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+# Handle early exit flags
+if [[ "$CLEAR_HISTORY" == true ]]; then
+  clear_history_file
+  exit 0
+fi
+
+if [[ "$SHOW_HISTORY" == true ]]; then
+  show_history_file
+  exit 0
+fi
+
+# Validate we have a prompt for non-history operations
+if [[ $# -eq 0 ]]; then
+  echo "Error: No prompt provided" >&2
+  show_help >&2
+  exit 1
+fi
+
+PROMPT="$1"
+
+# Validate file exists if specified
+if [[ -n "$READ_FILE" ]] && [[ ! -f "$READ_FILE" ]]; then
+  echo "Error: File not found: $READ_FILE" >&2
+  exit 1
+fi
+
+# Build the full prompt with history context if --continue is used
+FULL_PROMPT="$PROMPT"
+if [[ "$CONTINUE" == true ]]; then
+  HISTORY_CONTEXT=$(get_history_context)
+  if [[ -n "$HISTORY_CONTEXT" ]]; then
+    FULL_PROMPT="Based on the following conversation:
+
+$HISTORY_CONTEXT
+New question: $PROMPT"
+  fi
+fi
+
+# Build aider command
+aider_cmd=("aider" "--message" "$FULL_PROMPT" "--model" "$MODEL" "--openai-api-base" "$GITHUB_COPILOT_BASE_URL" "--openai-api-key" "$GITHUB_COPILOT_API_KEY" "--no-stream" "--no-pretty" "--no-git" "--no-gitignore")
+
+# Add read flag if needed
+if [[ "$READ_STDIN" == true ]]; then
+  aider_cmd+=("--read" "/dev/stdin")
+elif [[ -n "$READ_FILE" ]]; then
+  aider_cmd+=("--read" "$READ_FILE")
+fi
+
+# Execute or show dry run
+if [[ "$DRY_RUN" == true ]]; then
+  echo "Command: ${aider_cmd[@]}"
+  exit 0
+fi
+
+# Execute aider and capture response
+if [[ "$VERBOSE" == true ]]; then
+  RESPONSE=$("${aider_cmd[@]}" 2>&1)
+else
+  # Suppress aider's metadata output, only capture the response
+  RESPONSE=$("${aider_cmd[@]}" 2>&1 | grep -v '^Aider\|^Model:\|^Git repo:\|^Repo-map:\|^Tokens:\|^$' | sed '/^$/d')
+fi
+
+# Save to history and output response
+save_to_history "$PROMPT" "$RESPONSE"
+echo "$RESPONSE"
