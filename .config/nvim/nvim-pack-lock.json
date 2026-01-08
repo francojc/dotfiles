@@ -21,7 +21,7 @@
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
-      "rev": "6efc53e",
+      "rev": "beaf41a",
       "src": "https://github.com/catppuccin/nvim"
     },
     "cmp-pandoc-references": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "dfac404",
+      "rev": "72acb69",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -97,7 +97,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "7085387",
+      "rev": "2c1d23c",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -121,7 +121,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "da6a7b2",
+      "rev": "73a6ebc",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "b5d1bfe",
+      "rev": "ecc18c6",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
