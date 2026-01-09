@@ -78,3 +78,4 @@ conversation.toml
 .config/nvim/.claude/settings.local.json
 .claude/telemetry
 .config/litellm/github_copilot
+.claude/cache
