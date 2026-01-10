@@ -33,7 +33,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
-      "rev": "206011a",
+      "rev": "a12fd56",
       "src": "https://github.com/github/copilot.vim"
     },
     "csvview.nvim": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "5cdd276",
+      "rev": "42d6aed",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -97,7 +97,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "2c1d23c",
+      "rev": "f6b241f",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "6eeeab6",
+      "rev": "4a8bd32",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
