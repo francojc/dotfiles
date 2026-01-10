@@ -808,7 +808,21 @@ require("aerial").setup({})
 ---| File Management ----------------------------------
 
 -- Yazi file manager
-require("yazi").setup({})
+require("yazi").setup({
+	floating_window_scaling_factor = 0.95,
+})
+
+-- Issue workaround for `open_for_directories=true`
+-- mark netrw as loaded so it's not loaded at all.
+-- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+vim.g.loaded_netrwPlugin = 1
+vim.api.nvim_create_autocmd("UIEnter", {
+	callback = function()
+		require("yazi").setup({
+			open_for_directories = true,
+		})
+	end,
+})
 
 -- CSV viewer
 require("csvview").setup({})

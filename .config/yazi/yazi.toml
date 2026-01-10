@@ -22,7 +22,7 @@ run  = "plugin jump-to-char"
 desc = "Jump to char"
 
 [preview]
-wrap            = "no"
+wrap            = "yes"
 tab_size        = 2
 max_width       = 960
 max_height      = 900
