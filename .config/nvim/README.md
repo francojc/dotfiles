@@ -2,6 +2,7 @@
 
 A streamlined, modular Neovim configuration built on Neovim 0.12+ native functionality. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
 
+
 ## Features
 
 ### Document Editing

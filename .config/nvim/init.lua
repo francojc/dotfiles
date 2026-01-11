@@ -5,8 +5,8 @@
 ---| Llama.vim ----------------------------------
 -- AI-powered code completion using local llama.cpp server
 vim.g.llama_config = {
-	endpoint = "http://127.0.0.1:8012/infill",
-	api_key = "",
+	endpoint = "http://100.101.38.4:8080/infill",
+	api_key = "de7df50cff8b8ed12426b5d2af443c6644a356f7359ca6ba5d221b23b7339ec1",
 	model = "",
 	n_prefix = 256,
 	n_suffix = 64,
@@ -30,7 +30,7 @@ vim.g.llama_config = {
 }
 
 -- Llama.vim highlights
-vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#393B42", ctermfg = 59, default = true }) -- Custom color
+vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#918374", ctermfg = 59, default = true }) -- Custom color
 vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#77ff2f", ctermfg = 119, default = true })
 
 ---| Plugin Management (vim.pack) ---------------------------------
