@@ -69,7 +69,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "85952a6",
+      "rev": "699a088",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "94514e2",
+      "rev": "5021866",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

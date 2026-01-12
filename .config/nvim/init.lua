@@ -13,25 +13,25 @@ vim.g.llama_config = {
 	n_predict = 128,
 	stop_strings = {},
 	t_max_prompt_ms = 500,
-	t_max_predict_ms = 500,
-	show_info = 0,
+	t_max_predict_ms = 1000,
+	show_info = 2, -- inline info
 	auto_fim = true,
-	max_line_suffix = 8,
+	max_line_suffix = 8, -- num chars after stop suggesting fills
 	max_cache_keys = 250,
 	ring_n_chunks = 16,
 	ring_chunk_size = 64,
 	ring_scope = 1024,
 	ring_update_ms = 1000,
-	keymap_trigger = "<C-N>",
-	keymap_accept_full = "<Tab>",
-	keymap_accept_line = "<C-F>",
-	keymap_accept_word = "<C-D>",
+	keymap_fim_trigger = "<C-N>",
+	keymap_fim_accept_full = "<Tab>",
+	keymap_fim_accept_line = "<C-F>",
+	keymap_fim_accept_word = "<C-D>",
 	enable_at_startup = false,
 }
 
 -- Llama.vim highlights
 vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#918374", ctermfg = 59, default = true }) -- Custom color
-vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#77ff2f", ctermfg = 119, default = true })
+vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#B9BB25", ctermfg = 119, default = true })
 
 ---| Plugin Management (vim.pack) ---------------------------------
 -- Install and declare plugins using Neovim 0.12+ native vim.pack
