@@ -29,7 +29,7 @@
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
     },
     "conform.nvim": {
-      "rev": "8314f4c",
+      "rev": "238f542",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
@@ -69,7 +69,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "8e7d1d0",
+      "rev": "85952a6",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -121,7 +121,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "73a6ebc",
+      "rev": "ae89236",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -173,7 +173,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "4a8bd32",
+      "rev": "94514e2",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
