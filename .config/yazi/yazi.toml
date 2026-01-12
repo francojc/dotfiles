@@ -36,7 +36,7 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 google_drive = [
-  { run = '/Users/francojc/.bin/google-drive-files.sh "$@"', orphan = true, for = "macos" },
+  { run = 'google-drive-files.sh "$@"', orphan = true, for = "macos" },
 ]
 excel = [
   { run = 'open -a "Microsoft Excel" "$@"', orphan = true, for = "macos" },
