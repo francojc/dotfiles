@@ -8,7 +8,7 @@
   useremail = "francojc@wfu.edu";
 
   # Theme selection for this host
-  theme = "tokyonight"; # options: arthur, autumn, gruvbox, onedark, vague, catppuccin, vscode, tokyonight, nightfox
+  theme = "ayu"; # options: arthur, autumn, ayu, gruvbox, onedark, vague, catppuccin, vscode, tokyonight, nightfox
 
   # Host-specific modules
   hostModules = [
@@ -45,8 +45,8 @@
       system.keyboard = {
         userKeyMapping = [
           {
-            HIDKeyboardModifierMappingSrc = 1095216660483;  # Fn key
-            HIDKeyboardModifierMappingDst = 30064771302;     # Right Option
+            HIDKeyboardModifierMappingSrc = 1095216660483; # Fn key
+            HIDKeyboardModifierMappingDst = 30064771302; # Right Option
           }
         ];
       };

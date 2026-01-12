@@ -29,9 +29,9 @@ vim.g.llama_config = {
 	enable_at_startup = true,
 }
 
--- Llama.vim highlights
+-- Llama.vim highlights: modify these as needed
 vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#918374", ctermfg = 59, default = true }) -- Custom color
-vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#B9BB25", ctermfg = 119, default = true })
+vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#B9BB25", ctermfg = 119, default = true }) -- Custom color
 
 ---| Plugin Management (vim.pack) ---------------------------------
 -- Install and declare plugins using Neovim 0.12+ native vim.pack

@@ -2,7 +2,6 @@
 
 A streamlined, modular Neovim configuration built on Neovim 0.12+ native functionality. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
 
-
 ## Features
 
 ### Document Editing
@@ -51,7 +50,6 @@ A streamlined, modular Neovim configuration built on Neovim 0.12+ native functio
 ### Setup
 
 1. Clone, symlink, or `stow` this configuration to your Neovim config directory.
-
 2. Start Neovim - plugins will be installed automatically via vim.pack
 
 The first launch may take a moment as vim.pack downloads plugins in parallel
@@ -257,6 +255,7 @@ require("your-plugin").setup({
 ```
 
 Place it in the appropriate section based on functionality:
+
 - Completion & snippets
 - Colorschemes & theming
 - Code formatting
@@ -343,6 +342,7 @@ Let's say you want to add a test runner plugin:
 ### Themes
 
 Current theme is set in `lua/theme-config.lua` (Nix-managed symlink). Available themes:
+
 - Gruvbox (default)
 - Vague
 - OneDark
@@ -360,6 +360,7 @@ Statusline highlights automatically adapt to active colorscheme via `lua/statusl
 ### Language Servers
 
 LSP configurations are in `lua/plugins-config.lua`. Currently supported:
+
 - **Bash**: bash-language-server
 - **Go**: gopls, golangci-lint-langserver
 - **JSON**: vscode-json-language-server
