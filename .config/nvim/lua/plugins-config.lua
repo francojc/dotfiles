@@ -446,6 +446,72 @@ vim.lsp.config.copilot = {
 	filetypes = { "*" }, -- enable for all filetypes
 }
 
+---| CopilotChat.nvim ----------------------------------
+require("CopilotChat").setup({
+	model = "gpt-4.1",
+	temperature = 0.1,
+	headers = {
+		user = " ",
+		assistant = " ",
+		tool = " ",
+	},
+	window = {
+		layout = "vertical",
+		width = 0.5,
+		border = "rounded",
+		title = "Copilot",
+	},
+	auto_insert_mode = true,
+	mappings = {
+		complete = {
+			detail = "Show help with the diff",
+			insert = "<Tab>",
+		},
+		close = {
+			normal = "q",
+			insert = "<C-c>",
+		},
+		reset = {
+			normal = "<C-l>",
+			insert = "<C-l>",
+		},
+		submit = {
+			normal = "<CR>",
+			insert = "<C-s>",
+		},
+	},
+	prompts = {
+		Explain = {
+			mapping = "<leader>ae",
+			description = "AI Explain",
+		},
+		Review = {
+			mapping = "<leader>ar",
+			description = "AI Review",
+		},
+		Fix = {
+			mapping = "<leader>af",
+			description = "AI Fix",
+		},
+		Optimize = {
+			mapping = "<leader>ao",
+			description = "AI Optimize",
+		},
+		Docs = {
+			mapping = "<leader>ad",
+			description = "AI Docs",
+		},
+		Tests = {
+			mapping = "<leader>at",
+			description = "AI Tests",
+		},
+		Commit = {
+			mapping = "<leader>ac",
+			description = "AI Commit Message",
+		},
+	},
+})
+
 ---| R & Data Science ----------------------------------
 
 -- R Language Server

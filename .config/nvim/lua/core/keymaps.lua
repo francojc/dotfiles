@@ -92,6 +92,15 @@ map(
 map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (current line)" })
 map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
 
+-- AI Assistant (CopilotChat) -----------------------------
+map("n", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" })
+map("v", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" })
+map("n", "<leader>ax", "<Cmd>CopilotChatClose<Cr>", { desc = "AI Chat close" })
+map("n", "<leader>aR", "<Cmd>CopilotChatReset<Cr>", { desc = "AI Chat reset" })
+map("n", "<leader>as", "<Cmd>CopilotChatStop<Cr>", { desc = "AI Chat stop" })
+map("n", "<leader>ap", "<Cmd>CopilotChatPrompts<Cr>", { desc = "AI Chat prompts" })
+map("n", "<leader>am", "<Cmd>CopilotChatModels<Cr>", { desc = "AI Chat models" })
+
 -- Diagnostics/Debug -----------------------------
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
 -- Neovim 0.12+: gf in diagnostic float jumps to related locations

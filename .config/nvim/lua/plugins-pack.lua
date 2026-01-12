@@ -31,6 +31,7 @@ local eager_plugins = {
 	{ src = "https://github.com/folke/which-key.nvim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/github/copilot.vim" },
+	{ src = "https://github.com/CopilotC-Nvim/CopilotChat.nvim" },
 	{ src = "https://github.com/hakonharnes/img-clip.nvim" },
 	{ src = "https://github.com/hat0uma/csvview.nvim" },
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
