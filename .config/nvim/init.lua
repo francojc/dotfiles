@@ -26,7 +26,7 @@ vim.g.llama_config = {
 	keymap_fim_accept_full = "<Tab>",
 	keymap_fim_accept_line = "<C-F>",
 	keymap_fim_accept_word = "<C-D>",
-	enable_at_startup = false,
+	enable_at_startup = true,
 }
 
 -- Llama.vim highlights
