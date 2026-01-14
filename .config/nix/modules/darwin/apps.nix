@@ -68,7 +68,7 @@
       "rectangle" # window management
       "signal" # messaging
       "spotify" # music streaming
-      "transcribe"
+      # "transcribe"
       "transmission"
       "vlc" # media player
       "wezterm@nightly" # terminal emulator
