@@ -440,7 +440,7 @@ vim.lsp.config.pyright = {
 }
 
 -- Copilot (copilot-language-server)
-vim.g.copilot_enabled = false -- enable copilot by default
+vim.g.copilot_enabled = true -- enable copilot by default
 vim.lsp.config.copilot = {
 	capabilities = capabilities,
 	filetypes = { "*" }, -- enable for all filetypes
