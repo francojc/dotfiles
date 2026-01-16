@@ -117,7 +117,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "quarto-nvim": {
-      "rev": "0e94915",
+      "rev": "206b36e",
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
     "quicker.nvim": {
@@ -177,7 +177,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "26715d1",
+      "rev": "d99c95a",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
