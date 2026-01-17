@@ -2,8 +2,8 @@
 # Github Copilot: openai completion endpoint
 openai-api-base: https://api.githubcopilot.com
 # Models
-model: openai/gemini-2.5-pro
-editor-model: openai/claude-sonnet-4.5
+model: openai/claude-haiku-4.5
+editor-model: openai/gpt-4o
 weak-model: openai/gpt-4o
 
 # edit-format: whole # options; diff, whole, udiff, diff-fenced
@@ -30,7 +30,7 @@ code-theme: "monokai"
 editor: nvim
 
 # Streaming
-stream: true
+stream: false
 show-model-warnings: false
 
 # Git Settings
