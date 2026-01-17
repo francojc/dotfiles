@@ -59,7 +59,7 @@ alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hos
 # Usage: aider-copilot - uses GitHub Copilot API
 alias aider-copilot='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY"'
 # Usage: aider-zai - uses ZAI API with glm-4.6 model
-alias aider-zai='aider --openai-api-base "$ZAI_BASE_URL" --openai-api-key "$ZAI_API_KEY" --model glm-4.6'
+alias aider-zai='aider --openai-api-base "$ZAI_BASE_URL" --openai-api-key "$ZAI_API_KEY" --model glm-4.7'
 # Usage: aider-commit - specialized for commit message generation
 alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)' # Note: uses the `aider-copilot` command in ~/.bin/ to access the GitHub Copilot api
 
