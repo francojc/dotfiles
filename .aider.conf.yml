@@ -1,6 +1,6 @@
 # Aider Configuration File
 # Github Copilot: openai completion endpoint
-# openai-api-base: https://api.githubcopilot.com
+openai-api-base: https://api.githubcopilot.com
 # Models
 model: openai/claude-haiku-4.5
 editor-model: openai/gpt-4o
