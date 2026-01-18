@@ -50,6 +50,7 @@
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
+      "bettershot" # screenshot tool
       "calibre" # eBook management
       "chatgpt"
       "claude" # Claude Desktop
@@ -68,7 +69,6 @@
       "rectangle" # window management
       "signal" # messaging
       "spotify" # music streaming
-      # "transcribe"
       "transmission"
       "vlc" # media player
       "wezterm@nightly" # terminal emulator
@@ -79,6 +79,7 @@
       # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
+      # "transcribe"
     ];
 
     masApps = {
