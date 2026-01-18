@@ -1,3 +1,14 @@
+# Ollama Service Module
+#
+# NOTE: This module configures environment variables for Ollama but does NOT
+# manage the service itself. The actual service runs from Homebrew via a
+# LaunchAgent plist.
+#
+# For the hybrid setup documentation, see:
+# ../../docs/ollama-hybrid-setup.md
+#
+# IMPORTANT: Changes to this module require manual sync with the LaunchAgent
+# plist. See the documentation for the sync procedure.
 {
   pkgs,
   config,
