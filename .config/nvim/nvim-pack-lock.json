@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "b1b7740",
+      "rev": "820f1dd",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -33,7 +33,7 @@
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
     },
     "conform.nvim": {
-      "rev": "238f542",
+      "rev": "5ac2bb5",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
@@ -85,7 +85,7 @@
       "src": "https://github.com/echasnovski/mini.pairs"
     },
     "mini.surround": {
-      "rev": "cc7b9d0",
+      "rev": "f935854",
       "src": "https://github.com/echasnovski/mini.surround"
     },
     "nightfox.nvim": {
@@ -117,7 +117,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "quarto-nvim": {
-      "rev": "206b36e",
+      "rev": "cc99501",
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
     "quicker.nvim": {
@@ -125,7 +125,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "ae89236",
+      "rev": "c54380d",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -177,7 +177,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "d99c95a",
+      "rev": "8b3e0b3",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
