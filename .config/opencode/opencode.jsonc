@@ -17,6 +17,13 @@
         },
         "gpt-oss:latest": {
           "name": "GPT-OSS Latest",
+        },
+        "ministral-3:latest": {
+          "name": "Ministral 3 Latest",
+        },
+        {
+        "codestral:latest": {
+          "name": "Codestral Latest",
         }
       }
     }
