@@ -1,11 +1,11 @@
 {
   "plugins": {
     "CopilotChat.nvim": {
-      "rev": "21bdecb",
+      "rev": "07dcc18",
       "src": "https://github.com/CopilotC-Nvim/CopilotChat.nvim"
     },
     "aerial.nvim": {
-      "rev": "da0ceef",
+      "rev": "7a6a427",
       "src": "https://github.com/stevearc/aerial.nvim"
     },
     "ayu-vim": {
@@ -33,7 +33,7 @@
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
     },
     "conform.nvim": {
-      "rev": "5ac2bb5",
+      "rev": "c2526f1",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.vim": {
@@ -177,7 +177,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "8b3e0b3",
+      "rev": "5634692",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

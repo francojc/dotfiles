@@ -20,7 +20,7 @@ opt.pummaxwidth = 60 -- Maximum width for popup menu (0.12+)
 -- Window
 opt.splitbelow = true
 opt.splitright = true
-opt.scrolloff = 3
+opt.scrolloff = 1
 opt.sidescrolloff = 5
 opt.wrap = true
 -- Gutter
