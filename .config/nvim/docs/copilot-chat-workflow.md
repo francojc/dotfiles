@@ -59,6 +59,21 @@ Switch between optimized configurations for different work types:
 
 **Example workflow**: Start in Academic mode, switch to Creative for brainstorming, then Precise for final editing.
 
+## Chat Window Controls
+
+When inside a CopilotChat window, these keybindings control the chat interaction:
+
+- `<CR>` (Normal mode) / `<C-s>` (Insert mode) - Submit prompt
+- `<leader>aC` - Clear/reset chat (both modes)
+- `q` (Normal) / `<C-c>` (Insert) - Close chat window
+- `<C-y>` - Accept diff (apply AI's suggested changes)
+- `gy` - Yank diff (copy suggested changes to clipboard)
+- `gd` - Show diff (view changes side-by-side)
+- `gp` - Show system prompt (view current AI instructions)
+- `gs` - Show user selection (view context sent to AI)
+
+**Note**: Tab completion is disabled - use copilot.vim for inline completions in regular buffers.
+
 ## Knowledge Work Prompts
 
 ### Academic Writing
@@ -401,6 +416,18 @@ Verify the preset name is correct. Available: `academic`, `creative`, `precise`,
 2. Check for Lua errors: `:messages`
 3. Verify CopilotChat is loaded: `:CopilotChat`
 
+### Tab key not working for completion
+
+Tab completion is intentionally disabled in CopilotChat. Use copilot.vim for text completions in regular buffers. CopilotChat is for interactive prompting, not inline completions.
+
+### Submit prompt not working
+
+If `<CR>` or `<C-s>` don't submit your prompt:
+
+1. Ensure you're inside the CopilotChat window (not the main buffer)
+2. Try closing and reopening the chat: `<leader>ax` then `<leader>av`
+3. Check for key mapping conflicts: `:verbose map <CR>`
+
 ## Advanced Tips
 
 ### Custom Context in Commands
@@ -442,6 +469,12 @@ Use `:CopilotChatSave session_name` to save a conversation for later reference.
 - `<leader>av` - Chat with selection (most versatile)
 - `<leader>aM` - Switch model preset
 - `<leader>ap` - Browse all prompts
-- `<leader>aR` - Reset chat
+- `<leader>aR` - Reset chat (from anywhere)
+- `<leader>aC` - Clear chat (within chat window)
+
+**Chat Window Controls**:
+- `<CR>` / `<C-s>` - Submit prompt
+- `<C-y>` - Accept diff
+- `q` / `<C-c>` - Close chat
 
 **Remember**: The goal is token efficiency without sacrificing quality. Always think "What's the minimum context the AI needs to help me?"

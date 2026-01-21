@@ -76,6 +76,8 @@ conversation.toml
 .config/kitty/kitty.conf
 .config/wezterm/wezterm.lua
 .config/nvim/.claude/settings.local.json
+
 .claude/telemetry
 .config/litellm/github_copilot
 .claude/cache
+.claude/paste-cache

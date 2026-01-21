@@ -478,20 +478,37 @@ Do not assume or request additional files unless necessary.]],
 	auto_insert_mode = true,
 	mappings = {
 		complete = {
-			detail = "Show help with the diff",
-			insert = "<Tab>",
+			detail = "Use AI to complete",
+			insert = "",  -- DISABLE: copilot.vim handles completions
 		},
 		close = {
 			normal = "q",
 			insert = "<C-c>",
 		},
 		reset = {
-			normal = "<C-l>",
-			insert = "<C-l>",
+			normal = "<leader>aC",  -- Changed from <C-l> to avoid TMUX conflict
+			insert = "<leader>aC",
 		},
-		submit = {
+		submit_prompt = {  -- Changed from "submit" to correct key name
 			normal = "<CR>",
 			insert = "<C-s>",
+		},
+		accept_diff = {
+			normal = "<C-y>",
+			insert = "<C-y>",
+		},
+		yank_diff = {
+			normal = "gy",
+			insert = "",
+		},
+		show_diff = {
+			normal = "gd",
+		},
+		show_system_prompt = {
+			normal = "gp",
+		},
+		show_user_selection = {
+			normal = "gs",
 		},
 	},
 	prompts = {

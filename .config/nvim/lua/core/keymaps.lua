@@ -100,6 +100,7 @@ map("n", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" }
 map("v", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" })
 map("n", "<leader>ax", "<Cmd>CopilotChatClose<Cr>", { desc = "AI Chat close" })
 map("n", "<leader>aR", "<Cmd>CopilotChatReset<Cr>", { desc = "AI Chat reset" })
+
 map("n", "<leader>as", "<Cmd>CopilotChatStop<Cr>", { desc = "AI Chat stop" })
 map("n", "<leader>ap", "<Cmd>CopilotChatPrompts<Cr>", { desc = "AI Chat prompts" })
 map("n", "<leader>am", "<Cmd>CopilotChatModels<Cr>", { desc = "AI Chat models" })
