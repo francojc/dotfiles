@@ -448,12 +448,26 @@ vim.lsp.config.copilot = {
 
 ---| CopilotChat.nvim ----------------------------------
 require("CopilotChat").setup({
-	model = "gpt-4.1",
-	temperature = 0.1,
+	-- Model configuration optimized for knowledge work
+	model = "claude-sonnet-4.5",
+	temperature = 0.4, -- Balanced: structured yet creative for academic writing
+	
+	-- Token efficiency: limit conversation history
+	history = {
+		max_items = 5, -- Keep only last 5 exchanges to minimize token usage
+	},
+	
+	-- System prompt focused on academic work and token awareness
+	system_prompt = [[You are a helpful academic writing and research assistant.
+Be concise and focused on the task at hand. Only use the context explicitly 
+provided via resources (#file, #selection, #buffer, #gitdiff, etc.). 
+Maintain appropriate academic tone while prioritizing clarity.
+Do not assume or request additional files unless necessary.]],
+	
 	headers = {
-		user = " ",
-		assistant = " ",
-		tool = " ",
+		user = " ",
+		assistant = " ",
+		tool = " ",
 	},
 	window = {
 		layout = "vertical",
@@ -481,6 +495,7 @@ require("CopilotChat").setup({
 		},
 	},
 	prompts = {
+		-- Code prompts (existing)
 		Explain = {
 			mapping = "<leader>ae",
 			description = "AI Explain",
@@ -508,6 +523,98 @@ require("CopilotChat").setup({
 		Commit = {
 			mapping = "<leader>ac",
 			description = "AI Commit Message",
+		},
+		
+		-- Academic writing prompts
+		AcademicOutline = {
+			prompt = "#selection Create a detailed outline for this section with main points and sub-points",
+			system_prompt = "You are an academic writing assistant. Create well-structured, hierarchical outlines suitable for research papers and proposals.",
+			mapping = "<leader>aAo",
+			description = "AI Academic outline",
+		},
+		ClarifyAcademic = {
+			prompt = "#selection Improve the clarity of this text while maintaining academic tone. Suggest more precise language.",
+			system_prompt = "You are an academic editor. Focus on clarity, precision, and appropriate scholarly tone. Avoid oversimplification.",
+			mapping = "<leader>aCl",
+			description = "AI Clarify academic text",
+		},
+		ImproveFlow = {
+			prompt = "#selection Suggest improvements to the flow and transitions between ideas in this text",
+			system_prompt = "You are an expert in academic rhetoric and discourse. Focus on logical flow and smooth transitions.",
+			mapping = "<leader>aFl",
+			description = "AI Improve flow",
+		},
+		SectionHeadings = {
+			prompt = "#buffer:active Suggest descriptive section headings for this document based on content",
+			system_prompt = "Analyze the document structure and propose clear, informative section headings that follow academic conventions.",
+			mapping = "<leader>aHd",
+			description = "AI Section headings",
+		},
+		LiteratureReview = {
+			prompt = "#selection Help me synthesize these ideas into a coherent literature review paragraph",
+			system_prompt = "You are an expert at academic synthesis. Create flowing, well-connected prose that integrates multiple sources.",
+			mapping = "<leader>aLr",
+			description = "AI Literature synthesis",
+		},
+		SimplifyForTeaching = {
+			prompt = "#selection Rewrite this in simpler language suitable for undergraduate students, maintaining accuracy",
+			system_prompt = "You are a pedagogy expert. Simplify complex concepts for teaching while preserving academic accuracy.",
+			mapping = "<leader>aSt",
+			description = "AI Simplify for teaching",
+		},
+		ResearchGaps = {
+			prompt = "#selection Identify potential research gaps, weaknesses, or areas that need more support",
+			system_prompt = "You are a research methodology expert. Critically analyze the text for gaps in logic, missing citations, or underdeveloped arguments.",
+			mapping = "<leader>aRg",
+			description = "AI Research gaps",
+		},
+		
+		-- Proposal and planning prompts
+		ProposalStrength = {
+			prompt = "#selection Evaluate the persuasiveness of this proposal text. What makes it strong? What could be stronger?",
+			system_prompt = "You are a grant reviewer. Evaluate proposal text for clarity of objectives, feasibility, impact, and persuasiveness.",
+			mapping = "<leader>aPs",
+			description = "AI Proposal strength",
+		},
+		ObjectivesCheck = {
+			prompt = "#selection Review these objectives. Are they SMART (Specific, Measurable, Achievable, Relevant, Time-bound)?",
+			system_prompt = "You are a project planning expert. Evaluate objectives against SMART criteria and suggest improvements.",
+			mapping = "<leader>aOb",
+			description = "AI Check objectives",
+		},
+		DataAnalysisPlan = {
+			prompt = "#selection Help me develop a data analysis plan based on this research design",
+			system_prompt = "You are a research methods expert. Suggest appropriate analysis approaches aligned with the research questions and data types.",
+			mapping = "<leader>aDa",
+			description = "AI Data analysis plan",
+		},
+		
+		-- Pedagogy prompts
+		PedagogyReview = {
+			prompt = "#selection Review this content for teaching effectiveness, clarity, and engagement. Suggest improvements for student learning.",
+			system_prompt = "You are a pedagogy and instructional design expert. Focus on learning outcomes, student engagement, accessibility, and effective teaching strategies for college-level courses.",
+			mapping = "<leader>aPr",
+			description = "AI Pedagogy review",
+		},
+		SpanishPedagogy = {
+			prompt = "#selection As a Spanish pedagogy expert, review this content for teaching effectiveness and cultural appropriateness",
+			system_prompt = "You are a Spanish pedagogy expert. Focus on language acquisition principles, cultural integration, and effective teaching strategies for college-level Spanish courses.",
+			mapping = "<leader>aSp",
+			description = "AI Spanish pedagogy review",
+		},
+		BilingualCheck = {
+			prompt = "#selection Check this bilingual content for consistency, accuracy, and natural language use in both languages",
+			system_prompt = "You are a bilingual education specialist. Verify translations, check for cultural appropriateness, and ensure natural language use.",
+			mapping = "<leader>aBl",
+			description = "AI Bilingual check",
+		},
+		
+		-- Research methods prompts
+		MethodologyReview = {
+			prompt = "#selection Review this methodology section. Is it rigorous, replicable, and clearly explained?",
+			system_prompt = "You are a research methodology expert. Evaluate for rigor, clarity, replicability, and appropriateness for the research questions.",
+			mapping = "<leader>aMr",
+			description = "AI Methodology review",
 		},
 	},
 })
@@ -823,6 +930,18 @@ require("which-key").setup({
 local wk = require("which-key")
 wk.add({
 	{ "<leader>a", group = "Assistant", icon = "󰚩 " },
+	{ "<leader>aA", group = "Academic", icon = "󰑓 " },
+	{ "<leader>aB", group = "Bilingual", icon = "󰗊 " },
+	{ "<leader>aC", group = "Clarity", icon = "󰦨 " },
+	{ "<leader>aD", group = "Data", icon = "󰮘 " },
+	{ "<leader>aF", group = "Flow", icon = "󰹺 " },
+	{ "<leader>aH", group = "Headings", icon = "󰉫 " },
+	{ "<leader>aL", group = "Literature", icon = "󰂺 " },
+	{ "<leader>aM", group = "Model/Mode", icon = "󰚩 " },
+	{ "<leader>aO", group = "Objectives", icon = "󰯂 " },
+	{ "<leader>aP", group = "Proposal/Pedagogy", icon = "󰠮 " },
+	{ "<leader>aR", group = "Research", icon = "󰔎 " },
+	{ "<leader>aS", group = "Spanish/Simplify", icon = "󰗊 " },
 	{ "<leader>b", group = "Buffer", icon = "󰓩 " },
 	{ "<leader>c", group = "Code", icon = "󰌗" },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = "󰒡" },

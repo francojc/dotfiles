@@ -5,6 +5,9 @@ local g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
+-- Load Copilot helper functions
+require("copilot-helpers")
+
 -- map() function -----
 local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
@@ -100,6 +103,27 @@ map("n", "<leader>aR", "<Cmd>CopilotChatReset<Cr>", { desc = "AI Chat reset" })
 map("n", "<leader>as", "<Cmd>CopilotChatStop<Cr>", { desc = "AI Chat stop" })
 map("n", "<leader>ap", "<Cmd>CopilotChatPrompts<Cr>", { desc = "AI Chat prompts" })
 map("n", "<leader>am", "<Cmd>CopilotChatModels<Cr>", { desc = "AI Chat models" })
+
+-- Context-specific sends (token-efficient)
+map("v", "<leader>av", ":CopilotChat #selection ", { desc = "AI Chat with selection" })
+map("n", "<leader>al", ":CopilotChat #selection ", { desc = "AI Chat with current line" })
+map("n", "<leader>ab", ":CopilotChat #buffer:active ", { desc = "AI Chat with active buffer" })
+map("n", "<leader>ag", ":CopilotChat #gitdiff:staged ", { desc = "AI Chat with git diff" })
+map("n", "<leader>aq", ":CopilotChat #quickfix ", { desc = "AI Chat with quickfix" })
+map("n", "<leader>aw", ":CopilotChat #diagnostics ", { desc = "AI Chat with diagnostics" })
+
+-- Quick prompts with context (visual mode)
+map("v", "<leader>aE", ":CopilotChat #selection Explain this code<CR>", { desc = "AI Explain selection" })
+map("v", "<leader>aF", ":CopilotChat #selection Fix any issues<CR>", { desc = "AI Fix selection" })
+map("v", "<leader>aO", ":CopilotChat #selection Optimize this<CR>", { desc = "AI Optimize selection" })
+
+-- Model preset management
+map("n", "<leader>aM", "<Cmd>lua Copilot_toggle_model_preset()<Cr>", { desc = "AI Model presets" })
+map("n", "<leader>aM1", "<Cmd>lua Copilot_set_model_preset('academic')<Cr>", { desc = "AI Academic mode" })
+map("n", "<leader>aM2", "<Cmd>lua Copilot_set_model_preset('creative')<Cr>", { desc = "AI Creative mode" })
+map("n", "<leader>aM3", "<Cmd>lua Copilot_set_model_preset('precise')<Cr>", { desc = "AI Precise mode" })
+map("n", "<leader>aM4", "<Cmd>lua Copilot_set_model_preset('research')<Cr>", { desc = "AI Research mode" })
+map("n", "<leader>aM5", "<Cmd>lua Copilot_set_model_preset('code')<Cr>", { desc = "AI Code mode" })
 
 -- Diagnostics/Debug -----------------------------
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
