@@ -5,9 +5,9 @@
 ---| Llama.vim ----------------------------------
 -- AI-powered code completion using local llama.cpp server
 vim.g.llama_config = {
-	endpoint = "http://100.101.38.4:8080/infill",
+	endpoint_fim = "http://100.101.38.4:8080/infill",
 	api_key = "de7df50cff8b8ed12426b5d2af443c6644a356f7359ca6ba5d221b23b7339ec1",
-	model = "",
+	model_fim = "",
 	n_prefix = 256,
 	n_suffix = 64,
 	n_predict = 128,
