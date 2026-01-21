@@ -21,9 +21,8 @@
         "ministral-3:latest": {
           "name": "Ministral 3 Latest",
         },
-        {
-        "codestral:latest": {
-          "name": "Codestral Latest",
+        "nemotron-3-nano:30b-cloud": {
+          "name": "Nemotron 3 Nano 30B Cloud",
         }
       }
     }
