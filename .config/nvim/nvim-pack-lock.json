@@ -81,7 +81,7 @@
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "mini.pairs": {
-      "rev": "d5a29b6",
+      "rev": "4089aa6",
       "src": "https://github.com/echasnovski/mini.pairs"
     },
     "mini.surround": {
@@ -109,7 +109,7 @@
       "src": "https://github.com/navarasu/onedark.nvim"
     },
     "otter.nvim": {
-      "rev": "8b48e2f",
+      "rev": "6b75433",
       "src": "https://github.com/jmbuhr/otter.nvim"
     },
     "plenary.nvim": {
@@ -177,7 +177,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "bf40565",
+      "rev": "f75450e",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
