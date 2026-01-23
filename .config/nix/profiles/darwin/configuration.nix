@@ -163,5 +163,5 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  environment.variables.HOMBREW_NO_ANALYTICS = "1"; # Keep brew specific var
+  environment.variables.HOMEBREW_NO_ANALYTICS = "1"; # Keep brew specific var
 }

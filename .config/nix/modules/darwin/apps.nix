@@ -20,10 +20,6 @@
       "FelixKratz/formulae/borders" # jankyborders
       "raine/workmux/workmux" # agentic ai multiplexer
       "llama.cpp" # LLaMA model inference
-      {
-        name = "neovim";
-        args = ["HEAD"]; # pre-release version
-      }
       "ncspot" # spotify TUI client
       "ninja" # build system
       "nmap" # network scanner

@@ -41,6 +41,7 @@
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
         export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
         export PATH="${config.home.homeDirectory}/.cargo/bin:$PATH" # rust cargo
+        export PATH="${config.home.homeDirectory}/.local/share/bob/nvim-bin:$PATH" # bob-managed neovim
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
