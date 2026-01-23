@@ -451,23 +451,23 @@ require("CopilotChat").setup({
 	-- Model configuration optimized for knowledge work
 	model = "claude-sonnet-4.5",
 	temperature = 0.4, -- Balanced: structured yet creative for academic writing
-	
+
 	-- Token efficiency: limit conversation history
 	history = {
 		max_items = 5, -- Keep only last 5 exchanges to minimize token usage
 	},
-	
+
 	-- System prompt focused on academic work and token awareness
 	system_prompt = [[You are a helpful academic writing and research assistant.
-Be concise and focused on the task at hand. Only use the context explicitly 
-provided via resources (#file, #selection, #buffer, #gitdiff, etc.). 
+Be concise and focused on the task at hand. Only use the context explicitly
+provided via resources (#file, #selection, #buffer, #gitdiff, etc.).
 Maintain appropriate academic tone while prioritizing clarity.
 Do not assume or request additional files unless necessary.]],
-	
+
 	headers = {
-		user = " ",
-		assistant = " ",
-		tool = " ",
+		user = " ",
+		assistant = " ",
+		tool = " ",
 	},
 	window = {
 		layout = "vertical",
@@ -479,17 +479,17 @@ Do not assume or request additional files unless necessary.]],
 	mappings = {
 		complete = {
 			detail = "Use AI to complete",
-			insert = "",  -- DISABLE: copilot.vim handles completions
+			insert = "", -- DISABLE: copilot.vim handles completions
 		},
 		close = {
 			normal = "q",
 			insert = "<C-c>",
 		},
 		reset = {
-			normal = "<leader>aC",  -- Changed from <C-l> to avoid TMUX conflict
+			normal = "<leader>aC", -- Changed from <C-l> to avoid TMUX conflict
 			insert = "<leader>aC",
 		},
-		submit_prompt = {  -- Changed from "submit" to correct key name
+		submit_prompt = { -- Changed from "submit" to correct key name
 			normal = "<CR>",
 			insert = "<C-s>",
 		},
@@ -541,7 +541,7 @@ Do not assume or request additional files unless necessary.]],
 			mapping = "<leader>ac",
 			description = "AI Commit Message",
 		},
-		
+
 		-- Academic writing prompts
 		AcademicOutline = {
 			prompt = "#selection Create a detailed outline for this section with main points and sub-points",
@@ -585,7 +585,7 @@ Do not assume or request additional files unless necessary.]],
 			mapping = "<leader>aRg",
 			description = "AI Research gaps",
 		},
-		
+
 		-- Proposal and planning prompts
 		ProposalStrength = {
 			prompt = "#selection Evaluate the persuasiveness of this proposal text. What makes it strong? What could be stronger?",
@@ -605,7 +605,7 @@ Do not assume or request additional files unless necessary.]],
 			mapping = "<leader>aDa",
 			description = "AI Data analysis plan",
 		},
-		
+
 		-- Pedagogy prompts
 		PedagogyReview = {
 			prompt = "#selection Review this content for teaching effectiveness, clarity, and engagement. Suggest improvements for student learning.",
@@ -625,7 +625,7 @@ Do not assume or request additional files unless necessary.]],
 			mapping = "<leader>aBl",
 			description = "AI Bilingual check",
 		},
-		
+
 		-- Research methods prompts
 		MethodologyReview = {
 			prompt = "#selection Review this methodology section. Is it rigorous, replicable, and clearly explained?",
