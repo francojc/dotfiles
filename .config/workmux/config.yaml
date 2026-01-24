@@ -11,3 +11,4 @@ files:
     - .env.example
 
 agent: claude
+nerdfont: true
