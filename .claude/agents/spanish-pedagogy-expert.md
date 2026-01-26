@@ -2,7 +2,7 @@
 name: spanish-pedagogy-expert
 description: Use this agent when designing Spanish language courses, creating lesson plans, developing assessments, implementing backward design methodology, or planning flipped classroom activities. Examples: <example>Context: The user is developing a new Spanish course and needs help structuring the curriculum using backward design principles. user: 'I need to create a Spanish 300-level course on contemporary Latin American culture. Can you help me design the course structure?' assistant: 'I'll use the spanish-pedagogy-expert agent to help you design this course using backward design methodology, starting with learning outcomes and working backward to create assessments and activities.' <commentary>Since the user needs help with Spanish course design, use the spanish-pedagogy-expert agent to apply backward design principles and create a comprehensive course structure.</commentary></example> <example>Context: The user wants to convert traditional Spanish grammar lessons into flipped classroom format. user: 'How can I redesign my subjunctive mood lessons for a flipped classroom approach?' assistant: 'Let me use the spanish-pedagogy-expert agent to help you restructure these grammar lessons for flipped classroom implementation.' <commentary>The user is asking about flipped classroom methodology for Spanish grammar instruction, which requires the spanish-pedagogy-expert agent's specialized knowledge in both Spanish pedagogy and flipped classroom techniques.</commentary></example>
 tools: Task, Bash, Glob, Grep, LS, ExitPlanMode, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, mcp__gemini-mcp-server__generate_image, mcp__zotero__zotero_search_items
-model: sonnet
+model: opus
 color: yellow
 ---
 
