@@ -103,6 +103,9 @@
       # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
 
+      # Floating calendar popup
+      bind-key c display-popup -w 55% -h 30% -T "Calendar" -k "gcal -K .."
+
       # kill pane
       bind x kill-pane
 
