@@ -69,7 +69,8 @@ opt.autoread = true -- auto read files when changed outside of Neovim
 opt.foldmethod = "indent"
 opt.foldlevel = 99 -- start with all folds open
 opt.laststatus = 2 -- show statusline always
--- Statusline (native, leveraging Neovim 0.12+ vim.diagnostic.status())
+
+-- Statusline (native, leveraging Neovim 0.12+)
 vim.o.statusline = table.concat({
 	"%#StatusLineModeNormal#",
 	" %{v:lua.Get_mode_name()} ", -- Mode (full name)
@@ -83,7 +84,7 @@ vim.o.statusline = table.concat({
 	" %t ", -- Filename (tail)
 	"%#StatusLine#",
 	"%=", -- Right align
-	"%{v:lua.vim.diagnostic.status()} ", -- Diagnostic count (0.12+ native)
+	"%{%v:lua.vim.diagnostic.status()%} ", -- Diagnostic status
 	"%#StatusLineSearch#",
 	"%{v:lua.Get_search_count()}", -- Search count
 	"%#StatusLineModeNormal#",

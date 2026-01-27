@@ -10,11 +10,8 @@ function M.setup()
 		return vim.api.nvim_get_hl(0, { name = name })
 	end
 
-	-- Diagnostics - direct links to semantic groups
-	vim.api.nvim_set_hl(0, "StatusLineDiagError", { link = "DiagnosticError" })
-	vim.api.nvim_set_hl(0, "StatusLineDiagWarn", { link = "DiagnosticWarn" })
-	vim.api.nvim_set_hl(0, "StatusLineDiagInfo", { link = "DiagnosticInfo" })
-	vim.api.nvim_set_hl(0, "StatusLineDiagHint", { link = "DiagnosticHint" })
+	-- Get Normal highlight for deriving colors
+	local normal = get_hl("Normal")
 
 	-- Git branch - link to Directory (typically blue/cyan in most themes)
 	vim.api.nvim_set_hl(0, "StatusLineGit", { link = "Directory" })
@@ -26,7 +23,6 @@ function M.setup()
 	vim.api.nvim_set_hl(0, "StatusLineMuted", { link = "Comment" })
 
 	-- Dynamic mode indicators with inverted colors for prominence
-	local normal = get_hl("Normal")
 	local keyword = get_hl("Keyword")
 	local string = get_hl("String")
 	local special = get_hl("Special")
