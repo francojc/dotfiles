@@ -82,3 +82,5 @@ conversation.toml
 .claude/cache
 .claude/paste-cache
 .claude/tasks/
+.config/mole/clean-list.txt
+.config/mole/mole.log

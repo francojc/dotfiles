@@ -20,6 +20,7 @@
       "FelixKratz/formulae/borders" # jankyborders
       "raine/workmux/workmux" # agentic ai multiplexer
       "llama.cpp" # LLaMA model inference
+      "mole" # terminal cleanup app for macOS
       "ncspot" # spotify TUI client
       "ninja" # build system
       "nmap" # network scanner
