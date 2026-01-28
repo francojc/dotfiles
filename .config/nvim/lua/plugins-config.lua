@@ -883,6 +883,9 @@ require("snacks").setup({
 -- Register Snacks picker as the vim.ui.select backend
 vim.ui.select = Snacks.picker.ui_select
 
+--| todo-comments.nvim ----------------------------------
+require("todo-comments").setup({})
+
 ---==========================================================
 ---| SYNTAX & PARSING
 ---==========================================================

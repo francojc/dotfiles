@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "820f1dd",
+      "rev": "b137f63d89d0285ca76eed12e1923220e0aff8c1",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -41,11 +41,11 @@
       "src": "https://github.com/github/copilot.vim"
     },
     "csvview.nvim": {
-      "rev": "da4106d",
+      "rev": "8d068c526ab5ade68226de036d533298cd93a399",
       "src": "https://github.com/hat0uma/csvview.nvim"
     },
     "friendly-snippets": {
-      "rev": "572f566",
+      "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
@@ -73,7 +73,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "85ec507",
+      "rev": "a2eb12c1a8629702117f82ff09eb6b2ce0f2d6a4",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -93,7 +93,7 @@
       "src": "https://github.com/EdenEast/nightfox.nvim"
     },
     "nvim-highlight-colors": {
-      "rev": "e0c4a58",
+      "rev": "e2cb22089cc2358b2b995c09578224f142de6039",
       "src": "https://github.com/brenoprata10/nvim-highlight-colors"
     },
     "nvim-treesitter": {
@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "acd7383",
+      "rev": "15c4fe79e4116c09d112a7846fa8dddec5c1faba",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -129,7 +129,7 @@
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
-      "rev": "4f7ecf5",
+      "rev": "6dbf6ffc9fed889765a0d9d95f404f9274a73b2d",
       "src": "https://github.com/krissen/snacks-bibtex.nvim"
     },
     "snacks.nvim": {
@@ -140,6 +140,10 @@
       "rev": "9a34994",
       "src": "https://github.com/abecodes/tabout.nvim"
     },
+    "todo-comments.nvim": {
+      "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
+      "src": "https://github.com/folke/todo-comments.nvim"
+    },
     "tokyonight.nvim": {
       "rev": "5da1b76",
       "src": "https://github.com/folke/tokyonight.nvim"
@@ -149,7 +153,7 @@
       "src": "https://github.com/chomosuke/typst-preview.nvim"
     },
     "vague.nvim": {
-      "rev": "fcc2835",
+      "rev": "30d2239ecf8adab9bc0d07d42e7a07283879dab6",
       "src": "https://github.com/vague2k/vague.nvim"
     },
     "vim-autumn": {
@@ -165,7 +169,7 @@
       "src": "https://github.com/jpalardy/vim-slime"
     },
     "vim-tmux-navigator": {
-      "rev": "c45243d",
+      "rev": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432",
       "src": "https://github.com/christoomey/vim-tmux-navigator"
     },
     "vscode.nvim": {
@@ -177,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "f75450e",
+      "rev": "9bbe1b18a6ee24d791ae9937e64c8526b80e8ffa",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

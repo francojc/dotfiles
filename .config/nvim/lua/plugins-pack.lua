@@ -28,6 +28,7 @@ local eager_plugins = {
 	{ src = "https://github.com/echasnovski/mini.icons" },
 	{ src = "https://github.com/echasnovski/mini.surround" },
 	{ src = "https://github.com/folke/snacks.nvim" },
+	{ src = "https://github.com/folke/todo-comments.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/github/copilot.vim" },
