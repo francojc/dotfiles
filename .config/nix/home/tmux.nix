@@ -106,6 +106,18 @@
       # Floating calendar popup
       bind-key c display-popup -w 55% -h 30% -T "Calendar" -k "gcal -K .."
 
+      # Jump to last Claude notification pane
+      bind-key N run-shell '\
+        if [ -f ~/.claude/last-notification ]; then \
+          TARGET=$(cat ~/.claude/last-notification); \
+          tmux switch-client -t "$TARGET" 2>/dev/null || \
+          tmux select-window -t "$TARGET" 2>/dev/null || \
+          tmux display-message "Could not find: $TARGET"; \
+        else \
+          tmux display-message "No recent Claude notification"; \
+        fi \
+      '
+
       # kill pane
       bind x kill-pane
 

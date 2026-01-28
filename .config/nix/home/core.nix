@@ -110,6 +110,7 @@
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
+    terminal-notifier # macOS notifications from command line
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool

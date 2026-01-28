@@ -1,0 +1,25 @@
+#!/bin/bash
+# Claude Code notification script with TMUX context capture
+# Saves TMUX coordinates for jump-back functionality via prefix + N
+
+MESSAGE="${1:-Claude Code notification}"
+TITLE="${2:-Claude Code}"
+
+# Capture TMUX context (if running in TMUX)
+if [ -n "$TMUX" ]; then
+  SESSION=$(tmux display-message -p '#S')
+  WINDOW=$(tmux display-message -p '#I')
+  PANE=$(tmux display-message -p '#P')
+  echo "$SESSION:$WINDOW.$PANE" > ~/.claude/last-notification
+fi
+
+# Send notification (clicking activates terminal)
+terminal-notifier \
+  -message "$MESSAGE" \
+  -title "$TITLE" \
+  -sender com.apple.Terminal \
+  -activate com.apple.Terminal \
+  -sound default
+
+# Play sound
+afplay /System/Library/Sounds/Tink.aiff &
