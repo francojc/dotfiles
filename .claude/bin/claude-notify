@@ -3,8 +3,29 @@
 # Finds the TMUX pane by walking the process tree since hooks
 # don't inherit the $TMUX environment variable
 
-MESSAGE="${1:-Claude Code notification}"
-TITLE="${2:-Claude Code}"
+SAVE_PANE=false
+MESSAGE=""
+TITLE="Claude Code"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --save-pane)
+      SAVE_PANE=true
+      shift
+      ;;
+    *)
+      if [ -z "$MESSAGE" ]; then
+        MESSAGE="$1"
+      else
+        TITLE="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+MESSAGE="${MESSAGE:-Claude Code notification}"
 
 # Find TMUX pane by walking process tree
 find_tmux_pane() {
@@ -32,10 +53,12 @@ find_tmux_pane() {
   return 1
 }
 
-# Try to find and save TMUX coordinates
-TMUX_TARGET=$(find_tmux_pane)
-if [ -n "$TMUX_TARGET" ]; then
-  echo "$TMUX_TARGET" > ~/.claude/last-notification
+# Only save pane coordinates if --save-pane flag is set
+if [ "$SAVE_PANE" = true ]; then
+  TMUX_TARGET=$(find_tmux_pane)
+  if [ -n "$TMUX_TARGET" ]; then
+    echo "$TMUX_TARGET" > ~/.claude/last-notification
+  fi
 fi
 
 # Send notification (clicking activates terminal)
