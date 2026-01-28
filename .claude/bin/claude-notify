@@ -1,16 +1,41 @@
 #!/bin/bash
 # Claude Code notification script with TMUX context capture
-# Saves TMUX coordinates for jump-back functionality via prefix + N
+# Finds the TMUX pane by walking the process tree since hooks
+# don't inherit the $TMUX environment variable
 
 MESSAGE="${1:-Claude Code notification}"
 TITLE="${2:-Claude Code}"
 
-# Capture TMUX context (if running in TMUX)
-if [ -n "$TMUX" ]; then
-  SESSION=$(tmux display-message -p '#S')
-  WINDOW=$(tmux display-message -p '#I')
-  PANE=$(tmux display-message -p '#P')
-  echo "$SESSION:$WINDOW.$PANE" > ~/.claude/last-notification
+# Find TMUX pane by walking process tree
+find_tmux_pane() {
+  local pid=$$
+
+  # Get all tmux pane PIDs and their coordinates
+  local pane_info
+  pane_info=$(tmux list-panes -a -F '#{pane_pid} #{session_name}:#{window_index}.#{pane_index}' 2>/dev/null)
+
+  [ -z "$pane_info" ] && return 1
+
+  # Walk up process tree looking for a tmux pane
+  while [ "$pid" -gt 1 ]; do
+    local match
+    match=$(echo "$pane_info" | awk -v pid="$pid" '$1 == pid {print $2}')
+    if [ -n "$match" ]; then
+      echo "$match"
+      return 0
+    fi
+    # Get parent PID
+    pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+    [ -z "$pid" ] && break
+  done
+
+  return 1
+}
+
+# Try to find and save TMUX coordinates
+TMUX_TARGET=$(find_tmux_pane)
+if [ -n "$TMUX_TARGET" ]; then
+  echo "$TMUX_TARGET" > ~/.claude/last-notification
 fi
 
 # Send notification (clicking activates terminal)
