@@ -84,3 +84,4 @@ conversation.toml
 .claude/tasks/
 .config/mole/clean-list.txt
 .config/mole/mole.log
+.claude/last-notification
