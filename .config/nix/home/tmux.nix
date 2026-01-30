@@ -110,8 +110,9 @@
       bind-key N run-shell '\
         if [ -f ~/.claude/last-notification ]; then \
           TARGET=$(cat ~/.claude/last-notification); \
-          tmux switch-client -t "$TARGET" 2>/dev/null || \
-          tmux select-window -t "$TARGET" 2>/dev/null || \
+          tmux switch-client -t "$TARGET" 2>/dev/null; \
+          tmux select-window -t "$TARGET" 2>/dev/null; \
+          tmux select-pane -t "$TARGET" 2>/dev/null || \
           tmux display-message "Could not find: $TARGET"; \
         else \
           tmux display-message "No recent Claude notification"; \

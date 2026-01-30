@@ -73,7 +73,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "a2eb12c1a8629702117f82ff09eb6b2ce0f2d6a4",
+      "rev": "bc7743b9e6dde6ce56a1c9bc41f6b06720430537",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "15c4fe79e4116c09d112a7846fa8dddec5c1faba",
+      "rev": "44060ccca31f1c67e89f08bcc663a7e318667e5d",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -117,7 +117,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "quarto-nvim": {
-      "rev": "cc99501",
+      "rev": "d923bb7cfc2bde41143e1c531c28190f0fade3a2",
       "src": "https://github.com/quarto-dev/quarto-nvim"
     },
     "quicker.nvim": {
@@ -125,7 +125,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "c54380d",
+      "rev": "48934b49a2363b49ae1d698ed4cb30fb79d7efe8",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -181,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "9bbe1b18a6ee24d791ae9937e64c8526b80e8ffa",
+      "rev": "876ce992480202a8bc18718638d54b3c91e3b2f6",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
