@@ -17,6 +17,7 @@
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "acrogenesis/macchanger/macchanger" # MAC address changer
+      "android-platform-tools" # ADB and Fastboot
       "FelixKratz/formulae/borders" # jankyborders
       "raine/workmux/workmux" # agentic ai multiplexer
       "llama.cpp" # LLaMA model inference

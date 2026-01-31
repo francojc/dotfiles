@@ -356,15 +356,16 @@ map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelli
 map("n", "<leader>st", "<Cmd>lua Snacks.picker.todo_comments()<Cr>", { desc = "Search todos" })
 
 -- Toggle ------------------------------------
+map("n", "<leader>tR", "<Cmd>lua Toggle_citation_format()<CR>", { desc = "Toggle citation format (Pandoc/LaTeX)" })
 map("n", "<leader>ta", "<Cmd>AerialToggle<CR>", { desc = "Toggle Aerial" })
 map("n", "<leader>tb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
 map("n", "<leader>tc", "<Cmd>HighlightColors Toggle<CR>", { desc = "Toggle color highlights" })
 map("n", "<leader>td", "<Cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle word diff" })
+map("n", "<leader>tf", "<Cmd>AerialNavToggle<CR>", { desc = "Toggle Aerial (floating)" })
 map("n", "<leader>ti", "<Cmd>lua Toggle_image_rendering()<CR>", { desc = "Toggle image rendering" })
 map("n", "<leader>tl", "<Cmd>SpellLang<Cr>", { desc = "Select spell language" })
 map("n", "<leader>tm", "<Cmd>RenderMarkdown toggle<Cr>", { desc = "Toggle markdown rendering" })
 map("n", "<leader>tr", "<Cmd>lua Toggle_r_language_server()<CR>", { desc = "Toggle R LSP" })
-map("n", "<leader>tR", "<Cmd>lua Toggle_citation_format()<CR>", { desc = "Toggle citation format (Pandoc/LaTeX)" })
 map("n", "<leader>ts", "<Cmd>lua Toggle_spell()<Cr>", { desc = "Toggle spell" })
 map("n", "<leader>tv", "<Cmd>CsvViewToggle<Cr>", { desc = "Toggle CSV view" })
 map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap" })

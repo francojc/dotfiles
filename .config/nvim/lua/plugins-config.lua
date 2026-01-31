@@ -1008,7 +1008,9 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
 ---| Code Navigation ----------------------------------
 
 -- Aerial code outline
-require("aerial").setup({})
+require("aerial").setup({
+	post_jump_cmd = "normal! zt",
+})
 
 ---| File Management ----------------------------------
 
