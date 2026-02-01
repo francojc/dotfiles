@@ -2,6 +2,7 @@
   # Add system packages
   environment.systemPackages = with pkgs; [
     # nix-darwin specific apps on nixpkgs
+    terminal-notifier # macOS notifications from command line
   ];
 
   homebrew = {

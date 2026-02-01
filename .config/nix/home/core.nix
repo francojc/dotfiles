@@ -69,12 +69,14 @@
     uv # Modern Python package and project manager
   ];
 
-  # llm_with_plugins = pkgs.python312.withPackages (ps:
-  #   with ps; [
-  #     llm
-  #     llm-openrouter
-  #     huggingface-hub
-  #   ]);
+  # LLM with plugins (uses python312 to match developmentPackages)
+  llmWithPlugins = pkgs.python312.withPackages (ps:
+    with ps; [
+      llm
+      llm-github-copilot
+      llm-ollama
+      llm-openrouter
+    ]);
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
@@ -96,13 +98,7 @@
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
-    # llm not building 1/6/26
-    # (python314Packages.llm.withPlugins
-    #   {
-    #     llm-github-copilot = true;
-    #     llm-ollama = true;
-    #     llm-openrouter = true;
-    #   })
+    llmWithPlugins # LLM CLI with plugins (github-copilot, ollama, openrouter)
     ncdu # Disk usage analyzer
     pass # Password manager
     repgrep # ripgrep across files
