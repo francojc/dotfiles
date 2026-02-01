@@ -3,7 +3,7 @@
 # Intentionally NOT in home.packages because UV provides:
 # - Faster updates (no waiting for nixpkgs)
 # - Isolated environments per tool
-# - Consistent Python version (nix 3.13)
+# - Consistent Python version (nix 3.12)
 #
 # Current UV tools:
 # - aider-chat    (AI code assistant)
@@ -62,7 +62,7 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    python313 # Python 3.13 for uv and general use
+    python312 # Python 3.12 for uv and general use
     # Note: Python CLI tools managed via UV, not nix
     # shunit2 # Shell testing
     stow # Symlink manager
@@ -73,7 +73,6 @@
   cliUtilities = with pkgs; [
     # _7zz # Archive compression
     # ruby # Programming language
-    # typtea # Terminal-based typing test
     # unp # Archive unpacker
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
@@ -99,7 +98,7 @@
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
-    ttyper # Typing test
+    tt # CLI typing test (my fork: ~/.local/bin/tt)
     which # Command location utility
     xan # data visualization from CSV files
     yazi-unwrapped # Terminal file manager
@@ -125,14 +124,13 @@
     # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     typst # Document preparation system
-    tt # CLI typing test
     vdirsyncer # CalDAV/CardDAV sync
-    yt-dlp # Video downloader
   ];
 
   # YouTube content creation and streaming
   youtubeContentPackages = with pkgs; [
     # audacity # Audio editing and recording
+    yt-dlp # Video downloader
   ];
 
   # Combined package list
