@@ -1,8 +1,8 @@
 # Aider configuration file
 # Commit messages
 
-model: openai/gpt-4o
-weak-model: openai/gpt-4o
+model: openai/claude-haiku-4.5
+weak-model: openai/claude-haiku-4.5
 commit: true
 architect: false
 stream: false

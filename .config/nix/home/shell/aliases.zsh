@@ -25,7 +25,7 @@ claudz() {
 # Usage: claudo [model_name] - defaults to gpt-4o if no model specified
 # Environment: GITHUB_COPILOT_BASE_URL, GITHUB_COPILOT_API_KEY must be set
 claudo() {
-  local model="${1:-gpt-4.1}"
+  local model="${1:-claude-haiku-4.5}"
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
 }
 
