@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "b137f63d89d0285ca76eed12e1923220e0aff8c1",
+      "rev": "fab799d086fd63fa5b389007f63767b23885ebf8",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -73,7 +73,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "llama.vim": {
-      "rev": "bc7743b9e6dde6ce56a1c9bc41f6b06720430537",
+      "rev": "a1c8e6e40cb45df59b78add5b65d575386832465",
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "44060ccca31f1c67e89f08bcc663a7e318667e5d",
+      "rev": "c26007067341bd147b0d95437493f38886015add",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -181,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "876ce992480202a8bc18718638d54b3c91e3b2f6",
+      "rev": "cc44c583e1faaf350f983c180822a249b6116988",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
