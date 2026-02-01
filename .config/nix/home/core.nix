@@ -3,7 +3,7 @@
 # Intentionally NOT in home.packages because UV provides:
 # - Faster updates (no waiting for nixpkgs)
 # - Isolated environments per tool
-# - Consistent Python version (nix 3.12.11)
+# - Consistent Python version (nix 3.13)
 #
 # Current UV tools:
 # - aider-chat    (AI code assistant)
@@ -62,21 +62,12 @@
     lazygit # TUI Git client
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
-    python312 # Python 3.12 for uv and general use
+    python313 # Python 3.13 for uv and general use
     # Note: Python CLI tools managed via UV, not nix
     # shunit2 # Shell testing
     stow # Symlink manager
     uv # Modern Python package and project manager
   ];
-
-  # LLM with plugins (uses python312 to match developmentPackages)
-  llmWithPlugins = pkgs.python312.withPackages (ps:
-    with ps; [
-      llm
-      llm-github-copilot
-      llm-ollama
-      llm-openrouter
-    ]);
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
@@ -98,7 +89,6 @@
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
-    llmWithPlugins # LLM CLI with plugins (github-copilot, ollama, openrouter)
     ncdu # Disk usage analyzer
     pass # Password manager
     repgrep # ripgrep across files
@@ -106,7 +96,6 @@
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
-    terminal-notifier # macOS notifications from command line
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
