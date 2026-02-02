@@ -28,12 +28,11 @@
     firefox
     flameshot # Screenshot tool
     i3status # Status bar for i3
-    neovim # Text editor
     kitty # Terminal emulator
     networkmanagerapplet # Network manager GUI
     pavucontrol # PulseAudio volume control
     pcmanfm # File manager
-    xfce.mousepad # Simple text editor
+    mousepad # Simple text editor
   ];
 
   # --- Firefox system-wide ---
