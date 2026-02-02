@@ -84,7 +84,6 @@
     fd # find replacement
     file # File type identification
     fzf # General fuzzy finder
-    gcal # GNU cal command
     glances # System monitoring tool
     gnupg # GNU Privacy Guard
     jq # JSON processor
