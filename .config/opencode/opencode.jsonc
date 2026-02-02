@@ -23,6 +23,9 @@
         },
         "nemotron-3-nano:30b-cloud": {
           "name": "Nemotron 3 Nano 30B Cloud",
+        },
+        "kimi-k2.5:cloud": {
+          "name": "Kimi K2.5 Cloud",
         }
       }
     }
