@@ -46,8 +46,8 @@
     ];
 
     casks = [
-      "appcleaner" # remove macOS apps
       "android-platform-tools" # ADB and Fastboot
+      "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
@@ -61,6 +61,7 @@
       "google-drive"
       "kap" # screen recording
       "kitty" # terminal emulator
+      "libreoffice" # office suite
       "lm-studio" # LLM model gui/cli
       "obsidian" # note-taking
       "orbstack" # Docker alternative
