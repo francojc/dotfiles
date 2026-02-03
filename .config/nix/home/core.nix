@@ -54,6 +54,7 @@
   # Development and system tools
   developmentPackages = with pkgs; [
     bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
+    neovim # Stable Neovim 0.11+
     cachix # Nix package cache
     gh # GitHub CLI
     git # Version control system

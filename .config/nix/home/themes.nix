@@ -909,4 +909,16 @@ in {
       }
     }
   '';
+
+  # Generate theme config for nvim-nix (stable 0.11.x)
+  xdg.configFile."nvim-nix/lua/theme-config.lua".text = ''
+    return {
+      colorscheme = "${currentTheme.neovim.colorscheme}",
+      colors = {
+        bg = "${currentTheme.neovim.colors.bg}",
+        fg = "${currentTheme.neovim.colors.fg}",
+        yellow = "${currentTheme.neovim.colors.yellow}",
+      }
+    }
+  '';
 }

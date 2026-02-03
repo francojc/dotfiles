@@ -157,6 +157,9 @@
         lt = "ll --tree --level=2 --ignore-glob='.git|.DS_Store'";
         lg = "lazygit";
 
+        # Neovim - stable nix version (0.11.x) using full path to avoid bob's nvim
+        nv = "NVIM_APPNAME=nvim-nix /etc/profiles/per-user/${username}/bin/nvim";
+
         # Flatpak aliases (similar to brew workflow)
         flat = "flatpak";
         flat-install = "flatpak install flathub";
