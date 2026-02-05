@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "8f99d8d5d8f063342b082bbc54d120760630d162",
+      "rev": "438d0adddb232c9e08fbf910faf49c47a1960651",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -153,7 +153,7 @@
       "src": "https://github.com/chomosuke/typst-preview.nvim"
     },
     "vague.nvim": {
-      "rev": "30d2239ecf8adab9bc0d07d42e7a07283879dab6",
+      "rev": "c1ab4d4891ff3a27deba6a80222d895ac8ffb2e5",
       "src": "https://github.com/vague2k/vague.nvim"
     },
     "vim-autumn": {
@@ -181,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "02d5086bee04e0c861afeed8ce48988c89b19f9d",
+      "rev": "b3df5d00bbf5cd862b853993135598f12b2eb3b5",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
