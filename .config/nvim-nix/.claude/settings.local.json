@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(head:*)",
+      "Bash(git -C /home/jeridf/.dotfiles log --oneline --all)",
+      "Bash(git -C /home/jeridf/.dotfiles show c082c34 --stat)",
+      "Bash(git -C /home/jeridf/.dotfiles status --short)",
+      "Bash(git -C /home/jeridf/.dotfiles diff .config/nix/profiles/nixos/configuration.nix)",
+      "Bash(ldd:*)",
+      "Bash(nvim:*)",
+      "Bash(stow:*)"
+    ]
+  }
+}

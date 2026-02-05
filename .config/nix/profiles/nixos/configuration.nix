@@ -22,6 +22,7 @@
   };
 
   programs.zsh.enable = true; # Enable Zsh
+  programs.nix-ld.enable = true; # Expose nix-provided libraries
 
   # Define the primary user for NixOS
   users.users.${username} = {
