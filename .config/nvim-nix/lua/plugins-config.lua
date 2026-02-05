@@ -159,10 +159,9 @@ vim.lsp.enable({
 local blink_ok, blink = pcall(require, "blink.cmp")
 if blink_ok then
 	blink.setup({
-		-- Force download of prebuilt binary for this version (paq doesn't checkout tags properly)
 		fuzzy = {
 			prebuilt_binaries = {
-				force_version = "v0.10.0",
+				download = true,
 			},
 		},
 		keymap = {
@@ -190,20 +189,7 @@ if blink_ok then
 				},
 			},
 		},
-		snippets = {
-			expand = function(snippet)
-				require("luasnip").lsp_expand(snippet)
-			end,
-			active = function(filter)
-				if filter and filter.direction then
-					return require("luasnip").jumpable(filter.direction)
-				end
-				return require("luasnip").in_snippet()
-			end,
-			jump = function(direction)
-				require("luasnip").jump(direction)
-			end,
-		},
+		snippets = { preset = "luasnip" },
 		completion = {
 			accept = {
 				auto_brackets = {

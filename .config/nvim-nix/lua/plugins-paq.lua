@@ -36,8 +36,8 @@ require("paq")({
 	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 	-- nvim-lspconfig removed: using native vim.lsp.config (0.11+)
 
-	-- Completion (use release tag for prebuilt binaries)
-	{ "Saghen/blink.cmp", tag = "v0.10.0" },
+	-- Completion
+	"Saghen/blink.cmp",
 	"L3MON4D3/LuaSnip",
 	"rafamadriz/friendly-snippets",
 
