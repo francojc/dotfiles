@@ -1,7 +1,7 @@
 {
   "plugins": {
     "CopilotChat.nvim": {
-      "rev": "07dcc18",
+      "rev": "69199d46b56f67a226789da256264c6291c4e63d",
       "src": "https://github.com/CopilotC-Nvim/CopilotChat.nvim"
     },
     "aerial.nvim": {
@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "fab799d086fd63fa5b389007f63767b23885ebf8",
+      "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -49,7 +49,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "abf82a6",
+      "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -85,7 +85,7 @@
       "src": "https://github.com/echasnovski/mini.pairs"
     },
     "mini.surround": {
-      "rev": "f935854",
+      "rev": "d648a5601e1c48f175b07d10eba141da338a0a2a",
       "src": "https://github.com/echasnovski/mini.surround"
     },
     "nightfox.nvim": {
@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "c26007067341bd147b0d95437493f38886015add",
+      "rev": "8f99d8d5d8f063342b082bbc54d120760630d162",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -109,7 +109,7 @@
       "src": "https://github.com/navarasu/onedark.nvim"
     },
     "otter.nvim": {
-      "rev": "6b75433",
+      "rev": "8cf628c4d7531de3d8dd4e78f5ce6f9519d432b2",
       "src": "https://github.com/jmbuhr/otter.nvim"
     },
     "plenary.nvim": {
@@ -125,7 +125,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "48934b49a2363b49ae1d698ed4cb30fb79d7efe8",
+      "rev": "48b4175dbca8439d30c1f52231cbe5a712c8f9d9",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -181,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "cc44c583e1faaf350f983c180822a249b6116988",
+      "rev": "02d5086bee04e0c861afeed8ce48988c89b19f9d",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
