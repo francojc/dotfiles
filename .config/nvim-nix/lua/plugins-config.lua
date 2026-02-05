@@ -156,76 +156,82 @@ vim.lsp.enable({
 -- Completion with blink.cmp
 --=============================================================================
 
-require("blink.cmp").setup({
-	-- Force download of prebuilt binary for this version (paq doesn't checkout tags properly)
-	fuzzy = {
-		prebuilt_binaries = {
-			force_version = "v0.10.0",
-		},
-	},
-	keymap = {
-		preset = "default",
-		["<Tab>"] = { "select_next", "fallback" },
-		["<S-Tab>"] = { "select_prev", "fallback" },
-		["<CR>"] = { "accept", "fallback" },
-		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-		["<C-e>"] = { "hide" },
-		["<C-d>"] = { "scroll_documentation_down", "fallback" },
-		["<C-u>"] = { "scroll_documentation_up", "fallback" },
-	},
-	appearance = {
-		use_nvim_cmp_as_default = true,
-		nerd_font_variant = "mono",
-	},
-	sources = {
-		default = { "lsp", "path", "snippets", "buffer" },
-		providers = {
-			emoji = {
-				module = "blink-emoji",
-				name = "Emoji",
-				score_offset = 15,
-				opts = { insert = true },
+local blink_ok, blink = pcall(require, "blink.cmp")
+if blink_ok then
+	blink.setup({
+		-- Force download of prebuilt binary for this version (paq doesn't checkout tags properly)
+		fuzzy = {
+			prebuilt_binaries = {
+				force_version = "v0.10.0",
 			},
 		},
-	},
-	snippets = {
-		expand = function(snippet)
-			require("luasnip").lsp_expand(snippet)
-		end,
-		active = function(filter)
-			if filter and filter.direction then
-				return require("luasnip").jumpable(filter.direction)
-			end
-			return require("luasnip").in_snippet()
-		end,
-		jump = function(direction)
-			require("luasnip").jump(direction)
-		end,
-	},
-	completion = {
-		accept = {
-			auto_brackets = {
-				enabled = true,
+		keymap = {
+			preset = "default",
+			["<Tab>"] = { "select_next", "fallback" },
+			["<S-Tab>"] = { "select_prev", "fallback" },
+			["<CR>"] = { "accept", "fallback" },
+			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+			["<C-e>"] = { "hide" },
+			["<C-d>"] = { "scroll_documentation_down", "fallback" },
+			["<C-u>"] = { "scroll_documentation_up", "fallback" },
+		},
+		appearance = {
+			use_nvim_cmp_as_default = true,
+			nerd_font_variant = "mono",
+		},
+		sources = {
+			default = { "lsp", "path", "snippets", "buffer" },
+			providers = {
+				emoji = {
+					module = "blink-emoji",
+					name = "Emoji",
+					score_offset = 15,
+					opts = { insert = true },
+				},
 			},
 		},
-		menu = {
-			border = "rounded",
+		snippets = {
+			expand = function(snippet)
+				require("luasnip").lsp_expand(snippet)
+			end,
+			active = function(filter)
+				if filter and filter.direction then
+					return require("luasnip").jumpable(filter.direction)
+				end
+				return require("luasnip").in_snippet()
+			end,
+			jump = function(direction)
+				require("luasnip").jump(direction)
+			end,
 		},
-		documentation = {
-			auto_show = true,
-			auto_show_delay_ms = 500,
-			window = {
+		completion = {
+			accept = {
+				auto_brackets = {
+					enabled = true,
+				},
+			},
+			menu = {
 				border = "rounded",
 			},
+			documentation = {
+				auto_show = true,
+				auto_show_delay_ms = 500,
+				window = {
+					border = "rounded",
+				},
+			},
 		},
-	},
-})
+	})
+end
 
 --=============================================================================
 -- Luasnip
 --=============================================================================
 
-require("luasnip.loaders.from_vscode").lazy_load()
+local luasnip_ok, luasnip_loaders = pcall(require, "luasnip.loaders.from_vscode")
+if luasnip_ok then
+	luasnip_loaders.lazy_load()
+end
 
 --=============================================================================
 -- Conform (formatting)
