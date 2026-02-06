@@ -35,7 +35,16 @@ end, { desc = "Decrement node selection" })
 vim.lsp.config.lua_ls = {
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
-	root_markers = { ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git" },
+	root_markers = {
+		".luarc.json",
+		".luarc.jsonc",
+		".luacheckrc",
+		".stylua.toml",
+		"stylua.toml",
+		"selene.toml",
+		"selene.yml",
+		".git",
+	},
 	capabilities = capabilities,
 	settings = {
 		Lua = {
@@ -54,7 +63,15 @@ vim.lsp.config.lua_ls = {
 vim.lsp.config.pyright = {
 	cmd = { "pyright-langserver", "--stdio" },
 	filetypes = { "python" },
-	root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", "pyrightconfig.json", ".git" },
+	root_markers = {
+		"pyproject.toml",
+		"setup.py",
+		"setup.cfg",
+		"requirements.txt",
+		"Pipfile",
+		"pyrightconfig.json",
+		".git",
+	},
 	capabilities = capabilities,
 	settings = {
 		python = {
@@ -160,9 +177,7 @@ local blink_ok, blink = pcall(require, "blink.cmp")
 if blink_ok then
 	blink.setup({
 		fuzzy = {
-			prebuilt_binaries = {
-				download = true,
-			},
+			implementation = "prefer_rust_with_warning",
 		},
 		keymap = {
 			preset = "default",

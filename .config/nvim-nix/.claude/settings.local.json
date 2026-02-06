@@ -10,7 +10,8 @@
       "Bash(ldd:*)",
       "Bash(nvim:*)",
       "Bash(stow:*)",
-      "Bash(NVIM_APPNAME=nvim-nix nvim:*)"
+      "Bash(NVIM_APPNAME=nvim-nix nvim:*)",
+      "Bash(cargo build:*)"
     ]
   }
 }
