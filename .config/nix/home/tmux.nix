@@ -74,6 +74,7 @@
       # Session bindings
       bind-key n switch-client -n   # Go to the next session
       bind-key p switch-client -p   # Go to the previous session
+      bind-key a switch-client -l   # Toggle to the last session
 
       # Window bindings
       bind W new-window -c "#{pane_current_path}"
