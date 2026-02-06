@@ -1,1 +1,0 @@
-/nix/store/2brxqgxi4czxvk7ikdwahqj8xr01xwja-home-manager-files/.config/nvim-nix/lua/theme-config.lua

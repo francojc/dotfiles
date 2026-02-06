@@ -85,3 +85,4 @@ conversation.toml
 .config/mole/clean-list.txt
 .config/mole/mole.log
 .claude/last-notification
+.config/nvim-nix/lua/theme-config.lua
