@@ -1,10 +1,9 @@
-# Justfile for nix-darwin
-
+# Justfile for nix-darwin and nixos
 
 default:
   @just --list
 
-hostname := "Mac-Minicore"
+hostname := `hostname`
 
 ############################################################################
 #
@@ -12,40 +11,57 @@ hostname := "Mac-Minicore"
 #
 ############################################################################
 
+# Build and activate darwin configuration
 darwin:
-  sudo nix build .#darwinConfigurations.{{hostname}}.system \
+  nix build .#darwinConfigurations.{{hostname}}.system \
     --extra-experimental-features 'nix-command flakes'
+  sudo ./result/sw/bin/darwin-rebuild switch --flake .#{{hostname}}
 
-  ./result/sw/bin/darwin-rebuild switch --flake .#{{hostname}}
-
+# Build darwin configuration with debug output
 darwin-debug:
-  sudo nix build .#darwinConfigurations.{{hostname}}.system --show-trace --verbose \
+  nix build .#darwinConfigurations.{{hostname}}.system --show-trace --verbose \
     --extra-experimental-features 'nix-command flakes'
-
-  ./result/sw/bin/darwin-rebuild switch --flake .#{{hostname}} --show-trace --verbose
+  sudo ./result/sw/bin/darwin-rebuild switch --flake .#{{hostname}} --show-trace --verbose
 
 ############################################################################
 #
-#  nix related commands
+#  NixOS related commands
 #
 ############################################################################
 
+# Build and activate NixOS configuration
+nixos:
+  sudo nixos-rebuild switch --flake .#Mini-Rover
+
+############################################################################
+#
+#  Nix related commands
+#
+############################################################################
+
+# Check flake for evaluation errors
+check:
+  nix flake check
+
+# Update flake.lock
 update:
   nix flake update
 
+# Show system profile history
 history:
   nix profile history --profile /nix/var/nix/profiles/system
 
+# Garbage collect old generations and unused store entries
 gc:
   # remove all generations older than 7 days
-  sudo nix profile wipe-history --profile /nix/var/nix/profiles/system  --older-than 7d
-
+  sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
   # garbage collect all unused nix store entries
-  sudo nix store gc --debug
+  sudo nix store gc
 
+# Format nix files in this repo
 fmt:
-  # format the nix files in this repo
   nix fmt
 
+# Remove build artifacts
 clean:
   rm -rf result
