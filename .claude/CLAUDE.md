@@ -44,11 +44,11 @@ A description of an upcoming bullet list:
 
 ## Research Considerations
 
-- Handle multilingual text data and encoding issues
-- Corpus data citation and attribution
-- Institutional ethics compliance
-- Long-term data preservation
-- Balance computational efficiency with linguistic validity
+- Handle multilingual text data and encoding issues (e.g. UTF-8, Unicode normalization)
+- Corpus data citation and attribution (e.g. Common Crawl, Wikipedia dumps)
+- Institutional ethics compliance (e.g. IRB, FERPA, etc.)
+- Long-term data preservation (e.g. Zenodo, OSF, institutional repositories)
+- Balance computational efficiency with linguistic validity (e.g. tokenization, lemmatization, etc.)
 
 ## Avoid overused patterns
 
