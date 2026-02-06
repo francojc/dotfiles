@@ -50,56 +50,17 @@ A description of an upcoming bullet list:
 - Long-term data preservation
 - Balance computational efficiency with linguistic validity
 
-## Avoid Overused Patterns
+## Avoid overused patterns
 
-Patterns that signal AI-generated text and undermine authentic academic voice.
+Write in a natural academic voice. Avoid patterns that signal AI-generated text:
 
-### Overused Words
+- Do not use AI-tell words (delve, crucial, leverage, robust, nuanced, etc.) or stock phrases (rich tapestry, pave the way, at its core, etc.)
+- Do not open paragraphs with moreover, furthermore, additionally, or in conclusion
+- Do not hedge with empty qualifiers (It's important to note..., Generally speaking...)
+- Vary sentence length, paragraph length, and structure — break monotony
+- Use sentence case in headings, not title case
+- Prefer active voice; use passive only when the agent is unknown or irrelevant
+- No emojis, no sycophantic openers, no corporate tone
+- No fabricated references, garbled citation codes, or broken wikitext
 
-Avoid these high-frequency AI markers (per academic studies on LLM vocabulary):
-
-- **Verbs**: delve, underscore, showcase, highlight, leverage, harness, illuminate, facilitate, foster, navigate
-- **Adjectives**: crucial, comprehensive, notable, pivotal, robust, intricate, nuanced, multifaceted, transformative, groundbreaking
-- **Adverbs**: notably, particularly, importantly, interestingly, remarkably, fundamentally
-- **Phrases**: "rich tapestry," "stands as a testament," "unlock the potential," "pave the way," "at its core"
-
-### Hedging and Filler
-
-- "It's important to note that..."
-- "Generally speaking..."
-- "From a broader perspective..."
-- "It is worth mentioning..."
-- Excessive "however," "moreover," "furthermore," "additionally" as paragraph openers
-
-### Structural Patterns
-
-- Uniform paragraph length (vary naturally)
-- Rigid topic sentence → support → summary in every paragraph
-- "From X to Y" sentence openers
-- Lists with identical grammatical structures
-- Excessive participial phrases (main clause + comma + "-ing" phrase)
-- Formulaic endings: "In conclusion," "Despite challenges..."
-
-### Voice and Tone
-
-- Generic, emotionally detached corporate tone
-- Absence of specific examples or lived experience
-- Perfect consistency without natural quirks
-- Excessive passive voice
-- Sycophantic openers: "Great question!", "Absolutely!", "You're absolutely right"
-
-### Style Issues
-
-- Title case in headings (Capitalizing Every Word)
-- Excessive bold text for emphasis
-- Overuse of em dashes as universal connectors
-- Use of clichés and idioms
-- Use of emojis
-- Sentences of similar length and structure (lack of variety)
-
-### Technical Problems
-
-- Broken wikitext mixed with Markdown formatting
-- Garbled citation codes like "turn0search0" or ":contentReference"
-- Fabricated references with invalid DOIs/ISBNs
-- Letter-like formatting ("Dear Wikipedia Editors...")
+The PostToolUse hook in `settings.json` enforces surface-level checks on academic file writes automatically. Use `/refine <file>` for a thorough pass across vocabulary, structure, voice, formatting, and deep structural issues.
