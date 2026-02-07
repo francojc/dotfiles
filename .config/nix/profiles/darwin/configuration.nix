@@ -21,6 +21,10 @@
   # Add this line to disable nix-darwin's Nix management
   nix.enable = false;
 
+  # Skip nix-darwin option reference manual to avoid builtins.toFile warning
+  # (nixpkgs store path in options.json lacks proper context)
+  documentation.enable = false;
+
   system.stateVersion = 5; # Keep consistent with nix-darwin requirements
 
   system = {
