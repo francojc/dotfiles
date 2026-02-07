@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "4b18c32adef2898f95cdef6192cbd5796c1a332d",
+      "rev": "f9e855c4d96e1264f7c818844f5a0166ad48c212",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -101,7 +101,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "438d0adddb232c9e08fbf910faf49c47a1960651",
+      "rev": "ab9b3d159eca94a22ca91a996a77672a7b5caf8b",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -181,7 +181,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "b3df5d00bbf5cd862b853993135598f12b2eb3b5",
+      "rev": "0181178a3ca490cb32d8d2bcb4be0292c0cb8180",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

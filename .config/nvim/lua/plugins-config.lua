@@ -852,7 +852,7 @@ require("snacks").setup({
 	explorer = { enabled = false }, -- Using yazi
 	git = { enabled = false },
 	gitbrowse = { enabled = false },
-	image = { enabled = true }, -- Using image.nvim
+	image = { enabled = false }, -- Using image.nvim
 	input = { enabled = false },
 	notifier = { enabled = false }, -- Using standard vim.notify
 	picker = {
@@ -1057,8 +1057,6 @@ vim.api.nvim_create_autocmd("FileType", {
 				},
 			},
 		})
-		-- Disable by default to match the global flag
-		require("image").disable()
 	end,
 	once = true,
 })

@@ -70,6 +70,7 @@
       "signal" # messaging
       "spotify" # music streaming
       "transmission"
+      "visual-studio-code" # code editor
       "vlc" # media player
       "wezterm@nightly" # terminal emulator
       "zen" # browser
