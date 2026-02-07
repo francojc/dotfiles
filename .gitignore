@@ -22,17 +22,23 @@
 .config/gh/*
 .config/git/*
 .config/github-copilot
+.config/kitty/kitty.conf
+.config/kitty/kitty.conf
+.config/litellm/github_copilot
+.config/mole/clean-list.txt
+.config/mole/mole.log
 .config/ncspot/userstate.cbor
+.config/nvim-nix/lua/theme-config.lua
+.config/nvim/lua/theme-config.lua
+.config/opencode/opencode.json
 .config/pianobar/state
 .config/pulse/*
 .config/raycast/*
-
-.config/nvim/lua/theme-config.lua
-.config/opencode/opencode.json
+.config/reddix/config.yaml
 .config/reddix/config.yaml.backup
 .config/reddix/reddix-receipt.json
-.config/kitty/kitty.conf
 .config/tmux/*
+.config/wezterm/wezterm.lua
 
 # ----------------------------------------------------------
 # Development Tools & AI Assistants
@@ -43,10 +49,13 @@
 .aider.tags*
 
 # CLAUDE AI
-# Credentials
 .claude/.credentials.json
 *.claude/.settings.local.json
-.claude/settings.json
+.claude/cache
+.claude/last-notification
+.claude/paste-cache
+.claude/tasks/
+.claude/telemetry
 
 # Gemini AI
 # CLI config
@@ -72,17 +81,4 @@ _freeze
 # Project-Specific Files
 # ----------------------------------------------------------
 conversation.toml
-.config/reddix/config.yaml
-.config/kitty/kitty.conf
-.config/wezterm/wezterm.lua
-.config/nvim/.claude/settings.local.json
 
-.claude/telemetry
-.config/litellm/github_copilot
-.claude/cache
-.claude/paste-cache
-.claude/tasks/
-.config/mole/clean-list.txt
-.config/mole/mole.log
-.claude/last-notification
-.config/nvim-nix/lua/theme-config.lua
