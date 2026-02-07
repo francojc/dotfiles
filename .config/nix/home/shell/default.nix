@@ -109,7 +109,7 @@
         # zsh-ai-cmd configuration
         export ZSH_AI_CMD_PROVIDER='copilot'
         # Uncomment and customize if needed:
-        export ZSH_AI_CMD_COPILOT_MODEL='gpt-4o'
+        export ZSH_AI_CMD_COPILOT_MODEL='claude-haiku-4.5'
         export ZSH_AI_CMD_COPILOT_HOST='mac-minicore.gerbil-matrix.ts.net:4141'
 
         # Press 'v' in normal mode to open current file in $EDITOR
