@@ -2,6 +2,7 @@
   # Add system packages
   environment.systemPackages = with pkgs; [
     # nix-darwin specific apps on nixpkgs
+    coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     terminal-notifier # macOS notifications from command line
     gcal # GNU cal command
   ];
@@ -77,7 +78,7 @@
       "zoom" # video conferencing
       "zotero@beta" # reference manager
       # "blackhole-2ch" # virtual audio driver
-      # "keycastr" # keystroke visualizer
+      "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
       # "transcribe"

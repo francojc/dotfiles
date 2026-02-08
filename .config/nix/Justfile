@@ -58,9 +58,9 @@ gc:
   # garbage collect all unused nix store entries
   sudo nix store gc
 
-# Format nix files in this repo
+# Format nix files in this repo (using flake's formatter)
 fmt:
-  nix fmt
+  nix formatter run
 
 # Remove build artifacts
 clean:

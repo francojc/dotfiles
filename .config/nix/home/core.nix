@@ -77,7 +77,6 @@
     # unp # Archive unpacker
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
-    coreutils # GNU core utilities (provides grealpath for yazi)
     duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement
