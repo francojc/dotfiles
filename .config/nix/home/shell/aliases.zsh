@@ -78,9 +78,14 @@ alias ...='cd ../..'    # Move up two directory levels
 alias c='clear'
 
 # File listing with eza - enhanced file listing with icons and color
-alias ls='eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"' # List files with icons, excluding .DS_Store
-alias la='eza --icons=auto --long --almost-all --smart-group --time=changed --color-scale=age --time-style=relative --color-scale-mode=gradient --ignore-glob=".git|.DS_Store"' # Detailed list with smart grouping
-alias lt='la --icons=auto --tree --level=2 --ignore-glob=".git|.DS_Store"' # Tree view of current directory
+
+alias ls='eza --dereference --no-quotes --icons=auto --color=auto --ignore-glob=".DS_Store"'
+alias la='ls --almost-all'
+alias ll='ls --long --time-style=relative --ignore-glob=.git'
+alias lla='la --long --time-style=relative --ignore-glob=.git'
+alias lt='ls --tree --level=2 --ignore-glob=.git'
+alias llt='ll --tree --level=2 --ignore-glob=.git'
+alias lat='lla --tree --level=2 --ignore-glob=.git'
 
 # Use fd instead of find - faster file searching
 alias fd="fd --hidden --exclude '.git'"
@@ -93,6 +98,7 @@ alias df='duf'         # Use duf instead of df for better disk usage display
 # More verbose and interactive copy/move operations
 alias cp='cp -iv'      # Interactive copy with verbose output
 alias mv='mv -iv'      # Interactive move with verbose output
+alias rm='rm -iv'      # Interactive remove with verbose output
 
 # Better path display - shows PATH variable with newlines
 alias path='echo -e ${PATH//:/\\n}'
