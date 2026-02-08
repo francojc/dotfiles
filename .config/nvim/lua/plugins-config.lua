@@ -262,9 +262,21 @@ vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.blue or "#7aa2f7" })
 ---| Codesnap.nvim ----------------------------------
 
 require("codesnap").setup({
-	show_line_numbers = false,
-	watermark = {
-		content = "",
+	show_line_number = false,
+	snapshot_config = {
+		background = "#FFFFFF",
+		watermark = {
+			content = "",
+		},
+		margin = {
+			x = 10,
+			y = 10,
+		},
+		code_config = {
+			breadcrumbs = {
+				enable = false,
+			},
+		},
 	},
 })
 
