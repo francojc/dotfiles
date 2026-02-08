@@ -77,6 +77,7 @@
     # unp # Archive unpacker
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
+    codesnap # CLI code snippet screenshot tool
     duf # Disk usage utility
     entr # Event notify tool
     eza # ls replacement
