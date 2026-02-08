@@ -2,6 +2,13 @@
 -- Modular configuration for Neovim
 -- This file orchestrates loading all configuration modules
 --
+
+---| Providers --------------------------------------
+--- Disable
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_python3_provider = 0
+
 ---| Llama.vim ----------------------------------
 -- AI-powered code completion using local llama.cpp server
 vim.g.llama_config = {

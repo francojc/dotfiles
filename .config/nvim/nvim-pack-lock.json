@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "f9e855c4d96e1264f7c818844f5a0166ad48c212",
+      "rev": "f85eb6252f4c0212be15c6c4213e9af587574cbe",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -31,6 +31,10 @@
     "cmp-pandoc-references": {
       "rev": "130eae4",
       "src": "https://github.com/jmbuhr/cmp-pandoc-references"
+    },
+    "codesnap.nvim": {
+      "rev": "31b5dbc353ce0823086273abb6e82f3dcbb9e4f8",
+      "src": "https://github.com/mistricky/codesnap.nvim"
     },
     "conform.nvim": {
       "rev": "c2526f1",
