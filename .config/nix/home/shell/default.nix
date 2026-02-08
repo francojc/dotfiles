@@ -152,11 +152,6 @@
       # Other ZSH plugins
       plugins = [];
       shellAliases = {
-        ls = "eza --almost-all --icons=auto --dereference --no-quotes --ignore-glob='.DS_Store'";
-        ll = "ls --long --time-style=relative --ignore-glob='.git|.DS_Store'";
-        lt = "ll --tree --level=2 --ignore-glob='.git|.DS_Store'";
-        lg = "lazygit";
-
         # Neovim - stable nix version (0.11.x) using full path to avoid bob's nvim
         nv = "NVIM_APPNAME=nvim-nix /etc/profiles/per-user/${username}/bin/nvim";
 
