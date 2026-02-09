@@ -61,7 +61,7 @@
       "google-chrome"
       "google-drive"
       "kap" # screen recording
-      "kitty" # terminal emulator
+      # "kitty" # terminal emulator (moved to Nix)
       "lm-studio" # LLM model gui/cli
       "obsidian" # note-taking
       "orbstack" # Docker alternative

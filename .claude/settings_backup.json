@@ -1,0 +1,63 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(brew info:*)",
+      "Bash(brew list:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(find:*)",
+      "Bash(nvim:*)",
+      "Bash(readlink:*)",
+      "Bash(tree:*)",
+      "Bash(uv:*)",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "plan"
+  },
+  "model": "opus",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/bin/claude-notify --save-pane 'Waiting for input...' 'Claude Code'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/bin/claude-notify --save-pane 'Task completed!' 'Claude Code'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are an academic writing quality gate. You receive JSON describing a file just written or edited.\n\nFIRST: Check file_path. If the extension is NOT .md, .qmd, .tex, .Rmd, or .Rnw — respond {\"ok\": true} immediately.\n\nIf the file IS an academic document, scan the content for AI artifacts:\n\n1. FLAGGED WORDS: delve, underscore, showcase, highlight, leverage, harness, illuminate, facilitate, foster, navigate, crucial, comprehensive, notable, pivotal, robust, intricate, nuanced, multifaceted, transformative, groundbreaking, notably, particularly, importantly, interestingly, remarkably, fundamentally\n2. FLAGGED PHRASES: \"rich tapestry\", \"stands as a testament\", \"unlock the potential\", \"pave the way\", \"at its core\", \"It's important to note\", \"Generally speaking\", \"From a broader perspective\", \"It is worth mentioning\"\n3. HEDGING OPENERS: Paragraphs starting with Moreover, Furthermore, Additionally, In conclusion, Despite challenges\n4. TITLE CASE HEADINGS: Headings where every word is capitalized\n5. GARBLED ARTIFACTS: citation codes like turn0search0, :contentReference, broken wikitext\n\nIf issues found: {\"ok\": false, \"reason\": \"AI artifacts in <filename>: <specific issues with context>. Replace flagged words with precise alternatives. Vary sentence openings. Use sentence case in headings.\"}\n\nIf clean: {\"ok\": true}",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/ccline/ccline",
+    "padding": 0
+  },
+  "alwaysThinkingEnabled": true
+}

@@ -53,19 +53,20 @@
 
   # Development and system tools
   developmentPackages = with pkgs; [
+    # Note: Python CLI tools managed via UV, not nix
+    # shunit2 # Shell testing
     bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
-    neovim # Stable Neovim 0.11+
     cachix # Nix package cache
     gh # GitHub CLI
     git # Version control system
     go # Go programming language
     home-manager # Essential for this config
+    kitty # Terminal emulator
     lazygit # TUI Git client
+    neovim # Stable Neovim 0.11+
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
     python312 # Python 3.12 for uv and general use
-    # Note: Python CLI tools managed via UV, not nix
-    # shunit2 # Shell testing
     stow # Symlink manager
     uv # Modern Python package and project manager
   ];
