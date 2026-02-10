@@ -63,4 +63,4 @@ Write in a natural academic voice. Avoid patterns that signal AI-generated text:
 - No emojis, no sycophantic openers, no corporate tone
 - No fabricated references, garbled citation codes, or broken wikitext
 
-The PostToolUse hook in `settings.json` enforces surface-level checks on academic file writes automatically. Use `/refine <file>` for a thorough pass across vocabulary, structure, voice, formatting, and deep structural issues.
+Use `/refine <file>` for a thorough pass across vocabulary, structure, voice, formatting, and deep structural issues.
