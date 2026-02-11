@@ -13,7 +13,8 @@
       "mcp__github__list_commits",
       "Bash(git fetch:*)",
       "mcp__github__get_commit",
-      "Bash(git rev-list:*)"
+      "Bash(git rev-list:*)",
+      "Bash(xxd:*)"
     ],
     "deny": [],
     "ask": []
