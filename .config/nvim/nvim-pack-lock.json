@@ -1,7 +1,7 @@
 {
   "plugins": {
     "CopilotChat.nvim": {
-      "rev": "69199d46b56f67a226789da256264c6291c4e63d",
+      "rev": "743d6005fb412c85309d3f3aa45f18f3a2fb2098",
       "src": "https://github.com/CopilotC-Nvim/CopilotChat.nvim"
     },
     "aerial.nvim": {
@@ -21,7 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "f85eb6252f4c0212be15c6c4213e9af587574cbe",
+      "rev": "7c80e36023c5499a97e097cb5f229e9b635725a0",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -53,7 +53,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "1ce96a464fdbc24208e24c117e2021794259005d",
+      "rev": "31217271a7314c343606acb4072a94a039a19fb5",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -105,7 +105,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "ab9b3d159eca94a22ca91a996a77672a7b5caf8b",
+      "rev": "be9370b72c39fe10b2218e9c0aa06dcbe47f7296",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -113,7 +113,7 @@
       "src": "https://github.com/navarasu/onedark.nvim"
     },
     "otter.nvim": {
-      "rev": "8cf628c4d7531de3d8dd4e78f5ce6f9519d432b2",
+      "rev": "1e9d033f284c176b2f05778c2dbb9a23b0a421d2",
       "src": "https://github.com/jmbuhr/otter.nvim"
     },
     "plenary.nvim": {
@@ -185,7 +185,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "0181178a3ca490cb32d8d2bcb4be0292c0cb8180",
+      "rev": "a3fe7b5855254974837c23c915865478b0d54534",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
