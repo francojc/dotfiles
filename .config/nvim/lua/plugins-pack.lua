@@ -39,6 +39,7 @@ local eager_plugins = {
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
 	{ src = "https://github.com/jpalardy/vim-slime" },
 	{ src = "https://github.com/kdheepak/lazygit.nvim" },
+	{ src = "https://github.com/sindrets/diffview.nvim" },
 	{ src = "https://github.com/krissen/snacks-bibtex.nvim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },

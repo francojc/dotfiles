@@ -143,6 +143,11 @@ map("n", "<leader>fc", "<Cmd>lua Snacks.picker.resume()<Cr>", { desc = "Resume p
 -- Lazygit
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
+-- Diffview
+map("n", "<leader>gd", "<Cmd>DiffviewOpen<Cr>", { desc = "Diff view (uncommitted)" })
+map("n", "<leader>gh", "<Cmd>DiffviewFileHistory %<Cr>", { desc = "File history (current)" })
+map("n", "<leader>gH", "<Cmd>DiffviewFileHistory<Cr>", { desc = "File history (repo)" })
+map("n", "<leader>gx", "<Cmd>DiffviewClose<Cr>", { desc = "Close diff view" })
 -- GitHub (Snacks gh)
 map("n", "<leader>gio", "<Cmd>lua Snacks.picker.gh_issue({ state = 'open' })<Cr>", { desc = "GitHub issues (open)" })
 map("n", "<leader>gpo", "<Cmd>lua Snacks.picker.gh_pr({ state = 'open' })<Cr>", { desc = "GitHub PRs (open)" })

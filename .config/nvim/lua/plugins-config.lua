@@ -1019,6 +1019,17 @@ wk.add({
 
 ---| Version Control ----------------------------------
 
+-- Diffview (git diff and merge UI)
+require("diffview").setup({
+	enhanced_diff_hl = true,
+	view = {
+		merge_tool = {
+			layout = "diff3_horizontal",
+			winbar_info = true,
+		},
+	},
+})
+
 -- Gitsigns (load when opening files in git repos)
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
 	group = vim.api.nvim_create_augroup("LazyGitsigns", { clear = true }),

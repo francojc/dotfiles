@@ -26,7 +26,7 @@
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
       merge.tool = "nvimdiff";
-      mergetool.nvimdiff.cmd = "nvim -d $BASE $LOCAL $REMOTE $MERGED";
+      mergetool.nvimdiff.cmd = ''nvim -c "DiffviewOpen" "$MERGED"'';
       mergetool.prompt = false;
       mergetool.keepBackup = false;
 
