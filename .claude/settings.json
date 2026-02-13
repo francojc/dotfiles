@@ -10,6 +10,8 @@
       "Bash(readlink:*)",
       "Bash(tree:*)",
       "Bash(uv:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
       "WebFetch",
       "WebSearch"
     ],
