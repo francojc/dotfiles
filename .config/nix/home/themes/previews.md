@@ -8,22 +8,48 @@
 
 ## Autumn
 
+![](images/autumn.png)
+
+## Ayu
+
+![](images/ayu.png)
+
 ## Blackmetal
 
-## Gruvbox
-
-## Nightfox
-
-## Onedark
-
-## Tokyonight
+![](images/blackmetal.png)
 
 ## Catppuccin
 
-## VSCode
+![](images/catppuccin.png)
+
+## Gruvbox
+
+![](images/gruvbox.png)
+
+
+## Nightfox
+
+![](images/nightfox.png)
+
+## Onedark
+
+![](images/onedark.png)
+
+
+## Tokyonight
+
+![](images/tokyonight.png)
+
 
 ## Vague
 
-## Ayu
+![](images/vague.png)
+
+## VSCode
+
+![](images/vscode.png)
+
+
+
 
 

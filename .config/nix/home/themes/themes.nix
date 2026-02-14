@@ -286,7 +286,7 @@
       name = "gruvbox";
       inherit colors;
       ghostty = {
-        theme = "GruvboxDarkHard";
+        theme = "Gruvbox Dark Hard";
         cursor_color = "#fe8019";
       };
       kitty = {
