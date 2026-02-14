@@ -34,6 +34,7 @@
       "rename" # file renaming utility
       "sqly" # interactive SQL client
       "transmission-cli" # command-line torrent client
+      # "waynehoover/tap/pbrich" # pbcopy for multiple formats (text, html, rtf, images)
 
       # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support
       # Installed via Homebrew because UV-installed marker-pdf needs
