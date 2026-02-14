@@ -5,7 +5,11 @@
       "Bash(brew list:*)",
       "Bash(cat:*)",
       "Bash(echo:*)",
+      "Bash(ls:*)",
       "Bash(find:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh repo list:*)",
+      "Bash(git log:*)",
       "Bash(nvim:*)",
       "Bash(readlink:*)",
       "Bash(tree:*)",
@@ -49,5 +53,6 @@
     "padding": 0
   },
   "enabledPlugins": {},
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "medium"
 }
