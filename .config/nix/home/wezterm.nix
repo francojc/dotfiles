@@ -13,7 +13,7 @@
       local config = wezterm.config_builder()
 
       -- Font Configuration ------------------------------------
-      config.font = wezterm.font('JetBrainsMono Nerd Font Mono')
+      config.font = wezterm.font('JetBrains Mono NL')
       config.font_size = ${toString (
         if hostname == "Mac-Minicore"
         then 20
@@ -118,7 +118,7 @@
       config.enable_scroll_bar = false
       config.use_fancy_tab_bar = false
       config.window_frame = {
-        font = wezterm.font({ family = 'JetBrainsMono Nerd Font Mono', weight = 'Bold' }),
+        font = wezterm.font({ family = 'JetBrains Mono', weight = 'Bold' }),
         font_size = ${toString (
         if hostname == "Mac-Minicore"
         then 18
