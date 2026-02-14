@@ -49,13 +49,14 @@
 .aider.tags*
 
 # CLAUDE AI
-.claude/.credentials.json
 *.claude/.settings.local.json
+.claude/.credentials.json
 .claude/cache
 .claude/last-notification
 .claude/paste-cache
 .claude/tasks/
 .claude/telemetry
+.claude/usage-data/
 
 # Gemini AI
 # CLI config

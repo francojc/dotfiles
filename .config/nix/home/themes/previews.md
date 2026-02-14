@@ -6,10 +6,6 @@
 
 ![](images/aurthur.png)
 
-## Autumn
-
-![](images/autumn.png)
-
 ## Ayu
 
 ![](images/ayu.png)
