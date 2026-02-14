@@ -7,7 +7,7 @@
   # Accept standard HM args
   imports =
     [
-      ./themes.nix
+      ./themes/themes.nix
       ./core.nix
       ./git.nix
       ./ghostty.nix
