@@ -61,7 +61,7 @@
     git # Version control system
     go # Go programming language
     home-manager # Essential for this config
-    kitty # Terminal emulator
+    # kitty # Terminal emulator
     lazygit # TUI Git client
     neovim # Stable Neovim 0.11+
     nix-prefetch-git

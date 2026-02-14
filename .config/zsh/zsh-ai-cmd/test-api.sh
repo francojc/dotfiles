@@ -45,7 +45,7 @@ get_api_key() {
   [[ $provider == ollama || $provider == copilot ]] && return 0
 
   local key_var="${(U)provider}_API_KEY"
-  local keychain_name="${provider}-api-key"
+  local keychain_name="${(e)ZSH_AI_CMD_KEYCHAIN_NAME:-${provider}-api-key}"
 
   # Check env var (use :- to avoid set -u error)
   [[ -n ${(P)key_var:-} ]] && return 0

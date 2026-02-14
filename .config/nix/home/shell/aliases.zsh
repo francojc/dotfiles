@@ -29,6 +29,28 @@ claudo() {
   env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
 }
 
+# Headless Claude: apply targeted edits across files in the current project
+# Usage: claude-edit "<prompt>"
+claude-edit() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: claude-edit \"<prompt>\""
+    return 1
+  fi
+  claude -p "$1" \
+    --allowedTools "Read,Edit,Glob,Grep,LS,Bash(git diff:*),Bash(git status:*),Bash(git log:*)"
+}
+
+# Headless Claude: multi-step operations with broader tool access
+# Usage: claude-batch "<prompt>"
+claude-batch() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: claude-batch \"<prompt>\""
+    return 1
+  fi
+  claude -p "$1" \
+    --allowedTools "Read,Write,Edit,Glob,Grep,LS,WebFetch,WebSearch,Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git add:*)"
+}
+
 # --- TMUX ALIASES ---
 # Tmux session management for terminal multiplexing
 alias tl='tmux list-sessions' # list all tmux sessions

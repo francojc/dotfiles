@@ -79,17 +79,6 @@
         # Ensure Flatpak apps can find system fonts and themes
         export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/usr/share:$XDG_DATA_DIRS"
 
-
-        # --- CLAUDE CODE ---
-        # Install claude-code, if not already installed
-        if ! command -v claude &> /dev/null; then
-          if command -v npm &> /dev/null; then
-            npm install -g @anthropic-ai/claude-code@latest
-          else
-            echo "npm not found. Please install Node.js and npm to use claude-code."
-          fi
-        fi
-
         # --- OPENCODE AI ---
         # Install opencode-ai, if not already installed
         if ! command -v opencode &> /dev/null; then
