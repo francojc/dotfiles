@@ -86,7 +86,12 @@ local function get_project_root()
 		return nil
 	end
 	local path = vim.fn.fnamemodify(current_file, ":h")
+	local prev = nil
 	while path ~= "" and path ~= "/" do
+		if path == prev then
+			break
+		end
+		prev = path
 		if vim.fn.isdirectory(path .. "/.git") == 1 or vim.fn.isdirectory(path .. "/.nvim_spell_lang") == 1 then
 			return path
 		end
@@ -116,7 +121,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		local bufname = vim.api.nvim_buf_get_name(0)
 
 		-- Only run for normal file buffers
-		if buftype == "" and bufname ~= "" and not bufname:match("^%s*$") then
+		if buftype == "" and bufname ~= "" and not bufname:match("^%s*$") and not bufname:match("^%w+://") then
 			load_spell_lang()
 		end
 	end,
@@ -244,7 +249,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	group = "personal",
 	callback = function()
 		-- Only set up mappings for normal file buffers
-		if vim.bo.buftype == "" then
+		local bufname = vim.api.nvim_buf_get_name(0)
+		if vim.bo.buftype == "" and not bufname:match("^%w+://") then
 			-- Set up enhanced search navigation that updates search count
 			local opts = { buffer = true, silent = true, noremap = true }
 
