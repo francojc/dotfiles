@@ -168,8 +168,8 @@ Global validations:
 
 ## Step 7: Feedback Refinement (15–20 words)
 
-Read `metadata.language_learning` and `metadata.feedback_language` from the
-assessment JSON.
+Read `metadata.language_learning`, `metadata.feedback_language`, `metadata.level`,
+and `metadata.formality` from the assessment JSON.
 
 If `feedback_mode=rewrite` or `append`, launch the appropriate agent via Task
 per adjusted student to produce criterion-level comments with these constraints:
@@ -186,6 +186,7 @@ per adjusted student to produce criterion-level comments with these constraints:
 Reescribe un comentario breve para la rúbrica (15–20 palabras, español),
 centrado SOLO en este criterio. Mantén precisión, especificidad y
 recomendación accionable. No menciones ajustes de calificación ni curva.
+Tono: {formality} (casual = tú, formal = usted). Nivel: {level}.
 
 Criterio: {criterion_name}
 Puntaje final: {new_points_c}/{max_c}
@@ -198,6 +199,7 @@ Descripción breve del desempeño y rasgos observables: {signals_from_submission
 Rewrite a brief rubric comment (15–20 words, English) focused ONLY on this
 criterion. Be precise, specific, and actionable. Do not mention grade
 adjustments or curves.
+Tone: {formality} (casual = academic casual, formal = standard academic). Level: {level}.
 
 Criterion: {criterion_name}
 Final score: {new_points_c}/{max_c}

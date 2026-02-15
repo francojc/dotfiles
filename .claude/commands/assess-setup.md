@@ -14,37 +14,39 @@ Initialize the grading workflow for Canvas assignment {{assignment_id}}.
 
 Create the assessment JSON file with all student submissions and rubric structure, ready for AI evaluation.
 
-## Step 1: Validate course_parameters.md
+## Step 1: Validate course_parameters.yaml
 
-Check for `.claude/course_parameters.md` in the current repository.
+Check for `.claude/course_parameters.yaml` in the current repository.
 
-**If missing**: Use `AskUserQuestion` to collect all nine fields, then create the file. The file uses YAML frontmatter with these fields:
+**If missing**: Use `AskUserQuestion` to collect all fields, then create the file:
 
 ```yaml
----
 course_title: "Exploring the Hispanic World"
 course_code: "SPA-212-T"
 canvas_course_id: 79384
 term: "Spring"
 year: 2026
+level: "undergraduate"
 feedback_language: "Spanish"
 language_learning: true
 language_level: "ACTFL Intermediate Mid"
-formality: "tú"
----
+formality: "casual"
 ```
 
 Notes on field values:
 
-- `language_learning: false` means `language_level` and `formality` should be `"NA"`
+- `level` specifies the educational setting: "undergraduate", "graduate", "professional", etc. This informs the depth and rigor of feedback expectations.
+- `formality` controls tone across all feedback: "casual" or "formal". For Spanish courses, "casual" implies tú and "formal" implies usted. For English feedback, "casual" means academic casual tone and "formal" means standard academic tone.
+- `language_learning: false` means `language_level` should be `"NA"`
 - `feedback_language` accepts full names ("Spanish", "English")
 
-**If present**: Parse YAML frontmatter and validate all nine fields are populated. If any field is missing, prompt user for the missing values and update the file.
+**If present**: Parse YAML and validate all fields are populated. If any field is missing, prompt user for the missing values and update the file.
 
 **Extract values for downstream use**:
 
 - `canvas_course_id` becomes the `course_id` for all Canvas API calls
 - Map `feedback_language` to language code: "Spanish" → `"es"`, "English" → `"en"`
+- `level` carries through to metadata for agent context
 
 ## Step 2: Generate Assessment Structure
 
@@ -54,7 +56,7 @@ Fetch data from Canvas using three separate API calls:
 
 Use `mcp__mcp-canvas__get_assignment_details`:
 
-- `course_identifier`: the `canvas_course_id` from course_parameters.md
+- `course_identifier`: the `canvas_course_id` from course_parameters.yaml
 - `assignment_id`: the assignment_id
 
 This returns assignment metadata (name, due date, points possible, submission type) and the assignment description/instructions. Extract the description field — it will be stored in the assessment JSON as `assignment_instructions`.
@@ -100,10 +102,11 @@ Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestam
     "total_submissions": ...,
     "created_at": "...",
     "assignment_instructions": "...",
+    "level": "undergraduate|graduate|...",
     "feedback_language": "en|es",
     "language_learning": true|false,
     "language_level": "ACTFL Intermediate Mid|NA",
-    "formality": "tú|NA",
+    "formality": "casual|formal",
     "workflow_version": "1.0"
   },
   "rubric": {
@@ -143,13 +146,14 @@ Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestam
 }
 ```
 
-Copy these fields from course_parameters.md into the JSON metadata:
+Copy these fields from course_parameters.yaml into the JSON metadata:
 
 - `course_id` (from `canvas_course_id`)
+- `level` (educational setting string)
 - `feedback_language` (mapped to `"es"` or `"en"`)
 - `language_learning` (boolean)
 - `language_level` (string or `"NA"`)
-- `formality` (string or `"NA"`)
+- `formality` (`"casual"` or `"formal"`)
 
 This will:
 
@@ -172,6 +176,7 @@ Assessment Setup Complete
 ========================
 
 Course: {course_title} ({course_code})
+Level: {level}
 Term: {term} {year}
 Feedback Language: {feedback_language}
 

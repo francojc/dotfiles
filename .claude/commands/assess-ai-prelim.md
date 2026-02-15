@@ -48,9 +48,10 @@ For each student in the assessment file who has submitted (process in chronologi
    **Launch the selected agent** with this prompt:
 
 ```
-You are evaluating a student's submission for a university course.
+You are evaluating a student's submission for a {level} course.
 
 Feedback language: {feedback_language} (write ALL feedback in this language)
+Formality: {formality}
 
 ## Student Submission
 
@@ -108,11 +109,14 @@ Overall Comments: {final summary of all criteria in {feedback_language_name}, 30
 **If language_learning is true (language course)**:
 - Value attempts at grammatical and lexical complexity; do not penalize these
 - Consider this is a language course ({language_level} proficiency expected)
-- Use the "{formality}" form when addressing the student
+- Apply formality setting: if "casual", use tú (Spanish) or conversational academic tone (English); if "formal", use usted (Spanish) or standard academic tone (English)
+- Calibrate feedback depth and vocabulary to the {level} setting
 - Tone: supportive and encouraging, motivating the student to improve their language skills
 
 **If language_learning is false (non-language course)**:
 - Evaluate content, reasoning, and adherence to assignment requirements
+- Apply formality setting: if "casual", use a conversational academic tone; if "formal", use standard academic tone
+- Calibrate feedback depth and expectations to the {level} setting
 - Tone: constructive and professional, motivating the student to improve
 
 ## Final Summary
