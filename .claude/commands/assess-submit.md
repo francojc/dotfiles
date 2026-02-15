@@ -78,12 +78,11 @@ Submission Preview (DRY RUN)
 ============================
 
 WILL BE SUBMITTED (Z approved):
-  ✓ User {user_id} - {total_pts}/20 pts
-    - {criterion1}: {pts1}/5
-    - {criterion2}: {pts2}/5
-    - {criterion3}: {pts3}/5
-    - {criterion4}: {pts4}/5
-  ...
+  ✓ User {user_id} - {total_pts}/{points_possible} pts
+    - {criterion1}: {pts1}/{max1}
+    - {criterion2}: {pts2}/{max2}
+    - ...
+  (list all criteria from rubric)
 
 WILL BE SKIPPED:
   ⊘ User {user_id} - not approved (needs review)
@@ -106,7 +105,7 @@ This will:
 
   • Submit grades for Z students
   • Skip X unapproved assessments
-  • Post rubric scores and Spanish feedback to Canvas
+  • Post rubric scores and feedback to Canvas
   • Mark submitted assessments in JSON file
 
 Continue? (Y/n)
@@ -137,7 +136,7 @@ Submission Complete
 ===================
 
 Successfully Submitted: X students
-  ✓ User {user_id} - {total_pts}/20 pts posted to Canvas
+  ✓ User {user_id} - {total_pts}/{points_possible} pts posted to Canvas
   ...
 
 Skipped:
@@ -188,13 +187,13 @@ Grading Complete:
   - Z students no submission
 
 Class Performance (submitted grades):
-  Average: {avg}/20 pts ({percentage}%)
+  Average: {avg}/{points_possible} pts ({percentage}%)
 
   Criterion Averages:
   - {criterion1}: {avg1}/{max1} pts
   - {criterion2}: {avg2}/{max2} pts
-  - {criterion3}: {avg3}/{max3} pts
-  - {criterion4}: {avg4}/{max4} pts
+  - ...
+  (list all criteria from rubric)
 
 Assessment File: {file_path}
   Preserved as audit trail with submission timestamps

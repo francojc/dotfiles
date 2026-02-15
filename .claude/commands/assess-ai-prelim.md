@@ -1,5 +1,5 @@
 ---
-description: Use spanish-pedagogy-expert agent to evaluate all submissions with AI-generated assessments
+description: Use pedagogy agent to evaluate all submissions with AI-generated assessments
 args:
   - name: course_id
     description: Canvas course ID (auto-discovers from state if not provided)
@@ -11,11 +11,11 @@ args:
 
 # AI Preliminary Assessment - Evaluate Submissions
 
-Use the spanish-pedagogy-expert agent to evaluate all student submissions and populate the assessment JSON file.
+Use the appropriate pedagogy agent to evaluate all student submissions and populate the assessment JSON file.
 
 ## Task Overview
 
-Process each submission chronologically, using the agent to provide rubric-based evaluation with concise Spanish feedback.
+Process each submission chronologically, using the agent to provide rubric-based evaluation with concise feedback in the assignment's feedback language (from `metadata.feedback_language` in the assessment JSON).
 
 ## Step 1: Locate Assessment File
 
@@ -41,10 +41,16 @@ For each student in the assessment file who has submitted (process in chronologi
    - Skip if assessment already has scores (don't re-evaluate)
    - Report: "Skipping user {user_id} - already evaluated"
 
-2. **Launch spanish-pedagogy-expert agent** via Task tool with this prompt:
+2. **Select agent based on `metadata.language_learning`**:
+   - If `true`: use `spanish-pedagogy-expert` agent via Task tool
+   - If `false`: use `pedagogy-expert` agent via Task tool
+
+   **Launch the selected agent** with this prompt:
 
 ```
-You are evaluating a Spanish language student's submission.
+You are evaluating a student's submission for a university course.
+
+Feedback language: {feedback_language} (write ALL feedback in this language)
 
 ## Student Submission
 
@@ -55,12 +61,16 @@ Word Count: {word_count}
 ### Submission Text:
 {submission_text}
 
+## Assignment Instructions
+
+{assignment_instructions_from_metadata}
+
 ## Rubric Criteria
 
 You must evaluate this submission against the rubric criteria. For EACH criterion, provide:
 - Points awarded (based on rating levels, half-points acceptable)
 - Rating ID (the specific ID matching the points)
-- Concise feedback (`justification`) in Spanish (EXACTLY 15-20 words)
+- Concise feedback (`justification`) in {feedback_language_name} (EXACTLY 15-20 words)
 - A final summary of all criteria at the end in the overall comments section.
 
 {full_rubric_details_here}
@@ -72,12 +82,12 @@ Provide your assessment in this EXACT format:
 **CRITERION: {criterion_name} [{criterion_id}]**
 Points: {points_awarded}
 Rating ID: {rating_id}
-Justification: {15-20 word Spanish feedback focusing ONLY on main positive/negative attributes}
-Overall Comments: {final summary of all criteria in Spanish, 30-40 words}
+Justification: {15-20 word feedback in {feedback_language_name} focusing ONLY on main positive/negative attributes}
+Overall Comments: {final summary of all criteria in {feedback_language_name}, 30-40 words}
 
 ## Feedback Requirements
 
-- EXACTLY 15-20 words in Spanish per criterion
+- EXACTLY 15-20 words in {feedback_language_name} per criterion
 - Focus ONLY on the main strength OR weakness (not both if space-constrained)
 - Use clear, comprehensible phrases (need not be complete sentences)
 - Directly address the specific criterion
@@ -87,19 +97,31 @@ Overall Comments: {final summary of all criteria in Spanish, 30-40 words}
 
 ## Evaluation Guidelines
 
+- Consider whether the submission addresses the assignment instructions/prompt
 - Use the language of the rubric levels to guide your scoring and justification feedback
 - Be lenient in applying rubric criteria and lean toward higher points when borderline
-- Value attempts at grammatical and lexical complexity, do not penalize these
 - Use partial credit when appropriate
 - Ensure feedback helps student understand the assessment
-- Consider this is upper-level Spanish (advanced low proficiency expected)
+
+### Language-specific guidelines
+
+**If language_learning is true (language course)**:
+- Value attempts at grammatical and lexical complexity; do not penalize these
+- Consider this is a language course ({language_level} proficiency expected)
+- Use the "{formality}" form when addressing the student
+- Tone: supportive and encouraging, motivating the student to improve their language skills
+
+**If language_learning is false (non-language course)**:
+- Evaluate content, reasoning, and adherence to assignment requirements
+- Tone: constructive and professional, motivating the student to improve
 
 ## Final Summary
 
 - Summarize the individual criterion ratings and justification comments in the overall comments section.
 - Provide praise for strengths and constructive suggestions for improvement.
+- Write the summary in {feedback_language_name}.
 
-The tone for all written feedback should be supportive and encouraging, aiming to motivate the student to improve their Spanish skills. It is written in Spanish and directed at the student using the informal "tú" form.
+The tone for all written feedback should be supportive and encouraging, directed at the student.
 
 Provide complete assessment for all criteria now.
 ```
@@ -107,14 +129,14 @@ Provide complete assessment for all criteria now.
 3. **Parse agent response** to extract:
    - Points for each criterion
    - Rating ID for each criterion
-   - 15-20 word Spanish feedback for each criterion
+   - 15-20 word feedback for each criterion (in the feedback language)
    - Overall comments summary
 
 4. **Validate agent output**:
    - Verify all criteria have assessments
    - Check that rating IDs match the rubric structure
    - Count words in each feedback (must be 15-20)
-   - Verify feedback is in Spanish
+   - Verify feedback is in the correct language (matches `metadata.feedback_language`)
 
 5. **Save assessment** using `mcp__mcp-canvas__review_assessment`:
    - `file_path`: the assessment JSON file
@@ -126,8 +148,8 @@ Provide complete assessment for all criteria now.
 6. **Report progress**:
 
    ```
-   ✓ Evaluated User {user_id} - {total_points}/20 pts
-     [{criterion1}: {pts1}, {criterion2}: {pts2}, {criterion3}: {pts3}, {criterion4}: {pts4}]
+   Evaluated User {user_id} - {total_points}/{points_possible} pts
+     [{criterion1}: {pts1}, {criterion2}: {pts2}, ...]
    ```
 
 ## Step 3: Display Summary
@@ -145,21 +167,21 @@ Submissions Evaluated: X/Y
 - Already graded in Canvas (excluded during setup): A students
 
 Score Distribution:
-  Average: {avg} / 20 pts
+  Average: {avg} / {points_possible} pts
   Range: {min} - {max} pts
 
   Criterion Averages:
   - {criterion1}: {avg1} / {max1} pts
   - {criterion2}: {avg2} / {max2} pts
-  - {criterion3}: {avg3} / {max3} pts
-  - {criterion4}: {avg4} / {max4} pts
+  - ...
+  (list all criteria from rubric)
 
 Assessment File Updated:
-  📄 {assessment_file_path}
+  {assessment_file_path}
 
 Status:
-  ✓ All assessments marked as "reviewed"
-  ⚠ None marked as "approved" yet
+  All assessments marked as "reviewed"
+  None marked as "approved" yet
 
 Note: Already-graded submissions were excluded during setup to prevent overwriting.
 
@@ -174,6 +196,7 @@ Next Steps:
 
 - If agent fails to evaluate: Report error, continue with next student
 - If feedback not 15-20 words: Report warning, ask agent to revise
+- If feedback in wrong language: Report warning, ask agent to revise
 - If rating ID invalid: Report error, ask agent to provide valid ID
 - If assessment file not found: Report error, tell user to run `/assess-setup`
 
@@ -185,6 +208,6 @@ Next Steps:
 - Never overwrite existing assessments (skip if already evaluated)
 - All assessments marked as "reviewed" but NOT "approved"
 - Human review required before submission to Canvas
-- The spanish-pedagogy-expert agent ensures pedagogically appropriate evaluation
+- Agent selection is based on `metadata.language_learning`: `spanish-pedagogy-expert` for language courses, `pedagogy-expert` for non-language courses
 
 Begin AI evaluation now.

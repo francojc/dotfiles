@@ -50,7 +50,8 @@ increments for clarity and rubric integrity.
 Normalize totals toward a median target using a nonnegative-only, additive-capped
 uplift K applied in 0.5 steps per criterion, respecting per-criterion maximums
 and preserving Canvas rubric validity. Optionally rewrite criterion feedback
-(Spanish, 15–20 words), then mark as reviewed and approved.
+(15–20 words in the feedback language from `metadata.feedback_language`), then
+mark as reviewed and approved.
 
 ## Step 1: Locate Assessment File
 
@@ -142,8 +143,8 @@ Totals (median): {old_med} → {new_med}
 Criterion averages:
 - {crit1}: {old1} → {new1}
 - {crit2}: {old2} → {new2}
-- {crit3}: {old3} → {new3}
-- {crit4}: {old4} → {new4}
+- ...
+(list all criteria from rubric)
 
 Adjusted: X students
 No change: Y students
@@ -165,17 +166,21 @@ Global validations:
 - All criteria present and within [0, max]
 - Idempotency: if `refinement_meta` exists and `reapply=false`, abort with guidance
 
-## Step 7: Spanish Feedback Refinement (15–20 words)
+## Step 7: Feedback Refinement (15–20 words)
 
-If `feedback_mode=rewrite` or `append`, launch `spanish-pedagogy-expert` via Task
+Read `metadata.language_learning` and `metadata.feedback_language` from the
+assessment JSON.
+
+If `feedback_mode=rewrite` or `append`, launch the appropriate agent via Task
 per adjusted student to produce criterion-level comments with these constraints:
 
-- EXACTLY 15–20 words in Spanish per criterion
+- Agent: `spanish-pedagogy-expert` if `language_learning=true`, `pedagogy-expert` if `false`
+- EXACTLY 15–20 words per criterion in the feedback language
 - Focus ONLY on the criterion; one main strength OR weakness
 - Actionable and specific; avoid generic praise
 - Do NOT mention curves, cohort, calibration, or numeric step sizes
 
-Prompt template (per criterion):
+**Prompt template (per criterion) — Spanish (`es`)**:
 
 ```
 Reescribe un comentario breve para la rúbrica (15–20 palabras, español),
@@ -187,37 +192,49 @@ Puntaje final: {new_points_c}/{max_c}
 Descripción breve del desempeño y rasgos observables: {signals_from_submission}
 ```
 
+**Prompt template (per criterion) — English (`en`)**:
+
+```
+Rewrite a brief rubric comment (15–20 words, English) focused ONLY on this
+criterion. Be precise, specific, and actionable. Do not mention grade
+adjustments or curves.
+
+Criterion: {criterion_name}
+Final score: {new_points_c}/{max_c}
+Brief description of performance and observable traits: {signals_from_submission}
+```
+
 Append mode:
 
-- If `feedback_mode=append`, keep el comentario original y añade una cláusula
-  final de 8–12 palabras coherente con el nuevo puntaje (sin mencionar la
-  calibración). Validar que el total por criterio quede en 15–20 palabras si
-  se requiere; si no, solo añadir una cláusula concisa.
+- If `feedback_mode=append`, keep the original comment and add a final clause
+  of 8–12 words consistent with the new score (without mentioning calibration).
+  Validate that the total per criterion stays within 15–20 words if required;
+  otherwise just add a concise clause.
 
 Validation:
 
-- Verificar 15–20 palabras, español, relevancia al criterio
-- Si falla, reintentar una vez; si persiste, usar `append` o `none` y marcar para revisión
+- Verify 15–20 words, correct language, relevance to criterion
+- If validation fails, retry once; if it persists, fall back to `append` or `none` and flag for review
 
 ## Step 8: Confirm and Write
 
 - Show a confirmation prompt. If `dry_run=true`, exit after preview
 - If confirmed and `dry_run=false`:
-  - For cada estudiante ajustado, usar `mcp__mcp-canvas__review_assessment`:
+  - For each adjusted student, use `mcp__mcp-canvas__review_assessment`:
     - `file_path`: assessment JSON
     - `user_id`: Canvas user ID
-    - `updated_assessment`: rubric_assessment con nuevos puntos y rating ids,
-      comentarios por criterio (15–20 palabras) y nota general breve sobre
-      expectativas de dominio (sin mencionar curva)
+    - `updated_assessment`: rubric_assessment with updated points and rating IDs,
+      per-criterion comments (15–20 words in feedback language), and brief
+      overall note on proficiency expectations (without mentioning curves)
     - `mark_reviewed`: true
-    - `mark_approved`: según `approve` (default true)
-  - Escribir bloque `refinement_meta` con:
+    - `mark_approved`: per `approve` flag (default true)
+  - Write `refinement_meta` block with:
     - policy, algorithm, step_size=0.5, target, K, caps, feasibility, timestamp,
       version y resumen de cambios por estudiante/criterio
 
 ## Step 9: Summary and State Update
 
-Mostrar resumen final:
+Display final summary:
 
 ```
 Refinement Complete
@@ -233,8 +250,8 @@ Means: {old_mean} → {new_mean}
 Criterion averages:
 - {crit1}: {old1} → {new1}
 - {crit2}: {old2} → {new2}
-- {crit3}: {old3} → {new3}
-- {crit4}: {old4} → {new4}
+- ...
+(list all criteria from rubric)
 
 Assessment File Updated:
   📄 {assessment_file_path}

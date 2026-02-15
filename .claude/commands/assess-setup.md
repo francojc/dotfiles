@@ -1,9 +1,6 @@
 ---
 description: Initialize Canvas assignment grading workflow and create assessment JSON file
 args:
-  - name: course_id
-    description: Canvas course ID (auto-discovers if not provided)
-    required: false
   - name: assignment_id
     description: Canvas assignment ID (auto-discovers if not provided)
     required: false
@@ -11,23 +8,43 @@ args:
 
 # Assessment Setup - Initialize Grading Workflow
 
-Initialize the grading workflow for Canvas assignment {{assignment_id}} in course {{course_id}}.
+Initialize the grading workflow for Canvas assignment {{assignment_id}}.
 
 ## Task Overview
 
 Create the assessment JSON file with all student submissions and rubric structure, ready for AI evaluation.
 
-## Step 1: Determine Course and Assignment IDs
+## Step 1: Validate course_parameters.md
 
-**If arguments provided**:
+Check for `.claude/course_parameters.md` in the current repository.
 
-- Use `course_id={{course_id}}` and `assignment_id={{assignment_id}}`
+**If missing**: Use `AskUserQuestion` to collect all nine fields, then create the file. The file uses YAML frontmatter with these fields:
 
-**If no arguments provided**:
+```yaml
+---
+course_title: "Exploring the Hispanic World"
+course_code: "SPA-212-T"
+canvas_course_id: 79384
+term: "Spring"
+year: 2026
+feedback_language: "Spanish"
+language_learning: true
+language_level: "ACTFL Intermediate Mid"
+formality: "tú"
+---
+```
 
-- Search current directory for existing `assessments_*.json` files
-- If found, extract course_id and assignment_id from most recent file
-- If not found, ask user to provide course_id and assignment_id
+Notes on field values:
+
+- `language_learning: false` means `language_level` and `formality` should be `"NA"`
+- `feedback_language` accepts full names ("Spanish", "English")
+
+**If present**: Parse YAML frontmatter and validate all nine fields are populated. If any field is missing, prompt user for the missing values and update the file.
+
+**Extract values for downstream use**:
+
+- `canvas_course_id` becomes the `course_id` for all Canvas API calls
+- Map `feedback_language` to language code: "Spanish" → `"es"`, "English" → `"en"`
 
 ## Step 2: Generate Assessment Structure
 
@@ -37,16 +54,16 @@ Fetch data from Canvas using three separate API calls:
 
 Use `mcp__mcp-canvas__get_assignment_details`:
 
-- `course_identifier`: the course_id
+- `course_identifier`: the `canvas_course_id` from course_parameters.md
 - `assignment_id`: the assignment_id
 
-This returns assignment metadata (name, due date, points possible, submission type).
+This returns assignment metadata (name, due date, points possible, submission type) and the assignment description/instructions. Extract the description field — it will be stored in the assessment JSON as `assignment_instructions`.
 
 ### 2b. Get Rubric Structure
 
 Use `mcp__mcp-canvas__get_assignment_rubric_details`:
 
-- `course_identifier`: the course_id
+- `course_identifier`: the `canvas_course_id`
 - `assignment_id`: the assignment_id
 
 This returns complete rubric with all criteria and rating levels.
@@ -55,7 +72,7 @@ This returns complete rubric with all criteria and rating levels.
 
 Use `mcp__mcp-canvas__get_submissions_with_content`:
 
-- `course_identifier`: the course_id
+- `course_identifier`: the `canvas_course_id`
 - `assignment_id`: the assignment_id
 - `include_unsubmitted`: false
 - `exclude_graded`: true (skips already-graded submissions)
@@ -82,6 +99,11 @@ Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestam
     "points_possible": ...,
     "total_submissions": ...,
     "created_at": "...",
+    "assignment_instructions": "...",
+    "feedback_language": "en|es",
+    "language_learning": true|false,
+    "language_level": "ACTFL Intermediate Mid|NA",
+    "formality": "tú|NA",
     "workflow_version": "1.0"
   },
   "rubric": {
@@ -121,6 +143,14 @@ Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestam
 }
 ```
 
+Copy these fields from course_parameters.md into the JSON metadata:
+
+- `course_id` (from `canvas_course_id`)
+- `feedback_language` (mapped to `"es"` or `"en"`)
+- `language_learning` (boolean)
+- `language_level` (string or `"NA"`)
+- `formality` (string or `"NA"`)
+
 This will:
 
 - Combine data from all three API calls into one assessment file
@@ -141,6 +171,10 @@ Report the following information:
 Assessment Setup Complete
 ========================
 
+Course: {course_title} ({course_code})
+Term: {term} {year}
+Feedback Language: {feedback_language}
+
 Assignment: [assignment name]
 Due Date: [due date]
 Points Possible: [total points]
@@ -154,6 +188,8 @@ Submissions Found: Y students
 - No submission: D students (skipped)
   Student IDs: [list of student IDs with no submissions]
 
+Assignment Instructions: Captured ({word_count} words)
+
 Rubric Structure:
 - Number of criteria: [count]
 - Total points: [points]
@@ -163,7 +199,7 @@ Rubric Structure:
   ...
 
 Assessment File Created:
-  📄 assessments_{course_id}_{assignment_id}_{timestamp}.json
+  assessments_{course_id}_{assignment_id}_{timestamp}.json
 
 Note: Already-graded submissions were excluded to prevent overwriting existing grades.
 
