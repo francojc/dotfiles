@@ -140,6 +140,9 @@ map("n", "<leader>fn", "<Cmd>enew<Cr>", { desc = "New file" })
 map("n", "<leader>fr", "<Cmd>lua Snacks.picker.recent()<Cr>", { desc = "Recent files" })
 map("n", "<leader>fc", "<Cmd>lua Snacks.picker.resume()<Cr>", { desc = "Resume picker" })
 -- Git -----------------------------------
+-- Gitsigns
+map("n", "<leader>gn", "<Cmd>Gitsigns nav_hunk next<Cr>", { desc = "Next git hunk" })
+map("n", "<leader>gp", "<Cmd>Gitsigns nav_hunk previous<Cr>", { desc = "Previous git hunk" })
 -- Lazygit
 map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
 map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })

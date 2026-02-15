@@ -131,6 +131,7 @@
   # YouTube content creation and streaming
   youtubeContentPackages = with pkgs; [
     # audacity # Audio editing and recording
+    tenacity # Audacity fork, more actively maintained
     yt-dlp # Video downloader
   ];
 
