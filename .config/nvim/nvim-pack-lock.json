@@ -21,11 +21,11 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-      "rev": "7c80e36023c5499a97e097cb5f229e9b635725a0",
+      "rev": "cd79f572971c58784ca72551af29af3a63da9168",
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
-      "rev": "beaf41a",
+      "rev": "0a5de4da015a175f416d6ef1eda84661623e0500",
       "src": "https://github.com/catppuccin/nvim"
     },
     "cmp-pandoc-references": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/github/copilot.vim"
     },
     "csvview.nvim": {
-      "rev": "8d068c526ab5ade68226de036d533298cd93a399",
+      "rev": "7022e18a0fbae9aecf99a3ba02b2a541edc2b8a1",
       "src": "https://github.com/hat0uma/csvview.nvim"
     },
     "diffview.nvim": {
@@ -57,7 +57,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "31217271a7314c343606acb4072a94a039a19fb5",
+      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "golangci-lint-langserver": {
@@ -65,11 +65,11 @@
       "src": "https://github.com/nametake/golangci-lint-langserver"
     },
     "gruvbox.nvim": {
-      "rev": "a472496",
+      "rev": "561126520034a1dac2f78ab063db025d12555998",
       "src": "https://github.com/ellisonleao/gruvbox.nvim"
     },
     "image.nvim": {
-      "rev": "446a8a5",
+      "rev": "c75654b37cd13df17475a53d9dc3e3d1b5e09fa1",
       "src": "https://github.com/3rd/image.nvim"
     },
     "img-clip.nvim": {
@@ -85,7 +85,7 @@
       "src": "https://github.com/ggml-org/llama.vim"
     },
     "mini.icons": {
-      "rev": "efc85e4",
+      "rev": "68c178e0958d95b3977a771f3445429b1bded985",
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "mini.pairs": {
@@ -109,7 +109,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "be9370b72c39fe10b2218e9c0aa06dcbe47f7296",
+      "rev": "1705e203716269e709ef7645196636d09fe58ed9",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -117,7 +117,7 @@
       "src": "https://github.com/navarasu/onedark.nvim"
     },
     "otter.nvim": {
-      "rev": "1e9d033f284c176b2f05778c2dbb9a23b0a421d2",
+      "rev": "4796602953348e19fb24916557af7b89e188751f",
       "src": "https://github.com/jmbuhr/otter.nvim"
     },
     "plenary.nvim": {
@@ -189,7 +189,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "a3fe7b5855254974837c23c915865478b0d54534",
+      "rev": "834842409184e612e0fc037358cd150a1b6e3cd6",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
