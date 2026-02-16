@@ -28,6 +28,16 @@ $rlang\
 $status\
 $memory_usage"""
 
+[os]
+disabled = false
+style = "bright-white"
+
+[os.symbols]
+Macos = " "
+Linux = " "
+Ubuntu = "󰕈 "
+Alpine = " "
+
 [fill]
 symbol = ' '
 
@@ -161,15 +171,6 @@ style = 'bold italic dimmed blue'
 symbol = "  "
 format = '[$symbol]($style)'
 
-[os]
-disabled = false
-style = "bright-white"
-
-[os.symbols]
-Macos = " "
-Linux = " "
-Ubuntu = "󰕈 "
-Alpine = " "
 
 [rlang]
 symbol = " "

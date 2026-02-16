@@ -105,7 +105,7 @@
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
 
       # Floating calendar popup
-      bind-key c display-popup -w 55% -h 30% -T "Calendar" -k "gcal -K .."
+      bind-key c display-popup -w 60% -h 40% -T "Calendar" -k "gcal -K .."
 
       # Jump to last Claude notification pane
       bind-key N run-shell '\
