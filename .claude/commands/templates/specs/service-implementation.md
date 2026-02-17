@@ -72,6 +72,7 @@
   - Action item tracking and follow-up systems
   - Decision documentation and rationale recording
   - Archive maintenance and access procedures
+  - Weekly reviews and session logs stored in `logs/`
 
 ### Communication Implementation
 

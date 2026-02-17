@@ -39,6 +39,17 @@ Write in a natural academic voice. Avoid patterns that signal AI-generated text:
 
 Use `/writing:refine <file>` for a thorough pass across vocabulary, structure, voice, and formatting.
 
+## Project logs convention
+
+All project types use a `logs/` directory at the repo root for
+machine-generated status artifacts. Commands that write to `logs/`:
+
+- `/project:review-week` — writes `logs/weekly-review-YYYY-MM-DD.md`
+- `/project:status` and `/project:plan-session` — read from `logs/` for context
+
+Each entry gets its own dated file. Do not consolidate into a single log file.
+The `logs/` directory is created automatically by `/project:setup`.
+
 ## Command workflows
 
 Commands are organized into namespaced groups under `~/.claude/commands/`.

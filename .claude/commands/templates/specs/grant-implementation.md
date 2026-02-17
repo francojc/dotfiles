@@ -291,6 +291,7 @@
 - **Correspondence:** [Important communication archiving]
 - **Legal Documents:** [Contracts, agreements, and compliance records]
 - **Financial Records:** [Detailed expenditure tracking and receipts]
+- **Project Logs:** Weekly reviews and session logs stored in `logs/`
 
 ## Sustainability and Legacy
 

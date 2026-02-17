@@ -15,7 +15,7 @@ Run these in parallel:
 - `git diff --stat HEAD~20..HEAD` (or appropriate range) for change scope.
 - Read the project CLAUDE.md for goals and structure context.
 - Glob for `specs/**/*.md` and read progress-tracking files.
-- Glob for `docs/weekly-log.md` or similar existing log files.
+- Glob for `logs/*.md` to find existing weekly reviews and session logs.
 
 ## Step 2 — Analyze and categorize
 
@@ -60,10 +60,8 @@ Write a concise report in this format:
 
 Keep it to one screen of text. No filler, no fluff. Write in plain language.
 
-## Step 4 — Offer to save
+## Step 4 — Save the report
 
-Ask the user if they want to append the report to a log file. Check if
-`docs/weekly-log.md` exists; if so, suggest appending there. Otherwise suggest
-creating it.
-
-When appending, add a horizontal rule (`---`) separator before the new entry.
+Write the report to `logs/weekly-review-YYYY-MM-DD.md` (using today's date).
+Create the `logs/` directory if it does not exist. Each review gets its own
+file — do not append to a single log file.

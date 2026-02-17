@@ -104,6 +104,7 @@ Track the progress of the project in the current repository, including milestone
 
 - Read specs/planning.md to understand project objectives and timeline
 - Parse specs/progress.md for current status and completed milestones
+- Read recent entries from `logs/` directory for historical context
 - Analyze git commit history for development activity patterns
 - Identify areas of high productivity vs. areas needing attention
 

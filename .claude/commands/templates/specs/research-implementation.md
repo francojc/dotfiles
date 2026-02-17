@@ -102,6 +102,7 @@ project/
 │   ├── protocols/       # Detailed methodology documentation
 │   ├── reports/         # Analysis reports and summaries
 │   └── presentations/   # Conference and meeting materials
+├── logs/                # Weekly reviews and session logs
 └── output/
     ├── figures/         # Generated plots and visualizations
     ├── tables/          # Analysis results tables

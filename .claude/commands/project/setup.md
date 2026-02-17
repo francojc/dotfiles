@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Grep, Edit, Bash, Write
 description: |
-  Create complete project scaffolding for research, teaching, grant, or service projects including CLAUDE.md, specs/ directory structure, and development environment setup.
+  Create complete project scaffolding for research, teaching, grant, or service projects including CLAUDE.md, specs/, logs/ directories, and development environment setup.
 ---
 
 Set up a comprehensive project structure with documentation, planning, and development environment.
@@ -36,6 +36,7 @@ Set up a comprehensive project structure with documentation, planning, and devel
 3. **Create Project Structure with Context**
    - Generate CLAUDE.md with project-specific content from description
    - Create specs/ directory with contextually appropriate templates
+   - Create logs/ directory for weekly reviews and session logs
    - Set up development environment (flake.nix)
    - Configure project-specific .gitignore patterns
 
@@ -286,8 +287,8 @@ esac
 
 
 ```bash
-# Create specs directory
-mkdir -p specs
+# Create specs and logs directories
+mkdir -p specs logs
 
 # Apply project-specific templates with intelligent content population
 TEMPLATE_DIR="$HOME/.dotfiles/.claude/commands/templates/specs"
@@ -419,6 +420,7 @@ After successful setup:
 - [ ] **Project Description Validated:** README.md or equivalent with sufficient detail
 - [ ] **CLAUDE.md Generated:** Project-specific content derived from description
 - [ ] **Specs/ Directory Created:** planning.md, progress.md, implementation.md with context
+- [ ] **Logs/ Directory Created:** ready for weekly reviews and session logs
 - [ ] **Environment Setup:** flake.nix file for reproducible environment
 - [ ] **Project Configuration:** .gitignore with appropriate patterns
 - [ ] **Context Integration:** Templates populated with project-specific information

@@ -31,6 +31,7 @@ Generate a comprehensive project status report analyzing recent activity, progre
 ### 4. Current State Assessment
 
 - Review specs/progress.md for latest status updates
+- Read recent entries from `logs/` directory (weekly reviews, session logs)
 - Analyze project directory structure and organization
 - Identify active areas of development
 - Assess resource utilization and timeline adherence

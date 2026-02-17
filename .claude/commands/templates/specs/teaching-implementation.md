@@ -31,16 +31,17 @@
 Course Structure:
 ├── Module 1: [Foundation Concepts]
 │   ├── Learning Activities
-│   ├── Formative Assessments  
+│   ├── Formative Assessments
 │   └── Summative Assessment
 ├── Module 2: [Core Content Block 1]
 │   ├── Learning Activities
 │   ├── Formative Assessments
 │   └── Summative Assessment
-└── Module 3: [Advanced Applications]
-    ├── Learning Activities
-    ├── Formative Assessments
-    └── Final Project/Assessment
+├── Module 3: [Advanced Applications]
+│   ├── Learning Activities
+│   ├── Formative Assessments
+│   └── Final Project/Assessment
+└── logs/                # Weekly reviews and session logs
 ```
 
 ### Scaffolding Strategy

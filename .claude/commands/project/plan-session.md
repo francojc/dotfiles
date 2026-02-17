@@ -13,6 +13,7 @@ Gather context by running these in parallel:
 - Run `git log --oneline --since="30 days ago" -30` to see recent activity.
 - Run `git status` to see current working state.
 - Glob for `specs/**/*.md` and read any progress-tracking files found.
+- Glob for `logs/*.md` and read recent entries (weekly reviews, session logs).
 - Glob for task lists, changelogs, or TODO files in the repo root.
 
 ## Step 2 — Present a status summary
