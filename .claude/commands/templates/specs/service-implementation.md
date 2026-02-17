@@ -9,6 +9,7 @@
 ### Service Architecture
 
 #### Governance Structure
+
 - **Committee Type:** [Standing, Ad Hoc, Advisory, Executive]
 - **Reporting Structure:** [Organizational hierarchy and accountability]
 - **Decision Authority:** [What decisions committee can make independently]
