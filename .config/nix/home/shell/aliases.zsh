@@ -5,13 +5,15 @@
 alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
 
 # --- AI/LLM ALIASES ---
-# llm template shortcuts for quick text processing
-alias llmb='llm -t briefly' # uses the template 'briefly' for concise summaries
-alias llms='llm -t summarize' # uses the template 'summarize' for detailed summaries
-
+# --
 # --- WORKFLOW ALIASES ---
 # Workmux session management for quick workspace switching
-alias wm='workmux'
+alias wm='workmux' # main workmux command
+alias wma='workmux add' # add new workmux session
+alias wmo='workmux open' # open workmux session
+alias wml='workmux list' # list workmux sessions
+alias wmm='workmux merge' # merge workmux sessions
+alias wmr='workmux remove' # remove workmux session
 
 # Secure Claude function that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
 # Usage: claudz [model_name] - defaults to glm-4.6v if no model specified
@@ -120,7 +122,7 @@ alias df='duf'         # Use duf instead of df for better disk usage display
 # More verbose and interactive copy/move operations
 alias cp='cp -iv'      # Interactive copy with verbose output
 alias mv='mv -iv'      # Interactive move with verbose output
-alias rm='rm -iv'      # Interactive remove with verbose output
+alias rm='rm -v'      # Remove with verbose output
 
 # Better path display - shows PATH variable with newlines
 alias path='echo -e ${PATH//:/\\n}'
