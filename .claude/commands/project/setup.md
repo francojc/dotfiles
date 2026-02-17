@@ -6,7 +6,7 @@ description: |
 
 Set up a comprehensive project structure with documentation, planning, and development environment.
 
-**Usage:** /project-setup [type] [optional-name]
+**Usage:** /project:setup [type] [optional-name]
 
 **Prerequisites:** Project description file (README.md, PROJECT.md, CONCEPT.md, or PROPOSAL.md) with meaningful project details
 
@@ -230,7 +230,7 @@ else
     echo '  ## Methodology'
     echo '  Mixed-methods approach combining sociolinguistic interviews...'
     echo ""
-    echo "Then run /project-setup again."
+    echo "Then run /project:setup again."
     exit 1
 fi
 
@@ -379,36 +379,36 @@ Mixed-methods approach combining:
 EOF
 
 # Step 2: Then run project setup (project name extracted from title)
-/project-setup research
+/project:setup research
 
 # Alternative: Specify custom project name
-/project-setup research "Andalusian Vowel Study"
+/project:setup research "Andalusian Vowel Study"
 ```
 
 ### Project Type Examples
 
 ```bash
 # Teaching project (after creating course description)
-/project-setup teaching "Advanced Linguistic Analysis"
+/project:setup teaching "Advanced Linguistic Analysis"
 
 # Grant proposal (after creating preliminary proposal concept)  
-/project-setup grant "NSF Linguistics Research Proposal"
+/project:setup grant "NSF Linguistics Research Proposal"
 
 # Service committee (after creating committee charter/description)
-/project-setup service "Faculty Search Committee"
+/project:setup service "Faculty Search Committee"
 ```
 
 ### Error Prevention Examples
 
 ```bash
 # This will fail with helpful guidance:
-/project-setup research "My Study"
+/project:setup research "My Study"
 # Error: No project description found
 # Please create a project description file...
 
 # This will also fail:
 echo "# Brief title" > README.md
-/project-setup research
+/project:setup research
 # Error: Project description in README.md appears too brief
 # Please add more detail about your project...
 ```

@@ -52,14 +52,14 @@ Notes on field values:
 
 Fetch data from Canvas using three separate API calls:
 
-### 2a. Get Assignment Details
+### 2a. Get Assignment Details and Prompt
 
 Use `mcp__mcp-canvas__get_assignment_details`:
 
 - `course_identifier`: the `canvas_course_id` from course_parameters.yaml
 - `assignment_id`: the assignment_id
 
-This returns assignment metadata (name, due date, points possible, submission type) and the assignment description/instructions. Extract the description field — it will be stored in the assessment JSON as `assignment_instructions`.
+This returns assignment metadata (name, due date, points possible, submission type) and the assignment description/instructions. Extract the `description` field — this is the **assignment prompt** that students responded to. Store it in the assessment JSON as `assignment_instructions`. This prompt is essential context for the AI evaluation step: it tells the evaluator what the student was asked to do.
 
 ### 2b. Get Rubric Structure
 
@@ -193,7 +193,7 @@ Submissions Found: Y students
 - No submission: D students (skipped)
   Student IDs: [list of student IDs with no submissions]
 
-Assignment Instructions: Captured ({word_count} words)
+Assignment Prompt: Captured ({word_count} words)
 
 Rubric Structure:
 - Number of criteria: [count]
@@ -209,7 +209,7 @@ Assessment File Created:
 Note: Already-graded submissions were excluded to prevent overwriting existing grades.
 
 Next Steps:
-  Run `/assess-ai-prelim` to begin AI evaluation of submissions
+  Run `/assess:ai-pass` to begin AI evaluation of submissions
 ```
 
 ## Step 4: Save State

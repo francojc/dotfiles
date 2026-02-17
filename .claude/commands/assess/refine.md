@@ -41,7 +41,7 @@ args:
 
 # Assess Refine - Cohort-Aware Normalization (0.5-point increments)
 
-Refine rubric assessments produced by `/assess-ai-prelim` by adjusting scores and
+Refine rubric assessments produced by `/assess:ai-pass` by adjusting scores and
 justifications based on cohort performance. All adjustments use 0.5-point
 increments for clarity and rubric integrity.
 
@@ -65,7 +65,7 @@ If no arguments provided:
 - Check `.claude/state/assessment_state.json` for last used file
 - If state file exists, use that assessment file
 - If not found, search for `assessments_*.json` and use most recent
-- If no files found, report error and tell user to run `/assess-setup` first
+- If no files found, report error and tell user to run `/assess:setup` first
 
 Load the assessment file using `mcp__mcp-canvas__load_assessment_file`.
 
@@ -273,7 +273,7 @@ auto-discovery in subsequent commands.
 - Invalid rating map: fallback to nearest-below rating; store points; warn
 - Feedback validation fails twice: fallback to `append` or `none` and flag
 - Idempotency: refinement already present without `--reapply`: abort with guidance
-- Assessment file not found: ask user to run `/assess-setup` and `/assess-ai-prelim`
+- Assessment file not found: ask user to run `/assess:setup` and `/assess:ai-pass`
 
 ## Important Notes
 
@@ -288,4 +288,4 @@ auto-discovery in subsequent commands.
 ## Next Steps
 
 - Review refined assessments as needed
-- Run `/assess-submit` to post approved grades to Canvas
+- Run `/assess:submit` to post approved grades to Canvas

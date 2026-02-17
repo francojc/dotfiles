@@ -20,7 +20,7 @@
 
 ## Project documentation
 
-When creating or updating a project-level CLAUDE.md (e.g., via `/init` or `/project-setup`), include:
+When creating or updating a project-level CLAUDE.md (e.g., via `/init` or `/project:setup`), include:
 
 - Build, test, and preview commands (exact commands, not descriptions)
 - File structure: which directories hold source, data, output, and config
@@ -37,4 +37,53 @@ Write in a natural academic voice. Avoid patterns that signal AI-generated text:
 - Vary sentence and paragraph length. Sentence case in headings. Active voice by default.
 - No emojis, no corporate tone, no fabricated references or garbled citations.
 
-Use `/refine <file>` for a thorough pass across vocabulary, structure, voice, and formatting.
+Use `/writing:refine <file>` for a thorough pass across vocabulary, structure, voice, and formatting.
+
+## Command workflows
+
+Commands are organized into namespaced groups under `~/.claude/commands/`.
+
+### Project lifecycle (`/project:*`)
+
+- `/project:setup [type]` — scaffold a new project (research, teaching, grant, service)
+- `/project:status` — analyze git history, specs, and milestones
+- `/project:manage [subcommand]` — update docs, track progress, fix issues, create specs
+- `/project:plan-session` — assess state, set goals, build a dependency-linked task list
+- `/project:review-week` — weekly progress report from git log and specs
+
+Typical flow: `setup` once, then `plan-session` at the start of each work session, `review-week` at week's end.
+
+### Research (`/research:*`)
+
+- `/research:search <topic>` — search Zotero and Semantic Scholar, produce annotated tables
+- `/research:challenge [file or aspect]` — stress-test theory, methods, design, and contribution with literature-backed critique
+- `/research:target [file or focus]` — synthesize search and challenge output into 2-4 ranked research paths with pros, cons, and feasibility
+
+Typical flow: `search` to survey the field, `challenge` to pressure-test the design, `target` to identify and commit to the strongest path.
+
+### Writing (`/writing:*`)
+
+- `/writing:draft <section>` — draft a section from project context and sources
+- `/writing:refine <file>` — detect and remove AI writing artifacts
+- `/writing:reviewer-2 [file]` — tough-but-fair peer review with literature-backed critique
+
+Typical flow: `draft` a section, run `reviewer-2` for critique, address tasks, then `refine` for final polish.
+
+### Assessment (`/assess:*`)
+
+Pipeline for Canvas rubric grading:
+
+1. `/assess:setup [assignment_id]` — fetch rubric, submissions, create assessment JSON
+2. `/assess:ai-pass` — AI-evaluate all submissions against rubric
+3. `/assess:refine` — cohort-aware score normalization (0.5-point steps)
+4. `/assess:submit` — post approved grades to Canvas
+
+### Utility (root level)
+
+- `/chat` — conversational mode, no tools
+- `/implement <plan>` — execute a plan with checkpoints at decision points
+- `/ai-commit` — stage and commit with generated message
+
+### Templates (`/templates:specs:*`)
+
+Spec scaffolds for research, teaching, grant, and service projects (planning, progress, implementation).

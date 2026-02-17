@@ -29,7 +29,7 @@ Review approved assessments, preview submission, and send grades to Canvas with 
 - Check `.claude/state/assessment_state.json` for last used file
 - If state file exists, use that assessment file
 - If not found, search for `assessments_*.json` and use most recent
-- If no files found, report error and tell user to run `/assess-setup` first
+- If no files found, report error and tell user to run `/assess:setup` first
 
 ## Step 2: Load and Validate Assessment File
 

@@ -29,7 +29,7 @@ Process each submission chronologically, using the agent to provide rubric-based
 - Check `.claude/state/assessment_state.json` for last used file
 - If state file exists, use that assessment file
 - If not found, search for `assessments_*.json` and use most recent
-- If no files found, report error and tell user to run `/assess-setup` first
+- If no files found, report error and tell user to run `/assess:setup` first
 
 Load the assessment file using `mcp__mcp-canvas__load_assessment_file`.
 
@@ -62,7 +62,9 @@ Word Count: {word_count}
 ### Submission Text:
 {submission_text}
 
-## Assignment Instructions
+## Assignment Prompt
+
+The following is the assignment prompt that the student was asked to respond to. Use this as essential context when applying rubric criteria — it defines the task the student was expected to complete.
 
 {assignment_instructions_from_metadata}
 
@@ -98,7 +100,7 @@ Overall Comments: {final summary of all criteria in {feedback_language_name}, 30
 
 ## Evaluation Guidelines
 
-- Consider whether the submission addresses the assignment instructions/prompt
+- Use the assignment prompt as essential context: it defines what the student was asked to do and informs how rubric criteria should be applied to this specific submission
 - Use the language of the rubric levels to guide your scoring and justification feedback
 - Be lenient in applying rubric criteria and lean toward higher points when borderline
 - Use partial credit when appropriate
@@ -193,7 +195,7 @@ Next Steps:
   1. Review the assessment file manually
   2. Edit any assessments as needed using review tools or JSON editing
   3. Mark assessments as "approved" when ready
-  4. Run `/assess-submit` to submit approved grades to Canvas
+  4. Run `/assess:submit` to submit approved grades to Canvas
 ```
 
 ## Error Handling
@@ -202,7 +204,7 @@ Next Steps:
 - If feedback not 15-20 words: Report warning, ask agent to revise
 - If feedback in wrong language: Report warning, ask agent to revise
 - If rating ID invalid: Report error, ask agent to provide valid ID
-- If assessment file not found: Report error, tell user to run `/assess-setup`
+- If assessment file not found: Report error, tell user to run `/assess:setup`
 
 ## Important Notes
 

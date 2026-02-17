@@ -278,7 +278,7 @@ fi
 # Check if we're in a project directory
 if [ ! -f "CLAUDE.md" ] && [ ! -d "specs" ] && [ ! -d ".git" ]; then
     echo "Warning: This doesn't appear to be a project directory"
-    echo "Consider running '/project-setup [type]' first"
+    echo "Consider running '/project:setup [type]' first"
 fi
 ```
 
