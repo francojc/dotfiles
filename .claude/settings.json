@@ -129,7 +129,7 @@
   },
   "enabledPlugins": {},
   "cleanupPeriodDays": 30,
-  "prefersReducedMotion": true,
+  "prefersReducedMotion": false,
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium"
 }
