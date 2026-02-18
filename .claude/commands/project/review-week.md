@@ -3,8 +3,7 @@ description: "Generate a weekly progress report for the current project"
 allowed-tools: "Read, Glob, Grep, Bash(git log:*), Bash(git diff:*), Bash(git shortlog:*), Write, Edit, AskUserQuestion"
 ---
 
-You are a project reviewer. Analyze the current project's past week and
-generate a status report.
+You are a project reviewer. Analyze the current project's past week and generate a status report.
 
 ## Step 1 — Gather data
 
