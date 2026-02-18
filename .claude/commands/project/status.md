@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Grep, Edit, Bash, LS
 description: |
-  Analyze current project state including git history, progress tracking, and academic milestones with next-step recommendations.
+  Analyze current project state including git history, progress tracking, and milestones with next-step recommendations.
 ---
 
 Generate a comprehensive project status report analyzing recent activity, progress against goals, and current state.
@@ -11,13 +11,13 @@ Generate a comprehensive project status report analyzing recent activity, progre
 ### 1. Project Detection and Context
 
 - Identify project type from existing CLAUDE.md or specs/ structure
-- Determine academic context (research/teaching/grant/service)
+- Determine context (research/teaching/grant/service/application)
 - Assess project phase and timeline
 
 ### 2. Git Analysis and Recent Activity
 
 - Analyze recent commits (last 30 days) for development patterns
-- Identify key contributors and collaboration activity  
+- Identify key contributors and collaboration activity
 - Review file change patterns and development focus areas
 - Assess branch structure and development workflow
 
@@ -36,12 +36,13 @@ Generate a comprehensive project status report analyzing recent activity, progre
 - Identify active areas of development
 - Assess resource utilization and timeline adherence
 
-### 5. Academic Milestone Tracking
+### 5. Milestone Tracking
 
 - **Research Projects:** Literature review, data collection, analysis, writing phases
 - **Teaching Projects:** Course development, content creation, assessment design
 - **Grant Projects:** Proposal sections, budget development, submission timeline
 - **Service Projects:** Committee deliverables, meeting schedules, governance tasks
+- **Application Projects:** Feature development, testing phases, deployment milestones
 
 ## Report Generation
 
@@ -51,7 +52,7 @@ Generate a comprehensive project status report analyzing recent activity, progre
 # Recent commit analysis
 git log --oneline --since="30 days ago" --author-date-order
 
-# File change patterns  
+# File change patterns
 git diff --stat HEAD~30..HEAD
 
 # Contributor activity
@@ -73,12 +74,13 @@ Based on recent git activity and file changes, identify:
 - Potential bottlenecks or stalled areas
 - Collaboration patterns and team dynamics
 
-### Academic Context Assessment
+### Context Assessment
 
 - **Research:** Progress on data collection, analysis, writing
 - **Teaching:** Course material development, assessment creation
 - **Grant:** Proposal component completion, deadline tracking
 - **Service:** Committee work progress, meeting preparation
+- **Application:** Feature development, testing, deployment status
 
 ## Recommendations and Next Steps
 
@@ -89,16 +91,18 @@ Based on analysis, suggest 2-3 specific actions to maintain momentum
 ### Strategic Recommendations
 
 - Timeline adjustments needed
-- Resource reallocation suggestions  
+- Resource reallocation suggestions
 - Collaboration opportunities
 - Risk mitigation for identified issues
+- Methodology refinements
 
-### Academic Best Practices
+### Best Practices
 
 - Documentation improvements needed
 - Methodology refinements suggested
 - Quality assurance checkpoints
 - Dissemination opportunities
+- Deployment strategies for application projects
 
 ## Output Format
 
@@ -106,7 +110,7 @@ Based on analysis, suggest 2-3 specific actions to maintain momentum
 Generated: [Current Date]
 
 **Project:** [Name from CLAUDE.md or directory]
-**Type:** [Research/Teaching/Grant/Service]
+**Type:** [Research/Teaching/Grant/Service/Application]
 **Phase:** [Current project phase]
 
 **RECENT ACTIVITY (Last 30 Days)**
@@ -128,10 +132,10 @@ Generated: [Current Date]
 **RECOMMENDATIONS**
 - Next Steps: [2-3 immediate actions]
 - Strategic: [Longer-term suggestions]
-- Academic: [Methodology/documentation improvements]
+- Professional: [Methodology/documentation improvements, dissemination strategies]
 
 **RISK FACTORS**
 - [Any identified risks or concerns]
 - [Mitigation suggestions]
 
-Use this analysis to inform project planning and maintain academic rigor while ensuring timely progress toward objectives.
+Use this analysis to inform project planning and maintain academic/professiona rigor while ensuring timely progress toward objectives.

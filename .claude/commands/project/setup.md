@@ -1,7 +1,7 @@
 ---
-allowed-tools: Read, Grep, Edit, Bash, Write
+allowed-tools: Read, Grep, Edit, Bash, Write, AskUserQuestion
 description: |
-  Create complete project scaffolding for research, teaching, grant, or service projects including CLAUDE.md, specs/, logs/ directories, and development environment setup.
+  Create complete project scaffolding for research, teaching, grant, service, or application projects including CLAUDE.md, specs/, logs/ directories, and development environment setup.
 ---
 
 Set up a comprehensive project structure with documentation, planning, and development environment.
@@ -18,6 +18,7 @@ Set up a comprehensive project structure with documentation, planning, and devel
 - **teaching** - Course development, pedagogical design, and educational materials
 - **grant** - Proposal development, funding applications, and compliance tracking
 - **service** - Committee work, governance, and institutional service
+- **application** - Software development projects (CLI tools, web apps, APIs, libraries)
 
 ### Setup Process
 
@@ -193,6 +194,60 @@ backup/
 archive/old/
 ```
 
+### Application Projects
+
+**Interactive Setup:** When the `application` type is selected, first read the project description document (README.md or equivalent) and attempt to infer:
+
+1. **Application type** — CLI tool, web application, API service, library/package, desktop app, or mobile app
+2. **Primary language and framework** — e.g., Python + FastAPI, Rust CLI, TypeScript + React
+3. **Key goals** — what the software should accomplish
+
+Then use `AskUserQuestion` to present the inferred answers for confirmation and ask about any details that could not be determined from the README. Pre-populate option labels with the best guess from the README where possible, so the user can confirm with a single click or override with a different choice.
+
+Incorporate the confirmed answers into the generated specs and CLAUDE.md content.
+
+**Templates:**
+
+- specs/planning.md: `~/.dotfiles/.claude/commands/templates/specs/application-planning.md`
+- specs/progress.md: `~/.dotfiles/.claude/commands/templates/specs/application-progress.md`
+- specs/implementation.md: `~/.dotfiles/.claude/commands/templates/specs/application-implementation.md`
+
+**CLAUDE.md Requirements:**
+
+- Software purpose and target users
+- Architecture overview and key components
+- Build, test, and run commands (exact commands)
+- Language, framework, and dependency management
+- Directory structure with source, test, and config locations
+- Development workflow and contribution guidelines
+
+**Gitignore Patterns:**
+
+```
+# Build artifacts
+dist/
+build/
+target/
+*.egg-info/
+__pycache__/
+
+# Dependencies (when not vendored)
+node_modules/
+.venv/
+
+# Environment and secrets
+.env
+.env.local
+*.pem
+credentials.json
+
+# IDE and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+```
+
 ## Implementation Logic
 
 ### Step 1: Project Prerequisites Validation
@@ -270,13 +325,13 @@ fi
 
 # Validate project type
 case "$PROJECT_TYPE" in
-    research|teaching|grant|service)
+    research|teaching|grant|service|application)
         echo "Setting up $PROJECT_TYPE project: $PROJECT_NAME"
         echo "Using context from: $PROJECT_DOC"
         ;;
     *)
         echo "Error: Invalid project type '$PROJECT_TYPE'"
-        echo "Supported types: research, teaching, grant, service"
+        echo "Supported types: research, teaching, grant, service, application"
         exit 1
         ;;
 esac
@@ -392,11 +447,14 @@ EOF
 # Teaching project (after creating course description)
 /project:setup teaching "Advanced Linguistic Analysis"
 
-# Grant proposal (after creating preliminary proposal concept)  
+# Grant proposal (after creating preliminary proposal concept)
 /project:setup grant "NSF Linguistics Research Proposal"
 
 # Service committee (after creating committee charter/description)
 /project:setup service "Faculty Search Committee"
+
+# Application project (will prompt for app type, language, goals)
+/project:setup application "corpus-query-tool"
 ```
 
 ### Error Prevention Examples
