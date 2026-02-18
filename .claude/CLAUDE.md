@@ -56,7 +56,7 @@ Commands are organized into namespaced groups under `~/.claude/commands/`.
 
 ### Project lifecycle (`/project:*`)
 
-- `/project:setup [type]` — scaffold a new project (research, teaching, grant, service)
+- `/project:setup [type]` — scaffold a new project (research, teaching, grant, service, development)
 - `/project:status` — analyze git history, specs, and milestones
 - `/project:manage [subcommand]` — update docs, track progress, fix issues, create specs
 - `/project:plan-session` — assess state, set goals, build a dependency-linked task list
@@ -97,4 +97,4 @@ Pipeline for Canvas rubric grading:
 
 ### Templates (`/templates:specs:*`)
 
-Spec scaffolds for research, teaching, grant, and service projects (planning, progress, implementation).
+Spec scaffolds for research, teaching, grant, service, and development projects (planning, progress, implementation).

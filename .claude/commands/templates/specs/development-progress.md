@@ -1,4 +1,4 @@
-# Application Project Progress
+# Development Project Progress
 
 **Project:** {PROJECT_NAME}
 **Status:** {STATUS}

@@ -17,6 +17,7 @@ Claude Code provides 3 streamlined slash commands for complete academic project 
 - `teaching` - Course development, pedagogical design, and educational materials  
 - `grant` - Proposal development, funding applications, and compliance tracking
 - `service` - Committee work, governance, and institutional service
+- `development` - Software development projects (CLI tools, web apps, APIs, libraries)
 
 **Enhanced Workflow:**
 
@@ -174,6 +175,21 @@ EOF
 - Communication and collaboration methods
 - Repository organization
 
+### Development Projects
+
+**Focus:** Software development lifecycle, architecture, deployment
+
+**Templates Generated:**
+- specs/planning.md - Architecture and development roadmap
+- specs/progress.md - Feature development and release tracking
+- specs/implementation.md - Technical stack and deployment
+
+**CLAUDE.md Includes:**
+- Project purpose and architecture overview
+- Development workflow and tooling
+- Testing strategy and CI/CD
+- Deployment and release process
+
 ## Help and Discovery
 
 ### Command Help
@@ -196,7 +212,7 @@ EOF
 
 ### Tab Completion
 - `/project` + TAB → shows available sub-commands
-- `/project-setup` + TAB → shows project types (research, teaching, grant, service)
+- `/project-setup` + TAB → shows project types (research, teaching, grant, service, development)
 - `/project create` + TAB → shows documentation types
 
 ## Benefits and Features

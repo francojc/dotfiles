@@ -1,10 +1,10 @@
 ---
 allowed-tools: Read, Grep, Edit, Bash, LS, Write
 description: |
-  Unified project management command with sub-commands for documentation, progress tracking, GitHub integration, and specs creation.
+  Project management sub-comands: create, update, track, fix, create with unified interface and academic and professional workflows.
 ---
 
-Unified project management for academic workflows with sub-command support.
+Unified project management for workflows with sub-command support.
 
 **Command:** /project $ARGUMENTS
 
@@ -12,10 +12,10 @@ Unified project management for academic workflows with sub-command support.
 
 ### Available Sub-Commands
 
+- **`create [type]`** - Create project documentation (specs, planning docs, etc.)
 - **`update`** - Synchronize project documentation and provide AI-powered next-step recommendations
 - **`track`** - Track project progress including milestones, tasks, and deadlines
 - **`fix [issue-number]`** - Analyze and fix GitHub issues with automated workflow
-- **`create [type]`** - Create project documentation (specs, planning docs, etc.)
 
 ### Sub-Command Dispatcher
 
@@ -31,7 +31,7 @@ case "$SUBCOMMAND" in
         # Execute project-update functionality
         ;;
     track|progress)
-        # Execute tracking functionality  
+        # Execute tracking functionality
         ;;
     fix|issue)
         # Execute GitHub issue fixing
@@ -76,11 +76,12 @@ Synchronize project documentation with current state and generate intelligent ne
    - Refresh timeline and milestone information
    - Add new insights or direction changes
 
-4. **Academic Context Integration**
+4. **Context Integration**
    - **Research:** Align with research lifecycle and methodology standards
-   - **Teaching:** Integrate pedagogical best practices and course design principles  
+   - **Teaching:** Integrate pedagogical best practices and course design principles
    - **Grant:** Ensure compliance with proposal requirements and funder expectations
    - **Service:** Maintain institutional alignment and governance standards
+   - **Development:** Follow software development lifecycle and deployment best practices
 
 #### AI-Powered Recommendations
 
@@ -93,6 +94,8 @@ Generate project type-specific guidance:
 **Grant Projects:** Proposal strengthening, budget optimization, compliance, collaboration opportunities
 
 **Service Projects:** Efficiency improvements, stakeholder engagement, deliverable quality, institutional impact
+
+**Development Projects:** Architecture decisions, development workflow, testing strategy, deployment and release planning
 
 ### 2. Track Sub-Command (`/project track`)
 
@@ -122,12 +125,13 @@ Track the progress of the project in the current repository, including milestone
 - Identify dependencies and critical path items
 - Generate priority recommendations
 
-#### Academic-Specific Tracking
+#### Specific Tracking
 
 - **Research:** Data collection phases, analysis milestones, writing deadlines
 - **Teaching:** Course development stages, material creation, assessment design
 - **Grant:** Proposal sections, submission deadlines, review cycles
 - **Service:** Committee deliverables, meeting schedules, governance tasks
+- **Development:** Feature development, testing phases, deployment milestones
 
 ### 3. Fix Sub-Command (`/project fix [issue-number]`)
 
@@ -194,7 +198,7 @@ Create systematic project documentation in specs/ format.
 1. **Project Analysis**
    - Read existing README.md and CLAUDE.md to identify aims and goals
    - Analyze current project structure and files
-   - Determine project type (research, teaching, grant, service)
+   - Determine project type (research, teaching, grant, service, development)
    - Identify documentation gaps
 
 2. **Template Selection**
@@ -207,13 +211,13 @@ Create systematic project documentation in specs/ format.
    - Generate planning documents with clear objectives
    - Create progress tracking framework with milestones
    - Develop implementation details and specifications
-   - Include academic best practices and methodology
+   - Include academic/professional best practices and methodology
 
 #### Usage Examples
 
 ```bash
 /project create planning     # Create specs/planning.md
-/project create progress     # Create specs/progress.md  
+/project create progress     # Create specs/progress.md
 /project create specs        # Create complete specs/ structure
 /project new implementation  # Alternative syntax
 ```
@@ -234,7 +238,7 @@ Sub-commands:
 Examples:
   /project update                    # Update docs and get recommendations
   /project track                     # View project progress
-  /project fix 123                   # Fix GitHub issue #123  
+  /project fix 123                   # Fix GitHub issue #123
   /project create planning           # Create planning document
 
 For detailed help on any sub-command:
@@ -254,7 +258,7 @@ Provide detailed help for each sub-command including:
 ### Invalid Sub-Commands
 
 ```bash
-if [ "$SUBCOMMAND" != "update" ] && [ "$SUBCOMMAND" != "track" ] && 
+if [ "$SUBCOMMAND" != "update" ] && [ "$SUBCOMMAND" != "track" ] &&
    [ "$SUBCOMMAND" != "fix" ] && [ "$SUBCOMMAND" != "create" ] &&
    [ "$SUBCOMMAND" != "help" ]; then
     echo "Error: Unknown sub-command '$SUBCOMMAND'"
@@ -293,5 +297,6 @@ This unified command structure provides:
 4. **Extensibility** - Easy to add new sub-commands without polluting command namespace
 5. **Hook Integration** - Works seamlessly with the project update hook system
 6. **Academic Focus** - Maintains discipline-specific workflows and best practices
+7. **Professional Focus** - Aligns with industry standards for project management and development
 
 The `/project` command replaces the need for separate project-update.md, tracking.md, fix-gh-issue.md, and create-specs.md commands while preserving all their functionality in a more organized, discoverable format.

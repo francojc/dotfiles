@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-The Claude Code academic project management system provides a streamlined 3-command interface designed specifically for university professors and researchers. The system combines intelligent project scaffolding with comprehensive workflow support for research, teaching, grant, and service projects.
+The Claude Code academic project management system provides a streamlined 3-command interface designed specifically for university professors and researchers. The system combines intelligent project scaffolding with comprehensive workflow support for research, teaching, grant, service, and development projects.
 
 ## Core Commands
 
@@ -55,6 +55,12 @@ Each project type receives discipline-specific treatment:
 - Deliverable tracking and progress documentation
 - Professional development and network building
 
+**Development Projects:**
+- Architecture planning and technology stack selection
+- Development workflow and CI/CD pipeline setup
+- Testing strategy and quality assurance
+- Deployment planning and release management
+
 ## Template Architecture
 
 ### Comprehensive Template Matrix
@@ -72,9 +78,12 @@ specs/
 ├── grant-planning.md         # Proposal strategy and timeline
 ├── grant-progress.md         # Funding lifecycle tracking
 ├── grant-implementation.md   # Project phases and governance
-├── service-planning.md       # Committee overview and roles
-├── service-progress.md       # Meeting logs and deliverables
-└── service-implementation.md # Operational framework
+├── service-planning.md          # Committee overview and roles
+├── service-progress.md          # Meeting logs and deliverables
+├── service-implementation.md    # Operational framework
+├── development-planning.md      # Architecture and development roadmap
+├── development-progress.md      # Feature development and release tracking
+└── development-implementation.md # Technical stack and deployment
 ```
 
 ### Template Intelligence Features

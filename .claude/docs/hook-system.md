@@ -152,6 +152,11 @@ count_recent_commits() {
 - Track administrative task completion
 - Document governance and policy development
 
+#### Development Projects
+- Track feature development and implementation sessions
+- Monitor testing and deployment progress
+- Document architecture decisions and technical debt
+
 ### 4. Integration Benefits
 
 - **Command Synergy**: Enhances `/project-status` and `/project-update` commands with rich activity data

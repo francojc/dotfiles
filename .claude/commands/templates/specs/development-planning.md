@@ -1,4 +1,4 @@
-# Application Project Planning
+# Development Project Planning
 
 **Project:** {PROJECT_NAME}
 **Status:** Planning

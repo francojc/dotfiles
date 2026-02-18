@@ -1,4 +1,4 @@
-# Application Implementation Details
+# Development Implementation Details
 
 **Project:** {PROJECT_NAME}
 **Status:** {STATUS}

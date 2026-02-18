@@ -11,7 +11,7 @@ Generate a comprehensive project status report analyzing recent activity, progre
 ### 1. Project Detection and Context
 
 - Identify project type from existing CLAUDE.md or specs/ structure
-- Determine context (research/teaching/grant/service/application)
+- Determine context (research/teaching/grant/service/development)
 - Assess project phase and timeline
 
 ### 2. Git Analysis and Recent Activity
@@ -42,7 +42,7 @@ Generate a comprehensive project status report analyzing recent activity, progre
 - **Teaching Projects:** Course development, content creation, assessment design
 - **Grant Projects:** Proposal sections, budget development, submission timeline
 - **Service Projects:** Committee deliverables, meeting schedules, governance tasks
-- **Application Projects:** Feature development, testing phases, deployment milestones
+- **Development Projects:** Feature development, testing phases, deployment milestones
 
 ## Report Generation
 
@@ -102,7 +102,7 @@ Based on analysis, suggest 2-3 specific actions to maintain momentum
 - Methodology refinements suggested
 - Quality assurance checkpoints
 - Dissemination opportunities
-- Deployment strategies for application projects
+- Deployment strategies for development projects
 
 ## Output Format
 
@@ -110,7 +110,7 @@ Based on analysis, suggest 2-3 specific actions to maintain momentum
 Generated: [Current Date]
 
 **Project:** [Name from CLAUDE.md or directory]
-**Type:** [Research/Teaching/Grant/Service/Application]
+**Type:** [Research/Teaching/Grant/Service/Development]
 **Phase:** [Current project phase]
 
 **RECENT ACTIVITY (Last 30 Days)**
