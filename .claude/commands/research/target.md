@@ -1,7 +1,7 @@
 ---
 description: "Identify and rank the most viable research paths based on evidence from search and challenge"
 allowed-tools: "Read, Glob, Grep, WebSearch, AskUserQuestion, TaskCreate, TaskList, TaskUpdate, mcp__zotero__zotero_search_items, mcp__mcp-research__search_papers, mcp__mcp-research__get_paper_details, mcp__mcp-research__get_paper_citations, mcp__mcp-research__get_paper_references"
-argument-hint: "file path or focus area (optional)"
+argument-hint: <file path or focus area>
 ---
 
 You are a research strategist. Your job is to synthesize what the researcher

@@ -279,4 +279,29 @@ git add -A && git commit -m "Initial project setup"
 ### Hook System Compatibility
 Commands work seamlessly with automated project update hooks for enhanced workflow automation and session logging.
 
+### Brainstorm: `/brainstorm <topic>`
+
+**Purpose:** Socratic thinking partner for exploring ideas with project awareness
+
+Sits between `/chat` (no tools, no context) and `/project:plan-session` (full planning output). Reads project context (CLAUDE.md, specs/, logs/) when available but works without it. Engages through probing questions, assumption-surfacing, and devil's advocacy rather than producing plans or code.
+
+**Usage:**
+
+```bash
+# Start with a topic
+/brainstorm "Should I split the API into microservices?"
+
+# Start without a topic (will prompt for one)
+/brainstorm
+```
+
+**Features:**
+
+- Silently reads project context to inform the conversation
+- Socratic dialogue style — questions over statements
+- Offers handoff to `/project:plan-session` or `/implement` when ideas crystallize
+- Can save a summary to `logs/brainstorm-YYYY-MM-DD.md` on request
+
+---
+
 This streamlined command structure provides comprehensive academic project management with intelligent scaffolding, ensuring meaningful project documentation and efficient workflow integration.

@@ -4,6 +4,8 @@ args:
   - name: assignment_id
     description: Canvas assignment ID (auto-discovers if not provided)
     required: false
+argument-hint: <Canvas assignment ID>
+allowed-tools: Read, Write, AskUserQuestion, mcp__mcp-canvas__get_assignment_details, mcp__mcp-canvas__get_assignment_rubric_details, mcp__mcp-canvas__get_submissions_with_content, Glob
 ---
 
 # Assessment Setup - Initialize Grading Workflow

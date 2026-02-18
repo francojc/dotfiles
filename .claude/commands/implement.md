@@ -1,6 +1,6 @@
 ---
 description: Execute an implementation plan directly, pausing only at key decision points
-argument-hint: [plan-file-or-inline-description]
+argument-hint: <plan file path or inline plan text>
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, LS, Task, AskUserQuestion
 ---
 

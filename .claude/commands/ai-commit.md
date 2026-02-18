@@ -1,6 +1,6 @@
 ---
 description: Automatically stage all changes and commit with AI-generated message
-argument-hint: [optional-message-override]
+argument-hint: <optional message override>
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git diff:*), Bash(git commit:*)
 ---
 

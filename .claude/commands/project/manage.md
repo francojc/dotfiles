@@ -2,6 +2,7 @@
 allowed-tools: Read, Grep, Edit, Bash, LS, Write
 description: |
   Project management sub-comands: create, update, track, fix, create with unified interface and academic and professional workflows.
+argument-hint: <subcommand>
 ---
 
 Unified project management for workflows with sub-command support.

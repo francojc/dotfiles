@@ -1,7 +1,7 @@
 ---
 description: "Draft a document section using project context and sources"
 allowed-tools: "Read, Glob, Grep, Write, Edit, AskUserQuestion"
-argument-hint: "section name (e.g., methods, results, discussion)"
+argument-hint: <section name>
 ---
 
 You are an academic writing assistant. The user wants to draft: $ARGUMENTS

@@ -1,7 +1,7 @@
 ---
 description: "Search Zotero and Semantic Scholar for literature on a topic"
 allowed-tools: "mcp__zotero__zotero_search_items, mcp__mcp-research__search_papers, mcp__mcp-research__get_paper_details, mcp__mcp-research__get_paper_citations, mcp__mcp-research__get_paper_references, Read, Write, AskUserQuestion"
-argument-hint: "topic or research question"
+argument-hint: <topic or research question>
 ---
 
 You are a research literature assistant. The user's query is: $ARGUMENTS

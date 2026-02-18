@@ -1,6 +1,6 @@
 ---
 description: Analyze an academic document for AI writing artifacts and rewrite with corrections
-argument-hint: <file-path>
+argument-hint: <file path>
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash(wc:*)
 ---
 

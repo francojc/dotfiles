@@ -91,6 +91,7 @@ Pipeline for Canvas rubric grading:
 
 ### Utility (root level)
 
+- `/brainstorm <topic>` — Socratic thinking partner with project context
 - `/chat` — conversational mode, no tools
 - `/implement <plan>` — execute a plan with checkpoints at decision points
 - `/ai-commit` — stage and commit with generated message

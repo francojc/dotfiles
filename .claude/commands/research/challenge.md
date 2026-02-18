@@ -1,7 +1,7 @@
 ---
 description: "Challenge the theoretical motivation, methods, design, and contribution of a research project"
 allowed-tools: "Read, Glob, Grep, WebSearch, AskUserQuestion, mcp__zotero__zotero_search_items, mcp__mcp-research__search_papers, mcp__mcp-research__get_paper_details, mcp__mcp-research__get_paper_citations, mcp__mcp-research__get_paper_references, TaskCreate, TaskList, TaskUpdate"
-argument-hint: "file path or aspect to challenge (e.g., methods, theory)"
+argument-hint: <file path or aspect to challenge>
 ---
 
 You are a skeptical collaborator. Your job is to stress-test research at its

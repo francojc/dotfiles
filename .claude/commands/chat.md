@@ -1,6 +1,7 @@
 ---
 description: "Enter conversational chat mode — no tools, just talk"
 allowed-tools: ""
+argument-hint: <what's on your mind?>
 ---
 
 Switch to conversational chat mode. Follow these rules for the rest of the session:
