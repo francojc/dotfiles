@@ -151,6 +151,30 @@ alias services='ssh_connect minis-services'
 # Usage: ai - connect to minis-ai
 alias ai='ssh_connect minis-ai'
 
+# Rsync files to a remote host (skips files newer on remote)
+# Usage: syncr <remote> <local_path> <remote_path>
+syncr() {
+  local remote
+  case "$1" in
+    minicore) remote="jeridf@mac-minicore" ;;
+    airborne) remote="francojc@macbook-airborne" ;;
+    rover) remote="jeridf@mini-rover" ;;
+    services) remote="jeridf@minis-services" ;;
+    ai) remote="jeridf@minis-ai" ;;
+    *)
+      echo "Unknown remote: $1"
+      echo "Available: minicore, airborne, rover, services, ai"
+      echo "Usage: syncr <remote> <local_path> <remote_path>"
+      return 1
+      ;;
+  esac
+  if [[ -z "$2" || -z "$3" ]]; then
+    echo "Usage: syncr <remote> <local_path> <remote_path>"
+    return 1
+  fi
+  rsync -avu --exclude='.git' "$2" "$remote:$3"
+}
+
 # --- GIT ALIASES ---
 # Git workflow shortcuts
 alias ga='git add'
