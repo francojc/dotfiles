@@ -25,8 +25,7 @@
 .config/kitty/kitty.conf
 .config/kitty/kitty.conf
 .config/litellm/github_copilot
-.config/mole/clean-list.txt
-.config/mole/mole.log
+.config/mole/*
 .config/ncspot/userstate.cbor
 .config/nvim-nix/lua/theme-config.lua
 .config/nvim/lua/theme-config.lua
@@ -51,6 +50,7 @@
 # CLAUDE AI
 *.claude/.settings.local.json
 .claude/.credentials.json
+.claude/backups/*
 .claude/cache
 .claude/last-notification
 .claude/paste-cache
@@ -83,4 +83,3 @@ _freeze
 # ----------------------------------------------------------
 conversation.toml
 
-.claude/backups/*

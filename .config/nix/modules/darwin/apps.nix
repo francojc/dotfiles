@@ -22,6 +22,7 @@
       "acrogenesis/macchanger/macchanger" # MAC address changer
       "FelixKratz/formulae/borders" # jankyborders
       "raine/workmux/workmux" # agentic ai multiplexer
+      "librespeed/tap/librespeed-cli"
       "llama.cpp" # LLaMA model inference
       "mole" # terminal cleanup app for macOS
       "ncspot" # spotify TUI client
