@@ -49,16 +49,16 @@
     ];
 
     casks = [
-      "android-platform-tools" # ADB and Fastboot
+      "android-platform-tools" # ADB and Fastboot (for TVs)
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "calibre" # eBook management
+      # "calibre" # eBook management
       "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
-      "fbreader" # eBook reader
+      # "fbreader" # eBook reader (use bookokrat)
       "ghostty" # Terminal emulator
       "google-chrome"
       "google-drive"
