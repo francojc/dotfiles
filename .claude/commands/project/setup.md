@@ -20,6 +20,7 @@ Set up a comprehensive project structure with documentation, planning, and devel
 - **grant** - Proposal development, funding applications, and compliance tracking
 - **service** - Committee work, governance, and institutional service
 - **development** - Software development projects (CLI tools, web apps, APIs, libraries)
+  - Supports **fork-contribution mode**: when working on a forked repo with intent to contribute upstream, all project infrastructure stays local and invisible to git (CLAUDE.md written to `.claude/`, exclusions via `.git/info/exclude`, no `.gitignore` or `flake.nix` changes)
 
 ### Setup Process
 
@@ -339,12 +340,89 @@ esac
 ```
 
 
+### Step 2b: Fork Detection (Development Projects)
+
+After parsing arguments, check for fork indicators when the project
+type is `development`:
+
+```bash
+FORK_MODE=false
+
+# Check fork indicators
+HAS_ROOT_CLAUDE_MD=false
+HAS_UPSTREAM_REMOTE=false
+ORIGIN_LOOKS_FOREIGN=false
+
+if [ -f "CLAUDE.md" ]; then
+    HAS_ROOT_CLAUDE_MD=true
+fi
+
+if git remote get-url upstream &>/dev/null; then
+    HAS_UPSTREAM_REMOTE=true
+fi
+
+# Check if origin URL differs from user's GitHub username
+ORIGIN_URL=$(git remote get-url origin 2>/dev/null || echo "")
+if [ -n "$ORIGIN_URL" ] && ! echo "$ORIGIN_URL" | grep -qi "francojc"; then
+    ORIGIN_LOOKS_FOREIGN=true
+fi
+```
+
+**Decision logic:**
+
+- If any fork indicators are found, surface them to the user via
+  `AskUserQuestion` with context about what was detected:
+
+  ```
+  "Fork indicators detected: [list detected signals].
+   Is this a fork you plan to contribute to?"
+  - Yes — use fork mode (local infrastructure only) (Recommended)
+  - No — standard setup (write to repo root)
+  ```
+
+- If no fork indicators are found but the project type is
+  `development`, still include the fork question in the interactive
+  setup flow but don't lead with it — ask as a secondary question:
+
+  ```
+  "Will you be contributing upstream from this repo?"
+  - No — standard setup (Recommended)
+  - Yes — use fork mode (local infrastructure only)
+  ```
+
+Set `FORK_MODE=true` if the user selects fork mode. This flag is
+checked at each subsequent file-creation step.
+
 ### Step 3: Context-Aware Template Application
 
 
 ```bash
 # Create specs and logs directories
 mkdir -p specs logs
+
+# Fork mode: exclude specs/ and logs/ via .git/info/exclude
+if [ "$FORK_MODE" = true ]; then
+    EXCLUDE_FILE=".git/info/exclude"
+    mkdir -p "$(dirname "$EXCLUDE_FILE")"
+    touch "$EXCLUDE_FILE"
+
+    # Append entries if not already present
+    for entry in "specs/" "logs/"; do
+        if ! grep -qxF "$entry" "$EXCLUDE_FILE"; then
+            echo "$entry" >> "$EXCLUDE_FILE"
+        fi
+    done
+
+    # Add header comment if this is the first fork-mode entry
+    if ! grep -q "project:setup fork mode" "$EXCLUDE_FILE"; then
+        # Prepend comment before the entries
+        sed -i '' '/^specs\/$/i\
+# project:setup fork mode — local planning infrastructure
+' "$EXCLUDE_FILE"
+    fi
+
+    echo "✓ Added specs/ and logs/ to .git/info/exclude"
+fi
 
 # Apply project-specific templates with intelligent content population
 TEMPLATE_DIR="$HOME/.dotfiles/.claude/commands/templates/specs"
@@ -353,12 +431,12 @@ TEMPLATE_DIR="$HOME/.dotfiles/.claude/commands/templates/specs"
 for template in planning progress implementation; do
     if [ -f "$TEMPLATE_DIR/${PROJECT_TYPE}-${template}.md" ]; then
         echo "Generating ${template}.md with project context..."
-        
+
         # Basic placeholder replacement
         sed "s/{PROJECT_NAME}/$PROJECT_NAME/g; s/{DATE}/$(date '+%Y-%m-%d')/g" \
             "$TEMPLATE_DIR/${PROJECT_TYPE}-${template}.md" > "specs/${template}.md"
-        
-        # Enhanced context integration: 
+
+        # Enhanced context integration:
         # Claude will read $PROJECT_DOC and intelligently populate templates
         # with project-specific research questions, objectives, methodologies,
         # timelines, and other contextually appropriate content beyond basic
@@ -373,6 +451,7 @@ echo "  Review and customize the generated files as needed."
 
 ### Step 4: Environment Setup
 
+**Standard mode:**
 
 ```bash
 # Copy flake.nix if not present
@@ -387,10 +466,17 @@ cat >> .gitignore << EOF
 EOF
 ```
 
+**Fork mode:** Skip this step entirely. The fork owns its build
+system (`flake.nix`, `Makefile`, etc.) and its `.gitignore`. All
+git exclusions for project infrastructure are handled via
+`.git/info/exclude` in Step 3.
+
 ### Step 5: CLAUDE.md Generation with Context Integration
 
+**Standard mode:**
 
-Create comprehensive project documentation based on project type requirements, incorporating:
+Create comprehensive project documentation based on project type
+requirements, incorporating:
 
 - Project-specific sections and requirements from existing description
 - Academic best practices for the discipline
@@ -404,6 +490,36 @@ The command will read the project description document and use it to:
 - Identify relevant methodologies and approaches
 - Populate CLAUDE.md with contextually appropriate guidance
 - Generate project-specific instructions for Claude assistance
+
+**Fork mode:**
+
+Write to `.claude/CLAUDE.md` instead of root `CLAUDE.md`. Create the
+`.claude/` directory if it doesn't exist.
+
+```bash
+mkdir -p .claude
+# Write CLAUDE.md to .claude/CLAUDE.md
+```
+
+The fork-mode CLAUDE.md should:
+
+- Note that this is a fork contribution project
+- Reference the upstream repo (extracted from `upstream` remote URL
+  or the origin URL's parent org)
+- Include build, test, and run commands for the project
+- Include the user's development workflow and contribution approach
+- Do NOT duplicate content from any upstream root `CLAUDE.md` — Claude
+  reads both `.claude/CLAUDE.md` and root `CLAUDE.md` automatically,
+  so fork-mode content is additive
+
+Content sections for fork-mode CLAUDE.md:
+
+- Fork context (upstream URL, contribution scope)
+- Build and test commands
+- Development workflow (branch strategy, PR process)
+- Areas of focus / contribution goals
+- Specs and logs location (`specs/`, `logs/` at repo root, excluded
+  via `.git/info/exclude`)
 
 ## Usage Examples
 
@@ -456,6 +572,12 @@ EOF
 
 # Development project (will prompt for app type, language, goals)
 /project:setup development "corpus-query-tool"
+
+# Fork contribution (setup detects fork, asks interactively)
+# In a forked repo with upstream remote or existing CLAUDE.md:
+/project:setup development
+# → "Fork indicators detected. Is this a fork you plan to contribute to?"
+# → Yes → fork mode: .claude/CLAUDE.md, .git/info/exclude, no .gitignore changes
 ```
 
 ### Error Prevention Examples
@@ -475,7 +597,10 @@ echo "# Brief title" > README.md
 
 ## Success Criteria
 
+### Standard mode
+
 After successful setup:
+
 - [ ] **Project Description Validated:** README.md or equivalent with sufficient detail
 - [ ] **CLAUDE.md Generated:** Project-specific content derived from description
 - [ ] **Specs/ Directory Created:** planning.md, progress.md, implementation.md with context
@@ -484,6 +609,21 @@ After successful setup:
 - [ ] **Project Configuration:** .gitignore with appropriate patterns
 - [ ] **Context Integration:** Templates populated with project-specific information
 - [ ] **Academic Workflow Ready:** Directory structure prepared for discipline-specific work
+
+### Fork-contribution mode
+
+After successful fork-mode setup:
+
+- [ ] **Project Description Validated:** README.md or equivalent with sufficient detail
+- [ ] **`.claude/CLAUDE.md` Created:** Fork-specific content (contribution scope, build commands, workflow)
+- [ ] **Root `CLAUDE.md` Untouched:** Any upstream CLAUDE.md remains unmodified
+- [ ] **Specs/ Directory Created:** planning.md, progress.md, implementation.md at repo root
+- [ ] **Logs/ Directory Created:** ready for weekly reviews and session logs
+- [ ] **`.git/info/exclude` Updated:** Contains `specs/` and `logs/` entries
+- [ ] **No `.gitignore` Changes:** Fork's `.gitignore` remains unmodified
+- [ ] **No `flake.nix` Changes:** Fork's build system remains unmodified
+- [ ] **`git status` Clean:** No changes to tracked files after setup
+- [ ] **Context Integration:** Templates populated with project-specific information
 
 ## Enhanced Benefits
 
