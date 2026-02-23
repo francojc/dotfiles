@@ -2,7 +2,7 @@
 allowed-tools: Read, Grep, Edit, Bash, Write, AskUserQuestion
 description: |
   Create complete project scaffolding for research, teaching, grant, service, or development projects including CLAUDE.md, specs/, logs/ directories, and development environment setup.
-argument-hint: <project type>
+argument-hint: "<type> [name] — types: research, teaching, grant, service, development"
 ---
 
 Set up a comprehensive project structure with documentation, planning, and development environment.
