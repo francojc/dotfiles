@@ -83,6 +83,7 @@
     entr # Event notify tool
     eza # ls replacement
     fastfetch # System information tool
+    onefetch # Git repository information tool
     fd # find replacement
     file # File type identification
     fzf # General fuzzy finder
