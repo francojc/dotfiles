@@ -83,3 +83,4 @@ _freeze
 # ----------------------------------------------------------
 conversation.toml
 
+.claude/mcp-needs-auth-cache.json
