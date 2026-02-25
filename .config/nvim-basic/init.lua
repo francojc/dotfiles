@@ -55,7 +55,7 @@ vim.opt.background = "dark"
 
 -- Core Settings (Leverage 0.12+ Options)
 vim.opt.autocomplete = true
-vim.opt.completefuzzycollect = ""
+-- vim.opt.completefuzzycollect = ""
 vim.opt.pummaxwidth = 60
 vim.opt.winborder = "rounded"
 vim.opt.autowriteall = true
