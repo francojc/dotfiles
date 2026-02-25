@@ -5,7 +5,7 @@
       "src": "https://github.com/CopilotC-Nvim/CopilotChat.nvim"
     },
     "aerial.nvim": {
-      "rev": "f93dceed41e2f926074944fdf94c93c747bb7d19",
+      "rev": "3b8d9a340b99f8e458ad8b689d69adc346472631",
       "src": "https://github.com/stevearc/aerial.nvim"
     },
     "ayu-vim": {
@@ -21,13 +21,7 @@
       "src": "https://github.com/moyiz/blink-emoji.nvim"
     },
     "blink.cmp": {
-<<<<<<< HEAD
       "rev": "b650e976a927be6b46487a0a610b75af111376c5",
-||||||| parent of 7606174 (chore: bump revisions in .config/nvim/nvim-pack-lock.json)
-      "rev": "cd79f572971c58784ca72551af29af3a63da9168",
-=======
-      "rev": "b4d379393882561f9055abe780342ee00f02c573",
->>>>>>> 7606174 (chore: bump revisions in .config/nvim/nvim-pack-lock.json)
       "src": "https://github.com/Saghen/blink.cmp"
     },
     "catppuccin": {
@@ -195,13 +189,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-<<<<<<< HEAD
       "rev": "1317633540114eeed5dd060d23590d448b7fe16e",
-||||||| parent of 7606174 (chore: bump revisions in .config/nvim/nvim-pack-lock.json)
-      "rev": "834842409184e612e0fc037358cd150a1b6e3cd6",
-=======
-      "rev": "854ac9c225fcfd8f0c8711819783366814da40eb",
->>>>>>> 7606174 (chore: bump revisions in .config/nvim/nvim-pack-lock.json)
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
