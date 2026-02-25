@@ -117,6 +117,7 @@
     # gv # Ghostview - PostScript/PDF viewer
     # haskellPackages.pandoc-crossref # Pandoc filter
     imagemagick # Image manipulation
+    glow # Markdown renderer
     khal # Calendar
     mpv-unwrapped # Media player
     # ncspot # Spotify TUI client
