@@ -1,67 +1,88 @@
 -- Neovim 0.12+ Ultra-Stock Configuration
 -- Pure built-in features, zero external plugins
 
--- Version check for 0.12+
-if vim.version().minor < 12 then
-  vim.notify("This config requires Neovim 0.12+", vim.log.levels.ERROR)
-  return
-end
-
 -- Plugins 
 vim.pack.add({
 	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
 })
 
+-- Settings ------------------------------------------------------------ {{{
 
--- Standard Settings 
+-- Line numbers & cursor
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.clipboard:append("unnamedplus")
-vim.opt.path:append("**")                  --- Recursive search
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
+
+-- Display & UI
 vim.opt.termguicolors = true
 vim.opt.mouse = "a"
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.writebackup = false
-vim.opt.undofile = true
-vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
-vim.opt.scrolloff = 3
-vim.opt.sidescrolloff = 5
-vim.opt.wrap = true
-vim.opt.linebreak = true
-vim.opt.breakindent = true
-vim.opt.showbreak = "↪ "
+vim.opt.signcolumn = "yes:1"
+vim.opt.colorcolumn = "80"
+vim.opt.background = "dark"
+vim.opt.fillchars = "foldinner: "
+vim.opt.winborder = "rounded"
+
+-- Statusline & command line
 vim.opt.showmode = false
 vim.opt.showcmd = true
 vim.opt.ruler = true
 vim.opt.laststatus = 2
 vim.opt.cmdheight = 1
-vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
-vim.opt.ttimeoutlen = 10
-vim.opt.splitbelow = true
-vim.opt.splitright = true
+
+-- Wrapping
+vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.breakindent = true
+vim.opt.showbreak = "↪ "
+
+-- Scrolling
+vim.opt.scrolloff = 3
+vim.opt.sidescrolloff = 5
+
+-- Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.inccommand = "split"
-vim.opt.signcolumn = "yes:1"
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
-vim.opt.colorcolumn = "80"
-vim.opt.autoread = true
-vim.opt.background = "dark"
+vim.opt.maxsearchcount = 999
 
--- Core Settings (Leverage 0.12+ Options)
+-- Splits
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
+-- Files & backup
+vim.opt.clipboard:append("unnamedplus")
+vim.opt.path:append("**")
+vim.opt.autoread = true
+vim.opt.autowriteall = true
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
+
+-- Timing
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.ttimeoutlen = 10
+
+-- Completion
 vim.opt.autocomplete = true
 -- vim.opt.completefuzzycollect = ""
+vim.opt.complete = ".,w,b,u,t,i,kspell,F,o"
+vim.opt.completeopt = "menu,menuone,preview,noselect,nearest"
 vim.opt.pummaxwidth = 60
-vim.opt.winborder = "rounded"
-vim.opt.autowriteall = true
+
+-- Wildmenu
+vim.opt.wildchar = 9
+vim.opt.wildmode = "full:longest,full:longest,list:longest"
+
+-- Diff
 vim.opt.diffopt = "indent-heuristic,inline:char"
-vim.opt.maxsearchcount = 999
-vim.opt.fillchars = "foldinner: "
+
+-- }}}
 
 -- Plugin Management Structure (ready for future plugins)
 local pack_path = vim.fn.stdpath('data') .. '/site/pack'
@@ -115,10 +136,6 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   end
 })
 
--- Completion options (0.12 flags)
-vim.opt.complete = ".,w,b,u,t,i,kspell,F,o"
-vim.opt.completeopt = "menu,menuone,preview,noselect,nearest"
-
 -- Statusline Configuration
 vim.opt.statusline = "%!v:lua.require'my_statusline'.active()"
 -- Create statusline module
@@ -168,10 +185,6 @@ end
 package.loaded.my_statusline = create_statusline_module()
 
 -- Key Mappings (0.12 Features)
--- Search completion with wildchar (Tab key = ASCII 9)
-vim.opt.wildchar = 9
-vim.opt.wildmode = "full:longest,full:longest,list:longest"
-
 -- URL opening (enhanced in 0.12)
 vim.keymap.set("n", "gx", function()
   local url = vim.fn.expand("<cWORD>")
