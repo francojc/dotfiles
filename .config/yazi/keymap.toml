@@ -40,4 +40,11 @@ desc = "Enter child directory, or open file"
 url = "*"
 run = 'piper -- echo "$1"'
 
+[[plugin.prepend_previewers]]
+url = "*.csv"
+run = 'piper -- bat -p --color=always "$1"'
+
+[[plugin.prepend_previewers]]
+url = "*.md"
+run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
 
