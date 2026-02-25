@@ -8,5 +8,10 @@ use = "yazi-rs/plugins:jump-to-char"
 rev = "9a52857"
 hash = "ce67445ebb1bf3d97b8e44f50904b2c5"
 
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "eca1861"
+hash = "e519d894e94ded741e06aae4d4775981"
+
 [flavor]
 deps = []
