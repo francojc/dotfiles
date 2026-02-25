@@ -26,10 +26,10 @@ require("starship"):setup({
 	-- Custom starship configuration file to use
 	config_file = "~/.config/starship.toml", -- Default: nil
 	-- Whether to enable support for starship's right prompt (i.e. `starship prompt --right`).
-	show_right_prompt = false,
+	show_right_prompt = true,
 	-- Whether to hide the count widget, in case you want only your right prompt to show up. Only has
 	-- an effect when `show_right_prompt = true`
-	hide_count = false,
+	hide_count = true,
 	-- Separator to place between the right prompt and the count widget. Use `count_separator = ""`
 	-- to have no space between the widgets.
 	count_separator = " ",

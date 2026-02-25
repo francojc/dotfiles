@@ -10,11 +10,6 @@ run = "arrow -1"
 desc = "Move cursor up"
 
 [[mgr.prepend_keymap]]
-on = [ "<C-s>" ]
-run = 'shell "$SHELL" --block --confirm'
-desc = "Open shell here"
-
-[[mgr.prepend_keymap]]
 on = [ "<C-e>" ]
 run = 'seek +5'
 desc = "Seek down 5 lines"
@@ -23,6 +18,11 @@ desc = "Seek down 5 lines"
 on = [ "<C-y>" ]
 run = 'seek -5'
 desc = "Seek up 5 lines"
+
+[[mgr.prepend_keymap]]
+on = [ "<C-s>" ]
+run = 'shell "$SHELL" --block --confirm'
+desc = "Open shell here"
 
 # Input keymaps ----------------------------------------------
 [[input.prepend_keymap]]
@@ -34,4 +34,10 @@ desc = "Cancel input"
 on = [ "l" ]
 run = "plugin --sync smart-enter"
 desc = "Enter child directory, or open file"
+
+# Preview keymaps ----------------------------------------------
+[[plugin.prepend_previewers]]
+url = "*"
+run = 'piper -- echo "$1"'
+
 
