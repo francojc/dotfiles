@@ -1,7 +1,6 @@
 ---| Neovim Configuration -----------------------------------------
 -- Modular configuration for Neovim
 -- This file orchestrates loading all configuration modules
---
 
 ---| Providers --------------------------------------
 --- Disable
