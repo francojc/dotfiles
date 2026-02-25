@@ -1,12 +1,7 @@
 -- Neovim 0.12+ Ultra-Stock Configuration
 -- Pure built-in features, zero external plugins
 
--- Plugins 
-vim.pack.add({
-	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
-})
-
--- Settings ------------------------------------------------------------ {{{
+-- Settings ------------------------------------------------------------
 
 -- Line numbers & cursor
 vim.opt.number = true
@@ -16,9 +11,9 @@ vim.opt.cursorlineopt = "number"
 
 -- Display & UI
 vim.opt.termguicolors = true
+vim.cmd("colorscheme retrobox")
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes:1"
-vim.opt.colorcolumn = "80"
 vim.opt.background = "dark"
 vim.opt.fillchars = "foldinner: "
 vim.opt.winborder = "rounded"
@@ -37,7 +32,7 @@ vim.opt.breakindent = true
 vim.opt.showbreak = "↪ "
 
 -- Scrolling
-vim.opt.scrolloff = 3
+vim.opt.scrolloff = 2
 vim.opt.sidescrolloff = 5
 
 -- Search
@@ -70,7 +65,6 @@ vim.opt.ttimeoutlen = 10
 
 -- Completion
 vim.opt.autocomplete = true
--- vim.opt.completefuzzycollect = ""
 vim.opt.complete = ".,w,b,u,t,i,kspell,F,o"
 vim.opt.completeopt = "menu,menuone,preview,noselect,nearest"
 vim.opt.pummaxwidth = 60
@@ -82,9 +76,16 @@ vim.opt.wildmode = "full:longest,full:longest,list:longest"
 -- Diff
 vim.opt.diffopt = "indent-heuristic,inline:char"
 
--- }}}
+-- Plugins -------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
+})
+
+-- Plugin configuration ---------------------------------------
 
 -- Plugin Management Structure (ready for future plugins)
+
 local pack_path = vim.fn.stdpath('data') .. '/site/pack'
 vim.opt.packpath:prepend(pack_path)
 
