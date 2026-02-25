@@ -45,6 +45,6 @@ url = "*.csv"
 run = 'piper -- bat -p --color=always "$1"'
 
 [[plugin.prepend_previewers]]
-url = "*.md"
+url = ["*.md", "*.qmd"]
 run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
 
