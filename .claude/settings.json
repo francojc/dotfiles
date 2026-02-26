@@ -1,4 +1,73 @@
 {
+  "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 30,
+  "effortLevel": "medium",
+  "enabledPlugins": {},
+  "env": {
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "0",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/bin/claude-notify --save-pane 'Waiting for input...' 'Claude Code'",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      },
+      {
+        "hooks": [
+          {
+            "command": "workmux set-window-status waiting",
+            "type": "command"
+          }
+        ],
+        "matcher": "permission_prompt|elicitation_dialog"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "workmux set-window-status working",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/bin/claude-notify --save-pane 'Task completed!' 'Claude Code'",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      },
+      {
+        "hooks": [
+          {
+            "command": "workmux set-window-status done",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "workmux set-window-status working",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(R -e:*)",
@@ -66,6 +135,8 @@
       "WebSearch",
       "Write"
     ],
+    "ask": [],
+    "defaultMode": "plan",
     "deny": [
       "Bash(chmod:*)",
       "Bash(chown:*)",
@@ -90,46 +161,12 @@
       "Bash(sudo:*)",
       "Read(./.env)",
       "Read(./.env.*)"
-    ],
-    "ask": [],
-    "defaultMode": "plan"
-  },
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/bin/claude-notify --save-pane 'Waiting for input...' 'Claude Code'"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/bin/claude-notify --save-pane 'Task completed!' 'Claude Code'"
-          }
-        ]
-      }
     ]
   },
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
-    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "0"
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/ccline/ccline",
-    "padding": 0
-  },
-  "enabledPlugins": {},
-  "cleanupPeriodDays": 30,
   "prefersReducedMotion": false,
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "medium"
+  "statusLine": {
+    "command": "~/.claude/ccline/ccline",
+    "padding": 0,
+    "type": "command"
+  }
 }
