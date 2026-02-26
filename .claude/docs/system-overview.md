@@ -175,7 +175,7 @@ Modular design with consistent interface patterns:
 /project [subcommand] [arguments]
 ├── update    # Documentation synchronization
 ├── track     # Progress and milestone management
-├── fix       # GitHub issue resolution
+├── address   # GitHub issue resolution
 └── create    # Documentation generation
 ```
 

@@ -1,8 +1,8 @@
 ---
 allowed-tools: Read, Grep, Edit, Bash, LS, Write
 description: |
-  Project management sub-comands: create, update, track, fix, create with unified interface and academic and professional workflows.
-argument-hint: "<subcommand> [args] — update | track | fix <issue#> | create <planning|progress|implementation>"
+  Project management sub-comands: create, update, track, address, create with unified interface and academic and professional workflows.
+argument-hint: "<subcommand> [args] — update | track | address <issue#> | create <planning|progress|implementation>"
 ---
 
 Unified project management for workflows with sub-command support.
@@ -16,7 +16,7 @@ Unified project management for workflows with sub-command support.
 - **`create [type]`** - Create project documentation (specs, planning docs, etc.)
 - **`update`** - Synchronize project documentation and provide AI-powered next-step recommendations
 - **`track`** - Track project progress including milestones, tasks, and deadlines
-- **`fix [issue-number]`** - Analyze and fix GitHub issues with automated workflow
+- **`address [issue-number]`** - Analyze and address GitHub issues with automated workflow
 
 ### Sub-Command Dispatcher
 
@@ -34,8 +34,8 @@ case "$SUBCOMMAND" in
     track|progress)
         # Execute tracking functionality
         ;;
-    fix|issue)
-        # Execute GitHub issue fixing
+    address|issue)
+        # Execute GitHub issue addressing
         ;;
     create|new|spec|specs)
         # Execute documentation creation
@@ -134,11 +134,11 @@ Track the progress of the project in the current repository, including milestone
 - **Service:** Committee deliverables, meeting schedules, governance tasks
 - **Development:** Feature development, testing phases, deployment milestones
 
-### 3. Fix Sub-Command (`/project fix [issue-number]`)
+### 3. address Sub-Command (`/project address [issue-number]`)
 
-Analyze and fix the GitHub issue with automated development workflow.
+Analyze and address the GitHub issue with automated development workflow.
 
-**Functionality from fix-gh-issue.md:**
+**Functionality from address-gh-issue.md:**
 
 #### GitHub Issue Workflow
 
@@ -155,15 +155,15 @@ Analyze and fix the GitHub issue with automated development workflow.
    - Analyze related test cases and documentation
 
 3. **Solution Implementation**
-   - Implement necessary changes to fix the issue
+   - Implement necessary changes to address the issue
    - Follow project coding standards and conventions
-   - Add or update tests to verify the fix
+   - Add or update tests to verify the address
    - Update documentation if needed
 
 4. **Quality Assurance**
    - Run existing tests to ensure no regressions
    - Perform linting and type checking
-   - Test the specific fix against issue reproduction steps
+   - Test the specific address against issue reproduction steps
    - Verify edge cases and error handling
 
 5. **Submission Workflow**
@@ -175,9 +175,9 @@ Analyze and fix the GitHub issue with automated development workflow.
 #### Usage Examples
 
 ```bash
-/project fix 123           # Fix GitHub issue #123
-/project fix bug-login     # Fix issue by title search
-/project issue 456         # Alternative syntax
+/project address 123           # address GitHub issue #123
+/project address bug-login     # address issue by title search
+/project issue 456             # Alternative syntax
 ```
 
 
@@ -233,13 +233,13 @@ Usage: /project [subcommand] [arguments]
 Sub-commands:
   update              Synchronize documentation and get recommendations
   track               Track progress, milestones, and tasks
-  fix <issue>         Analyze and fix GitHub issues
+  address <issue>         Analyze and address GitHub issues
   create <type>       Create project documentation
 
 Examples:
   /project update                    # Update docs and get recommendations
   /project track                     # View project progress
-  /project fix 123                   # Fix GitHub issue #123
+  /project address 123                   # address GitHub issue #123
   /project create planning           # Create planning document
 
 For detailed help on any sub-command:
@@ -260,7 +260,7 @@ Provide detailed help for each sub-command including:
 
 ```bash
 if [ "$SUBCOMMAND" != "update" ] && [ "$SUBCOMMAND" != "track" ] &&
-   [ "$SUBCOMMAND" != "fix" ] && [ "$SUBCOMMAND" != "create" ] &&
+   [ "$SUBCOMMAND" != "address" ] && [ "$SUBCOMMAND" != "create" ] &&
    [ "$SUBCOMMAND" != "help" ]; then
     echo "Error: Unknown sub-command '$SUBCOMMAND'"
     echo "Run '/project help' for available sub-commands"
@@ -271,9 +271,9 @@ fi
 ### Missing Arguments
 
 ```bash
-if [ "$SUBCOMMAND" = "fix" ] && [ -z "$REMAINING_ARGS" ]; then
-    echo "Error: 'fix' sub-command requires an issue number or identifier"
-    echo "Usage: /project fix <issue-number>"
+if [ "$SUBCOMMAND" = "address" ] && [ -z "$REMAINING_ARGS" ]; then
+    echo "Error: 'address' sub-command requires an issue number or identifier"
+    echo "Usage: /project address <issue-number>"
     exit 1
 fi
 ```
@@ -300,4 +300,4 @@ This unified command structure provides:
 6. **Academic Focus** - Maintains discipline-specific workflows and best practices
 7. **Professional Focus** - Aligns with industry standards for project management and development
 
-The `/project` command replaces the need for separate project-update.md, tracking.md, fix-gh-issue.md, and create-specs.md commands while preserving all their functionality in a more organized, discoverable format.
+The `/project` command replaces the need for separate project-update.md, tracking.md, address-gh-issue.md, and create-specs.md commands while preserving all their functionality in a more organized, discoverable format.

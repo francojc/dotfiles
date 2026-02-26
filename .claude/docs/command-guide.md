@@ -14,7 +14,7 @@ Claude Code provides 3 streamlined slash commands for complete academic project 
 
 **Project Types:**
 - `research` - Research projects with data collection, analysis, and publication workflows
-- `teaching` - Course development, pedagogical design, and educational materials  
+- `teaching` - Course development, pedagogical design, and educational materials
 - `grant` - Proposal development, funding applications, and compliance tracking
 - `service` - Committee work, governance, and institutional service
 - `development` - Software development projects (CLI tools, web apps, APIs, libraries)
@@ -27,14 +27,14 @@ cat > README.md << 'EOF'
 # Spanish Dialect Corpus Analysis
 
 ## Overview
-This project analyzes phonetic variation in Andalusian Spanish through 
+This project analyzes phonetic variation in Andalusian Spanish through
 corpus-based sociolinguistic analysis, focusing on vowel reduction patterns.
 
 ## Research Questions
 - How does social class affect vowel reduction in unstressed syllables?
 - What are the geographic distribution patterns across Andalusian provinces?
 
-## Methodology  
+## Methodology
 Mixed-methods approach combining sociolinguistic interviews and acoustic analysis.
 EOF
 
@@ -85,7 +85,7 @@ EOF
 - Timeline analysis
 - Goal achievement assessment
 
-#### `/project fix [issue-number]`
+#### `/project address [issue-number]`
 - GitHub issue analysis and resolution
 - Code debugging assistance
 - Problem identification and solutions
@@ -105,8 +105,8 @@ EOF
 # Track progress and milestones
 /project track
 
-# Fix specific GitHub issue
-/project fix 42
+# address specific GitHub issue
+/project address 42
 
 # Create additional documentation
 /project create specs
@@ -203,7 +203,7 @@ EOF
 # Specific sub-command help
 /project help update
 /project help track
-/project help fix
+/project help address
 /project help create
 
 # Project setup help and types
@@ -260,7 +260,7 @@ Create shortcuts for frequent commands:
 alias ps='/project-status'
 alias pu='/project update'
 alias pt='/project track'
-alias pf='/project fix'
+alias pf='/project address'
 alias pc='/project create'
 ```
 

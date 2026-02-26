@@ -58,7 +58,7 @@ Commands are organized into namespaced groups under `~/.claude/commands/`.
 
 - `/project:setup [type]` — scaffold a new project (research, teaching, grant, service, development)
 - `/project:status` — analyze git history, specs, and milestones
-- `/project:manage [subcommand]` — update docs, track progress, fix issues, create specs
+- `/project:manage [subcommand]` — update docs, track progress, address issues, create specs
 - `/project:plan-session` — assess state, set goals, build a dependency-linked task list
 - `/project:review-week` — weekly progress report from git log and specs
 
