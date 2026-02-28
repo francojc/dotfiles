@@ -1,8 +1,8 @@
 # Aider configuration file
 # Commit messages
 
-model: openai/gpt-5-mini
-weak-model: openai/gpt-5-mini
+model: openai/gpt-4o
+weak-model: openai/gpt-4o
 commit: true
 architect: false
 stream: false
