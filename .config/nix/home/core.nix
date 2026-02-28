@@ -73,7 +73,7 @@
 
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
-    # _7zz # Archive compression
+    _7zz # Archive compression
     # ruby # Programming language
     # unp # Archive unpacker
     atuin # Shell history manager
