@@ -55,7 +55,6 @@
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       # "calibre" # eBook management
-      "chatgpt"
       "claude" # Claude Desktop
       "dropbox"
       # "fbreader" # eBook reader (use bookokrat)
