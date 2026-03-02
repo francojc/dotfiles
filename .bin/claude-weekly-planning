@@ -6,7 +6,7 @@ LOG_FILE="${LOG_DIR}/weekly-planning.log"
 
 main() {
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-  claude_run "claude-sonnet-4-6" "/weekly-planning"
+  claude_run "/weekly-planning"
 }
 
 main >> "$LOG_FILE" 2>&1

@@ -10,7 +10,7 @@ main() {
     exit 0
   fi
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-  claude_run "claude-sonnet-4-6" "/monthly-review-planning"
+  claude_run "/monthly-review-planning"
 }
 
 main >> "$LOG_FILE" 2>&1
