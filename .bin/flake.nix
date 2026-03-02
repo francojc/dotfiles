@@ -55,13 +55,6 @@
         buildInputs = allPackages;
         shellHook = ''
           echo "Welcome to the development shell!"
-          echo "You have access to the following tools:"
-          echo "- R"
-          echo "- Python"
-          echo "- Jupyter"
-          echo "- Quarto"
-          echo "- Git"
-          echo "- Pandoc"
           echo "Feel free to customize this shell further as needed."
         '';
       };

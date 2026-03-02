@@ -88,7 +88,7 @@
     file # File type identification
     fzf # General fuzzy finder
     glances # System monitoring tool
-    gnupg # GNU Privacy Guard
+    # gnupg managed by programs.gpg module below
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
@@ -142,4 +142,15 @@
 in {
   # Install general packages globally for the user
   home.packages = generalPackages;
+
+  # GnuPG — managed via home-manager for agent lifecycle control
+  programs.gpg = {
+    enable = true;
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 34560000;
+    maxCacheTtl = 34560000;
+  };
 }
