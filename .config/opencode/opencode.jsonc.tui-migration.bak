@@ -34,7 +34,15 @@
   // Preferred models
   // "model": "main-model-here",
   "small_model": "claude-3-5-haiku-20241022",
+  // Custom keybinds
+  "keybinds": {
+    "messages_page_up": "ctrl+u",
+    "messages_page_down": "ctrl+d",
+    "input_newline": "alt+enter"
+  },
   // MCP servers
   "mcp": {},
+  // Theme configuration
+  "theme": "system",
   "autoupdate": true
 }
