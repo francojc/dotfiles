@@ -71,6 +71,7 @@
       "rectangle" # window management
       "signal" # messaging
       "spotify" # music streaming
+      "tidal" # music streaming
       "transmission"
       "visual-studio-code" # code editor
       "vlc" # media player
