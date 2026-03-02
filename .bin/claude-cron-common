@@ -1,0 +1,15 @@
+# Shared config for Claude planning cron scripts
+# Source this; do not execute directly.
+
+source "${HOME}/.bin/common"
+
+readonly VAULT_DIR="${HOME}/Obsidian/Notes"
+readonly LOG_DIR="${VAULT_DIR}/.claude/logs"
+
+# Run claude -p with standard cron flags
+# Usage: claude_run <model> <prompt>
+claude_run() {
+  local model="$1" prompt="$2"
+  cd "$VAULT_DIR"
+  claude -p --model "$model" "$prompt" --dangerously-skip-permissions
+}

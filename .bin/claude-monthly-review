@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "${HOME}/.bin/claude-cron-common"
+
+LOG_FILE="${LOG_DIR}/monthly-review-planning.log"
+
+main() {
+  # First-Sunday guard: cron fires every Sunday, exit early if day > 7
+  if [ "$(date +%d)" -gt 7 ]; then
+    exit 0
+  fi
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  claude_run "claude-sonnet-4-6" "/monthly-review-planning"
+}
+
+main >> "$LOG_FILE" 2>&1

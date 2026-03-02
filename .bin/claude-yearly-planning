@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "${HOME}/.bin/claude-cron-common"
+
+LOG_FILE="${LOG_DIR}/vision-yearly-planning.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  claude_run "claude-sonnet-4-6" "/vision-yearly-planning"
+}
+
+main >> "$LOG_FILE" 2>&1
