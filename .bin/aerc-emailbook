@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Adapter: emailbook-bash → aerc tab-delimited completion format
+# Usage: aerc-emailbook <book-name> <search-query>
+#   book-name: "work" or "personal"
+# Output: email<TAB>name  (one per line, name optional)
+
+EMAILBOOK_DIR="$HOME/.local/share/emailbook"
+
+case "$1" in
+  work)     file="$EMAILBOOK_DIR/work-emailbook.txt" ;;
+  personal) file="$EMAILBOOK_DIR/personal-emailbook.txt" ;;
+  *)        echo "Unknown emailbook: $1" >&2; exit 1 ;;
+esac
+
+emailbook-bash "$file" --search "$2" | awk '
+  match($0, /^(.*[^ ]) +<([^>]+)>$/, a) { print a[2] "\t" a[1]; next }
+  match($0, /^<([^>]+)>$/, a)            { print a[1]; next }
+  { print }
+'
