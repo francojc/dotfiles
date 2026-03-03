@@ -24,6 +24,7 @@
       "raine/workmux/workmux" # agentic ai multiplexer
       "librespeed/tap/librespeed-cli"
       "llama.cpp" # LLaMA model inference
+      "llmfit" # LLM system fit
       "mole" # terminal cleanup app for macOS
       "ncspot" # spotify TUI client
       "ninja" # build system
