@@ -185,7 +185,7 @@
 
     plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = yank;
+        plugin = fzf-tmux-url;
         extraConfig = "";
       }
       {
@@ -193,7 +193,13 @@
         extraConfig = "";
       }
       {
-        plugin = fzf-tmux-url;
+        plugin = tmux-which-key;
+        extraConfig = ''
+          set -g @tmux-which-key-xdg-enable 1;
+        '';
+      }
+      {
+        plugin = yank;
         extraConfig = "";
       }
     ];
