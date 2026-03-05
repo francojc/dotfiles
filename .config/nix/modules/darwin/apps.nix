@@ -26,7 +26,6 @@
       "llama.cpp" # LLaMA model inference
       "llmfit" # LLM system fit
       "mole" # terminal cleanup app for macOS
-      "ncspot" # spotify TUI client
       "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
@@ -71,8 +70,6 @@
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
-      "spotify" # music streaming
-      "tidal" # music streaming
       "transmission"
       "visual-studio-code" # code editor
       "vlc" # media player
