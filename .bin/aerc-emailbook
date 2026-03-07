@@ -1,19 +1,92 @@
 #!/usr/bin/env bash
-# Adapter: emailbook-bash → aerc tab-delimited completion format
-# Usage: aerc-emailbook <book-name> <search-query>
-#   book-name: "work" or "personal"
-# Output: email<TAB>name  (one per line, name optional)
+# aerc-emailbook — address book completion and management for aerc
+#
+# Completion (called by aerc address-book-cmd):
+#   aerc-emailbook <work|personal> <query>
+#   Output: email<TAB>name  (one per line)
+#
+# Parse and add from a piped message (called from binds.conf):
+#   aerc-emailbook add <work|personal> [--from|--all]
+#   Reads stdin, extracts addresses, appends new entries, merges if work.
 
 EMAILBOOK_DIR="$HOME/.local/share/emailbook"
 
-case "$1" in
-  work)     file="$EMAILBOOK_DIR/work-emailbook.txt" ;;
-  personal) file="$EMAILBOOK_DIR/personal-emailbook.txt" ;;
-  *)        echo "Unknown emailbook: $1" >&2; exit 1 ;;
-esac
+_complete() {
+  # $1=book  $2=query
+  local file
+  case "$1" in
+    work)     file="$EMAILBOOK_DIR/work-emailbook.txt" ;;
+    personal) file="$EMAILBOOK_DIR/personal-emailbook.txt" ;;
+    *) echo "Unknown emailbook: $1" >&2; exit 1 ;;
+  esac
+  grep -i "$2" "$file" | awk '
+    /^.* *<[^>]+>$/ {
+      email=$0; gsub(/^.*<|>$/, "", email)
+      name=$0;  gsub(/ *<[^>]+>$/, "", name)
+      print email "\t" name; next
+    }
+    /^<[^>]+>$/ {
+      email=$0; gsub(/^<|>$/, "", email)
+      print email; next
+    }
+  '
+}
 
-emailbook-bash "$file" --search "$2" | awk '
-  match($0, /^(.*[^ ]) +<([^>]+)>$/, a) { print a[2] "\t" a[1]; next }
-  match($0, /^<([^>]+)>$/, a)            { print a[1]; next }
-  { print }
-'
+_add() {
+  # $1=book  $2=--from|--all (default: --all)
+  local file merge_after=false
+  case "$1" in
+    work)     file="$EMAILBOOK_DIR/professional.txt"; merge_after=true ;;
+    personal) file="$EMAILBOOK_DIR/personal-emailbook.txt" ;;
+    *) echo "Unknown emailbook: $1" >&2; exit 1 ;;
+  esac
+
+  local header_pat
+  case "${2:---all}" in
+    --from) header_pat="^from:" ;;
+    --all)  header_pat="^(from|to|cc|bcc):" ;;
+    *) echo "Unknown flag: $2" >&2; exit 1 ;;
+  esac
+
+  # 1. MIME-decode headers; 2. unfold and extract matching header lines;
+  # 3. split comma-separated addresses; 4. deduplicate and append.
+  perl -CS -MEncode -ne 'print Encode::decode("MIME-HEADER", $_)' | \
+  awk -v pat="$header_pat" '
+    /^[^ \t]/ {
+      if (buf) print buf
+      buf = (tolower($0) ~ pat) ? $0 : ""
+    }
+    /^[ \t]/ && buf { buf = buf " " substr($0, 2) }
+    END { if (buf) print buf }
+  ' | \
+  perl -ne '
+    s/^[^:]+:\s*//;
+    while (/((?:"[^"]*"\s*<[^>]+>|[^,]+))/g) {
+      (my $e = $1) =~ s/^\s+|\s+$//g;
+      print "$e\n" if $e =~ /@/;
+    }
+  ' | \
+  while IFS= read -r entry; do
+    grep -qF "$entry" "$file" 2>/dev/null || {
+      printf '%s\n' "$entry" >> "$file"
+      printf '+ %s\n' "$entry" >&2
+    }
+  done
+
+  $merge_after && bash "$EMAILBOOK_DIR/merge.sh"
+}
+
+case "$1" in
+  add)
+    shift
+    _add "$@"
+    ;;
+  work|personal)
+    _complete "$1" "${2:-}"
+    ;;
+  *)
+    printf 'Usage: aerc-emailbook <work|personal> <query>\n' >&2
+    printf '       aerc-emailbook add <work|personal> [--from|--all]\n' >&2
+    exit 1
+    ;;
+esac
