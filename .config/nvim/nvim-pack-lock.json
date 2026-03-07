@@ -109,7 +109,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "052235c1e7b7c2655c3d743b3779f42e7975e2d0",
+      "rev": "3709702523f8083bc4a8fe8b5727e0300c705c84",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
