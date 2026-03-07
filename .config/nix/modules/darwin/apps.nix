@@ -23,6 +23,7 @@
       "FelixKratz/formulae/borders" # jankyborders
       "raine/workmux/workmux" # agentic ai multiplexer
       "librespeed/tap/librespeed-cli"
+      "oronbz/tap/nag" # Reminders TUI
       "llama.cpp" # LLaMA model inference
       "llmfit" # LLM system fit
       "mole" # terminal cleanup app for macOS

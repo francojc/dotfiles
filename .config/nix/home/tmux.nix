@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   theme,
   ...
@@ -7,6 +8,7 @@
     enable = true;
     terminal = "tmux-256color";
     historyLimit = 100000;
+    keyMode = "vi";
     baseIndex = 1;
     mouse = true;
     prefix = "C-a";
@@ -184,24 +186,10 @@
     '';
 
     plugins = with pkgs.tmuxPlugins; [
-      {
-        plugin = fzf-tmux-url;
-        extraConfig = "";
-      }
-      {
-        plugin = vim-tmux-navigator;
-        extraConfig = "";
-      }
-      {
-        plugin = tmux-which-key;
-        extraConfig = ''
-          set -g @tmux-which-key-xdg-enable 1;
-        '';
-      }
-      {
-        plugin = yank;
-        extraConfig = "";
-      }
+      fzf-tmux-url
+      vim-tmux-navigator
+      tmux-which-key
+      yank
     ];
   };
 
