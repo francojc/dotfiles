@@ -13,20 +13,11 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
-    ../../modules/darwin/copilot-api.nix
     ../../modules/darwin/ollama.nix
     ../../modules/darwin/reddix.nix
 
     # Inline module for host-specific service configuration
     {
-      services = {
-        copilot-api = {
-          enable = true;
-          port = 4141;
-          host = "0.0.0.0"; # Make accessible via Tailscale
-        };
-      };
-
       custom.services = {
         # IMPORTANT: Hybrid Homebrew + Nix Ollama Setup
         #
@@ -53,7 +44,7 @@
         ollama = {
           enable = true;
           port = 11434;
-          host = "0.0.0.0"; # Make accessible via Tailscale
+          host = "100.101.38.4"; # Tailscale IP — no university LAN exposure
           flashAttention = true;
           kvCacheType = "q8_0";
           # Optional: Additional settings

@@ -73,7 +73,7 @@
         launchctl setenv DYLD_FALLBACK_LIBRARY_PATH "/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib" 2>/dev/null || true
 
         # OLLAMA
-        export OLLAMA_HOST="0.0.0.0"
+        export OLLAMA_HOST="100.101.38.4"
 
         # --- FLATPAK INTEGRATION ---
         # Ensure Flatpak apps can find system fonts and themes
