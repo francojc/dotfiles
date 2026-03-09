@@ -189,7 +189,7 @@ require("tokyonight").setup({
 	style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night`, and `day`
 	light_style = "day", -- The theme is used when the background is set to light
 	transparent = false, -- Enable this to disable setting the background color
-	terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+	terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
 	styles = {
 		-- Style to be applied to different syntax groups
 		-- Value is any valid attr-list value for `:highlight` command
@@ -239,6 +239,16 @@ end
 
 vim.cmd("colorscheme " .. theme_config.colorscheme)
 
+---| llama.vim Statusline Spinner ----------------------------------
+require("llama-status").setup()
+
+---| llama.vim Highlight Overrides ----------------------------------
+local function apply_llama_highlights()
+	vim.api.nvim_set_hl(0, "llama_hl_fim_hint", { fg = "#918374", ctermfg = 59 })
+	vim.api.nvim_set_hl(0, "llama_hl_fim_info", { fg = "#B9BB25", ctermfg = 119 })
+end
+apply_llama_highlights()
+
 ---| Statusline Highlights (theme-adaptive) ----------------------------------
 require("statusline-highlights").setup()
 
@@ -247,6 +257,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 	pattern = "*",
 	callback = function()
 		require("statusline-highlights").setup()
+		apply_llama_highlights()
 	end,
 	desc = "Update statusline highlights when colorscheme changes",
 })
@@ -466,7 +477,7 @@ vim.lsp.config.pyright = {
 }
 
 -- Copilot (copilot-language-server)
-vim.g.copilot_enabled = true -- enable copilot by default
+vim.g.copilot_enabled = false -- enable copilot by default
 vim.lsp.config.copilot = {
 	capabilities = capabilities,
 	filetypes = { "*" }, -- enable for all filetypes

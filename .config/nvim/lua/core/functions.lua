@@ -330,7 +330,7 @@ local function update_search_count_async()
 	end
 
 	-- Get current cursor position
-	local current_cursor = { vim.fn.line('.'), vim.fn.col('.') }
+	local current_cursor = { vim.fn.line("."), vim.fn.col(".") }
 	local cursor_str = string.format("%d,%d", current_cursor[1], current_cursor[2])
 
 	-- Debouncing: only update if enough time has passed or cursor moved significantly
@@ -347,7 +347,7 @@ local function update_search_count_async()
 	-- Get search count with error handling
 	local ok, result = pcall(vim.fn.searchcount, {
 		maxcount = 9999, -- Set high limit to get most results
-		timeout = 100,   -- Quick timeout to avoid blocking
+		timeout = 100, -- Quick timeout to avoid blocking
 	})
 
 	if ok and result and result.total and result.total > 0 then
@@ -382,6 +382,18 @@ local function update_search_count_async()
 			end)
 		end
 	end
+end
+
+-- Get `llama_status` status
+function _G.Get_llama_status()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local cached = llama_status_cache[bufnr]
+	if not cached then
+		local status = vim.fn.llama_status()
+		llama_status_cache[bufnr] = status
+		return status
+	end
+	return cached
 end
 
 -- Get search count from cache (non-blocking)
@@ -441,7 +453,11 @@ function _G.Should_check_for_updates()
 	if not last_check then
 		return true
 	end
-	local last_seconds = os.time({ year = tonumber(last_check:sub(1, 4)), month = tonumber(last_check:sub(6, 7)), day = tonumber(last_check:sub(9, 10)) })
+	local last_seconds = os.time({
+		year = tonumber(last_check:sub(1, 4)),
+		month = tonumber(last_check:sub(6, 7)),
+		day = tonumber(last_check:sub(9, 10)),
+	})
 	local current_seconds = os.time()
 	local days_passed = (current_seconds - last_seconds) / 86400
 	return days_passed >= 7
@@ -457,7 +473,8 @@ local function get_local_tag(plugin_path)
 	local result = vim.system(
 		{ "git", "-C", plugin_path, "describe", "--tags", "--abbrev=0", "--exact-match" },
 		{ text = true }
-	):wait()
+	)
+		:wait()
 
 	if result.code == 0 and result.stdout then
 		local tag = vim.trim(result.stdout)
@@ -539,66 +556,62 @@ function _G.Pack_check_updates()
 			local name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t")
 
 			-- Try to get latest tag or commit from remote
-			vim.system(
-				{ "git", "ls-remote", "--tags", "--heads", repo_url },
-				{ text = true },
-				function(result)
-					if result.code == 0 and result.stdout then
-						local latest_ref = nil
-						local latest_tag = nil
+			vim.system({ "git", "ls-remote", "--tags", "--heads", repo_url }, { text = true }, function(result)
+				if result.code == 0 and result.stdout then
+					local latest_ref = nil
+					local latest_tag = nil
 
-						-- Find latest tag (looks like refs/tags/vX.X.X)
-						for line in result.stdout:gmatch("[^\r\n]+") do
-							if line:match("^%-?%w+%s+refs/tags/") then
-								local ref_name = line:match("refs/tags/(.+)")
-								if ref_name and not ref_name:match("^%^{}$") then
-									if not latest_tag or ref_name > latest_tag then
-										latest_tag = ref_name
-										latest_ref = line:match("^%w+")
-									end
+					-- Find latest tag (looks like refs/tags/vX.X.X)
+					for line in result.stdout:gmatch("[^\r\n]+") do
+						if line:match("^%-?%w+%s+refs/tags/") then
+							local ref_name = line:match("refs/tags/(.+)")
+							if ref_name and not ref_name:match("^%^{}$") then
+								if not latest_tag or ref_name > latest_tag then
+									latest_tag = ref_name
+									latest_ref = line:match("^%w+")
 								end
 							end
 						end
+					end
 
-						-- Strip {} from annotated tags
-						if latest_tag then
-							latest_tag = latest_tag:gsub("%^%{%}%$", "")
+					-- Strip {} from annotated tags
+					if latest_tag then
+						latest_tag = latest_tag:gsub("%^%{%}%$", "")
+					end
+
+					-- Only proceed if we found a remote reference
+					if latest_ref then
+						-- Check if update is available
+						local has_update = false
+
+						if local_tag then
+							-- If we have a local tag, compare with remote tag
+							has_update = (not latest_tag) or (local_tag ~= latest_tag)
+						else
+							-- If no local tag, compare commits
+							has_update = (plugin.rev ~= latest_ref)
 						end
 
-						-- Only proceed if we found a remote reference
-						if latest_ref then
-							-- Check if update is available
-							local has_update = false
+						if has_update then
+							local local_display_ver = local_tag or local_version:sub(1, 7)
+							local remote_display_ver = latest_tag or latest_ref:sub(1, 7)
+							local local_is_tag = local_tag ~= nil
+							local remote_is_tag = latest_tag ~= nil
 
-							if local_tag then
-								-- If we have a local tag, compare with remote tag
-								has_update = (not latest_tag) or (local_tag ~= latest_tag)
-							else
-								-- If no local tag, compare commits
-								has_update = (plugin.rev ~= latest_ref)
-							end
+							local update_type = get_update_type(local_display_ver, remote_display_ver)
 
-							if has_update then
-								local local_display_ver = local_tag or local_version:sub(1, 7)
-								local remote_display_ver = latest_tag or latest_ref:sub(1, 7)
-								local local_is_tag = local_tag ~= nil
-								local remote_is_tag = latest_tag ~= nil
-
-								local update_type = get_update_type(local_display_ver, remote_display_ver)
-
-								table.insert(updatable, {
-									name = name,
-									local_version = local_display_ver,
-									remote_version = remote_display_ver,
-									local_is_tag = local_is_tag,
-									remote_is_tag = remote_is_tag,
-									update_type = update_type,
-								})
-							end
+							table.insert(updatable, {
+								name = name,
+								local_version = local_display_ver,
+								remote_version = remote_display_ver,
+								local_is_tag = local_is_tag,
+								remote_is_tag = remote_is_tag,
+								update_type = update_type,
+							})
 						end
 					end
 				end
-			)
+			end)
 		end
 	end
 
@@ -845,4 +858,3 @@ function _G.Pack_status()
 		end
 	end)
 end
-

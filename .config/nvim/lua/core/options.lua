@@ -84,6 +84,9 @@ vim.o.statusline = table.concat({
 	" %t ", -- Filename (tail)
 	"%#StatusLine#",
 	"%=", -- Right align
+	"%#StatusLineLlama#",
+	"%{get(g:,'llama_status','')} ", -- llama FIM spinner
+	"%#StatusLine#",
 	"%{%v:lua.vim.diagnostic.status()%} ", -- Diagnostic status
 	"%#StatusLineSearch#",
 	"%{v:lua.Get_search_count()}", -- Search count

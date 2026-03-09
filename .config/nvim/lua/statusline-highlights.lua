@@ -69,6 +69,9 @@ function M.setup()
 		bg = normal.bg,
 		bold = true,
 	})
+
+	-- llama.vim spinner - use the same muted color as FIM hint virt text
+	vim.api.nvim_set_hl(0, "StatusLineLlama", { link = "llama_hl_fim_hint" })
 end
 
 return M

@@ -11,33 +11,37 @@ vim.g.loaded_python3_provider = 0
 ---| Llama.vim ----------------------------------
 -- AI-powered code completion using local llama.cpp server
 vim.g.llama_config = {
+	-- Behavior
+	enable_at_startup = true,
+	auto_fim = true,
+	max_line_suffix = 8,
+	-- Server connection
 	endpoint_fim = "http://100.101.38.4:8080/infill",
 	api_key = "de7df50cff8b8ed12426b5d2af443c6644a356f7359ca6ba5d221b23b7339ec1",
 	model_fim = "",
-	n_prefix = 256,
+	-- Context settings
+	n_prefix = 512,
 	n_suffix = 64,
 	n_predict = 128,
 	stop_strings = {},
+	-- Timout settings
 	t_max_prompt_ms = 500,
 	t_max_predict_ms = 1000,
-	show_info = 2, -- inline info
-	auto_fim = true,
-	max_line_suffix = 8, -- num chars after stop suggesting fills
+	-- Cache settings
 	max_cache_keys = 250,
+	-- Ring buffer
 	ring_n_chunks = 16,
 	ring_chunk_size = 64,
 	ring_scope = 1024,
 	ring_update_ms = 1000,
-	keymap_fim_trigger = "<C-N>",
-	keymap_fim_accept_full = "<Tab>",
-	keymap_fim_accept_line = "<C-F>",
-	keymap_fim_accept_word = "<C-D>",
-	enable_at_startup = false,
+	-- Keymaps
+	keymap_fim_trigger = "<C-N>", -- Trigger FIM
+	keymap_fim_accept_full = "<Tab>", -- Accept full
+	keymap_fim_accept_line = "<C-F>", -- Accept line
+	keymap_fim_accept_word = "<C-D>", -- Accept word
+	-- Info
+	show_info = 2, -- 0=off, 1=statusline, 2=inline
 }
-
--- Llama.vim highlights: modify these as needed
-vim.api.nvim_set_hl(0, "llama_hl_hint", { fg = "#918374", ctermfg = 59 }) -- Custom color
-vim.api.nvim_set_hl(0, "llama_hl_info", { fg = "#B9BB25", ctermfg = 119 }) -- Custom color
 
 ---| Plugin Management (vim.pack) ---------------------------------
 -- Install and declare plugins using Neovim 0.12+ native vim.pack

@@ -53,6 +53,7 @@ local eager_plugins = {
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
+	{ src = "https://github.com/milanglacier/minuet-ai.nvim" },
 	{ src = "https://github.com/stevearc/quicker.nvim" },
 }
 

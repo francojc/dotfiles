@@ -96,6 +96,10 @@
       "rev": "d205d1741d1fcc1f3117b4e839bf00f74ad72fa2",
       "src": "https://github.com/echasnovski/mini.surround"
     },
+    "minuet-ai.nvim": {
+      "rev": "3d25c24487876676d29d325c01ce108cbdbd0753",
+      "src": "https://github.com/milanglacier/minuet-ai.nvim"
+    },
     "nightfox.nvim": {
       "rev": "ba47d4b",
       "src": "https://github.com/EdenEast/nightfox.nvim"
@@ -109,7 +113,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "obsidian.nvim": {
-      "rev": "3709702523f8083bc4a8fe8b5727e0300c705c84",
+      "rev": "cb0b9745d4d18617c19085bde0900733470d4aae",
       "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "onedark.nvim": {
@@ -133,7 +137,7 @@
       "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "907505549edc2f90c82fc429348af03ee8c3a825",
+      "rev": "fcea0776a3019f49360b7aaec3318630633c522d",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "snacks-bibtex.nvim": {
@@ -189,7 +193,7 @@
       "src": "https://github.com/folke/which-key.nvim"
     },
     "yazi.nvim": {
-      "rev": "fecdeabfe8daa7b937447f90c22df4c74d605956",
+      "rev": "54097e2cb5282d8c92c6dd16c9868ed3b3273a24",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
