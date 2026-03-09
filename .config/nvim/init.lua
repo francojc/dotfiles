@@ -40,7 +40,7 @@ vim.g.llama_config = {
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word
 	-- Info
-	show_info = 2, -- 0=off, 1=statusline, 2=inline
+	show_info = 0, -- 0=off, 1=statusline, 2=inline
 }
 
 ---| Plugin Management (vim.pack) ---------------------------------
