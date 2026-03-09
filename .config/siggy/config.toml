@@ -1,0 +1,11 @@
+account = "+13367264229"
+signal_cli_path = "/opt/homebrew/bin/signal-cli"
+download_dir = "~/Downloads/"
+notify_direct = true
+notify_group = true
+desktop_notifications = false
+inline_images = true
+mouse_enabled = true
+send_read_receipts = true
+theme = "Default"
+proxy = ""

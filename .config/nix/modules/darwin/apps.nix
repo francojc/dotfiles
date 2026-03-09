@@ -34,6 +34,7 @@
       "pngpaste" # paste images
       "keith/formulae/reminders-cli"
       "rename" # file renaming utility
+      "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
       "transmission-cli" # command-line torrent client
       # "waynehoover/tap/pbrich" # pbcopy for multiple formats (text, html, rtf, images)
