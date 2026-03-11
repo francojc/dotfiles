@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+# music_convert — Convert Apple Music .mp4 files to FLAC
+# Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
+
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+LOG_DIR="$HOME/.local/share/music_convert"
+LOG_FILE="$LOG_DIR/music_convert.log"
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+log() {
+  local level="$1"
+  local msg="$2"
+  local ts
+  ts=$(date '+%Y-%m-%d %H:%M:%S')
+  printf '[%s] [%-7s] %s\n' "$ts" "$level" "$msg" >> "$LOG_FILE"
+}
+
+# ---------------------------------------------------------------------------
+# Usage
+# ---------------------------------------------------------------------------
+usage() {
+  cat <<'EOF'
+Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
+
+Convert Apple Music .mp4 files to FLAC, mirroring the source directory
+structure under the target directory.
+
+Arguments:
+  source_dir   Directory containing .mp4 files (must exist)
+  target_dir   Destination root for .flac output (must exist)
+
+Flags:
+  --dry-run    Show what would be converted without doing anything
+  --help       Show this help message
+
+Examples:
+  music_convert ~/Music/Apple\ Music ~/Music/FLAC
+  music_convert --dry-run /Volumes/Purchases ~/NAS/music
+
+Notes:
+  - Skips files that already have a corresponding .flac at the target path
+  - Skips .mp4 files with no audio stream
+  - Logs all activity to ~/.local/share/music_convert/music_convert.log
+  - ffmpeg and ffprobe must be on PATH
+
+Conversion flags used:
+  ffmpeg -i <src> -vn -acodec flac -compression_level 12 -map_metadata 0
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+dry_run=false
+positional=()
+
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h) usage; exit 0 ;;
+    --dry-run) dry_run=true ;;
+    -*) printf 'Unknown flag: %s\n' "$arg" >&2; usage >&2; exit 1 ;;
+    *) positional+=("$arg") ;;
+  esac
+done
+
+if [[ ${#positional[@]} -ne 2 ]]; then
+  printf 'Error: expected 2 positional arguments, got %d\n' \
+    "${#positional[@]}" >&2
+  usage >&2
+  exit 1
+fi
+
+src="${positional[0]%/}"
+tgt="${positional[1]%/}"
+
+# ---------------------------------------------------------------------------
+# Validate inputs
+# ---------------------------------------------------------------------------
+if [[ ! -d "$src" ]]; then
+  printf 'Error: source directory does not exist: %s\n' "$src" >&2
+  exit 1
+fi
+
+if [[ ! -d "$tgt" ]]; then
+  printf 'Error: target directory does not exist: %s\n' "$tgt" >&2
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Dependency check
+# ---------------------------------------------------------------------------
+missing=()
+for cmd in ffmpeg ffprobe fd; do
+  command -v "$cmd" &>/dev/null || missing+=("$cmd")
+done
+
+if [[ ${#missing[@]} -gt 0 ]]; then
+  printf 'Error: required tool(s) not found on PATH: %s\n' \
+    "${missing[*]}" >&2
+  printf '\nInstall via Homebrew:\n' >&2
+  printf '  brew install ffmpeg\n' >&2
+  printf '\nOr via Nix:\n' >&2
+  printf '  nix profile install nixpkgs#ffmpeg\n' >&2
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Setup log directory
+# ---------------------------------------------------------------------------
+mkdir -p "$LOG_DIR"
+
+# ---------------------------------------------------------------------------
+# Collect files (bash 3.x-compatible two-pass approach)
+# ---------------------------------------------------------------------------
+files=()
+while IFS= read -r -d '' f; do
+  files+=("$f")
+done < <(fd -e mp4 -e m4p -e m4a -t f -0 . "$src" | sort -z)
+
+total=${#files[@]}
+
+if [[ $total -eq 0 ]]; then
+  printf 'No .mp4/.m4p/.m4a files found under %s\n' "$src"
+  exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Run start
+# ---------------------------------------------------------------------------
+log INFO "Run started — source: $src  target: $tgt  dry_run: $dry_run"
+printf 'Found %d file(s) (.mp4/.m4p/.m4a) under %s\n\n' "$total" "$src"
+
+converted=0
+skipped=0
+errors=0
+count=0
+
+# ---------------------------------------------------------------------------
+# Main loop
+# ---------------------------------------------------------------------------
+for mp4 in "${files[@]}"; do
+  count=$((count + 1))
+  rel="${mp4#"$src"/}"
+  src_base=$(basename "$src")
+  out="$tgt/$src_base/${rel%.*}.flac"
+  out_dir="$tgt/$src_base/$(dirname "$rel")"
+
+  prefix="[$count/$total]"
+
+  # Already converted?
+  if [[ -f "$out" ]]; then
+    printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
+    log SKIP "Already exists: $out"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  # Audio stream check
+  audio=$(ffprobe -v error -select_streams a \
+    -show_entries stream=index \
+    -of csv=p=0 "$mp4" 2>/dev/null)
+  if [[ -z "$audio" ]]; then
+    printf '%s SKIP (no audio) %s\n' "$prefix" "$mp4"
+    log SKIP "No audio stream: $mp4"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  printf '%s CONVERT  %s\n        -> %s\n' "$prefix" "$mp4" "$out"
+
+  if [[ "$dry_run" == true ]]; then
+    log INFO "Dry-run: $mp4 -> $out"
+    converted=$((converted + 1))
+    continue
+  fi
+
+  mkdir -p "$out_dir"
+
+  if ffmpeg -i "$mp4" -vn -acodec flac \
+      -compression_level 12 \
+      -map_metadata 0 \
+      -loglevel error \
+      "$out" 2>/tmp/music_convert_err; then
+    log OK "$mp4 -> $out"
+    converted=$((converted + 1))
+  else
+    err_msg=$(cat /tmp/music_convert_err 2>/dev/null || true)
+    printf '        ERROR: %s\n' "$err_msg" >&2
+    log ERROR "Conversion failed: $mp4${err_msg:+  ($err_msg)}"
+    errors=$((errors + 1))
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
+summary="converted: $converted, skipped: $skipped, errors: $errors"
+printf '\nDone — %s\n' "$summary"
+log INFO "Run complete — $summary"
+
+[[ $errors -gt 0 ]] && exit 1 || exit 0

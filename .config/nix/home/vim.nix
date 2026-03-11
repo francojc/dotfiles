@@ -31,29 +31,28 @@
         );
       extraConfig = ''
         " GENERAL --------------------------------------------------
-        set number              " Show line numbers
-        set relativenumber      " Show relative line numbers
-        set tabstop=4           " Tab width
-        set shiftwidth=4        " Indent width
-        set expandtab           " Use spaces instead of tabs
-        set smartindent         " Smart auto-indenting
-        set hlsearch            " Highlight search results
-        set incsearch           " Incremental search
-        set ignorecase          " Case-insensitive searching
-        set smartcase           " Case-sensitive if uppercase used
+        syntax on                 " Syntax highlighting
+        set number                " Show line numbers
+        set relativenumber        " Show relative line numbers
+        set tabstop=4             " Tab width
+        set shiftwidth=4          " Indent width
+        set expandtab             " Use spaces instead of tabs
+        set smartindent           " Smart auto-indenting
+        set hlsearch              " Highlight search results
+        set incsearch             " Incremental search
+        set ignorecase            " Case-insensitive searching
+        set smartcase             " Case-sensitive if uppercase used
         set clipboard=unnamedplus " Use system clipboard
-        syntax on               " Syntax highlighting
-        set mouse=a             " Enable mouse support
-        set clipboard=unnamed   " Use system clipboard
-        set autoindent          " Auto-indent
-        set hidden              " Hide buffers instead of closing them
-        set termguicolors       " True color support
-        set undofile            " Save undo history to file
-        set undodir=~/.vim/undo " Save undo history to file
-        set undolevels=75       " Maximum number of changes that can be undone
-        set noswapfile          " Disable swap files
-        set nobackup            " Disable backup files
-        set cursorline          " Highlight current line
+        set mouse=a               " Enable mouse support
+        set autoindent            " Auto-indent
+        set hidden                " Hide buffers instead of closing them
+        set termguicolors         " True color support
+        set undofile              " Save undo history to file
+        set undodir=~/.vim/undo   " Save undo history to file
+        set undolevels=75         " Maximum number of changes that can be undone
+        set noswapfile            " Disable swap files
+        set nobackup              " Disable backup files
+        set cursorline            " Highlight current line
         colorscheme ${theme.vim.colorscheme}
         set background=${theme.vim.background}
 
@@ -81,18 +80,18 @@
         nnoremap <silent> <leader>s :split<cr> " Split window
         nnoremap <silent> <leader>v :vsplit<cr> " Split window vertically
 
-        nnoremap <C-Left> <C-W>h           " Move to window left
-        nnoremap <C-Down> <C-W>j           " Move to window below
-        nnoremap <C-Up> <C-W>k             " Move to window above
-        nnoremap <C-Right> <C-W>l          " Move to window right
+        nnoremap <C-Left> <C-W>h          " Move to window left
+        nnoremap <C-Down> <C-W>j          " Move to window below
+        nnoremap <C-Up> <C-W>k            " Move to window above
+        nnoremap <C-Right> <C-W>l         " Move to window right
 
-        nnoremap <C-=> <C-w>=              " Balance windows
-        nnoremap <C-w>o <C-w>o             " Close other windows
+        nnoremap <C-=> <C-w>=             " Balance windows
+        nnoremap <C-w>o <C-w>o            " Close other windows
 
-        map <C-j> <C-W>j             " Move to window below
-        map <C-k> <C-W>k             " Move to window above
-        map <C-h> <C-W>h             " Move to window left
-        map <C-l> <C-W>l             " Move to window right
+        map <C-j> <C-W>j                  " Move to window below
+        map <C-k> <C-W>k                  " Move to window above
+        map <C-h> <C-W>h                  " Move to window left
+        map <C-l> <C-W>l                  " Move to window right
 
         " Buffer management
         nnoremap <leader>bd :bd<cr>       " Close buffer
