@@ -19,11 +19,11 @@
 
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
-      "acrogenesis/macchanger/macchanger" # MAC address changer
       "FelixKratz/formulae/borders" # jankyborders
-      "raine/workmux/workmux" # agentic ai multiplexer
+      "acrogenesis/macchanger/macchanger" # MAC address changer
+      "bitwarden-cli" # Bitwarden CLI
+      "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
-      "oronbz/tap/nag" # Reminders TUI
       "llama.cpp" # LLaMA model inference
       "llmfit" # LLM system fit
       "mole" # terminal cleanup app for macOS
@@ -31,8 +31,9 @@
       "nmap" # network scanner
       "node" # Node.js
       "ollama" # LLM inference server (temporary replacement for nixpkgs version)
+      "oronbz/tap/nag" # Reminders TUI
       "pngpaste" # paste images
-      "keith/formulae/reminders-cli"
+      "raine/workmux/workmux" # agentic ai multiplexer
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client

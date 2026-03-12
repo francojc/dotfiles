@@ -2,10 +2,18 @@
 # music_convert — Process Apple Music exports into a portable library.
 #
 # File handling:
-#   .mp4 / .m4a / .m4p  — lossy Apple formats; transcoded to lossless FLAC
-#   .mp3                 — already a portable format; copied as-is, no re-encoding
+#   .mp4 / .m4a  — lossy Apple formats; transcoded to lossless FLAC
+#   .mp3         — already a portable format; copied as-is, no re-encoding
+#   .m4p         — DRM-protected; skipped with warning by default
+#                  use --divert-m4p to move them to ~/Desktop/m4ps/ for manual handling
 #
-# Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
+# Source path convention (trailing slash matters):
+#   music_convert ~/Music/Artist/   ~/FLAC/   # trailing slash: contents go into target
+#                                             # → ~/FLAC/Album/track.flac
+#   music_convert ~/Music/Artist    ~/FLAC/   # no trailing slash: dir itself goes in
+#                                             # → ~/FLAC/Artist/Album/track.flac
+#
+# Usage: music_convert [--dry-run] [--divert-m4p] [--help] <source_dir> <target_dir>
 
 set -euo pipefail
 
@@ -14,6 +22,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 LOG_DIR="$HOME/.local/share/music_convert"
 LOG_FILE="$LOG_DIR/music_convert.log"
+M4P_DIR="$HOME/Desktop/m4ps"
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -31,13 +40,14 @@ log() {
 # ---------------------------------------------------------------------------
 usage() {
   cat <<'EOF'
-Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
+Usage: music_convert [--dry-run] [--divert-m4p] [--help] <source_dir> <target_dir>
 
 Convert Apple Music files, mirroring the source directory structure under
 the target directory.
 
-  .mp4 / .m4a / .m4p  →  converted to .flac
-  .mp3                 →  copied as-is (no re-encoding)
+  .mp4 / .m4a  →  converted to .flac
+  .mp3         →  copied as-is (no re-encoding)
+  .m4p         →  skipped with warning (DRM-protected; see --divert-m4p)
 
 Arguments:
   source_dir   Directory containing audio files (must exist)
@@ -45,17 +55,28 @@ Arguments:
 
 Flags:
   --dry-run    Show what would be done without doing anything
+  --divert-m4p     Move .m4p files to ~/Desktop/m4ps/ (preserving Artist/Album
+               structure) instead of skipping them. Use this to collect
+               DRM-protected files for manual handling (e.g., burn-and-rip).
   --help       Show this help message
 
 Examples:
   music_convert ~/Music/Apple\ Music ~/Music/FLAC
+  music_convert --divert-m4p ~/Music/Apple\ Music ~/Music/FLAC
   music_convert --dry-run /Volumes/Purchases ~/NAS/music
 
 Notes:
+  - Trailing slash on source_dir controls output structure (rsync convention):
+      music_convert ~/Music/Artist/  ~/FLAC/  # contents into target (no Artist/ wrapper)
+      music_convert ~/Music/Artist   ~/FLAC/  # Artist/ dir created inside target
+      music_convert ~/Music/         ~/FLAC/  # each Artist/ subdir placed inside target
   - .mp3 files are copied without re-encoding (already portable)
-  - .mp4/.m4a/.m4p files are transcoded to FLAC (lossless, no DRM wrapper)
+  - .mp4/.m4a files are transcoded to FLAC (lossless)
+  - .m4p files are DRM-protected and cannot be decoded by ffmpeg; they are
+    skipped by default. Use --divert-m4p to move them to ~/Desktop/m4ps/ so
+    they can be handled separately (e.g., via iTunes burn-and-rip workflow).
   - Skips files that already exist at the target path
-  - Skips .mp4/.m4a/.m4p files with no audio stream
+  - Skips .mp4/.m4a files with no audio stream
   - Logs all activity to ~/.local/share/music_convert/music_convert.log
   - ffmpeg, ffprobe, and fd must be on PATH
 
@@ -68,12 +89,14 @@ EOF
 # Argument parsing
 # ---------------------------------------------------------------------------
 dry_run=false
+divert_m4p=false
 positional=()
 
 for arg in "$@"; do
   case "$arg" in
     --help|-h) usage; exit 0 ;;
     --dry-run) dry_run=true ;;
+    --divert-m4p)  divert_m4p=true ;;
     -*) printf 'Unknown flag: %s\n' "$arg" >&2; usage >&2; exit 1 ;;
     *) positional+=("$arg") ;;
   esac
@@ -86,8 +109,18 @@ if [[ ${#positional[@]} -ne 2 ]]; then
   exit 1
 fi
 
+# Trailing slash on source → strip src base from output paths (rsync convention:
+# "copy contents", not "copy the directory itself").
+[[ "${positional[0]}" == */ ]] && strip_base=true || strip_base=false
+
 src="${positional[0]%/}"
 tgt="${positional[1]%/}"
+
+if [[ "$strip_base" == true ]]; then
+  tgt_base="$tgt"
+else
+  tgt_base="$tgt/$(basename "$src")"
+fi
 
 # ---------------------------------------------------------------------------
 # Validate inputs
@@ -143,11 +176,12 @@ fi
 # ---------------------------------------------------------------------------
 # Run start
 # ---------------------------------------------------------------------------
-log INFO "Run started — source: $src  target: $tgt  dry_run: $dry_run"
+log INFO "Run started — source: $src  target: $tgt  dry_run: $dry_run  divert_m4p: $divert_m4p"
 printf 'Found %d file(s) (.mp4/.m4p/.m4a/.mp3) under %s\n\n' "$total" "$src"
 
 converted=0
 copied=0
+diverted=0
 skipped=0
 errors=0
 count=0
@@ -158,16 +192,15 @@ count=0
 for src_file in "${files[@]}"; do
   count=$((count + 1))
   rel="${src_file#"$src"/}"
-  src_base=$(basename "$src")
   ext="${src_file##*.}"
-  out_dir="$tgt/$src_base/$(dirname "$rel")"
+  out_dir="$tgt_base/$(dirname "$rel")"
 
   prefix="[$count/$total]"
 
   case "$ext" in
     mp3)
       # .mp3: copy as-is
-      out="$tgt/$src_base/$rel"
+      out="$tgt_base/$rel"
 
       if [[ -f "$out" ]]; then
         printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
@@ -196,9 +229,48 @@ for src_file in "${files[@]}"; do
       fi
       ;;
 
-    mp4|m4a|m4p)
-      # .mp4/.m4a/.m4p: convert to FLAC
-      out="$tgt/$src_base/${rel%.*}.flac"
+    m4p)
+      # .m4p: DRM-protected; divert to Desktop or skip with warning
+      if [[ "$divert_m4p" == true ]]; then
+        out="$M4P_DIR/$rel"
+        out_dir_m4p="$M4P_DIR/$(dirname "$rel")"
+
+        if [[ -f "$out" ]]; then
+          printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
+          log SKIP "Already exists: $out"
+          skipped=$((skipped + 1))
+          continue
+        fi
+
+        printf '%s DIVERT   %s\n        -> %s\n' "$prefix" "$src_file" "$out"
+
+        if [[ "$dry_run" == true ]]; then
+          log INFO "Dry-run divert: $src_file -> $out"
+          diverted=$((diverted + 1))
+          continue
+        fi
+
+        mkdir -p "$out_dir_m4p"
+
+        if mv "$src_file" "$out"; then
+          log OK "Diverted: $src_file -> $out"
+          diverted=$((diverted + 1))
+        else
+          printf '        ERROR: mv failed\n' >&2
+          log ERROR "Divert failed: $src_file"
+          errors=$((errors + 1))
+        fi
+      else
+        printf '%s SKIP (DRM)     %s\n' "$prefix" "$src_file"
+        printf '        .m4p files are DRM-protected; use --divert-m4p to divert to %s\n' "$M4P_DIR"
+        log SKIP "DRM-protected, skipped: $src_file"
+        skipped=$((skipped + 1))
+      fi
+      ;;
+
+    mp4|m4a)
+      # .mp4/.m4a: convert to FLAC
+      out="$tgt_base/${rel%.*}.flac"
 
       if [[ -f "$out" ]]; then
         printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
@@ -248,7 +320,7 @@ done
 # ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
-summary="converted: $converted, copied: $copied, skipped: $skipped, errors: $errors"
+summary="converted: $converted, copied: $copied, diverted: $diverted, skipped: $skipped, errors: $errors"
 printf '\nDone — %s\n' "$summary"
 log INFO "Run complete — $summary"
 
