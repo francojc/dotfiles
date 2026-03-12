@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# mono_2_navi — Extract a zip archive and merge into Artist/Album hierarchy
+# Usage: mono_2_navi [--help] [--dry-run] <zipfile> <target_dir>
+
+SCRIPT_NAME="mono_2_navi"
+SCRIPT_VERSION="0.1.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/common"
+
+# ---------------------------------------------------------------------------
+# Usage
+# ---------------------------------------------------------------------------
+usage() {
+  cat <<'EOF'
+Usage: mono_2_navi [--help] [--dry-run] <zipfile> <target_dir>
+
+Extract a zip archive containing an "Album - Artist" directory and merge
+its contents into a nested target/Artist/Album/ hierarchy.
+
+Arguments:
+  zipfile      Path to the .zip archive (kept after extraction)
+  target_dir   Root of the music library (must exist)
+
+Flags:
+  --help       Show this help message
+  --dry-run    Print actions without executing
+
+Directory naming:
+  The zip must contain exactly one directory named "Album - Artist".
+  The split is on the LAST occurrence of " - ":
+    "Start - End - Artist" -> Album="Start - End", Artist="Artist"
+
+Duplicate handling:
+  Files already present at target/Artist/Album/<filename> are skipped.
+
+Examples:
+  mono_2_navi ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+  mono_2_navi --dry-run ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+SHOW_HELP=0
+SHOW_VERSION=0
+mapfile -t _canonical < <(canonicalize_long_opts "$@") || true
+set -- "${_canonical[@]+"${_canonical[@]}"}"
+mapfile -t _rest < <(parse_common_args "$@") || true
+set -- "${_rest[@]+"${_rest[@]}"}"
+
+if [[ "${SHOW_HELP:-0}" -eq 1 ]]; then
+  usage
+  exit 0
+fi
+
+if [[ $# -lt 2 ]]; then
+  usage >&2
+  die "Expected 2 arguments: <zipfile> <target_dir>"
+fi
+
+zip_file="$1"
+target_dir="$2"
+
+# ---------------------------------------------------------------------------
+# Validation
+# ---------------------------------------------------------------------------
+require unzip
+
+[[ -f "$zip_file" ]]       || die "Not a file: $zip_file"
+[[ "$zip_file" == *.zip ]] || die "Expected a .zip file: $zip_file"
+[[ -d "$target_dir" ]]     || die "Target directory not found: $target_dir"
+
+# ---------------------------------------------------------------------------
+# Extract to temp dir
+# Always extract (temp is ephemeral); only mkdir/mv are DRY_RUN-gated.
+# ---------------------------------------------------------------------------
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  log_info "[DRY RUN] Would extract: $zip_file -> <tmpdir>"
+  unzip -q "$zip_file" -d "$tmp_dir"
+else
+  unzip -q "$zip_file" -d "$tmp_dir"
+fi
+
+# ---------------------------------------------------------------------------
+# Locate extracted directory (expect exactly one)
+# ---------------------------------------------------------------------------
+extracted_dirs=("$tmp_dir"/*)
+[[ ${#extracted_dirs[@]} -eq 1 && -d "${extracted_dirs[0]}" ]] \
+  || die "Expected exactly one top-level directory in zip; found: ${#extracted_dirs[@]}"
+
+src_dir="${extracted_dirs[0]}"
+dir_name="$(basename "$src_dir")"
+
+# ---------------------------------------------------------------------------
+# Parse "Album - Artist" name (split on last " - ")
+# ---------------------------------------------------------------------------
+artist="${dir_name##* - }"
+album="${dir_name% - *}"
+
+log_info "Source : $dir_name"
+log_info "Artist : $artist"
+log_info "Album  : $album"
+
+# ---------------------------------------------------------------------------
+# Merge into target
+# ---------------------------------------------------------------------------
+album_dir="$target_dir/$artist/$album"
+
+run mkdir -p "$album_dir"
+
+moved=0
+skipped=0
+
+while IFS= read -r -d '' src_file; do
+  filename="$(basename "$src_file")"
+  dest_file="$album_dir/$filename"
+
+  if [[ -f "$dest_file" ]]; then
+    log_info "SKIP  $artist/$album/$filename (exists)"
+    skipped=$((skipped + 1))
+  else
+    run mv "$src_file" "$dest_file"
+    log_info "MOVE  $artist/$album/$filename"
+    moved=$((moved + 1))
+  fi
+done < <(find "$src_dir" -maxdepth 1 -type f -print0)
+
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
+log_info "Done — moved: $moved  skipped: $skipped"
+log_info "Zip kept: $zip_file"

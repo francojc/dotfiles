@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-# music_convert — Convert Apple Music .mp4 files to FLAC
+# music_convert — Process Apple Music exports into a portable library.
+#
+# File handling:
+#   .mp4 / .m4a / .m4p  — lossy Apple formats; transcoded to lossless FLAC
+#   .mp3                 — already a portable format; copied as-is, no re-encoding
+#
 # Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
 
 set -euo pipefail
@@ -28,15 +33,18 @@ usage() {
   cat <<'EOF'
 Usage: music_convert [--dry-run] [--help] <source_dir> <target_dir>
 
-Convert Apple Music .mp4 files to FLAC, mirroring the source directory
-structure under the target directory.
+Convert Apple Music files, mirroring the source directory structure under
+the target directory.
+
+  .mp4 / .m4a / .m4p  →  converted to .flac
+  .mp3                 →  copied as-is (no re-encoding)
 
 Arguments:
-  source_dir   Directory containing .mp4 files (must exist)
-  target_dir   Destination root for .flac output (must exist)
+  source_dir   Directory containing audio files (must exist)
+  target_dir   Destination root for output (must exist)
 
 Flags:
-  --dry-run    Show what would be converted without doing anything
+  --dry-run    Show what would be done without doing anything
   --help       Show this help message
 
 Examples:
@@ -44,10 +52,12 @@ Examples:
   music_convert --dry-run /Volumes/Purchases ~/NAS/music
 
 Notes:
-  - Skips files that already have a corresponding .flac at the target path
-  - Skips .mp4 files with no audio stream
+  - .mp3 files are copied without re-encoding (already portable)
+  - .mp4/.m4a/.m4p files are transcoded to FLAC (lossless, no DRM wrapper)
+  - Skips files that already exist at the target path
+  - Skips .mp4/.m4a/.m4p files with no audio stream
   - Logs all activity to ~/.local/share/music_convert/music_convert.log
-  - ffmpeg and ffprobe must be on PATH
+  - ffmpeg, ffprobe, and fd must be on PATH
 
 Conversion flags used:
   ffmpeg -i <src> -vn -acodec flac -compression_level 12 -map_metadata 0
@@ -121,12 +131,12 @@ mkdir -p "$LOG_DIR"
 files=()
 while IFS= read -r -d '' f; do
   files+=("$f")
-done < <(fd -e mp4 -e m4p -e m4a -t f -0 . "$src" | sort -z)
+done < <(fd -e mp4 -e m4p -e m4a -e mp3 -t f -0 . "$src" | sort -z)
 
 total=${#files[@]}
 
 if [[ $total -eq 0 ]]; then
-  printf 'No .mp4/.m4p/.m4a files found under %s\n' "$src"
+  printf 'No .mp4/.m4p/.m4a/.mp3 files found under %s\n' "$src"
   exit 0
 fi
 
@@ -134,9 +144,10 @@ fi
 # Run start
 # ---------------------------------------------------------------------------
 log INFO "Run started — source: $src  target: $tgt  dry_run: $dry_run"
-printf 'Found %d file(s) (.mp4/.m4p/.m4a) under %s\n\n' "$total" "$src"
+printf 'Found %d file(s) (.mp4/.m4p/.m4a/.mp3) under %s\n\n' "$total" "$src"
 
 converted=0
+copied=0
 skipped=0
 errors=0
 count=0
@@ -144,63 +155,100 @@ count=0
 # ---------------------------------------------------------------------------
 # Main loop
 # ---------------------------------------------------------------------------
-for mp4 in "${files[@]}"; do
+for src_file in "${files[@]}"; do
   count=$((count + 1))
-  rel="${mp4#"$src"/}"
+  rel="${src_file#"$src"/}"
   src_base=$(basename "$src")
-  out="$tgt/$src_base/${rel%.*}.flac"
+  ext="${src_file##*.}"
   out_dir="$tgt/$src_base/$(dirname "$rel")"
 
   prefix="[$count/$total]"
 
-  # Already converted?
-  if [[ -f "$out" ]]; then
-    printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
-    log SKIP "Already exists: $out"
-    skipped=$((skipped + 1))
-    continue
-  fi
+  case "$ext" in
+    mp3)
+      # .mp3: copy as-is
+      out="$tgt/$src_base/$rel"
 
-  # Audio stream check
-  audio=$(ffprobe -v error -select_streams a \
-    -show_entries stream=index \
-    -of csv=p=0 "$mp4" 2>/dev/null)
-  if [[ -z "$audio" ]]; then
-    printf '%s SKIP (no audio) %s\n' "$prefix" "$mp4"
-    log SKIP "No audio stream: $mp4"
-    skipped=$((skipped + 1))
-    continue
-  fi
+      if [[ -f "$out" ]]; then
+        printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
+        log SKIP "Already exists: $out"
+        skipped=$((skipped + 1))
+        continue
+      fi
 
-  printf '%s CONVERT  %s\n        -> %s\n' "$prefix" "$mp4" "$out"
+      printf '%s COPY     %s\n        -> %s\n' "$prefix" "$src_file" "$out"
 
-  if [[ "$dry_run" == true ]]; then
-    log INFO "Dry-run: $mp4 -> $out"
-    converted=$((converted + 1))
-    continue
-  fi
+      if [[ "$dry_run" == true ]]; then
+        log INFO "Dry-run copy: $src_file -> $out"
+        copied=$((copied + 1))
+        continue
+      fi
 
-  mkdir -p "$out_dir"
+      mkdir -p "$out_dir"
 
-  if ffmpeg -i "$mp4" -vn -acodec flac \
-      -compression_level 12 \
-      -map_metadata 0 \
-      -loglevel error \
-      "$out" 2>/tmp/music_convert_err; then
-    log OK "$mp4 -> $out"
-    converted=$((converted + 1))
-  else
-    err_msg=$(cat /tmp/music_convert_err 2>/dev/null || true)
-    printf '        ERROR: %s\n' "$err_msg" >&2
-    log ERROR "Conversion failed: $mp4${err_msg:+  ($err_msg)}"
-    errors=$((errors + 1))
-  fi
+      if cp "$src_file" "$out"; then
+        log OK "Copied: $src_file -> $out"
+        copied=$((copied + 1))
+      else
+        printf '        ERROR: cp failed\n' >&2
+        log ERROR "Copy failed: $src_file"
+        errors=$((errors + 1))
+      fi
+      ;;
+
+    mp4|m4a|m4p)
+      # .mp4/.m4a/.m4p: convert to FLAC
+      out="$tgt/$src_base/${rel%.*}.flac"
+
+      if [[ -f "$out" ]]; then
+        printf '%s SKIP (exists)  %s\n' "$prefix" "$out"
+        log SKIP "Already exists: $out"
+        skipped=$((skipped + 1))
+        continue
+      fi
+
+      # Audio stream check
+      audio=$(ffprobe -v error -select_streams a \
+        -show_entries stream=index \
+        -of csv=p=0 "$src_file" 2>/dev/null)
+      if [[ -z "$audio" ]]; then
+        printf '%s SKIP (no audio) %s\n' "$prefix" "$src_file"
+        log SKIP "No audio stream: $src_file"
+        skipped=$((skipped + 1))
+        continue
+      fi
+
+      printf '%s CONVERT  %s\n        -> %s\n' "$prefix" "$src_file" "$out"
+
+      if [[ "$dry_run" == true ]]; then
+        log INFO "Dry-run convert: $src_file -> $out"
+        converted=$((converted + 1))
+        continue
+      fi
+
+      mkdir -p "$out_dir"
+
+      if ffmpeg -i "$src_file" -vn -acodec flac \
+          -compression_level 12 \
+          -map_metadata 0 \
+          -loglevel error \
+          "$out" 2>/tmp/music_convert_err; then
+        log OK "$src_file -> $out"
+        converted=$((converted + 1))
+      else
+        err_msg=$(cat /tmp/music_convert_err 2>/dev/null || true)
+        printf '        ERROR: %s\n' "$err_msg" >&2
+        log ERROR "Conversion failed: $src_file${err_msg:+  ($err_msg)}"
+        errors=$((errors + 1))
+      fi
+      ;;
+  esac
 done
 
 # ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
-summary="converted: $converted, skipped: $skipped, errors: $errors"
+summary="converted: $converted, copied: $copied, skipped: $skipped, errors: $errors"
 printf '\nDone — %s\n' "$summary"
 log INFO "Run complete — $summary"
 
