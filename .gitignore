@@ -27,6 +27,7 @@
 .config/ncspot/userstate.cbor
 .config/nvim-nix/lua/theme-config.lua
 .config/nvim/lua/theme-config.lua
+.config/nvim/nvim-pack-lock.json
 .config/opencode/opencode.json
 .config/pianobar/state
 .config/pulse/*

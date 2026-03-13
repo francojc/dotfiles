@@ -186,6 +186,7 @@ vim.api.nvim_create_user_command("PackUpdatePlugin", function(opts)
 end, { desc = "Update specific plugin", nargs = "?" })
 
 -- Clean unused plugins
+-- TODO: For some reason plugins are not removed 2026-03-13 09:25
 vim.api.nvim_create_user_command("PackClean", function()
 	_G.Pack_clean()
 end, { desc = "Clean unused plugins" })
@@ -283,7 +284,9 @@ a.nvim_create_autocmd("LspProgress", {
 	group = "personal",
 	callback = function(ev)
 		local value = ev.data.params.value or {}
-		if not value.kind then return end
+		if not value.kind then
+			return
+		end
 
 		local status = value.kind == "end" and 0 or 1
 		local percent = value.percentage or 0
@@ -298,3 +301,4 @@ a.nvim_create_autocmd("LspProgress", {
 		io.stdout:flush()
 	end,
 })
+
