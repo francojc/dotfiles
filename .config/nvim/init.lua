@@ -25,13 +25,13 @@ vim.g.llama_config = {
 	n_predict = 128,
 	stop_strings = {},
 	-- Timout settings
-	t_max_prompt_ms = 500,
+	t_max_prompt_ms = 1000,
 	t_max_predict_ms = 1000,
 	-- Cache settings
 	max_cache_keys = 250,
 	-- Ring buffer
 	ring_n_chunks = 16,
-	ring_chunk_size = 64,
+	ring_chunk_size = 32,
 	ring_scope = 1024,
 	ring_update_ms = 1000,
 	-- Keymaps
@@ -40,7 +40,7 @@ vim.g.llama_config = {
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word
 	-- Info
-	show_info = 0, -- 0=off, 1=statusline, 2=inline
+	show_info = 2, -- 0=off, 1=statusline, 2=inline
 }
 
 ---| Plugin Management (vim.pack) ---------------------------------

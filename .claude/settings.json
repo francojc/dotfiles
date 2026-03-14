@@ -170,6 +170,6 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
-  "prefersReducedMotion": false,
-  "voiceEnabled": true
+  "voiceEnabled": false,
+  "prefersReducedMotion": false
 }
