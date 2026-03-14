@@ -58,12 +58,10 @@
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       # "calibre" # eBook management
-      # "claude" # Claude Desktop
+      "claude" # Claude Desktop
       "dropbox"
-      # "fbreader" # eBook reader (use bookokrat)
       "ghostty" # Terminal emulator
       "google-chrome"
-      "google-drive"
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "lm-studio" # LLM model gui/cli
@@ -76,10 +74,9 @@
       "transmission"
       "visual-studio-code" # code editor
       "vlc" # media player
-      "wezterm@nightly" # terminal emulator
       "zen" # browser
       "zoom" # video conferencing
-      "zotero@beta" # reference manager
+      "zotero" # reference manager
       # "blackhole-2ch" # virtual audio driver
       "keycastr" # keystroke visualizer
       # "loopback" # audio routing

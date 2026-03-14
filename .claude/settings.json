@@ -170,6 +170,7 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
-  "voiceEnabled": false,
-  "prefersReducedMotion": false
+  "voiceEnabled": true,
+  "prefersReducedMotion": false,
+  "model": "opus[1m]"
 }
