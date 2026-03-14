@@ -58,7 +58,7 @@
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       # "calibre" # eBook management
-      "claude" # Claude Desktop
+      # "claude" # Claude Desktop
       "dropbox"
       # "fbreader" # eBook reader (use bookokrat)
       "ghostty" # Terminal emulator

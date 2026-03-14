@@ -53,6 +53,7 @@
 .claude/cache
 .claude/last-notification
 .claude/paste-cache
+.claude/sessions
 .claude/tasks/
 .claude/telemetry
 .claude/usage-data/

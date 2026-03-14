@@ -169,6 +169,7 @@
     "lua-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
   "prefersReducedMotion": false,
-  "effortLevel": "medium"
+  "voiceEnabled": true
 }
