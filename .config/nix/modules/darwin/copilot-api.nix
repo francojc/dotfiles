@@ -29,9 +29,14 @@
 # authenticate via Neovim first, then restart the service with:
 #   launchctl kickstart -k gui/$(id -u)/com.github.copilot-api
 #
-{ pkgs, config, lib, username, ... }:
-with lib;
-let
+{
+  pkgs,
+  config,
+  lib,
+  username,
+  ...
+}:
+with lib; let
   cfg = config.services.copilot-api;
 in {
   options.services.copilot-api = {
@@ -154,7 +159,7 @@ in {
     };
 
     # Ensure nodejs and our copilot-api wrapper are available
-    environment.systemPackages = [ pkgs.nodejs cfg.package ];
+    environment.systemPackages = [pkgs.nodejs cfg.package];
 
     # Create launchd agent for copilot-api using nix-darwin's interface
     launchd.user.agents.copilot-api = {

@@ -4,7 +4,6 @@
   username,
   ...
 }: {
-
   # --- Core NixOS Settings ---
   networking.hostName = hostname;
   i18n.defaultLocale = "en_US.UTF-8"; # From original config
@@ -37,7 +36,7 @@
   environment.systemPackages = with pkgs; [
     ghostty
   ];
-  
+
   # --- Sound (from original config) ---
   # services.pulseaudio.enable = false; # Default anyway if pipewire is enabled
   security.rtkit.enable = true; # Often needed for pipewire realtime priorities

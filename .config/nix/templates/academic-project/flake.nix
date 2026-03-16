@@ -6,17 +6,22 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
+  outputs = {
+    nixpkgs,
+    flake-utils,
+    ...
+  }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs {inherit system;};
 
-      pythonEnv = pkgs.python312.withPackages (ps: with ps; [
-        pandas
-        numpy
-        matplotlib
-        jupyter
-        pytest
-      ]);
+      pythonEnv = pkgs.python312.withPackages (ps:
+        with ps; [
+          pandas
+          numpy
+          matplotlib
+          jupyter
+          pytest
+        ]);
 
       rEnv = pkgs.rWrapper.override {
         packages = with pkgs.rPackages; [
@@ -39,7 +44,7 @@
         ruff
       ];
 
-      allPackages = corePackages ++ [ pythonEnv rEnv ];
+      allPackages = corePackages ++ [pythonEnv rEnv];
     in {
       devShell = pkgs.mkShell {
         buildInputs = allPackages;

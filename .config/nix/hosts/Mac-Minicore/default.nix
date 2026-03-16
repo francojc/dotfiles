@@ -56,6 +56,17 @@
         };
       };
 
+      # Host-specific Homebrew packages (merged with shared apps.nix)
+      homebrew = {
+        brews = [
+          # Mac-Minicore-only brews here
+        ];
+        casks = [
+          # Mac-Minicore-only casks here
+          "android-platform-tools" # ADB and Fastboot (for TVs)
+        ];
+      };
+
       system.keyboard = {
         userKeyMapping = [
           {

@@ -14,6 +14,26 @@
   hostModules = [
     ../../profiles/darwin/configuration.nix
     ../../modules/darwin/reddix.nix
+
+    # Host-specific Homebrew packages (merged with shared apps.nix)
+    {
+      homebrew = {
+        brews = [
+          # Macbook-Airborne-only brews here
+          "transmission-cli" # command-line torrent client
+        ];
+        casks = [
+          # Macbook-Airborne-only casks here
+          # "calibre" # eBook management
+          "dropbox" # cloud storage
+          "lm-studio" # LLM model gui/cli
+          "orbstack" # Docker alternative
+          "parallels" # virtualization
+          "transmission" # torrent client
+          # "transcribe"
+        ];
+      };
+    }
   ];
 
   # Home Manager host-specific modules (if any)

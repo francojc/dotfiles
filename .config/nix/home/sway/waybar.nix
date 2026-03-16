@@ -1,7 +1,4 @@
-
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   programs.waybar = {
     enable = true;
     style = ''
@@ -33,9 +30,9 @@
       mainBar = {
         layer = "top";
         position = "top";
-        modules-left = [ "sway/workspaces" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "network" ];
+        modules-left = ["sway/workspaces"];
+        modules-center = ["clock"];
+        modules-right = ["network"];
 
         "sway/workspaces" = {
           disable-scroll = true;

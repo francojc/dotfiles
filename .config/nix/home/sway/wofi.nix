@@ -1,7 +1,4 @@
-
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   programs.wofi = {
     enable = true;
     style = ''

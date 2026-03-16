@@ -1,3 +1,5 @@
+# Shared Homebrew packages for all Darwin hosts.
+# Host-specific packages live in each host's default.nix.
 {pkgs, ...}: {
   # Add system packages
   environment.systemPackages = with pkgs; [
@@ -21,7 +23,6 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "FelixKratz/formulae/borders" # jankyborders
       "acrogenesis/macchanger/macchanger" # MAC address changer
-      "bitwarden-cli" # Bitwarden CLI
       "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
       "llama.cpp" # LLaMA model inference
@@ -37,7 +38,6 @@
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
-      "transmission-cli" # command-line torrent client
       # "waynehoover/tap/pbrich" # pbcopy for multiple formats (text, html, rtf, images)
 
       # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support
@@ -52,53 +52,28 @@
     ];
 
     casks = [
-      "android-platform-tools" # ADB and Fastboot (for TVs)
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      # "calibre" # eBook management
       "claude" # Claude Desktop
-      "dropbox"
       "ghostty" # Terminal emulator
       "google-chrome"
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
-      "lm-studio" # LLM model gui/cli
       "obsidian" # note-taking
-      "orbstack" # Docker alternative
-      "parallels" # virtualization
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
-      "transmission"
       "visual-studio-code" # code editor
       "vlc" # media player
       "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
-      # "blackhole-2ch" # virtual audio driver
       "keycastr" # keystroke visualizer
+      # "blackhole-2ch" # virtual audio driver
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
-      # "transcribe"
     ];
-
-    masApps = {
-      # `mas` is not currently compatible with my OS
-      # memorydiag = 748212890;
-      # JustFocus = 1142151959;
-      # Suggester = 1106482294;
-      # iMovie = 408981434;
-      # Bitwarden = 1352778147;
-      # GarageBand = 682658836;
-      # IPA_Keyboard = 1461264628;
-      # Keynote = 409183694;
-      # Numbers = 409203825;
-      # Pages = 409201541;
-      # Triode = 1450027401;
-      # iPreview = 1519213509;
-      # windows-app = 1295203466;
-    };
   };
 }

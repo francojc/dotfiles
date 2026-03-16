@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # --- Flatpak Support ---
   services.flatpak.enable = true;
 

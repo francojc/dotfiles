@@ -1,6 +1,11 @@
-{ pkgs, config, lib, username, ... }:
-with lib;
-let
+{
+  pkgs,
+  config,
+  lib,
+  username,
+  ...
+}:
+with lib; let
   cfg = config.services.ollama;
 in {
   options.services.ollama = {
@@ -74,7 +79,7 @@ in {
     };
 
     # Add ollama to system packages
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [cfg.package];
 
     # Create launchd agent for ollama using nix-darwin's interface
     launchd.user.agents.ollama = {
@@ -89,20 +94,21 @@ in {
         StandardOutPath = "/Users/${cfg.user}/.local/share/ollama.log";
         StandardErrorPath = "/Users/${cfg.user}/.local/share/ollama.error.log";
         WorkingDirectory = "/Users/${cfg.user}";
-        EnvironmentVariables = {
-          OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
-          OLLAMA_MODELS = cfg.modelsPath;
-        }
-        // optionalAttrs cfg.flashAttention {
-          OLLAMA_FLASH_ATTENTION = "1";
-        }
-        // optionalAttrs (cfg.kvCacheType != "") {
-          OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
-        }
-        // optionalAttrs cfg.keepModelLoaded {
-          OLLAMA_KEEP_ALIVE = "-1";
-        }
-        // cfg.extraEnvironment;
+        EnvironmentVariables =
+          {
+            OLLAMA_HOST = "${cfg.host}:${toString cfg.port}";
+            OLLAMA_MODELS = cfg.modelsPath;
+          }
+          // optionalAttrs cfg.flashAttention {
+            OLLAMA_FLASH_ATTENTION = "1";
+          }
+          // optionalAttrs (cfg.kvCacheType != "") {
+            OLLAMA_KV_CACHE_TYPE = cfg.kvCacheType;
+          }
+          // optionalAttrs cfg.keepModelLoaded {
+            OLLAMA_KEEP_ALIVE = "-1";
+          }
+          // cfg.extraEnvironment;
         SoftResourceLimits = {
           NumberOfFiles = 65536;
         };

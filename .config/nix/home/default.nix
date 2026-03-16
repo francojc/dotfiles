@@ -13,8 +13,6 @@
       ./ghostty.nix
       ./kitty.nix
       ./wezterm.nix
-      ./ncspot.nix
-      ./reddix.nix
       ./shell/default.nix
       ./tmux.nix
       ./vim.nix

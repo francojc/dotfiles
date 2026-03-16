@@ -26,20 +26,24 @@ let
   # Helper functions for working with systems
   helpers = rec {
     # Check if a system is Darwin-based
-    isDarwin = system: 
-      let systemInfo = supportedSystems.${system} or null;
-      in systemInfo != null && systemInfo.platform == "darwin";
+    isDarwin = system: let
+      systemInfo = supportedSystems.${system} or null;
+    in
+      systemInfo != null && systemInfo.platform == "darwin";
 
-    # Check if a system is Linux-based  
-    isLinux = system:
-      let systemInfo = supportedSystems.${system} or null;
-      in systemInfo != null && systemInfo.platform == "linux";
+    # Check if a system is Linux-based
+    isLinux = system: let
+      systemInfo = supportedSystems.${system} or null;
+    in
+      systemInfo != null && systemInfo.platform == "linux";
 
     # Get all systems for a specific platform
     getSystemsForPlatform = platform:
-      builtins.filter (system: 
-        let systemInfo = supportedSystems.${system} or null;
-        in systemInfo != null && systemInfo.platform == platform
+      builtins.filter (
+        system: let
+          systemInfo = supportedSystems.${system} or null;
+        in
+          systemInfo != null && systemInfo.platform == platform
       ) (builtins.attrNames supportedSystems);
 
     # Get all Darwin systems
@@ -48,7 +52,6 @@ let
     # Get all Linux systems
     getLinuxSystems = getSystemsForPlatform "linux";
   };
-
 in {
   inherit supportedSystems helpers;
 }
