@@ -25,6 +25,7 @@
         casks = [
           # Macbook-Airborne-only casks here
           # "calibre" # eBook management
+          "android-platform-tools" # ADB and Fastboot (for TVs)
           "dropbox" # cloud storage
           "lm-studio" # LLM model gui/cli
           "orbstack" # Docker alternative
