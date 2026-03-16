@@ -64,6 +64,7 @@
         casks = [
           # Mac-Minicore-only casks here
           "android-platform-tools" # ADB and Fastboot (for TVs)
+          "google-drive" # Google Drive sync
         ];
       };
 
