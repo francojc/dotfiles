@@ -59,25 +59,6 @@
           yellow = "#e8ae5b";
         };
       };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_orange;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg3;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
-      };
     };
 
     blackmetal = let
@@ -138,25 +119,6 @@
           fg = "#c1c1c1";
           yellow = "#a0a0a0";
         };
-      };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.fg0;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg3;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
       };
     };
 
@@ -224,24 +186,66 @@
           yellow = "#fabd2f";
         };
       };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_orange;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
+    };
+
+    kanso = let
+      colors = {
+        # Background colors
+        bg0 = "#14171d";
+        bg1 = "#1f1f26";
+        bg2 = "#22262D";
+        bg3 = "#393B44";
+        bg4 = "#4b4e57";
+
+        # Foreground colors
+        fg0 = "#f2f1ef";
+        fg1 = "#C5C9C7";
+        fg2 = "#A4A7A4";
+        fg3 = "#717C7C";
+
+        # Accent colors
+        red = "#C34043";
+        green = "#98BB6C";
+        yellow = "#DCA561";
+        blue = "#7FB4CA";
+        purple = "#938AA9";
+        aqua = "#8ea4a2";
+        orange = "#b6927b";
+
+        # Bright colors
+        bright_red = "#E46876";
+        bright_green = "#87a987";
+        bright_yellow = "#E6C384";
+        bright_blue = "#8ba4b0";
+        bright_purple = "#949fb5";
+        bright_aqua = "#7AA89F";
+        bright_orange = "#b98d7b";
+
+        # Special
+        cursor = "#DCA561";
+        accent = "#7FB4CA";
+      };
+    in {
+      name = "kanso";
+      inherit colors;
+      ghostty = {
+        theme = "Kanso Ink";
+        cursor_color = "#DCA561";
+      };
+      kitty = {
+        theme_name = "kanso";
+      };
+      vim = {
+        colorscheme = "kanso";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "kanso";
+        colors = {
+          bg = "#1f1f26";
+          fg = "#C5C9C7";
+          yellow = "#DCA561";
+        };
       };
     };
 
@@ -303,25 +307,6 @@
           fg = "#cdcecf";
           yellow = "#dbc074";
         };
-      };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
       };
     };
 
@@ -390,25 +375,6 @@
           yellow = "#e5c07b";
         };
       };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
-      };
     };
 
     tokyonight = let
@@ -469,25 +435,6 @@
           fg = "#c0caf5";
           yellow = "#e0af68";
         };
-      };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
       };
     };
 
@@ -550,25 +497,6 @@
           yellow = "#f9e2af";
         };
       };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg3;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
-      };
     };
 
     vscode = let
@@ -629,25 +557,6 @@
           fg = "#d4d4d4";
           yellow = "#dcdcaa";
         };
-      };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
       };
     };
 
@@ -710,25 +619,6 @@
           yellow = "#e6c792";
         };
       };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_blue;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
-      };
     };
 
     ayu = let
@@ -789,25 +679,6 @@
           fg = "#D9D7CE";
           yellow = "#FFD57F";
         };
-      };
-      ncspot = {
-        background = colors.bg0;
-        primary = colors.fg0;
-        secondary = colors.fg3;
-        title = colors.accent;
-        playing = colors.accent;
-        playing_selected = colors.bright_orange;
-        playing_bg = colors.bg0;
-        highlight = colors.fg0;
-        highlight_bg = colors.bg2;
-        error = colors.fg0;
-        error_bg = colors.red;
-        statusbar = colors.bg0;
-        statusbar_progress = colors.accent;
-        statusbar_bg = colors.accent;
-        cmdline = colors.fg0;
-        cmdline_bg = colors.bg0;
-        search_match = colors.bright_red;
       };
     };
   };

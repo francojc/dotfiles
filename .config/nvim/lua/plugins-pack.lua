@@ -17,6 +17,7 @@ local eager_plugins = {
 	{ src = "https://github.com/vague2k/vague.nvim" },
 	{ src = "https://github.com/Mofiqul/vscode.nvim" },
 	{ src = "https://github.com/ayu-theme/ayu-vim" },
+	{ src = "https://github.com/webhooked/kanso.nvim" },
 
 	-- Core functionality plugins (eager-loaded)
 	{ src = "https://github.com/3rd/image.nvim" },

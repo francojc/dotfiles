@@ -170,6 +170,14 @@ require("gruvbox").setup({
 	overrides = {},
 })
 
+--| Kanso ------------------------------------
+require("kanso").setup({
+	backround = {
+		dark = "zen",
+	},
+	foreground = "saturated",
+})
+
 ---| Nightfox ----------------------------------
 require("nightfox").setup({
 	styles = {
