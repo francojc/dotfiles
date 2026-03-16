@@ -1,25 +1,45 @@
 #!/usr/bin/env bash
-# mono_2_navi — Extract a zip archive and merge into Artist/Album hierarchy
-# Usage: mono_2_navi [--help] [--dry-run] <zipfile> <target_dir>
+
+# mono_2_navi — Organize music files into Artist/Album hierarchy
+# Usage: mono_2_navi <subcommand> [flags] <args...>
 
 SCRIPT_NAME="mono_2_navi"
-SCRIPT_VERSION="0.1.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common"
+SCRIPT_VERSION="0.2.0"
 
 # ---------------------------------------------------------------------------
 # Usage
 # ---------------------------------------------------------------------------
-usage() {
+top_level_usage() {
   cat <<'EOF'
-Usage: mono_2_navi [--help] [--dry-run] <zipfile> <target_dir>
+Usage: mono_2_navi <subcommand> [flags] <args...>
+
+Organize music files into an Artist/Album hierarchy.
+
+Subcommands:
+  album    Extract a zip archive and merge into Artist/Album/
+  tracks   Organize loose FLAC files into Artist/Album/
+
+Flags:
+  --help       Show this help message
+  --version    Show version
+  --dry-run    Print actions without executing
+
+Run 'mono_2_navi <subcommand> --help' for subcommand-specific help.
+EOF
+}
+
+usage_album() {
+  cat <<'EOF'
+Usage: mono_2_navi album [--dry-run] <zipfile> <target_dir>
 
 Extract a zip archive containing an "Album - Artist" directory and merge
 its contents into a nested target/Artist/Album/ hierarchy.
 
 Arguments:
   zipfile      Path to the .zip archive (kept after extraction)
-  target_dir   Root of the music library (must exist)
+  target_dir   Root of the music library (created if missing)
 
 Flags:
   --help       Show this help message
@@ -34,103 +54,298 @@ Duplicate handling:
   Files already present at target/Artist/Album/<filename> are skipped.
 
 Examples:
-  mono_2_navi ~/Downloads/"Some Album - The Artist.zip" ~/Music/
-  mono_2_navi --dry-run ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+  mono_2_navi album ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+  mono_2_navi album --dry-run ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+EOF
+}
+
+usage_tracks() {
+  cat <<'EOF'
+Usage: mono_2_navi tracks [--dry-run] [--album NAME] <source_dir> <target_dir>
+
+Organize loose FLAC files named "TN - ARTIST - TRACK.flac" into a nested
+target/ARTIST/ALBUM/ hierarchy.
+
+Arguments:
+  source_dir   Directory containing FLAC files
+  target_dir   Root of the music library (created if missing)
+
+Flags:
+  --help         Show this help message
+  --dry-run      Print actions without executing
+  --album NAME   Album name (prompted interactively if omitted)
+
+Filename format:
+  Files must match "TN - ARTIST - TRACK.flac" where:
+    TN      Track number (before first " - ")
+    ARTIST  Artist name (between first and second " - ")
+    TRACK   Track title (after second " - ", may contain " - ")
+
+  All files must share the same ARTIST.
+
+Destination:
+  Each file is moved to target/ARTIST/ALBUM/TN TRACK.flac
+
+Examples:
+  mono_2_navi tracks --album "Cool Album" ~/Downloads/singles/ ~/Music/
+  mono_2_navi tracks --dry-run ~/Downloads/singles/ ~/Music/
 EOF
 }
 
 # ---------------------------------------------------------------------------
-# Argument parsing
+# cmd_album — extract zip and merge into Artist/Album hierarchy
 # ---------------------------------------------------------------------------
-SHOW_HELP=0
-SHOW_VERSION=0
-mapfile -t _canonical < <(canonicalize_long_opts "$@") || true
-set -- "${_canonical[@]+"${_canonical[@]}"}"
-mapfile -t _rest < <(parse_common_args "$@") || true
-set -- "${_rest[@]+"${_rest[@]}"}"
+cmd_album() {
+  # Pre-scan flags (parse_common_args runs in a subshell via process
+  # substitution, so its global assignments don't propagate back).
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      --help|-h)    usage_album; exit 0 ;;
+      --dry-run|-n) DRY_RUN=1 ;;
+      --verbose|-v) VERBOSE=$((VERBOSE + 1)) ;;
+      --quiet|-q)   QUIET=1 ;;
+    esac
+  done
 
-if [[ "${SHOW_HELP:-0}" -eq 1 ]]; then
-  usage
-  exit 0
-fi
+  # Strip flags, keep positional args
+  mapfile -t _canonical < <(canonicalize_long_opts "$@") || true
+  set -- "${_canonical[@]+"${_canonical[@]}"}"
+  mapfile -t _rest < <(parse_common_args "$@") || true
+  set -- "${_rest[@]+"${_rest[@]}"}"
 
-if [[ $# -lt 2 ]]; then
-  usage >&2
-  die "Expected 2 arguments: <zipfile> <target_dir>"
-fi
-
-zip_file="$1"
-target_dir="$2"
-
-# ---------------------------------------------------------------------------
-# Validation
-# ---------------------------------------------------------------------------
-require unzip
-
-[[ -f "$zip_file" ]]       || die "Not a file: $zip_file"
-[[ "$zip_file" == *.zip ]] || die "Expected a .zip file: $zip_file"
-[[ -d "$target_dir" ]]     || die "Target directory not found: $target_dir"
-
-# ---------------------------------------------------------------------------
-# Extract to temp dir
-# Always extract (temp is ephemeral); only mkdir/mv are DRY_RUN-gated.
-# ---------------------------------------------------------------------------
-tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
-
-if [[ "$DRY_RUN" -eq 1 ]]; then
-  log_info "[DRY RUN] Would extract: $zip_file -> <tmpdir>"
-  unzip -q "$zip_file" -d "$tmp_dir"
-else
-  unzip -q "$zip_file" -d "$tmp_dir"
-fi
-
-# ---------------------------------------------------------------------------
-# Locate extracted directory (expect exactly one)
-# ---------------------------------------------------------------------------
-extracted_dirs=("$tmp_dir"/*)
-[[ ${#extracted_dirs[@]} -eq 1 && -d "${extracted_dirs[0]}" ]] \
-  || die "Expected exactly one top-level directory in zip; found: ${#extracted_dirs[@]}"
-
-src_dir="${extracted_dirs[0]}"
-dir_name="$(basename "$src_dir")"
-
-# ---------------------------------------------------------------------------
-# Parse "Album - Artist" name (split on last " - ")
-# ---------------------------------------------------------------------------
-artist="${dir_name##* - }"
-album="${dir_name% - *}"
-
-log_info "Source : $dir_name"
-log_info "Artist : $artist"
-log_info "Album  : $album"
-
-# ---------------------------------------------------------------------------
-# Merge into target
-# ---------------------------------------------------------------------------
-album_dir="$target_dir/$artist/$album"
-
-run mkdir -p "$album_dir"
-
-moved=0
-skipped=0
-
-while IFS= read -r -d '' src_file; do
-  filename="$(basename "$src_file")"
-  dest_file="$album_dir/$filename"
-
-  if [[ -f "$dest_file" ]]; then
-    log_info "SKIP  $artist/$album/$filename (exists)"
-    skipped=$((skipped + 1))
-  else
-    run mv "$src_file" "$dest_file"
-    log_info "MOVE  $artist/$album/$filename"
-    moved=$((moved + 1))
+  if [[ $# -lt 2 ]]; then
+    usage_album >&2
+    die "Expected 2 arguments: <zipfile> <target_dir>"
   fi
-done < <(find "$src_dir" -maxdepth 1 -type f -print0)
+
+  local zip_file="$1"
+  local target_dir="${2%/}"
+
+  require unzip
+
+  [[ -f "$zip_file" ]]       || die "Not a file: $zip_file"
+  [[ "$zip_file" == *.zip ]] || die "Expected a .zip file: $zip_file"
+  [[ -d "$target_dir" ]]     || run mkdir -p "$target_dir"
+
+  # Use script-global so the EXIT trap can access it after the
+  # function returns (local would be out of scope → unbound variable).
+  _album_tmp_dir="$(mktemp -d)"
+  trap 'rm -rf "$_album_tmp_dir"' EXIT
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    log_info "[DRY RUN] Would extract: $zip_file -> <tmpdir>"
+  fi
+  unzip -q "$zip_file" -d "$_album_tmp_dir"
+
+  local extracted_dirs=("$_album_tmp_dir"/*)
+  [[ ${#extracted_dirs[@]} -eq 1 && -d "${extracted_dirs[0]}" ]] \
+    || die "Expected exactly one top-level directory in zip; found: ${#extracted_dirs[@]}"
+
+  local src_dir="${extracted_dirs[0]}"
+  local dir_name
+  dir_name="$(basename "$src_dir")"
+
+  local artist="${dir_name##* - }"
+  local album="${dir_name% - *}"
+
+  log_info "Source : $dir_name"
+  log_info "Artist : $artist"
+  log_info "Album  : $album"
+
+  local album_dir="$target_dir/$artist/$album"
+  run mkdir -p "$album_dir"
+
+  local moved=0
+  local skipped=0
+  local filename dest_file
+
+  while IFS= read -r -d '' src_file; do
+    filename="$(basename "$src_file")"
+    dest_file="$album_dir/$filename"
+
+    if [[ -f "$dest_file" ]]; then
+      log_info "SKIP  $dest_file (exists)"
+      skipped=$((skipped + 1))
+    else
+      run mv "$src_file" "$dest_file"
+      log_info "MOVE  $dest_file"
+      moved=$((moved + 1))
+    fi
+  done < <(find "$src_dir" -maxdepth 1 -type f -print0)
+
+  log_info "Done — moved: $moved  skipped: $skipped"
+  log_info "Zip kept: $zip_file"
+}
 
 # ---------------------------------------------------------------------------
-# Summary
+# cmd_tracks — organize loose FLAC files into Artist/Album hierarchy
 # ---------------------------------------------------------------------------
-log_info "Done — moved: $moved  skipped: $skipped"
-log_info "Zip kept: $zip_file"
+cmd_tracks() {
+  local album_name=""
+
+  # Extract --album flag and pre-scan common flags (parse_common_args
+  # runs in a subshell via process substitution, so its global
+  # assignments don't propagate back).
+  local args=()
+  while (($#)); do
+    case "$1" in
+      --album)
+        [[ -n "${2:-}" ]] || die "--album requires an argument"
+        album_name="$2"
+        shift 2
+        ;;
+      --help|-h)    usage_tracks; exit 0 ;;
+      --dry-run|-n) DRY_RUN=1;  args+=("$1"); shift ;;
+      --verbose|-v) VERBOSE=$((VERBOSE + 1)); args+=("$1"); shift ;;
+      --quiet|-q)   QUIET=1;    args+=("$1"); shift ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+  done
+  set -- "${args[@]+"${args[@]}"}"
+
+  # Strip flags, keep positional args
+  mapfile -t _canonical < <(canonicalize_long_opts "$@") || true
+  set -- "${_canonical[@]+"${_canonical[@]}"}"
+  mapfile -t _rest < <(parse_common_args "$@") || true
+  set -- "${_rest[@]+"${_rest[@]}"}"
+
+  if [[ $# -lt 2 ]]; then
+    usage_tracks >&2
+    die "Expected 2 arguments: <source_dir> <target_dir>"
+  fi
+
+  local source_dir="${1%/}"
+  local target_dir="${2%/}"
+
+  [[ -d "$source_dir" ]] || die "Source directory not found: $source_dir"
+  [[ -d "$target_dir" ]] || run mkdir -p "$target_dir"
+
+  # Collect FLAC files
+  local flac_files=()
+  while IFS= read -r -d '' f; do
+    flac_files+=("$f")
+  done < <(find "$source_dir" -maxdepth 1 -name '*.flac' -type f -print0)
+
+  [[ ${#flac_files[@]} -gt 0 ]] \
+    || die "No .flac files found in: $source_dir"
+
+  # Parse filenames and validate consistent artist
+  local artists=()
+  local parsed_tn=()
+  local parsed_artist=()
+  local parsed_track=()
+  local parsed_file=()
+  local filename base tn rest artist track found
+
+  for f in "${flac_files[@]}"; do
+    filename="$(basename "$f")"
+    base="${filename%.flac}"
+
+    if [[ "$base" != *" - "* ]]; then
+      die "Filename does not match 'TN - ARTIST - TRACK' format: $filename"
+    fi
+
+    tn="${base%% - *}"
+    rest="${base#* - }"
+
+    if [[ "$rest" != *" - "* ]]; then
+      die "Filename does not match 'TN - ARTIST - TRACK' format: $filename"
+    fi
+
+    artist="${rest%% - *}"
+    track="${rest#* - }"
+
+    parsed_tn+=("$tn")
+    parsed_artist+=("$artist")
+    parsed_track+=("$track")
+    parsed_file+=("$f")
+
+    # Track unique artists
+    found=0
+    for a in "${artists[@]+"${artists[@]}"}"; do
+      if [[ "$a" == "$artist" ]]; then
+        found=1
+        break
+      fi
+    done
+    if [[ "$found" -eq 0 ]]; then
+      artists+=("$artist")
+    fi
+  done
+
+  if [[ ${#artists[@]} -gt 1 ]]; then
+    local artist_list
+    artist_list="$(printf '%s, ' "${artists[@]}")"
+    die "Mixed artists found: ${artist_list%, }"
+  fi
+
+  artist="${artists[0]}"
+
+  # Prompt for album name if not provided
+  if [[ -z "$album_name" ]]; then
+    read -rp "Album name for $artist: " album_name
+    [[ -n "$album_name" ]] || die "Album name cannot be empty"
+  fi
+
+  log_info "Artist : $artist"
+  log_info "Album  : $album_name"
+  log_info "Files  : ${#flac_files[@]}"
+
+  local album_dir="$target_dir/$artist/$album_name"
+  run mkdir -p "$album_dir"
+
+  local moved=0
+  local skipped=0
+  local dest_name dest_file
+
+  for i in "${!parsed_file[@]}"; do
+    dest_name="${parsed_tn[$i]} ${parsed_track[$i]}.flac"
+    dest_file="$album_dir/$dest_name"
+
+    if [[ -f "$dest_file" ]]; then
+      log_info "SKIP  $dest_file (exists)"
+      skipped=$((skipped + 1))
+    else
+      run mv "${parsed_file[$i]}" "$dest_file"
+      log_info "MOVE  $dest_file"
+      moved=$((moved + 1))
+    fi
+  done
+
+  log_info "Done — moved: $moved  skipped: $skipped"
+}
+
+# ---------------------------------------------------------------------------
+# Main — subcommand dispatch
+# ---------------------------------------------------------------------------
+if [[ $# -eq 0 ]]; then
+  top_level_usage >&2
+  die "Missing subcommand"
+fi
+
+case "$1" in
+  --help|-h)
+    top_level_usage
+    exit 0
+    ;;
+  --version)
+    print_version
+    exit 0
+    ;;
+esac
+
+subcmd="$1"
+shift
+
+case "$subcmd" in
+  album)  cmd_album "$@" ;;
+  tracks) cmd_tracks "$@" ;;
+  *)
+    top_level_usage >&2
+    die "Unknown subcommand: $subcmd"
+    ;;
+esac
