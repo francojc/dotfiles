@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# openclaude — launch claude via OpenRouter with model selection
+# Usage:
+# openclaude [--open] [--opus MODEL] [--sonnet MODEL] [--haiku MODEL] [-- CLAUDE_ARGS...]
+
+# Claude (Anthropic) model defaults
+readonly CLAUDE_OPUS="anthropic/claude-opus-4.6"
+readonly CLAUDE_SONNET="anthropic/claude-sonnet-4.6"
+readonly CLAUDE_HAIKU="anthropic/claude-haiku-4.5"
+
+# Open-weight model defaults
+readonly OPEN_OPUS="qwen/qwen3.5-397b-a17b"
+readonly OPEN_SONNET="z-ai/glm-5-turbo"
+readonly OPEN_HAIKU="minimax/minimax-m2.5"
+
+opus_model="$CLAUDE_OPUS"
+sonnet_model="$CLAUDE_SONNET"
+haiku_model="$CLAUDE_HAIKU"
+claude_args=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --open)
+      opus_model="$OPEN_OPUS"
+      sonnet_model="$OPEN_SONNET"
+      haiku_model="$OPEN_HAIKU"
+      shift
+      ;;
+    --opus)
+      if [[ -z "${2-}" || "$2" == --* ]]; then
+        echo "error: --opus requires a model argument" >&2
+        exit 1
+      fi
+      opus_model="$2"; shift 2
+      ;;
+    --sonnet)
+      if [[ -z "${2-}" || "$2" == --* ]]; then
+        echo "error: --sonnet requires a model argument" >&2
+        exit 1
+      fi
+      sonnet_model="$2"; shift 2
+      ;;
+    --haiku)
+      if [[ -z "${2-}" || "$2" == --* ]]; then
+        echo "error: --haiku requires a model argument" >&2
+        exit 1
+      fi
+      haiku_model="$2"; shift 2
+      ;;
+    --)
+      shift
+      claude_args+=("$@")
+      break
+      ;;
+    *)
+      claude_args+=("$1")
+      shift
+      ;;
+  esac
+done
+
+printf "opus:   %s\nsonnet: %s\nhaiku:  %s\n" \
+  "$opus_model" "$sonnet_model" "$haiku_model"
+
+ANTHROPIC_BASE_URL="https://openrouter.ai/api" \
+ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY" \
+ANTHROPIC_API_KEY="" \
+ANTHROPIC_DEFAULT_OPUS_MODEL="$opus_model" \
+ANTHROPIC_DEFAULT_SONNET_MODEL="$sonnet_model" \
+ANTHROPIC_DEFAULT_HAIKU_MODEL="$haiku_model" \
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
+claude "${claude_args[@]}"
+
