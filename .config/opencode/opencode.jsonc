@@ -9,17 +9,14 @@
         "baseURL": "http://mac-minicore.gerbil-matrix.ts.net:11434/v1",
       },
       "models": {
-        "gemma3:4b": {
-          "name": "Gemma 3 4B",
+        "qwen3.5:4b": {
+          "name": "Qwen 3.5 4B",
         },
-        "qwen3-vl:8b": {
-          "name": "Qwen 3 VL 8B",
+        "qwen3.5": {
+          "name": "Qwen 3.5 9B",
         },
         "gpt-oss:latest": {
           "name": "GPT-OSS Latest",
-        },
-        "ministral-3:latest": {
-          "name": "Ministral 3 Latest",
         },
         "nemotron-3-nano:30b-cloud": {
           "name": "Nemotron 3 Nano 30B Cloud",
