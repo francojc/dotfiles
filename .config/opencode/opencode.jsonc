@@ -27,10 +27,8 @@
       }
     }
   },
-  "disabled_providers": ["openai", "mistral", "gemini", "perplexity", "deepseek", "google-vertex-anthropic", "google-vertex", "opencode"],
+  "disabled_providers": ["openai", "mistral", "gemini", "perplexity", "deepseek", "google-vertex-anthropic", "google-vertex"],
   // Preferred models
-  // "model": "main-model-here",
-  "small_model": "claude-3-5-haiku-20241022",
   // MCP servers
   "mcp": {},
   "autoupdate": true
