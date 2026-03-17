@@ -18,11 +18,12 @@
 #
 # Environment Variables:
 #   OPENROUTER_API_KEY: Must be set to your OpenRouter API key.
+#   OPENROUTER_DEFAULT_MODEL: Override default model (default: google/gemini-flash-1.5).
 #
 # Author: Jerid Francom/Assistant
 
 # --- Configuration ---
-DEFAULT_MODEL="google/gemini-flash-1.5"
+DEFAULT_MODEL="${OPENROUTER_DEFAULT_MODEL:-google/gemini-flash-1.5}"
 API_URL="https://openrouter.ai/api/v1/chat/completions"
 
 # --- Helper Functions ---
@@ -46,6 +47,7 @@ usage() {
   echo
   echo "Environment Variables:"
   echo "  OPENROUTER_API_KEY: Must be set to your OpenRouter API key."
+  echo "  OPENROUTER_DEFAULT_MODEL: Override the default model."
   exit 1
 }
 
@@ -133,11 +135,6 @@ elif [[ -n "$positional_prompt" ]]; then
   prompt="$positional_prompt"
 fi
 
-# Check for any remaining unexpected arguments (double check, should be caught above)
-if [[ $# -gt 0 ]]; then
-    error_exit "Unexpected arguments found after processing: '$*'. Check argument order and quoting."
-fi
-
 
 # --- Input Validation ---
 
@@ -149,21 +146,6 @@ fi
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
     error_exit "'jq' command is not found. Please install jq (JSON processor)."
-fi
-
-# Check if file command is installed (for MIME type detection)
-if ! command -v file &> /dev/null; then
-    error_exit "'file' command is not found. Please install file."
-fi
-
-# Check if base64 command is installed
-if ! command -v base64 &> /dev/null; then
-    error_exit "'base64' command is not found. Please install base64."
-fi
-
-# Check if tr command is installed
-if ! command -v tr &> /dev/null; then
-    error_exit "'tr' command is not found. Please install tr (translate characters)."
 fi
 
 # Ensure prompt or attachment is provided
@@ -193,22 +175,9 @@ if [[ -n "$attachment_path" ]]; then
   fi
 
   # Base64 encode the file content and remove newlines for portability
-  base64_content=$(base64 < "$attachment_path" | tr -d '\n')
-  if [[ -z "$base64_content" ]]; then
-      # Check if base64 command succeeded but produced empty output (e.g., empty file)
-      # Or if tr failed, though less likely if the command check passed.
-      # Get exit status of the pipeline components
-      pipe_status=("${PIPESTATUS[@]}")
-      if [[ ${pipe_status[0]} -ne 0 ]]; then
-          error_exit "base64 command failed for attachment: $attachment_path"
-      elif [[ ${pipe_status[1]} -ne 0 ]]; then
-          error_exit "tr command failed while processing base64 output for attachment: $attachment_path"
-      else
-          # Base64 succeeded, tr succeeded, but output is empty. Likely an empty input file.
-          # Allow empty content, as it might be valid for some use cases or APIs.
-          : # Keep base64_content as empty string
-      fi
-  fi
+  base64_content=$(base64 < "$attachment_path" | tr -d '\n') || {
+    error_exit "Failed to encode attachment: $attachment_path"
+  }
 
 
   # Construct the JSON part for the attachment based on MIME type
@@ -217,8 +186,11 @@ if [[ -n "$attachment_path" ]]; then
       attachment_json_part=$(jq -n --arg mime "$mime_type" --arg data "$base64_content" \
         '{type: "image_url", image_url: {url: ("data:" + $mime + ";base64," + $data)}}')
   elif [[ "$mime_type" == "application/pdf" ]]; then
-      # Structure for PDFs (using a common pattern for base64 documents)
-      # This structure might need adjustment based on specific OpenRouter/model requirements.
+      # WARNING: PDF support via 'document_attachment' is non-standard and
+      # not part of the OpenAI-compatible API that OpenRouter exposes. Most
+      # models do not support this structure. Verify model compatibility before
+      # using PDF attachments — e.g., anthropic/claude-* models handle PDFs
+      # natively but require a different content block format.
       attachment_json_part=$(jq -n \
         --arg mime "$mime_type" \
         --arg data "$base64_content" \
@@ -231,40 +203,39 @@ if [[ -n "$attachment_path" ]]; then
 fi
 
 # --- Construct JSON Payload ---
-
-# Start building the messages array. Handle case where prompt might be empty (e.g., only attachment provided)
-messages_content_array='[]'
-if [[ -n "$prompt" ]]; then
-    # Ensure prompt is treated as a single JSON string, even with newlines/quotes
-    messages_content_array=$(jq -n --arg text_prompt "$prompt" '[{type: "text", text: $text_prompt}]')
-fi
-
-# If there's an attachment, add it to the content array
+# Build the entire payload in a single jq invocation.
+# We pre-compute the content array as a JSON string and pass it in,
+# avoiding multiple piped jq calls.
 if [[ -n "$attachment_json_part" ]]; then
-  messages_content_array=$(echo "$messages_content_array" | jq --argjson attachment "$attachment_json_part" '. += [$attachment]')
+  content_array=$(jq -n \
+    --arg text "$prompt" \
+    --argjson attachment "$attachment_json_part" \
+    '[(if $text != "" then {type: "text", text: $text} else empty end),
+      $attachment]')
+else
+  content_array=$(jq -n --arg text "$prompt" \
+    '[(if $text != "" then {type: "text", text: $text} else empty end)]')
 fi
 
-# Construct the messages array with the user role and the content array
-messages_json=$(jq -n --argjson content "$messages_content_array" '[{role: "user", content: $content}]')
-
-
-# Construct the base JSON payload by piping messages_json to jq stdin
-base_payload=$(echo "$messages_json" | jq --arg model "$model" \
-  '{model: $model, messages: .}')
-
-# Add max_tokens to the payload if it was provided
 if [[ -n "$max_tokens" ]]; then
-  # Use --argjson to ensure max_tokens is treated as a number
-  json_payload=$(echo "$base_payload" | jq --argjson tokens "$max_tokens" '. + {max_tokens: $tokens}')
+  json_payload=$(jq -n \
+    --arg model "$model" \
+    --argjson content "$content_array" \
+    --argjson tokens "$max_tokens" \
+    '{model: $model, messages: [{role: "user", content: $content}], max_tokens: $tokens}')
 else
-  json_payload="$base_payload"
+  json_payload=$(jq -n \
+    --arg model "$model" \
+    --argjson content "$content_array" \
+    '{model: $model, messages: [{role: "user", content: $content}]}')
 fi
 
 
 # --- Make API Call ---
-# Use curl to send the request
-# -s for silent, -S to show errors, -f to fail fast on HTTP errors
-api_response=$(curl -s -S -f -X POST "$API_URL" \
+# -s: silent progress, -S: show errors, --fail-with-body: return body on HTTP
+#   errors while still setting non-zero exit code, -L: follow redirects,
+# --max-time: abort after 60s of no data transfer
+api_response=$(curl -s -S --fail-with-body -L --max-time 60 -X POST "$API_URL" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENROUTER_API_KEY" \
   -d "$json_payload")
@@ -272,20 +243,15 @@ api_response=$(curl -s -S -f -X POST "$API_URL" \
 # Check curl exit status
 curl_exit_status=$?
 if [[ $curl_exit_status -ne 0 ]]; then
-  # Try to parse error from response if available
+  # Guard against empty or non-JSON response (e.g., DNS failure, timeout)
+  if [[ -z "$api_response" ]] || ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
+    error_exit "API call failed (curl exit code $curl_exit_status). $(if [[ -n "$api_response" ]]; then echo "Response: $(echo "$api_response" | head -c 200)"; else echo "No response received (network error or timeout)."; fi)"
+  fi
   error_message=$(echo "$api_response" | jq -r '.error.message // empty')
   if [[ -n "$error_message" ]]; then
-      error_exit "API call failed (curl exit code $curl_exit_status): $error_message"
-  else
-      # Check if the response is valid JSON before trying to parse further
-      if ! echo "$api_response" | jq -e . > /dev/null 2>&1; then
-          # Provide more context if response isn't JSON
-          error_exit "API call failed (curl exit code $curl_exit_status). Response was not valid JSON: $(echo "$api_response" | head -c 200) ..." # Show beginning of response
-      else
-          # Valid JSON but no specific error message found
-          error_exit "API call failed (curl exit code $curl_exit_status). Response: $(echo "$api_response" | jq -c .)" # Show compact JSON
-      fi
+    error_exit "API call failed (curl exit code $curl_exit_status): $error_message"
   fi
+  error_exit "API call failed (curl exit code $curl_exit_status). Response: $(echo "$api_response" | jq -c .)"
 fi
 
 # --- Process Response ---

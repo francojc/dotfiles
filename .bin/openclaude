@@ -1,7 +1,42 @@
 #!/usr/bin/env bash
-# openclaude — launch claude via OpenRouter with model selection
+# openclaude — launch claude CLI via OpenRouter with model selection
+#
 # Usage:
-# openclaude [--open] [--opus MODEL] [--sonnet MODEL] [--haiku MODEL] [-- CLAUDE_ARGS...]
+#   openclaude [--open] [--opus MODEL] [--sonnet MODEL] [--haiku MODEL]
+#              [-- CLAUDE_ARGS...]
+#   openclaude -h | --help
+#
+# Options:
+#   --open            Switch all model slots to open-weight defaults
+#   --opus MODEL      Override the opus model slot
+#   --sonnet MODEL    Override the sonnet model slot
+#   --haiku MODEL     Override the haiku model slot
+#   --                Pass all remaining arguments directly to claude
+#   -h, --help        Show this help message and exit
+#
+# Environment Variables:
+#   OPENROUTER_API_KEY  Required. Your OpenRouter API key.
+#
+# Claude (Anthropic) defaults:
+#   opus:   anthropic/claude-opus-4.6
+#   sonnet: anthropic/claude-sonnet-4.6
+#   haiku:  anthropic/claude-haiku-4.5
+#
+# Open-weight defaults (--open):
+#   opus:   qwen/qwen3.5-397b-a17b
+#   sonnet: z-ai/glm-5-turbo
+#   haiku:  minimax/minimax-m2.5
+#
+# Examples:
+#   openclaude                        # launch claude with Anthropic models
+#   openclaude --open                 # launch with open-weight model defaults
+#   openclaude --sonnet vendor/model  # override the sonnet slot only
+#   openclaude -- --help              # pass --help through to claude
+
+SCRIPT_NAME="openclaude"
+SCRIPT_VERSION="1.1.0"
+
+# --- Model defaults ---
 
 # Claude (Anthropic) model defaults
 readonly CLAUDE_OPUS="anthropic/claude-opus-4.6"
@@ -18,8 +53,42 @@ sonnet_model="$CLAUDE_SONNET"
 haiku_model="$CLAUDE_HAIKU"
 claude_args=()
 
+# --- Helper functions ---
+
+usage() {
+  echo "Usage: $SCRIPT_NAME [--open] [--opus MODEL] [--sonnet MODEL] [--haiku MODEL] [-- CLAUDE_ARGS...]"
+  echo "       $SCRIPT_NAME -h | --help"
+  echo
+  echo "Launch the claude CLI via OpenRouter with configurable model slots."
+  echo
+  echo "Options:"
+  echo "  --open            Switch all model slots to open-weight defaults"
+  echo "  --opus MODEL      Override the opus model slot"
+  echo "  --sonnet MODEL    Override the sonnet model slot"
+  echo "  --haiku MODEL     Override the haiku model slot"
+  echo "  --                Pass all remaining arguments directly to claude"
+  echo "  -h, --help        Show this help message and exit"
+  echo
+  echo "Environment Variables:"
+  echo "  OPENROUTER_API_KEY  Required. Your OpenRouter API key."
+  exit 0
+}
+
+error_exit() {
+  echo "error: $1" >&2
+  exit 1
+}
+
+# --- Strict mode ---
+set -euo pipefail
+
+# --- Argument parsing ---
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    -h|--help)
+      usage
+      ;;
     --open)
       opus_model="$OPEN_OPUS"
       sonnet_model="$OPEN_SONNET"
@@ -28,22 +97,19 @@ while [[ $# -gt 0 ]]; do
       ;;
     --opus)
       if [[ -z "${2-}" || "$2" == --* ]]; then
-        echo "error: --opus requires a model argument" >&2
-        exit 1
+        error_exit "--opus requires a model argument"
       fi
       opus_model="$2"; shift 2
       ;;
     --sonnet)
       if [[ -z "${2-}" || "$2" == --* ]]; then
-        echo "error: --sonnet requires a model argument" >&2
-        exit 1
+        error_exit "--sonnet requires a model argument"
       fi
       sonnet_model="$2"; shift 2
       ;;
     --haiku)
       if [[ -z "${2-}" || "$2" == --* ]]; then
-        echo "error: --haiku requires a model argument" >&2
-        exit 1
+        error_exit "--haiku requires a model argument"
       fi
       haiku_model="$2"; shift 2
       ;;
@@ -59,6 +125,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# --- Validation ---
+
+if [[ -z "${OPENROUTER_API_KEY:-}" ]]; then
+  error_exit "OPENROUTER_API_KEY is not set"
+fi
+
+command -v claude >/dev/null 2>&1 || error_exit "'claude' not found on PATH"
+
+# --- Launch ---
+
 printf "opus:   %s\nsonnet: %s\nhaiku:  %s\n" \
   "$opus_model" "$sonnet_model" "$haiku_model"
 
@@ -70,4 +146,3 @@ ANTHROPIC_DEFAULT_SONNET_MODEL="$sonnet_model" \
 ANTHROPIC_DEFAULT_HAIKU_MODEL="$haiku_model" \
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
 claude "${claude_args[@]}"
-
