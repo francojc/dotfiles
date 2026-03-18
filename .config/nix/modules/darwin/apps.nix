@@ -62,6 +62,7 @@
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
+      "opencode-desktop" # opencode desktop app
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging

@@ -107,6 +107,7 @@
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
     zoxide # Smarter cd command
+    zplug # Plugin manager for Zsh
   ];
 
   # Media and document processing
