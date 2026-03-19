@@ -6,7 +6,7 @@
 SCRIPT_NAME="mono_2_navi"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common"
-SCRIPT_VERSION="0.2.0"
+SCRIPT_VERSION="0.3.0"
 
 # ---------------------------------------------------------------------------
 # Usage
@@ -18,7 +18,7 @@ Usage: mono_2_navi <subcommand> [flags] <args...>
 Organize music files into an Artist/Album hierarchy.
 
 Subcommands:
-  album    Extract a zip archive and merge into Artist/Album/
+  album    Merge a zip archive or directory into Artist/Album/
   tracks   Organize loose FLAC files into Artist/Album/
 
 Flags:
@@ -32,13 +32,14 @@ EOF
 
 usage_album() {
   cat <<'EOF'
-Usage: mono_2_navi album [--dry-run] <zipfile> <target_dir>
+Usage: mono_2_navi album [--dry-run] <source> <target_dir>
 
-Extract a zip archive containing an "Album - Artist" directory and merge
-its contents into a nested target/Artist/Album/ hierarchy.
+Merge an album's files into a nested target/Artist/Album/ hierarchy.
+The source may be a .zip archive or an already-extracted directory.
 
 Arguments:
-  zipfile      Path to the .zip archive (kept after extraction)
+  source       Path to a .zip archive or a directory named "Album - Artist"
+               (zip is kept after extraction; directory is left in place)
   target_dir   Root of the music library (created if missing)
 
 Flags:
@@ -46,8 +47,8 @@ Flags:
   --dry-run    Print actions without executing
 
 Directory naming:
-  The zip must contain exactly one directory named "Album - Artist".
-  The split is on the LAST occurrence of " - ":
+  The source (or the single top-level directory inside a zip) must be
+  named "Album - Artist". The split is on the LAST occurrence of " - ":
     "Start - End - Artist" -> Album="Start - End", Artist="Artist"
 
 Duplicate handling:
@@ -55,6 +56,7 @@ Duplicate handling:
 
 Examples:
   mono_2_navi album ~/Downloads/"Some Album - The Artist.zip" ~/Music/
+  mono_2_navi album ~/Downloads/"Some Album - The Artist/" ~/Music/
   mono_2_navi album --dry-run ~/Downloads/"Some Album - The Artist.zip" ~/Music/
 EOF
 }
@@ -93,7 +95,7 @@ EOF
 }
 
 # ---------------------------------------------------------------------------
-# cmd_album — extract zip and merge into Artist/Album hierarchy
+# cmd_album — merge a zip archive or directory into Artist/Album hierarchy
 # ---------------------------------------------------------------------------
 cmd_album() {
   # Pre-scan flags (parse_common_args runs in a subshell via process
@@ -116,33 +118,41 @@ cmd_album() {
 
   if [[ $# -lt 2 ]]; then
     usage_album >&2
-    die "Expected 2 arguments: <zipfile> <target_dir>"
+    die "Expected 2 arguments: <source> <target_dir>"
   fi
 
-  local zip_file="$1"
+  local source="$1"
   local target_dir="${2%/}"
 
-  require unzip
+  [[ -d "$target_dir" ]] || run mkdir -p "$target_dir"
 
-  [[ -f "$zip_file" ]]       || die "Not a file: $zip_file"
-  [[ "$zip_file" == *.zip ]] || die "Expected a .zip file: $zip_file"
-  [[ -d "$target_dir" ]]     || run mkdir -p "$target_dir"
+  local src_dir
+  if [[ -d "$source" ]]; then
+    src_dir="$source"
+  elif [[ -f "$source" && "$source" == *.zip ]]; then
+    require unzip
 
-  # Use script-global so the EXIT trap can access it after the
-  # function returns (local would be out of scope → unbound variable).
-  _album_tmp_dir="$(mktemp -d)"
-  trap 'rm -rf "$_album_tmp_dir"' EXIT
+    # Use script-global so the EXIT trap can access it after the
+    # function returns (local would be out of scope → unbound variable).
+    _album_tmp_dir="$(mktemp -d)"
+    trap 'rm -rf "$_album_tmp_dir"' EXIT
 
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    log_info "[DRY RUN] Would extract: $zip_file -> <tmpdir>"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      log_info "[DRY RUN] Would extract: $source -> <tmpdir>"
+    fi
+    unzip -q "$source" -d "$_album_tmp_dir"
+
+    local extracted_dirs=("$_album_tmp_dir"/*)
+    [[ ${#extracted_dirs[@]} -eq 1 && -d "${extracted_dirs[0]}" ]] \
+      || die "Expected exactly one top-level directory in zip; found: ${#extracted_dirs[@]}"
+
+    src_dir="${extracted_dirs[0]}"
+  elif [[ -f "$source" ]]; then
+    die "Expected a .zip archive or a directory: $source"
+  else
+    die "Source not found: $source"
   fi
-  unzip -q "$zip_file" -d "$_album_tmp_dir"
 
-  local extracted_dirs=("$_album_tmp_dir"/*)
-  [[ ${#extracted_dirs[@]} -eq 1 && -d "${extracted_dirs[0]}" ]] \
-    || die "Expected exactly one top-level directory in zip; found: ${#extracted_dirs[@]}"
-
-  local src_dir="${extracted_dirs[0]}"
   local dir_name
   dir_name="$(basename "$src_dir")"
 
@@ -175,7 +185,9 @@ cmd_album() {
   done < <(find "$src_dir" -maxdepth 1 -type f -print0)
 
   log_info "Done — moved: $moved  skipped: $skipped"
-  log_info "Zip kept: $zip_file"
+  if [[ -f "$source" && "$source" == *.zip ]]; then
+    log_info "Zip kept: $source"
+  fi
 }
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# music_sync — rsync an artist/album/track directory to Navidrome on minis-services.
+#
+# Usage: music_sync [-n|--dry-run] [-p|--progress] [-h|--help] <source_dir>
+
+set -euo pipefail
+
+REMOTE="jeridf@minis-services:/opt/docker/media/music/user-1/"
+
+# ---------------------------------------------------------------------------
+# Usage
+# ---------------------------------------------------------------------------
+usage() {
+  cat <<'EOF'
+Usage: music_sync [-n|--dry-run] [-p|--progress] [-h|--help] <source_dir>
+
+Sync a local music directory (artist, album, or track folder) to the
+Navidrome library on minis-services. Existing remote files are never
+overwritten.
+
+Arguments:
+  source_dir   Local directory to sync (artist, album, or individual folder)
+
+Flags:
+  -n, --dry-run    Show what would transfer without sending anything
+  -p, --progress   Show per-file progress bars during transfer
+  -h, --help       Show this help message
+
+Examples:
+  music_sync ~/Music/Pinback
+  music_sync --dry-run ~/Music/Pinback
+  music_sync --progress ~/Music/Pinback/"Summer in Abaddon"
+
+Notes:
+  - Uses rsync --ignore-existing: files already on the remote are skipped
+  - Trailing slash on source_dir is stripped automatically so rsync copies
+    the directory itself (not just its contents) into the remote target
+  - Remote target: jeridf@minis-services:/opt/docker/media/music/user-1/
+  - rsync must be on PATH
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+dry_run=false
+progress=false
+positional=()
+
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h) usage; exit 0 ;;
+    --dry-run|-n) dry_run=true ;;
+    --progress|-p) progress=true ;;
+    -*) printf 'Unknown flag: %s\n' "$arg" >&2; usage >&2; exit 1 ;;
+    *) positional+=("$arg") ;;
+  esac
+done
+
+if [[ ${#positional[@]} -ne 1 ]]; then
+  printf 'Error: expected 1 positional argument, got %d\n' \
+    "${#positional[@]}" >&2
+  usage >&2
+  exit 1
+fi
+
+src="${positional[0]%/}"
+
+# ---------------------------------------------------------------------------
+# Validate inputs
+# ---------------------------------------------------------------------------
+if [[ ! -d "$src" ]]; then
+  printf 'Error: not a directory: %s\n' "$src" >&2
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Dependency check
+# ---------------------------------------------------------------------------
+if ! command -v rsync >/dev/null 2>&1; then
+  printf 'Error: rsync not found on PATH\n' >&2
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Build rsync args and execute
+# ---------------------------------------------------------------------------
+rsync_args=(-av --ignore-existing)
+$dry_run     && rsync_args+=(--dry-run)
+$progress    && rsync_args+=(--progress)
+
+printf 'Syncing %s -> %s\n' "$src" "$REMOTE"
+$dry_run && printf '(dry run — no files will be transferred)\n'
+printf '\n'
+
+rsync "${rsync_args[@]}" -- "$src" "$REMOTE"
