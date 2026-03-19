@@ -5,7 +5,7 @@ args:
     description: Canvas assignment ID (auto-discovers if not provided)
     required: false
 argument-hint: <Canvas assignment ID>
-allowed-tools: Read, Write, AskUserQuestion, mcp__mcp-canvas__get_assignment_details, mcp__mcp-canvas__get_assignment_rubric_details, mcp__mcp-canvas__get_submissions_with_content, Glob
+allowed-tools: Read, Write, AskUserQuestion, Bash, Glob
 ---
 
 # Assessment Setup - Initialize Grading Workflow
@@ -16,23 +16,24 @@ Initialize the grading workflow for Canvas assignment {{assignment_id}}.
 
 Create the assessment JSON file with all student submissions and rubric structure, ready for AI evaluation.
 
-## Step 1: Validate course_parameters.yaml
+## Step 1: Validate easel/config.toml
 
-Check for `.claude/course_parameters.yaml` in the current repository.
+Check for `easel/config.toml` in the current repository.
 
 **If missing**: Use `AskUserQuestion` to collect all fields, then create the file:
 
-```yaml
-course_title: "Exploring the Hispanic World"
-course_code: "SPA-212-T"
-canvas_course_id: 79384
-term: "Spring"
-year: 2026
-level: "undergraduate"
-feedback_language: "Spanish"
-language_learning: true
-language_level: "ACTFL Intermediate Mid"
-formality: "casual"
+```toml
+course_title = "Exploring the Hispanic World"
+course_code = "SPA-212-T"
+canvas_course_id = 79384
+term = "Spring"
+year = 2026
+level = "undergraduate"
+feedback_language = "Spanish"
+language_learning = true
+language_level = "ACTFL Intermediate Mid"
+formality = "casual"
+anonymize = true
 ```
 
 Notes on field values:
@@ -41,8 +42,9 @@ Notes on field values:
 - `formality` controls tone across all feedback: "casual" or "formal". For Spanish courses, "casual" implies tú and "formal" implies usted. For English feedback, "casual" means academic casual tone and "formal" means standard academic tone.
 - `language_learning: false` means `language_level` should be `"NA"`
 - `feedback_language` accepts full names ("Spanish", "English")
+- `anonymize` controls FERPA-compliant PII stripping: when `true`, student names and emails are blanked in the assessment JSON. The numeric `user_id` is retained for grade submission. Default `false`.
 
-**If present**: Parse YAML and validate all fields are populated. If any field is missing, prompt user for the missing values and update the file.
+**If present**: Parse TOML and validate all fields are populated. If any field is missing, prompt user for the missing values and update the file.
 
 **Extract values for downstream use**:
 
@@ -52,126 +54,65 @@ Notes on field values:
 
 ## Step 2: Generate Assessment Structure
 
-Fetch data from Canvas using three separate API calls:
+Fetch data from Canvas using the easel CLI, then construct the assessment file.
 
-### 2a. Get Assignment Details and Prompt
+### 2a. Run easel assess setup
 
-Use `mcp__mcp-canvas__get_assignment_details`:
+Use the Bash tool to run the easel CLI:
 
-- `course_identifier`: the `canvas_course_id` from course_parameters.yaml
-- `assignment_id`: the assignment_id
-
-This returns assignment metadata (name, due date, points possible, submission type) and the assignment description/instructions. Extract the `description` field — this is the **assignment prompt** that students responded to. Store it in the assessment JSON as `assignment_instructions`. This prompt is essential context for the AI evaluation step: it tells the evaluator what the student was asked to do.
-
-### 2b. Get Rubric Structure
-
-Use `mcp__mcp-canvas__get_assignment_rubric_details`:
-
-- `course_identifier`: the `canvas_course_id`
-- `assignment_id`: the assignment_id
-
-This returns complete rubric with all criteria and rating levels.
-
-### 2c. Get Student Submissions
-
-Use `mcp__mcp-canvas__get_submissions_with_content`:
-
-- `course_identifier`: the `canvas_course_id`
-- `assignment_id`: the assignment_id
-- `include_unsubmitted`: false
-- `exclude_graded`: true (skips already-graded submissions)
-
-**IMPORTANT - FERPA Compliance**: This function automatically filters submissions
-to ONLY include students enrolled in the specified course. For cross-listed
-assignments, submissions from other sections are excluded to prevent unauthorized
-access to student data.
-
-This returns all student submissions with extracted text content from uploaded files (DOCX, PDF).
-
-### 2d. Construct Assessment JSON
-
-Manually create the JSON file `assessments_{course_id}_{assignment_id}_{timestamp}.json` using the `Write` tool with this structure:
-
-```json
-{
-  "metadata": {
-    "course_id": "...",
-    "course_name": "...",
-    "assignment_id": "...",
-    "assignment_name": "...",
-    "due_date": "...",
-    "points_possible": ...,
-    "total_submissions": ...,
-    "created_at": "...",
-    "assignment_instructions": "...",
-    "level": "undergraduate|graduate|...",
-    "feedback_language": "en|es",
-    "language_learning": true|false,
-    "language_level": "ACTFL Intermediate Mid|NA",
-    "formality": "casual|formal",
-    "workflow_version": "1.0"
-  },
-  "rubric": {
-    "total_points": ...,
-    "criteria_count": ...,
-    "criteria": {
-      "criterion_id": {
-        "description": "...",
-        "max_points": ...,
-        "ratings": [...]
-      }
-    }
-  },
-  "assessments": [
-    {
-      "user_id": ...,
-      "user_name": "...",
-      "user_email": "...",
-      "submission_id": ...,
-      "submitted_at": "...",
-      "late": false,
-      "word_count": ...,
-      "submission_text": "...",
-      "rubric_assessment": {
-        "criterion_id": {
-          "points": null,
-          "rating_id": null,
-          "justification": ""
-        }
-      },
-      "overall_comment": "",
-      "reviewed": false,
-      "approved": false
-    }
-  ],
-  "ai_instructions": "..."
-}
+```bash
+uv run easel assess setup {canvas_course_id} {assignment_id} \
+  --course-name "{course_title}" \
+  --level "{level}" \
+  --feedback-language "{feedback_language_code}" \
+  --language-learning \
+  --language-level "{language_level}" \
+  --formality "{formality}" \
+  --exclude-graded \
+  --anonymize \
+  --format json
 ```
 
-Copy these fields from course_parameters.yaml into the JSON metadata:
+Notes:
 
-- `course_id` (from `canvas_course_id`)
-- `level` (educational setting string)
-- `feedback_language` (mapped to `"es"` or `"en"`)
-- `language_learning` (boolean)
-- `language_level` (string or `"NA"`)
-- `formality` (`"casual"` or `"formal"`)
+- `{canvas_course_id}` comes from `easel/config.toml`
+- `{assignment_id}` is the argument passed to this command
+- Only include `--language-learning` if `language_learning: true` in easel/config.toml
+- Only include `--anonymize` if `anonymize: true` in easel/config.toml
+- `--feedback-language` uses the mapped code ("es" or "en")
+- `--exclude-graded` skips already-graded submissions (default behavior)
+- `--format json` returns structured output for parsing
 
-This will:
+The CLI will:
 
-- Combine data from all three API calls into one assessment file
-- Skip already-graded submissions (workflow_state = "graded")
-- Skip students without submissions automatically
-- Extract text from uploaded DOCX and PDF files
+- Fetch assignment details, rubric structure, and student submissions
+- Build the assessment JSON combining all three data sources
+- Save to `.claude/assessments/{course_id}_{assignment_id}_{timestamp}.json`
+- Return a JSON summary with the file path and statistics
 
-Finally, save the resulting JSON file:
+### 2b. Parse CLI Output
 
-- Create `.claude/assessments/` if it doesn't exist.
-- Write this file to `.claude/assessments/{course_id}_{assignment_id}_{timestamp}.json`.
+Extract from the JSON response:
+
+- `file`: path to the created assessment file
+- `course_id`: resolved course ID
+- `assignment`: assignment name
+- `points_possible`: total points
+- `submissions`: number of submissions
+- `criteria`: number of rubric criteria
+
+### 2c. Read the Created Assessment File
+
+Use the Read tool to load the assessment file created by the CLI. This gives you access to the full assessment structure including:
+
+- Assignment instructions (prompt)
+- Complete rubric with criteria and ratings
+- All student submissions with extracted text
+- Metadata fields
 
 ## Step 3: Display Summary
 
-Report the following information:
+Read the assessment file and report the following information:
 
 ```
 Assessment Setup Complete
@@ -244,6 +185,7 @@ This allows subsequent commands to auto-discover the assessment file.
 - Automatically skips students who haven't submitted
 - **Excludes already-graded submissions by default** to prevent overwriting existing grades
 - **FERPA COMPLIANCE: Enrollment filtering enabled** - Only includes submissions from students enrolled in the specified course, preventing cross-section contamination in cross-listed assignments
+- **FERPA COMPLIANCE: PII anonymization** - When `anonymize: true` in easel/config.toml, student names and emails are stripped from the assessment JSON. The numeric `user_id` is retained for grade submission back to Canvas
 - Creates fresh assessment file each time (timestamped to avoid conflicts)
 - Preserves all rubric details for AI evaluation step
 

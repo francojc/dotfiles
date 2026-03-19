@@ -37,6 +37,7 @@ args:
   - name: reapply
     description: true | false (default false). Allow re-run even if refinement_meta exists
     required: false
+allowed-tools: Read, Write, Bash, Glob, Task, AskUserQuestion
 ---
 
 # Assess Refine - Cohort-Aware Normalization (0.5-point increments)
@@ -50,7 +51,7 @@ increments for clarity and rubric integrity.
 Normalize totals toward a median target using a nonnegative-only, additive-capped
 uplift K applied in 0.5 steps per criterion, respecting per-criterion maximums
 and preserving Canvas rubric validity. Optionally rewrite criterion feedback
-(15–20 words in the feedback language from `metadata.feedback_language`), then
+(15-20 words in the feedback language from `metadata.feedback_language`), then
 mark as reviewed and approved.
 
 ## Step 1: Locate Assessment File
@@ -67,7 +68,7 @@ If no arguments provided:
 - If not found, search for `assessments_*.json` and use most recent
 - If no files found, report error and tell user to run `/assess:setup` first
 
-Load the assessment file using `mcp__mcp-canvas__load_assessment_file`.
+Load the assessment file using the Read tool.
 
 ## Step 2: Determine Scope and Readiness
 
@@ -104,7 +105,7 @@ Defaults unless overridden by flags:
 Target selection:
 
 - Median-anchored normalization to `--target` (required unless `policy=advisory-only`)
-- If target missing and not advisory-only → prompt for target
+- If target missing and not advisory-only, prompt for target
 
 0.5-step enforcement (global):
 
@@ -139,10 +140,10 @@ Step size: 0.5
 Target median: {target} (feasible max: {feasible})
 Chosen K: {K}
 
-Totals (median): {old_med} → {new_med}
+Totals (median): {old_med} -> {new_med}
 Criterion averages:
-- {crit1}: {old1} → {new1}
-- {crit2}: {old2} → {new2}
+- {crit1}: {old1} -> {new1}
+- {crit2}: {old2} -> {new2}
 - ...
 (list all criteria from rubric)
 
@@ -155,8 +156,8 @@ Skipped: Z students (reasons)
 
 For each adjusted criterion:
 
-- If `new_points_c` exactly equals a rating value → use that `rating_id`
-- Else map to the highest rating whose points ≤ `new_points_c`; store points
+- If `new_points_c` exactly equals a rating value, use that `rating_id`
+- Else map to the highest rating whose points <= `new_points_c`; store points
 - Validate rubric rules. If Canvas disallows fractional criterion points:
   - Round to the nearest allowed step
   - Warn and record rounding in the audit log
@@ -166,7 +167,7 @@ Global validations:
 - All criteria present and within [0, max]
 - Idempotency: if `refinement_meta` exists and `reapply=false`, abort with guidance
 
-## Step 7: Feedback Refinement (15–20 words)
+## Step 7: Feedback Refinement (15-20 words)
 
 Read `metadata.language_learning`, `metadata.feedback_language`, `metadata.level`,
 and `metadata.formality` from the assessment JSON.
@@ -175,28 +176,28 @@ If `feedback_mode=rewrite` or `append`, launch the appropriate agent via Task
 per adjusted student to produce criterion-level comments with these constraints:
 
 - Agent: `spanish-pedagogy-expert` if `language_learning=true`, `pedagogy-expert` if `false`
-- EXACTLY 15–20 words per criterion in the feedback language
+- EXACTLY 15-20 words per criterion in the feedback language
 - Focus ONLY on the criterion; one main strength OR weakness
 - Actionable and specific; avoid generic praise
 - Do NOT mention curves, cohort, calibration, or numeric step sizes
 
-**Prompt template (per criterion) — Spanish (`es`)**:
+**Prompt template (per criterion) -- Spanish (`es`)**:
 
 ```
-Reescribe un comentario breve para la rúbrica (15–20 palabras, español),
-centrado SOLO en este criterio. Mantén precisión, especificidad y
-recomendación accionable. No menciones ajustes de calificación ni curva.
-Tono: {formality} (casual = tú, formal = usted). Nivel: {level}.
+Reescribe un comentario breve para la rubrica (15-20 palabras, espanol),
+centrado SOLO en este criterio. Manten precision, especificidad y
+recomendacion accionable. No menciones ajustes de calificacion ni curva.
+Tono: {formality} (casual = tu, formal = usted). Nivel: {level}.
 
 Criterio: {criterion_name}
 Puntaje final: {new_points_c}/{max_c}
-Descripción breve del desempeño y rasgos observables: {signals_from_submission}
+Descripcion breve del desempeno y rasgos observables: {signals_from_submission}
 ```
 
-**Prompt template (per criterion) — English (`en`)**:
+**Prompt template (per criterion) -- English (`en`)**:
 
 ```
-Rewrite a brief rubric comment (15–20 words, English) focused ONLY on this
+Rewrite a brief rubric comment (15-20 words, English) focused ONLY on this
 criterion. Be precise, specific, and actionable. Do not mention grade
 adjustments or curves.
 Tone: {formality} (casual = academic casual, formal = standard academic). Level: {level}.
@@ -209,30 +210,41 @@ Brief description of performance and observable traits: {signals_from_submission
 Append mode:
 
 - If `feedback_mode=append`, keep the original comment and add a final clause
-  of 8–12 words consistent with the new score (without mentioning calibration).
-  Validate that the total per criterion stays within 15–20 words if required;
+  of 8-12 words consistent with the new score (without mentioning calibration).
+  Validate that the total per criterion stays within 15-20 words if required;
   otherwise just add a concise clause.
 
 Validation:
 
-- Verify 15–20 words, correct language, relevance to criterion
+- Verify 15-20 words, correct language, relevance to criterion
 - If validation fails, retry once; if it persists, fall back to `append` or `none` and flag for review
 
 ## Step 8: Confirm and Write
 
 - Show a confirmation prompt. If `dry_run=true`, exit after preview
 - If confirmed and `dry_run=false`:
-  - For each adjusted student, use `mcp__mcp-canvas__review_assessment`:
-    - `file_path`: assessment JSON
-    - `user_id`: Canvas user ID
-    - `updated_assessment`: rubric_assessment with updated points and rating IDs,
-      per-criterion comments (15–20 words in feedback language), and brief
-      overall note on proficiency expectations (without mentioning curves)
-    - `mark_reviewed`: true
-    - `mark_approved`: per `approve` flag (default true)
-  - Write `refinement_meta` block with:
-    - policy, algorithm, step_size=0.5, target, K, caps, feasibility, timestamp,
-      version y resumen de cambios por estudiante/criterio
+  - For each adjusted student, use the easel CLI via Bash:
+
+    ```bash
+    uv run easel assess update {assessment_file_path} {user_id} \
+      --rubric-json '{"criterion_id": {"points": X, "justification": "..."}, ...}' \
+      --comment "Overall comment text" \
+      --reviewed \
+      --approved \
+      --format json
+    ```
+
+    Notes:
+    - Include `--approved` only if `approve=true` (default)
+    - Single-quote the `--rubric-json` value to prevent shell expansion
+    - If the JSON value contains single quotes, escape them appropriately
+
+  - Write `refinement_meta` block to the assessment file via Read + modify + Write:
+    - Read the current assessment JSON
+    - Add a `refinement_meta` key with: policy, algorithm, step_size=0.5,
+      target, K, caps, feasibility, timestamp, version, and per-student/criterion
+      change summary
+    - Write the updated JSON back to the file
 
 ## Step 9: Summary and State Update
 
@@ -246,20 +258,20 @@ Adjusted: X
 No change: Y
 Skipped: Z (reasons)
 
-Totals (median): {old_med} → {new_med}
-Means: {old_mean} → {new_mean}
+Totals (median): {old_med} -> {new_med}
+Means: {old_mean} -> {new_mean}
 
 Criterion averages:
-- {crit1}: {old1} → {new1}
-- {crit2}: {old2} → {new2}
+- {crit1}: {old1} -> {new1}
+- {crit2}: {old2} -> {new2}
 - ...
 (list all criteria from rubric)
 
 Assessment File Updated:
-  📄 {assessment_file_path}
+  {assessment_file_path}
 
 Status:
-  ✓ All adjusted assessments marked as "reviewed"
+  All adjusted assessments marked as "reviewed"
   {approved_line}
 ```
 

@@ -7,6 +7,7 @@ args:
   - name: assignment_id
     description: Canvas assignment ID (auto-discovers from state if not provided)
     required: false
+allowed-tools: Read, Write, Bash, Glob, Task, AskUserQuestion
 ---
 
 # AI Preliminary Assessment - Evaluate Submissions
@@ -31,7 +32,7 @@ Process each submission chronologically, using the agent to provide rubric-based
 - If not found, search for `assessments_*.json` and use most recent
 - If no files found, report error and tell user to run `/assess:setup` first
 
-Load the assessment file using `mcp__mcp-canvas__load_assessment_file`.
+Load the assessment file using the Read tool.
 
 ## Step 2: Process Each Submission
 
@@ -144,12 +145,21 @@ Provide complete assessment for all criteria now.
    - Count words in each feedback (must be 15-20)
    - Verify feedback is in the correct language (matches `metadata.feedback_language`)
 
-5. **Save assessment** using `mcp__mcp-canvas__review_assessment`:
-   - `file_path`: the assessment JSON file
-   - `user_id`: student's Canvas user ID
-   - `updated_assessment`: dictionary with rubric_assessment and notes
-   - `mark_reviewed`: true (marks as reviewed by AI)
-   - `mark_approved`: false (requires human review before submission)
+5. **Save assessment** using the easel CLI via Bash:
+
+   ```bash
+   uv run easel assess update {assessment_file_path} {user_id} \
+     --rubric-json '{"criterion_id": {"points": X, "justification": "..."}, ...}' \
+     --comment "Overall comment text" \
+     --reviewed \
+     --format json
+   ```
+
+   Notes on shell quoting:
+   - Single-quote the `--rubric-json` value to prevent shell expansion
+   - If the JSON value itself contains single quotes, use `$'...'` quoting or escape them
+   - The `--reviewed` flag marks as reviewed by AI
+   - Do NOT include `--approved` (requires human review before submission)
 
 6. **Report progress**:
 

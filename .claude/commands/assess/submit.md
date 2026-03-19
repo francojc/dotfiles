@@ -21,7 +21,7 @@ Review approved assessments, preview submission, and send grades to Canvas with 
 
 **If course_id and assignment_id provided**:
 
-- Look for `./claude/assessments/{{course_id}}_{{assignment_id}}_*.json` in the current repository
+- Look for `.claude/assessments/{{course_id}}_{{assignment_id}}_*.json` in the current repository
 - Use most recent file matching that pattern
 
 **If no arguments provided**:
@@ -33,11 +33,7 @@ Review approved assessments, preview submission, and send grades to Canvas with 
 
 ## Step 2: Load and Validate Assessment File
 
-Use `mcp__mcp-canvas__load_assessment_file` to:
-
-- Load the assessment JSON file
-- Validate structure
-- Get statistics on assessments
+Read the assessment JSON file using the Read tool. Validate structure and compute statistics.
 
 Display validation summary:
 
@@ -62,31 +58,28 @@ Score Statistics (approved only):
 
 ## Step 3: Dry Run Preview
 
-Use `mcp__mcp-canvas__submit_reviewed_assessments` with:
+Run the easel CLI submit command without `--confirm` to get a dry run:
 
-- `file_path`: the assessment JSON file
-- `course_identifier`: {course_id}
-- `assignment_id`: {assignment_id}
-- `only_approved`: true
-- `dry_run`: true
-- `overwrite_existing`: false (default: prevents overwriting existing Canvas grades)
+```bash
+uv run easel assess submit {assessment_file_path} {course_id} {assignment_id} --format json
+```
 
-Display preview:
+This shows what would be submitted without making changes. Build and display a preview from the assessment file data:
 
 ```
 Submission Preview (DRY RUN)
 ============================
 
 WILL BE SUBMITTED (Z approved):
-  ✓ User {user_id} - {total_pts}/{points_possible} pts
+  User {user_id} - {total_pts}/{points_possible} pts
     - {criterion1}: {pts1}/{max1}
     - {criterion2}: {pts2}/{max2}
     - ...
   (list all criteria from rubric)
 
 WILL BE SKIPPED:
-  ⊘ User {user_id} - not approved (needs review)
-  ⊘ User {user_id} - already graded in Canvas (protected)
+  User {user_id} - not approved (needs review)
+  User {user_id} - already graded in Canvas (protected)
   ...
 
 NO SUBMISSION (W students):
@@ -103,10 +96,10 @@ Ready to submit Z approved assessments to Canvas?
 
 This will:
 
-  • Submit grades for Z students
-  • Skip X unapproved assessments
-  • Post rubric scores and feedback to Canvas
-  • Mark submitted assessments in JSON file
+  - Submit grades for Z students
+  - Skip X unapproved assessments
+  - Post rubric scores and feedback to Canvas
+  - Mark submitted assessments in JSON file
 
 Continue? (Y/n)
 ```
@@ -120,14 +113,11 @@ Use `AskUserQuestion` tool with:
 
 **If user confirms YES**:
 
-Use `mcp__mcp-canvas__submit_reviewed_assessments` with:
+Run the easel CLI submit command with `--confirm`:
 
-- `file_path`: the assessment JSON file
-- `course_identifier`: {course_id}
-- `assignment_id`: {assignment_id}
-- `only_approved`: true
-- `dry_run`: false
-- `overwrite_existing`: false (default: prevents overwriting existing Canvas grades)
+```bash
+uv run easel assess submit {assessment_file_path} {course_id} {assignment_id} --confirm --format json
+```
 
 Report results:
 
@@ -136,23 +126,24 @@ Submission Complete
 ===================
 
 Successfully Submitted: X students
-  ✓ User {user_id} - {total_pts}/{points_possible} pts posted to Canvas
+  User {user_id} - {total_pts}/{points_possible} pts posted to Canvas
   ...
 
 Skipped:
-  ⊘ Not approved: Y students
-  ⊘ Already graded in Canvas: Z students (protected)
+  Not approved: Y students
+  Already graded in Canvas: Z students (protected)
   ...
 
 Failed (errors): W students
-  ✗ User {user_id} - Error: {error_message}
+  User {user_id} - Error: {error_message}
   ...
 
 Grades Posted to Canvas: X/{total_submissions}
-Assessment File Updated: ✓
+Assessment File Updated
 ```
 
 **If user cancels**:
+
 - Report: "Submission cancelled. No grades posted to Canvas."
 - Exit without making changes
 
@@ -182,8 +173,8 @@ Assignment: {assignment_name}
 Course: {course_name}
 
 Grading Complete:
-  ✓ X students graded in Canvas
-  ⊘ Y students pending approval
+  X students graded in Canvas
+  Y students pending approval
   - Z students no submission
 
 Class Performance (submitted grades):
@@ -199,9 +190,9 @@ Assessment File: {file_path}
   Preserved as audit trail with submission timestamps
 
 Next Steps:
-  • Review skipped assessments if any
-  • Check Canvas gradebook to verify grades posted
-  • Follow up with students who didn't submit
+  - Review skipped assessments if any
+  - Check Canvas gradebook to verify grades posted
+  - Follow up with students who didn't submit
 ```
 
 ## Error Handling
@@ -215,7 +206,7 @@ Next Steps:
 
 - ALWAYS runs dry-run preview first before actual submission
 - ONLY submits assessments explicitly marked as "approved"
-- **Protects existing Canvas grades by default** (overwrite_existing=false)
+- **Protects existing Canvas grades by default** (won't overwrite already-graded)
 - Skips unapproved assessments and already-graded submissions
 - Preserves assessment file as audit trail
 - Updates JSON with submission timestamps
