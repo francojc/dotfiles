@@ -102,7 +102,7 @@
         # export ZSH_AI_CMD_ANTHROPIC_MODEL='claude-haiku-4-5-20251001'
         export ZSH_AI_CMD_PROVIDER='copilot'
         export ZSH_AI_CMD_COPILOT_MODEL='claude-haiku-4.5'
-        export ZSH_AI_CMD_COPILOT_HOST='copilot.gerbil-matrix.ts.net'
+        export ZSH_AI_CMD_COPILOT_HOST='https://copilot.gerbil-matrix.ts.net'
         # export ZSH_AI_CMD_PROVIDER='ollama'
         # export ZSH_AI_CMD_OLLAMA_MODEL='qwen3.5:4b'
         # export ZSH_AI_CMD_OLLAMA_HOST='mac-minicore.gerbil-matrix.ts.net:11434'
