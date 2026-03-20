@@ -24,6 +24,13 @@
         ./i3/default.nix
       ]
       else []
+    )
+    ++ (
+      if isDarwin
+      then [
+        ./llm.nix
+      ]
+      else []
     );
 
   home = {

@@ -6,7 +6,8 @@
       "Bash(curl:*)",
       "WebSearch",
       "Bash(nix flake show:*)",
-      "Bash(just:*)"
+      "Bash(just:*)",
+      "Bash(llm dir:*)"
     ]
   }
 }

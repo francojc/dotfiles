@@ -26,6 +26,7 @@
       "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
       "llama.cpp" # LLaMA model inference
+      "llm" # llm.dataset.io
       "llmfit" # LLM system fit
       "mole" # terminal cleanup app for macOS
       "ninja" # build system
