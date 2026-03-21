@@ -12,5 +12,6 @@
     vim # Basic editor
     viu # Image viewer
     w3m # Text browser
+    wget # Download tool
   ];
 }
