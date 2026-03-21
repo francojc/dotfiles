@@ -55,17 +55,22 @@
   developmentPackages = with pkgs; [
     # Note: Python CLI tools managed via UV, not nix
     # shunit2 # Shell testing
+    # kitty # Terminal emulator
+    age # Encryption
     bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
     cachix # Nix package cache
+    carapace # Command-line completion
+    codespell # Spell checker
+    direnv # Environment manager
     gh # GitHub CLI
     git # Version control system
     go # Go programming language
     home-manager # Essential for this config
-    # kitty # Terminal emulator
     lazygit # TUI Git client
     neovim # Stable Neovim 0.11+
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
+    nurl # Nix URL fetcher helper
     python312 # Python 3.12 for uv and general use
     stow # Symlink manager
     uv # Modern Python package and project manager
