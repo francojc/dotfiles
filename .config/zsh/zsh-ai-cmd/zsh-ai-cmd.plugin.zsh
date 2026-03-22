@@ -231,13 +231,13 @@ _zsh_ai_cmd_suggest() {
   setopt local_options no_notify no_monitor
   local result_fd
   exec {result_fd}< <(_zsh_ai_cmd_call_api "$BUFFER" 2>/dev/null)
-  local pid=$!
+  local api_pid=$!
 
   # Animate spinner while waiting
-  while kill -0 $pid 2>/dev/null; do
+  while ! zselect -t 10 -r $result_fd 2>/dev/null; do
     POSTDISPLAY=" ${spinner:$((i % 10)):1}"
     zle -R
-    read -t 0.1 -k 1 && { kill $pid 2>/dev/null; exec {result_fd}<&-; POSTDISPLAY=""; return; }
+    read -t 0 -k 1 && { kill $api_pid 2>/dev/null; exec {result_fd}<&-; POSTDISPLAY=""; return; }
     ((i++))
   done
 
