@@ -384,6 +384,21 @@ local function update_search_count_async()
 	end
 end
 
+function _G.Get_filename()
+	local buftype = vim.bo.buftype
+	if buftype == "terminal" then
+		return " terminal"
+	end
+	if buftype == "help" then
+		return " " .. vim.fn.expand("%:t:r")
+	end
+	local path = vim.fn.expand("%:~:.")
+	if path == "" then
+		return "[No Name]"
+	end
+	return " " .. path .. " "
+end
+
 -- Get `llama_status` status
 function _G.Get_llama_status()
 	local bufnr = vim.api.nvim_get_current_buf()

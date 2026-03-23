@@ -80,8 +80,7 @@ vim.o.statusline = table.concat({
 	"%{&readonly?' []':''} ", -- Readonly indicator
 	"%#StatusLineGit#",
 	"%{v:lua.Get_git_branch()}", -- Git branch
-	"%#StatusLineFilename#",
-	" %t ", -- Filename (tail)
+	"%{v:lua.Get_filename()}", -- Filename (relative to cwd)
 	"%#StatusLine#",
 	"%=", -- Right align
 	"%#StatusLineLlama#",
