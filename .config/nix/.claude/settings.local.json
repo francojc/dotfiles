@@ -7,7 +7,12 @@
       "WebSearch",
       "Bash(nix flake show:*)",
       "Bash(just:*)",
-      "Bash(llm dir:*)"
+      "Bash(llm dir:*)",
+      "Bash(/etc/profiles/per-user/jeridf/bin/nvim --version)",
+      "Bash(bob erase:*)",
+      "Bash(bob install:*)",
+      "Bash(bob use:*)",
+      "Bash(bob --help)"
     ]
   }
 }
