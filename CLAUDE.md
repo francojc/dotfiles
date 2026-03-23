@@ -70,3 +70,15 @@ stow .         # Symlink dotfiles from repo root
 **Change theme**: Modify `selectedTheme` in the host's config file
 
 **Add a new host**: Create directory in `hosts/`, add to `flake.nix` outputs
+
+## Troubleshooting
+
+### nvim (bob nightly) crashes with `dyld: Library not loaded`
+
+**Cause**: Nix GC removed a store path that the bob-managed nvim binary depends on.
+
+**Fix**:
+
+```bash
+bob erase && bob install nightly && bob use nightly
+```
