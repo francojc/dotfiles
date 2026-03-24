@@ -7,19 +7,19 @@
 --=============================================================================
 
 -- Options must load first (sets leader key)
-require('core.options')
+require("core.options")
 
 -- Helper functions (global functions for statusline, toggles, etc.)
-require('core.functions')
+require("core.functions")
 
 -- Plugin declarations (paq-nvim)
-require('plugins-paq')
+require("plugins-paq")
 
 -- Keymaps (depends on functions module)
-require('core.keymaps')
+require("core.keymaps")
 
 -- Autocommands
-require('core.autocommands')
+require("core.autocommands")
 
 -- Plugin configurations (depends on plugins being loaded)
-require('plugins-config')
+require("plugins-config")
