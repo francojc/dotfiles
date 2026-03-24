@@ -84,3 +84,5 @@ _freeze
 conversation.toml
 
 .claude/mcp-needs-auth-cache.json
+.pi/agent/sessions/*
+/.pi/agent/auth.json
