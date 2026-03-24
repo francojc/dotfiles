@@ -195,14 +195,14 @@
         let mapleader = ' '     " Leader key is <Space>
 
         " General
-        nnoremap <leader>h :set hlsearch!<cr> " Toggle search highlighting
-        nnoremap <leader>fe :Ex<cr>           " Open file explorer
+        nnoremap <leader>h :set hlsearch!<cr>
+        nnoremap <leader>fe :Ex<cr>
 
-        inoremap jj <Esc>                     " jj to escape insert mode
+        inoremap jj <Esc>
 
-        nnoremap <leader>w :w<cr>            " Save file
-        nnoremap <leader>q :q<cr>            " Close file
-        nnoremap <leader>Q :q!<cr>           " Close file without saving
+        nnoremap <leader>w :w<cr>
+        nnoremap <leader>q :q<cr>
+        nnoremap <leader>Q :q!<cr>
 
         " FZF
         nnoremap <leader>ff :FZF<cr>
@@ -212,57 +212,88 @@
         nnoremap <leader>fr :Rg<cr>
 
         " Window management
-        nnoremap <silent> <leader>s :split<cr> " Split window
-        nnoremap <silent> <leader>v :vsplit<cr> " Split window vertically
+        nnoremap <silent> <leader>s :split<cr>
+        nnoremap <silent> <leader>v :vsplit<cr>
 
-        nnoremap <C-Left> <C-W>h          " Move to window left
-        nnoremap <C-Down> <C-W>j          " Move to window below
-        nnoremap <C-Up> <C-W>k            " Move to window above
-        nnoremap <C-Right> <C-W>l         " Move to window right
+        nnoremap <C-Left> <C-W>h
+        nnoremap <C-Down> <C-W>j
+        nnoremap <C-Up> <C-W>k
+        nnoremap <C-Right> <C-W>l
 
-        nnoremap <C-=> <C-w>=             " Balance windows
-        nnoremap <C-w>o <C-w>o            " Close other windows
+        nnoremap <C-=> <C-w>=
+        nnoremap <C-w>o <C-w>o
 
         " C-h/j/k/l handled by vim-tmux-navigator
 
         " Buffer management
-        nnoremap <leader>bd :bd<cr>       " Close buffer
-        nnoremap <leader>bn :bn<cr>       " Next buffer
-        nnoremap <leader>bp :bp<cr>       " Previous buffer
+        nnoremap <leader>bd :bd<cr>
+        nnoremap <leader>bn :bn<cr>
+        nnoremap <leader>bp :bp<cr>
 
-        " Which Key
-        " Open which key menu
+        " WHICH KEY ------------------------------------------------
+        " Appearance
+        let g:which_key_sep = '  '
+        let g:which_key_sort_last = 1
+        let g:which_key_use_floating_win = 0
+        let g:which_key_flatten = 1
+        let g:which_key_display_names = {
+            \ '<CR>': '↵',
+            \ '<TAB>': '⇥',
+            \ '<BS>': '⌫',
+            \ '<ESC>': '⎋',
+            \ ' ': 'SPC',
+            \ }
+
+        " Highlight groups (defined after colorscheme loads)
+        function! SetupWhichKeyColors()
+          hi WhichKey          guifg=#fabd2f gui=bold
+          hi WhichKeySeperator guifg=#504945 gui=NONE
+          hi WhichKeyGroup     guifg=#83a598 gui=bold
+          hi WhichKeyDesc      guifg=#ebdbb2 gui=NONE
+          hi WhichKeyFloating  guibg=#1d2021
+        endfunction
+        augroup WhichKeyColors
+          autocmd!
+          autocmd ColorScheme * call SetupWhichKeyColors()
+        augroup END
+        call SetupWhichKeyColors()
+
+        " Map definition — register BEFORE binding the keys
+        let g:which_key_map = {}
+
+        " Top-level bindings with clean descriptions
+        let g:which_key_map['h'] = ['set hlsearch!',   '⟳ toggle search highlight']
+        let g:which_key_map['w'] = ['w',               ' save file']
+        let g:which_key_map['q'] = ['q',               ' quit']
+        let g:which_key_map['Q'] = ['q!',              ' force quit']
+        let g:which_key_map['s'] = ['split',           ' split horizontal']
+        let g:which_key_map['v'] = ['vsplit',          ' split vertical']
+
+        " File group
+        let g:which_key_map['f'] = {
+            \ 'name': ' +file',
+            \ 'f': ['FZF',     'find files'],
+            \ 'g': ['GFiles',  'git files'],
+            \ 'b': ['Buffers', 'open buffers'],
+            \ 'l': ['Lines',   'lines in buffer'],
+            \ 'r': ['Rg',      'ripgrep search'],
+            \ 'e': ['Ex',      'file explorer'],
+            \ }
+
+        " Buffer group
+        let g:which_key_map['b'] = {
+            \ 'name': ' +buffer',
+            \ 'd': ['bd', 'delete buffer'],
+            \ 'n': ['bn', 'next buffer'],
+            \ 'p': ['bp', 'prev buffer'],
+            \ }
+
+        " Register the map so which-key uses descriptions instead of raw cmds
+        call which_key#register('<Space>', "g:which_key_map")
+
+        " Open which-key menu
         nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<cr>
         vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<cr>
-
-        let g:which_key_map = {
-            \ 'f': 'File',
-            \ 'b': 'Buffer',
-            \ 'g': 'Git',
-            \ 'w': 'Window',
-            \ 's': 'Search',
-            \ 't': 'Tags',
-            \ 'p': 'Project',
-            \ 'l': 'LSP',
-            \ 'c': 'Code',
-            \ 'h': 'Help',
-            \ 'q': 'Quit',
-            \ 'a': 'Actions',
-            \ 'r': 'Replace',
-            \ 'o': 'Open',
-            \ 'm': 'Make',
-            \ 'n': 'Notes',
-            \ 'e': 'Errors',
-            \ 'd': 'Debug',
-            \ 'i': 'Info',
-            \ 'j': 'Jump',
-            \ 'k': 'Keybindings',
-            \ 'u': 'User',
-            \ 'v': 'Vim',
-            \ 'x': 'Extra',
-            \ 'y': 'Yank',
-            \ 'z': 'Zen',
-            \ }
 
         " AUTOCOMMANDS ---------------------------------------------
         " Highlight on Yank
