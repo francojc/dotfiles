@@ -30,6 +30,7 @@ require("paq")({
 	"vague2k/vague.nvim",
 	"Mofiqul/vscode.nvim",
 	"ayu-theme/ayu-vim",
+	"webhooked/kanso.nvim",
 
 	-- Core functionality
 	"nvim-lua/plenary.nvim",

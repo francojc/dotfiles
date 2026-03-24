@@ -187,7 +187,6 @@
     plugins = with pkgs.tmuxPlugins; [
       fzf-tmux-url
       vim-tmux-navigator
-      tmux-which-key
       yank
     ];
   };
