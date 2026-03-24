@@ -236,7 +236,7 @@
         theme_name = "kanso";
       };
       vim = {
-        colorscheme = "kanso";
+        colorscheme = "zenbones";
         background = "dark";
       };
       neovim = {
