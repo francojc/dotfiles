@@ -257,6 +257,10 @@ local function apply_llama_highlights()
 end
 apply_llama_highlights()
 
+-- Fix undercurl leak in tmux: use underline instead for URL highlights
+vim.api.nvim_set_hl(0, "@string.special.url", { fg = "#7FB4CA", underline = true, undercurl = false })
+vim.api.nvim_set_hl(0, "@markup.link.url", { link = "@string.special.url" })
+
 ---| Statusline Highlights (theme-adaptive) ----------------------------------
 require("statusline-highlights").setup()
 
@@ -266,6 +270,9 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 	callback = function()
 		require("statusline-highlights").setup()
 		apply_llama_highlights()
+		-- Re-fix undercurl leak for URL highlights
+		vim.api.nvim_set_hl(0, "@string.special.url", { fg = "#7FB4CA", underline = true, undercurl = false })
+		vim.api.nvim_set_hl(0, "@markup.link.url", { link = "@string.special.url" })
 	end,
 	desc = "Update statusline highlights when colorscheme changes",
 })
@@ -1101,8 +1108,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.cmd.packadd("image.nvim")
 		require("image").setup({
 			processor = "magick_cli",
-			-- Use unicode placeholders to avoid escape sequence leaks in tmux
-			kitty_method = "unicode-placeholders",
 			integrations = {
 				markdown = {
 					clear_in_insert_mode = false,
