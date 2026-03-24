@@ -1101,6 +1101,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.cmd.packadd("image.nvim")
 		require("image").setup({
 			processor = "magick_cli",
+			-- Use unicode placeholders to avoid escape sequence leaks in tmux
+			kitty_method = "unicode-placeholders",
 			integrations = {
 				markdown = {
 					clear_in_insert_mode = false,
@@ -1109,6 +1111,7 @@ vim.api.nvim_create_autocmd("FileType", {
 				},
 			},
 		})
+		require("image").disable()
 	end,
 	once = true,
 })
