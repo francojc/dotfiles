@@ -381,7 +381,9 @@ require("obsidian").setup({
 		name = "snacks.pick",
 	},
 	new_notes_location = "notes_subdir",
-	preferred_link_style = "wiki",
+	link = {
+		style = "wiki",
+	},
 	templates = {
 		subdir = "Templates",
 		date_format = "%Y-%m-%d",

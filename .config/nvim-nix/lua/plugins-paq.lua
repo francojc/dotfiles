@@ -38,7 +38,7 @@ require("paq")({
 	-- nvim-lspconfig removed: using native vim.lsp.config (0.11+)
 
 	-- Completion
-	"Saghen/blink.cmp",
+	{ "Saghen/blink.cmp", build = "cargo build --release" },
 	"L3MON4D3/LuaSnip",
 	"rafamadriz/friendly-snippets",
 
