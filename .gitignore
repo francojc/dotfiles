@@ -86,3 +86,4 @@ conversation.toml
 .claude/mcp-needs-auth-cache.json
 .pi/agent/sessions/*
 /.pi/agent/auth.json
+.pi/agent/settings.json

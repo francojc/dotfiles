@@ -1,0 +1,674 @@
+#!/usr/bin/env bash
+# skysnark — weather forecast with attitude
+# Usage: skysnark --location "City, ST" [--date YYYY-MM-DD]
+
+set -euo pipefail
+
+# ─── ANSI ──────────────────────────────────────────────────────────────────────
+# Only emit color codes when stdout is an interactive terminal. When piped or
+# captured (e.g. :read ! in Neovim), all variables are empty and plain text
+# is written instead.
+if [ -t 1 ]; then
+  RESET='\033[0m'
+  BOLD='\033[1m'
+  DIM='\033[2m'
+  ITALIC='\033[3m'
+  RED='\033[31m'
+  YELLOW='\033[33m'
+  BLUE='\033[34m'
+  MAGENTA='\033[35m'
+  CYAN='\033[36m'
+  WHITE='\033[37m'
+  BR_YELLOW='\033[93m'
+  BR_BLUE='\033[94m'
+  BR_MAGENTA='\033[95m'
+  BR_CYAN='\033[96m'
+  ORANGE='\033[38;5;208m'
+  GRAY='\033[38;5;245m'
+  LIGHT_GRAY='\033[38;5;250m'
+else
+  RESET='' BOLD='' DIM='' ITALIC='' RED='' YELLOW='' BLUE='' MAGENTA=''
+  CYAN='' WHITE='' BR_YELLOW='' BR_BLUE='' BR_MAGENTA='' BR_CYAN=''
+  ORANGE='' GRAY='' LIGHT_GRAY=''
+fi
+
+# ─── Dependencies ──────────────────────────────────────────────────────────────
+for dep in curl jq awk; do
+  command -v "$dep" &>/dev/null || {
+    printf "Error: '%s' is required but not installed.\n" "$dep" >&2
+    exit 1
+  }
+done
+
+# ─── Usage ─────────────────────────────────────────────────────────────────────
+usage() {
+  printf "\n${BOLD}skysnark${RESET} — weather forecast with attitude\n\n"
+  printf "${BOLD}Usage:${RESET}\n"
+  printf "  skysnark --location <place> [--date <YYYY-MM-DD>]\n\n"
+  printf "${BOLD}Options:${RESET}\n"
+  printf "  %-28s %s\n" "--location <place>"    "City name or address (required)"
+  printf "  %-28s %s\n" "--date <YYYY-MM-DD>"   "Forecast date (default: today, max 7 days ahead)"
+  printf "  %-28s %s\n" "--line"                "Condense output to a single line"
+  printf "  %-28s %s\n" "--help"                "Show this help message"
+  printf "\n${BOLD}Examples:${RESET}\n"
+  printf "  skysnark --location \"Winston-Salem, NC\"\n"
+  printf "  skysnark --location \"Tokyo\" --date 2025-04-01\n\n"
+  exit 0
+}
+
+# ─── Arguments ─────────────────────────────────────────────────────────────────
+LOCATION=""
+DATE=""
+LINE=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --location) LOCATION="$2"; shift 2 ;;
+    --date)     DATE="$2";     shift 2 ;;
+    --line)     LINE=true;     shift   ;;
+    --help|-h)  usage ;;
+    *)
+      printf "${RED}Error:${RESET} Unknown argument: %s\n\n" "$1" >&2
+      usage
+      ;;
+  esac
+done
+
+[[ -z "$LOCATION" ]] && {
+  printf "${RED}Error:${RESET} --location is required.\n\n" >&2
+  usage
+}
+
+TODAY=$(date +%Y-%m-%d)
+[[ -z "$DATE" ]] && DATE="$TODAY"
+
+[[ "$DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || {
+  printf "${RED}Error:${RESET} --date must be in YYYY-MM-DD format.\n" >&2
+  exit 1
+}
+
+[[ "$DATE" < "$TODAY" ]] && {
+  printf "${RED}Error:${RESET} Date cannot be in the past.\n" >&2
+  exit 1
+}
+
+# Cross-platform "+7 days"
+if date -v+7d +%Y-%m-%d &>/dev/null 2>&1; then
+  MAX_DATE=$(date -v+7d +%Y-%m-%d)          # macOS BSD date
+else
+  MAX_DATE=$(date -d "+7 days" +%Y-%m-%d)   # GNU date
+fi
+
+[[ "$DATE" > "$MAX_DATE" ]] && {
+  printf "${RED}Error:${RESET} Date must be within 7 days (max: %s).\n" "$MAX_DATE" >&2
+  exit 1
+}
+
+# ─── Progress helper ───────────────────────────────────────────────────────────
+# Suppress spinner entirely when stdout is not a TTY (piped, :read !, etc.)
+if [ -t 1 ]; then
+  progress()       { printf "  ${DIM}%s...${RESET}\033[K\r" "$1" >&2; }
+  clear_progress() { printf '\r\033[K' >&2; }
+else
+  progress()       { :; }
+  clear_progress() { :; }
+fi
+
+# ─── Geocoding ─────────────────────────────────────────────────────────────────
+progress "Locating $LOCATION"
+
+# The Open-Meteo geocoding API only understands plain city names, not "City, State"
+# Strip anything after a comma so "Winston-Salem, NC" becomes "Winston-Salem"
+LOC_QUERY="${LOCATION%%,*}"
+LOC_ENC=$(printf '%s' "$LOC_QUERY" | jq -sRr @uri)
+GEO_JSON=$(curl -sf \
+  "https://geocoding-api.open-meteo.com/v1/search?name=${LOC_ENC}&count=1&language=en&format=json") || {
+  clear_progress
+  printf "${RED}Error:${RESET} Could not reach geocoding API. Check your connection.\n" >&2
+  exit 1
+}
+
+COUNT=$(printf '%s' "$GEO_JSON" | jq '.results | length // 0')
+(( COUNT > 0 )) || {
+  clear_progress
+  printf "${RED}Error:${RESET} Location not found: \"%s\"\n" "$LOCATION" >&2
+  exit 1
+}
+
+LAT=$(printf '%s' "$GEO_JSON"      | jq -r '.results[0].latitude')
+LON=$(printf '%s' "$GEO_JSON"      | jq -r '.results[0].longitude')
+CITY=$(printf '%s' "$GEO_JSON"     | jq -r '.results[0].name')
+ADMIN=$(printf '%s' "$GEO_JSON"    | jq -r '.results[0].admin1 // ""')
+COUNTRY=$(printf '%s' "$GEO_JSON"  | jq -r '.results[0].country // ""')
+TIMEZONE=$(printf '%s' "$GEO_JSON" | jq -r '.results[0].timezone // "UTC"')
+
+[[ -n "$ADMIN" ]] \
+  && DISPLAY_LOC="${CITY}, ${ADMIN}" \
+  || DISPLAY_LOC="${CITY}, ${COUNTRY}"
+
+# ─── Weather API ───────────────────────────────────────────────────────────────
+progress "Fetching forecast for $DISPLAY_LOC"
+
+TZ_ENC=$(printf '%s' "$TIMEZONE" | jq -sRr @uri)
+WX_URL="https://api.open-meteo.com/v1/forecast"
+WX_URL+="?latitude=${LAT}&longitude=${LON}"
+WX_URL+="&daily=apparent_temperature_max,apparent_temperature_min"
+WX_URL+=",weather_code,precipitation_probability_max"
+WX_URL+=",wind_speed_10m_max,sunshine_duration"
+WX_URL+="&timezone=${TZ_ENC}"
+WX_URL+="&wind_speed_unit=mph"
+WX_URL+="&temperature_unit=fahrenheit"
+WX_URL+="&precipitation_unit=inch"
+
+WX_JSON=$(curl -sf "$WX_URL") || {
+  clear_progress
+  printf "${RED}Error:${RESET} Could not reach weather API. Check your connection.\n" >&2
+  exit 1
+}
+
+# ─── Extract data for the requested date ───────────────────────────────────────
+IDX=$(printf '%s' "$WX_JSON" | jq -r --arg d "$DATE" '
+  (.daily.time | to_entries[] | select(.value == $d).key) // empty
+' | head -1)
+
+[[ -z "$IDX" ]] && {
+  clear_progress
+  printf "${RED}Error:${RESET} No forecast data available for %s.\n" "$DATE" >&2
+  exit 1
+}
+
+TEMP_MAX=$(printf '%s' "$WX_JSON" | jq -r --argjson i "$IDX" '.daily.apparent_temperature_max[$i] // "N/A"')
+TEMP_MIN=$(printf '%s' "$WX_JSON" | jq -r --argjson i "$IDX" '.daily.apparent_temperature_min[$i] // "N/A"')
+WX_CODE=$(printf '%s' "$WX_JSON"  | jq -r --argjson i "$IDX" '.daily.weather_code[$i] // 0')
+PRECIP=$(printf '%s' "$WX_JSON"   | jq -r --argjson i "$IDX" '.daily.precipitation_probability_max[$i] // 0')
+WIND=$(printf '%s' "$WX_JSON"     | jq -r --argjson i "$IDX" '.daily.wind_speed_10m_max[$i] // 0')
+SUN_SEC=$(printf '%s' "$WX_JSON"  | jq -r --argjson i "$IDX" '.daily.sunshine_duration[$i] // 0')
+SUN_HRS=$(awk "BEGIN { printf \"%.1f\", $SUN_SEC / 3600 }")
+
+clear_progress
+
+# Format display date (cross-platform)
+if date -j -f "%Y-%m-%d" "$DATE" "+%A, %B %-d, %Y" &>/dev/null 2>&1; then
+  DISPLAY_DATE=$(date -j -f "%Y-%m-%d" "$DATE" "+%A, %B %-d, %Y")   # macOS
+else
+  DISPLAY_DATE=$(date -d "$DATE" "+%A, %B %-d, %Y")                  # Linux
+fi
+
+# ─── WMO weather code → description / icon / color / snarks ───────────────────
+wx_lookup() {
+  WX_ICON="?" WX_COLOR="$GRAY" WX_DESC="Unknown Conditions"
+  WX_SNARKS=("The forecast is as confused as everything else. Good luck out there.")
+
+  case "$WX_CODE" in
+    0)
+      WX_ICON="☀"  WX_COLOR="$BR_YELLOW" WX_DESC="Clear Sky"
+      WX_SNARKS=(
+        "Not a cloud in sight. The universe is showing off. Typical."
+        "Clear sky. Nature finally got its act together. Suspicious."
+        "Suspiciously gorgeous out there. Don't trust it."
+        "Go outside before you remember you hate sunlight."
+        "Perfect day. The kind that makes you feel guilty for having plans."
+        "Clear skies. No excuses left for staying inside. Sorry."
+        "The sky is completely unobstructed. Bold move. Let's see if it holds."
+        "Absolutely pristine up there. The weather is trying to impress someone."
+        "Not a single cloud. The sky is really committing to the bit today."
+        "Clear and sunny. A rare gift. Squander it wisely."
+        "Blue skies, no clouds, zero drama. From the weather, at least."
+        "The sun showed up and brought its full personality. Brace yourself."
+        "Peak sky behavior. Everything else in your day will disappoint by comparison."
+        "Flawless visibility. The sky has nothing to hide, unlike most things."
+      ) ;;
+    1)
+      WX_ICON="🌤" WX_COLOR="$BR_YELLOW" WX_DESC="Mainly Clear"
+      WX_SNARKS=(
+        "Mainly clear — the sky is 90% committed to being nice today. Respect the effort."
+        "A few clouds for emotional support. Mostly sunny though."
+        "Mainly clear. Even the weather has trust issues."
+        "Mostly sunny with decorative clouds. Very tasteful."
+        "Almost clear skies. The clouds are just passing through. Don't read into it."
+        "Mainly clear. The sky is doing its best and honestly that's enough."
+        "Ninety percent blue sky. The other ten percent is keeping things interesting."
+        "A little hazy around the edges but mostly gorgeous. Like most good things."
+        "Mainly clear. The weather equivalent of 'fine, I'll be nice today.'"
+        "Nearly perfect. The clouds are just there for texture."
+      ) ;;
+    2)
+      WX_ICON="⛅" WX_COLOR="$YELLOW" WX_DESC="Partly Cloudy"
+      WX_SNARKS=(
+        "Partly cloudy. The sky literally cannot make up its mind today."
+        "Half sun, half cloud. Aggressively mediocre, meteorologically speaking."
+        "The weather is having an existential crisis. Relatable."
+        "Partly cloudy. Commit to something, sky."
+        "50% sky, 50% clouds, 100% noncommittal."
+        "The atmosphere is hedging its bets. Fiscally responsible of it."
+        "Partly cloudy — nature's way of saying 'good enough.'"
+        "The clouds and sun are sharing custody of the sky today."
+        "Partly cloudy. The weather equivalent of a shrug emoji."
+        "Mixed bag up there. Just like your inbox."
+        "Sun and clouds in uneasy coexistence. Respect the tension."
+        "Partly cloudy. The sky read 'balance' in a self-help book and took it too literally."
+        "Some clouds, some sun, no decisions. Inspiring, really."
+        "The sky is being diplomatic. Nobody likes a diplomat."
+      ) ;;
+    3)
+      WX_ICON="☁"  WX_COLOR="$GRAY" WX_DESC="Overcast"
+      WX_SNARKS=(
+        "Overcast. The sky is wearing its grey hoodie and not taking requests."
+        "Total cloud coverage. The sun has ghosted you today."
+        "Overcast all day. Perfect for questioning your choices indoors."
+        "The sky went full grey. Very emo of it."
+        "Solid cloud cover. The sun is in there somewhere, deeply uninterested in helping."
+        "Overcast and unapologetic about it."
+        "Grey skies from edge to edge. The sky is going through something."
+        "Complete overcast. The clouds have filed for full custody."
+        "The atmosphere is running in dark mode today."
+        "Overcast. Nature's way of saying 'keep your expectations low.'"
+        "All clouds, no sun, no apologies. The sky means it this time."
+        "100% cloud cover. Even the weather has given up on optimism."
+        "The sky is one giant rain threat that just hasn't committed yet."
+        "Overcast. A great day for anyone who's been personally wronged by the sun."
+      ) ;;
+    45)
+      WX_ICON="🌫" WX_COLOR="$GRAY" WX_DESC="Foggy"
+      WX_SNARKS=(
+        "Foggy out there. Visibility is just a suggestion today."
+        "Dense fog. Drive like you mean it — or don't drive at all."
+        "The atmosphere is hiding something. Honestly, so should you."
+        "Fog. The world ends about 50 feet in every direction."
+        "Foggy. Everything looks mysterious. Don't get comfortable with that."
+        "Visibility: poor. Vibes: surprisingly cinematic."
+        "The fog rolled in and didn't ask for permission. Bold."
+        "Pea soup out there. Perfect weather for very slow decisions."
+        "Fog advisory: the sky is pulling a disappearing act."
+        "Everything is obscured. The universe is being coy."
+      ) ;;
+    48)
+      WX_ICON="🌫" WX_COLOR="$CYAN" WX_DESC="Freezing Fog"
+      WX_SNARKS=(
+        "Freezing fog — because regular fog wasn't miserable enough, it added ice."
+        "Icy fog. The weather is experimenting with new ways to ruin your morning."
+        "Rime fog: beautifully lethal, like most things that hurt you."
+        "Freezing fog. The roads are a glazed death trap dressed up as a nature photo."
+        "Ice crystals suspended in fog. Technically pretty. Functionally terrible."
+        "Rime fog coats everything in ice. The world is beautiful and wants you dead."
+        "Freezing fog advisory. The meteorologists are also having a bad day."
+      ) ;;
+    51)
+      WX_ICON="🌦" WX_COLOR="$CYAN" WX_DESC="Light Drizzle"
+      WX_SNARKS=(
+        "Light drizzle — not enough for an umbrella, just enough to ruin your hair."
+        "The sky is teasing you with barely-rain."
+        "Drizzle. Too wet to ignore, too light to justify gear. Classic passive-aggression."
+        "Barely raining. The sky is clearly thinking about it though."
+        "Drizzle: the weather equivalent of someone breathing too close to you."
+        "It's misting. Technically precipitation. Zero respect for it."
+        "A light drizzle, which is weather's way of committing to nothing."
+        "Faint drizzle. Not enough to ruin your day. Just enough to try."
+        "The sky is damp with indecision."
+        "Drizzling lightly. Bring a hood, keep your dignity."
+      ) ;;
+    53)
+      WX_ICON="🌧" WX_COLOR="$CYAN" WX_DESC="Moderate Drizzle"
+      WX_SNARKS=(
+        "Moderate drizzle. Can't even commit to being real rain. Pathetic."
+        "The sky is crying about something embarrassing and won't talk about it."
+        "Steady drizzle — the weather's passive-aggressive mood."
+        "It's damp and getting damper. That's the whole story."
+        "Moderate drizzle. You'll get wet, but only enough to be annoyed."
+        "The sky is deeply unsatisfied with something. Take the hint."
+        "Drizzle with follow-through. Respect, sort of."
+        "Sustained drizzle. The sky has committed to low-grade misery."
+      ) ;;
+    55)
+      WX_ICON="🌧" WX_COLOR="$BLUE" WX_DESC="Heavy Drizzle"
+      WX_SNARKS=(
+        "Heavy drizzle — just call it rain, coward."
+        "Dense drizzle. It refuses to be called rain on principle."
+        "This is basically rain now. Get an umbrella and stop pretending otherwise."
+        "Heavy drizzle: rain with a self-image problem."
+        "At this point it's raining and everyone knows it except the forecast."
+        "Dense drizzle. Your socks will be wet. That's a promise."
+        "It's raining. The forecast just won't admit it."
+      ) ;;
+    61)
+      WX_ICON="🌧" WX_COLOR="$BLUE" WX_DESC="Light Rain"
+      WX_SNARKS=(
+        "Light rain. 'It won't be that bad' — famous last words."
+        "Slight rain. Your 'quick errand' just became a wet adventure."
+        "Nature is watering the earth. How thoughtful. How deeply inconvenient."
+        "A light rain is falling. Your optimism is charming and wrong."
+        "Technically raining. Barely counts. Still counts."
+        "Light rain. The kind that's 'fine' right up until it absolutely isn't."
+        "A gentle rain. Very poetic. Very wet."
+        "Sprinkles. Actual rain's less committed younger sibling."
+        "Light rain — carry a jacket or carry regret. Your call."
+        "It's sprinkling. The sky is testing the waters, so to speak."
+        "A soft rain. Perfect for a sad playlist and cancelled plans."
+        "Light rain falling. More will follow. It always does."
+        "Just enough rain to make everything slightly worse."
+        "A light drizzle that graduated to actual rain. Congratulations to it."
+      ) ;;
+    63)
+      WX_ICON="🌧" WX_COLOR="$BLUE" WX_DESC="Moderate Rain"
+      WX_SNARKS=(
+        "Moderate rain. Your 'water-resistant' jacket is about to be scientifically tested."
+        "It's properly raining now. Cancel the picnic. Embrace the couch."
+        "Moderate rain. The sky means business today."
+        "Solid rain. Not a drill, not a sprinkle. Just rain, doing rain things."
+        "Moderate rainfall. Your umbrella earns its keep today."
+        "It's raining with intention. Respect it."
+        "A real rain. The kind that makes you glad you're indoors and mad if you're not."
+        "Moderate rain. Any outdoor plans you had were optimistic at best."
+        "The sky is fully committed now. You should be too — to staying dry."
+        "Rain, actual rain. Not a metaphor, not light drizzle. Rain."
+        "Steady rain. Your hair has already accepted its fate."
+        "The precipitation has arrived and it's not leaving soon."
+        "Moderate rain: nature's way of clearing your schedule."
+        "It's raining properly. Act accordingly."
+      ) ;;
+    65)
+      WX_ICON="🌧" WX_COLOR="$BR_BLUE" WX_DESC="Heavy Rain"
+      WX_SNARKS=(
+        "Heavy rain. Noah is watching the sky nervously."
+        "It's absolutely pouring. Your plans are officially waterlogged."
+        "You will get wet even with an umbrella. Accept your fate."
+        "Heavy rain. The sky has fully committed to ruining your day."
+        "It's pouring. Cancel everything above ground."
+        "Substantial rainfall. You'd need a submarine not a jacket."
+        "Heavy rain. The streets belong to the puddles now."
+        "Bucketing down out there. Heroic efforts to stay dry will fail."
+        "Torrential-adjacent. This isn't weather, it's a grudge."
+        "Heavy rain. The sky is emptying itself dramatically, as one does."
+      ) ;;
+    71)
+      WX_ICON="🌨" WX_COLOR="$BR_CYAN" WX_DESC="Light Snow"
+      WX_SNARKS=(
+        "Light snow. Time to panic-buy milk and bread, apparently."
+        "A little snow. Cute and manageable — for now."
+        "Snow flurries. The world is briefly beautiful before it becomes a slipping hazard."
+        "Light snow falling. Enjoy the quiet before everyone forgets how to drive."
+        "Flurries. The gateway drug of winter precipitation."
+        "A dusting of snow. Looks lovely. Feels cold. Is both."
+        "Light snow. The kind of winter that still has its charm."
+        "Snowflakes. Each one unique, and collectively inconvenient."
+        "A light snow is falling. The world looks like a greeting card — briefly."
+        "First snow energy, whether it's actually the first or not."
+        "Light snow. Perfect if you like it. Terrible if you have anywhere to be."
+        "Flurries swirling. Romantic until you remember it's still cold."
+      ) ;;
+    73)
+      WX_ICON="❄"  WX_COLOR="$CYAN" WX_DESC="Moderate Snow"
+      WX_SNARKS=(
+        "Moderate snow. Your back will hate you after shoveling. Worth it? No."
+        "Solid snowfall. The driveway isn't going to clear itself."
+        "Schools may close. Adults will pretend to be disappointed."
+        "Moderate snow. Winter is no longer being coy about its intentions."
+        "Real snowfall. Start the car early and stretch your lower back."
+        "Accumulating snow. The kind that requires actual effort."
+        "Moderate snowfall. Your shovel is having its moment."
+        "Steady snow. Cancel brunch, not because you want to, but because you must."
+        "This is the kind of snow that ends up in your boots."
+        "Meaningful snow accumulation. The sidewalk will not dig itself out."
+        "Moderate snow. The world is white, your driveway is your problem."
+      ) ;;
+    75)
+      WX_ICON="❄"  WX_COLOR="$WHITE" WX_DESC="Heavy Snow"
+      WX_SNARKS=(
+        "Heavy snow. Cancel everything and live in your snow globe now."
+        "Full blizzard energy. Surrender to it gracefully."
+        "Stay inside. The snow doesn't care about your plans."
+        "Heavy snowfall. The world is becoming impassable and beautiful."
+        "Significant snow. Your car is now a suggestion under a drift."
+        "Heavy snow. The kind that makes you wonder why you live here."
+        "This much snow requires a philosophical adjustment, not just a shovel."
+        "Heavy accumulation. All plans are hereby suspended by weather."
+        "The snow is winning. It was never a competition."
+        "Buried. Figuratively, soon literally."
+      ) ;;
+    77)
+      WX_ICON="🌨" WX_COLOR="$CYAN" WX_DESC="Snow Grains"
+      WX_SNARKS=(
+        "Snow grains — like a blizzard had a baby with sand. Unpleasant all around."
+        "Graupel? Snow grains? Whatever this is, it's cold and unimpressive."
+        "Snow grains. The weather equivalent of being completely lukewarm."
+        "Pellet snow. Not soft, not pretty, just cold and slightly hostile."
+        "Graupel: for when the atmosphere can't decide between ice and snow."
+        "Snow grains. The off-brand version of actual winter."
+        "Small ice pellets falling. The sky put in minimal effort today."
+      ) ;;
+    80)
+      WX_ICON="🌦" WX_COLOR="$CYAN" WX_DESC="Slight Rain Showers"
+      WX_SNARKS=(
+        "Brief showers passing through. The sky is keeping you on your toes."
+        "In and out, like a houseguest with absolutely no concept of boundaries."
+        "Passing showers. Gamble on the umbrella. Entirely your call."
+        "Light showers. You'll be fine. Probably. Check again in an hour."
+        "Scattered showers. The sky is making spot decisions."
+        "Brief rain. The kind that catches you mid-errand with zero warning."
+        "Showers likely. The umbrella debate has never been more relevant."
+        "Intermittent light rain. The forecast is technically correct, infuriatingly so."
+        "On-and-off showers. The weather is stringing you along."
+        "Quick showers passing through. They won't apologize for the inconvenience."
+      ) ;;
+    81)
+      WX_ICON="🌧" WX_COLOR="$BLUE" WX_DESC="Moderate Rain Showers"
+      WX_SNARKS=(
+        "Rain showers. The umbrella you left at home is very smug right now."
+        "Moderate showers. Bring rain gear and low expectations."
+        "Intermittent rain. Great weather for second-guessing yourself outside."
+        "On-again off-again moderate rain. Commit to being wet and move on."
+        "Showers of consequence. This isn't drizzle. Gear up."
+        "Moderate rain showers. The sky is serious today but keeps changing the subject."
+        "Meaningful showers. Your 'it won't last' attitude will be tested."
+        "Rain showers with commitment. Unlike some people."
+      ) ;;
+    82)
+      WX_ICON="⛈"  WX_COLOR="$BR_BLUE" WX_DESC="Heavy Rain Showers"
+      WX_SNARKS=(
+        "Violent showers. The sky has chosen violence today."
+        "Like a car wash, but everywhere, free, and absolutely terrible."
+        "Heavy rain bursts. The atmosphere is venting about something personal."
+        "Intense downpours. The sky is working through some things aggressively."
+        "Violent rain showers. You will not win this one."
+        "Heavy bursts of rain. Shelter is not optional, it's strategy."
+        "The sky is absolutely losing it out there. Stay clear."
+      ) ;;
+    85)
+      WX_ICON="🌨" WX_COLOR="$CYAN" WX_DESC="Snow Showers"
+      WX_SNARKS=(
+        "Snow showers. Like rain showers, but colder and more passive-aggressive."
+        "On-again off-again snow. The weather is in a complicated relationship."
+        "Intermittent snow showers. Make peace with the inconvenience."
+        "Snow showers. A scattering of winter, just to remind you who's in charge."
+        "Sporadic snow. The forecast is trying its best. So are you."
+        "Snow showers drifting through. Briefly pretty, persistently annoying."
+        "Intermittent snow bursts. You'll get caught in one. That's just how this works."
+      ) ;;
+    86)
+      WX_ICON="❄"  WX_COLOR="$WHITE" WX_DESC="Heavy Snow Showers"
+      WX_SNARKS=(
+        "Heavy snow showers. Winter is not playing games today."
+        "The sky is burying its feelings — and your car."
+        "Intense snow bursts. Stay inside. This is not a suggestion."
+        "Heavy snow showers. The driveway situation has become a project."
+        "Dense snow showers. Visibility dropping, ambitions following."
+        "Serious snow showers. Winter has escalated without warning."
+        "Heavy snow bursts. Your windshield will need both a scraper and a pep talk."
+      ) ;;
+    95)
+      WX_ICON="⛈"  WX_COLOR="$MAGENTA" WX_DESC="Thunderstorm"
+      WX_SNARKS=(
+        "Thunderstorms. Perfect weather for staying inside and questioning your life choices."
+        "Zeus is upset about something. Take it personally."
+        "The sky is having a full emotional meltdown. Extremely relatable."
+        "Mother Nature didn't take her meds today. Stay indoors."
+        "Thunder and lightning. The sky is being dramatic and has the receipts to back it up."
+        "Thunderstorms. Unplug things you care about."
+        "Lightning in the forecast. The tallest thing outside would like to not be you."
+        "Thunderstorm incoming. The atmosphere has filed a formal complaint."
+        "The sky is doing its loudest impression of being upset. Respect the theater."
+        "Thunderstorms. A good day to appreciate walls and roofs."
+        "Lightning and thunder. Genuinely spectacular. Genuinely dangerous. Both."
+        "The sky is crackling with energy. Yours should be spent staying indoors."
+      ) ;;
+    96)
+      WX_ICON="⛈"  WX_COLOR="$BR_MAGENTA" WX_DESC="Thunderstorm with Hail"
+      WX_SNARKS=(
+        "Thunderstorm with hail. The sky is throwing a tantrum AND throwing rocks."
+        "Hail and lightning. Nature is actively dunking on your car's resale value."
+        "Thunderstorm with hail. The sky has completely lost the plot."
+        "Hailstones and lightning. Weather as personal attack."
+        "Hail. The sky is not satisfied with just being wet and loud."
+        "Thunderstorm with hail. Everything outside is having a bad time."
+        "Ice from the sky, lightning from the sky. The sky is everything right now."
+        "Hail-producing thunderstorm. Your patio furniture is on its own."
+      ) ;;
+    99)
+      WX_ICON="⛈"  WX_COLOR="$RED" WX_DESC="Thunderstorm, Heavy Hail"
+      WX_SNARKS=(
+        "Thunderstorm with heavy hail. Your insurance agent is preemptively weeping."
+        "The sky is done pretending to be nice. Seek shelter immediately."
+        "Heavy hail and lightning. This is not a drill. Go inside. Now."
+        "Large hail and severe lightning. The atmosphere has escalated to threats."
+        "Heavy hail. Anything parked outside is a science experiment now."
+        "This is the kind of weather that ends up in news reports. Stay inside."
+        "Severe thunderstorm with large hail. The sky has declared war on your possessions."
+      ) ;;
+    *)
+      WX_ICON="?" WX_COLOR="$GRAY" WX_DESC="Weather Code ${WX_CODE}"
+      WX_SNARKS=(
+        "Weather code ${WX_CODE}? Even the meteorologists are confused. Good luck."
+        "Unknown forecast. As opaque as most things in life, honestly."
+        "The forecast is unprecedented. Just like everything else lately."
+        "Unclassified weather. Dress in layers and hope for the best."
+      ) ;;
+  esac
+
+  local n=${#WX_SNARKS[@]}
+  WX_SNARK="${WX_SNARKS[$(( RANDOM % n ))]}"
+}
+
+# ─── Temperature comment ───────────────────────────────────────────────────────
+temp_comment() {
+  local t; t=$(printf '%.0f' "$TEMP_MAX")
+  if   (( t <=   0 )); then TEMP_COMMENT="Dangerously cold. You are not a penguin."
+  elif (( t <=  20 )); then TEMP_COMMENT="Brutal. Reconsider every one of your choices."
+  elif (( t <=  32 )); then TEMP_COMMENT="Freezing. Layer up like your life depends on it."
+  elif (( t <=  45 )); then TEMP_COMMENT="Cold and raw. A jacket is non-negotiable."
+  elif (( t <=  55 )); then TEMP_COMMENT="Crisp and cool. Hoodie weather. No notes."
+  elif (( t <=  65 )); then TEMP_COMMENT="Pleasantly mild. Suspicious, honestly."
+  elif (( t <=  75 )); then TEMP_COMMENT="Lovely. Don't ruin it by staying indoors all day."
+  elif (( t <=  85 )); then TEMP_COMMENT="Warm. Make shade your best friend."
+  elif (( t <=  95 )); then TEMP_COMMENT="Hot. Hydrate aggressively or suffer."
+  elif (( t <= 105 )); then TEMP_COMMENT="Very hot. The asphalt is cooking and so are you."
+  else                      TEMP_COMMENT="Dangerously hot. The sun has filed a formal complaint."
+  fi
+}
+
+# ─── Wind comment ──────────────────────────────────────────────────────────────
+wind_comment() {
+  local w; w=$(printf '%.0f' "$WIND")
+  if   (( w <=  5 )); then WIND_COMMENT="Dead calm. Enjoy it."
+  elif (( w <= 12 )); then WIND_COMMENT="Light breeze. Nothing to worry about."
+  elif (( w <= 20 )); then WIND_COMMENT="Moderate wind. Hold onto your hat."
+  elif (( w <= 30 )); then WIND_COMMENT="Breezy enough to reconsider your hairstyle choices."
+  elif (( w <= 40 )); then WIND_COMMENT="Strong winds. Umbrellas will not survive this."
+  elif (( w <= 55 )); then WIND_COMMENT="Very strong. You'll walk at a 45-degree angle."
+  else                     WIND_COMMENT="You may become briefly airborne. Not a joke."
+  fi
+}
+
+# ─── Precipitation comment ─────────────────────────────────────────────────────
+precip_comment() {
+  local p; p=$(printf '%.0f' "$PRECIP")
+  if   (( p <= 10 )); then PRECIP_COMMENT="Basically bone dry."
+  elif (( p <= 30 )); then PRECIP_COMMENT="Low chance. Gamble on leaving the umbrella home."
+  elif (( p <= 50 )); then PRECIP_COMMENT="Coin flip. Pack it — you'll regret not packing it."
+  elif (( p <= 70 )); then PRECIP_COMMENT="More likely wet than not. Bring rain gear."
+  elif (( p <= 90 )); then PRECIP_COMMENT="Very likely. Just accept the moisture."
+  else                     PRECIP_COMMENT="Basically guaranteed. You WILL be wet."
+  fi
+}
+
+# ─── Run all lookups ───────────────────────────────────────────────────────────
+wx_lookup
+temp_comment
+wind_comment
+precip_comment
+
+# ─── Drawing helpers ───────────────────────────────────────────────────────────
+COLS=$(tput cols 2>/dev/null || echo 72)
+(( COLS > 80 )) && COLS=80
+
+draw_rule() {
+  local char="${1:-─}" pad=2
+  local n=$(( COLS - pad ))
+  local line=""
+  for (( i = 0; i < n; i++ )); do line+="$char"; done
+  printf "  %s\n" "$line"
+}
+
+SEP="  ${DIM}·${RESET}  "
+
+# ─── Render ────────────────────────────────────────────────────────────────────
+WX_DESC_UPPER=$(printf '%s' "$WX_DESC" | tr '[:lower:]' '[:upper:]')
+
+if $LINE; then
+
+  # ── Single-line mode ─────────────────────────────────────────────────────────
+  printf "${BOLD}${WX_COLOR}%s %s${RESET}" "$WX_ICON" "$WX_DESC_UPPER"
+  printf "$SEP"
+  printf "${BOLD}${ORANGE}↑%.0f°F${RESET} ${BOLD}${BR_CYAN}↓%.0f°F${RESET}" "$TEMP_MAX" "$TEMP_MIN"
+  printf "$SEP"
+  printf "${BOLD}${BLUE}%.0f%% rain${RESET}" "$PRECIP"
+  printf "$SEP"
+  printf "${BOLD}${CYAN}%.0f mph${RESET}" "$WIND"
+  printf '\n'
+  printf "  ${ITALIC}${DIM}\"%s\"${RESET}\n" "$WX_SNARK"
+
+else
+
+  # ── Full mode ────────────────────────────────────────────────────────────────
+  printf '\n'
+
+  # Header
+  printf "  ${BOLD}${WX_COLOR}%s  SKYSNARK${RESET}" "$WX_ICON"
+  printf "$SEP"
+  printf "${BOLD}${WHITE}%s${RESET}" "$DISPLAY_LOC"
+  printf "$SEP"
+  printf "${LIGHT_GRAY}%s${RESET}\n" "$DISPLAY_DATE"
+  draw_rule "─"
+
+  printf '\n'
+
+  # Condition label
+  printf "  ${BOLD}${WX_COLOR}%s  %s${RESET}\n" "$WX_ICON" "$WX_DESC_UPPER"
+
+  printf '\n'
+
+  # Stats block
+  printf "  ${GRAY}%-16s${RESET}" "Temperature"
+  printf "  ${BOLD}${ORANGE}↑ %.0f°F${RESET}" "$TEMP_MAX"
+  printf "  ${BOLD}${BR_CYAN}↓ %.0f°F${RESET}" "$TEMP_MIN"
+  printf "  ${DIM}%s${RESET}\n" "$TEMP_COMMENT"
+
+  printf "  ${GRAY}%-16s${RESET}" "Precipitation"
+  printf "  ${BOLD}${BLUE}%s%%${RESET}" "$PRECIP"
+  printf "  ${DIM}%s${RESET}\n" "$PRECIP_COMMENT"
+
+  printf "  ${GRAY}%-16s${RESET}" "Wind"
+  printf "  ${BOLD}${CYAN}%.0f mph${RESET}" "$WIND"
+  printf "  ${DIM}%s${RESET}\n" "$WIND_COMMENT"
+
+  printf "  ${GRAY}%-16s${RESET}" "Sunshine"
+  printf "  ${BOLD}${BR_YELLOW}%s hrs${RESET}\n" "$SUN_HRS"
+
+  printf '\n'
+  draw_rule "╌"
+  printf '\n'
+
+  # Snark
+  printf "  ${ITALIC}${DIM}\"${WX_SNARK}\"${RESET}\n"
+  printf '\n'
+
+fi

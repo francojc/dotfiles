@@ -1,7 +1,0 @@
-{
-  "lastChangelogVersion": "0.62.0",
-  "theme": "dark",
-  "defaultProvider": "openrouter",
-  "defaultModel": "anthropic/claude-sonnet-4.6"
-}
-
