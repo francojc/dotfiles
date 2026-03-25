@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { render } = require("/Users/francojc/.npm-global/lib/node_modules/emailmd/dist/index.cjs");
+
+const chunks = [];
+process.stdin.on("data", (chunk) => chunks.push(chunk));
+process.stdin.on("end", () => {
+  const markdown = Buffer.concat(chunks).toString("utf8");
+  const { html } = render(markdown);
+  process.stdout.write(html);
+});

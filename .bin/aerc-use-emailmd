@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo "emailmd" > /tmp/aerc-html-converter

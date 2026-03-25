@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# aerc multipart converter: routes text/plain (markdown) → text/html
+# via emailmd or pandoc depending on /tmp/aerc-html-converter sentinel file.
+#
+# Keybind h in [compose::review] → emailmd (email-safe MJML-backed HTML)
+# Keybind H in [compose::review] → pandoc  (generic standalone HTML)
+
+set -euo pipefail
+
+SENTINEL="/tmp/aerc-html-converter"
+
+if [ -f "$SENTINEL" ] && [ "$(cat "$SENTINEL")" = "pandoc" ]; then
+  rm -f "$SENTINEL"
+  pandoc -f markdown -t html --standalone
+else
+  rm -f "$SENTINEL"
+  emailmd-render
+fi
