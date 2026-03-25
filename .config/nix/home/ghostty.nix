@@ -12,7 +12,7 @@
       font-family = "JetBrainsMono Nerd Font Mono"
       font-size = ${toString (
         if hostname == "Mac-Minicore"
-        then 20
+        then 22
         else if hostname == "Macbook-Airborne"
         then 18
         else 14
