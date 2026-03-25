@@ -38,6 +38,7 @@
       # Server behavior
       set -s focus-events on
       set -s extended-keys on
+      set -s extended-keys-format csi-u
       set -s escape-time 0
       set -g detach-on-destroy off
 
