@@ -1,6 +1,6 @@
 ---
 name: todo-resolver
-description: Systematically finds and resolves TODO comments in code files. Use when TODO comments are present in a codebase and need to be addressed — either after writing new code with TODOs, when finishing incomplete sections, or to clear technical debt. Follows a structured analyze-plan-implement workflow respecting project conventions from CLAUDE.md or similar config files.
+description: Systematically finds and resolves TODO comments in files. Use when TODO comments are present in a repo/project and need to be addressed — either after writing new code/content with TODOs, when finishing incomplete sections, or to clear technical debt. Follows a structured analyze-plan-implement workflow respecting project conventions from CLAUDE.md or similar config files.
 ---
 
 # TODO Resolver
@@ -15,7 +15,7 @@ Search the relevant scope for TODO comments:
 
 ```bash
 # Find all TODOs in current directory
-grep -rn "TODO" --include="*.{r,R,py,ts,js,nix,sh,md}" .
+grep -rn "TODO" --include="*.{r,R,py,ts,js,nix,sh,md,qmd,Rmd}" .
 
 # Or focus on a specific file or module
 grep -n "TODO" path/to/file
