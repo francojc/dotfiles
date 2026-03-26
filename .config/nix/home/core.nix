@@ -126,6 +126,7 @@
     glow # Markdown renderer
     khal # Calendar
     mpv-unwrapped # Media player
+    nicotine-plus # p2p file sharing/discovery client
     pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)

@@ -87,3 +87,4 @@ conversation.toml
 .pi/agent/sessions/*
 /.pi/agent/auth.json
 .pi/agent/settings.json
+.config/nicotine/*
