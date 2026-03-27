@@ -19,13 +19,6 @@
       ./syncthing.nix
     ]
     ++ (
-      if isLinux
-      then [
-        ./i3/default.nix
-      ]
-      else []
-    )
-    ++ (
       if isDarwin
       then [
         ./llm.nix

@@ -18,20 +18,18 @@
     settings.PasswordAuthentication = true;
   };
 
+  # --- Desktop Environment (GNOME + GDM) ---
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [
-    # Essential desktop utilities for i3
-    # Network and system utilities
     alacritty # Terminal emulator
-    dmenu # Application launcher
-    feh # Image viewer and wallpaper setter
     firefox
     flameshot # Screenshot tool
-    i3status # Status bar for i3
     kitty # Terminal emulator
-    networkmanagerapplet # Network manager GUI
     pavucontrol # PulseAudio volume control
-    pcmanfm # File manager
     mousepad # Simple text editor
   ];
 

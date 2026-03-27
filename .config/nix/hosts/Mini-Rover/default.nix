@@ -13,14 +13,10 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/nixos/configuration.nix
-    ../../profiles/nixos/i3.nix
     ./configuration.nix
     ./hardware-configuration.nix
   ];
 
   # Home Manager host-specific modules (if any)
-  homeModules = [
-    # X11/i3 compatible modules - no Wayland/Sway modules
-    # i3 configuration is now included in main home config for Linux hosts
-  ];
+  homeModules = [];
 }
