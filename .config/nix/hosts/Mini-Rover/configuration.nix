@@ -28,8 +28,12 @@
     options = "ctrl:nocaps";
   };
 
-  # --- Remote Desktop (GNOME RDP) ---
-  services.gnome.gnome-remote-desktop.enable = true;
+  # --- Remote Desktop (xrdp) ---
+  services.xrdp = {
+    enable = true;
+    defaultWindowManager = "${pkgs.gnome-session}/bin/gnome-session";
+    openFirewall = true;
+  };
 
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [
