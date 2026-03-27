@@ -5,7 +5,6 @@
 }: {
   # Host-specific overrides and additional configuration for Mini-Rover
 
-  # Add audio group for RDP functionality
   users.users.${username}.extraGroups = ["wheel" "networkmanager" "audio"];
 
   # --- Bootloader (systemd-boot with EFI) ---
@@ -20,8 +19,11 @@
 
   # --- Desktop Environment (GNOME + GDM) ---
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  # --- Remote Desktop (GNOME RDP) ---
+  services.gnome.gnome-remote-desktop.enable = true;
 
   # --- Additional System Packages ---
   environment.systemPackages = with pkgs; [
