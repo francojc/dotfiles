@@ -22,6 +22,12 @@
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
+  # --- Keyboard ---
+  services.xserver.xkb = {
+    layout = "us";
+    options = "ctrl:nocaps";
+  };
+
   # --- Remote Desktop (GNOME RDP) ---
   services.gnome.gnome-remote-desktop.enable = true;
 

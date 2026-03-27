@@ -18,5 +18,7 @@
   ];
 
   # Home Manager host-specific modules (if any)
-  homeModules = [];
+  homeModules = [
+    ../../home/gnome.nix
+  ];
 }
