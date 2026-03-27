@@ -38,6 +38,7 @@
     flameshot # Screenshot tool
     kitty # Terminal emulator
     pavucontrol # PulseAudio volume control
+    gnome-extensions-cli # Manage GNOME extensions from terminal
     mousepad # Simple text editor
   ];
 
