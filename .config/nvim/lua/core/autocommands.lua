@@ -25,6 +25,17 @@ a.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- aerc sets ft=mail for compose buffers, but the body is markdown destined
+-- for emailmd rendering. Treat as markdown so treesitter, snippets, and
+-- all markdown tooling apply. aerc handles headers in its own UI.
+vim.api.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = "mail",
+	callback = function()
+		vim.bo.filetype = "markdown"
+	end,
+})
+
 -- Ensure .qmd files are treated as markdown for navigation and features
 a.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	group = "personal",

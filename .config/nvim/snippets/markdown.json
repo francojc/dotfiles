@@ -75,5 +75,131 @@
       "${0}"
     ],
     "description": "HTML figure with caption"
+  },
+  "emailmd frontmatter": {
+    "prefix": "emd-frontmatter",
+    "body": [
+      "---",
+      "preheader: \"${1:Inbox preview text}\"",
+      "brand_color: \"${2:#2563eb}\"",
+      "---",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd YAML frontmatter with preheader and brand color"
+  },
+  "emailmd dark frontmatter": {
+    "prefix": "emd-frontmatter-dark",
+    "body": [
+      "---",
+      "theme: dark",
+      "preheader: \"${1:Inbox preview text}\"",
+      "brand_color: \"${2:#60a5fa}\"",
+      "---",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd dark theme frontmatter"
+  },
+  "emailmd button": {
+    "prefix": "emd-button",
+    "body": [
+      "[${1:Label}](${2:https://example.com}){button}",
+      "${0}"
+    ],
+    "description": "emailmd primary button"
+  },
+  "emailmd button secondary": {
+    "prefix": "emd-button-secondary",
+    "body": [
+      "[${1:Label}](${2:https://example.com}){button.secondary}",
+      "${0}"
+    ],
+    "description": "emailmd secondary (outline) button"
+  },
+  "emailmd button pair": {
+    "prefix": "emd-button-pair",
+    "body": [
+      "[${1:Primary}](${2:https://example.com}){button} [${3:Secondary}](${4:https://example.com}){button.secondary}",
+      "${0}"
+    ],
+    "description": "emailmd side-by-side primary + secondary buttons"
+  },
+  "emailmd callout": {
+    "prefix": "emd-callout",
+    "body": [
+      "::: callout",
+      "${1:Callout content}",
+      ":::",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd callout block"
+  },
+  "emailmd centered": {
+    "prefix": "emd-centered",
+    "body": [
+      "::: centered",
+      "${1:Centered content}",
+      ":::",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd centered text block"
+  },
+  "emailmd highlight": {
+    "prefix": "emd-highlight",
+    "body": [
+      "::: highlight",
+      "${1:Highlighted content}",
+      ":::",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd brand-accented highlight block"
+  },
+  "emailmd header": {
+    "prefix": "emd-header",
+    "body": [
+      "::: header",
+      "![${1:Logo}](${2:https://example.com/logo.png}){width=\"${3:150}\"}",
+      ":::",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd header with logo image"
+  },
+  "emailmd footer": {
+    "prefix": "emd-footer",
+    "body": [
+      "::: footer",
+      "${1:**Organization**} · [Unsubscribe](${2:https://example.com/unsub})",
+      ":::",
+      "${0}"
+    ],
+    "description": "emailmd footer with unsubscribe link"
+  },
+  "emailmd hero": {
+    "prefix": "emd-hero",
+    "body": [
+      "::: hero ${1:https://example.com/hero.jpg}",
+      "# ${2:Heading}",
+      "",
+      "${3:Subtext}",
+      "",
+      "[${4:Call to Action}](${5:https://example.com}){button}",
+      ":::",
+      "",
+      "${0}"
+    ],
+    "description": "emailmd hero banner with background image"
+  },
+  "emailmd image": {
+    "prefix": "emd-image",
+    "body": [
+      "![${1:Alt text}](${2:https://example.com/image.jpg}){width=\"${3:600}\"}",
+      "${0}"
+    ],
+    "description": "emailmd responsive image with width"
   }
 }
