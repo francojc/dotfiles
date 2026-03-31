@@ -200,6 +200,14 @@ repo-migrate() {
   has_pages="${has_pages:-n}"
 
   # Write _repo.md marker into the Drive directory
+  local marker_path="$drive_dir/_repo.md"
+  echo "Writing marker to: $marker_path"
+
+  if [[ ! -w "$drive_dir" ]]; then
+    echo "Warning: Drive directory is not writable: $drive_dir"
+    echo "Attempting write anyway..."
+  fi
+
   {
     echo "# $repo_name"
     echo ""
@@ -209,9 +217,14 @@ repo-migrate() {
     echo "- **Local**: ~/Projects/$gh_user/$repo_name"
     echo "- **Status**: migrated $(date +%Y-%m-%d) -- Drive copy can be removed"
     [[ -n "$tags" ]] && echo "- **Tags**: $tags"
-  } > "$drive_dir/_repo.md"
+  } > "$marker_path" 2>&1
 
-  echo "Created marker: $drive_dir/_repo.md"
+  if [[ -f "$marker_path" ]]; then
+    echo "Created marker: $marker_path"
+  else
+    echo "Error: failed to create marker at $marker_path"
+    echo "You can create it manually later."
+  fi
 
   # Register in repoindex
   repoindex refresh --path "$dest" 2>/dev/null

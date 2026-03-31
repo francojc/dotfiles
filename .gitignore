@@ -88,3 +88,4 @@ conversation.toml
 /.pi/agent/auth.json
 .pi/agent/settings.json
 .config/nicotine/*
+.config/rclone/rclone.conf
