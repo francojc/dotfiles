@@ -41,7 +41,7 @@ repo-bootstrap() {
         echo "  skip  $name (already exists)"
       else
         echo "  clone $name"
-        gh repo clone "francojc/$name" "$dest" -- --quiet
+        git clone "git@github.com:francojc/$name.git" "$dest" --quiet
       fi
     done
   echo "Done. Run 'repoindex refresh' to update the index."
@@ -97,6 +97,7 @@ repo-migrate() {
 
   local dest="$HOME/Projects/$gh_user/$repo_name"
   local github_url="https://github.com/$gh_user/$repo_name"
+  local ssh_url="git@github.com:$gh_user/$repo_name.git"
 
   # Check if destination already exists
   if [[ -d "$dest" ]]; then
@@ -136,7 +137,7 @@ repo-migrate() {
     # --- Path A: repo exists on GitHub -> clone fresh ---
     echo ""
     echo "Found on GitHub. Cloning fresh copy..."
-    gh repo clone "$gh_user/$repo_name" "$dest" -- --quiet
+    git clone "$ssh_url" "$dest" --quiet
 
     if [[ $? -ne 0 ]]; then
       echo "Error: clone failed."
@@ -212,6 +213,7 @@ repo-migrate() {
     echo "# $repo_name"
     echo ""
     echo "- **GitHub**: $github_url"
+    echo "- **Clone**: \`$ssh_url\`"
     [[ "$has_pages" == "y" ]] && \
       echo "- **Pages**: https://$gh_user.github.io/$repo_name"
     echo "- **Local**: ~/Projects/$gh_user/$repo_name"
@@ -273,13 +275,14 @@ repo-init() {
 
   local repo_dir="$HOME/Projects/$gh_user/$repo_name"
   local github_url="https://github.com/$gh_user/$repo_name"
+  local ssh_url="git@github.com:$gh_user/$repo_name.git"
 
   # Clone if repo already exists on GitHub; otherwise create directory and init
   mkdir -p "$HOME/Projects/$gh_user"
   if gh repo view "$gh_user/$repo_name" &>/dev/null; then
     echo ""
     echo "Found existing GitHub repo -- cloning..."
-    gh repo clone "$gh_user/$repo_name" "$repo_dir" -- --quiet
+    git clone "$ssh_url" "$repo_dir" --quiet
   else
     echo ""
     read "do_create?Repo not found on GitHub. Create it now? (y/n) [y]: "
@@ -301,6 +304,7 @@ repo-init() {
     echo "# $repo_name"
     echo ""
     echo "- **GitHub**: $github_url"
+    echo "- **Clone**: \`$ssh_url\`"
     [[ "$has_pages" == "y" ]] && \
       echo "- **Pages**: https://$gh_user.github.io/$repo_name"
     echo "- **Local**: $repo_dir"
