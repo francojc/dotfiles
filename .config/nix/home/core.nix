@@ -97,6 +97,7 @@
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
+    rclone # Cloud storage sync (Google Drive, S3, etc.)
     repgrep # ripgrep across files
     ripgrep # grep replacement
     speedtest-cli # Internet speed test

@@ -4,96 +4,6 @@
 # Git workflow shortcut - combines git add, commit, pull, and push operations
 alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
 
-# --- AI/LLM ALIASES ---
-# --
-# --- WORKFLOW ALIASES ---
-# Workmux session management for quick workspace switching
-alias wm='workmux' # main workmux command
-alias wma='workmux add' # add new workmux session
-alias wmo='workmux open' # open workmux session
-alias wml='workmux list' # list workmux sessions
-alias wmm='workmux merge' # merge workmux sessions
-alias wmr='workmux remove' # remove workmux session
-
-# Secure Claude function that uses ZAI API endpoint (requires ZAI_BASE_URL and ZAI_API_KEY env vars)
-# Usage: claudz [model_name] - defaults to glm-4.6v if no model specified
-# Environment: ZAI_BASE_URL, ZAI_API_KEY must be set
-claudz() {
-  local model="${1:-glm-4.7}"
-  env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL="$ZAI_BASE_URL" ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
-}
-
-# Secure Claude function that uses GitHub Copilot API endpoint (requires GITHUB_COPILOT_BASE_URL and GITHUB_COPILOT_API_KEY env vars)
-# Usage: claudo [model_name] - defaults to gpt-4o if no model specified
-# Environment: GITHUB_COPILOT_BASE_URL, GITHUB_COPILOT_API_KEY must be set
-claudo() {
-  local model="${1:-claude-haiku-4.5}"
-  env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=http://mac-minicore.gerbil-matrix.ts.net:4141 ANTHROPIC_AUTH_TOKEN="$GITHUB_COPILOT_API_KEY" ANTHROPIC_DEFAULT_SONNET_MODEL="$model" claude
-}
-
-# Headless Claude: apply targeted edits across files in the current project
-# Usage: claude-edit "<prompt>"
-claude-edit() {
-  if [[ -z "$1" ]]; then
-    echo "Usage: claude-edit \"<prompt>\""
-    return 1
-  fi
-  claude -p "$1" \
-    --allowedTools "Read,Edit,Glob,Grep,LS,Bash(git diff:*),Bash(git status:*),Bash(git log:*)"
-}
-
-# Headless Claude: multi-step operations with broader tool access
-# Usage: claude-batch "<prompt>"
-claude-batch() {
-  if [[ -z "$1" ]]; then
-    echo "Usage: claude-batch \"<prompt>\""
-    return 1
-  fi
-  claude -p "$1" \
-    --allowedTools "Read,Write,Edit,Glob,Grep,LS,WebFetch,WebSearch,Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git add:*)"
-}
-
-# --- TMUX ALIASES ---
-# Tmux session management for terminal multiplexing
-alias tl='tmux list-sessions' # list all tmux sessions
-alias taa=' tmux attach-session -t' # attach to a specific session
-alias tka='tmux kill-session -t' # kill a specific session
-alias tko='tmux kill-server' # kill all tmux sessions
-
-# Attach to a named tmux session (1-based); create if absent
-# Usage: t [session_name] - creates or attaches to session
-t() {
-  if [ $# -eq 0 ]; then
-    tmux new-session -As 1
-  else
-    tmux new-session -As "$1"
-  fi
-}
-
-# --- NIX ALIASES ---
-# System rebuild commands - uses hostname to determine the flake to switch to
-# Usage: dswitch - rebuilds Darwin system configuration
-alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
-
-# Usage: nswitch - rebuilds NixOS system configuration
-alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
-
-# --- AIDER ALIASES ---
-# AI coding assistant configurations for code generation and review
-# Usage: aider-copilot
-alias aider-copilot='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --model openai/claude-haiku-4.5 --weak-model openai/gpt-4o --editor-model openai/gpt-4o'
-# Usage: aider-zai
-alias aider-zai='aider --openai-api-base "$ZAI_BASE_URL" --openai-api-key "$ZAI_API_KEY" --model glm-4.7 --weak-model glm-4.7 --editor-model glm-4.7'
-alias aider-ollama='aider --openai-api-base "http://localhost:11434/v1" --model ollama_chat/ministral-3:latest --weak-model ollama_chat/ministral-3:latest --editor-model ollama_chat/ministral-3:latest'
-# Specialized: commits
-# Usage: aider-commit
-alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)'
-
-# --- MAIL ALIASES ---
-# Aerc email client configuration with custom config files
-# Usage: mail - launches Aerc email client with configured settings
-alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
-
 # --- DIRECTORY NAVIGATION ---
 # Basic directory navigation for quick path movement
 alias ..='cd ..'        # Move up one directory level
@@ -102,7 +12,6 @@ alias ...='cd ../..'    # Move up two directory levels
 alias c='clear'
 
 # File listing with eza - enhanced file listing with icons and color
-
 alias ls='eza --dereference --no-quotes --icons=auto --color=auto --ignore-glob=".DS_Store"'
 alias la='ls --almost-all'
 alias ll='ls --long --time-style=relative --ignore-glob=.git'
@@ -127,53 +36,14 @@ alias rm='rm -v'      # Remove with verbose output
 # Better path display - shows PATH variable with newlines
 alias path='echo -e ${PATH//:/\\n}'
 
-# --- SSH ALIASES (CONSOLIDATED) ---
-# SSH Aliases - Consolidated with parameterized function
-# Usage: ssh_connect [host] [user] - connects to SSH server with optional user override
-ssh_connect() {
-  local host="$1"
-  local user="$2"
-  [ -z "$user" ] && user="jeridf"
-  TERM=xterm-256color ssh "$user@$host"
-}
-
-# Individual aliases (preserve for backward compatibility)
-# Usage: minicore - connect to mac-minicore
+# --- SSH ALIASES ---
+# Individual aliases using ssh_connect() from functions.zsh
 alias minicore='ssh_connect mac-minicore'
-# Usage: airborne - connect to macbook-airborne with francojc user
 alias airborne='ssh_connect macbook-airborne francojc'
-# Usage: rover - connect to mini-rover
 alias rover='ssh_connect mini-rover'
-# Usage: proxmox - connect to minis-proxmox with root user
 alias proxmox='ssh_connect minis-proxmox root'
-# Usage: services - connect to minis-services
 alias services='ssh_connect minis-services'
-# Usage: ai - connect to minis-ai
 alias ai='ssh_connect minis-ai'
-
-# Rsync files to a remote host (skips files newer on remote)
-# Usage: syncr <remote> <local_path> <remote_path>
-syncr() {
-  local remote
-  case "$1" in
-    minicore) remote="jeridf@mac-minicore" ;;
-    airborne) remote="francojc@macbook-airborne" ;;
-    rover) remote="jeridf@mini-rover" ;;
-    services) remote="jeridf@minis-services" ;;
-    ai) remote="jeridf@minis-ai" ;;
-    *)
-      echo "Unknown remote: $1"
-      echo "Available: minicore, airborne, rover, services, ai"
-      echo "Usage: syncr <remote> <local_path> <remote_path>"
-      return 1
-      ;;
-  esac
-  if [[ -z "$2" || -z "$3" ]]; then
-    echo "Usage: syncr <remote> <local_path> <remote_path>"
-    return 1
-  fi
-  rsync -avu --exclude='.git' "$2" "$remote:$3"
-}
 
 # --- GIT ALIASES ---
 # Git workflow shortcuts
@@ -204,108 +74,40 @@ alias gss='git status'
 alias gst='git stash'           # Quick stash
 alias gstp='git stash pop'
 
+# --- NIX ALIASES ---
+alias dswitch='sudo darwin-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
+alias nswitch='sudo nixos-rebuild switch --flake $(realpath ~/.config/nix)#$(hostname)'
+
+# --- TMUX ALIASES ---
+alias tl='tmux list-sessions'
+alias taa=' tmux attach-session -t'
+alias tka='tmux kill-session -t'
+alias tko='tmux kill-server'
+
 # --- EDITOR ALIASES ---
-# Neovim shortcuts for quick editing
-alias v='nvim'                             # Open Neovim
-# alias b='NVIM_APPNAME="nvim-dev" nvim-dev'  # Alternative Neovim instance (commented out)
+alias v='nvim'
 
 # Obsidian notes
 alias on='cd ~/Obsidian/Notes && nvim'
 alias op='cd ~/Obsidian/Personal && nvim'
 
 # --- QUARTO ALIASES ---
-# Academic publishing tools for creating and rendering documents
-alias q='quarto'                              # Main Quarto command
-alias qp='quarto preview'                      # Preview current document
-alias qph='quarto preview --to html'           # Preview as HTML
-alias qpp='quarto preview --to pdf'            # Preview as PDF
-alias qr='quarto render'                      # Render current document
-alias qrh='quarto render --no-clean --to html' # Render as HTML without cleaning
-alias qrp='quarto render --no-clean --to pdf'  # Render as PDF without cleaning
-alias qpub='quarto publish gh-pages'           # Publish to GitHub Pages
+alias q='quarto'
+alias qp='quarto preview'
+alias qph='quarto preview --to html'
+alias qpp='quarto preview --to pdf'
+alias qr='quarto render'
+alias qrh='quarto render --no-clean --to html'
+alias qrp='quarto render --no-clean --to pdf'
+alias qpub='quarto publish gh-pages'
 
 # --- CLOUD ALIASES ---
-# iCloud
 alias icloud='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/'
-# Google Drive
 alias gdrive='cd ~/Google\ Drive/My\ Drive/'
 
-# Last command related aliases
-# Reminder: `fc` is a built-in Zsh command to edit the last command in $EDITOR
-alias last='fc -ln -1'  # Print last command
-alias lastrun='fc -e -'  # Re-execute last command
+# --- MAIL ALIASES ---
+alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
 
-# --- FUNCTIONS ---
-# list directory contents after changing directory
-# Usage: zl [path] - changes directory and lists contents with eza
-function zl() {
-  z "$@" && eza --almost-all --dereference --no-quotes --icons=auto --ignore-glob=".DS_Store"
-}
-
-# Make and change to a directory
-# Usage: mkcd [directory] - creates directory and changes to it
-function mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
-# Recall last command output - Simplified
-# Usage: r [PATTERN] [-p] - recalls last command output with optional filtering
-function r() {
-  local pattern="$1"
-  local print_only="$2"
-
-  # Help output
-  if [[ "$pattern" == "--help" || "$pattern" == "-h" ]]; then
-    echo "Usage: r [PATTERN] [-p]"
-    echo "Recall last command output and copy to clipboard"
-    echo
-    echo "Options:"
-    echo "  PATTERN     Filter output using pattern"
-    echo "  -p          Print to stdout instead of copying to clipboard"
-    echo "  --help, -h  Show this help message"
-    return 0
-  fi
-
-  # Determine output method
-  local output_cmd="pbcopy"
-  if [[ "$print_only" == "-p" ]]; then
-    output_cmd="cat"
-  fi
-
-  # Execute command
-  if [ -z "$pattern" ]; then
-    fc -ln -1 | $output_cmd
-  else
-    fc -ln -1 | grep "$pattern" | $output_cmd
-  fi
-}
-
-
-# Setup qtree (Quick Tree) command
-# Usage: qtree [directory] [depth] - lists directory tree with custom depth
-# - first argument is the directory to list (default is current directory)
-# - second argument is the -L value (default is 2)
-function qtree() {
-  if [ -z "$1" ]; then
-    DIR="."
-  else
-    DIR=$1
-  fi
-  if [ -z "$2" ]; then
-    L=2
-  else
-    L=$2
-  fi
-  command tree $DIR -L $L -CF
-}
-
-# -- Setup yazi (Yet Another Zoxide Integration) command
-# Usage: y [arguments] - opens yazi file manager with directory navigation
-
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
-}
+# --- MISC ---
+alias last='fc -ln -1'
+alias lastrun='fc -e -'

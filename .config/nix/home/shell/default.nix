@@ -13,6 +13,9 @@
       defaultKeymap = "viins";
       initContent = ''
         ${builtins.readFile ./aliases.zsh}
+        ${builtins.readFile ./functions.zsh}
+        ${builtins.readFile ./ai.zsh}
+        ${builtins.readFile ./repo.zsh}
         ${builtins.readFile ./fzf.zsh}
 
         # Source zsh-ai-cmd plugin
