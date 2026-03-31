@@ -187,11 +187,13 @@ repo-migrate() {
 
       gh repo create "$gh_user/$repo_name" \
         --"$visibility" \
-        --description "$description" \
-        --source "$dest" \
-        --remote origin \
-        --push
-      echo "Created: $github_url"
+        --description "$description"
+
+      # Set remote to SSH and push
+      git -C "$dest" remote add origin "$ssh_url" 2>/dev/null || \
+        git -C "$dest" remote set-url origin "$ssh_url"
+      git -C "$dest" push -u origin HEAD --quiet
+      echo "Created and pushed: $github_url"
     fi
   fi
 
@@ -292,9 +294,11 @@ repo-init() {
     if [[ "$do_create" == "y" ]]; then
       gh repo create "$gh_user/$repo_name" \
         --"$visibility" \
-        --description "$description" \
-        --source "$repo_dir" \
-        --remote origin
+        --description "$description"
+
+      # Set remote to SSH and push
+      git -C "$repo_dir" remote add origin "$ssh_url" 2>/dev/null || \
+        git -C "$repo_dir" remote set-url origin "$ssh_url"
       echo "Created GitHub repo: $github_url"
     fi
   fi
