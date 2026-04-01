@@ -9,28 +9,16 @@
       enable = true;
       plugins = with pkgs.vimPlugins;
         [
-          # Add your favorite plugins here
+          # Plugins: 
           llama-vim # FIM completion from llama.cpp (self-hosted)
           fzf-vim # FZF
           vim-fugitive # Git integration (for statusline branch)
           vim-commentary # Commenting
           vim-markdown # Markdown support
-          # vim-sensible # Sensible defaults
           vim-surround # Surround text objects
           vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
           vim-which-key # Keybindings
-          # Theme plugins
-          gruvbox # Gruvbox colorscheme
-          # kanso-nvim # Kanso colorscheme (Neovim-only, not compatible with Vim)
-          zenbones-nvim # Zenbones colorscheme
-        ]
-        ++ (
-          if theme.vim.colorscheme == "nightfox"
-          then [
-            pkgs.vimPlugins.nightfox-nvim
-          ]
-          else []
-        );
+        ];
       extraConfig = ''
         " LLAMA.VIM -----------------------------------------------
         let g:llama_config = {
@@ -93,7 +81,7 @@
         set noswapfile            " Disable swap files
         set nobackup              " Disable backup files
         set cursorline            " Highlight current line
-        colorscheme ${theme.vim.colorscheme}
+        colorscheme retrobox 
         set background=${theme.vim.background}
 
         " STATUSLINE -----------------------------------------------
@@ -199,7 +187,7 @@
         " Build statusline
         set statusline=
         set statusline+=%{%StatuslineModeHighlight()%}
-        set statusline+=\ %{StatuslineMode()}\
+        set statusline+=\ %{StatuslineMode()}
         set statusline+=%#StatusLineModified#
         set statusline+=%{StatuslineModified()}
         set statusline+=%#StatusLineGit#
@@ -211,11 +199,11 @@
         set statusline+=%#StatusLineSearch#
         set statusline+=%{StatuslineSearchCount()}
         set statusline+=%#StatusLineType#
-        set statusline+=\ %Y\
+        set statusline+=\ %Y
         set statusline+=%#StatusLinePos#
-        set statusline+=\ %3l:%-2c\
+        set statusline+=\ %3l:%-2c
         set statusline+=%{%StatuslineModeHighlight()%}
-        set statusline+=\ %p%%\
+        set statusline+=\ %p%%
 
         " KEYMAPS --------------------------------------------------
         let mapleader = ' '     " Leader key is <Space>
