@@ -10,12 +10,12 @@
       plugins = with pkgs.vimPlugins;
         [
           # Add your favorite plugins here
-          copilot-vim # Copilot
+          llama-vim # FIM completion from llama.cpp (self-hosted)
           fzf-vim # FZF
           vim-fugitive # Git integration (for statusline branch)
           vim-commentary # Commenting
           vim-markdown # Markdown support
-          vim-sensible # Sensible defaults
+          # vim-sensible # Sensible defaults
           vim-surround # Surround text objects
           vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
           vim-which-key # Keybindings
@@ -32,6 +32,32 @@
           else []
         );
       extraConfig = ''
+        " LLAMA.VIM -----------------------------------------------
+        let g:llama_config = {
+            \ 'enable_at_startup': 1,
+            \ 'auto_fim': 1,
+            \ 'max_line_suffix': 8,
+            \ 'endpoint_fim': 'http://100.101.38.4:8080/infill',
+            \ 'api_key': 'de7df50cff8b8ed12426b5d2af443c6644a356f7359ca6ba5d221b23b7339ec1',
+            \ 'model_fim': "",
+            \ 'n_prefix': 512,
+            \ 'n_suffix': 64,
+            \ 'n_predict': 128,
+            \ 'stop_strings': [],
+            \ 't_max_prompt_ms': 1000,
+            \ 't_max_predict_ms': 1000,
+            \ 'max_cache_keys': 250,
+            \ 'ring_n_chunks': 16,
+            \ 'ring_chunk_size': 32,
+            \ 'ring_scope': 1024,
+            \ 'ring_update_ms': 1000,
+            \ 'keymap_fim_trigger': '<C-N>',
+            \ 'keymap_fim_accept_full': '<Tab>',
+            \ 'keymap_fim_accept_line': '<C-F>',
+            \ 'keymap_fim_accept_word': '<C-D>',
+            \ 'show_info': 2,
+            \ }
+
         " GENERAL --------------------------------------------------
         syntax on                 " Syntax highlighting
         set number                " Show line numbers
@@ -173,7 +199,7 @@
         " Build statusline
         set statusline=
         set statusline+=%{%StatuslineModeHighlight()%}
-        set statusline+=\ %{StatuslineMode()}\ 
+        set statusline+=\ %{StatuslineMode()}\
         set statusline+=%#StatusLineModified#
         set statusline+=%{StatuslineModified()}
         set statusline+=%#StatusLineGit#
@@ -185,11 +211,11 @@
         set statusline+=%#StatusLineSearch#
         set statusline+=%{StatuslineSearchCount()}
         set statusline+=%#StatusLineType#
-        set statusline+=\ %Y\ 
+        set statusline+=\ %Y\
         set statusline+=%#StatusLinePos#
-        set statusline+=\ %3l:%-2c\ 
+        set statusline+=\ %3l:%-2c\
         set statusline+=%{%StatuslineModeHighlight()%}
-        set statusline+=\ %p%%\ 
+        set statusline+=\ %p%%\
 
         " KEYMAPS --------------------------------------------------
         let mapleader = ' '     " Leader key is <Space>
