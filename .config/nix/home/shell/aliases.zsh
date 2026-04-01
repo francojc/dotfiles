@@ -42,8 +42,10 @@ alias minicore='ssh_connect mac-minicore'
 alias airborne='ssh_connect macbook-airborne francojc'
 alias rover='ssh_connect mini-rover'
 alias proxmox='ssh_connect minis-proxmox root'
-alias services='ssh_connect minis-services'
-alias ai='ssh_connect minis-ai'
+alias services='ssh_connect core-services root'
+alias media='ssh_connect media-services root'
+alias pi-meta='ssh_connect pi-meta root'
+alias pi-agents='ssh_connect pi-agents root'
 
 # --- GIT ALIASES ---
 # Git workflow shortcuts
