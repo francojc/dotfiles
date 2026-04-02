@@ -67,6 +67,7 @@
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
+      "telegram" # messaging (bot)
       "visual-studio-code" # code editor
       "vlc" # media player
       "zen" # browser
