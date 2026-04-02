@@ -68,35 +68,7 @@ opt.formatexpr = "v:lua.require('conform').formatexpr()"
 opt.autoread = true -- auto read files when changed outside of Neovim
 opt.foldmethod = "indent"
 opt.foldlevel = 99 -- start with all folds open
-opt.laststatus = 2 -- show statusline always
-
--- Statusline (native, leveraging Neovim 0.12+)
-vim.o.statusline = table.concat({
-	"%#StatusLineModeNormal#",
-	" %{v:lua.Get_mode_name()} ", -- Mode (full name)
-	"%#StatusLineModified#",
-	"%{&modified?' [+]':''}", -- Modified indicator
-	"%#StatusLine#",
-	"%{&readonly?' []':''} ", -- Readonly indicator
-	"%#StatusLineGit#",
-	"%{v:lua.Get_git_branch()}", -- Git branch
-	"%{v:lua.Get_filename()}", -- Filename (relative to cwd)
-	"%#StatusLine#",
-	"%=", -- Right align
-	"%#StatusLineLlama#",
-	"%{get(g:,'llama_status','')} ", -- llama FIM spinner
-	"%#StatusLine#",
-	"%{%v:lua.vim.diagnostic.status()%} ", -- Diagnostic status
-	"%#StatusLineSearch#",
-	"%{v:lua.Get_search_count()}", -- Search count
-	"%#StatusLineModeNormal#",
-	" %Y ", -- File type
-	"%#StatusLine#",
-	" %3l:%-2c ", -- Line:Column
-	"%#StatusLineModeNormal#",
-	" %p%% ", -- Percentage through file
-	"%#StatusLine#",
-}, "")
+opt.laststatus = 2 -- show statusline always (managed by lualine)
 
 -- Diagnostics
 vim.diagnostic.config({

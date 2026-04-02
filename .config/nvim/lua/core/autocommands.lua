@@ -78,18 +78,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Session management: auto-save on exit
-vim.api.nvim_create_autocmd("VimLeavePre", {
-	callback = function()
-		local session_dir = vim.fn.stdpath("state") .. "/sessions"
-		if vim.fn.isdirectory(session_dir) == 0 then
-			vim.fn.mkdir(session_dir, "p")
-		end
-		local target = session_dir .. "/last.vim"
-		pcall(vim.cmd, "mksession! " .. vim.fn.fnameescape(target))
-	end,
-})
-
 -- Spell language management
 local function get_project_root()
 	local current_file = vim.fn.expand("%:p")
@@ -212,37 +200,6 @@ vim.api.nvim_create_user_command("PackStatus", function()
 	_G.Pack_status()
 end, { desc = "Show plugin status" })
 
--- Git branch cache updates for statusline performance
--- Update cache on buffer enter, directory change, and focus gained
-vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged", "FocusGained" }, {
-	group = "personal",
-	callback = function()
-		-- Skip special buffers (terminal, picker, etc.)
-		local buftype = vim.bo.buftype
-		if buftype == "" then
-			Update_git_branch_cache()
-			Update_search_count_cache()
-		end
-	end,
-})
-
--- Search count cache updates for statusline performance
--- Update cache when search commands complete or buffer enters
-vim.api.nvim_create_autocmd({ "CmdlineLeave", "BufEnter" }, {
-	group = "personal",
-	callback = function()
-		-- Skip special buffers (terminal, picker, etc.)
-		local buftype = vim.bo.buftype
-		if buftype == "" then
-			-- Update search count when leaving command line or entering buffer
-			-- Check if we just finished a search by looking at @/
-			if vim.fn.getreg("/") ~= "" then
-				Update_search_count_cache()
-			end
-		end
-	end,
-})
-
 -- Check for plugin updates on startup (weekly)
 vim.api.nvim_create_autocmd("VimEnter", {
 	group = "personal",
@@ -253,40 +210,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 				_G.Pack_check_updates()
 			end
 		end)
-	end,
-})
-
--- Enhanced search navigation with automatic search count updates
-vim.api.nvim_create_autocmd("BufEnter", {
-	group = "personal",
-	callback = function()
-		-- Only set up mappings for normal file buffers
-		local bufname = vim.api.nvim_buf_get_name(0)
-		if vim.bo.buftype == "" and not bufname:match("^%w+://") then
-			-- Set up enhanced search navigation that updates search count
-			local opts = { buffer = true, silent = true, noremap = true }
-
-			-- Override n and N to update search count after navigation
-			vim.keymap.set("n", "n", function()
-				vim.cmd("normal! n")
-				-- Small delay to allow cursor to move, then update search count
-				vim.defer_fn(function()
-					if vim.o.hlsearch and vim.fn.getreg("/") ~= "" then
-						Update_search_count_cache()
-					end
-				end, 10)
-			end, opts)
-
-			vim.keymap.set("n", "N", function()
-				vim.cmd("normal! N")
-				-- Small delay to allow cursor to move, then update search count
-				vim.defer_fn(function()
-					if vim.o.hlsearch and vim.fn.getreg("/") ~= "" then
-						Update_search_count_cache()
-					end
-				end, 10)
-			end, opts)
-		end
 	end,
 })
 

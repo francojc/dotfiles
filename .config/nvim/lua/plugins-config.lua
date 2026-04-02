@@ -3,7 +3,6 @@
 ---| UPFRONT ---------------------------------------------------
 -- Load theme config early for colors used by plugins
 local theme_config = require("theme-config")
-local colors = theme_config.colors
 
 ---=============================================================
 ---| COMPLETION & SNIPPETS
@@ -247,64 +246,20 @@ end
 
 vim.cmd("colorscheme " .. theme_config.colorscheme)
 
----| llama.vim Statusline Spinner ----------------------------------
-require("llama-status").setup()
-
 ---| llama.vim Highlight Overrides ----------------------------------
-local function apply_llama_highlights()
-	vim.api.nvim_set_hl(0, "llama_hl_fim_hint", { fg = "#918374", ctermfg = 59 })
-	vim.api.nvim_set_hl(0, "llama_hl_fim_info", { fg = "#B9BB25", ctermfg = 119 })
-end
-apply_llama_highlights()
+vim.api.nvim_set_hl(0, "llama_hl_fim_hint", { fg = "#918374", ctermfg = 59 })
+vim.api.nvim_set_hl(0, "llama_hl_fim_info", { fg = "#B9BB25", ctermfg = 119 })
 
 -- Fix undercurl leak in tmux: use underline instead for URL highlights
 vim.api.nvim_set_hl(0, "@string.special.url", { fg = "#7FB4CA", underline = true, undercurl = false })
 vim.api.nvim_set_hl(0, "@markup.link.url", { link = "@string.special.url" })
 
----| Statusline Highlights (theme-adaptive) ----------------------------------
-require("statusline-highlights").setup()
-
--- Re-apply statusline highlights when colorscheme changes
-vim.api.nvim_create_autocmd("ColorScheme", {
-	pattern = "*",
-	callback = function()
-		require("statusline-highlights").setup()
-		apply_llama_highlights()
-		-- Re-fix undercurl leak for URL highlights
-		vim.api.nvim_set_hl(0, "@string.special.url", { fg = "#7FB4CA", underline = true, undercurl = false })
-		vim.api.nvim_set_hl(0, "@markup.link.url", { link = "@string.special.url" })
-	end,
-	desc = "Update statusline highlights when colorscheme changes",
-})
-
 ---| Neovim 0.12+ Highlight Groups ----------------------------------
 vim.api.nvim_set_hl(0, "DiffTextAdd", { bg = "#3d5213", fg = "#b4fa72" })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = colors.blue or "#7aa2f7" })
 
 ---============================================================
 ---| CODE FORMATTING
 ---============================================================
-
----| Codesnap.nvim ----------------------------------
-
--- require("codesnap").setup({
--- 	show_line_number = false,
--- 	snapshot_config = {
--- 		background = "#FFFFFF",
--- 		watermark = {
--- 			content = "",
--- 		},
--- 		margin = {
--- 			x = 10,
--- 			y = 10,
--- 		},
--- 		code_config = {
--- 			breadcrumbs = {
--- 				enable = false,
--- 			},
--- 		},
--- 	},
--- })
 
 ---| Conform ----------------------------------------
 require("conform").setup({
@@ -491,14 +446,8 @@ vim.lsp.config.pyright = {
 	end,
 }
 
--- Copilot (copilot-language-server)
-vim.g.copilot_enabled = false -- enable copilot by default
-vim.lsp.config.copilot = {
-	capabilities = capabilities,
-	filetypes = { "*" }, -- enable for all filetypes
-}
-
----| CopilotChat.nvim ----------------------------------
+---| CopilotChat (removed) ----------------------------
+--[[ CopilotChat removed: using llama.vim for completions
 require("CopilotChat").setup({
 	-- Model configuration optimized for knowledge work
 	model = "claude-sonnet-4.5",
@@ -687,6 +636,7 @@ Do not assume or request additional files unless necessary.]],
 		},
 	},
 })
+--]]
 
 ---| R & Data Science ----------------------------------
 
@@ -837,59 +787,47 @@ vim.api.nvim_create_autocmd("FileType", {
 ---==========================================================
 
 ---| Mini Modules ----------------------------------
-local mini_modules = { "icons", "surround" }
-for _, module in ipairs(mini_modules) do
-	require("mini." .. module).setup({})
-end
-
--- Configure MiniSurround custom "h" to add ==…==
-pcall(function()
-	require("mini.surround").setup({
-		custom_surroundings = {
-			h = {
-				-- Add:       sa h  (then motion)
-				-- Replace:   sr h  (works when cursor inside ==…== if recognized)
-				-- Delete:    sd h
-				output = function()
-					return { left = "==", right = "==" }
-				end,
-			},
+require("mini.icons").setup({})
+require("mini.surround").setup({
+	custom_surroundings = {
+		h = {
+			-- Add:       sa h  (then motion)
+			-- Replace:   sr h
+			-- Delete:    sd h
+			output = function()
+				return { left = "==", right = "==" }
+			end,
 		},
-	})
-end)
+	},
+})
+
+---| Lualine ----------------------------------
+require("lualine").setup({
+	options = {
+		theme = "auto",
+		component_separators = { left = "|", right = "|" },
+		section_separators = { left = "", right = "" },
+		globalstatus = false,
+	},
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { { "filename", path = 1 } }, -- relative path
+		lualine_x = {
+			{ function() return vim.g.llama_status or "" end, color = { fg = "#918374" } },
+			"filetype",
+		},
+		lualine_y = { "searchcount", "progress" },
+		lualine_z = { "location" },
+	},
+	inactive_sections = {
+		lualine_c = { { "filename", path = 1 } },
+		lualine_x = { "location" },
+	},
+})
 
 ---| Quicker ----------------------------------
 require("quicker").setup()
-
----| Typst Preview ----------------------------
-require("typst-preview").setup({
-	dependencies_bin = {
-		["tinymist"] = "tinymist",
-		["websocat"] = "websocat",
-	},
-})
-
----| Tabout ----------------------------------
-require("tabout").setup({
-	tabkey = "<Tab>",
-	backwards_tabkey = "<S-Tab>",
-	act_as_tab = true, -- Use tab normally when tabout is unavailable
-	act_as_shift_tab = false,
-	default_tab = "<C-t>", -- Fallback for indent
-	default_shift_tab = "<C-d>", -- Fallback for dedent
-	enable_backwards = true,
-	completion = true, -- Handle completion popups (blink.cmp)
-	tabouts = {
-		{ open = "'", close = "'" },
-		{ open = '"', close = '"' },
-		{ open = "`", close = "`" },
-		{ open = "(", close = ")" },
-		{ open = "[", close = "]" },
-		{ open = "{", close = "}" },
-	},
-	ignore_beginning = true, -- Allow tabout from the beginning of brackets
-	exclude = {}, -- No filetype exclusions
-})
 
 ---| Snacks ----------------------------------
 require("snacks").setup({
@@ -1001,19 +939,6 @@ require("which-key").setup({
 -- Add keymap groups
 local wk = require("which-key")
 wk.add({
-	{ "<leader>a", group = "Assistant", icon = "󰚩 " },
-	{ "<leader>aA", group = "Academic", icon = "󰑓 " },
-	{ "<leader>aB", group = "Bilingual", icon = "󰗊 " },
-	{ "<leader>aC", group = "Clarity", icon = "󰦨 " },
-	{ "<leader>aD", group = "Data", icon = "󰮘 " },
-	{ "<leader>aF", group = "Flow", icon = "󰹺 " },
-	{ "<leader>aH", group = "Headings", icon = "󰉫 " },
-	{ "<leader>aL", group = "Literature", icon = "󰂺 " },
-	{ "<leader>aM", group = "Model/Mode", icon = "󰚩 " },
-	{ "<leader>aO", group = "Objectives", icon = "󰯂 " },
-	{ "<leader>aP", group = "Proposal/Pedagogy", icon = "󰠮 " },
-	{ "<leader>aR", group = "Research", icon = "󰔎 " },
-	{ "<leader>aS", group = "Spanish/Simplify", icon = "󰗊 " },
 	{ "<leader>b", group = "Buffer", icon = "󰓩 " },
 	{ "<leader>c", group = "Code", icon = "󰌗" },
 	{ "<leader>d", group = "Diagnostics/Debug", icon = "󰒡" },
@@ -1021,13 +946,11 @@ wk.add({
 	{ "<leader>f", group = "Files", icon = "󰈔" },
 	{ "<leader>g", group = "Git", icon = "󰊢" },
 	{ "<leader>gi", group = "GitHub issues", icon = "󰌚" },
-	{ "<leader>gp", group = "GitHub PRs", icon = "󰓁" },
 	{ "<leader>h", group = "Help", icon = "󰋗" },
 	{ "<leader>l", group = "LSP", icon = "󰅩" },
 	{ "<leader>lc", group = "Call Hierarchy", icon = "󰘦" },
 	{ "<leader>m", group = "Markdown", icon = "󰉫" },
 	{ "<leader>o", group = "Obsidian", icon = "󱞁" },
-	{ "<leader>p", group = "Persistence", icon = "󰆓" },
 	{ "<leader>q", group = "Quarto", icon = "󰠮" },
 	{ "<leader>r", group = "References", icon = "󰒋" },
 	{ "<leader>rb", desc = "BibTeX citations" },

@@ -1,101 +1,5 @@
 ---| Functions --------------------------------------------
 
--- Session management helpers using core session commands
-local session_dir = vim.fn.stdpath("state") .. "/sessions"
-
-local function ensure_session_dir()
-	if vim.fn.isdirectory(session_dir) == 0 then
-		vim.fn.mkdir(session_dir, "p")
-	end
-end
-
-local function normalize_session_name(name)
-	local normalized = (name or "last"):gsub("%.vim$", "")
-	normalized = normalized:gsub("%s+", "_")
-	normalized = normalized:gsub("[^%w%._%-]", "")
-	if normalized == "" then
-		normalized = "last"
-	end
-	return normalized
-end
-
-local function session_path(name)
-	ensure_session_dir()
-	local normalized = normalize_session_name(name)
-	return session_dir .. "/" .. normalized .. ".vim"
-end
-
-local function session_save(name, opts)
-	opts = opts or {}
-	local target = session_path(name)
-	local ok, err = pcall(vim.cmd, "mksession! " .. vim.fn.fnameescape(target))
-	if not ok then
-		if not opts.silent then
-			vim.notify("Session save failed: " .. err, vim.log.levels.ERROR)
-		end
-		return
-	end
-	if not opts.silent then
-		vim.notify("Session saved to " .. target, vim.log.levels.INFO)
-	end
-	return target
-end
-
-local function session_load(name, opts)
-	opts = opts or {}
-	local target = session_path(name)
-	if vim.fn.filereadable(target) == 0 then
-		if not opts.silent then
-			vim.notify("Session not found: " .. target, vim.log.levels.WARN)
-		end
-		return
-	end
-	local ok, err = pcall(vim.cmd, "source " .. vim.fn.fnameescape(target))
-	if not ok then
-		if not opts.silent then
-			vim.notify("Session load failed: " .. err, vim.log.levels.ERROR)
-		end
-		return
-	end
-	if not opts.silent then
-		vim.notify("Session loaded from " .. target, vim.log.levels.INFO)
-	end
-end
-
-local function session_list()
-	ensure_session_dir()
-	local files = vim.fn.readdir(session_dir, function(file)
-		return file:sub(-4) == ".vim"
-	end)
-	table.sort(files)
-	return files
-end
-
-function _G.Session_save_prompt()
-	local name = vim.fn.input("Save session name (last): ", "", "file")
-	if name == "" then
-		name = "last"
-	end
-	session_save(name)
-end
-
-function _G.Session_load_last()
-	session_load("last")
-end
-
-function _G.Session_select()
-	local files = session_list()
-	if vim.tbl_isempty(files) then
-		vim.notify("No sessions saved in " .. session_dir, vim.log.levels.INFO)
-		return
-	end
-	vim.ui.select(files, { prompt = "Select session" }, function(choice)
-		if choice then
-			session_load(choice)
-		end
-	end)
-end
-
 -- Notification helper function
 local function notify_toggle(enabled, feature)
 	local status = enabled and "enabled" or "disabled"
@@ -103,8 +7,8 @@ local function notify_toggle(enabled, feature)
 end
 
 -- Image Rendering Toggle Functionality
-Image_rendering_enabled = false -- Assume images are disabled by default -- Make global
-function _G.Toggle_image_rendering() -- Make global
+Image_rendering_enabled = false -- default: disabled
+function _G.Toggle_image_rendering()
 	if Image_rendering_enabled then
 		require("image").disable()
 	else
@@ -120,19 +24,15 @@ function _G.Toggle_r_language_server()
 	local is_running = #clients > 0
 
 	if is_running then
-		-- LSP is running for this buffer, stop all R clients for this buffer
 		for _, client in ipairs(clients) do
 			vim.lsp.stop_client(client.id)
 		end
 		notify_toggle(false, "R LSP")
 	else
-		-- LSP is not running for this buffer, start it
-		-- We need configuration details to start the client manually
 		local bufname = vim.api.nvim_buf_get_name(0)
 		local root_dir = vim.fs.root(bufname, "DESCRIPTION") or vim.fs.root(bufname, ".git") or vim.fs.dirname(bufname)
 
 		if root_dir then
-			-- Get capabilities from blink.cmp if available
 			local capabilities = nil
 			local blink_ok, blink = pcall(require, "blink.cmp")
 			if blink_ok then
@@ -144,7 +44,7 @@ function _G.Toggle_r_language_server()
 				cmd = { "R", "--slave", "-e", "languageserver::run()" },
 				root_dir = root_dir,
 				capabilities = capabilities,
-				filetypes = { "r" }, -- Ensure filetype association
+				filetypes = { "r" },
 			})
 			notify_toggle(true, "R LSP")
 		else
@@ -153,7 +53,6 @@ function _G.Toggle_r_language_server()
 	end
 end
 
--- Additional toggle functions with notifications
 function _G.Toggle_spell()
 	vim.opt.spell = not vim.opt.spell:get()
 	notify_toggle(vim.opt.spell:get(), "Spell checking")
@@ -164,7 +63,7 @@ function _G.Toggle_wrap()
 	notify_toggle(vim.opt.wrap:get(), "Word wrap")
 end
 
--- Buffer management function
+-- Buffer management
 function _G.Close_other_buffers()
 	local current_buf = vim.fn.bufnr("%")
 	local buffers = vim.api.nvim_list_bufs()
@@ -182,273 +81,10 @@ function _G.Close_other_buffers()
 	vim.notify(closed_count .. " buffer(s) closed", vim.log.levels.INFO)
 end
 
--- Workaround for vim.pack.update() sha_target error in Neovim 0.12 pre-release
--- The update function works but fails when displaying results due to a bug
--- This wrapper suppresses the error and shows a simple success message
--- function _G.Pack_update()
--- 	vim.notify("Updating plugins...", vim.log.levels.INFO)
---
--- 	local ok, err = pcall(vim.pack.update)
---
--- 	if not ok then
--- 		if string.match(tostring(err), "sha_target") then
--- 			vim.notify("Plugins updated successfully (display error suppressed)", vim.log.levels.INFO)
--- 			vim.notify("Check :messages or ~/.local/state/nvim/nvim-pack.log for details", vim.log.levels.INFO)
--- 		else
--- 			vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
--- 		end
--- 	else
--- 		vim.notify("Plugins updated successfully", vim.log.levels.INFO)
--- 	end
--- end
-
--- Git branch helper for statusline with caching
--- Cache structure: { [bufnr] = { branch = string, git_dir = string } }
-local git_branch_cache = {}
-
--- Update git branch asynchronously for current buffer
-local function update_git_branch_async()
-	local bufnr = vim.api.nvim_get_current_buf()
-
-	-- Get buffer path and verify it's a valid directory
-	local buf_path = vim.api.nvim_buf_get_name(bufnr)
-	if buf_path == "" or buf_path:match("^nvim-pack://") or buf_path:match("^[a-z]+://") then
-		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
-		return
-	end
-
-	local buf_dir = vim.fn.fnamemodify(buf_path, ":h")
-	if not buf_dir or buf_dir == "" or vim.fn.isdirectory(buf_dir) == 0 then
-		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
-		return
-	end
-
-	-- Check if we're in a git repository by looking for .git directory
-	local git_dir = vim.fn.finddir(".git", buf_dir .. ";")
-	if git_dir == "" then
-		git_branch_cache[bufnr] = { branch = "", git_dir = "" }
-		return
-	end
-
-	-- Store git_dir to detect directory changes
-	if not git_branch_cache[bufnr] then
-		git_branch_cache[bufnr] = { branch = "", git_dir = git_dir }
-	else
-		git_branch_cache[bufnr].git_dir = git_dir
-	end
-
-	-- Get current branch asynchronously using vim.system (Neovim 0.12+)
-	vim.system({ "git", "branch", "--show-current" }, {
-		text = true,
-		cwd = buf_dir,
-	}, function(result)
-		-- Callback runs asynchronously
-		if result.code == 0 and result.stdout then
-			local branch = vim.trim(result.stdout)
-			if branch ~= "" then
-				git_branch_cache[bufnr] = {
-					branch = " " .. branch .. " ",
-					git_dir = git_dir,
-				}
-			else
-				git_branch_cache[bufnr] = { branch = "", git_dir = git_dir }
-			end
-			-- Trigger statusline redraw
-			vim.schedule(function()
-				vim.cmd("redrawstatus")
-			end)
-		end
-	end)
-end
-
--- Get git branch from cache (non-blocking)
-function _G.Get_git_branch()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local cached = git_branch_cache[bufnr]
-
-	if cached then
-		return cached.branch or ""
-	end
-
-	-- Cache miss - trigger async update and return empty for now
-	update_git_branch_async()
-	return ""
-end
-
--- Expose update function globally for autocommands
-function _G.Update_git_branch_cache()
-	update_git_branch_async()
-end
-
--- Get full mode name for statusline
-function _G.Get_mode_name()
-	local mode_map = {
-		n = "NORMAL",
-		i = "INSERT",
-		v = "VISUAL",
-		V = "V-LINE",
-		["\22"] = "V-BLOCK", -- Ctrl-V
-		c = "COMMAND",
-		s = "SELECT",
-		S = "S-LINE",
-		["\19"] = "S-BLOCK", -- Ctrl-S
-		R = "REPLACE",
-		r = "REPLACE",
-		["!"] = "SHELL",
-		t = "TERMINAL",
-	}
-	local current_mode = vim.fn.mode()
-	return mode_map[current_mode] or current_mode:upper()
-end
-
--- Search count helper for statusline with caching
--- Cache structure: { [bufnr] = { count = string, pattern = string, hlsearch = boolean } }
-local search_count_cache = {}
-
--- Debouncing variables
-local last_update_time = 0
-local last_cursor_pos = nil
-local DEBOUNCE_DELAY = 50 -- ms between updates
-
--- Update search count asynchronously for current buffer
-local function update_search_count_async()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local current_time = vim.loop.hrtime() / 1000000 -- Convert to milliseconds
-
-	-- Check if search highlighting is active
-	local hlsearch = vim.o.hlsearch
-	if not hlsearch then
-		search_count_cache[bufnr] = { count = "", pattern = "", hlsearch = false }
-		return
-	end
-
-	-- Get current search pattern
-	local pattern = vim.fn.getreg("/")
-	if pattern == "" then
-		search_count_cache[bufnr] = { count = "", pattern = "", hlsearch = false }
-		return
-	end
-
-	-- Get current cursor position
-	local current_cursor = { vim.fn.line("."), vim.fn.col(".") }
-	local cursor_str = string.format("%d,%d", current_cursor[1], current_cursor[2])
-
-	-- Debouncing: only update if enough time has passed or cursor moved significantly
-	if current_time - last_update_time < DEBOUNCE_DELAY then
-		if last_cursor_pos and cursor_str == last_cursor_pos then
-			return -- Skip update for same position within debounce window
-		end
-	end
-
-	-- Update tracking variables
-	last_update_time = current_time
-	last_cursor_pos = cursor_str
-
-	-- Get search count with error handling
-	local ok, result = pcall(vim.fn.searchcount, {
-		maxcount = 9999, -- Set high limit to get most results
-		timeout = 100, -- Quick timeout to avoid blocking
-	})
-
-	if ok and result and result.total and result.total > 0 then
-		local current = result.current or 0
-		local total = result.total or 0
-		local new_count = string.format(" %d/%d ", current, total)
-
-		-- Only update if count actually changed (to avoid unnecessary redraws)
-		local cached = search_count_cache[bufnr]
-		if not cached or cached.count ~= new_count or cached.pattern ~= pattern or cached.hlsearch ~= hlsearch then
-			search_count_cache[bufnr] = {
-				count = new_count,
-				pattern = pattern,
-				hlsearch = hlsearch,
-			}
-			-- Trigger statusline redraw only when count changes
-			vim.schedule(function()
-				vim.cmd("redrawstatus")
-			end)
-		end
-	else
-		-- No matches or error - clear display
-		local cached = search_count_cache[bufnr]
-		if not cached or cached.count ~= "" then
-			search_count_cache[bufnr] = {
-				count = "",
-				pattern = pattern,
-				hlsearch = hlsearch,
-			}
-			vim.schedule(function()
-				vim.cmd("redrawstatus")
-			end)
-		end
-	end
-end
-
-function _G.Get_filename()
-	local buftype = vim.bo.buftype
-	if buftype == "terminal" then
-		return " terminal"
-	end
-	if buftype == "help" then
-		return " " .. vim.fn.expand("%:t:r")
-	end
-	local path = vim.fn.expand("%:~:.")
-	if path == "" then
-		return "[No Name]"
-	end
-	return " " .. path .. " "
-end
-
--- Get `llama_status` status
-function _G.Get_llama_status()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local cached = llama_status_cache[bufnr]
-	if not cached then
-		local status = vim.fn.llama_status()
-		llama_status_cache[bufnr] = status
-		return status
-	end
-	return cached
-end
-
--- Get search count from cache (non-blocking)
-function _G.Get_search_count()
-	local bufnr = vim.api.nvim_get_current_buf()
-
-	-- Always check hlsearch state and search pattern first
-	if not vim.o.hlsearch then
-		-- Clear cache when hlsearch is disabled
-		search_count_cache[bufnr] = nil
-		return ""
-	end
-
-	-- Check if search pattern exists
-	local pattern = vim.fn.getreg("/")
-	if pattern == "" then
-		search_count_cache[bufnr] = nil
-		return ""
-	end
-
-	local cached = search_count_cache[bufnr]
-	if cached and cached.hlsearch and cached.pattern == pattern then
-		return cached.count or ""
-	end
-
-	-- Cache miss - trigger async update and return empty for now
-	update_search_count_async()
-	return ""
-end
-
--- Expose update function globally for autocommands
-function _G.Update_search_count_cache()
-	update_search_count_async()
-end
-
 ---============================================================
 ---| PLUGIN MANAGEMENT FUNCTIONS
 ---============================================================
 
--- Update state tracking
 function _G.Save_last_check_date()
 	local state_file = vim.fn.stdpath("state") .. "/plugins_last_check"
 	local date = os.date("%Y-%m-%d")
@@ -478,22 +114,18 @@ function _G.Should_check_for_updates()
 	return days_passed >= 7
 end
 
--- Check for available updates
 -- Get local tag for a plugin (returns nil if no tag)
 local function get_local_tag(plugin_path)
 	if not plugin_path or vim.fn.isdirectory(plugin_path) == 0 then
 		return nil
 	end
-
 	local result = vim.system(
 		{ "git", "-C", plugin_path, "describe", "--tags", "--abbrev=0", "--exact-match" },
 		{ text = true }
-	)
-		:wait()
-
+	):wait()
 	if result.code == 0 and result.stdout then
 		local tag = vim.trim(result.stdout)
-		return tag:gsub("%^%{%}%$", "") -- Strip annotated tag suffix {}
+		return tag:gsub("%^%{%}%$", "")
 	end
 	return nil
 end
@@ -503,11 +135,7 @@ local function parse_semver(version_str)
 	if not version_str or version_str == "" then
 		return nil
 	end
-
-	-- Strip leading 'v' if present
 	version_str = version_str:gsub("^v", "")
-
-	-- Extract major.minor.patch
 	local major, minor, patch = version_str:match("^(%d+)%.?(%d*)%.?(%d*)")
 	if major then
 		return {
@@ -524,12 +152,9 @@ local function get_update_type(local_ver, remote_ver)
 	if not local_ver or not remote_ver then
 		return "uncategorized"
 	end
-
-	-- Try to parse as semver if they look like versions
 	if local_ver:match("^v?%d+%.?%d*%.?%d*") and remote_ver:match("^v?%d+%.?%d*%.?%d*") then
 		local local_parsed = parse_semver(local_ver)
 		local remote_parsed = parse_semver(remote_ver)
-
 		if local_parsed and remote_parsed then
 			if remote_parsed.major > local_parsed.major then
 				return "major"
@@ -540,12 +165,10 @@ local function get_update_type(local_ver, remote_ver)
 			end
 		end
 	end
-
-	-- Can't determine update type
 	return "uncategorized"
 end
 
--- Format version for display (tags get full version, commits get 7 chars)
+-- Format version for display
 local function format_version(version, is_tag)
 	if is_tag and version then
 		return version:gsub("^v", "")
@@ -562,21 +185,16 @@ function _G.Pack_check_updates()
 
 	for _, plugin in ipairs(plugins) do
 		if plugin.path and plugin.spec and plugin.spec.src then
-			-- Get local tag if available
 			local local_tag = get_local_tag(plugin.path)
 			local local_version = local_tag or plugin.rev:sub(1, 8)
-
-			-- Get latest remote rev asynchronously
 			local repo_url = plugin.spec.src
 			local name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t")
 
-			-- Try to get latest tag or commit from remote
 			vim.system({ "git", "ls-remote", "--tags", "--heads", repo_url }, { text = true }, function(result)
 				if result.code == 0 and result.stdout then
 					local latest_ref = nil
 					local latest_tag = nil
 
-					-- Find latest tag (looks like refs/tags/vX.X.X)
 					for line in result.stdout:gmatch("[^\r\n]+") do
 						if line:match("^%-?%w+%s+refs/tags/") then
 							local ref_name = line:match("refs/tags/(.+)")
@@ -589,38 +207,29 @@ function _G.Pack_check_updates()
 						end
 					end
 
-					-- Strip {} from annotated tags
 					if latest_tag then
 						latest_tag = latest_tag:gsub("%^%{%}%$", "")
 					end
 
-					-- Only proceed if we found a remote reference
 					if latest_ref then
-						-- Check if update is available
 						local has_update = false
-
 						if local_tag then
-							-- If we have a local tag, compare with remote tag
 							has_update = (not latest_tag) or (local_tag ~= latest_tag)
 						else
-							-- If no local tag, compare commits
 							has_update = (plugin.rev ~= latest_ref)
 						end
 
 						if has_update then
 							local local_display_ver = local_tag or local_version:sub(1, 7)
 							local remote_display_ver = latest_tag or latest_ref:sub(1, 7)
-							local local_is_tag = local_tag ~= nil
-							local remote_is_tag = latest_tag ~= nil
-
 							local update_type = get_update_type(local_display_ver, remote_display_ver)
 
 							table.insert(updatable, {
 								name = name,
 								local_version = local_display_ver,
 								remote_version = remote_display_ver,
-								local_is_tag = local_is_tag,
-								remote_is_tag = remote_is_tag,
+								local_is_tag = local_tag ~= nil,
+								remote_is_tag = latest_tag ~= nil,
 								update_type = update_type,
 							})
 						end
@@ -630,84 +239,37 @@ function _G.Pack_check_updates()
 		end
 	end
 
-	-- Wait for async calls to complete, then display results
 	vim.defer_fn(function()
 		if #updatable > 0 then
-			-- Group updates by type
-			local grouped = {
-				major = {},
-				minor = {},
-				patch = {},
-				uncategorized = {},
-			}
-
+			local grouped = { major = {}, minor = {}, patch = {}, uncategorized = {} }
 			for _, p in ipairs(updatable) do
-				if grouped[p.update_type] then
-					table.insert(grouped[p.update_type], p)
-				else
-					table.insert(grouped.uncategorized, p)
-				end
+				table.insert(grouped[p.update_type] or grouped.uncategorized, p)
 			end
-
-			-- Sort each group alphabetically
 			for _, group in pairs(grouped) do
 				table.sort(group, function(a, b)
 					return a.name < b.name
 				end)
 			end
 
-			-- Build message
 			local msg = string.format("%d plugin(s) have updates available:\n", #updatable)
-
-			-- Display Major updates
-			if #grouped.major > 0 then
-				msg = msg .. "\nMajor updates:"
-				for _, p in ipairs(grouped.major) do
-					local local_fmt = format_version(p.local_version, p.local_is_tag)
-					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
-					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
+			local order = { "major", "minor", "patch", "uncategorized" }
+			local labels = { major = "Major", minor = "Minor", patch = "Patch", uncategorized = "Version changes" }
+			local first = true
+			for _, key in ipairs(order) do
+				local group = grouped[key]
+				if #group > 0 then
+					if not first then
+						msg = msg .. "\n"
+					end
+					first = false
+					msg = msg .. "\n" .. labels[key] .. " updates:"
+					for _, p in ipairs(group) do
+						local lf = format_version(p.local_version, p.local_is_tag)
+						local rf = format_version(p.remote_version, p.remote_is_tag)
+						msg = msg .. string.format("\n  • %-30s %s → %s", p.name, lf, rf)
+					end
 				end
 			end
-
-			-- Display Minor updates
-			if #grouped.minor > 0 then
-				if #grouped.major > 0 then
-					msg = msg .. "\n"
-				end
-				msg = msg .. "\nMinor updates:"
-				for _, p in ipairs(grouped.minor) do
-					local local_fmt = format_version(p.local_version, p.local_is_tag)
-					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
-					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
-				end
-			end
-
-			-- Display Patch updates
-			if #grouped.patch > 0 then
-				if #grouped.major > 0 or #grouped.minor > 0 then
-					msg = msg .. "\n"
-				end
-				msg = msg .. "\nPatch updates:"
-				for _, p in ipairs(grouped.patch) do
-					local local_fmt = format_version(p.local_version, p.local_is_tag)
-					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
-					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
-				end
-			end
-
-			-- Display Uncategorized updates
-			if #grouped.uncategorized > 0 then
-				if #grouped.major > 0 or #grouped.minor > 0 or #grouped.patch > 0 then
-					msg = msg .. "\n"
-				end
-				msg = msg .. "\nVersion changes (uncategorized):"
-				for _, p in ipairs(grouped.uncategorized) do
-					local local_fmt = format_version(p.local_version, p.local_is_tag)
-					local remote_fmt = format_version(p.remote_version, p.remote_is_tag)
-					msg = msg .. string.format("\n  • %-30s %s → %s", p.name, local_fmt, remote_fmt)
-				end
-			end
-
 			vim.notify(msg, vim.log.levels.INFO)
 		else
 			vim.notify("All plugins are up to date.", vim.log.levels.INFO)
@@ -717,18 +279,10 @@ function _G.Pack_check_updates()
 	return updatable
 end
 
--- Update all plugins
 function _G.Pack_update_all(force)
-	if force then
-		vim.notify("Force updating all plugins...", vim.log.levels.INFO)
-	else
-		vim.notify("Updating all plugins...", vim.log.levels.INFO)
-	end
-
+	vim.notify((force and "Force updating" or "Updating") .. " all plugins...", vim.log.levels.INFO)
 	_G.Save_last_check_date()
-
 	local ok, err = pcall(vim.pack.update)
-
 	if ok then
 		vim.notify("Plugins updated successfully!", vim.log.levels.INFO)
 	else
@@ -736,48 +290,36 @@ function _G.Pack_update_all(force)
 	end
 end
 
--- Update specific plugin
 function _G.Pack_update_plugin(plugin_path)
 	if not plugin_path or not vim.fn.isdirectory(plugin_path) then
 		vim.notify("Invalid plugin path: " .. tostring(plugin_path), vim.log.levels.ERROR)
 		return
 	end
-
 	local plugin_name = vim.fn.fnamemodify(plugin_path, ":t")
 	vim.notify("Updating plugin: " .. plugin_name, vim.log.levels.INFO)
-
 	vim.system({ "git", "-C", plugin_path, "pull", "--ff-only" }, { text = true }, function(result)
-		if result.code == 0 then
-			vim.schedule(function()
+		vim.schedule(function()
+			if result.code == 0 then
 				vim.notify("Plugin " .. plugin_name .. " updated successfully!", vim.log.levels.INFO)
-			end)
-		else
-			vim.schedule(function()
-				vim.notify(
-					"Failed to update " .. plugin_name .. ": " .. (result.stderr or "Unknown error"),
-					vim.log.levels.ERROR
-				)
-			end)
-		end
+			else
+				vim.notify("Failed to update " .. plugin_name .. ": " .. (result.stderr or "Unknown error"), vim.log.levels.ERROR)
+			end
+		end)
 	end)
 end
 
--- Update specific plugin via picker
 function _G.Pack_update_picker()
 	local plugins = vim.pack.get()
 	local plugin_list = {}
-
 	for _, plugin in ipairs(plugins) do
 		table.insert(plugin_list, {
 			text = string.format("%-30s | %s", plugin.spec.name, plugin.rev:sub(1, 8)),
 			plugin = plugin,
 		})
 	end
-
 	table.sort(plugin_list, function(a, b)
 		return a.plugin.spec.name < b.plugin.spec.name
 	end)
-
 	vim.ui.select(plugin_list, {
 		prompt = "Select plugin to update",
 		format_item = function(item)
@@ -790,34 +332,27 @@ function _G.Pack_update_picker()
 	end)
 end
 
--- Clean unused plugins
 function _G.Pack_clean()
 	vim.notify("Checking for unused plugins...", vim.log.levels.INFO)
-
 	local plugins = vim.pack.get()
 	local active_plugins = {}
 	for _, plugin in ipairs(plugins) do
 		active_plugins[vim.fn.fnamemodify(plugin.path, ":t")] = true
 	end
-
 	local pack_dir = vim.fn.stdpath("data") .. "/site/pack/core"
 	local cleaned = 0
-
 	for _, pack_subdir in ipairs({ "start", "opt" }) do
 		local dir = pack_dir .. "/" .. pack_subdir
 		if vim.fn.isdirectory(dir) == 1 then
-			local plugin_dirs = vim.fn.readdir(dir)
-			for _, plugin_dir in ipairs(plugin_dirs) do
+			for _, plugin_dir in ipairs(vim.fn.readdir(dir)) do
 				if not active_plugins[plugin_dir] then
-					local full_path = dir .. "/" .. plugin_dir
-					vim.fn.delete(full_path, "rf")
+					vim.fn.delete(dir .. "/" .. plugin_dir, "rf")
 					cleaned = cleaned + 1
 					vim.notify("Removed: " .. plugin_dir, vim.log.levels.INFO)
 				end
 			end
 		end
 	end
-
 	if cleaned == 0 then
 		vim.notify("No unused plugins found.", vim.log.levels.INFO)
 	else
@@ -825,33 +360,25 @@ function _G.Pack_clean()
 	end
 end
 
--- Sync (install + update + clean)
 function _G.Pack_sync()
-	vim.notify("Syncing plugins (install + update + clean)...", vim.log.levels.INFO)
+	vim.notify("Syncing plugins (update + clean)...", vim.log.levels.INFO)
 	_G.Pack_update_all(false)
-	vim.defer_fn(function()
-		_G.Pack_clean()
-	end, 1000)
+	vim.defer_fn(_G.Pack_clean, 1000)
 end
 
--- Show plugin status
 function _G.Pack_status()
 	local plugins = vim.pack.get()
 	local status_list = {}
-
 	for _, plugin in ipairs(plugins) do
 		local active_status = plugin.active and "active" or "lazy"
-		local text = string.format("%-30s | %-6s | %s", plugin.spec.name, active_status, plugin.rev:sub(1, 8))
 		table.insert(status_list, {
-			text = text,
+			text = string.format("%-30s | %-6s | %s", plugin.spec.name, active_status, plugin.rev:sub(1, 8)),
 			plugin = plugin,
 		})
 	end
-
 	table.sort(status_list, function(a, b)
 		return a.plugin.spec.name < b.plugin.spec.name
 	end)
-
 	vim.ui.select(status_list, {
 		prompt = "Plugin Status",
 		format_item = function(item)
@@ -859,15 +386,10 @@ function _G.Pack_status()
 		end,
 	}, function(selected)
 		if selected then
-			local plugin = selected.plugin
+			local p = selected.plugin
 			vim.notify(
-				string.format(
-					"Plugin: %s\nStatus: %s\nPath: %s\nRevision: %s",
-					plugin.spec.name,
-					plugin.active and "active" or "lazy",
-					plugin.path,
-					plugin.rev
-				),
+				string.format("Plugin: %s\nStatus: %s\nPath: %s\nRevision: %s",
+					p.spec.name, p.active and "active" or "lazy", p.path, p.rev),
 				vim.log.levels.INFO
 			)
 		end

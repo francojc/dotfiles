@@ -5,9 +5,6 @@ local g = vim.g
 g.mapleader = " "
 g.maplocalleader = " "
 
--- Load Copilot helper functions
-require("copilot-helpers")
-
 -- map() function -----
 local function map(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
@@ -63,15 +60,6 @@ map("n", "N", "Nzzzv", { desc = "Previous search result" })
 -- Paste without overwriting register
 map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
--- Plugin keymaps ----------------
-g.copilot_no_tab_map = true -- Disable default tab mapping
-map("i", "<C-d>", "<Plug>(copilot-accept-word)", { desc = "Accept word" })
-map("i", "<C-f>", "<Plug>(copilot-accept-line)", { desc = "Accept line" })
-map("i", "<C-g>", "copilot#Accept('\\<Cr>')", { expr = true, replace_keycodes = false, desc = "Accept suggestion" })
-map("i", "<C-n>", "<Plug>(copilot-next)", { desc = "Next suggestion" })
-map("i", "<C-p>", "<Plug>(copilot-previous)", { desc = "Previous suggestion" })
-map("i", "<C-e>", "<Plug>(copilot-dismiss)", { desc = "Dismiss suggestion" })
-
 -- Buffers --------------------------
 -- Buffer navigation (native commands)
 map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
@@ -90,37 +78,6 @@ map(
 )
 map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (current line)" })
 map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
-
--- AI Assistant (CopilotChat) -----------------------------
-map("n", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" })
-map("v", "<leader>aa", "<Cmd>CopilotChatToggle<Cr>", { desc = "AI Chat toggle" })
-map("n", "<leader>ax", "<Cmd>CopilotChatClose<Cr>", { desc = "AI Chat close" })
-map("n", "<leader>aR", "<Cmd>CopilotChatReset<Cr>", { desc = "AI Chat reset" })
-
-map("n", "<leader>as", "<Cmd>CopilotChatStop<Cr>", { desc = "AI Chat stop" })
-map("n", "<leader>ap", "<Cmd>CopilotChatPrompts<Cr>", { desc = "AI Chat prompts" })
-map("n", "<leader>am", "<Cmd>CopilotChatModels<Cr>", { desc = "AI Chat models" })
-
--- Context-specific sends (token-efficient)
-map("v", "<leader>av", ":CopilotChat #selection ", { desc = "AI Chat with selection" })
-map("n", "<leader>al", ":CopilotChat #selection ", { desc = "AI Chat with current line" })
-map("n", "<leader>ab", ":CopilotChat #buffer:active ", { desc = "AI Chat with active buffer" })
-map("n", "<leader>ag", ":CopilotChat #gitdiff:staged ", { desc = "AI Chat with git diff" })
-map("n", "<leader>aq", ":CopilotChat #quickfix ", { desc = "AI Chat with quickfix" })
-map("n", "<leader>aw", ":CopilotChat #diagnostics ", { desc = "AI Chat with diagnostics" })
-
--- Quick prompts with context (visual mode)
-map("v", "<leader>aE", ":CopilotChat #selection Explain this code<CR>", { desc = "AI Explain selection" })
-map("v", "<leader>aF", ":CopilotChat #selection Fix any issues<CR>", { desc = "AI Fix selection" })
-map("v", "<leader>aO", ":CopilotChat #selection Optimize this<CR>", { desc = "AI Optimize selection" })
-
--- Model preset management
-map("n", "<leader>aM", "<Cmd>lua Copilot_toggle_model_preset()<Cr>", { desc = "AI Model presets" })
-map("n", "<leader>aM1", "<Cmd>lua Copilot_set_model_preset('academic')<Cr>", { desc = "AI Academic mode" })
-map("n", "<leader>aM2", "<Cmd>lua Copilot_set_model_preset('creative')<Cr>", { desc = "AI Creative mode" })
-map("n", "<leader>aM3", "<Cmd>lua Copilot_set_model_preset('precise')<Cr>", { desc = "AI Precise mode" })
-map("n", "<leader>aM4", "<Cmd>lua Copilot_set_model_preset('research')<Cr>", { desc = "AI Research mode" })
-map("n", "<leader>aM5", "<Cmd>lua Copilot_set_model_preset('code')<Cr>", { desc = "AI Code mode" })
 
 -- Diagnostics/Debug -----------------------------
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
@@ -143,9 +100,6 @@ map("n", "<leader>fc", "<Cmd>lua Snacks.picker.resume()<Cr>", { desc = "Resume p
 -- Gitsigns
 map("n", "<leader>gn", "<Cmd>Gitsigns nav_hunk next<Cr>", { desc = "Next git hunk" })
 map("n", "<leader>gp", "<Cmd>Gitsigns nav_hunk previous<Cr>", { desc = "Previous git hunk" })
--- Lazygit
-map("n", "<leader>gg", "<Cmd>LazyGit<Cr>", { desc = "Lazygit" })
-map("n", "<leader>gl", "<Cmd>LazyGitLog<Cr>", { desc = "Lazygit log" })
 -- Diffview
 map("n", "<leader>gd", "<Cmd>DiffviewOpen<Cr>", { desc = "Diff view (uncommitted)" })
 map("n", "<leader>gh", "<Cmd>DiffviewFileHistory %<Cr>", { desc = "File history (current)" })
@@ -333,11 +287,6 @@ map("n", "<leader>oy", "<Cmd>Obsidian yesterday<Cr>", { desc = "Yesterday's dail
 map("v", "<leader>oL", "<Cmd>Obsidian link_new<Cr>", { desc = "Create new note from selection" })
 map("v", "<leader>oe", "<Cmd>Obsidian extract_note<Cr>", { desc = "Extract selection to new note" })
 map("v", "<leader>ol", "<Cmd>Obsidian link<Cr>", { desc = "Link selection to note" })
-
---- Session persistence -------------------------------
-map("n", "<leader>ps", "<Cmd>lua Session_save_prompt()<Cr>", { desc = "Save session" })
-map("n", "<leader>pl", "<Cmd>lua Session_load_last()<Cr>", { desc = "Load last session" })
-map("n", "<leader>pS", "<Cmd>lua Session_select()<Cr>", { desc = "Select session" })
 
 -- Quarto -----------------------------------
 map("n", "<C-CR>", "<Cmd>QuartoSend<Cr>", { desc = "Quarto: send cell" })
