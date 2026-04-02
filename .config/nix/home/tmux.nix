@@ -28,9 +28,10 @@
       set -ga terminal-overrides ",*256col*:Tc"
       set -ga terminal-overrides ",*256col*:RGB"
 
-      # Colored and curly underline support
-      set -ga terminal-overrides ",*:Smulx=\E[4::%p1%dm"
-      set -ga terminal-overrides ",*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m"
+      # Underscore style and color (undercurl + underline color) via terminal-features
+      # Uses the terminal's own terminfo (xterm-ghostty has correct Smulx/Setulc)
+      # Avoids broken \E escape handling in terminal-overrides
+      set -ga terminal-features ",xterm*:usstyle"
 
       # Pane base index
       setw -g pane-base-index 1
