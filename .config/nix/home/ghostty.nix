@@ -46,6 +46,9 @@
       macos-icon-frame = plastic
       macos-icon-ghost-color = ${theme.ghostty.cursor_color}
 
+      # Width calculation - use legacy (wcswidth) to match tmux's expectations
+      grapheme-width-method = legacy
+
       # Theme
       theme = ${theme.ghostty.theme}
 
