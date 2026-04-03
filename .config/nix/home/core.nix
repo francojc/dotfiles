@@ -36,7 +36,6 @@
     air-formatter # R LSP/Formatter
     alejandra # Nix formatter
     mdformat # Markdown formatter
-    nodePackages.prettier # General purpose formatter
     ruff # Python linter/formatter
     shfmt # Shell formatter
     stylua # Lua formatter
@@ -67,7 +66,7 @@
     go # Go programming language
     home-manager # Essential for this config
     lazygit # TUI Git client
-    neovim # Stable Neovim 0.11+
+    neovim # Stable Neovim 0.12+
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
     nurl # Nix URL fetcher helper

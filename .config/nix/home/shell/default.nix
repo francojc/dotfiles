@@ -45,7 +45,6 @@
         export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
         export PATH="${config.home.homeDirectory}/.cargo/bin:$PATH" # rust cargo
         export PATH="${config.home.homeDirectory}/go/bin:$PATH" # go
-        export PATH="${config.home.homeDirectory}/.local/share/bob/nvim-bin:$PATH" # bob-managed neovim
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
@@ -150,9 +149,6 @@
       # Other ZSH plugins
       plugins = [];
       shellAliases = {
-        # Neovim - stable nix version (0.11.x) using full path to avoid bob's nvim
-        nv = "NVIM_APPNAME=nvim-nix /etc/profiles/per-user/${username}/bin/nvim";
-
         # Flatpak aliases (similar to brew workflow)
         flat = "flatpak";
         flat-install = "flatpak install flathub";
