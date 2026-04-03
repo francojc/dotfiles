@@ -14,12 +14,12 @@ A streamlined, modular Neovim configuration built on Neovim 0.12+ native functio
 
 ### Language Support
 
-- **R**: Language server with code execution via Slime
-- **Python**: Pyright LSP with Ruff formatting
 - **Bash**: Full LSP support with shfmt formatting
 - **Go**: gopls and golangci-lint-langserver
 - **Lua**: Native Neovim configuration language support
 - **Nix**: NixOS/Home Manager integration with nixd LSP
+- **Python**: Pyright LSP with Ruff formatting
+- **R**: Language server with code execution via Slime
 - **Typst**: tinymist LSP with preview
 - **YAML**: Quarto schema validation
 
@@ -34,7 +34,7 @@ A streamlined, modular Neovim configuration built on Neovim 0.12+ native functio
 
 ### Configuration Stats
 
-- **Total Plugins**: 44 (including 11 colorschemes)
+- **Total Plugins**: 44 (including 11 colorschemes: managed by Nix (themes.nix)
 - **Plugin Manager**: Neovim 0.12+ native vim.pack
 - **Philosophy**: Native Vim functionality preferred over plugin dependencies
 
@@ -409,13 +409,6 @@ Quarto and R integration settings can be found in `lua/plugins-config.lua`. Obsi
 - Check startup time: `nvim --startuptime startup.log`
 - All plugins are eager-loaded for immediate availability
 - Disable unused plugins in `lua/plugins-pack.lua`
-
-### Session Management
-
-- Sessions auto-save on exit to `~/.local/state/nvim/sessions/last.vim`
-- Manual save: `<leader>ps`
-- Load last session: `<leader>pl`
-- Select session: `<leader>pS`
 
 ### Spell Language
 

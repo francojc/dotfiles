@@ -1,6 +1,5 @@
 ---| Options ----------------------------------------------
 --- Locals -----
-local a = vim.api
 local opt = vim.opt
 
 -- Globals -----
@@ -8,15 +7,14 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 -- Locals -----
 -- Autowrite
 opt.autowrite = true
-opt.autowriteall = true -- tmp: to avoid losing work with 0.12 pre-release bugs
+opt.autowriteall = true
 -- Clipboard
-opt.clipboard:append("unnamedplus") --- Use system clipboard
+opt.clipboard:append("unnamedplus")
 -- Completions
-opt.completeopt = "menu,menuone,noselect,nearest" -- Completion options (nearest = distance-based sorting in 0.12+)
-opt.path:append("**") -- Search subdirectories
--- Neovim 0.12+ native completion UI enhancements
-opt.pumborder = "rounded" -- Popup menu border (0.12+)
-opt.pummaxwidth = 60 -- Maximum width for popup menu (0.12+)
+opt.completeopt = "menu,menuone,noselect,nearest"
+opt.path:append("**")
+opt.pumborder = "rounded"
+opt.pummaxwidth = 60
 -- Window
 opt.splitbelow = true
 opt.splitright = true
@@ -65,7 +63,7 @@ opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
-opt.autoread = true -- auto read files when changed outside of Neovim
+opt.autoread = true
 opt.foldmethod = "indent"
 opt.foldlevel = 99 -- start with all folds open
 opt.laststatus = 2 -- show statusline always (managed by lualine)
