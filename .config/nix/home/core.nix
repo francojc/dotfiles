@@ -16,7 +16,7 @@
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
     # Core dependencies
-    tree-sitter # Parser generator, using `auto_install` in nvim-treesitter for language parsers
+    tree-sitter # Parser generator
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP

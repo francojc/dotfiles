@@ -185,7 +185,6 @@ vim.api.nvim_create_user_command("PackUpdatePlugin", function(opts)
 end, { desc = "Update specific plugin", nargs = "?" })
 
 -- Clean unused plugins
--- TODO: For some reason plugins are not removed 2026-03-13 09:25
 vim.api.nvim_create_user_command("PackClean", function()
 	_G.Pack_clean()
 end, { desc = "Clean unused plugins" })

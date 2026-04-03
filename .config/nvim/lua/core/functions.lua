@@ -339,6 +339,8 @@ function _G.Pack_clean()
 	for _, plugin in ipairs(plugins) do
 		active_plugins[vim.fn.fnamemodify(plugin.path, ":t")] = true
 	end
+
+	-- Remove orphaned directories
 	local pack_dir = vim.fn.stdpath("data") .. "/site/pack/core"
 	local cleaned = 0
 	for _, pack_subdir in ipairs({ "start", "opt" }) do
@@ -353,6 +355,29 @@ function _G.Pack_clean()
 			end
 		end
 	end
+
+	-- Remove orphaned entries from the lockfile
+	local lockfile = vim.fn.stdpath("config") .. "/nvim-pack-lock.json"
+	if vim.fn.filereadable(lockfile) == 1 then
+		local ok, data = pcall(vim.fn.json_decode, table.concat(vim.fn.readfile(lockfile), "\n"))
+		if ok and data and data.plugins then
+			local lock_cleaned = 0
+			for name, _ in pairs(data.plugins) do
+				if not active_plugins[name] then
+					data.plugins[name] = nil
+					lock_cleaned = lock_cleaned + 1
+				end
+			end
+			if lock_cleaned > 0 then
+				vim.fn.writefile(
+					vim.split(vim.fn.json_encode(data), "\n"),
+					lockfile
+				)
+				cleaned = cleaned + lock_cleaned
+			end
+		end
+	end
+
 	if cleaned == 0 then
 		vim.notify("No unused plugins found.", vim.log.levels.INFO)
 	else
