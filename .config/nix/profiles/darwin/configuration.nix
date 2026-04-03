@@ -23,7 +23,7 @@
 
   # Skip nix-darwin option reference manual to avoid builtins.toFile warning
   # (nixpkgs store path in options.json lacks proper context)
-  documentation.enable = false;
+  documentation.enable = true;
 
   system.stateVersion = 5; # Keep consistent with nix-darwin requirements
 

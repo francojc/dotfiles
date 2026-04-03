@@ -689,22 +689,19 @@ require("todo-comments").setup({})
 ---==========================================================
 
 ---| Treesitter ----------------------------------
-require("nvim-treesitter.configs").setup({
-	auto_install = true, -- Automatically install missing parsers
-	highlight = {
-		enable = true,
-		additional_vim_regex_highlighting = false,
-	},
-	incremental_selection = {
-		enable = true,
-		keymaps = {
-			init_selection = "<C-Space>",
-			node_incremental = "<C-Space>",
-			scope_incremental = false,
-			node_decremental = "<Backspace>",
-		},
-	},
-	indent = { enable = false },
+-- New rewrite API (nvim-treesitter main, Neovim 0.12+):
+-- setup() only accepts install_dir; highlighting is enabled
+-- per-filetype via vim.treesitter.start() in a FileType autocmd.
+require("nvim-treesitter").setup()
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = "personal",
+	callback = function()
+		local ok = pcall(vim.treesitter.start)
+		if not ok then
+			vim.bo.syntax = "on" -- fallback to regex syntax
+		end
+	end,
 })
 
 ---| Otter (embedded language support) ----------------------------------
