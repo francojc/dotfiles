@@ -25,7 +25,7 @@ Check the user's message for a file path or focus area to emphasize.
 
 Run these in parallel:
 
-- Read the project CLAUDE.md for goals, scope, and constraints.
+- Read the project AGENTS.md for goals, scope, and constraints.
 - `find . -path '*/specs/*.md'` and read planning, progress, and
   implementation documents.
 - Use `todo` (action: `list`) to retrieve any open tasks from prior
@@ -55,7 +55,7 @@ feasibility:
 - **Field norms:** Methods, frameworks, and contribution types the target
   venue expects.
 
-If these are not documented in specs or CLAUDE.md, use the `question` tool to
+If these are not documented in specs or AGENTS.md, use the `question` tool to
 fill gaps. Keep it focused — no more than 4 questions at a time.
 
 ## Step 3 — Search for additional evidence where needed

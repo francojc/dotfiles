@@ -1,6 +1,6 @@
 ---
 name: todo-resolver
-description: Systematically finds and resolves TODO comments in files. Use when TODO comments are present in a repo/project and need to be addressed — either after writing new code/content with TODOs, when finishing incomplete sections, or to clear technical debt. Follows a structured analyze-plan-implement workflow respecting project conventions from CLAUDE.md or similar config files.
+description: Systematically finds and resolves TODO comments in files. Use when TODO comments are present in a repo/project and need to be addressed — either after writing new code/content with TODOs, when finishing incomplete sections, or to clear technical debt. Follows a structured analyze-plan-implement workflow respecting project conventions from AGENTS.md or similar config files.
 ---
 
 # TODO Resolver
@@ -34,7 +34,7 @@ For every TODO found, determine:
 
 Before proposing solutions:
 - Read surrounding code to understand implementation context
-- Check for project conventions in `CLAUDE.md`, `.pi/`, or similar config files
+- Check for project conventions in `AGENTS.md`, `.pi/`, or similar config files
 - Identify related code sections that might be affected
 - Understand the business logic or domain requirements
 - Note any security, performance, or accessibility considerations

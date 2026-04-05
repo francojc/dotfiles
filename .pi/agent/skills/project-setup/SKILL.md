@@ -1,6 +1,6 @@
 ---
 name: project-setup
-description: Scaffold a complete project structure for research, teaching, grant, service, or development projects. Creates CLAUDE.md, specs/ (planning, progress, implementation), logs/, flake.nix, and .gitignore from context-aware templates. Requires a project description document (README.md or equivalent) before running. Supports fork-contribution mode for development projects.
+description: Scaffold a complete project structure for research, teaching, grant, service, or development projects. Creates AGENTS.md, specs/ (planning, progress, implementation), logs/, flake.nix, and .gitignore from context-aware templates. Requires a project description document (README.md or equivalent) before running. Supports fork-contribution mode for development projects.
 allowed-tools: Read, Grep, Edit, Bash, Write, question
 ---
 
@@ -62,7 +62,7 @@ With options: "Yes, proceed" / "No, let me adjust the description first"
 
 When the type is `development`, check for fork indicators:
 
-- Is there an existing root `CLAUDE.md`?
+- Is there an existing root `AGENTS.md`?
 - Does a git remote named `upstream` exist (`git remote get-url upstream`)?
 - Does the `origin` remote URL not contain the user's usual identity?
 
@@ -126,16 +126,16 @@ For each file:
 
 Do not overwrite existing specs files without asking first.
 
-## Step 6 — Generate CLAUDE.md
+## Step 6 — Generate AGENTS.md
 
-**Standard mode:** Write to `CLAUDE.md` in the repo root.
+**Standard mode:** Write to `AGENTS.md` in the repo root.
 
-**Fork mode:** Write to `.claude/CLAUDE.md` (create `.claude/` if needed).
-A fork-mode CLAUDE.md is additive — it documents the contribution scope,
+**Fork mode:** Write to `.pi/agent/AGENTS.md` (create `.pi/agent/` if needed).
+A fork-mode AGENTS.md is additive — it documents the contribution scope,
 build/test commands, and development workflow. It does not duplicate any
-upstream root CLAUDE.md content.
+upstream root AGENTS.md content.
 
-### CLAUDE.md sections by project type
+### AGENTS.md sections by project type
 
 **Research:**
 - Research question(s) and significance
@@ -272,7 +272,7 @@ Report what was created:
 ✓ specs/progress.md — generated with project context
 ✓ specs/implementation.md — generated with project context
 ✓ logs/ — ready for weekly reviews and session logs
-✓ CLAUDE.md — project-specific content generated
+✓ AGENTS.md — project-specific content generated
 ✓ flake.nix — development environment template
 ✓ .gitignore — project-specific patterns added
 ```
@@ -280,11 +280,11 @@ Report what was created:
 Or for fork mode:
 ```
 ✓ specs/ and logs/ created (excluded via .git/info/exclude)
-✓ .claude/CLAUDE.md — fork contribution context generated
+✓ .pi/agent/AGENTS.md — fork contribution context generated
 ✓ No changes to .gitignore or flake.nix
 ✓ git status remains clean
 ```
 
 Remind the user to review and customize the generated files, particularly
-the specs/ content and CLAUDE.md, which are starting points rather than
+the specs/ content and AGENTS.md, which are starting points rather than
 finished documents.

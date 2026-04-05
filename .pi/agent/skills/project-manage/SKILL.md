@@ -28,7 +28,7 @@ user to clarify using the `question` tool.
 
 Check that the current directory looks like a managed project:
 
-- Is there a `CLAUDE.md` or `.claude/CLAUDE.md`?
+- Is there an `AGENTS.md` or `.pi/agent/AGENTS.md`?
 - Is there a `specs/` directory?
 - Is there a `.git` directory?
 
@@ -53,7 +53,7 @@ project directory and suggest running `project-setup` first.
    - Revise `specs/planning.md` if objectives or timelines have shifted
    - Ensure consistency across all documentation files
 
-3. **CLAUDE.md maintenance**
+3. **AGENTS.md maintenance**
    - Verify the project description still accurately reflects current work
    - Update methodology sections based on implementation changes
    - Refresh timeline and milestone information
@@ -137,7 +137,7 @@ If no issue is specified, use the `question` tool to ask for one.
 
 3. **Solution implementation**
    - Implement necessary changes to address the issue
-   - Follow project coding standards from CLAUDE.md
+   - Follow project coding standards from AGENTS.md
    - Add or update tests to verify the fix
    - Update documentation if needed
 
@@ -172,7 +172,7 @@ With options:
 ### Creation process
 
 1. **Project analysis**
-   - Read existing README.md and CLAUDE.md
+   - Read existing README.md and AGENTS.md
    - Determine project type (research / teaching / grant / service / development)
    - Identify documentation gaps
 

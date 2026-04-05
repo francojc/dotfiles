@@ -43,7 +43,7 @@ Read the target document in full before proceeding.
 
 In parallel:
 
-- Read the project CLAUDE.md for goals, scope, and structure.
+- Read the project AGENTS.md for goals, scope, and structure.
 - `find . -path '*/specs/*.md'` and read any planning documents that frame
   the work (research questions, hypotheses, methodology decisions).
 - Note the document type (proposal, lit review, methods, results,

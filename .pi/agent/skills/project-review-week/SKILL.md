@@ -16,7 +16,7 @@ Run these in parallel:
 - `git log --oneline --since="7 days ago"` for recent commits.
 - `git shortlog --since="7 days ago" -s` for contributor activity.
 - `git diff --stat HEAD~20..HEAD` (or appropriate range) for change scope.
-- Read the project CLAUDE.md for goals and structure context.
+- Read the project AGENTS.md for goals and structure context.
 - `find . -path '*/specs/*.md'` and read progress-tracking files.
 - `find . -path '*/logs/*.md'` to find existing weekly reviews and session logs.
 

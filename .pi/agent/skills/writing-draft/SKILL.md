@@ -23,10 +23,10 @@ If not provided, use the `question` tool to ask:
 
 Run these in parallel:
 
-- Read the project CLAUDE.md for file structure, goals, and constraints.
+- Read the project AGENTS.md for file structure, goals, and constraints.
 - `find . -path '*/specs/*.md'` and read planning and progress documents.
 - Use Bash to locate data files, analysis scripts, or output directories
-  mentioned in CLAUDE.md.
+  mentioned in AGENTS.md.
 - `find . -name '*.md' -path '*/drafts/*' -o -name '*.md' -path '*/writing/*'`
   to search for any existing drafts or outlines related to the section.
 

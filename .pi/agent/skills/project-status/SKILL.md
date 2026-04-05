@@ -13,11 +13,11 @@ progress against goals, and current state.
 
 Run these in parallel:
 
-- Read CLAUDE.md (check repo root and `.claude/` directory).
+- Read AGENTS.md (check repo root and `.pi/agent/` directory).
 - Read `specs/planning.md` to understand original objectives and timeline.
 - Read `specs/progress.md` for latest status updates.
 - `find . -path '*/logs/*.md'` and read recent weekly reviews and session logs.
-- Identify project type from CLAUDE.md or specs/ structure
+- Identify project type from AGENTS.md or specs/ structure
   (research / teaching / grant / service / development).
 
 ## Step 2 — Git activity analysis
@@ -66,7 +66,7 @@ Output a structured status report:
 PROJECT STATUS REPORT
 Generated: [current date]
 
-Project: [name from CLAUDE.md or directory]
+Project: [name from AGENTS.md or directory]
 Type: [research / teaching / grant / service / development]
 Phase: [current project phase]
 

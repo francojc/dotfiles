@@ -32,7 +32,7 @@ but still read the full design for context.
 
 In all cases, gather context by running these in parallel:
 
-- Read the project CLAUDE.md for goals, scope, and constraints.
+- Read the project AGENTS.md for goals, scope, and constraints.
 - `find . -path '*/specs/*.md'` and read planning, progress, and
   implementation documents.
 - Search for research question statements, hypotheses, methodology
