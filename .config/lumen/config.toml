@@ -3,13 +3,13 @@ sources = [
     "semantic_scholar",
 ]
 max_results = 10
-format = "table"
+format = "json"
 cache_dir = "/Users/francojc/.cache/lumen"
 no_cache = false
 no_pager = false
 no_color = false
 
 [credentials]
-semantic_scholar_api_key = "existing-key"
-zotero_user_id = "existing-uid"
-zotero_api_key = "existing-zot"
+semantic_scholar_api_key = ""
+zotero_user_id = ""
+zotero_api_key = ""
