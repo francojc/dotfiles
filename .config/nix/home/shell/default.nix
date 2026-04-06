@@ -65,6 +65,9 @@
         export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
         # Set for GUI apps (like Claude Desktop with MCP servers)
         launchctl setenv UV_PYTHON "/etc/profiles/per-user/${username}/bin/python3" 2>/dev/null || true
+        # --- PyPi PUBLISH --
+        export UV_PUBLISH_USER="Reveal1111"
+        export UV_PUBLISH_TOKEN=$PYPI_PUBLISH_TOKEN
 
         # --- MARKER-PDF C LIBRARY PATHS ---
         # WeasyPrint/Cairo library paths for marker-pdf DOCX/PPTX support
