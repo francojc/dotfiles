@@ -7,6 +7,13 @@
 #
 # Dependencies: curl, chafa, fzf, mpv, yt-dlp
 #
+# Bookmarking (Ctrl-b) saves the selected video to a Karakeep instance.
+# Requires two environment variables:
+#   KARAKEEP_API_ADDR  – base URL of your Karakeep instance
+#                        (e.g. https://notes.example.com)
+#   KARAKEEP_API_KEY   – API key generated in Karakeep under
+#                        Settings → API keys
+#
 
 set -uo pipefail
 
