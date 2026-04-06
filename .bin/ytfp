@@ -32,7 +32,7 @@ _search() {
 
 _preview() {
   local thumb_url="$1" title="$2" channel="$3" views="$4"
-  curl --silent "$thumb_url" | chafa --size=x14 --clear
+  curl --silent "$thumb_url" | chafa --size=x22 --clear
   printf '%-10s %s\n' 'Title:'   "$title"
   printf '%-10s %s\n' 'Channel:' "$channel"
   printf '%-10s %s\n' 'Views:'   \
@@ -41,6 +41,22 @@ _preview() {
       while(n>=1000){s=","sprintf("%03d",n%1000)s; n=int(n/1000)}
       print n s
     }')"
+}
+
+_bookmark() {
+  local url="$1" title="$2"
+  local api_addr="${KARAKEEP_API_ADDR:-}"
+  local api_key="${KARAKEEP_API_KEY:-}"
+  if [[ -z "$api_addr" || -z "$api_key" ]]; then
+    printf '%s: KARAKEEP_API_ADDR or KARAKEEP_API_KEY not set\n' "$PROG" >&2
+    return 1
+  fi
+  curl --silent --fail -X POST \
+    "$api_addr/api/v1/bookmarks" \
+    -H "Authorization: Bearer $api_key" \
+    -H "Content-Type: application/json" \
+    -d "{\"type\":\"link\",\"url\":\"$url\",\"title\":\"$title\"}" \
+    > /dev/null
 }
 
 _copy() {
@@ -60,9 +76,10 @@ _copy() {
 # ── Self-dispatch (fzf calls this script with a leading __ flag) ──────────────
 
 case "${1:-}" in
-  __search)  _search  "${2:-}";           exit ;;
-  __preview) _preview "$2" "$3" "$4" "$5"; exit ;;
-  __copy)    _copy    "$2";               exit ;;
+  __search)   _search   "${2:-}";            exit ;;
+  __preview)  _preview  "$2" "$3" "$4" "$5"; exit ;;
+  __bookmark) _bookmark "$2" "$3";           exit ;;
+  __copy)     _copy     "$2";               exit ;;
 esac
 
 # ── Help / version ────────────────────────────────────────────────────────────
@@ -84,6 +101,7 @@ Options:
 Key bindings (inside fzf):
   Enter              Play selected video (fullscreen)
   Ctrl-a             Play selected video audio only
+  Ctrl-b             Bookmark video to Karakeep
   Ctrl-y             Copy video URL to clipboard
   Esc / Ctrl-c       Quit
 
@@ -146,10 +164,10 @@ else
   MODE_LABEL=" "
 fi
 
-HEADER="${MODE_LABEL}Enter:play  Ctrl-a:audio  Ctrl-y:copy-url  Esc:quit"
+HEADER="${MODE_LABEL}Enter:play  Ctrl-a:audio  Ctrl-b:bookmark  Ctrl-y:copy-url  Esc:quit"
 
 fzf \
-  --preview-window down \
+  --preview-window down:65% \
   --layout reverse \
   --disabled \
   --with-shell 'bash -c' \
@@ -163,4 +181,5 @@ fzf \
   --preview "\"$SELF\" __preview {1} {2} {3} {4}" \
   --bind "enter:execute-silent($PLAY_CMD)" \
   --bind "ctrl-a:execute-silent(mpv --no-video {5})" \
+  --bind "ctrl-b:execute-silent(\"$SELF\" __bookmark {5} {2})" \
   --bind "ctrl-y:execute-silent(\"$SELF\" __copy {5})+abort"

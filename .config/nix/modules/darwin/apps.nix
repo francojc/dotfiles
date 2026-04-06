@@ -50,6 +50,7 @@
       "gdk-pixbuf" # image loading library
       "libffi" # Foreign Function Interface library
       "weasyprint" # HTML to PDF converter
+      "yt-dlp" # YouTube video downloader
     ];
 
     casks = [
