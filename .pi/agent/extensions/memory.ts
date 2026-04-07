@@ -241,16 +241,14 @@ export default function (pi: ExtensionAPI) {
     }
   };
 
-  // Setup system prompt with memory context
-  const setupMemoryContext = (cwd: string) => {
+  // Build memory context string for system prompt injection
+  const buildMemoryContext = (cwd: string): string => {
     const episodes = loadEpisodicMemories();
     const recentProjects = [...new Set(episodes.slice(0, 3).map((e) => e.cwd))].filter(Boolean);
 
     const semanticContent = loadProjectSemantic(cwd);
-    const episodeContent = formatEpisodesForPrompt(episodes);
     const workingContent = formatWorkingMemory(workingMemory);
 
-    // Build memory section
     const memorySections: string[] = [];
 
     memorySections.push(`## Working Memory (Current Session)\n${workingContent}`);
@@ -266,8 +264,7 @@ export default function (pi: ExtensionAPI) {
       memorySections.push(`## Project Knowledge\n${semanticContent}`);
     }
 
-    // Add to system prompt
-    pi.systemPrompt.addSection(memorySections.join("\n\n"));
+    return memorySections.join("\n\n");
   };
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -276,7 +273,6 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_start", async (event, ctx) => {
     reconstructState(ctx);
-    setupMemoryContext(ctx.cwd);
 
     // Show greeting on startup (not on switch/fork/reload)
     if (event.reason === "startup") {
@@ -289,6 +285,16 @@ export default function (pi: ExtensionAPI) {
           "info",
         );
       }
+    }
+  });
+
+  // Inject memory context into system prompt before each agent turn
+  pi.on("before_agent_start", async (event, ctx) => {
+    const memoryContext = buildMemoryContext(ctx.cwd);
+    if (memoryContext) {
+      return {
+        systemPrompt: event.systemPrompt + "\n\n# Memory Context\n\n" + memoryContext,
+      };
     }
   });
 
@@ -466,10 +472,6 @@ export default function (pi: ExtensionAPI) {
       return {
         content: [
           { type: "text", text: `**Relevant Past Sessions:**\n\n${output}` },
-          {
-            type: "thinking",
-            thinking: `Recalled ${results.length} relevant episodic memories matching "${params.query}"`,
-          },
         ],
       };
     },
