@@ -49,150 +49,216 @@ function parseSessionFile(path) {
 }
 
 /**
- * Generate a summary from session entries.
+ * Extract text content from a message entry.
+ */
+function extractText(entry) {
+  const content = entry.message?.content;
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .filter((c) => c.type === "text")
+      .map((c) => c.text)
+      .join(" ");
+  }
+  return "";
+}
+
+/**
+ * Generate a structured summary from session entries.
  *
- * This is a heuristic keyword-based summarizer. It scans user messages for
- * common action words and file references to build a brief description.
- * A proper LLM-based summarizer can replace this later.
+ * Uses a template approach anchored on the user's actual messages,
+ * supplemented by file paths from tool calls and keyword-based topics.
  */
 function generateSummary(entries) {
   // Collect user messages
   const userMessages = entries
     .filter((e) => e.type === "message" && e.message?.role === "user")
-    .map((e) => {
-      const content = e.message?.content;
-      if (typeof content === "string") return content;
-      if (Array.isArray(content)) {
-        return content
-          .filter((c) => c.type === "text")
-          .map((c) => c.text)
-          .join(" ");
-      }
-      return "";
-    })
+    .map(extractText)
     .filter(Boolean);
 
-  // Collect assistant messages for outcome detection
+  // Collect assistant messages
   const assistantMessages = entries
     .filter((e) => e.type === "message" && e.message?.role === "assistant")
-    .map((e) => {
-      const content = e.message?.content;
-      if (typeof content === "string") return content;
-      if (Array.isArray(content)) {
-        return content
-          .filter((c) => c.type === "text")
-          .map((c) => c.text)
-          .join(" ");
-      }
-      return "";
-    })
+    .map(extractText)
     .filter(Boolean);
 
-  // Collect tool names used
-  const toolsUsed = entries
+  // Collect tool calls with their arguments
+  const toolCalls = entries
     .filter((e) => e.type === "message" && e.message?.role === "assistant")
     .flatMap((e) => {
       const content = e.message?.content;
       if (!Array.isArray(content)) return [];
       return content
         .filter((c) => c.type === "tool_use")
-        .map((c) => c.name);
+        .map((c) => ({ name: c.name, input: c.input }));
     })
     .filter(Boolean);
 
-  const uniqueTools = [...new Set(toolsUsed)];
+  const uniqueTools = [...new Set(toolCalls.map((t) => t.name))];
 
   if (userMessages.length === 0) {
-    return { summary: "Empty session", topics: [], outcomes: [] };
+    return { summary: "Empty session", topics: [], outcomes: [], actionItems: [], context: "" };
   }
 
+  // ── Context: first user message (truncated) ──────────────────────────
+  const context = userMessages[0].substring(0, 300).trim();
+
+  // ── Files touched: extract from tool call arguments ──────────────────
+  const filesTouched = new Set();
+  for (const tc of toolCalls) {
+    const input = tc.input || {};
+    // Read, Edit, Write tools have a 'path' argument
+    if (input.path && typeof input.path === "string") {
+      filesTouched.add(input.path);
+    }
+  }
+  const fileList = [...filesTouched].map((f) => basename(f));
+  const uniqueFiles = [...new Set(fileList)].slice(0, 8);
+
+  // ── Keyword-based topics ─────────────────────────────────────────────
   const allUserText = userMessages.join(" ").toLowerCase();
   const topics = new Set();
-  const outcomes = new Set();
-  const actions = new Set();
 
-  // File mentions across all messages
-  const allText = [...userMessages, ...assistantMessages].join(" ");
-  const fileMatches = allText.match(/(?:\/[\w./-]+\.\w+)/g);
-  if (fileMatches) {
-    const uniqueFiles = [...new Set(fileMatches.map((f) => basename(f)))].slice(0, 5);
-    uniqueFiles.forEach((f) => topics.add(`file:${f}`));
-  }
-
-  // Keyword extraction
   const patterns = [
-    { re: /\b(refactor|restructur)/i, topic: "refactoring", action: "refactored" },
-    { re: /\b(fix|bug|issue|error|broken)/i, topic: "debugging", action: "fixed issues" },
-    { re: /\b(add|creat|new|implement|build)/i, topic: null, action: "created new content" },
-    { re: /\b(test|spec|assert)/i, topic: "testing", action: "worked on tests" },
-    { re: /\b(config|setup|install)/i, topic: "configuration", action: null },
-    { re: /\b(dotfiles?|nix|darwin|home-manager)/i, topic: "dotfiles/nix", action: null },
-    { re: /\b(spa\d|spanish|class|course|teach)/i, topic: "teaching", action: null },
-    { re: /\b(review|edit|revis|rewrit)/i, topic: null, action: "reviewed/revised" },
-    { re: /\b(deploy|publish|release)/i, topic: "deployment", action: "deployed" },
-    { re: /\b(document|readme|docs)/i, topic: "documentation", action: null },
-    { re: /\b(style|theme|css|color)/i, topic: "styling", action: null },
-    { re: /\b(memory|episod|semantic|recall)/i, topic: "memory system", action: null },
+    { re: /\b(refactor|restructur)/i, topic: "refactoring" },
+    { re: /\b(fix|bug|issue|error|broken|debug)/i, topic: "debugging" },
+    { re: /\b(test|spec|assert)/i, topic: "testing" },
+    { re: /\b(config|setup|install)/i, topic: "configuration" },
+    { re: /\b(dotfiles?|nix|darwin|home-manager|flake)/i, topic: "dotfiles/nix" },
+    { re: /\b(spa\d|spanish|class|course|teach)/i, topic: "teaching" },
+    { re: /\b(deploy|publish|release)/i, topic: "deployment" },
+    { re: /\b(document|readme|docs)/i, topic: "documentation" },
+    { re: /\b(style|theme|css|color)/i, topic: "styling" },
+    { re: /\b(memory|episod|semantic|recall)/i, topic: "memory system" },
+    { re: /\b(review|audit|assess)/i, topic: "review" },
+    { re: /\b(plan|design|architect)/i, topic: "planning" },
+    { re: /\b(script|automat|cron|systemd)/i, topic: "automation" },
+    { re: /\b(git|commit|branch|merge|pr)/i, topic: "git" },
+    { re: /\b(network|dns|ping|ssh|vpn|proxy)/i, topic: "networking" },
   ];
 
-  for (const { re, topic, action } of patterns) {
+  for (const { re, topic } of patterns) {
     if (re.test(allUserText)) {
-      if (topic) topics.add(topic);
-      if (action) actions.add(action);
+      topics.add(topic);
     }
   }
 
-  // Tool-based outcomes
+  // ── Outcomes: what tools did ─────────────────────────────────────────
+  const outcomes = [];
   if (uniqueTools.includes("Write") || uniqueTools.includes("write")) {
-    outcomes.add("wrote files");
+    outcomes.push("wrote files");
   }
   if (uniqueTools.includes("Edit") || uniqueTools.includes("edit")) {
-    outcomes.add("edited files");
+    outcomes.push("edited files");
   }
   if (uniqueTools.includes("Bash") || uniqueTools.includes("bash")) {
-    outcomes.add("ran commands");
+    outcomes.push("ran commands");
   }
 
-  // Build summary
-  const topicList = [...topics].slice(0, 4);
-  const actionList = [...actions].slice(0, 2);
-  const outcomeList = [...outcomes].slice(0, 3);
+  // ── Action items: scan for TODO-like forward references ──────────────
+  const actionItems = extractActionItems(userMessages, assistantMessages);
 
-  let summary = "";
-  if (actionList.length > 0) {
-    summary = actionList.join(", ");
-    if (topicList.length > 0) {
-      summary += ` involving ${topicList.join(", ")}`;
-    }
-  } else if (topicList.length > 0) {
-    summary = `Worked on ${topicList.join(", ")}`;
-  } else {
-    summary = `Session with ${userMessages.length} message(s)`;
+  // ── Build summary ───────────────────────────────────────────────────
+  const topicList = [...topics].slice(0, 5);
+
+  // Start with the user's opening request (truncated)
+  let summary = context.length > 200
+    ? context.substring(0, 200) + "..."
+    : context;
+
+  // Append file and tool context
+  const parts = [];
+  if (uniqueFiles.length > 0) {
+    parts.push(`Files: ${uniqueFiles.join(", ")}`);
   }
-
-  if (outcomeList.length > 0) {
-    summary += ` (${outcomeList.join(", ")})`;
+  if (outcomes.length > 0) {
+    parts.push(`Actions: ${outcomes.join(", ")}`);
   }
-
-  // Capitalize first letter
-  summary = summary.charAt(0).toUpperCase() + summary.slice(1);
+  if (parts.length > 0) {
+    summary += ` [${parts.join(". ")}]`;
+  }
 
   return {
     summary,
-    topics: [...topicList],
-    outcomes: [...outcomeList],
+    topics: topicList,
+    outcomes,
+    actionItems,
+    context,
   };
+}
+
+/**
+ * Extract action items from session messages.
+ *
+ * Scans for TODO-like phrases, forward-looking statements, and
+ * explicit next-step language in both user and assistant messages.
+ */
+function extractActionItems(userMessages, assistantMessages) {
+  const items = new Set();
+  const allMessages = [...userMessages, ...assistantMessages];
+
+  const actionPatterns = [
+    // Explicit TODOs
+    /TODO[:\s]+(.{10,80})/gi,
+    // Forward-looking statements
+    /(?:next time|later|still need to|should also|need to|will need to|don't forget to|make sure to)\s+(.{10,80})/gi,
+    // "We should" / "I should" patterns
+    /(?:we|i) should\s+(.{10,80})/gi,
+    // "Remains to" / "left to do"
+    /(?:remains to|left to|pending|outstanding)[:\s]+(.{10,80})/gi,
+  ];
+
+  for (const msg of allMessages) {
+    for (const pattern of actionPatterns) {
+      pattern.lastIndex = 0;
+      let match;
+      while ((match = pattern.exec(msg)) !== null) {
+        const item = match[1].trim().replace(/[.;,]$/, "");
+        if (item.length >= 10) {
+          items.add(item);
+        }
+      }
+    }
+  }
+
+  return [...items].slice(0, 5);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Consolidation
 // ─────────────────────────────────────────────────────────────────────────────
 
+const MAX_CONSOLIDATED_ENTRIES = 30;
+
+/**
+ * Derive a meaningful project name from a cwd path.
+ *
+ * Uses the last 2 significant path segments (skipping the home directory),
+ * e.g. "/Users/francojc/.dotfiles/.config/nix" → "dotfiles/nix"
+ */
+function projectNameFromCwd(cwd) {
+  const home = homedir();
+  const relative = cwd.startsWith(home) ? cwd.slice(home.length) : cwd;
+  const segments = relative.split("/").filter(Boolean);
+  // Take last 2 segments, strip leading dots for readability
+  const meaningful = segments.slice(-2).map((s) => s.replace(/^\./, ""));
+  return meaningful.join("/") || "unknown";
+}
+
+/**
+ * Check if two episodes overlap significantly in topics.
+ */
+function topicsOverlap(existingTopics, newTopics) {
+  if (existingTopics.length === 0 || newTopics.length === 0) return false;
+  const shared = newTopics.filter((t) => existingTopics.includes(t));
+  return shared.length / Math.max(existingTopics.length, newTopics.length) >= 0.8;
+}
+
 function consolidateEpisodes(toConsolidate) {
   // Group by project directory
   const byProject = new Map();
   for (const ep of toConsolidate) {
-    const project = ep.cwd.split("/").pop() || "unknown";
+    const project = projectNameFromCwd(ep.cwd);
     if (!byProject.has(project)) {
       byProject.set(project, []);
     }
@@ -202,35 +268,66 @@ function consolidateEpisodes(toConsolidate) {
   ensureDir(join(SEMANTIC_DIR, "projects"));
 
   for (const [project, episodes] of byProject) {
-    const projectPath = join(SEMANTIC_DIR, "projects", `${project}.md`);
+    // Use sanitized filename (replace / with --)
+    const safeFilename = project.replace(/\//g, "--");
+    const projectPath = join(SEMANTIC_DIR, "projects", `${safeFilename}.md`);
 
-    // Load existing content (if any)
-    let existing = "";
+    // Load existing content and parse existing entries
+    let header = `# ${project}\n\n## Consolidated Sessions`;
+    let existingEntries = [];
+
     if (existsSync(projectPath)) {
-      existing = readFileSync(projectPath, "utf-8").trim();
+      const content = readFileSync(projectPath, "utf-8").trim();
+      // Extract the header (everything before the first ### entry)
+      const firstEntry = content.indexOf("### ");
+      if (firstEntry >= 0) {
+        header = content.substring(0, firstEntry).trim();
+        // Parse existing entries by splitting on ### boundaries
+        const entriesSection = content.substring(firstEntry);
+        existingEntries = entriesSection
+          .split(/(?=^### )/m)
+          .filter((e) => e.trim());
+      } else {
+        header = content;
+      }
     }
 
-    // Build new entries
-    const newEntries = episodes
-      .map(
-        (ep) =>
-          `### ${new Date(ep.timestamp).toLocaleDateString()}\n\n` +
-          `- ${ep.summary}\n` +
-          (ep.keyTopics.length ? `- Topics: ${ep.keyTopics.join(", ")}\n` : "") +
-          (ep.outcomes.length ? `- Outcomes: ${ep.outcomes.join(", ")}\n` : ""),
-      )
-      .join("\n");
+    // Build new entries, skipping if topics overlap >80% with existing
+    const newEntries = [];
+    for (const ep of episodes) {
+      // Check for dedup against existing entries (by topic overlap)
+      const isDuplicate = existingEntries.some((existing) => {
+        const topicMatch = existing.match(/- Topics: (.+)/);
+        if (!topicMatch) return false;
+        const existingTopics = topicMatch[1].split(", ").map((t) => t.trim());
+        return topicsOverlap(existingTopics, ep.keyTopics);
+      });
 
-    // If the file already has a "## Consolidated Sessions" section, append to it.
-    // Otherwise create the section.
-    if (existing.includes("## Consolidated Sessions")) {
-      writeFileSync(projectPath, `${existing}\n\n${newEntries}\n`);
-    } else if (existing) {
-      writeFileSync(projectPath, `${existing}\n\n## Consolidated Sessions\n\n${newEntries}\n`);
-    } else {
-      writeFileSync(projectPath, `# ${project}\n\n## Consolidated Sessions\n\n${newEntries}\n`);
+      if (isDuplicate) {
+        console.log(`Skipping duplicate entry for ${project}: ${ep.keyTopics.join(", ")}`);
+        continue;
+      }
+
+      let entry = `### ${new Date(ep.timestamp).toLocaleDateString()}\n\n`;
+      entry += `- ${ep.summary}\n`;
+      if (ep.keyTopics.length) entry += `- Topics: ${ep.keyTopics.join(", ")}\n`;
+      if (ep.outcomes.length) entry += `- Outcomes: ${ep.outcomes.join(", ")}\n`;
+      if (ep.actionItems && ep.actionItems.length) {
+        entry += `- Action items: ${ep.actionItems.join("; ")}\n`;
+      }
+      newEntries.push(entry);
     }
 
+    // Merge and enforce rolling window cap
+    const allEntries = [...existingEntries, ...newEntries];
+    const capped = allEntries.slice(-MAX_CONSOLIDATED_ENTRIES);
+
+    if (capped.length < allEntries.length) {
+      console.log(`Capped ${project}: dropped ${allEntries.length - capped.length} oldest entries`);
+    }
+
+    // Write the file
+    writeFileSync(projectPath, `${header}\n\n${capped.join("\n")}\n`);
     console.log(`Updated semantic memory: ${project}`);
   }
 
@@ -262,7 +359,7 @@ function processSessionEnd(sessionPath) {
   const timestamp = sessionEntry?.timestamp || new Date().toISOString();
 
   // Generate summary
-  const { summary, topics, outcomes } = generateSummary(entries);
+  const { summary, topics, outcomes, actionItems, context } = generateSummary(entries);
 
   // Skip trivially short sessions (e.g., accidental opens)
   const userMsgCount = entries.filter(
@@ -280,8 +377,9 @@ function processSessionEnd(sessionPath) {
     cwd,
     summary,
     keyTopics: topics,
-    actionItems: [],
+    actionItems,
     outcomes,
+    context,
   };
 
   ensureDir(EPISODES_DIR);

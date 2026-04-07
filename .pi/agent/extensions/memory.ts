@@ -13,8 +13,9 @@
 
 import { StringEnum } from "@mariozechner/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import { Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, openSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { homedir } from "os";
 import { spawn } from "child_process";
@@ -135,7 +136,11 @@ function loadAllEpisodicMemories(): EpisodicMemory[] {
 }
 
 function getProjectSemanticPath(cwd: string): string {
-  const projectName = cwd.split("/").pop() || "default";
+  const home = homedir();
+  const relative = cwd.startsWith(home) ? cwd.slice(home.length) : cwd;
+  const segments = relative.split("/").filter(Boolean);
+  const meaningful = segments.slice(-2).map((s) => s.replace(/^\./, ""));
+  const projectName = meaningful.join("--") || "default";
   return join(getSemanticDir(), "projects", `${projectName}.md`);
 }
 
@@ -306,9 +311,14 @@ export default function (pi: ExtensionAPI) {
     const processorPath = join(dirname(import.meta.url.replace("file://", "")), "..", "session-end-processor.mjs");
     if (!existsSync(processorPath)) return;
 
+    // Log stderr to a file so processor errors are visible
+    const logPath = join(MEMORY_DIR, "processor.log");
+    ensureDir(MEMORY_DIR);
+    const logFd = openSync(logPath, "a");
+
     const child = spawn("node", [processorPath, sessionFile], {
       detached: true,
-      stdio: "ignore",
+      stdio: ["ignore", logFd, logFd],
     });
     child.unref();
   });
@@ -396,12 +406,13 @@ export default function (pi: ExtensionAPI) {
 
     renderCall(args, theme, _context) {
       const icon = theme.fg("accent", "󰊠 ");
-      return `${icon}memory ${theme.fg("muted", args.action)}${args.content ? ` "${args.content.substring(0, 30)}${args.content.length > 30 ? "..." : ""}"` : ""}`;
+      const label = `${icon}memory ${theme.fg("muted", args.action)}${args.content ? ` "${args.content.substring(0, 30)}${args.content.length > 30 ? "..." : ""}"` : ""}`;
+      return new Text(label, 0, 0);
     },
 
     renderResult(result, _opts, theme, _context) {
       const text = result.content[0]?.type === "text" ? result.content[0].text : "";
-      return theme.fg("muted", text);
+      return new Text(theme.fg("muted", text), 0, 0);
     },
   });
 
@@ -442,7 +453,7 @@ export default function (pi: ExtensionAPI) {
       // Score by keyword matches
       const queryWords = params.query.toLowerCase().split(/\s+/);
       const scored = filtered.map((e) => {
-        const content = `${e.summary} ${e.keyTopics.join(" ")} ${e.outcomes.join(" ")}`.toLowerCase();
+        const content = `${e.summary} ${e.keyTopics.join(" ")} ${e.outcomes.join(" ")} ${(e as any).context || ""} ${(e as any).actionItems?.join(" ") || ""}`.toLowerCase();
         const score = queryWords.reduce((acc, word) => acc + (content.includes(word) ? 1 : 0), 0);
         return { episode: e, score };
       });
@@ -478,12 +489,12 @@ export default function (pi: ExtensionAPI) {
 
     renderCall(args, theme, _context) {
       const icon = theme.fg("accent", "󰪶 ");
-      return `${icon}recall "${args.query.substring(0, 30)}${args.query.length > 30 ? "..." : ""}"`;
+      return new Text(`${icon}recall "${args.query.substring(0, 30)}${args.query.length > 30 ? "..." : ""}"`, 0, 0);
     },
 
     renderResult(result, _opts, theme, _context) {
       const text = result.content[0]?.type === "text" ? result.content[0].text : "";
-      return theme.fg("muted", text.split("\n")[0] || "Recall results");
+      return new Text(theme.fg("muted", text.split("\n")[0] || "Recall results"), 0, 0);
     },
   });
 
@@ -500,11 +511,54 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.registerCommand("consolidate", {
-    description: "Manually trigger memory consolidation",
+    description: "Manually trigger memory consolidation for the current session",
     handler: async (_args, ctx) => {
-      // This would trigger the same logic that runs at session end
-      console.log("Memory consolidation triggered. Running background summary...");
-      console.log("Note: This runs automatically at session end via pi -p");
+      const sessionFile = ctx.sessionManager.getSessionFile();
+      if (!sessionFile) {
+        console.log("No session file (ephemeral session). Nothing to consolidate.");
+        return;
+      }
+
+      const processorPath = join(dirname(import.meta.url.replace("file://", "")), "..", "session-end-processor.mjs");
+      if (!existsSync(processorPath)) {
+        console.log("Error: session-end-processor.mjs not found.");
+        return;
+      }
+
+      console.log("Running memory processor...");
+      const logPath = join(MEMORY_DIR, "processor.log");
+      ensureDir(MEMORY_DIR);
+      const logFd = openSync(logPath, "a");
+
+      const child = spawn("node", [processorPath, sessionFile], {
+        detached: true,
+        stdio: ["ignore", logFd, logFd],
+      });
+      child.unref();
+      console.log("Consolidation started in background. Check ~/.pi/memory/processor.log for output.");
+    },
+  });
+
+  pi.registerCommand("memory-status", {
+    description: "Show memory system health: episode count, semantic files, recent log",
+    handler: async (_args, _ctx) => {
+      const episodes = loadAllEpisodicMemories();
+      const semanticDir = join(getSemanticDir(), "projects");
+      const semanticFiles = existsSync(semanticDir)
+        ? readdirSync(semanticDir).filter((f) => f.endsWith(".md"))
+        : [];
+      const logPath = join(MEMORY_DIR, "processor.log");
+      const logTail = existsSync(logPath)
+        ? readFileSync(logPath, "utf-8").trim().split("\n").slice(-5).join("\n")
+        : "(no log file)";
+
+      console.log(`Episodes in buffer: ${episodes.length} / ${EPISODE_LIMIT}`);
+      console.log(`Semantic project files: ${semanticFiles.length}`);
+      if (semanticFiles.length > 0) {
+        console.log(`  ${semanticFiles.map((f) => f.replace(".md", "").replace(/--/g, "/")).join(", ")}`);
+      }
+      console.log(`\nRecent processor log:`);
+      console.log(logTail);
     },
   });
 

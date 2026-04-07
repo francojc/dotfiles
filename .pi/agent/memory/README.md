@@ -5,114 +5,116 @@ A cross-session memory system for Pi modeled on human memory.
 ## Memory Types
 
 ### 1. Working Memory (Session-Scoped)
+
 - **Storage**: Tool result details (branch-aware)
 - **Scope**: Current session only
-- **Size**: Max 20 items
 - **Lifetime**: Session duration, forks inherit parent working memory
 
 **Commands:**
-- `/memory` - View current working memory
-- LLM tool: `memory_working({ action: "add|remove|clear|list", type?: "fact|goal|context", content?: string })`
+
+- `/memory` – View current working memory
+
+**LLM tool:**
+
+- `memory_working({ action: "add|remove|clear|list", type?: "fact|goal|context", content?: string })`
 
 ### 2. Episodic Memory (Rolling Buffer)
+
 - **Storage**: `~/.pi/memory/episodes/*.json`
-- **Scope**: Recent sessions (last 5)
-- **Lifetime**: Auto-consolidated to semantic memory when buffer is full
+- **Scope**: 5 most recent sessions
+- **Lifetime**: Oldest auto-consolidated to semantic memory when buffer exceeds 5
 - **Generation**: Automatic at session end via `session_shutdown` → `session-end-processor.mjs`
 
-**LLM Tool:**
+Each episode contains:
+
+- `summary` – The user's opening request plus files touched and tools used
+- `context` – First user message (up to 300 chars) for search matching
+- `keyTopics` – Keyword-extracted topics (debugging, configuration, etc.)
+- `actionItems` – Forward-looking statements extracted from conversation (TODOs, "next time", "still need to")
+- `outcomes` – Tool-based outcomes (wrote files, edited files, ran commands)
+
+**LLM tool:**
+
 - `memory_recall({ query: string, dateRange?: string, projectFilter?: string, limit?: number })`
 
 **Skill:**
-- `memory-recall` - Auto-triggered on keywords: "remember", "recall", "like with", "previous work", "similar to", etc.
+
+- `memory-recall` – Auto-triggered on keywords: "remember", "recall", "like with", "previous work", "similar to", etc.
 
 ### 3. Semantic Memory (Long-term)
-- **Storage**: `~/.pi/memory/semantic/*.md`
-- **Scope**: Project-specific and global knowledge
+
+- **Storage**: `~/.pi/memory/semantic/projects/*.md`
+- **Scope**: Project-specific consolidated knowledge
 - **Lifetime**: Persistent, self-organizing
-- **Update**: Automatic consolidation from episodic memories
+- **Update**: Automatic consolidation from episodic overflow
+- **Cap**: 30 entries per project file (rolling window, oldest dropped)
+- **Dedup**: Episodes with >80% topic overlap with existing entries are skipped
+
+Project names are derived from the last 2 path segments of the working directory (e.g., `/Users/you/.dotfiles/.config/nix` → `config/nix`, stored as `config--nix.md`).
 
 ## How It Works
 
 ### Session Start
-1. Reconstruct working memory from session history
-2. Show greeting with 2-3 recent projects
-3. Load project-specific semantic memory into system prompt
+
+1. Reconstruct working memory from session history (replays `memory_working` tool results)
+2. Show notification with 2-3 recent projects
+3. Load project-specific semantic memory based on cwd
 
 ### During Session
-- `memory_working` tool updates session context
+
+- `memory_working` tool updates session context (facts, goals, temporary context)
 - `memory_recall` tool searches past sessions on demand
 - `memory-recall` skill auto-triggers on recall keywords
+- Working memory + recent projects + project semantic knowledge injected into system prompt on every turn
 
 ### Session End (`session_shutdown`)
+
 1. `memory.ts` spawns `session-end-processor.mjs` as a detached background process
-2. Processor parses the session JSONL and generates an episodic summary
-3. If >5 episodic memories, oldest are consolidated into project semantic files
-4. Consolidated episode files are pruned
+2. Processor parses the session JSONL
+3. Generates a structured summary (first user message + files + tools + keyword topics + action items)
+4. Writes episodic JSON to `~/.pi/memory/episodes/`
+5. If >5 episodes, consolidates oldest to semantic project files (with dedup and rolling cap)
+6. Consolidated episode files are pruned
+7. Errors logged to `~/.pi/memory/processor.log`
 
 ## File Structure
 
 ```
 ~/.pi/memory/
-├── episodes/
-│   ├── 2026-04-06T16-34-44-751Z_7e7e5892.json  # Session summaries
-│   └── ...
-└── semantic/
-    ├── preferences.md    # User preferences
-    ├── themes.md         # Recurring topics
-    └── projects/
-        ├── dotfiles.md   # Project-specific knowledge
-        └── ...
+├── episodes/                          # Rolling buffer of 5 recent session summaries
+│   └── <session-id>.json
+├── semantic/
+│   └── projects/
+│       ├── config--nix.md             # Consolidated from .config/nix sessions
+│       ├── dotfiles--pi.md            # Consolidated from .dotfiles/.pi sessions
+│       └── ...
+└── processor.log                      # Error/output log from background processor
 ```
 
-## Configuration
+## Commands
 
-Currently hardcoded in the source files:
+| Command | Description |
+|---------|-------------|
+| `/memory` | Show current working memory state |
+| `/memory-status` | Show system health: episode count, semantic files, recent log |
+| `/consolidate` | Manually trigger consolidation for current session |
 
-| Setting | Value | Location |
-|---------|-------|----------|
-| Episode buffer size | 5 | `memory.ts`, `session-end-processor.mjs` |
-| Memory directory | `~/.pi/memory/` | Both files |
-| Recall keywords | see `SKILL.md` | `memory-recall` skill |
+## Troubleshooting
 
-## Manual Commands
+**No episodes appearing after sessions?**
 
-- `/memory` - Show working memory
-- `/consolidate` - Manually trigger consolidation
+1. Check `~/.pi/memory/processor.log` for errors
+2. Run `/memory-status` to see current state
+3. Manually test: `node ~/.pi/agent/session-end-processor.mjs <path-to-session.jsonl>`
 
-## Example Usage
+**Summaries are too generic?**
 
+The summarizer extracts the first user message, files from tool calls, and keyword topics. It does not use an LLM. Summaries are only as specific as the user's opening message.
+
+**Backfill past sessions:**
+
+```bash
+for f in $(find ~/.pi/agent/sessions -name "*.jsonl" -type f | sort); do
+  node ~/.pi/agent/session-end-processor.mjs "$f"
+done
 ```
-# Add to working memory
-[Tool: memory_working] action: add, type: goal, content: "Refactoring auth system"
-
-# Recall relevant past sessions
-[Tool: memory_recall] query: "React components", projectFilter: "dotfiles", limit: 2
-
-# Or trigger via natural language
-"Remember when we set up the nix config?"
-→ Triggers memory-recall skill → Loads relevant sessions
-```
-
-## File Layout
-
-```
-agent/
-├── extensions/
-│   └── memory.ts              # Extension: tools, events, system prompt
-├── session-end-processor.mjs  # Standalone: episodic generation + consolidation
-├── memory/
-│   ├── README.md              # This file
-│   └── test-memory.sh         # Smoke test
-└── skills/
-    └── memory-recall/
-        └── SKILL.md           # Auto-recall skill
-```
-
-## First Use
-
-1. Restart Pi (extension auto-loads from `agent/extensions/`)
-2. Working memory starts empty
-3. After first session ends, `session_shutdown` spawns the processor
-4. Processor writes an episodic JSON to `~/.pi/memory/episodes/`
-5. After 5 episodes, oldest are consolidated to `~/.pi/memory/semantic/projects/`
