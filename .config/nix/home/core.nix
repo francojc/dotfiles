@@ -8,9 +8,14 @@
 # Current UV tools:
 # - aider-chat    (AI code assistant)
 # - marker-pdf    (PDF/DOCX converter)
+# - mlx           ( )
 # - mlx-lm        (Apple MLX language models)
-# - zotero-mcp    (Zotero MCP server)
-#
+# - termaid       (Create mermaid diagrams in the terminal)
+# - pyzotero      (Zotero API)
+# - repoindex     (git repository index)
+# My tools (on PyPi) -------
+# - dauber        (Canvas management cli tool)
+# - orbitr        (Academic lit search and management)
 # Update: uv tool upgrade --all
 {pkgs, ...}: let
   # Define packages primarily used with or by Neovim
