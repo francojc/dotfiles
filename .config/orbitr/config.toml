@@ -1,0 +1,15 @@
+sources = [
+    "arxiv",
+    "semantic_scholar",
+]
+max_results = 10
+format = "detail"
+cache_dir = "/Users/francojc/.cache/orbitr"
+no_cache = false
+no_pager = false
+no_color = false
+
+[credentials]
+semantic_scholar_api_key = ""
+zotero_user_id = ""
+zotero_api_key = ""
