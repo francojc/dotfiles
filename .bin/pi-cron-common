@@ -5,7 +5,7 @@ source "${HOME}/.bin/common"
 
 readonly VAULT_DIR="${HOME}/Obsidian/Notes"
 readonly LOG_DIR="${VAULT_DIR}/.pi/logs"
-readonly PI_TIMEOUT="${PI_TIMEOUT:-600}"  # 10 min default
+readonly PI_TIMEOUT="${PI_TIMEOUT:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
 PI_PROVIDER="${PI_PROVIDER:-anthropic}"
