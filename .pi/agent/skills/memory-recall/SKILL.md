@@ -3,18 +3,8 @@ name: memory-recall
 description: |
   Triggered when user mentions recalling previous work, remembering past sessions,
   or asking about things done before. Automatically retrieves relevant episodic memories.
-triggers:
-  - keywords:
-      - remember
-      - recall
-      - like with
-      - previous work
-      - similar to
-      - we did before
-      - last time
-      - earlier
-      - before
-      - like when
+  Use when user input contains keywords like: remember, recall, previous work, similar to,
+  we did before, last time, earlier, like when we, etc.
 ---
 
 # Memory Recall Skill

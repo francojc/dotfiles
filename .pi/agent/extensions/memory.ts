@@ -41,9 +41,6 @@ interface EpisodicMemory {
   outcomes: string[];
 }
 
-interface MemoryState {
-  working: WorkingMemory;
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Configuration
@@ -54,15 +51,6 @@ const EPISODES_DIR = join(MEMORY_DIR, "episodes");
 const SEMANTIC_DIR = join(MEMORY_DIR, "semantic");
 const EPISODE_LIMIT = 5;
 
-const RECALL_KEYWORDS = [
-  "remember",
-  "recall",
-  "like with",
-  "previous work",
-  "similar to",
-  "we did before",
-  "last time",
-];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Utility Functions
@@ -93,20 +81,13 @@ function getSemanticDir(): string {
 function getEpisodicPaths(): string[] {
   const dir = getEpisodesDir();
   if (!existsSync(dir)) return [];
+  // Episode filenames contain ISO timestamps (e.g., 2026-04-06T13-59-13-132Z_uuid.json),
+  // so they sort lexicographically. Reverse sort for newest first.
   return readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => join(dir, f))
-    .sort((a, b) => {
-      const statA = existsSync(a) ? readFileSync(a).toString() : "";
-      const statB = existsSync(b) ? readFileSync(b).toString() : "";
-      try {
-        const dataA = JSON.parse(statA) as EpisodicMemory;
-        const dataB = JSON.parse(statB) as EpisodicMemory;
-        return new Date(dataB.timestamp).getTime() - new Date(dataA.timestamp).getTime();
-      } catch {
-        return 0;
-      }
-    });
+    .sort()
+    .reverse();
 }
 
 function loadEpisodicMemories(limit = EPISODE_LIMIT): EpisodicMemory[] {
@@ -150,12 +131,6 @@ function loadProjectSemantic(cwd: string): string {
   return readFileSync(path).toString();
 }
 
-function formatEpisodesForPrompt(episodes: EpisodicMemory[]): string {
-  if (episodes.length === 0) return "No recent sessions.";
-  return episodes
-    .map((e) => `- ${e.timestamp} (${e.cwd}): ${e.summary}`)
-    .join("\n");
-}
 
 function formatWorkingMemory(memory: WorkingMemory): string {
   const parts: string[] = [];
@@ -190,10 +165,6 @@ const EpisodicRecallParams = Type.Object({
   limit: Type.Optional(Type.Number({ default: 3, description: "Max results to return" })),
 });
 
-const SemanticSuggestParams = Type.Object({
-  section: Type.String({ description: "Section to update (e.g., 'preferences', 'projects/DOTFILES')" }),
-  content: Type.String({ description: "Content to add or update" }),
-});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Main Extension
@@ -343,6 +314,11 @@ export default function (pi: ExtensionAPI) {
             };
           }
           const key = params.type as keyof Omit<WorkingMemory, "lastUpdated">;
+          // Enforce 20-item cap per type; drop oldest when exceeded
+          const MAX_ITEMS = 20;
+          if (workingMemory[key].length >= MAX_ITEMS) {
+            workingMemory[key].shift();
+          }
           workingMemory[key].push(params.content);
           workingMemory.lastUpdated = new Date().toISOString();
           return {

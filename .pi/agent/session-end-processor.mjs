@@ -275,7 +275,7 @@ function extractActionItems(userMessages, assistantMessages) {
 // Consolidation
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_CONSOLIDATED_ENTRIES = 30;
+const MAX_CONSOLIDATED_ENTRIES = 50;
 
 /**
  * Derive a meaningful project name from a cwd path.

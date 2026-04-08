@@ -14,6 +14,11 @@ A cross-session memory system for Pi modeled on human memory.
 
 - `/memory` – View current working memory
 
+**Limits:**
+
+- Max 20 items per type (fact/goal/context); oldest dropped on overflow
+- Example: adding 21st fact drops the oldest fact
+
 **LLM tool:**
 
 - `memory_working({ action: "add|remove|clear|list", type?: "fact|goal|context", content?: string })`
@@ -47,7 +52,7 @@ Each episode contains:
 - **Scope**: Project-specific consolidated knowledge
 - **Lifetime**: Persistent, self-organizing
 - **Update**: Automatic consolidation from episodic overflow
-- **Cap**: 30 entries per project file (rolling window, oldest dropped)
+- **Cap**: 50 entries per project file (rolling window, oldest dropped)
 - **Dedup**: Episodes with >80% topic overlap with existing entries are skipped
 
 Project names are derived from the last 2 path segments of the working directory (e.g., `/Users/you/.dotfiles/.config/nix` → `config/nix`, stored as `config--nix.md`).
@@ -97,7 +102,7 @@ Project names are derived from the last 2 path segments of the working directory
 |---------|-------------|
 | `/memory` | Show current working memory state |
 | `/memory-status` | Show system health: episode count, semantic files, recent log |
-| `/consolidate` | Manually trigger consolidation for current session |
+| `/consolidate` | Manually trigger memory consolidation for current session (runs processor in background) |
 
 ## Troubleshooting
 
