@@ -24,6 +24,53 @@ const SEMANTIC_DIR = join(MEMORY_DIR, "semantic");
 const EPISODE_LIMIT = 5;
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Secret Scrubbing
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Patterns that match common secret/token formats.
+ * Each match is replaced with "[REDACTED]" before writing to memory.
+ */
+const SECRET_PATTERNS = [
+  // Provider-prefixed API keys
+  /sk-[a-zA-Z0-9_-]{20,}/g,                       // OpenAI / Anthropic
+  /sk-ant-[a-zA-Z0-9_-]{20,}/g,                    // Anthropic
+  /ghp_[a-zA-Z0-9]{20,}/g,                         // GitHub PAT
+  /github_pat_[a-zA-Z0-9_]{20,}/g,                 // GitHub fine-grained PAT
+  /gho_[a-zA-Z0-9]{20,}/g,                         // GitHub OAuth
+  /ghs_[a-zA-Z0-9]{20,}/g,                         // GitHub App
+  /ghr_[a-zA-Z0-9]{20,}/g,                         // GitHub Refresh
+  /npm_[a-zA-Z0-9]{20,}/g,                         // npm token
+  /pplx-[a-zA-Z0-9]{20,}/g,                        // Perplexity
+  /AKIA[A-Z0-9]{16}/g,                             // AWS access key
+  /xox[bsapr]-[a-zA-Z0-9-]{20,}/g,                 // Slack tokens
+  /AIzaSy[a-zA-Z0-9_-]{30,}/g,                     // Google API key
+
+  // Generic high-entropy tokens (hex ≥32 chars, base64-ish ≥40 chars)
+  /(?<=[=:\s'"])[a-f0-9]{32,}(?=[\s'"\n,;]|$)/gi,
+  /(?<=[=:\s'"])[A-Za-z0-9+/]{40,}={0,2}(?=[\s'"\n,;]|$)/g,
+
+  // key=value patterns for known env var names
+  /(?:API_KEY|SECRET|TOKEN|PASSWORD|PASSWD|PRIVATE_KEY|CLIENT_SECRET|AUTH_TOKEN)\s*[=:]\s*\S+/gi,
+
+  // Inline export assignments: export VAR_WITH_KEY_OR_SECRET=value
+  /export\s+\w*(?:KEY|SECRET|TOKEN|PASSWORD|CREDENTIAL)\w*\s*=\s*\S+/gi,
+];
+
+/**
+ * Remove secrets from a string, replacing each match with [REDACTED].
+ */
+function scrubSecrets(text) {
+  let scrubbed = text;
+  for (const pattern of SECRET_PATTERNS) {
+    // Reset lastIndex for global regexes
+    pattern.lastIndex = 0;
+    scrubbed = scrubbed.replace(pattern, "[REDACTED]");
+  }
+  return scrubbed;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Utilities
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -309,7 +356,7 @@ function consolidateEpisodes(toConsolidate) {
       }
 
       let entry = `### ${new Date(ep.timestamp).toLocaleDateString()}\n\n`;
-      entry += `- ${ep.summary}\n`;
+      entry += `- ${scrubSecrets(ep.summary)}\n`;
       if (ep.keyTopics.length) entry += `- Topics: ${ep.keyTopics.join(", ")}\n`;
       if (ep.outcomes.length) entry += `- Outcomes: ${ep.outcomes.join(", ")}\n`;
       if (ep.actionItems && ep.actionItems.length) {
@@ -370,16 +417,16 @@ function processSessionEnd(sessionPath) {
     return;
   }
 
-  // Save episodic memory
+  // Save episodic memory (scrub secrets from all text fields)
   const episodic = {
     sessionId,
     timestamp,
     cwd,
-    summary,
+    summary: scrubSecrets(summary),
     keyTopics: topics,
-    actionItems,
+    actionItems: actionItems.map(scrubSecrets),
     outcomes,
-    context,
+    context: scrubSecrets(context),
   };
 
   ensureDir(EPISODES_DIR);
