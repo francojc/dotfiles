@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Yearly vision + planning — runs December 15 at 10:00
 set -euo pipefail
 source "${HOME}/.bin/pi-cron-common"
 

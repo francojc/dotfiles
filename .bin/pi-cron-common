@@ -1,4 +1,5 @@
-# Shared config for Pi planning cron scripts
+#!/usr/bin/env bash
+# Shared config for Pi skill cron scripts
 # Source this; do not execute directly.
 
 source "${HOME}/.bin/common"
@@ -59,13 +60,9 @@ _pi_run_once() {
 pi_run() {
   local skill="$1"
   shift
-  local args="${*:-}"
-
-  local prompt="/skill:${skill}"
-  [ -n "$args" ] && prompt="${prompt} ${args}"
-
+  local args="$*"
   cd "$VAULT_DIR"
-  log_info "Starting: pi -p \"${prompt}\""
+  log_info "Starting: pi --skill $skill $args"
   local start_time
   start_time=$(date +%s)
 
@@ -79,7 +76,8 @@ pi_run() {
     exit_code=$?
   fi
 
-  local elapsed=$(( $(date +%s) - start_time ))
-  log_info "Finished in ${elapsed}s (exit ${exit_code})"
+  local elapsed
+  elapsed=$(($(date +%s) - start_time))
+  log_info "Completed (exit $exit_code) in ${elapsed}s"
   return $exit_code
 }

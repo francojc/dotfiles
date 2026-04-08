@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Karakeep sync — Daily at 05:30
+# Syncs bookmarked articles from Karakeep to kb/sources/web/
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/karakeep-sync.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  log_info "Running karakeep-sync.sh..."
+  bash "${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts/karakeep-sync.sh"
+}
+
+main >> "$LOG_FILE" 2>&1

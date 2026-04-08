@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
+# Monthly review — runs first Sunday of each month at 15:00
+# Guard: exit if not in first 7 days of month
 set -euo pipefail
 source "${HOME}/.bin/pi-cron-common"
 
 LOG_FILE="${LOG_DIR}/monthly-review.log"
 
 main() {
-  # First-Sunday guard: cron fires every Sunday; exit early if day > 7
-  if [ "$(date +%d)" -gt 7 ]; then
-    exit 0
-  fi
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  # Guard: only run if day-of-month is 1-7
+  [ "$(date +%d)" -gt 7 ] && log_info "Not first week — skipping" && exit 0
   pi_run "monthly-review-planning"
 }
 
