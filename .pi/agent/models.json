@@ -40,9 +40,16 @@
             "image"
           ],
           "reasoning": true
+        },
+        {
+          "contextWindow": 202752,
+          "id": "glm5.1",
+          "input": [
+            "text"
+          ],
+          "reasoning": true
         }
       ]
     }
   }
 }
-

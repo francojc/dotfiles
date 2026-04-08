@@ -622,7 +622,12 @@ require("lualine").setup({
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { { "filename", path = 1 } }, -- relative path
 		lualine_x = {
-			{ function() return vim.g.llama_status or "" end, color = { fg = "#918374" } },
+			{
+				function()
+					return vim.g.llama_status or ""
+				end,
+				color = { fg = "#918374" },
+			},
 			"filetype",
 		},
 		lualine_y = { "searchcount", "progress" },
@@ -897,13 +902,13 @@ require("obsidian").setup({
 		workdays_only = false,
 	},
 	templates = {
-		folder = "Assets/Templates",
+		folder = "plan/templates/",
 		date_format = "%B %-d, %Y",
 		time_format = "%H:%M",
 	},
 	new_notes_location = "Inbox",
 	attachments = {
-		folder = "Assets/Attachments",
+		folder = "./",
 	},
 	completion = {
 		nvim_cmp = false,
