@@ -1,0 +1,66 @@
+# Shared config for Pi planning cron scripts
+# Source this; do not execute directly.
+
+source "${HOME}/.bin/common"
+
+readonly VAULT_DIR="${HOME}/Obsidian/Notes"
+readonly LOG_DIR="${VAULT_DIR}/.pi/logs"
+readonly PI_TIMEOUT="${PI_TIMEOUT:-600}"  # 10 min default
+
+# Override provider/model via env if needed
+PI_PROVIDER="${PI_PROVIDER:-anthropic}"
+PI_MODEL="${PI_MODEL:-claude-sonnet-4-6}"
+
+# Ensure required directories exist on every source
+mkdir -p "$LOG_DIR"
+mkdir -p "${HOME}/.pi/state"
+
+# Run pi -p with a skill command.
+# Usage: pi_run <skill-name> [arg...]
+#   skill-name  — bare skill name (e.g. daily-briefing)
+#   arg...      — optional arguments appended after the skill command
+#
+# Constructs:  pi -p "/skill:<name> [args]"
+# Runs in VAULT_DIR so .pi/skills/ are discovered.
+# Kills the process after PI_TIMEOUT seconds.
+pi_run() {
+  local skill="$1"
+  shift
+  local args="${*:-}"
+
+  local prompt="/skill:${skill}"
+  [ -n "$args" ] && prompt="${prompt} ${args}"
+
+  cd "$VAULT_DIR"
+  log_info "Starting: pi -p \"${prompt}\""
+  local start_time
+  start_time=$(date +%s)
+
+  pi --print "$prompt" \
+    --provider "$PI_PROVIDER" \
+    --model    "$PI_MODEL" \
+    --no-session &
+  local pid=$!
+
+  # Watchdog: kill pi if it exceeds the timeout
+  (
+    sleep "$PI_TIMEOUT"
+    if kill -0 "$pid" 2>/dev/null; then
+      log_error "Timed out after ${PI_TIMEOUT}s — killing pid $pid"
+      kill "$pid" 2>/dev/null
+    fi
+  ) &
+  local watchdog_pid=$!
+
+  wait "$pid"
+  local exit_code=$?
+
+  # Clean up watchdog if pi finished first
+  # (suppress 143/SIGTERM exit to avoid ERR trap)
+  kill "$watchdog_pid" 2>/dev/null || true
+  wait "$watchdog_pid" 2>/dev/null || true
+
+  local elapsed=$(( $(date +%s) - start_time ))
+  log_info "Finished in ${elapsed}s (exit ${exit_code})"
+  return $exit_code
+}

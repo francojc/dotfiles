@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Auto-ingest pipeline: sync Karakeep bookmarks, then batch-ingest new sources.
+# Chain: karakeep-sync.sh → detect new files → wiki-batch-ingest
+
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+SCRIPT_DIR="${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts"
+WEB_DIR="${VAULT_DIR}/kb/sources/web"
+LOG_FILE="${LOG_DIR}/karakeep-to-wiki.log"
+STATE_FILE="${HOME}/.pi/state/karakeep-last-sync"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+
+  # Step 1: Sync Karakeep bookmarks
+  log_info "Step 1: Syncing Karakeep bookmarks..."
+  if ! bash "$SCRIPT_DIR/karakeep-sync.sh"; then
+    log_error "karakeep-sync.sh failed — aborting pipeline"
+    return 1
+  fi
+
+  # Step 2: Detect new files since last sync
+  log_info "Step 2: Detecting new files..."
+
+  if [ ! -f "$STATE_FILE" ]; then
+    log_info "No state file found — ingesting all existing web sources on first run"
+    # Touch a zero-epoch reference so -newer finds everything
+    touch -t 197001010000 "/tmp/pi-epoch-ref" 2>/dev/null || true
+    local ref_file="/tmp/pi-epoch-ref"
+  else
+    local ref_file="$STATE_FILE"
+  fi
+
+  local new_files=()
+  while IFS= read -r file; do
+    new_files+=("$file")
+  done < <(find "$WEB_DIR" -name "*.md" -type f -newer "$ref_file" 2>/dev/null \
+           | grep -v attachments || true)
+
+  # Update state file immediately after detecting (before ingest, so a crash
+  # on ingest doesn't re-ingest the same files endlessly on retry)
+  date -u +"%Y-%m-%dT%H:%M:%SZ" > "$STATE_FILE"
+
+  if [ ${#new_files[@]} -eq 0 ]; then
+    log_info "No new files to ingest — pipeline complete"
+    return 0
+  fi
+
+  log_info "Found ${#new_files[@]} new file(s) to ingest:"
+  printf '  %s\n' "${new_files[@]}"
+
+  # Step 3: Batch-ingest new files via Pi skill
+  log_info "Step 3: Batch-ingesting ${#new_files[@]} source(s)..."
+  local file_list
+  file_list=$(printf '"%s" ' "${new_files[@]}")
+  pi_run "wiki-batch-ingest" "$file_list"
+
+  log_info "Auto-ingest pipeline complete"
+}
+
+main >> "$LOG_FILE" 2>&1

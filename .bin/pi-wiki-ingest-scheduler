@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Progressive ingest scheduler — processes un-ingested kb/sources/documents/ notes
+# in batches, working through the backlog without manual intervention.
+#
+# State file:  ~/.pi/state/ingest-processed  (one source path per line)
+# Batch size:  INGEST_BATCH_SIZE env var (default: 5)
+# Cron:        Saturdays at 07:00 (after karakeep sync, before Sunday planning)
+
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+DOCS_DIR="${VAULT_DIR}/kb/sources/documents"
+STATE_FILE="${HOME}/.pi/state/ingest-processed"
+BATCH_SIZE="${INGEST_BATCH_SIZE:-5}"
+LOG_FILE="${LOG_DIR}/wiki-ingest-scheduler.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+
+  # Ensure state file exists
+  touch "$STATE_FILE"
+
+  # Find all markdown source documents
+  local all_sources=()
+  while IFS= read -r f; do
+    all_sources+=("$f")
+  done < <(find "$DOCS_DIR" -name "*.md" -type f | sort)
+
+  local total=${#all_sources[@]}
+  log_info "Found $total source documents in $DOCS_DIR"
+
+  # Filter to unprocessed sources (not already in state file)
+  local pending=()
+  for src in "${all_sources[@]}"; do
+    if ! grep -qxF "$src" "$STATE_FILE" 2>/dev/null; then
+      pending+=("$src")
+    fi
+  done
+
+  local pending_count=${#pending[@]}
+  log_info "Pending (un-ingested): $pending_count / $total"
+
+  if [ "$pending_count" -eq 0 ]; then
+    log_info "All sources have been ingested — nothing to do"
+    return 0
+  fi
+
+  # Take the first BATCH_SIZE pending sources
+  local batch=("${pending[@]:0:${BATCH_SIZE}}")
+  log_info "Scheduling batch of ${#batch[@]} (INGEST_BATCH_SIZE=${BATCH_SIZE}):"
+  printf '  %s\n' "${batch[@]}"
+
+  # Build quoted file list for the skill
+  local file_list
+  file_list=$(printf '"%s" ' "${batch[@]}")
+
+  # Run batch ingest
+  if pi_run "wiki-batch-ingest" "$file_list"; then
+    # Mark batch as processed
+    printf '%s\n' "${batch[@]}" >> "$STATE_FILE"
+    log_info "Batch complete — ${#batch[@]} sources marked as processed"
+    log_info "Remaining after this run: $(( pending_count - ${#batch[@]} ))"
+  else
+    log_error "wiki-batch-ingest failed (exit $?) — state file NOT updated"
+    return 1
+  fi
+}
+
+main >> "$LOG_FILE" 2>&1

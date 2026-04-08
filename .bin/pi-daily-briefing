@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/daily-briefing.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  pi_run "daily-briefing" "$(date +%Y-%m-%d)"
+}
+
+main >> "$LOG_FILE" 2>&1

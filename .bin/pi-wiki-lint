@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/wiki-lint.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  # --fix: auto-apply fixable issues and file health report without prompting
+  pi_run "wiki-lint" "--fix"
+}
+
+main >> "$LOG_FILE" 2>&1
