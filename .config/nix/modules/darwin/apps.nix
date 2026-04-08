@@ -23,6 +23,7 @@
       "Adembc/homebrew-tap/lazyssh" # lazyssh
       "FelixKratz/formulae/borders" # jankyborders
       "acrogenesis/macchanger/macchanger" # MAC address changer
+      "git-filter-repo" # remove files/dirs from git history
       "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
       "llama.cpp" # LLaMA model inference
