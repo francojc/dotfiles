@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Karakeep sync — sync bookmarks with highlights to kb/sources/web/
+# Runs daily in the early morning (before daily-briefing)
+
+set -euo pipefail
+source "${HOME}/.bin/common"
+
+SCRIPT_DIR="${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts"
+LOG_FILE="${HOME}/Obsidian/Notes/.claude/logs/karakeep-sync.log"
+
+main() {
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  bash "$SCRIPT_DIR/karakeep-sync.sh" >> "$LOG_FILE" 2>&1
+  local exit_code=$?
+  if [ $exit_code -eq 0 ]; then
+    log_info "karakeep-sync completed successfully"
+  else
+    log_error "karakeep-sync failed with exit code $exit_code"
+  fi
+  return $exit_code
+}
+
+main
