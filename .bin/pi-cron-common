@@ -8,12 +8,45 @@ readonly LOG_DIR="${VAULT_DIR}/.pi/logs"
 readonly PI_TIMEOUT="${PI_TIMEOUT:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
-PI_PROVIDER="${PI_PROVIDER:-anthropic}"
-PI_MODEL="${PI_MODEL:-claude-sonnet-4-6}"
+PI_PROVIDER="${PI_PROVIDER:-ollama}"
+PI_MODEL="${PI_MODEL:-glm5.1}"
+PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-github-copilot}"
+PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-claude-sonnet-4.6}"
 
 # Ensure required directories exist on every source
 mkdir -p "$LOG_DIR"
 mkdir -p "${HOME}/.pi/state"
+
+# Internal helper: run pi once with a specific provider/model.
+# Usage: _pi_run_once <prompt> <provider> <model>
+_pi_run_once() {
+  local prompt="$1" provider="$2" model="$3"
+
+  log_info "Running: provider=${provider} model=${model}"
+  pi --print "$prompt" \
+    --provider "$provider" \
+    --model    "$model" \
+    --no-session &
+  local pid=$!
+
+  # Watchdog
+  (
+    sleep "$PI_TIMEOUT"
+    if kill -0 "$pid" 2>/dev/null; then
+      log_error "Timed out after ${PI_TIMEOUT}s — killing pid $pid"
+      kill "$pid" 2>/dev/null
+    fi
+  ) &
+  local watchdog_pid=$!
+
+  wait "$pid"
+  local exit_code=$?
+
+  kill "$watchdog_pid" 2>/dev/null || true
+  wait "$watchdog_pid" 2>/dev/null || true
+
+  return $exit_code
+}
 
 # Run pi -p with a skill command.
 # Usage: pi_run <skill-name> [arg...]
@@ -36,29 +69,15 @@ pi_run() {
   local start_time
   start_time=$(date +%s)
 
-  pi --print "$prompt" \
-    --provider "$PI_PROVIDER" \
-    --model    "$PI_MODEL" \
-    --no-session &
-  local pid=$!
-
-  # Watchdog: kill pi if it exceeds the timeout
-  (
-    sleep "$PI_TIMEOUT"
-    if kill -0 "$pid" 2>/dev/null; then
-      log_error "Timed out after ${PI_TIMEOUT}s — killing pid $pid"
-      kill "$pid" 2>/dev/null
-    fi
-  ) &
-  local watchdog_pid=$!
-
-  wait "$pid"
+  _pi_run_once "$prompt" "$PI_PROVIDER" "$PI_MODEL"
   local exit_code=$?
 
-  # Clean up watchdog if pi finished first
-  # (suppress 143/SIGTERM exit to avoid ERR trap)
-  kill "$watchdog_pid" 2>/dev/null || true
-  wait "$watchdog_pid" 2>/dev/null || true
+  # Fallback: retry with larger model on failure (e.g. context limit)
+  if [ $exit_code -ne 0 ] && [ -n "$PI_FALLBACK_MODEL" ]; then
+    log_info "Primary failed (exit ${exit_code}) — retrying with ${PI_FALLBACK_PROVIDER}/${PI_FALLBACK_MODEL}"
+    _pi_run_once "$prompt" "$PI_FALLBACK_PROVIDER" "$PI_FALLBACK_MODEL"
+    exit_code=$?
+  fi
 
   local elapsed=$(( $(date +%s) - start_time ))
   log_info "Finished in ${elapsed}s (exit ${exit_code})"
