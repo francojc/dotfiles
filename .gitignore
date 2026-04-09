@@ -89,5 +89,6 @@ conversation.toml
 .pi/agent/settings.json
 .pi/memory/episodes/*
 .pi/memory/processor.log
+.pi/memory/semantic/*
 .config/nicotine/*
 .config/rclone/rclone.conf
