@@ -895,7 +895,7 @@ require("obsidian").setup({
 		},
 	},
 	daily_notes = {
-		folder = "Daily",
+		folder = "plan/daily/",
 		template = "Daily.md",
 		date_format = "%Y-%m-%d",
 		alias_format = "%B %-d, %Y",
