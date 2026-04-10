@@ -99,6 +99,7 @@
     "ask": [],
     "defaultMode": "plan"
   },
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -166,8 +167,8 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
+    "lua-lsp@claude-plugins-official": false,
+    "pyright-lsp@claude-plugins-official": false
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",

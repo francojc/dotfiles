@@ -49,12 +49,12 @@ _pi_run_once() {
   return $exit_code
 }
 
-# Run pi -p with a skill command.
+# Run pi with a skill command.
 # Usage: pi_run <skill-name> [arg...]
 #   skill-name  — bare skill name (e.g. daily-briefing)
 #   arg...      — optional arguments appended after the skill command
 #
-# Constructs:  pi -p "/skill:<name> [args]"
+# Constructs:  /skill:<name> [args]  as the prompt
 # Runs in VAULT_DIR so .pi/skills/ are discovered.
 # Kills the process after PI_TIMEOUT seconds.
 pi_run() {
@@ -62,7 +62,14 @@ pi_run() {
   shift
   local args="$*"
   cd "$VAULT_DIR"
-  log_info "Starting: pi --skill $skill $args"
+
+  # Build the skill invocation prompt
+  local prompt="/skill:${skill}"
+  if [ -n "$args" ]; then
+    prompt="$prompt $args"
+  fi
+
+  log_info "Starting: pi --print \"$prompt\" --provider $PI_PROVIDER --model $PI_MODEL"
   local start_time
   start_time=$(date +%s)
 
