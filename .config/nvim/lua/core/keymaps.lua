@@ -76,25 +76,6 @@ map(
 	"<Cmd>lua require('conform').format({lsp_format = 'fallback'})<Cr>",
 	{ desc = "Code format" }
 )
-map(
-	{ "n", "x" },
-	"<C-space>",
-	"<Cmd>lua require('core.treesitter_select').increment_selection()<Cr>",
-	{ desc = "Treesitter expand selection" }
-)
-map(
-	{ "n", "x" },
-	"<C-@>",
-	"<Cmd>lua require('core.treesitter_select').increment_selection()<Cr>",
-	{ desc = "Treesitter expand selection" }
-)
-map(
-	"x",
-	"<Del>",
-	"<Cmd>lua require('core.treesitter_select').decrement_selection()<Cr>",
-	{ desc = "Treesitter shrink selection" }
-)
-map("x", "<BS>", "<Cmd>lua require('core.treesitter_select').decrement_selection()<Cr>", { desc = "Treesitter shrink selection" })
 map("n", "<leader>cn", "<Cmd>s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (current line)" })
 map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selected lines)" })
 
