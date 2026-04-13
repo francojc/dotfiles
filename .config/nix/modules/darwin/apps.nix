@@ -40,6 +40,7 @@
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
+      "tree-sitter-cli" # tree-sitter CLI
       # "waynehoover/tap/pbrich" # pbcopy for multiple formats (text, html, rtf, images)
 
       # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support

@@ -1,5 +1,10 @@
 --| Autocommands -------------------------------------------------
 local a = vim.api
+local ts_select = require("core.treesitter_select")
+
+local function is_visual_mode(mode)
+	return mode == "v" or mode == "V" or mode == "\022"
+end
 
 -- Create an autocommand group
 -- personal group
@@ -22,6 +27,26 @@ a.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 	callback = function()
 		vim.hl.on_yank()
+	end,
+})
+
+-- Reset treesitter selection state when buffer context changes
+a.nvim_create_autocmd({ "BufLeave", "TextChanged", "TextChangedI" }, {
+	group = "personal",
+	pattern = "*",
+	callback = function()
+		ts_select.reset()
+	end,
+})
+
+a.nvim_create_autocmd("ModeChanged", {
+	group = "personal",
+	pattern = "*",
+	callback = function()
+		local event = vim.v.event
+		if event and is_visual_mode(event.old_mode) and not is_visual_mode(event.new_mode) then
+			ts_select.reset()
+		end
 	end,
 })
 

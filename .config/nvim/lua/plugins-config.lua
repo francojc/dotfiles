@@ -694,9 +694,9 @@ require("todo-comments").setup({})
 ---==========================================================
 
 ---| Treesitter ----------------------------------
--- New rewrite API (nvim-treesitter main, Neovim 0.12+):
--- setup() only accepts install_dir; highlighting is enabled
--- per-filetype via vim.treesitter.start() in a FileType autocmd.
+-- Native Neovim treesitter runtime with neovim-treesitter fork
+-- for parser/query management. setup() only accepts install_dir;
+-- parser attach happens via vim.treesitter.start() below.
 require("nvim-treesitter").setup()
 
 vim.api.nvim_create_autocmd("FileType", {
