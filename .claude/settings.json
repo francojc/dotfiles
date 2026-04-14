@@ -173,5 +173,6 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
   "voiceEnabled": true,
-  "prefersReducedMotion": false
+  "prefersReducedMotion": false,
+  "skipDangerousModePermissionPrompt": true
 }

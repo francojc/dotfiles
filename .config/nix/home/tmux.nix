@@ -97,7 +97,7 @@
 
       # Popups
       # Obsidian vault popup which opens `~/Obsidian/Notes/Daily/{current_date}.md` in Neovim
-      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/Daily/$(date +'%Y-%m-%d').md"
+      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/plan/daily/$(date +'%Y-%m-%d').md"
 
       # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
