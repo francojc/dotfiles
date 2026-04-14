@@ -71,16 +71,18 @@ Project names are derived from the last 2 path segments of the working directory
 - `memory_recall` tool searches past sessions on demand
 - `memory-recall` skill auto-triggers on recall keywords
 - Working memory + recent projects + project semantic knowledge injected into system prompt on every turn
+- If `aside-mode` is active, memory context injection is skipped for that turn
 
 ### Session End (`session_shutdown`)
 
 1. `memory.ts` spawns `session-end-processor.mjs` as a detached background process
 2. Processor parses the session JSONL
-3. Generates a structured summary (first user message + files + tools + keyword topics + action items)
-4. Writes episodic JSON to `~/.pi/memory/episodes/`
-5. If >5 episodes, consolidates oldest to semantic project files (with dedup and rolling cap)
-6. Consolidated episode files are pruned
-7. Errors logged to `~/.pi/memory/processor.log`
+3. Filters out any entries recorded while `aside-mode` was active
+4. Generates a structured summary (first user message + files + tools + keyword topics + action items)
+5. Writes episodic JSON to `~/.pi/memory/episodes/`
+6. If >5 episodes, consolidates oldest to semantic project files (with dedup and rolling cap)
+7. Consolidated episode files are pruned
+8. Errors logged to `~/.pi/memory/processor.log`
 
 ## File Structure
 
@@ -103,6 +105,10 @@ Project names are derived from the last 2 path segments of the working directory
 | `/memory` | Show current working memory state |
 | `/memory-status` | Show system health: episode count, semantic files, recent log |
 | `/consolidate` | Manually trigger memory consolidation for current session (runs processor in background) |
+
+## Aside Mode Interaction
+
+If you enter `/aside`, Pi records start and stop markers in session state. `session-end-processor.mjs` drops all entries between those markers before building episodic or semantic memory. Result: aside chat stays out of durable memory.
 
 ## Troubleshooting
 

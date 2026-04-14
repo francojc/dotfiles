@@ -146,6 +146,17 @@ function formatWorkingMemory(memory: WorkingMemory): string {
   return parts.join("\n\n") || "No working memory.";
 }
 
+function isAsideActive(ctx: ExtensionContext): boolean {
+  let active = false;
+
+  for (const entry of ctx.sessionManager.getBranch()) {
+    if (entry.type !== "custom" || entry.customType !== "aside-mode") continue;
+    active = Boolean((entry.data as { enabled?: boolean } | undefined)?.enabled);
+  }
+
+  return active;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Schema Definitions
 // ─────────────────────────────────────────────────────────────────────────────
@@ -266,6 +277,8 @@ export default function (pi: ExtensionAPI) {
 
   // Inject memory context into system prompt before each agent turn
   pi.on("before_agent_start", async (event, ctx) => {
+    if (isAsideActive(ctx)) return;
+
     const memoryContext = buildMemoryContext(ctx.cwd);
     if (memoryContext) {
       return {

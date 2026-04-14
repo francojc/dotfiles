@@ -96,6 +96,34 @@ function parseSessionFile(path) {
 }
 
 /**
+ * Remove entries created while aside mode was active.
+ *
+ * aside.ts persists custom entries with customType="aside-mode" and
+ * data.enabled=true|false. Everything between an enable marker and the next
+ * disable marker is treated as off-record and excluded from episodic and
+ * semantic memory generation.
+ */
+function filterAsideEntries(entries) {
+  const filtered = [];
+  let asideActive = false;
+
+  for (const entry of entries) {
+    if (entry.type === "custom" && entry.customType === "aside-mode") {
+      asideActive = Boolean(entry.data?.enabled);
+      continue;
+    }
+
+    if (asideActive) {
+      continue;
+    }
+
+    filtered.push(entry);
+  }
+
+  return filtered;
+}
+
+/**
  * Extract text content from a message entry.
  */
 function extractText(entry) {
@@ -393,27 +421,29 @@ function consolidateEpisodes(toConsolidate) {
 
 function processSessionEnd(sessionPath) {
   const sessionId = basename(sessionPath, ".jsonl");
-  const entries = parseSessionFile(sessionPath);
+  const rawEntries = parseSessionFile(sessionPath);
 
-  if (entries.length === 0) {
+  if (rawEntries.length === 0) {
     console.log("No entries in session file, skipping.");
     return;
   }
 
+  const entries = filterAsideEntries(rawEntries);
+
   // Extract session metadata
-  const sessionEntry = entries.find((e) => e.type === "session");
+  const sessionEntry = rawEntries.find((e) => e.type === "session");
   const cwd = sessionEntry?.cwd || process.cwd();
   const timestamp = sessionEntry?.timestamp || new Date().toISOString();
 
   // Generate summary
   const { summary, topics, outcomes, actionItems, context } = generateSummary(entries);
 
-  // Skip trivially short sessions (e.g., accidental opens)
+  // Skip trivially short sessions or sessions that only contained aside content
   const userMsgCount = entries.filter(
     (e) => e.type === "message" && e.message?.role === "user",
   ).length;
   if (userMsgCount === 0) {
-    console.log("No user messages, skipping episodic save.");
+    console.log("No non-aside user messages, skipping episodic save.");
     return;
   }
 
