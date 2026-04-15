@@ -2,6 +2,7 @@
 name: writing-refine
 description: Analyze a document for AI writing artifacts across 7 categories and rewrite it with corrections. Use when a draft needs to be cleaned of detectable AI patterns — overused vocabulary, hedging, structural monotony, voice issues, formatting problems, technical artifacts, and unsupported generalizations. Preserves meaning and author intent throughout.
 allowed-tools: Read, Write, Edit, Grep, Bash, question
+disable-model-invocation: true
 ---
 
 # Academic writing refinement

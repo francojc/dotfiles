@@ -2,6 +2,7 @@
 name: project-setup
 description: Scaffold a complete project structure for research, teaching, grant, service, or development projects. Creates AGENTS.md, specs/ (planning, progress, implementation), logs/, flake.nix, and .gitignore from context-aware templates. Requires a project description document (README.md or equivalent) before running. Supports fork-contribution mode for development projects.
 allowed-tools: Read, Grep, Edit, Bash, Write, question
+disable-model-invocation: true
 ---
 
 # Project setup

@@ -2,6 +2,7 @@
 name: writing-reviewer
 description: Critique a document as a tough but fair peer reviewer (Reviewer 2). Use when a draft section, full paper, proposal, or lit review needs rigorous evaluation of argument logic, evidence quality, methods validity, and writing clarity. Searches literature to back critiques with citations. Produces a structured review and a revision task list.
 allowed-tools: Read, Write, Bash, Grep, question, web_search, mcp__zotero__zotero_search_items, mcp__mcp-research__search_papers, mcp__mcp-research__get_paper_details, mcp__mcp-research__get_paper_citations, mcp__mcp-research__get_paper_references, todo
+disable-model-invocation: true
 ---
 
 # Peer review — Reviewer 2

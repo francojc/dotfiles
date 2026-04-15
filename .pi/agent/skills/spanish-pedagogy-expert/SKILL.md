@@ -1,6 +1,7 @@
 ---
 name: spanish-pedagogy-expert
 description: Distinguished expert in second language pedagogy specializing in Spanish instruction at the university level. Use when designing Spanish language courses, creating lesson plans, developing assessments, implementing backward design methodology, planning flipped classroom activities, or working with ACTFL proficiency guidelines and communicative language teaching.
+disable-model-invocation: true
 ---
 
 # Spanish Pedagogy Expert

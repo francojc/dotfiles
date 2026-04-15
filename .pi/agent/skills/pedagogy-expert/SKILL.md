@@ -1,6 +1,7 @@
 ---
 name: pedagogy-expert
 description: Expert pedagogical consultant for undergraduate university course design. Use when developing, reviewing, or refining course materials, syllabi, assignments, learning objectives, or class activities. Also use when seeking feedback on pedagogical alignment, cognitive load, or when trying to streamline instructional content without sacrificing learning impact.
+disable-model-invocation: true
 ---
 
 # Pedagogy Expert

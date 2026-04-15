@@ -2,6 +2,7 @@
 name: writing-draft
 description: Draft a document section or document using project context, specs, and source materials. Use when starting a new section of a paper, proposal, report, or any academic or professional document. Grounds the draft in existing project files and analysis outputs. Follows academic writing conventions and flags gaps with TODO markers.
 allowed-tools: Read, Bash, Grep, Write, Edit, question
+disable-model-invocation: true
 ---
 
 # Academic writing — draft

@@ -1,4 +1,22 @@
 {
-  "tui.input.newLine": ["shift+enter", "alt+enter"],
-  "app.message.followUp": []
+  "tui.input.newLine": [
+    "shift+enter",
+    "alt+enter"
+  ],
+  "tui.editor.pageUp": [
+    "ctrl+b"
+  ],
+  "tui.select.pageUp": [
+    "ctrl+b"
+  ],
+  "tui.editor.pageDown": [
+    "ctrl+f"
+  ],
+  "tui.select.pageDown": [
+    "ctrl+f"
+  ],
+  "app.message.followUp": [],
+  "btw.overlay.toggleFocus": [
+    "ctrl+;"
+  ]
 }

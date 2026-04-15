@@ -2,6 +2,7 @@
 name: project-status
 description: Generate a comprehensive project status report analyzing git activity, progress against planned milestones, and current state across research, teaching, grant, service, or development projects. Use to get a quick health check on a project or before a meeting, planning session, or weekly review.
 allowed-tools: Read, Grep, Bash
+disable-model-invocation: true
 ---
 
 # Project status report

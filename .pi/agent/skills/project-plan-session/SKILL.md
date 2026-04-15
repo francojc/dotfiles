@@ -2,6 +2,7 @@
 name: project-plan-session
 description: Plan a focused work session with dependency-linked tasks for the current project. Use at the start of a work session to assess project state, agree on session goals, and build a concrete task graph. Reads git history, specs, and logs to surface project context before asking what to accomplish. Each task is tagged with a complexity signal (routine / analytical / generative) to guide model and reasoning-effort selection.
 allowed-tools: Read, Bash, Grep, todo, question
+disable-model-invocation: true
 ---
 
 # Session planner

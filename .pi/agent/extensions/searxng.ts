@@ -77,8 +77,8 @@ export default function (pi: ExtensionAPI) {
     name: "web_search",
     label: "Web Search",
     description:
-      'Search the web via self-hosted SearXNG. Use for current facts, documentation, recent events, or information not in training data. Use categories="science" for academic papers (arxiv, google scholar, pubmed, semantic scholar).',
-    promptSnippet: "Search the web via self-hosted SearXNG (general, science, news categories)",
+      'Search the web via self-hosted SearXNG. Use for current facts, documentation, recent events, or information not in training data.',
+    promptSnippet: "Search the web via self-hosted SearXNG (general, science, news categories, etc.)",
 
     parameters: Type.Object({
       query: Type.String({

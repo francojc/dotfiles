@@ -2,6 +2,7 @@
 name: project-manage
 description: "Unified project management interface for research, teaching, grant, service, and development projects. Supports four operations: update (sync docs and get AI recommendations), track (milestones, tasks, deadlines), address (analyze and fix a GitHub issue), and create (generate specs/ documentation). Use when managing ongoing project work in a structured project directory."
 allowed-tools: Read, Grep, Edit, Bash, Write, question, todo
+disable-model-invocation: true
 ---
 
 # Project management
