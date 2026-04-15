@@ -6,6 +6,7 @@ source "${HOME}/.bin/common"
 
 readonly VAULT_DIR="${HOME}/Obsidian/Notes"
 readonly LOG_DIR="${VAULT_DIR}/.pi/logs"
+readonly STATE_DIR="${VAULT_DIR}/.pi/state"
 readonly PI_TIMEOUT="${PI_TIMEOUT:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
@@ -16,7 +17,18 @@ PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-claude-sonnet-4.6}"
 
 # Ensure required directories exist on every source
 mkdir -p "$LOG_DIR"
-mkdir -p "${HOME}/.pi/state"
+mkdir -p "$STATE_DIR"
+
+# One-time migration: move legacy state from ~/.pi/state -> <vault>/.pi/state
+if [ -d "${HOME}/.pi/state" ] && [ "${HOME}/.pi/state" != "$STATE_DIR" ]; then
+  while IFS= read -r legacy_file; do
+    name=$(basename "$legacy_file")
+    target="$STATE_DIR/$name"
+    if [ ! -e "$target" ]; then
+      cp "$legacy_file" "$target"
+    fi
+  done < <(find "${HOME}/.pi/state" -maxdepth 1 -type f 2>/dev/null)
+fi
 
 # Internal helper: run pi once with a specific provider/model.
 # Usage: _pi_run_once <prompt> <provider> <model>

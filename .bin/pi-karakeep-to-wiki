@@ -9,8 +9,7 @@ source "${HOME}/.bin/pi-cron-common"
 LOG_FILE="${LOG_DIR}/karakeep-to-wiki.log"
 
 # Track last sync timestamp in a state file
-STATE_FILE="${HOME}/.pi/state/karakeep-last-sync"
-mkdir -p "$(dirname "$STATE_FILE")"
+STATE_FILE="${STATE_DIR}/karakeep-last-sync"
 
 main() {
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
@@ -21,24 +20,30 @@ main() {
   log_info "Karakeep sync complete"
 
   # Step 2: Find new files since last sync
-  local last_sync
+  local new_files=()
   if [ -f "$STATE_FILE" ]; then
+    local last_sync
     last_sync=$(cat "$STATE_FILE")
     log_info "Last sync: $last_sync"
+    while IFS= read -r f; do
+      new_files+=("$f")
+    done < <(find "${VAULT_DIR}/kb/sources/web/" -type f -name "*.md" -newer "$STATE_FILE" | sort)
   else
-    last_sync="1970-01-01"
     log_info "No previous sync found — ingesting all files"
+    while IFS= read -r f; do
+      new_files+=("$f")
+    done < <(find "${VAULT_DIR}/kb/sources/web/" -type f -name "*.md" | sort)
   fi
 
-  # Find markdown files in kb/sources/web/ modified since last sync
-  local new_files
-  new_files=$(find "${HOME}/Obsidian/Notes/kb/sources/web/" -name "*.md" -newer "$STATE_FILE" 2>/dev/null | tr '\n' ' ')
-
-  if [ -z "$new_files" ]; then
+  if [ ${#new_files[@]} -eq 0 ]; then
     log_info "No new files to ingest"
   else
-    log_info "Found new files to ingest: $new_files"
-    echo "$new_files" | xargs pi_run "wiki-batch-ingest"
+    log_info "Found new files to ingest (${#new_files[@]}):"
+    printf '  %s\n' "${new_files[@]}"
+
+    local file_list
+    file_list=$(printf '"%s" ' "${new_files[@]}")
+    pi_run "wiki-batch-ingest" "$file_list"
     log_info "Auto-ingest complete"
   fi
 

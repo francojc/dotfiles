@@ -2,7 +2,7 @@
 # Progressive ingest scheduler — processes un-ingested kb/sources/documents/ notes
 # in batches, working through the backlog without manual intervention.
 #
-# State file:  ~/.pi/state/ingest-processed  (one source path per line)
+# State file:  <vault>/.pi/state/ingest-processed  (one source path per line)
 # Batch size:  INGEST_BATCH_SIZE env var (default: 5)
 # Cron:        Saturdays at 07:00 (after karakeep sync, before Sunday planning)
 
@@ -10,7 +10,7 @@ set -euo pipefail
 source "${HOME}/.bin/pi-cron-common"
 
 DOCS_DIR="${VAULT_DIR}/kb/sources/documents"
-STATE_FILE="${HOME}/.pi/state/ingest-processed"
+STATE_FILE="${STATE_DIR}/ingest-processed"
 BATCH_SIZE="${INGEST_BATCH_SIZE:-5}"
 LOG_FILE="${LOG_DIR}/wiki-ingest-scheduler.log"
 
