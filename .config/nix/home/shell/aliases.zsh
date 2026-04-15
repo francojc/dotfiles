@@ -61,8 +61,7 @@ alias gco='git checkout'
 alias gc='git commit -m'
 alias gd='git diff'             # Show working tree diff
 alias gdf='git diff --name-only'  # List changed files in diff
-alias gdt='git difftool'        # Open Git difftool with nvimdiff
-alias gdv='git dv'              # Open Diffview for a revision or range
+gdt() { nvim -f -c "DiffviewOpen $*"; }  # Open Diffview for a revision or range
 alias gf='git fetch'            # Fetch from remotes
 alias gb='gh browse > /dev/null 2>&1'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"

@@ -8,8 +8,9 @@ source "${HOME}/.bin/pi-cron-common"
 
 LOG_FILE="${LOG_DIR}/karakeep-to-wiki.log"
 
-# Track last sync timestamp in a state file
-STATE_FILE="${STATE_DIR}/karakeep-last-sync"
+# Files used to coordinate sync -> ingest
+CHANGED_FILE="${STATE_DIR}/karakeep-changed-files.txt"
+PENDING_FILE="${STATE_DIR}/karakeep-pending-ingest.txt"
 
 main() {
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
@@ -19,36 +20,58 @@ main() {
   bash "${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts/karakeep-sync.sh"
   log_info "Karakeep sync complete"
 
-  # Step 2: Find new files since last sync
-  local new_files=()
-  if [ -f "$STATE_FILE" ]; then
-    local last_sync
-    last_sync=$(cat "$STATE_FILE")
-    log_info "Last sync: $last_sync"
+  # Step 2: Build ingest queue from changed-files manifest + pending backlog
+  local changed_files=()
+  local pending_files=()
+
+  if [ -f "$CHANGED_FILE" ]; then
     while IFS= read -r f; do
-      new_files+=("$f")
-    done < <(find "${VAULT_DIR}/kb/sources/web/" -type f -name "*.md" -newer "$STATE_FILE" | sort)
-  else
-    log_info "No previous sync found — ingesting all files"
-    while IFS= read -r f; do
-      new_files+=("$f")
-    done < <(find "${VAULT_DIR}/kb/sources/web/" -type f -name "*.md" | sort)
+      [ -n "$f" ] && [ -f "$f" ] && changed_files+=("$f")
+    done < "$CHANGED_FILE"
   fi
 
-  if [ ${#new_files[@]} -eq 0 ]; then
-    log_info "No new files to ingest"
-  else
-    log_info "Found new files to ingest (${#new_files[@]}):"
-    printf '  %s\n' "${new_files[@]}"
+  if [ -f "$PENDING_FILE" ]; then
+    while IFS= read -r f; do
+      [ -n "$f" ] && [ -f "$f" ] && pending_files+=("$f")
+    done < "$PENDING_FILE"
+  fi
 
-    local file_list
-    file_list=$(printf '"%s" ' "${new_files[@]}")
-    pi_run "wiki-batch-ingest" "$file_list"
+  log_info "Changed this sync: ${#changed_files[@]}"
+  log_info "Pending from previous failures: ${#pending_files[@]}"
+
+  local queue_file
+  queue_file=$(mktemp)
+  {
+    printf '%s\n' "${pending_files[@]:-}"
+    printf '%s\n' "${changed_files[@]:-}"
+  } | sed '/^$/d' | sort -u > "$queue_file"
+
+  local ingest_files=()
+  while IFS= read -r f; do
+    [ -n "$f" ] && ingest_files+=("$f")
+  done < "$queue_file"
+  rm -f "$queue_file"
+
+  if [ ${#ingest_files[@]} -eq 0 ]; then
+    log_info "No changed files to ingest"
+    : > "$PENDING_FILE"
+    return 0
+  fi
+
+  log_info "Files queued for ingest (${#ingest_files[@]}):"
+  printf '  %s\n' "${ingest_files[@]}"
+
+  local file_list
+  file_list=$(printf '"%s" ' "${ingest_files[@]}")
+
+  if pi_run "wiki-batch-ingest" "$file_list"; then
+    : > "$PENDING_FILE"
     log_info "Auto-ingest complete"
+  else
+    printf '%s\n' "${ingest_files[@]}" > "$PENDING_FILE"
+    log_error "Auto-ingest failed — queued ${#ingest_files[@]} file(s) for retry"
+    return 1
   fi
-
-  # Update last sync timestamp
-  date +%Y-%m-%dT%H:%M:%S > "$STATE_FILE"
 }
 
 main >> "$LOG_FILE" 2>&1

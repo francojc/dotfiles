@@ -25,8 +25,8 @@
         else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 
       # Diff and merge tools
-      diff.tool = "diffview";
-      difftool.nvimdiff.cmd = ''nvim -f -c "DiffviewOpen"'';
+      diff.tool = "nvimdiff";
+      difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
       merge.tool = "diffview";
       mergetool.diffview.cmd = ''nvim -f -c "DiffviewOpen"'';
