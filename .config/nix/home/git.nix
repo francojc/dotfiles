@@ -25,8 +25,8 @@
         else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 
       # Diff and merge tools
-      diff.tool = "nvimdiff";
-      difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
+      diff.tool = "diffview";
+      difftool.nvimdiff.cmd = ''nvim -f -c "DiffviewOpen"'';
       difftool.prompt = false;
       merge.tool = "diffview";
       mergetool.diffview.cmd = ''nvim -f -c "DiffviewOpen"'';
@@ -61,16 +61,8 @@
 
       # Git-specific workflow aliases
       alias = {
-        wip = "!git add -A && git commit -m 'WIP'"; # Work in progress commit; usage: git wip
-        unwip = "!git log -n 1 | grep -q -c 'WIP' && git reset HEAD~1";
-        cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"; # Delete all merged branches except main, master, and develop
-        find = "!git log --pretty=format:'%h %cd %s [%an]' --date=short --follow --"; # Search commit history for a file; usage: git find <file>
-        lgs = "log --graph --oneline --decorate --all"; # Pretty log graph; usage: git lgs
-        recent = "for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(refname:short)'"; # List branches sorted by recent commits; usage: git recent
         unstage = "reset HEAD --"; # Unstage files; usage: git unstage <file>
         last = "log -1 HEAD --stat"; # Show last commit details; usage: git last
-        amend = "commit --amend --no-edit"; # Amend last commit without changing message; usage: git amend
-        dv = "!f() { nvim -f -c \"DiffviewOpen $*\"; }; f"; # Open Diffview for an arbitrary revision/range; usage: git dv HEAD^
       };
     };
   };
