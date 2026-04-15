@@ -440,9 +440,13 @@ vim.lsp.config.pyright = {
 			},
 		},
 	},
-	root_dir = function(fname)
-		return vim.fs.root(fname, { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" })
-			or vim.fs.dirname(fname)
+	root_dir = function(bufnr, on_dir)
+		local root = vim.fs.root(bufnr, { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" })
+		if not root then
+			local name = vim.api.nvim_buf_get_name(bufnr)
+			root = name ~= "" and vim.fs.dirname(name) or vim.fn.getcwd()
+		end
+		on_dir(root)
 	end,
 }
 
@@ -457,8 +461,13 @@ vim.lsp.config.r_language_server = {
 	cmd = { "R", "--slave", "-e", "languageserver::run()" },
 	filetypes = { "r", "rmd", "quarto" },
 	capabilities = capabilities,
-	root_dir = function(fname)
-		return vim.fs.root(fname, "DESCRIPTION") or vim.fs.root(fname, ".git") or vim.fs.dirname(fname)
+	root_dir = function(bufnr, on_dir)
+		local root = vim.fs.root(bufnr, { "DESCRIPTION", ".git" })
+		if not root then
+			local name = vim.api.nvim_buf_get_name(bufnr)
+			root = name ~= "" and vim.fs.dirname(name) or vim.fn.getcwd()
+		end
+		on_dir(root)
 	end,
 	settings = {
 		r = {

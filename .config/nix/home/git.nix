@@ -28,8 +28,8 @@
       diff.tool = "nvimdiff";
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
-      merge.tool = "nvimdiff";
-      mergetool.nvimdiff.cmd = ''nvim -c "DiffviewOpen" "$MERGED"'';
+      merge.tool = "diffview";
+      mergetool.diffview.cmd = ''nvim -f -c "DiffviewOpen"'';
       mergetool.prompt = false;
       mergetool.keepBackup = false;
 
@@ -70,6 +70,7 @@
         unstage = "reset HEAD --"; # Unstage files; usage: git unstage <file>
         last = "log -1 HEAD --stat"; # Show last commit details; usage: git last
         amend = "commit --amend --no-edit"; # Amend last commit without changing message; usage: git amend
+        dv = "!f() { nvim -f -c \"DiffviewOpen $*\"; }; f"; # Open Diffview for an arbitrary revision/range; usage: git dv HEAD^
       };
     };
   };
