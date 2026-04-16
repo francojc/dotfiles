@@ -38,13 +38,14 @@
         mkdir -p "$NPM_CONFIG_PREFIX"
 
         # --- PATH ---
-        export PATH="/usr/local/sbin:$PATH"
         export PATH="${config.home.homeDirectory}/.bin:$PATH" # custom scripts
-        export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx
-        export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
-        export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
+        export PATH="${config.home.homeDirectory}/.bun/bin:$PATH" # bun global
         export PATH="${config.home.homeDirectory}/.cargo/bin:$PATH" # rust cargo
+        export PATH="${config.home.homeDirectory}/.local/bin:$PATH" # pipx python
+        export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
+        export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
         export PATH="${config.home.homeDirectory}/go/bin:$PATH" # go
+        export PATH="/usr/local/sbin:$PATH"
 
         # --- ENVIRONMENT VARIABLES ---
         export EDITOR='nvim'
