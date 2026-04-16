@@ -34,7 +34,8 @@
       # Server behavior
       set -s focus-events on
       set -s extended-keys on
-      set -s extended-keys-format csi-u
+      # Disabled csi-u format - causes selection highlighting issues in modern terminals
+      # set -s extended-keys-format csi-u
       set -s escape-time 0
       set -g detach-on-destroy off
 
@@ -175,7 +176,7 @@
       set -g message-command-style bg='${theme.colors.yellow}',fg='${theme.colors.bg0}'
 
       # Mode (copy mode) colors
-      set -g mode-style bg='${theme.colors.accent}',fg='${theme.colors.bg0}'
+      set -g mode-style bg='${theme.colors.accent}',fg='${theme.colors.bg0}',bold
 
       # Window status activity colors
       set -g window-status-activity-style bg='${theme.colors.yellow}',fg='${theme.colors.bg0}'
