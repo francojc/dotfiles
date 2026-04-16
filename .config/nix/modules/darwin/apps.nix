@@ -17,7 +17,9 @@
       upgrade = true;
     };
 
-    taps = [];
+    taps = [
+      "jundot/omlx" # olmx
+    ];
 
     brews = [
       "Adembc/homebrew-tap/lazyssh" # lazyssh
@@ -26,6 +28,7 @@
       "git-filter-repo" # remove files/dirs from git history
       "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
+      "omlx" # OpenAI LLMs
       "llama.cpp" # LLaMA model inference
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
