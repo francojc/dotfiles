@@ -21,7 +21,6 @@
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
     # Core dependencies
-    # tree-sitter # Parser generator (v0.25.10)
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
@@ -58,10 +57,9 @@
   # Development and system tools
   developmentPackages = with pkgs; [
     # Note: Python CLI tools managed via UV, not nix
-    # shunit2 # Shell testing
-    # kitty # Terminal emulator
     age # Encryption
     bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
+    bun # JavaScript package manager
     cachix # Nix package cache
     carapace # Command-line completion
     codespell # Spell checker
@@ -83,8 +81,6 @@
   # Command-line utilities and system monitoring
   cliUtilities = with pkgs; [
     _7zz # Archive compression
-    # ruby # Programming language
-    # unp # Archive unpacker
     atuin # Shell history manager
     bat # Often used by fzf previews, etc. but also standalone
     codesnap # CLI code snippet screenshot tool
@@ -97,7 +93,6 @@
     file # File type identification
     fzf # General fuzzy finder
     glances # System monitoring tool
-    # gnupg managed by programs.gpg module below
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager
@@ -122,11 +117,8 @@
   # Media and document processing
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
-    # drawio # Diagramming tool
     ffmpeg # Multimedia framework
     ghostscript # PostScript/PDF interpreter (used by Snacks.image)
-    # gv # Ghostview - PostScript/PDF viewer
-    # haskellPackages.pandoc-crossref # Pandoc filter
     imagemagick # Image manipulation
     glow # Markdown renderer
     khal # Calendar
@@ -135,7 +127,6 @@
     pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)
-    # qpdf # PDF manipulation tool
     quarto # Scientific publishing system
     typst # Document preparation system
     vdirsyncer # CalDAV/CardDAV sync
@@ -143,9 +134,7 @@
 
   # YouTube content creation and streaming
   youtubeContentPackages = with pkgs; [
-    # audacity # Audio editing and recording
     tenacity # Audacity fork, more actively maintained
-    # yt-dlp # Video downloader
   ];
 
   # Combined package list
