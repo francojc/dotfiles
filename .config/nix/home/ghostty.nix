@@ -63,8 +63,8 @@
       keybind = shift+enter=text:\n
 
       # -- Oh-My-Pi
-      keybind = alt+backspace=text:\x1b\x7f
-      keybind = alt+enter=text:\n
+      # keybind = alt+backspace=text:\x1b\x7f
+      # keybind = alt+enter=text:\n
     '';
   };
 }
