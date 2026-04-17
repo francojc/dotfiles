@@ -67,6 +67,7 @@ main() {
   if pi_run "wiki-batch-ingest" "$file_list"; then
     : > "$PENDING_FILE"
     log_info "Auto-ingest complete"
+    qmd_refresh
   else
     printf '%s\n' "${ingest_files[@]}" > "$PENDING_FILE"
     log_error "Auto-ingest failed — queued ${#ingest_files[@]} file(s) for retry"

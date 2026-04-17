@@ -60,6 +60,7 @@ main() {
     printf '%s\n' "${batch[@]}" >> "$STATE_FILE"
     log_info "Batch complete — ${#batch[@]} sources marked as processed"
     log_info "Remaining after this run: $(( pending_count - ${#batch[@]} ))"
+    qmd_refresh
   else
     log_error "wiki-batch-ingest failed (exit $?) — state file NOT updated"
     return 1

@@ -100,3 +100,19 @@ pi_run() {
   log_info "Completed (exit $exit_code) in ${elapsed}s"
   return $exit_code
 }
+
+# Refresh the qmd search index after ingest.
+# Usage: qmd_refresh
+# Exits non-zero if either step fails.
+qmd_refresh() {
+  log_info "Refreshing qmd index: qmd update && qmd embed"
+  if ! qmd update; then
+    log_error "qmd update failed"
+    return 1
+  fi
+  if ! qmd embed; then
+    log_error "qmd embed failed"
+    return 1
+  fi
+  log_info "qmd index refresh complete"
+}
