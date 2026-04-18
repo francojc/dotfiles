@@ -59,7 +59,6 @@
     # Note: Python CLI tools managed via UV, not nix
     age # Encryption
     bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
-    bun # JavaScript package manager
     cachix # Nix package cache
     carapace # Command-line completion
     codespell # Spell checker
