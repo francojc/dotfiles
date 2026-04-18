@@ -87,6 +87,7 @@ conversation.toml
 .pi/agent/sessions/*
 /.pi/agent/auth.json
 .pi/agent/settings.json
+.pi/agent/memory/*
 .pi/memory/episodes/*
 .pi/memory/processor.log
 .pi/memory/semantic/*

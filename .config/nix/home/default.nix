@@ -39,6 +39,7 @@
       LANG = "en_US.UTF-8";
       LC_TIME = "en_US.UTF-8";
       TZ = "America/New_York";
+      PI_MEMORY_DIR = "~/.local/share/pi-memory";
     };
     stateVersion = "24.05"; # Keep consistent
   };
