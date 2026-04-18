@@ -54,7 +54,7 @@
     },
     "llama-router": {
       "api": "openai-completions",
-      "apiKey": "!tr -d '\n' < /Users/jeridf/.llama.cpp/api_key.txt",
+      "apiKey": "LLAMA_API_KEY",
       "baseUrl": "http://100.101.38.4:8081/v1",
       "compat": {
         "supportsDeveloperRole": false,
