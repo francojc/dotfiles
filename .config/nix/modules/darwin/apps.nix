@@ -34,18 +34,13 @@
       "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
+      "ollama" # Ollama
       "pngpaste" # paste images
       "raine/workmux/workmux" # agentic ai multiplexer
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
       "tree-sitter-cli" # tree-sitter CLI
-      # "waynehoover/tap/pbrich" # pbcopy for multiple formats (text, html, rtf, images)
-
-      # WeasyPrint/Cairo dependencies for marker-pdf DOCX/PPTX support
-      # Installed via Homebrew because UV-installed marker-pdf needs
-      # system-level C libraries via DYLD_FALLBACK_LIBRARY_PATH.
-      # Nix's library isolation makes this difficult for UV tools.
       "cairo" # 2D graphics library
       "pango" # text layout library
       "gdk-pixbuf" # image loading library

@@ -20,9 +20,7 @@
     ]
     ++ (
       if isDarwin
-      then [
-        ./llm.nix
-      ]
+      then []
       else []
     );
 
