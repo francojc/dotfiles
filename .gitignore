@@ -16,17 +16,18 @@
 # Application configuration directories
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
-.config/containers/*
 .config/gh/*
 .config/git/*
 .config/kitty/kitty.conf
 .config/mole/*
+.config/nicotine/*
 .config/nvim/lua/theme-config.lua
 .config/nvim/nvim-pack-lock.json
 .config/opencode/opencode.json
 .config/pianobar/state
 .config/pulse/*
 .config/raycast/*
+.config/rclone/rclone.conf
 .config/tmux/*
 .config/wezterm/wezterm.lua
 
@@ -38,41 +39,8 @@
 .aider.input*
 .aider.tags*
 
-# CLAUDE AI
-*.claude/.settings.local.json
-.claude/.credentials.json
-.claude/backups/*
-.claude/cache
-.claude/last-notification
-.claude/paste-cache
-.claude/sessions
-.claude/tasks/
-.claude/telemetry
-.claude/usage-data/
-
-# ----------------------------------------------------------
-# R Programming Language
-# ----------------------------------------------------------
-.Rdata
-.Rhistory
-.Rproj.user
-.httr-oauth
-
-# ----------------------------------------------------------
-# Documentation & Publishing
-# ----------------------------------------------------------
-# Quarto publishing system
-.quarto
-_freeze
-
-# ----------------------------------------------------------
-# Project-Specific Files
-# ----------------------------------------------------------
-
-.claude/mcp-needs-auth-cache.json
-
+# Pi coding agent
 .pi/agent/sessions/*
 .pi/agent/auth.json
 .pi/agent/settings.json
-.config/nicotine/*
-.config/rclone/rclone.conf
+
