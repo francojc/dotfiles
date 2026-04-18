@@ -19,22 +19,14 @@
 .config/containers/*
 .config/gh/*
 .config/git/*
-.config/github-copilot
 .config/kitty/kitty.conf
-.config/kitty/kitty.conf
-.config/litellm/github_copilot
 .config/mole/*
-.config/ncspot/userstate.cbor
-.config/nvim-nix/lua/theme-config.lua
 .config/nvim/lua/theme-config.lua
 .config/nvim/nvim-pack-lock.json
 .config/opencode/opencode.json
 .config/pianobar/state
 .config/pulse/*
 .config/raycast/*
-.config/reddix/config.yaml
-.config/reddix/config.yaml.backup
-.config/reddix/reddix-receipt.json
 .config/tmux/*
 .config/wezterm/wezterm.lua
 
@@ -58,11 +50,6 @@
 .claude/telemetry
 .claude/usage-data/
 
-# Gemini AI
-# CLI config
-.config/configstore/*
-.gemini/installation_id
-
 # ----------------------------------------------------------
 # R Programming Language
 # ----------------------------------------------------------
@@ -81,15 +68,11 @@ _freeze
 # ----------------------------------------------------------
 # Project-Specific Files
 # ----------------------------------------------------------
-conversation.toml
 
 .claude/mcp-needs-auth-cache.json
+
 .pi/agent/sessions/*
-/.pi/agent/auth.json
+.pi/agent/auth.json
 .pi/agent/settings.json
-.pi/agent/memory/*
-.pi/memory/episodes/*
-.pi/memory/processor.log
-.pi/memory/semantic/*
 .config/nicotine/*
 .config/rclone/rclone.conf
