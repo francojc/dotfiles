@@ -20,9 +20,6 @@
 ## Configuration Structure
 
 ```txt
-├── docs
-│   ├── README.md
-│   └── ollama-hybrid-setup.md
 ├── flake.lock
 ├── flake.nix
 ├── home
@@ -33,8 +30,6 @@
 │   ├── i3
 │   │   └── default.nix
 │   ├── kitty.nix
-│   ├── ncspot.nix
-│   ├── reddix.nix
 │   ├── shell
 │   │   ├── aliases.zsh
 │   │   ├── default.nix
@@ -63,10 +58,6 @@
 ├── modules
 │   ├── darwin
 │   │   ├── apps.nix
-│   │   ├── copilot-api.nix
-│   │   ├── ollama-back.nix
-│   │   ├── ollama.nix
-│   │   └── reddix.nix
 │   ├── nixos
 │   │   └── apps.nix
 │   └── shared
@@ -94,17 +85,13 @@ This flake manages three distinct hosts with different hardware platforms and pu
 
 | Host | Platform | Theme | Desktop | Services |
 |------|----------|-------|---------|----------|
-| **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | ayu | macOS | copilot-api, ollama, reddix |
-| **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | reddix |
+| **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | ayu | macOS | - |
+| **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
 | **Mini-Rover** | x86_64-linux (Mac Mini 2011) | nightfox | i3 (X11) | - |
 
 ### Mac-Minicore
 
 Primary development machine running macOS on Apple Silicon (M4 Mac Mini). Configured with the "ayu" theme and runs all custom services:
-
-- **copilot-api**: Token sharing proxy for GitHub Copilot (port 4141, Tailscale accessible)
-- **ollama**: Local LLM service via hybrid Homebrew+Nix setup (port 11434, Tailscale accessible)
-- **reddix**: Reddit credential injection wrapper
 
 Includes custom keyboard mapping (Fn key → Right Option).
 
@@ -126,31 +113,6 @@ A token sharing proxy for GitHub Copilot that prevents OAuth conflicts when usin
 - **Port**: 4141 (accessible via Tailscale at 0.0.0.0)
 - **Purpose**: Share GitHub Copilot authentication tokens across multiple development machines
 - **Active on**: Mac-Minicore only
-
-### Ollama Service
-
-Local LLM inference service using a hybrid Homebrew + Nix approach.
-
-- **Module**: `modules/darwin/ollama.nix`
-- **Port**: 11434 (accessible via Tailscale at 0.0.0.0)
-- **Approach**: Hybrid setup - Ollama binary managed by Homebrew, configuration managed by Nix
-- **Configuration**:
-  - 8192 token context window (`OLLAMA_NUM_CTX`)
-  - Flash attention enabled (`OLLAMA_FLASH_ATTENTION=1`)
-  - Q8_0 quantized KV cache (`OLLAMA_KV_CACHE_TYPE=q8_0`)
-  - 4 parallel requests (`OLLAMA_NUM_PARALLEL=4`)
-- **Active on**: Mac-Minicore only
-- **Documentation**: See `docs/ollama-hybrid-setup.md` for detailed setup and sync procedures
-
-**Important**: This service requires manual synchronization between Nix configuration and the LaunchAgent plist. When updating settings in `hosts/Mac-Minicore/default.nix`, you must manually update `~/Library/LaunchAgents/com.github.ollama.plist` and reload the service.
-
-### Reddix Service
-
-A wrapper service that injects Reddit credentials from the `pass` password manager.
-
-- **Module**: `modules/darwin/reddix.nix`
-- **Purpose**: Securely inject Reddit API credentials into applications without storing them in plain text
-- **Active on**: Mac-Minicore and Macbook-Airborne
 
 ## Theme System
 
@@ -235,20 +197,6 @@ This configuration includes Flatpak support:
 - **Repositories**: Configured in `modules/nixos/apps.nix`.
 - **Integration**: Uses `nix-flatpak` for managing Flatpak packages, as defined in `flake.nix`.
 
-## Documentation
-
-This configuration includes comprehensive documentation in the `docs/` directory:
-
-- **`docs/README.md`**: Documentation index with quick references for common operations, theme switching, and service management
-- **`docs/ollama-hybrid-setup.md`**: Detailed guide for the Ollama hybrid Homebrew + Nix setup, including:
-  - Initial installation and configuration
-  - LaunchAgent plist setup
-  - Manual synchronization procedures
-  - Troubleshooting and verification steps
-  - Environment variable reference
-
-For detailed information about specific aspects of this configuration, consult these documentation files.
-
 ## Usage Instructions
 
 > **Note**: This Nix configuration is housed within my personal dotfiles repository. If you do not plan to use it as-is, please refer to it for inspiration in building your own configuration instead of cloning it directly.
@@ -286,8 +234,8 @@ This configuration supports two Darwin hosts: `Mac-Minicore` and `Macbook-Airbor
    ```
 
 **Choose the appropriate hostname**:
-- `Mac-Minicore` - For M1 Mac Mini (includes all services: copilot-api, ollama, reddix)
-- `Macbook-Airborne` - For MacBook Air M2/M3 (lightweight, reddix only)
+- `Mac-Minicore` - For M1 Mac Mini M4
+- `Macbook-Airborne` - For MacBook Air M3
 
 ### For NixOS (Mini-Rover)
 

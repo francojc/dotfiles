@@ -13,7 +13,6 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
-    ../../modules/darwin/reddix.nix
 
     # Host-specific Homebrew packages (merged with shared apps.nix)
     {

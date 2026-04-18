@@ -18,9 +18,6 @@
         ${builtins.readFile ./repo.zsh}
         ${builtins.readFile ./fzf.zsh}
 
-        # Source zsh-ai-cmd plugin
-        source ${config.home.homeDirectory}/.dotfiles/.config/zsh/zsh-ai-cmd/zsh-ai-cmd.plugin.zsh
-
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''
@@ -79,9 +76,6 @@
         # Set for GUI apps
         launchctl setenv DYLD_FALLBACK_LIBRARY_PATH "/opt/homebrew/lib:/etc/profiles/per-user/${username}/lib" 2>/dev/null || true
 
-        # OLLAMA
-        export OLLAMA_HOST="100.101.38.4"
-
         # --- FLATPAK INTEGRATION ---
         # Ensure Flatpak apps can find system fonts and themes
         export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/usr/share:$XDG_DATA_DIRS"
@@ -100,18 +94,6 @@
         # ZSH plugins
         export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
         export ZVM_KEYTIMEOUT=1 # 1 second
-        export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#5c6370"
-
-        # zsh-ai-cmd configuration
-        # -- Uncomment and customize if needed:
-        # export ZSH_AI_CMD_PROVIDER='anthropic'
-        # export ZSH_AI_CMD_ANTHROPIC_MODEL='claude-haiku-4-5-20251001'
-        export ZSH_AI_CMD_PROVIDER='copilot'
-        export ZSH_AI_CMD_COPILOT_MODEL='claude-haiku-4.5'
-        export ZSH_AI_CMD_COPILOT_HOST='https://copilot.gerbil-matrix.ts.net'
-        # export ZSH_AI_CMD_PROVIDER='ollama'
-        # export ZSH_AI_CMD_OLLAMA_MODEL='qwen3.5:4b'
-        # export ZSH_AI_CMD_OLLAMA_HOST='mac-minicore.gerbil-matrix.ts.net:11434'
 
         # Press 'v' in normal mode to open current file in $EDITOR
 

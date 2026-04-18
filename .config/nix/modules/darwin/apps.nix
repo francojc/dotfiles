@@ -34,8 +34,6 @@
       "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
-      "ollama" # LLM inference server (temporary replacement for nixpkgs version)
-      "oronbz/tap/nag" # Reminders TUI
       "pngpaste" # paste images
       "raine/workmux/workmux" # agentic ai multiplexer
       "rename" # file renaming utility

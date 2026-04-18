@@ -5,7 +5,6 @@
 }: {
   # System Services
   services.tailscale.enable = true;
-  # services.ollama.enable = true;
 
   # Flatpak Configuration (mirrors homebrew structure from darwin/apps.nix)
   services.flatpak = {
