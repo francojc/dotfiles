@@ -20,14 +20,20 @@
 .config/git/*
 .config/kitty/kitty.conf
 .config/mole/*
+<<<<<<< HEAD
 .config/nicotine/*
+=======
+>>>>>>> 03fe97e (chore: remove unused GitHub Copilot configuration files and update .gitignore)
 .config/nvim/lua/theme-config.lua
 .config/nvim/nvim-pack-lock.json
 .config/opencode/opencode.json
 .config/pianobar/state
 .config/pulse/*
 .config/raycast/*
+<<<<<<< HEAD
 .config/rclone/rclone.conf
+=======
+>>>>>>> 03fe97e (chore: remove unused GitHub Copilot configuration files and update .gitignore)
 .config/tmux/*
 .config/wezterm/wezterm.lua
 
