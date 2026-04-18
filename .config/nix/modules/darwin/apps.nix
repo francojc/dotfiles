@@ -18,7 +18,6 @@
     };
 
     taps = [
-      "jundot/omlx" # olmx
     ];
 
     brews = [
@@ -28,7 +27,6 @@
       "git-filter-repo" # remove files/dirs from git history
       "keith/formulae/reminders-cli"
       "librespeed/tap/librespeed-cli"
-      "omlx" # OpenAI LLMs
       "llama.cpp" # LLaMA model inference
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
