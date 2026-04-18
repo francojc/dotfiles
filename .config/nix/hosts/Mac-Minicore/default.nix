@@ -15,6 +15,8 @@
     ../../profiles/darwin/configuration.nix
     ../../modules/darwin/ollama.nix
     ../../modules/darwin/reddix.nix
+    ../../modules/darwin/llama-server.nix
+    ../../modules/darwin/llama-embed-server.nix
 
     # Inline module for host-specific service configuration
     {
@@ -47,12 +49,23 @@
           host = "100.101.38.4"; # Tailscale IP — no university LAN exposure
           flashAttention = true;
           kvCacheType = "q8_0";
-          # Optional: Additional settings
-          # keepModelLoaded = true;
+          # Reduced role: cloud-proxy models only.
           extraEnvironment = {
             OLLAMA_NUM_PARALLEL = "4";
-            OLLAMA_NUM_CTX = "8192"; # Increase context window to 8192 tokens
+            OLLAMA_NUM_CTX = "8192";
           };
+        };
+
+        # Local model router (OpenAI-compatible) on :8081
+        llamaRouter = {
+          enable = true;
+          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-general.sh";
+        };
+
+        # Dedicated embeddings endpoint on :8082
+        llamaEmbed = {
+          enable = true;
+          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-embed.sh";
         };
       };
 

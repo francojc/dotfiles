@@ -91,5 +91,47 @@
       api_base: "https://copilot.gerbil-matrix.ts.net"
       api_key_name: copilot
       supports_tools: true
+
+    # Local llama.cpp router models (OpenAI-compatible API on :8081)
+    # Run once after rebuild:
+    #   llm keys set local-router "no-key"
+    #   llm keys set local-embed "no-key"
+
+    - model_id: local/qwen3.5-9b
+      model_name: Qwen3.5-9B-Q8_0
+      api_base: "http://100.101.38.4:8081"
+      api_key_name: local-router
+      supports_tools: true
+
+    - model_id: local/gpt-oss-20b
+      model_name: gpt-oss-20b-Q8_0
+      api_base: "http://100.101.38.4:8081"
+      api_key_name: local-router
+      supports_tools: true
+
+    - model_id: local/gemma-4-e4b
+      model_name: gemma-4-E4B-it-Q6_K
+      api_base: "http://100.101.38.4:8081"
+      api_key_name: local-router
+      supports_tools: true
+
+    - model_id: local/gemma-4-e2b
+      model_name: gemma-4-E2B-it-Q8_0
+      api_base: "http://100.101.38.4:8081"
+      api_key_name: local-router
+      supports_tools: true
+
+    - model_id: local/qwen3.5-4b
+      model_name: Qwen3.5-4B-Q8_0
+      api_base: "http://100.101.38.4:8081"
+      api_key_name: local-router
+      supports_tools: true
+
+    # Local llama.cpp embedding endpoint on :8082
+    - model_id: local/nomic-embed
+      model_name: nomic-embed-text-v1.5
+      api_base: "http://100.101.38.4:8082"
+      api_key_name: local-embed
+      supports_tools: false
   '';
 }

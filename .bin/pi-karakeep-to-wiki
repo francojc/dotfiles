@@ -2,7 +2,7 @@
 # Karakeep sync + auto-ingest — Daily at 05:30
 # 1. Syncs Karakeep bookmarks to kb/sources/web/
 # 2. Detects new markdown files since last run
-# 3. Runs wiki-batch-ingest on new files
+# 3. Runs wiki-ingest on new files
 set -euo pipefail
 source "${HOME}/.bin/pi-cron-common"
 
@@ -64,7 +64,7 @@ main() {
   local file_list
   file_list=$(printf '"%s" ' "${ingest_files[@]}")
 
-  if pi_run "wiki-batch-ingest" "$file_list"; then
+  if pi_run "wiki-ingest" "$file_list"; then
     : > "$PENDING_FILE"
     log_info "Auto-ingest complete"
     qmd_refresh
