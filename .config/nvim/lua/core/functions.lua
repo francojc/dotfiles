@@ -279,6 +279,68 @@ function _G.Pack_check_updates()
 	return updatable
 end
 
+local function parse_urls_from_error(err)
+	local urls = {}
+	for url in tostring(err):gmatch("https?://[^%s']+") do
+		urls[url:gsub("/$", "")] = true
+	end
+	return urls
+end
+
+function _G.Pack_diagnose_fetch_failures(failed_urls)
+	local plugins = vim.pack.get()
+	local failures = {}
+	local filter_urls = failed_urls or {}
+	local use_filter = next(filter_urls) ~= nil
+
+	for _, plugin in ipairs(plugins) do
+		if plugin.spec and plugin.spec.src then
+			local src = plugin.spec.src:gsub("/$", "")
+			if (not use_filter) or filter_urls[src] then
+				local ok_wait, result = pcall(function()
+					return vim.system({ "git", "ls-remote", "--exit-code", "--heads", "--tags", src }, { text = true }):wait(10000)
+				end)
+
+				if not ok_wait then
+					table.insert(failures, {
+						name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t"),
+						src = src,
+						error = "diagnostic check failed to run",
+					})
+				elseif result.code ~= 0 then
+					local msg = vim.trim(result.stderr or result.stdout or ("git exited with code " .. tostring(result.code)))
+					table.insert(failures, {
+						name = plugin.spec.name or vim.fn.fnamemodify(plugin.path, ":t"),
+						src = src,
+						error = msg,
+					})
+				end
+			end
+		end
+	end
+
+	if #failures == 0 then
+		vim.notify("PackDiagnose: all checked plugin remotes are reachable.", vim.log.levels.INFO)
+		return failures
+	end
+
+	table.sort(failures, function(a, b)
+		return a.name < b.name
+	end)
+
+	local lines = { string.format("PackDiagnose: %d plugin remote(s) failed:", #failures) }
+	for _, failure in ipairs(failures) do
+		local short_error = failure.error:gsub("\n+", " ")
+		if #short_error > 140 then
+			short_error = short_error:sub(1, 140) .. "…"
+		end
+		table.insert(lines, string.format("  • %s\n    %s\n    %s", failure.name, failure.src, short_error))
+	end
+
+	vim.notify(table.concat(lines, "\n"), vim.log.levels.ERROR)
+	return failures
+end
+
 function _G.Pack_update_all(force)
 	vim.notify((force and "Force updating" or "Updating") .. " all plugins...", vim.log.levels.INFO)
 	_G.Save_last_check_date()
@@ -286,7 +348,12 @@ function _G.Pack_update_all(force)
 	if ok then
 		vim.notify("Plugins updated successfully!", vim.log.levels.INFO)
 	else
-		vim.notify("Plugin update failed: " .. tostring(err), vim.log.levels.ERROR)
+		local err_msg = tostring(err)
+		vim.notify("Plugin update failed: " .. err_msg, vim.log.levels.ERROR)
+		local failed_urls = parse_urls_from_error(err_msg)
+		vim.schedule(function()
+			_G.Pack_diagnose_fetch_failures(failed_urls)
+		end)
 	end
 end
 

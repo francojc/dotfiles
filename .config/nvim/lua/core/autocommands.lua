@@ -166,6 +166,11 @@ vim.api.nvim_create_user_command("PackCheck", function()
 	_G.Pack_check_updates()
 end, { desc = "Check for plugin updates" })
 
+-- Diagnose plugin fetch/connectivity failures
+vim.api.nvim_create_user_command("PackDiagnose", function()
+	_G.Pack_diagnose_fetch_failures()
+end, { desc = "Diagnose plugin remote fetch failures" })
+
 -- Update specific plugin
 vim.api.nvim_create_user_command("PackUpdatePlugin", function(opts)
 	if opts.args and opts.args ~= "" then

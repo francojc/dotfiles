@@ -10,6 +10,7 @@ vim.g.loaded_python3_provider = 0
 
 ---| Llama.vim ----------------------------------
 -- AI-powered code completion using local llama.cpp server
+local llama_api_key = vim.env.LLAMA_API_KEY or ""
 vim.g.llama_config = {
   -- Behavior
   enable_at_startup = true,
@@ -17,7 +18,7 @@ vim.g.llama_config = {
   max_line_suffix = 8,
   -- Server connection
   endpoint_fim = "http://100.101.38.4:8080/infill",
-  api_key = "de7df50cff8b8ed12426b5d2af443c6644a356f7359ca6ba5d221b23b7339ec1",
+  api_key = llama_api_key,
   model_fim = "",
   -- Context settings
   n_prefix = 512,
