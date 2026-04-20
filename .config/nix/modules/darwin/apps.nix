@@ -54,10 +54,9 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
+      "brave-browser" # web browser
       "claude" # Claude Desktop
       "ghostty" # Terminal emulator
-      # "google-chrome"
-      "ungoogled-chromium" # Chromium without Google tracking
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
