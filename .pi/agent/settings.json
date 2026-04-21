@@ -1,0 +1,26 @@
+{
+  "lastChangelogVersion": "0.68.0",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-6",
+  "enabledModels": [
+    "openai-codex/gpt-5.4",
+    "openai-codex/gpt-5.3-codex",
+    "openrouter/minimax/minimax-m2.7",
+    "openrouter/z-ai/glm-5.1",
+    "openrouter/qwen/qwen3-coder-next",
+    "github-copilot/claude-haiku-4.5",
+    "anthropic/claude-sonnet-4-6",
+    "github-copilot/claude-sonnet-4.6",
+    "anthropic/claude-opus-4-6"
+  ],
+  "collapseChangelog": true,
+  "defaultThinkingLevel": "medium",
+  "packages": [
+    "npm:@plannotator/pi-extension",
+    "npm:pi-btw",
+    "npm:pi-caveman",
+    "npm:@ogulcancelik/pi-ghostty-theme-sync"
+  ],
+  "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
+  "theme": "ghostty-sync-e13299c9"
+}

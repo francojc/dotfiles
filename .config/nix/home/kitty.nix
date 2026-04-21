@@ -13,6 +13,7 @@
       allow_remote_control yes
       listen_on unix:/tmp/nicekitty
       macos_quit_when_last_window_closed yes
+      macos_option_as_alt right
 
       # Font Configuration ------------------------------------
       ## Primary Font Settings
