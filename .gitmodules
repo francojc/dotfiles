@@ -1,3 +1,3 @@
-[submodule "/Users/francojc/.dotfiles/.pi/agent/extensions/pi-lsp-extension"]
-	path = /Users/francojc/.dotfiles/.pi/agent/extensions/pi-lsp-extension
+[submodule ".pi/agent/extensions/pi-lsp-extension"]
+	path = .pi/agent/extensions/pi-lsp-extension
 	url = git@github.com:francojc/pi-lsp-extension.git
