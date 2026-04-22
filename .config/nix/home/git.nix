@@ -38,6 +38,9 @@
       rebase.autoSquash = true;
       merge.conflictStyle = "zdiff3";
 
+      # Submodules
+      submodule.recurse = true;
+
       # Branch tracking
       branch.autosetupmerge = "always";
       branch.autosetuprebase = "always";
