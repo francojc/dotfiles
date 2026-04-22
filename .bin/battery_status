@@ -77,7 +77,15 @@ get_color() {
 
 # Get battery information using pmset
 battery_info=$(pmset -g batt)
+
+# Exit early if no battery present (e.g., desktop Mac)
+if ! echo "$battery_info" | grep -q '%'; then
+    echo "No battery detected"
+    exit 0
+fi
+
 percentage=$(echo "$battery_info" | grep -o '[0-9]*%' | tr -d '%')
+percentage=${percentage:-0}
 status=$(echo "$battery_info" | grep -o 'AC Power\|Battery Power')
 time_remaining=$(echo "$battery_info" | grep -o '[0-9:]* remaining' | awk '{print $1}')
 
