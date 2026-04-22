@@ -60,7 +60,7 @@
 
       # -- General
       keybind = global:ctrl+`=toggle_quick_terminal
-      keybind = shift+enter=text:\n
+
 
       # -- Oh-My-Pi
       # keybind = alt+backspace=text:\x1b\x7f

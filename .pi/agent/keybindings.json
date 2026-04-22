@@ -3,20 +3,7 @@
     "alt+enter",
     "shift+enter"
   ],
-  "tui.editor.pageUp": [
-    "ctrl+b"
-  ],
-  "tui.select.pageUp": [
-    "ctrl+b"
-  ],
-  "tui.editor.pageDown": [
-    "ctrl+f"
-  ],
-  "tui.select.pageDown": [
-    "ctrl+f"
-  ],
-  "app.message.followUp": [],
-  "btw.overlay.toggleFocus": [
-    "ctrl+;"
+  "app.message.followUp": [
+    "ctrl+shift+enter"
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.68.0",
+  "lastChangelogVersion": "0.68.1",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
   "enabledModels": [
@@ -14,6 +14,8 @@
     "anthropic/claude-opus-4-6"
   ],
   "collapseChangelog": true,
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
   "defaultThinkingLevel": "medium",
   "packages": [
     "npm:@plannotator/pi-extension",
@@ -22,8 +24,10 @@
     "npm:@ogulcancelik/pi-ghostty-theme-sync"
   ],
   "extensions": [
-    "extensions/pi-lsp-extension/src/index.ts"
+    "extensions/pi-lsp-extension/src/index.ts",
+    "extensions/git-branch-dirty-footer.ts"
   ],
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-e13299c9"
 }
+
