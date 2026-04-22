@@ -33,6 +33,7 @@
     nixd # Nix LSP
     pyright # Python LSP
     tinymist # Typst LSP
+    typescript-language-server # TypeScript LSP
     vscode-json-languageserver # JSON LSP
     yaml-language-server # YAML LSP
 

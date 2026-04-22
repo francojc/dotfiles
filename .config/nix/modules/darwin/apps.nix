@@ -45,6 +45,7 @@
       "pango" # text layout library
       "gdk-pixbuf" # image loading library
       "libffi" # Foreign Function Interface library
+      "vhs" # cli for programmable terminal gifs
       "weasyprint" # HTML to PDF converter
       "yt-dlp" # YouTube video downloader
     ];

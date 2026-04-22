@@ -1,0 +1,29 @@
+# typr - Typing Test Configuration
+#
+# This file contains default settings for typr.
+# Command-line flags override these settings.
+
+words: 1000en
+quotes: ""
+"n": 50
+g: 1
+start: -1
+w: 80
+t: -1
+theme: default
+showwpm: false
+notheme: false
+blockcursor: false
+bold: false
+noskip: false
+nobackspace: false
+nohighlight: false
+highlight1: false
+highlight2: false
+raw: false
+multi: false
+csv: false
+csvdir: ""
+json: false
+oneshot: false
+noreport: false

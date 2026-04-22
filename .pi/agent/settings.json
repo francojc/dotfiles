@@ -21,6 +21,10 @@
     "npm:pi-caveman",
     "npm:@ogulcancelik/pi-ghostty-theme-sync"
   ],
+  "extensions": [
+    "extensions/pi-lsp-extension/src/index.ts"
+  ],
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-e13299c9"
 }
+
