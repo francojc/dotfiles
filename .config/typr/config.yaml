@@ -2,6 +2,8 @@
 #
 # This file contains default settings for typr.
 # Command-line flags override these settings.
+#
+# Config path: /Users/francojc/.config/typr/config.yaml
 
 words: 1000en
 quotes: ""
@@ -22,8 +24,8 @@ highlight1: false
 highlight2: false
 raw: false
 multi: false
-csv: false
-csvdir: ""
+csv: true
+csvdir: /Users/francojc/.local/share/typr/results
 json: false
 oneshot: false
 noreport: false
