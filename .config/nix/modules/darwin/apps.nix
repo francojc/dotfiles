@@ -55,13 +55,13 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "brave-browser" # web browser
       "claude" # Claude Desktop
       "ghostty" # Terminal emulator
+      "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
+      "keycastr" # keystroke visualizer
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
-      "opencode-desktop" # opencode desktop app
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
@@ -71,7 +71,6 @@
       "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
-      "keycastr" # keystroke visualizer
       # "blackhole-2ch" # virtual audio driver
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording

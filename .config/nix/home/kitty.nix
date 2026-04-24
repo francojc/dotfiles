@@ -24,10 +24,10 @@
 
       font_size ${toString (
         if hostname == "Mac-Minicore"
-        then 20
+        then 18
         else if hostname == "Macbook-Airborne"
-        then 16
-        else 14
+        then 14
+        else 12
       )}
 
       ## Advanced Font Rendering

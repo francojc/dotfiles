@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.68.1",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-4-6",
+  "defaultProvider": "llama-router",
+  "defaultModel": "Qwen3.6-35B-A3B-UD-Q4_K_M",
   "enabledModels": [
     "openai-codex/gpt-5.4",
     "openai-codex/gpt-5.3-codex",
@@ -11,12 +11,13 @@
     "github-copilot/claude-haiku-4.5",
     "anthropic/claude-sonnet-4-6",
     "github-copilot/claude-sonnet-4.6",
-    "anthropic/claude-opus-4-6"
+    "anthropic/claude-opus-4-6",
+    "llama-router/Qwen3.6-35B-A3B-UD-Q4_K_M"
   ],
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "minimal",
   "packages": [
     "npm:@plannotator/pi-extension",
     "npm:pi-btw",
