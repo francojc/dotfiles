@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.68.1",
-  "defaultProvider": "llama-router",
-  "defaultModel": "Qwen3.6-35B-A3B-UD-Q4_K_M",
+  "lastChangelogVersion": "0.69.0",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-6",
   "enabledModels": [
     "openai-codex/gpt-5.4",
     "openai-codex/gpt-5.3-codex",
@@ -31,3 +31,4 @@
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-e13299c9"
 }
+
