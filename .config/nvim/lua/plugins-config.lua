@@ -1,16 +1,16 @@
----| PLUGINS CONFIGURATION ------------------------------------------------
+---| PLUGINS CONFIGURATION -----------------------------
 
----| UPFRONT ---------------------------------------------------
+---| UPFRONT ------------------------------------------
 -- Load theme config early for colors used by plugins
 local theme_config = require("theme-config")
 
----=============================================================
----==== EAGER PLUGINS ====
----=============================================================
+---=====================================================
+---==== EAGER PLUGINS ====---
+---=====================================================
 
----=============================================================
+---=====================================================
 ---| COMPLETION & SNIPPETS
----=============================================================
+---=====================================================
 
 ---| Blink.cmp ----------------------------------
 require("blink.cmp").setup({
@@ -812,12 +812,37 @@ local ft_lazy = {
 						unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
 						checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 						custom = {
-							waiting = { raw = "[?]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+							waiting = {
+								raw = "[?]",
+								rendered = " ",
+								highlight = "DiagnosticInfo",
+								scope_highlight = nil,
+							},
 							stale = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
-							forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
-							progress = { raw = "[/]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
-							cancel = { raw = "[~]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
-							important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
+							forward = {
+								raw = "[>]",
+								rendered = " ",
+								highlight = "DiagnosticError",
+								scope_highlight = nil,
+							},
+							progress = {
+								raw = "[/]",
+								rendered = " ",
+								highlight = "DiagnosticWarn",
+								scope_highlight = nil,
+							},
+							cancel = {
+								raw = "[~]",
+								rendered = " ",
+								highlight = "DiagnosticError",
+								scope_highlight = nil,
+							},
+							important = {
+								raw = "[!]",
+								rendered = " ",
+								highlight = "DiagnosticWarn",
+								scope_highlight = nil,
+							},
 						},
 					},
 					code = {
@@ -892,8 +917,16 @@ local ft_lazy = {
 				local pandoc_citations = {
 					{ cmd = "pandoc cite", template = "[@{{key}}]", desc = "Pandoc inline citation" },
 					{ cmd = "pandoc in-text", template = "@{{key}}", desc = "Pandoc in-text author citation" },
-					{ cmd = "pandoc suppress author", template = "[-@{{key}}]", desc = "Pandoc citation (suppress author)" },
-					{ cmd = "pandoc with page", template = "[@{{key}}, p. ]", desc = "Pandoc citation with page locator" },
+					{
+						cmd = "pandoc suppress author",
+						template = "[-@{{key}}]",
+						desc = "Pandoc citation (suppress author)",
+					},
+					{
+						cmd = "pandoc with page",
+						template = "[@{{key}}, p. ]",
+						desc = "Pandoc citation with page locator",
+					},
 					{ cmd = "pandoc with prefix", template = "[see @{{key}}]", desc = "Pandoc citation with prefix" },
 					{ cmd = "pandoc multiple", template = "[@{{key}}; @]", desc = "Pandoc multiple citations" },
 				}
@@ -913,8 +946,8 @@ local ft_lazy = {
 		},
 	},
 	quarto = {
-		{ "image.nvim", nil },          -- shared with markdown; packadd is a no-op if already loaded
-		{ "img-clip.nvim", nil },       -- shared with markdown
+		{ "image.nvim", nil }, -- shared with markdown; packadd is a no-op if already loaded
+		{ "img-clip.nvim", nil }, -- shared with markdown
 		{ "render-markdown.nvim", nil }, -- shared with markdown
 		{
 			"otter.nvim",

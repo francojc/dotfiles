@@ -25,7 +25,9 @@ local eager_plugins = {
 	{ src = "https://github.com/webhooked/kanso.nvim" },
 
 	-- Core (must be available at startup)
-	{ src = "https://github.com/Saghen/blink.cmp" },
+	{ src = "https://github.com/saghen/blink.cmp", 
+      version = "v1", -- branch
+    },
 	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
 	{ src = "https://github.com/echasnovski/mini.icons" },
