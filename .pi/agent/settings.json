@@ -1,23 +1,23 @@
 {
-  "lastChangelogVersion": "0.69.0",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-4-6",
+  "lastChangelogVersion": "0.70.2",
+  "defaultProvider": "ollama",
+  "defaultModel": "deepseek-v4-flash:cloud",
   "enabledModels": [
-    "openai-codex/gpt-5.4",
-    "openai-codex/gpt-5.3-codex",
-    "openrouter/minimax/minimax-m2.7",
-    "openrouter/z-ai/glm-5.1",
-    "openrouter/qwen/qwen3-coder-next",
-    "github-copilot/claude-haiku-4.5",
-    "anthropic/claude-sonnet-4-6",
+    "llama-router/Qwen3.5-4B-Q8_0",
+    "llama-router/Qwen3.5-9B-Q8_0",
+    "llama-router/gemma-4-E2B-it-Q8_0",
+    "llama-router/gemma-4-E4B-it-Q6_K",
+    "llama-router/gpt-oss-20b-Q8_0",
     "github-copilot/claude-sonnet-4.6",
-    "anthropic/claude-opus-4-6",
-    "llama-router/Qwen3.6-35B-A3B-UD-Q4_K_M"
+    "github-copilot/claude-haiku-4.5",
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.3-codex",
+    "ollama/deepseek-v4-flash:cloud"
   ],
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "minimal",
+  "defaultThinkingLevel": "low",
   "packages": [
     "npm:@plannotator/pi-extension",
     "npm:pi-btw",
@@ -31,4 +31,3 @@
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-e13299c9"
 }
-

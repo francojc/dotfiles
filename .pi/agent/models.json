@@ -4,6 +4,11 @@
       "api": "openai-completions",
       "apiKey": "ollama",
       "baseUrl": "http://100.101.38.4:11434/v1",
+      "compat": {
+        "reasoningEffortMap": {
+          "minimal": "low"
+        }
+      },
       "models": [
         {
           "_launch": true,
@@ -48,6 +53,14 @@
             "text"
           ],
           "reasoning": true
+        },
+        {
+          "contextWindow": 1048576,
+          "id": "deepseek-v4-flash:cloud",
+          "input": [
+            "text"
+          ],
+          "reasoning": true
         }
       ]
     },
@@ -57,24 +70,20 @@
       "baseUrl": "http://100.101.38.4:8081/v1",
       "compat": {
         "supportsDeveloperRole": false,
-        "supportsReasoningEffort": false
+        "supportsReasoningEffort": false,
+        "reasoningEffortMap": {
+          "minimal": "low"
+        },
+        "requiresThinkingAsText": true
       },
       "models": [
-        {
-          "id": "Qwen3.6-35B-A3B-UD-Q4_K_M",
-          "reasoning": true,
-          "input": [
-            "text"
-          ],
-          "contextWindow": 131072
-        },
         {
           "id": "Qwen3.5-9B-Q8_0",
           "reasoning": true,
           "input": [
             "text"
           ],
-          "contextWindow": 131072
+          "contextWindow": 30000
         },
         {
           "id": "Qwen3.5-4B-Q8_0",
@@ -82,7 +91,7 @@
           "input": [
             "text"
           ],
-          "contextWindow": 131072
+          "contextWindow": 30000
         },
         {
           "id": "gpt-oss-20b-Q8_0",
@@ -90,23 +99,25 @@
           "input": [
             "text"
           ],
-          "contextWindow": 131072
+          "contextWindow": 30000
         },
         {
           "id": "gemma-4-E4B-it-Q6_K",
           "reasoning": false,
           "input": [
+            "image",
             "text"
           ],
-          "contextWindow": 262144
+          "contextWindow": 30000
         },
         {
           "id": "gemma-4-E2B-it-Q8_0",
           "reasoning": false,
           "input": [
+            "image",
             "text"
           ],
-          "contextWindow": 262144
+          "contextWindow": 30000
         }
       ]
     }

@@ -54,6 +54,7 @@
         export USER=$(whoami)
         export VISUAL='nvim'
         export GCAL='-s 1 --iso-week-number=yes'
+        export OLLAMA_HOST='100.101.38.4:11434'
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
@@ -63,6 +64,8 @@
         export UV_PYTHON="/etc/profiles/per-user/${username}/bin/python3"
         # Set for GUI apps (like Claude Desktop with MCP servers)
         launchctl setenv UV_PYTHON "/etc/profiles/per-user/${username}/bin/python3" 2>/dev/null || true
+        launchctl setenv OLLAMA_HOST "100.101.38.4:11434" 2>/dev/null || true
+        [[ -n "$LLAMA_API_KEY" ]] && launchctl setenv LLAMA_API_KEY "$LLAMA_API_KEY" 2>/dev/null || true
         # --- PyPi PUBLISH --
         export UV_PUBLISH_USER="Reveal1111"
         export UV_PUBLISH_TOKEN=$PYPI_PUBLISH_TOKEN
