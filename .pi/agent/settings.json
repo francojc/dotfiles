@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.68.1",
-  "defaultProvider": "llama-router",
-  "defaultModel": "gemma-4-E2B-it-Q8_0",
+  "lastChangelogVersion": "0.70.2",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
   "enabledModels": [
     "llama-router/Qwen3.5-4B-Q8_0",
     "llama-router/Qwen3.5-9B-Q8_0",
@@ -17,7 +17,7 @@
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "low",
+  "defaultThinkingLevel": "high",
   "packages": [
     "npm:@plannotator/pi-extension",
     "npm:pi-btw",

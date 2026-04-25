@@ -6,6 +6,7 @@ LOG_FILE="${LOG_DIR}/daily-briefing.log"
 
 main() {
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
+  pi_run "weekly-planning" "rebalance"
   pi_run "daily-briefing" "$(date +%Y-%m-%d)"
 }
 

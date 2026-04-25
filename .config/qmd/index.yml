@@ -1,16 +1,10 @@
 collections:
   wiki:
-    path: /Users/jeridf/Obsidian/Notes/kb/wiki
+    path: /Users/francojc/Obsidian/Notes/kb/wiki
     pattern: "**/*.md"
-    context:
-      "": "LLM-generated knowledge base: concept pages, entity pages, source summaries, and synthesis."
   documents:
-    path: /Users/jeridf/Obsidian/Notes/kb/sources/documents
+    path: /Users/francojc/Obsidian/Notes/kb/sources/documents
     pattern: "**/*.md"
-    context:
-      "": "Human-authored reference notes: AI/ML, corpus linguistics, NLP, statistics, teaching, infrastructure."
   web:
-    path: /Users/jeridf/Obsidian/Notes/kb/sources/web
+    path: /Users/francojc/Obsidian/Notes/kb/sources/web
     pattern: "**/*.md"
-    context:
-      "": "Web bookmarks from Karakeep: AI in education, higher ed tech, pedagogical innovation, digital humanities."
