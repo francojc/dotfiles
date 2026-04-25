@@ -1,9 +1,14 @@
 ---| Plugin Management with vim.pack ---------------------------------
--- This file declares all plugins using Neovim 0.12+ native vim.pack
--- Plugins are installed to pack/core/start (eager) or pack/core/opt (lazy)
+-- Declares all plugins. Configuration and lazy-loading logic lives
+-- in plugins-config.lua.
+--
+-- eager_plugins → pack/core/start/ (loaded immediately at startup)
+-- opt_plugins   → pack/core/opt/   (loaded on demand via :packadd)
 
--- Eager-loaded plugins (load immediately at startup)
--- These provide core functionality needed at startup
+--===========================================================================
+--| EAGER PLUGINS
+--===========================================================================
+
 local eager_plugins = {
 	-- Themes (needed early for colorscheme)
 	{ src = "https://github.com/thenewvu/vim-colors-arthur" },
@@ -19,45 +24,51 @@ local eager_plugins = {
 	{ src = "https://github.com/ayu-theme/ayu-vim" },
 	{ src = "https://github.com/webhooked/kanso.nvim" },
 
-	-- Core functionality plugins (eager-loaded)
-	{ src = "https://github.com/3rd/image.nvim" },
-	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+	-- Core (must be available at startup)
 	{ src = "https://github.com/Saghen/blink.cmp" },
 	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
 	{ src = "https://github.com/echasnovski/mini.icons" },
 	{ src = "https://github.com/echasnovski/mini.surround" },
 	{ src = "https://github.com/folke/snacks.nvim" },
-	{ src = "https://github.com/folke/todo-comments.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
-	{ src = "https://github.com/hakonharnes/img-clip.nvim" },
-	{ src = "https://github.com/hat0uma/csvview.nvim" },
-	{ src = "https://github.com/jmbuhr/otter.nvim" },
-	{ src = "https://github.com/jpalardy/vim-slime" },
-	{ src = "https://github.com/sindrets/diffview.nvim" },
-	{ src = "https://github.com/krissen/snacks-bibtex.nvim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },
 	{ src = "https://github.com/moyiz/blink-emoji.nvim" },
-	{ src = "https://github.com/nametake/golangci-lint-langserver" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
 	{ src = "https://github.com/neovim-treesitter/treesitter-parser-registry" },
 	{
 		src = "https://github.com/neovim-treesitter/nvim-treesitter",
 		version = "main",
-		dependencies = {
-			"neovim-treesitter/treesitter-parser-registry",
-		},
+		dependencies = { "neovim-treesitter/treesitter-parser-registry" },
 	},
+	{ src = "https://github.com/rafamadriz/friendly-snippets" },
+	{ src = "https://github.com/stevearc/conform.nvim" },
+}
+
+vim.pack.add(eager_plugins, { load = true, confirm = false })
+
+--===========================================================================
+--| OPT PLUGINS (lazy-loaded via :packadd in plugins-config.lua)
+--===========================================================================
+
+local opt_plugins = {
+	{ src = "https://github.com/3rd/image.nvim" },
+	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+	{ src = "https://github.com/folke/todo-comments.nvim" },
+	{ src = "https://github.com/hakonharnes/img-clip.nvim" },
+	{ src = "https://github.com/hat0uma/csvview.nvim" },
+	{ src = "https://github.com/jmbuhr/otter.nvim" },
+	{ src = "https://github.com/jpalardy/vim-slime" },
+	{ src = "https://github.com/sindrets/diffview.nvim" },
+	{ src = "https://github.com/krissen/snacks-bibtex.nvim" },
+	{ src = "https://github.com/nametake/golangci-lint-langserver" },
 	{ src = "https://github.com/obsidian-nvim/obsidian.nvim" },
 	{ src = "https://github.com/quarto-dev/quarto-nvim" },
-	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/stevearc/aerial.nvim" },
-	{ src = "https://github.com/stevearc/conform.nvim" },
 	{ src = "https://github.com/stevearc/quicker.nvim" },
 }
 
--- Install and load all plugins immediately
-vim.pack.add(eager_plugins, { load = true, confirm = false })
+vim.pack.add(opt_plugins, { load = false, confirm = false })

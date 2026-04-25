@@ -5,6 +5,10 @@
 local theme_config = require("theme-config")
 
 ---=============================================================
+---==== EAGER PLUGINS ====
+---=============================================================
+
+---=============================================================
 ---| COMPLETION & SNIPPETS
 ---=============================================================
 
@@ -38,7 +42,6 @@ require("blink.cmp").setup({
 		documentation = { auto_show = true },
 	},
 	keymap = {
-		-- preset = "enter", -- with mods
 		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 		["<C-e>"] = { "cancel", "fallback" },
 		["<CR>"] = { "select_and_accept", "fallback" },
@@ -193,25 +196,22 @@ require("onedark").setup({
 
 ---| Tokyo Night ----------------------------------
 require("tokyonight").setup({
-	style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night`, and `day`
-	light_style = "day", -- The theme is used when the background is set to light
-	transparent = false, -- Enable this to disable setting the background color
-	terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
+	style = "storm",
+	light_style = "day",
+	transparent = false,
+	terminal_colors = true,
 	styles = {
-		-- Style to be applied to different syntax groups
-		-- Value is any valid attr-list value for `:highlight` command
 		comments = { italic = true },
 		keywords = { italic = true },
 		functions = {},
 		variables = {},
-		-- Background styles. Can be "dark", "transparent" or "normal"
-		sidebars = "dark", -- style for sidebars, see below
-		floats = "dark", -- style for floating windows
+		sidebars = "dark",
+		floats = "dark",
 	},
-	sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
-	day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
-	hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **StatusLineNC** highlights
-	dim_inactive = false, -- dims inactive windows
+	sidebars = { "qf", "help" },
+	day_brightness = 0.3,
+	hide_inactive_statusline = false,
+	dim_inactive = false,
 })
 
 ---| Vague ----------------------------------
@@ -219,22 +219,14 @@ require("vague").setup({})
 
 ---| VS Code ----------------------------------
 require("vscode").setup({
-	-- Alternatively set style in setup
 	style = "dark",
-	-- Enable transparent background
 	transparent = false,
-	-- Enable italic comment
 	italic_comments = false,
-	-- Disable nvim-tree background color
 	disable_nvimtree_bg = true,
-	-- Override colors (see ./lua/vscode/colors.lua)
 	color_overrides = {
 		vscLineNumber = "#FFFFFF",
 	},
-	-- Override highlight groups (see ./lua/vscode/theme.lua)
 	group_overrides = {
-		-- this supports the same val table as vim.api.nvim_set_hl
-		-- example:
 		Comment = { fg = "#FF0000", bg = "#0000FF", italic = true },
 	},
 })
@@ -473,7 +465,7 @@ vim.lsp.config.r_language_server = {
 		r = {
 			lsp = {
 				diagnostics = true,
-				rich_documentation = true, -- Enhanced hover documentation
+				rich_documentation = true,
 			},
 		},
 	},
@@ -603,6 +595,11 @@ vim.api.nvim_create_autocmd("FileType", {
 ---| EDITOR ENHANCEMENTS
 ---==========================================================
 
+---| Gitsigns ----------------------------------
+require("gitsigns").setup({
+	word_diff = false,
+})
+
 ---| Mini Modules ----------------------------------
 require("mini.icons").setup({})
 require("mini.surround").setup({
@@ -648,9 +645,6 @@ require("lualine").setup({
 	},
 })
 
----| Quicker ----------------------------------
-require("quicker").setup()
-
 ---| Snacks ----------------------------------
 require("snacks").setup({
 	bigfile = { enabled = false },
@@ -695,53 +689,6 @@ require("snacks").setup({
 -- Register Snacks picker as the vim.ui.select backend
 vim.ui.select = Snacks.picker.ui_select
 
---| todo-comments.nvim ----------------------------------
-require("todo-comments").setup({})
-
----==========================================================
----| SYNTAX & PARSING
----==========================================================
-
----| Treesitter ----------------------------------
--- Native Neovim treesitter runtime with neovim-treesitter fork
--- for parser/query management. setup() only accepts install_dir;
--- parser attach happens via vim.treesitter.start() below.
-require("nvim-treesitter").setup()
-
-vim.api.nvim_create_autocmd("FileType", {
-	group = "personal",
-	callback = function()
-		local ok = pcall(vim.treesitter.start)
-		if not ok then
-			vim.bo.syntax = "on" -- fallback to regex syntax
-		end
-	end,
-})
-
----| Otter (embedded language support) ----------------------------------
--- Otter needs to be setup eagerly for Quarto support
-require("otter").setup({
-	lsp = {
-		diagnostic_update_events = { "BufWritePost" },
-		root_dir = function(_, bufnr)
-			return vim.fs.root(bufnr or 0, {
-				".git",
-				"_quarto.yml",
-				"DESCRIPTION",
-			}) or vim.fn.getcwd(0)
-		end,
-	},
-	buffers = {
-		set_filetype = true,
-		write_to_disk = false,
-	},
-	handle_leading_whitespace = true,
-})
-
----==========================================================
----| UI & NAVIGATION
----==========================================================
-
 ---| WhichKey ----------------------------------
 require("which-key").setup({
 	preset = "helix",
@@ -780,292 +727,327 @@ wk.add({
 	{ "<leader>x", desc = "Quit", icon = "󰗼" },
 })
 
----==========================================================
----| LAZY-LOADED PLUGINS
----==========================================================
--- Native lazy-loading using vim.pack optional plugins and autocommands
+---| Treesitter ----------------------------------
+require("nvim-treesitter").setup()
 
----| Version Control ----------------------------------
-
--- Diffview (git diff and merge UI)
-require("diffview").setup({
-	enhanced_diff_hl = true,
-	view = {
-		merge_tool = {
-			layout = "diff3_horizontal",
-			winbar_info = true,
-		},
-	},
-})
-
--- Gitsigns (load when opening files in git repos)
-vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
-	group = vim.api.nvim_create_augroup("LazyGitsigns", { clear = true }),
+vim.api.nvim_create_autocmd("FileType", {
+	group = "personal",
 	callback = function()
-		vim.cmd.packadd("gitsigns.nvim")
-		require("gitsigns").setup({
-			word_diff = false,
-		})
-	end,
-	once = true,
-})
-
----| Code Navigation ----------------------------------
-
--- Aerial code outline
-require("aerial").setup({
-	post_jump_cmd = "normal! zt",
-})
-
----| File Management ----------------------------------
-
--- Yazi file manager
-
-vim.g.loaded_netrwPlugin = 1
-vim.api.nvim_create_autocmd("UIEnter", {
-	callback = function()
-		require("yazi").setup({
-			open_for_directories = true,
-			floating_window_scaling_factor = 0.95,
-			yazi_floating_window_border = "single",
-		})
+		local ok = pcall(vim.treesitter.start)
+		if not ok then
+			vim.bo.syntax = "on" -- fallback to regex syntax
+		end
 	end,
 })
 
--- CSV viewer
-require("csvview").setup({})
-
----| Visual Enhancements ----------------------------------
-
--- Highlight colors
+---| Highlight Colors ----------------------------------
 require("nvim-highlight-colors").setup({})
 
----| Markdown & Quarto Tools ----------------------------------
-
--- Image viewer for Markdown/Quarto
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "quarto" },
-	group = vim.api.nvim_create_augroup("LazyImage", { clear = true }),
-	callback = function()
-		vim.cmd.packadd("image.nvim")
-		require("image").setup({
-			processor = "magick_cli",
-			integrations = {
-				markdown = {
-					clear_in_insert_mode = false,
-					filetypes = { "markdown", "quarto" },
-					only_render_image_at_cursor = false,
-				},
-			},
-		})
-		require("image").disable()
-	end,
-	once = true,
-})
-
--- Image clipboard for Markdown/Quarto
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "quarto" },
-	group = vim.api.nvim_create_augroup("LazyImgClip", { clear = true }),
-	callback = function()
-		vim.cmd.packadd("img-clip.nvim")
-		require("img-clip").setup({
-			default = {
-				dir_path = "./images",
-				relative_to_current_file = true,
-				show_dir_path_in_prompt = true,
-			},
-		})
-	end,
-	once = true,
-})
-
--- Obsidian notes
-require("obsidian").setup({
-	legacy_commands = false,
-	ui = {
-		enable = false,
-	},
-	checkbox = {
-		order = { " ", "x", "/", "-", ">", "~", "!", "?" },
-	},
-	note_id_func = function(id, dir)
-		-- Always use manual input as-is for all notes
-		return id
-	end,
-	workspaces = {
-		{
-			name = "Notes",
-			path = "~/Obsidian/Notes/",
-		},
-		{
-			name = "Personal",
-			path = "~/Obsidian/Personal/",
-		},
-	},
-	daily_notes = {
-		folder = "plan/daily/",
-		template = "Daily.md",
-		date_format = "%Y-%m-%d",
-		alias_format = "%B %-d, %Y",
-		workdays_only = false,
-	},
-	templates = {
-		folder = "plan/templates/",
-		date_format = "%B %-d, %Y",
-		time_format = "%H:%M",
-	},
-	new_notes_location = "Inbox",
-	attachments = {
-		folder = "./",
-	},
-	completion = {
-		nvim_cmp = false,
-		blink = true,
-	},
-})
-
--- Quarto
-require("quarto").setup({
-	lspFeatures = {
-		enabled = true,
-		chunks = "curly",
-		languages = { "r", "python", "julia", "bash", "html" },
-		diagnostics = {
-			enabled = true,
-			triggers = { "BufWritePost" },
-		},
-		completion = {
-			enabled = true,
-		},
-	},
-	codeRunner = {
-		enabled = true,
-		default_method = "slime",
-		never_run = { "yaml" },
-	},
-	keymap = false,
-})
-
--- Render Markdown
-require("render-markdown").setup({
-	latex = { enabled = false },
-	bullet = {
-		icons = { "■ ", "□ ", "▪ ", "▫ " },
-		left_pad = 0,
-		right_pad = 2,
-	},
-	checkbox = {
-		unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-		checked = { icon = " ", highlight = "RenderMarkdownChecked" },
-		custom = {
-			waiting = {
-				raw = "[?]",
-				rendered = " ",
-				highlight = "DiagnosticInfo",
-				scope_highlight = nil,
-			},
-			stale = {
-				raw = "[-]",
-				rendered = " ",
-				highlight = "DiagnosticInfo",
-				scope_highlight = nil,
-			},
-			forward = {
-				raw = "[>]",
-				rendered = " ",
-				highlight = "DiagnosticError",
-				scope_highlight = nil,
-			},
-			progress = {
-				raw = "[/]",
-				rendered = " ",
-				highlight = "DiagnosticWarn",
-				scope_highlight = nil,
-			},
-			cancel = {
-				raw = "[~]",
-				rendered = " ",
-				highlight = "DiagnosticError",
-				scope_highlight = nil,
-			},
-			important = {
-				raw = "[!]",
-				rendered = " ",
-				highlight = "DiagnosticWarn",
-				scope_highlight = nil,
-			},
-		},
-	},
-	code = {
-		sign = false,
-		language_border = " ",
-	},
-	completions = {
-		lsp = { enabled = true },
-		blink = { enabled = true },
-	},
-	dash = { enabled = false },
-	file_types = { "markdown", "quarto" },
-	heading = {
-		backgrounds = {},
-		left_pad = 0,
-		position = "inline",
-		right_pad = 3,
-		icons = {
-			"# ",
-			"## ",
-			"### ",
-			"#### ",
-			"##### ",
-			"###### ",
-		},
-	},
-	html = {
-		enabled = true,
-		comment = { conceal = false },
-	},
-	pipe_table = {
-		preset = "round",
-	},
+---| Yazi ----------------------------------
+vim.g.loaded_netrwPlugin = 1
+require("yazi").setup({
+	open_for_directories = true,
+	floating_window_scaling_factor = 0.95,
+	yazi_floating_window_border = "single",
 })
 
 ---==========================================================
----| REFERENCES & CITATIONS - SNACKS BIBTEX
+---==== LAZY PLUGINS ====
 ---==========================================================
+-- General data-driven loaders. Each table entry = { plugin_name, setup_fn }.
+-- Config runs at load time via :packadd. Two autocommands cover all cases.
+-- packadd on an already-loaded plugin is a no-op, so shared plugins
+-- (e.g. render-markdown used by both markdown and quarto) are safe to list twice.
 
--- Pandoc citation command definitions
-local pandoc_citations = {
-	{ cmd = "pandoc cite", template = "[@{{key}}]", desc = "Pandoc inline citation" },
-	{ cmd = "pandoc in-text", template = "@{{key}}", desc = "Pandoc in-text author citation" },
-	{ cmd = "pandoc suppress author", template = "[-@{{key}}]", desc = "Pandoc citation (suppress author)" },
-	{ cmd = "pandoc with page", template = "[@{{key}}, p. ]", desc = "Pandoc citation with page locator" },
-	{ cmd = "pandoc with prefix", template = "[see @{{key}}]", desc = "Pandoc citation with prefix" },
-	{ cmd = "pandoc multiple", template = "[@{{key}}; @]", desc = "Pandoc multiple citations" },
+local function load(name, fn)
+	vim.cmd("packadd " .. name)
+	if fn then
+		fn()
+	end
+end
+
+---| FileType-triggered plugins ----------------------------------
+
+local ft_lazy = {
+	markdown = {
+		{
+			"image.nvim",
+			function()
+				require("image").setup({
+					processor = "magick_cli",
+					integrations = {
+						markdown = {
+							clear_in_insert_mode = false,
+							filetypes = { "markdown", "quarto" },
+							only_render_image_at_cursor = false,
+						},
+					},
+				})
+				require("image").disable()
+			end,
+		},
+		{
+			"img-clip.nvim",
+			function()
+				require("img-clip").setup({
+					default = {
+						dir_path = "./images",
+						relative_to_current_file = true,
+						show_dir_path_in_prompt = true,
+					},
+				})
+			end,
+		},
+		{
+			"render-markdown.nvim",
+			function()
+				require("render-markdown").setup({
+					latex = { enabled = false },
+					bullet = {
+						icons = { "■ ", "□ ", "▪ ", "▫ " },
+						left_pad = 0,
+						right_pad = 2,
+					},
+					checkbox = {
+						unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
+						checked = { icon = " ", highlight = "RenderMarkdownChecked" },
+						custom = {
+							waiting = { raw = "[?]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+							stale = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+							forward = { raw = "[>]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
+							progress = { raw = "[/]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
+							cancel = { raw = "[~]", rendered = " ", highlight = "DiagnosticError", scope_highlight = nil },
+							important = { raw = "[!]", rendered = " ", highlight = "DiagnosticWarn", scope_highlight = nil },
+						},
+					},
+					code = {
+						sign = false,
+						language_border = " ",
+					},
+					completions = {
+						lsp = { enabled = true },
+						blink = { enabled = true },
+					},
+					dash = { enabled = false },
+					file_types = { "markdown", "quarto" },
+					heading = {
+						backgrounds = {},
+						left_pad = 0,
+						position = "inline",
+						right_pad = 3,
+						icons = { "# ", "## ", "### ", "#### ", "##### ", "###### " },
+					},
+					html = {
+						enabled = true,
+						comment = { conceal = false },
+					},
+					pipe_table = {
+						preset = "round",
+					},
+				})
+			end,
+		},
+		{
+			"obsidian.nvim",
+			function()
+				require("obsidian").setup({
+					legacy_commands = false,
+					ui = { enable = false },
+					checkbox = {
+						order = { " ", "x", "/", "-", ">", "~", "!", "?" },
+					},
+					note_id_func = function(id, dir)
+						return id
+					end,
+					workspaces = {
+						{ name = "Notes", path = "~/Obsidian/Notes/" },
+						{ name = "Personal", path = "~/Obsidian/Personal/" },
+					},
+					daily_notes = {
+						folder = "plan/daily/",
+						template = "Daily.md",
+						date_format = "%Y-%m-%d",
+						alias_format = "%B %-d, %Y",
+						workdays_only = false,
+					},
+					templates = {
+						folder = "plan/templates/",
+						date_format = "%B %-d, %Y",
+						time_format = "%H:%M",
+					},
+					new_notes_location = "Inbox",
+					attachments = { folder = "./" },
+					completion = { nvim_cmp = false, blink = true },
+				})
+			end,
+		},
+		{
+			"snacks-bibtex.nvim",
+			function()
+				local cfg = require("snacks-bibtex.config").get()
+				-- Disable default LaTeX commands, add Pandoc commands
+				for _, cmd in ipairs(cfg.citation_commands) do
+					cmd.enabled = false
+				end
+				local pandoc_citations = {
+					{ cmd = "pandoc cite", template = "[@{{key}}]", desc = "Pandoc inline citation" },
+					{ cmd = "pandoc in-text", template = "@{{key}}", desc = "Pandoc in-text author citation" },
+					{ cmd = "pandoc suppress author", template = "[-@{{key}}]", desc = "Pandoc citation (suppress author)" },
+					{ cmd = "pandoc with page", template = "[@{{key}}, p. ]", desc = "Pandoc citation with page locator" },
+					{ cmd = "pandoc with prefix", template = "[see @{{key}}]", desc = "Pandoc citation with prefix" },
+					{ cmd = "pandoc multiple", template = "[@{{key}}; @]", desc = "Pandoc multiple citations" },
+				}
+				for _, p in ipairs(pandoc_citations) do
+					table.insert(cfg.citation_commands, {
+						command = p.cmd,
+						template = p.template,
+						description = p.desc,
+						packages = "pandoc",
+						enabled = true,
+					})
+				end
+				cfg.depth = 1
+				cfg.format = "[@%s]"
+				require("snacks-bibtex").setup(cfg)
+			end,
+		},
+	},
+	quarto = {
+		{ "image.nvim", nil },          -- shared with markdown; packadd is a no-op if already loaded
+		{ "img-clip.nvim", nil },       -- shared with markdown
+		{ "render-markdown.nvim", nil }, -- shared with markdown
+		{
+			"otter.nvim",
+			function()
+				require("otter").setup({
+					lsp = {
+						diagnostic_update_events = { "BufWritePost" },
+						root_dir = function(_, bufnr)
+							return vim.fs.root(bufnr or 0, {
+								".git",
+								"_quarto.yml",
+								"DESCRIPTION",
+							}) or vim.fn.getcwd(0)
+						end,
+					},
+					buffers = {
+						set_filetype = true,
+						write_to_disk = false,
+					},
+					handle_leading_whitespace = true,
+				})
+			end,
+		},
+		{
+			"quarto-nvim",
+			function()
+				require("quarto").setup({
+					lspFeatures = {
+						enabled = true,
+						chunks = "curly",
+						languages = { "r", "python", "julia", "bash", "html" },
+						diagnostics = {
+							enabled = true,
+							triggers = { "BufWritePost" },
+						},
+						completion = { enabled = true },
+					},
+					codeRunner = {
+						enabled = true,
+						default_method = "slime",
+						never_run = { "yaml" },
+					},
+					keymap = false,
+				})
+			end,
+		},
+		{ "vim-slime", nil }, -- no setup needed
+		{ "snacks-bibtex.nvim", nil }, -- shared with markdown
+	},
+	csv = {
+		{
+			"csvview.nvim",
+			function()
+				require("csvview").setup({})
+			end,
+		},
+	},
+	tsv = {
+		{
+			"csvview.nvim",
+			function()
+				require("csvview").setup({})
+			end,
+		},
+	},
 }
 
--- Setup configuration
-local cfg = require("snacks-bibtex.config").get()
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("LazyFT", { clear = true }),
+	pattern = vim.fn.keys(ft_lazy),
+	callback = function(args)
+		for _, spec in ipairs(ft_lazy[args.match] or {}) do
+			load(spec[1], spec[2])
+		end
+		ft_lazy[args.match] = nil -- run once per filetype
+	end,
+})
 
--- Disable default LaTeX commands, add Pandoc commands
-for _, cmd in ipairs(cfg.citation_commands) do
-	cmd.enabled = false
-end
-for _, p in ipairs(pandoc_citations) do
-	table.insert(cfg.citation_commands, {
-		command = p.cmd,
-		template = p.template,
-		description = p.desc,
-		packages = "pandoc",
-		enabled = true,
-	})
-end
+---| Command-triggered plugins ----------------------------------
 
-cfg.depth = 1 -- Search project root for .bib files
-cfg.format = "[@%s]" -- Default format when pressing Enter
-require("snacks-bibtex").setup(cfg)
+local cmd_lazy = {
+	DiffviewOpen = {
+		"diffview.nvim",
+		function()
+			require("diffview").setup({
+				enhanced_diff_hl = true,
+				view = {
+					merge_tool = {
+						layout = "diff3_horizontal",
+						winbar_info = true,
+					},
+				},
+			})
+		end,
+	},
+	Quicker = {
+		"quicker.nvim",
+		function()
+			require("quicker").setup({})
+		end,
+	},
+	AerialToggle = {
+		"aerial.nvim",
+		function()
+			require("aerial").setup({
+				post_jump_cmd = "normal! zt",
+			})
+		end,
+	},
+	TodoTelescope = {
+		"todo-comments.nvim",
+		function()
+			require("todo-comments").setup({})
+		end,
+	},
+}
 
--- Keybinding
+vim.api.nvim_create_autocmd("CmdUndefined", {
+	group = vim.api.nvim_create_augroup("LazyCmd", { clear = true }),
+	pattern = vim.fn.keys(cmd_lazy),
+	callback = function(args)
+		local spec = cmd_lazy[args.match]
+		if spec then
+			load(spec[1], spec[2])
+		end
+	end,
+})
+
+---==========================================================
+---| KEYMAPS FOR LAZY PLUGINS
+---==========================================================
+
+-- BibTeX keymap (snacks-bibtex loads lazily via FileType; keymap registered eagerly)
 vim.keymap.set("n", "<leader>rb", function()
 	require("snacks-bibtex").bibtex()
 end, { desc = "BibTeX citations" })
