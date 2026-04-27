@@ -44,3 +44,4 @@
 .pi/agent/auth.json
 
 .tmux/plugins/
+.config/matcha/*

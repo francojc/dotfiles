@@ -39,7 +39,7 @@
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
       "macchanger" # MAC address changer
-      "matcha" # matcha (tui email client)
+      # "floatpane/matcha/matcha" # matcha (tui email client)
       "mole" # terminal cleanup app for macOS
       "ninja" # build system
       "nmap" # network scanner
