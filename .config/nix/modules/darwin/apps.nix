@@ -18,35 +18,43 @@
     };
 
     taps = [
+      "Adembc/homebrew-tap" # lazyssh
+      "FelixKratz/formulae" # borders
+      "acrogenesis/macchanger" # macchanger
+      "floatpane/matcha" # matcha
+      "keith/formulae" # reminders-cli
+      "librespeed/tap" # librespeed-cli
+      "raine/workmux" # workmux
     ];
 
     brews = [
-      "Adembc/homebrew-tap/lazyssh" # lazyssh
-      "FelixKratz/formulae/borders" # jankyborders
-      "acrogenesis/macchanger/macchanger" # MAC address changer
+      "borders" # jankyborders
+      "cairo" # 2D graphics library
+      "gdk-pixbuf" # image loading library
       "git-filter-repo" # remove files/dirs from git history
-      "keith/formulae/reminders-cli"
-      "librespeed/tap/librespeed-cli"
+      "lazyssh" # lazyssh
+      "libffi" # Foreign Function Interface library
+      "librespeed-cli"
       "llama.cpp" # LLaMA model inference
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
+      "macchanger" # MAC address changer
+      "matcha" # matcha (tui email client)
       "mole" # terminal cleanup app for macOS
       "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
       "ollama" # Ollama
+      "pango" # text layout library
       "pngpaste" # paste images
-      "raine/workmux/workmux" # agentic ai multiplexer
+      "reminders-cli"
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
       "tree-sitter-cli" # tree-sitter CLI
-      "cairo" # 2D graphics library
-      "pango" # text layout library
-      "gdk-pixbuf" # image loading library
-      "libffi" # Foreign Function Interface library
       "vhs" # cli for programmable terminal gifs
       "weasyprint" # HTML to PDF converter
+      "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
     ];
 
