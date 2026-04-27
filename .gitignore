@@ -45,3 +45,4 @@
 
 .tmux/plugins/
 .config/matcha/*
+.config/llama/llama-api-key

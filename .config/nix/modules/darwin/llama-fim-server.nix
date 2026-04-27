@@ -5,32 +5,32 @@
   ...
 }:
 with lib; let
-  cfg = config.custom.services.llamaRouter;
+  cfg = config.custom.services.llamaFim;
 in {
-  options.custom.services.llamaRouter = {
-    enable = mkEnableOption "llama.cpp router server";
+  options.custom.services.llamaFim = {
+    enable = mkEnableOption "llama.cpp FIM server";
 
     scriptPath = mkOption {
       type = types.str;
-      default = "/Users/${username}/.llama.cpp/scripts/start-llama-router.sh";
-      description = "Path to router startup script";
+      default = "/Users/${username}/.llama.cpp/scripts/start-llama-fim.sh";
+      description = "Path to FIM startup script";
     };
 
     workingDirectory = mkOption {
       type = types.str;
       default = "/Users/${username}/.llama.cpp";
-      description = "Working directory for the router server";
+      description = "Working directory for the FIM server";
     };
 
     stdoutPath = mkOption {
       type = types.str;
-      default = "/Users/${username}/.llama.cpp/logs/router-stdout.log";
+      default = "/Users/${username}/.llama.cpp/logs/fim-stdout.log";
       description = "Stdout log path";
     };
 
     stderrPath = mkOption {
       type = types.str;
-      default = "/Users/${username}/.llama.cpp/logs/router-stderr.log";
+      default = "/Users/${username}/.llama.cpp/logs/fim-stderr.log";
       description = "Stderr log path";
     };
 
@@ -42,9 +42,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    launchd.user.agents."llama-router" = {
+    launchd.user.agents."llama-fim" = {
       serviceConfig = {
-        Label = "com.llama.server";
+        Label = "com.llama.fim-server";
         ProgramArguments = [cfg.scriptPath];
         WorkingDirectory = cfg.workingDirectory;
         StandardOutPath = cfg.stdoutPath;
@@ -62,7 +62,7 @@ in {
       };
     };
 
-    system.activationScripts.llamaRouter = {
+    system.activationScripts.llamaFim = {
       text = ''
         mkdir -p "/Users/${username}/.llama.cpp/logs"
         chown ${username}:staff "/Users/${username}/.llama.cpp/logs"

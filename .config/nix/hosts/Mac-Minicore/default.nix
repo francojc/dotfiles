@@ -15,6 +15,7 @@
     ../../profiles/darwin/configuration.nix
     ../../modules/darwin/llama-server.nix
     ../../modules/darwin/llama-embed-server.nix
+    ../../modules/darwin/llama-fim-server.nix
 
     # Inline module for host-specific service configuration
     {
@@ -22,13 +23,19 @@
         # Local model router (OpenAI-compatible) on :8081
         llamaRouter = {
           enable = true;
-          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-general.sh";
+          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-router.sh";
         };
 
         # Dedicated embeddings endpoint on :8082
         llamaEmbed = {
           enable = true;
           scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-embed.sh";
+        };
+
+        # Fill-in-the-middle code completion endpoint on :8080
+        llamaFim = {
+          enable = true;
+          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-fim.sh";
         };
       };
 
