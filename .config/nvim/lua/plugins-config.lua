@@ -810,36 +810,41 @@ local ft_lazy = {
 					},
 					checkbox = {
 						unchecked = { icon = "□ ", highlight = "RenderMarkdownUnchecked" },
-						checked = { icon = " ", highlight = "RenderMarkdownChecked" },
+						checked = { icon = " ", highlight = "RenderMarkdownChecked" },
 						custom = {
 							waiting = {
 								raw = "[?]",
-								rendered = " ",
+								rendered = " ",
 								highlight = "DiagnosticInfo",
 								scope_highlight = nil,
 							},
-							stale = { raw = "[-]", rendered = " ", highlight = "DiagnosticInfo", scope_highlight = nil },
+							stale = {
+								raw = "[-]",
+								rendered = " ",
+								highlight = "DiagnosticInfo",
+								scope_highlight = nil,
+							},
 							forward = {
 								raw = "[>]",
-								rendered = " ",
+								rendered = " ",
 								highlight = "DiagnosticError",
 								scope_highlight = nil,
 							},
 							progress = {
 								raw = "[/]",
-								rendered = " ",
+								rendered = " ",
 								highlight = "DiagnosticWarn",
 								scope_highlight = nil,
 							},
 							cancel = {
 								raw = "[~]",
-								rendered = " ",
+								rendered = " ",
 								highlight = "DiagnosticError",
 								scope_highlight = nil,
 							},
 							important = {
 								raw = "[!]",
-								rendered = " ",
+								rendered = " ",
 								highlight = "DiagnosticWarn",
 								scope_highlight = nil,
 							},
