@@ -40,10 +40,8 @@ show_all_days = True
 method = fg
 multiple = "#FB4934"
 
-[view]
-# event_view_always_visible = True
-event_view_weighting = 2
-frame = width
+[keybindings]
+external_edit = ctrl g
 
 [locale]
 local_timezone= America/New_York
@@ -53,6 +51,11 @@ longdateformat = %Y-%m-%d
 datetimeformat = %Y-%m-%d %H:%M
 longdatetimeformat = %Y-%m-%d %H:%M
 weeknumbers = right
+
+[view]
+# event_view_always_visible = True
+event_view_weighting = 2
+
 
 [palette]
 # Gruvbox Dark Hard theme

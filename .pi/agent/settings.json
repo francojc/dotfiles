@@ -17,7 +17,7 @@
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "high",
+  "defaultThinkingLevel": "minimal",
   "packages": [
     "npm:@plannotator/pi-extension",
     "npm:pi-btw",
