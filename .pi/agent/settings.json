@@ -22,7 +22,8 @@
     "npm:@plannotator/pi-extension",
     "npm:pi-btw",
     "npm:pi-caveman",
-    "npm:@ogulcancelik/pi-ghostty-theme-sync"
+    "npm:@ogulcancelik/pi-ghostty-theme-sync",
+    "npm:pi-fastboot"
   ],
   "extensions": [
     "extensions/pi-lsp-extension/src/index.ts",
