@@ -1,34 +1,33 @@
 {
-    "lastChangelogVersion": "0.70.5",
-    "defaultProvider": "openai-codex",
-    "defaultModel": "gpt-5.5",
-    "enabledModels": [
-        "llama-router/Qwen3.5-4B-Q8_0",
-        "llama-router/Qwen3.5-9B-Q8_0",
-        "llama-router/gemma-4-E2B-it-Q8_0",
-        "llama-router/gemma-4-E4B-it-Q6_K",
-        "llama-router/gpt-oss-20b-Q8_0",
-        "github-copilot/claude-sonnet-4.6",
-        "github-copilot/claude-haiku-4.5",
-        "openai-codex/gpt-5.5",
-        "openai-codex/gpt-5.3-codex",
-        "ollama/deepseek-v4-flash:cloud"
-    ],
-    "collapseChangelog": true,
-    "quietStartup": true,
-    "enableInstallTelemetry": false,
-    "defaultThinkingLevel": "minimal",
-    "packages": [
-        "npm:@plannotator/pi-extension@0.19.1",
-        "npm:pi-btw@0.3.7",
-        "npm:pi-caveman@1.0.5",
-        "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.1",
-        "npm:pi-fastboot@1.0.0"
-    ],
-    "extensions": [
-        "extensions/pi-lsp-extension/src/index.ts",
-        "extensions/git-branch-dirty-footer.ts"
-    ],
-    "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
-    "theme": "ghostty-sync-e13299c9"
+  "lastChangelogVersion": "0.70.5",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "enabledModels": [
+    "llama-router/Qwen3.5-4B-Q8_0",
+    "llama-router/Qwen3.5-9B-Q8_0",
+    "llama-router/gemma-4-E2B-it-Q8_0",
+    "llama-router/gemma-4-E4B-it-Q6_K",
+    "llama-router/gpt-oss-20b-Q8_0",
+    "github-copilot/claude-sonnet-4.6",
+    "github-copilot/claude-haiku-4.5",
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.3-codex",
+    "ollama/deepseek-v4-flash:cloud"
+  ],
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
+  "defaultThinkingLevel": "minimal",
+  "packages": [
+    "npm:@plannotator/pi-extension",
+    "npm:pi-btw",
+    "npm:pi-caveman",
+    "npm:@ogulcancelik/pi-ghostty-theme-sync"
+  ],
+  "extensions": [
+    "extensions/pi-lsp-extension/src/index.ts",
+    "extensions/git-branch-dirty-footer.ts"
+  ],
+  "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
+  "theme": "ghostty-sync-e13299c9"
 }
