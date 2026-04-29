@@ -11,7 +11,7 @@ readonly PI_TIMEOUT="${PI_TIMEOUT:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
 PI_PROVIDER="${PI_PROVIDER:-ollama}"
-PI_MODEL="${PI_MODEL:-glm-5.1:cloud}"
+PI_MODEL="${PI_MODEL:-kimi-k2.6:cloud}"
 PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-github-copilot}"
 PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-claude-sonnet-4.6}"
 

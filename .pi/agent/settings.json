@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.70.5",
+  "lastChangelogVersion": "0.70.6",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "enabledModels": [
@@ -12,18 +12,18 @@
     "github-copilot/claude-haiku-4.5",
     "openai-codex/gpt-5.5",
     "openai-codex/gpt-5.3-codex",
-    "ollama/deepseek-v4-flash:cloud"
+    "ollama/deepseek-v4-flash:cloud",
+    "github-copilot/claude-opus-4.7"
   ],
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "minimal",
   "packages": [
-    "npm:@plannotator/pi-extension@0.19.2",
-    "npm:pi-btw@0.3.7",
-    "npm:pi-caveman@1.0.5",
     "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.1",
-    "npm:pi-fastboot@1.0.0"
+    "npm:@plannotator/pi-extension@0.19.3",
+    "npm:pi-btw@0.3.7",
+    "npm:pi-caveman@1.0.5"
   ],
   "extensions": [
     "extensions/pi-lsp-extension/src/index.ts",
@@ -32,3 +32,4 @@
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-e13299c9"
 }
+

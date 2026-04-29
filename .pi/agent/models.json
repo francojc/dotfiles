@@ -61,6 +61,14 @@
             "image"
           ],
           "reasoning": true
+        },
+        {
+          "id": "gemma4:e4b-mxfp8",
+          "reasoning": true,
+          "input": [
+            "image"
+          ],
+          "contextWindow": 30000
         }
       ]
     },
