@@ -19,10 +19,11 @@
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "minimal",
   "packages": [
-    "npm:@plannotator/pi-extension",
-    "npm:pi-btw",
-    "npm:pi-caveman",
-    "npm:@ogulcancelik/pi-ghostty-theme-sync"
+    "npm:@plannotator/pi-extension@0.19.2",
+    "npm:pi-btw@0.3.7",
+    "npm:pi-caveman@1.0.5",
+    "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.1",
+    "npm:pi-fastboot@1.0.0"
   ],
   "extensions": [
     "extensions/pi-lsp-extension/src/index.ts",
