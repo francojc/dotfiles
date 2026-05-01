@@ -47,7 +47,7 @@
       "ollama" # Ollama
       "pango" # text layout library
       "pngpaste" # paste images
-      "reminders-cli"
+      "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "sqly" # interactive SQL client
@@ -63,6 +63,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
+      "chatgpt" # ChatGPT
       "claude" # Claude Desktop
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)

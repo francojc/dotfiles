@@ -18,7 +18,7 @@
   "collapseChangelog": true,
   "quietStartup": true,
   "enableInstallTelemetry": false,
-  "defaultThinkingLevel": "minimal",
+  "defaultThinkingLevel": "low",
   "packages": [
     "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.1",
     "npm:@plannotator/pi-extension@0.19.3",
@@ -30,6 +30,13 @@
     "extensions/git-branch-dirty-footer.ts"
   ],
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
-  "theme": "ghostty-sync-e13299c9"
+  "theme": "ghostty-sync-f4e5674f",
+  "terminal": {
+    "clearOnShrink": true,
+    "showTerminalProgress": true
+  },
+  "treeFilterMode": "default",
+  "warnings": {
+    "anthropicExtraUsage": false
+  }
 }
-
