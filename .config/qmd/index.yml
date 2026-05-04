@@ -1,10 +1,10 @@
 collections:
   wiki:
-    path: /Users/francojc/Obsidian/Notes/kb/wiki
+    path: /Users/jeridf/Obsidian/Notes/kb/wiki
     pattern: "**/*.md"
   documents:
-    path: /Users/francojc/Obsidian/Notes/kb/sources/documents
+    path: /Users/jeridf/Obsidian/Notes/kb/sources/documents
     pattern: "**/*.md"
   web:
-    path: /Users/francojc/Obsidian/Notes/kb/sources/web
+    path: /Users/jeridf/Obsidian/Notes/kb/sources/web
     pattern: "**/*.md"

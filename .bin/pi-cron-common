@@ -4,16 +4,45 @@
 
 source "${HOME}/.bin/common"
 
+readonly PI_ENV_FILE="${PI_ENV_FILE:-${HOME}/.variables.env}"
+
+_load_pi_env() {
+  if [ ! -f "$PI_ENV_FILE" ]; then
+    log_warn "Pi env file not found: $PI_ENV_FILE (continuing; jobs that need secrets may fail preflight)"
+    return 0
+  fi
+
+  local owner perms
+  owner=$(stat -f '%Su' "$PI_ENV_FILE" 2>/dev/null || stat -c '%U' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+  perms=$(stat -f '%Lp' "$PI_ENV_FILE" 2>/dev/null || stat -c '%a' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+
+  if [ "$owner" != "$(id -un)" ]; then
+    log_warn "Pi env file owner is $owner, expected $(id -un): $PI_ENV_FILE"
+  fi
+  if [ "$perms" != "600" ]; then
+    log_warn "Pi env file permissions are $perms, expected 600: chmod 600 $PI_ENV_FILE"
+  fi
+
+  # Expected format: export NAME=value or NAME=value. Do not print values.
+  # shellcheck disable=SC1090
+  source "$PI_ENV_FILE"
+}
+
+_load_pi_env
+
 readonly VAULT_DIR="${HOME}/Obsidian/Notes"
 readonly LOG_DIR="${VAULT_DIR}/.pi/logs"
 readonly STATE_DIR="${VAULT_DIR}/.pi/state"
 readonly PI_TIMEOUT="${PI_TIMEOUT:-1800}"  # 30 min default
+readonly PI_TIMEOUT_REBALANCE="${PI_TIMEOUT_REBALANCE:-900}"  # 15 min default
+readonly PI_TIMEOUT_DAILY="${PI_TIMEOUT_DAILY:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
 PI_PROVIDER="${PI_PROVIDER:-ollama}"
 PI_MODEL="${PI_MODEL:-kimi-k2.6:cloud}"
 PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-github-copilot}"
-PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-claude-sonnet-4.6}"
+# Use ${VAR-default} so PI_FALLBACK_MODEL= disables fallback for tests/debugging.
+PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL-claude-sonnet-4.6}"
 
 # Ensure required directories exist on every source
 mkdir -p "$LOG_DIR"
@@ -30,33 +59,149 @@ if [ -d "${HOME}/.pi/state" ] && [ "${HOME}/.pi/state" != "$STATE_DIR" ]; then
   done < <(find "${HOME}/.pi/state" -maxdepth 1 -type f 2>/dev/null)
 fi
 
+_redacted_status() {
+  local name="$1"
+  if [ -n "${!name:-}" ]; then
+    printf '%s=set' "$name"
+  else
+    printf '%s=unset' "$name"
+  fi
+}
+
+log_env_status() {
+  local name statuses=()
+  for name in "$@"; do
+    statuses+=("$(_redacted_status "$name")")
+  done
+  log_info "Env status: ${statuses[*]}"
+}
+
+require_env() {
+  local missing=() name
+  for name in "$@"; do
+    if [ -z "${!name:-}" ]; then
+      missing+=("$name")
+    fi
+  done
+  if [ ${#missing[@]} -gt 0 ]; then
+    log_error "Missing required env var(s): ${missing[*]}"
+    log_error "Load them via $PI_ENV_FILE (values will not be logged)"
+    return 1
+  fi
+  log_env_status "$@"
+}
+
+job_begin() {
+  local job_name="$1"
+  PI_RUN_ID="${job_name}-$(date '+%Y%m%dT%H%M%S')-$$"
+  export PI_RUN_ID
+
+  echo "--- $(date '+%Y-%m-%d %H:%M:%S') job=${job_name} run_id=${PI_RUN_ID} ---"
+  log_info "Host: $(hostname)"
+  log_info "User: $(id -un)"
+  log_info "Vault: $VAULT_DIR"
+  log_info "PATH: $PATH"
+  log_info "pi: $(command -v pi 2>/dev/null || echo missing)"
+  log_info "provider/model: ${PI_PROVIDER}/${PI_MODEL}; fallback: ${PI_FALLBACK_PROVIDER}/${PI_FALLBACK_MODEL:-none}"
+  log_info "timeouts: default=${PI_TIMEOUT}s rebalance=${PI_TIMEOUT_REBALANCE}s daily=${PI_TIMEOUT_DAILY}s"
+}
+
+job_end() {
+  local job_name="$1" exit_code="$2" elapsed="$3"
+  if [ "$exit_code" -eq 0 ]; then
+    log_info "Job completed: ${job_name} exit=${exit_code} elapsed=${elapsed}s"
+  else
+    log_error "Job failed: ${job_name} exit=${exit_code} elapsed=${elapsed}s"
+  fi
+}
+
+run_job() {
+  local job_name="$1" log_file="$2"
+  shift 2
+
+  local start exit_code elapsed
+  start=$(date +%s)
+  {
+    job_begin "$job_name"
+    if "$@"; then
+      exit_code=0
+    else
+      exit_code=$?
+    fi
+    elapsed=$(($(date +%s) - start))
+    job_end "$job_name" "$exit_code" "$elapsed"
+    echo ""
+  } >> "$log_file" 2>&1
+  return "$exit_code"
+}
+
+run_phase() {
+  local phase_name="$1"
+  shift
+
+  local start exit_code elapsed
+  start=$(date +%s)
+  log_info "Phase start: ${phase_name}"
+  if "$@"; then
+    exit_code=0
+  else
+    exit_code=$?
+  fi
+  elapsed=$(($(date +%s) - start))
+  if [ "$exit_code" -eq 0 ]; then
+    log_info "Phase ok: ${phase_name} exit=${exit_code} elapsed=${elapsed}s"
+  else
+    log_error "Phase failed: ${phase_name} exit=${exit_code} elapsed=${elapsed}s"
+  fi
+  return "$exit_code"
+}
+
+pi_preflight() {
+  local skill="$1"
+  require pi || return 1
+  [ -d "$VAULT_DIR" ] || { log_error "Vault dir missing: $VAULT_DIR"; return 1; }
+  [ -d "$VAULT_DIR/.pi/skills/$skill" ] || { log_error "Skill missing: $VAULT_DIR/.pi/skills/$skill"; return 1; }
+}
+
 # Internal helper: run pi once with a specific provider/model.
 # Usage: _pi_run_once <prompt> <provider> <model>
 _pi_run_once() {
   local prompt="$1" provider="$2" model="$3"
+  local timeout_s="${PI_RUN_TIMEOUT:-$PI_TIMEOUT}"
 
-  log_info "Running: provider=${provider} model=${model}"
-  pi --print "$prompt" \
-    --provider "$provider" \
-    --model    "$model" \
-    --no-session &
-  local pid=$!
+  log_info "Running: provider=${provider} model=${model} timeout=${timeout_s}s"
 
-  # Watchdog
-  (
-    sleep "$PI_TIMEOUT"
-    if kill -0 "$pid" 2>/dev/null; then
-      log_error "Timed out after ${PI_TIMEOUT}s — killing pid $pid"
-      kill "$pid" 2>/dev/null
+  local timeout_cmd=""
+  if command -v gtimeout >/dev/null 2>&1; then
+    timeout_cmd="gtimeout"
+  elif command -v timeout >/dev/null 2>&1; then
+    timeout_cmd="timeout"
+  fi
+
+  local exit_code
+  if [ -n "$timeout_cmd" ]; then
+    if "$timeout_cmd" "$timeout_s" pi --print "$prompt" \
+      --provider "$provider" \
+      --model    "$model" \
+      --no-session; then
+      exit_code=0
+    else
+      exit_code=$?
     fi
-  ) &
-  local watchdog_pid=$!
-
-  wait "$pid"
-  local exit_code=$?
-
-  kill "$watchdog_pid" 2>/dev/null || true
-  wait "$watchdog_pid" 2>/dev/null || true
+    if [ "$exit_code" -eq 124 ]; then
+      log_error "Timed out after ${timeout_s}s"
+    fi
+  else
+    log_warn "No timeout command found; running without watchdog"
+    if pi --print "$prompt" \
+      --provider "$provider" \
+      --model    "$model" \
+      --no-session; then
+      exit_code=0
+    else
+      exit_code=$?
+    fi
+  fi
 
   return $exit_code
 }
@@ -68,14 +213,15 @@ _pi_run_once() {
 #
 # Constructs:  /skill:<name> [args]  as the prompt
 # Runs in VAULT_DIR so .pi/skills/ are discovered.
-# Kills the process after PI_TIMEOUT seconds.
+# Kills the process after PI_RUN_TIMEOUT or PI_TIMEOUT seconds.
 pi_run() {
   local skill="$1"
   shift
   local args="$*"
   cd "$VAULT_DIR"
 
-  # Build the skill invocation prompt
+  pi_preflight "$skill" || return 1
+
   local prompt="/skill:${skill}"
   if [ -n "$args" ]; then
     prompt="$prompt $args"
@@ -85,14 +231,20 @@ pi_run() {
   local start_time
   start_time=$(date +%s)
 
-  _pi_run_once "$prompt" "$PI_PROVIDER" "$PI_MODEL"
-  local exit_code=$?
+  local exit_code
+  if _pi_run_once "$prompt" "$PI_PROVIDER" "$PI_MODEL"; then
+    exit_code=0
+  else
+    exit_code=$?
+  fi
 
-  # Fallback: retry with larger model on failure (e.g. context limit)
   if [ $exit_code -ne 0 ] && [ -n "$PI_FALLBACK_MODEL" ]; then
     log_info "Primary failed (exit ${exit_code}) — retrying with ${PI_FALLBACK_PROVIDER}/${PI_FALLBACK_MODEL}"
-    _pi_run_once "$prompt" "$PI_FALLBACK_PROVIDER" "$PI_FALLBACK_MODEL"
-    exit_code=$?
+    if _pi_run_once "$prompt" "$PI_FALLBACK_PROVIDER" "$PI_FALLBACK_MODEL"; then
+      exit_code=0
+    else
+      exit_code=$?
+    fi
   fi
 
   local elapsed

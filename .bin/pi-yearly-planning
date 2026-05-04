@@ -6,8 +6,11 @@ source "${HOME}/.bin/pi-cron-common"
 LOG_FILE="${LOG_DIR}/yearly-planning.log"
 
 main() {
-  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-  pi_run "vision-yearly-planning"
+  run_phase "vision-yearly-planning" pi_run "vision-yearly-planning"
 }
 
-main >> "$LOG_FILE" 2>&1
+if run_job "yearly-planning" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

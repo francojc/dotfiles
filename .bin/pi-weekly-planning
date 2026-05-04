@@ -5,8 +5,11 @@ source "${HOME}/.bin/pi-cron-common"
 LOG_FILE="${LOG_DIR}/weekly-planning.log"
 
 main() {
-  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-  pi_run "weekly-planning"
+  run_phase "weekly-planning" pi_run "weekly-planning"
 }
 
-main >> "$LOG_FILE" 2>&1
+if run_job "weekly-planning" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

@@ -8,19 +8,19 @@ source "${HOME}/.bin/pi-cron-common"
 
 LOG_FILE="${LOG_DIR}/karakeep-to-wiki.log"
 
-# Files used to coordinate sync -> ingest
 CHANGED_FILE="${STATE_DIR}/karakeep-changed-files.txt"
 PENDING_FILE="${STATE_DIR}/karakeep-pending-ingest.txt"
 
-main() {
-  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-
-  # Step 1: Sync Karakeep
-  log_info "Step 1: Syncing Karakeep bookmarks..."
+karakeep_sync_phase() {
+  require_env KARAKEEP_API_ADDR KARAKEEP_API_KEY || return 1
   bash "${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts/karakeep-sync.sh"
+}
+
+main() {
+  log_info "Step 1: Syncing Karakeep bookmarks..."
+  run_phase "karakeep sync" karakeep_sync_phase
   log_info "Karakeep sync complete"
 
-  # Step 2: Build ingest queue from changed-files manifest + pending backlog
   local changed_files=()
   local pending_files=()
 
@@ -64,7 +64,7 @@ main() {
   local file_list
   file_list=$(printf '"%s" ' "${ingest_files[@]}")
 
-  if pi_run "wiki-ingest" "$file_list"; then
+  if run_phase "wiki-ingest changed files (${#ingest_files[@]})" pi_run "wiki-ingest" "$file_list"; then
     : > "$PENDING_FILE"
     log_info "Auto-ingest complete"
     qmd_refresh
@@ -75,4 +75,8 @@ main() {
   fi
 }
 
-main >> "$LOG_FILE" 2>&1
+if run_job "karakeep-to-wiki" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

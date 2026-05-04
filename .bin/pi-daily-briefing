@@ -4,10 +4,29 @@ source "${HOME}/.bin/pi-cron-common"
 
 LOG_FILE="${LOG_DIR}/daily-briefing.log"
 
-main() {
-  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-  pi_run "weekly-planning" "rebalance"
-  pi_run "daily-briefing" "$(date +%Y-%m-%d)"
+daily_rebalance_phase() {
+  PI_RUN_TIMEOUT="$PI_TIMEOUT_REBALANCE" pi_run "weekly-planning" "rebalance"
 }
 
-main >> "$LOG_FILE" 2>&1
+daily_briefing_phase() {
+  PI_RUN_TIMEOUT="$PI_TIMEOUT_DAILY" pi_run "daily-briefing" "$@"
+}
+
+main() {
+  local today daily_args=()
+  today="$(date +%Y-%m-%d)"
+  daily_args=("$today")
+
+  if ! run_phase "weekly-planning rebalance" daily_rebalance_phase; then
+    log_error "Weekly rebalance failed/timed out; continuing daily briefing with current weekly plan baseline"
+    daily_args+=("--rebalance-status" "failed" "--rebalance-note" "Weekly rebalance failed or timed out before daily briefing; use current weekly plan as baseline and add a brief Thoughts note.")
+  fi
+
+  run_phase "daily-briefing $today" daily_briefing_phase "${daily_args[@]}"
+}
+
+if run_job "daily-briefing" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

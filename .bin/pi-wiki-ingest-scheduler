@@ -15,12 +15,8 @@ BATCH_SIZE="${INGEST_BATCH_SIZE:-5}"
 LOG_FILE="${LOG_DIR}/wiki-ingest-scheduler.log"
 
 main() {
-  echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
-
-  # Ensure state file exists
   touch "$STATE_FILE"
 
-  # Find all markdown source documents
   local all_sources=()
   while IFS= read -r f; do
     all_sources+=("$f")
@@ -29,7 +25,6 @@ main() {
   local total=${#all_sources[@]}
   log_info "Found $total source documents in $DOCS_DIR"
 
-  # Filter to unprocessed sources (not already in state file)
   local pending=()
   for src in "${all_sources[@]}"; do
     if ! grep -qxF "$src" "$STATE_FILE" 2>/dev/null; then
@@ -45,26 +40,26 @@ main() {
     return 0
   fi
 
-  # Take the first BATCH_SIZE pending sources
   local batch=("${pending[@]:0:${BATCH_SIZE}}")
   log_info "Scheduling batch of ${#batch[@]} (INGEST_BATCH_SIZE=${BATCH_SIZE}):"
   printf '  %s\n' "${batch[@]}"
 
-  # Build quoted file list for the skill
   local file_list
   file_list=$(printf '"%s" ' "${batch[@]}")
 
-  # Run batch ingest
-  if pi_run "wiki-ingest" "$file_list"; then
-    # Mark batch as processed
+  if run_phase "wiki-ingest batch (${#batch[@]})" pi_run "wiki-ingest" "$file_list"; then
     printf '%s\n' "${batch[@]}" >> "$STATE_FILE"
     log_info "Batch complete — ${#batch[@]} sources marked as processed"
     log_info "Remaining after this run: $(( pending_count - ${#batch[@]} ))"
     qmd_refresh
   else
-    log_error "wiki-ingest failed (exit $?) — state file NOT updated"
+    log_error "wiki-ingest failed — state file NOT updated"
     return 1
   fi
 }
 
-main >> "$LOG_FILE" 2>&1
+if run_job "wiki-ingest-scheduler" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

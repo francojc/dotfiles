@@ -12,6 +12,8 @@
 # Environment & Configuration Files
 # ----------------------------------------------------------
 .env
+.variables.env
+.config/pi-cron/env
 
 # Application configuration directories
 .config/aerc/google-aerc-credentials.json
