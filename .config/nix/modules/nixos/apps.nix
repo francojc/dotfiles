@@ -54,7 +54,7 @@
   # NixOS System Packages (complementary to Flatpak packages)
   environment.systemPackages = with pkgs; [
     coreutils # GNU core utilities
-    aider-chat
+    # aider-chat
     dconf-editor
     dconf2nix
     gcc
