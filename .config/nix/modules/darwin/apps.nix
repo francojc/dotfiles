@@ -21,10 +21,10 @@
       "Adembc/homebrew-tap" # lazyssh
       "FelixKratz/formulae" # borders
       "acrogenesis/macchanger" # macchanger
-      "floatpane/matcha" # matcha
       "keith/formulae" # reminders-cli
       "librespeed/tap" # librespeed-cli
       "raine/workmux" # workmux
+      "radiosilence/koan" # koan
     ];
 
     brews = [
@@ -32,6 +32,7 @@
       "cairo" # 2D graphics library
       "gdk-pixbuf" # image loading library
       "git-filter-repo" # remove files/dirs from git history
+      "koan" # Navidrome TUI player
       "lazyssh" # lazyssh
       "libffi" # Foreign Function Interface library
       "librespeed-cli"
@@ -39,7 +40,6 @@
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
       "macchanger" # MAC address changer
-      # "floatpane/matcha/matcha" # matcha (tui email client)
       "mole" # terminal cleanup app for macOS
       "ninja" # build system
       "nmap" # network scanner

@@ -18,6 +18,7 @@
         ${builtins.readFile ./repo.zsh}
         ${builtins.readFile ./fzf.zsh}
 
+        source <(COMPLETE=zsh koan) # autocomplete koan
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''

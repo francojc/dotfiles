@@ -1,0 +1,6 @@
+*.log
+*.db
+*.db-wal
+*.db-shm
+config.local.toml
+cache/
