@@ -128,6 +128,30 @@
           "contextWindow": 30000
         }
       ]
+    },
+    "omlx": {
+      "baseUrl": "http://127.0.0.1:8085/v1",
+      "api": "openai-completions",
+      "apiKey": "omlx-dvdxabi3afaw07ai",
+      "authHeader": true,
+      "models": [
+        {
+          "id": "supergemma4-26b-uncensored-mlx-4bit-v2",
+          "name": "supergemma4-26b-uncensored-mlx-4bit-v2",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 32768,
+          "maxTokens": 32768
+        }
+      ]
     }
   }
 }

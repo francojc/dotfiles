@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.72.1",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.5",
+  "lastChangelogVersion": "0.73.0",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "claude-sonnet-4.6",
   "enabledModels": [
     "llama-router/Qwen3.5-4B-Q8_0",
     "llama-router/Qwen3.5-9B-Q8_0",
@@ -30,6 +30,6 @@
     "extensions/git-branch-dirty-footer.ts"
   ],
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
-  "theme": "ghostty-sync-e13299c9"
+  "theme": "ghostty-sync-e13299c9",
+  "hideThinkingBlock": false
 }
-

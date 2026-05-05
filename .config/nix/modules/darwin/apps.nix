@@ -25,6 +25,7 @@
       "librespeed/tap" # librespeed-cli
       "raine/workmux" # workmux
       "radiosilence/koan" # koan
+      "jundot/omlx"
     ];
 
     brews = [
@@ -45,6 +46,7 @@
       "nmap" # network scanner
       "node" # Node.js
       "ollama" # Ollama
+      "omlx"
       "pango" # text layout library
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
