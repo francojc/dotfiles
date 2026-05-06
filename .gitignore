@@ -44,6 +44,7 @@
 # Pi coding agent
 .pi/agent/sessions/*
 .pi/agent/auth.json
+.pi/agent/settings.json
 
 .tmux/plugins/
 .config/matcha/*
