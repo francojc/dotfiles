@@ -45,6 +45,8 @@
 .pi/agent/sessions/*
 .pi/agent/auth.json
 .pi/agent/settings.json
+.pi/models/
+.pi/agent/themes/
 
 .tmux/plugins/
 .config/matcha/*
