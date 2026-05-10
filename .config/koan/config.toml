@@ -7,15 +7,6 @@ show_fps = false
 pre_amp_db = 0.0
 art_size = 24
 
-[remote]
-enabled = false
-url = ""
-username = ""
-transcode_quality = "original"
-download_workers = 5
-
-[organize]
-
 [visualizer]
 enabled = true
 fps = 30
@@ -51,3 +42,4 @@ cors_origins = []
 [discovery]
 analysis_on_scan = false
 acoustic_weight = 0.5
+
