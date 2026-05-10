@@ -1,6 +1,3 @@
-[library]
-folders = ["/Users/jeridf/Music"]
-
 [playback]
 software_volume = false
 replaygain = "album"
@@ -9,15 +6,6 @@ target_fps = 30
 show_fps = false
 pre_amp_db = 0.0
 art_size = 24
-
-[remote]
-enabled = false
-url = ""
-username = ""
-transcode_quality = "original"
-download_workers = 5
-
-[organize]
 
 [visualizer]
 enabled = true
@@ -54,3 +42,4 @@ cors_origins = []
 [discovery]
 analysis_on_scan = false
 acoustic_weight = 0.5
+
