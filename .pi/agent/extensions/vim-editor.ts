@@ -40,8 +40,8 @@
  *   u        Undo
  */
 
-import { CustomEditor, type ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { matchesKey, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
+import { CustomEditor, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 // Escape sequences understood by Pi's built-in editor ─────────────────────────
 const SEQ = {
