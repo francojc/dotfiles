@@ -119,22 +119,25 @@ export default function (pi: ExtensionAPI) {
 					const sessionName = ctx.sessionManager.getSessionName();
 					if (sessionName) pwd = `${pwd}${theme.fg("dim", " • ")}${sessionName}`;
 
+					const metric = (label: string, value: string, color: "accent" | "success" | "warning" | "muted" = "muted") =>
+						`${theme.fg(color, label)}${theme.fg("dim", value)}`;
+
 					const statsParts: string[] = [];
-					if (totalInput) statsParts.push(`↑${formatTokens(totalInput)}`);
-					if (totalOutput) statsParts.push(`↓${formatTokens(totalOutput)}`);
-					if (totalCacheRead) statsParts.push(`R${formatTokens(totalCacheRead)}`);
-					if (totalCacheWrite) statsParts.push(`W${formatTokens(totalCacheWrite)}`);
+					if (totalInput) statsParts.push(metric("↑", formatTokens(totalInput), "accent"));
+					if (totalOutput) statsParts.push(metric("↓", formatTokens(totalOutput), "success"));
+					if (totalCacheRead) statsParts.push(metric("R", formatTokens(totalCacheRead), "muted"));
+					if (totalCacheWrite) statsParts.push(metric("W", formatTokens(totalCacheWrite), "muted"));
 
 					const usingSubscription = ctx.model ? ctx.modelRegistry.isUsingOAuth(ctx.model) : false;
 					if (totalCost || usingSubscription) {
-						statsParts.push(`$${totalCost.toFixed(3)}${usingSubscription ? " (sub)" : ""}`);
+						statsParts.push(metric("$", `${totalCost.toFixed(3)}${usingSubscription ? " sub" : ""}`, "warning"));
 					}
 
 					const contextDisplay =
 						contextPercent === "?" ? `?/${formatTokens(contextWindow)}` : `${contextPercent}%/${formatTokens(contextWindow)}`;
 					if (contextPercentValue > 90) statsParts.push(theme.fg("error", contextDisplay));
 					else if (contextPercentValue > 70) statsParts.push(theme.fg("warning", contextDisplay));
-					else statsParts.push(contextDisplay);
+					else statsParts.push(metric("ctx ", contextDisplay, "accent"));
 
 					let left = statsParts.join(" ");
 					let leftWidth = visibleWidth(left);
@@ -145,13 +148,13 @@ export default function (pi: ExtensionAPI) {
 
 					const sessionContext = ctx.sessionManager.buildSessionContext();
 					const modelName = ctx.model?.id || "no-model";
-					let right = modelName;
+					let right = theme.fg("muted", modelName);
 					if (ctx.model?.reasoning) {
 						const thinkingLevel = sessionContext.thinkingLevel || "off";
-						right = `${modelName}:${thinkingLevel}`;
+						right = `${theme.fg("muted", modelName)}${theme.fg("dim", ":")}${theme.fg("accent", thinkingLevel)}`;
 					}
 					if (footerData.getAvailableProviderCount() > 1 && ctx.model) {
-						const withProvider = `(${ctx.model.provider}) ${right}`;
+						const withProvider = `${theme.fg("dim", "(")}${theme.fg("accent", ctx.model.provider)}${theme.fg("dim", ") ")}${right}`;
 						if (leftWidth + 2 + visibleWidth(withProvider) <= width) right = withProvider;
 					}
 
@@ -165,12 +168,17 @@ export default function (pi: ExtensionAPI) {
 
 					const lines = [
 						truncateToWidth(theme.fg("dim", pwd), width, theme.fg("dim", "...")),
-						theme.fg("dim", statsLine),
+						statsLine,
 					];
 
 					const extensionStatuses = [...footerData.getExtensionStatuses().entries()]
 						.sort(([a], [b]) => a.localeCompare(b))
-						.map(([, text]) => sanitizeStatusText(text))
+						.map(([key, text]) => {
+							const status = sanitizeStatusText(text);
+							if (!status) return "";
+							if (key === "idle") return `${theme.fg("dim", "voice: ")}${status}`;
+							return status;
+						})
 						.filter(Boolean);
 					if (extensionStatuses.length > 0) {
 						lines.push(truncateToWidth(extensionStatuses.join(" "), width, theme.fg("dim", "...")));
