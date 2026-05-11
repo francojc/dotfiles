@@ -57,6 +57,13 @@
         export GCAL='-s 1 --iso-week-number=yes'
         export OLLAMA_HOST='100.101.38.4:11434'
 
+        # --- PI ENV VARIABLES ---
+        # update provider/model with subscription changes
+        export PI_PROVIDER="openai-codex"
+        export PI_MODEL="gpt-5.5"
+        export PI_FALLBACK_PROVIDER="ollama"
+        export PI_FALLBACK_MODEL="gemma4:31b-cloud"
+
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
         #
@@ -83,16 +90,6 @@
         # --- FLATPAK INTEGRATION ---
         # Ensure Flatpak apps can find system fonts and themes
         export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/usr/share:$XDG_DATA_DIRS"
-
-        # --- OPENCODE AI ---
-        # Install opencode-ai, if not already installed
-        if ! command -v opencode &> /dev/null; then
-          if command -v npm &> /dev/null; then
-            npm install -g opencode-ai@latest
-          else
-            echo "npm not found. Please install Node.js and npm to use opencode-ai."
-          fi
-        fi
 
         # --- ZSH ---
         # ZSH plugins
