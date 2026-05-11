@@ -759,11 +759,56 @@ require("yazi").setup({
 -- packadd on an already-loaded plugin is a no-op, so shared plugins
 -- (e.g. render-markdown used by both markdown and quarto) are safe to list twice.
 
+local configured_plugins = {}
+
 local function load(name, fn)
 	vim.cmd("packadd " .. name)
-	if fn then
+	if fn and not configured_plugins[name] then
 		fn()
+		configured_plugins[name] = true
 	end
+end
+
+local obsidian_workspaces = {
+	{ name = "Notes", path = "~/Obsidian/Notes/" },
+	{ name = "Personal", path = "~/Obsidian/Personal/" },
+}
+
+local function setup_obsidian()
+	require("obsidian").setup({
+		legacy_commands = false,
+		ui = { enable = false },
+		checkbox = {
+			order = { " ", "x", "/", "-", ">", "~", "!", "?" },
+		},
+		note_id_func = function(id, dir)
+			return id
+		end,
+		workspaces = obsidian_workspaces,
+		daily_notes = {
+			folder = "plan/daily/",
+			template = "Daily.md",
+			date_format = "%Y-%m-%d",
+			alias_format = "%B %-d, %Y",
+			workdays_only = false,
+		},
+		templates = {
+			folder = "plan/templates/",
+			date_format = "%B %-d, %Y",
+			time_format = "%H:%M",
+		},
+		new_notes_location = "Inbox",
+		attachments = { folder = "./" },
+		completion = { nvim_cmp = false, blink = true },
+	})
+end
+
+local function cwd_in_obsidian_vault()
+	return vim.fs.find(".obsidian", {
+		path = vim.fn.getcwd(),
+		upward = true,
+		type = "directory",
+	})[1] ~= nil
 end
 
 ---| FileType-triggered plugins ----------------------------------
@@ -877,40 +922,7 @@ local ft_lazy = {
 				})
 			end,
 		},
-		{
-			"obsidian.nvim",
-			function()
-				require("obsidian").setup({
-					legacy_commands = false,
-					ui = { enable = false },
-					checkbox = {
-						order = { " ", "x", "/", "-", ">", "~", "!", "?" },
-					},
-					note_id_func = function(id, dir)
-						return id
-					end,
-					workspaces = {
-						{ name = "Notes", path = "~/Obsidian/Notes/" },
-						{ name = "Personal", path = "~/Obsidian/Personal/" },
-					},
-					daily_notes = {
-						folder = "plan/daily/",
-						template = "Daily.md",
-						date_format = "%Y-%m-%d",
-						alias_format = "%B %-d, %Y",
-						workdays_only = false,
-					},
-					templates = {
-						folder = "plan/templates/",
-						date_format = "%B %-d, %Y",
-						time_format = "%H:%M",
-					},
-					new_notes_location = "Inbox",
-					attachments = { folder = "./" },
-					completion = { nvim_cmp = false, blink = true },
-				})
-			end,
-		},
+		{ "obsidian.nvim", setup_obsidian },
 		{
 			"snacks-bibtex.nvim",
 			function()
@@ -1028,6 +1040,17 @@ vim.api.nvim_create_autocmd("FileType", {
 			load(spec[1], spec[2])
 		end
 		ft_lazy[args.match] = nil -- run once per filetype
+	end,
+})
+
+vim.api.nvim_create_autocmd("VimEnter", {
+	group = vim.api.nvim_create_augroup("LazyObsidianVault", { clear = true }),
+	desc = "Load obsidian.nvim when Neovim starts inside an Obsidian vault",
+	once = true,
+	callback = function()
+		if cwd_in_obsidian_vault() then
+			load("obsidian.nvim", setup_obsidian)
+		end
 	end,
 })
 
