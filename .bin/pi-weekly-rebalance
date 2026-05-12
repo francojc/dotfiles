@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/weekly-rebalance.log"
+
+main() {
+  PI_RUN_TIMEOUT="$PI_TIMEOUT_REBALANCE" run_phase "weekly-rebalance" pi_run "weekly-rebalance" "$@"
+}
+
+if run_job "weekly-rebalance" "$LOG_FILE" main "$@"; then
+  exit 0
+else
+  exit $?
+fi
