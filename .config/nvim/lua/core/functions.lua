@@ -401,10 +401,10 @@ end
 
 function _G.Pack_clean()
 	vim.notify("Checking for unused plugins...", vim.log.levels.INFO)
-	local plugins = vim.pack.get()
-	local active_plugins = {}
-	for _, plugin in ipairs(plugins) do
-		active_plugins[vim.fn.fnamemodify(plugin.path, ":t")] = true
+	local active_plugins = _G.Pack_declared_plugins or {}
+	if vim.tbl_isempty(active_plugins) then
+		vim.notify("No declared plugin list found; refusing to clean.", vim.log.levels.ERROR)
+		return
 	end
 
 	-- Remove orphaned directories

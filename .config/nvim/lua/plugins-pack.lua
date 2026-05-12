@@ -25,9 +25,10 @@ local eager_plugins = {
 	{ src = "https://github.com/webhooked/kanso.nvim" },
 
 	-- Core (must be available at startup)
-	{ src = "https://github.com/saghen/blink.cmp", 
-      version = "v1", -- branch
-    },
+	{
+		src = "https://github.com/saghen/blink.cmp",
+		version = "v1", -- branch
+	},
 	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
 	{ src = "https://github.com/echasnovski/mini.icons" },
@@ -72,5 +73,20 @@ local opt_plugins = {
 	{ src = "https://github.com/stevearc/aerial.nvim" },
 	{ src = "https://github.com/stevearc/quicker.nvim" },
 }
+
+local function plugin_name(spec)
+	if spec.name then
+		return spec.name
+	end
+	return spec.src:match("/([^/]+)$")
+end
+
+_G.Pack_declared_plugins = {}
+for _, spec in ipairs(eager_plugins) do
+	_G.Pack_declared_plugins[plugin_name(spec)] = true
+end
+for _, spec in ipairs(opt_plugins) do
+	_G.Pack_declared_plugins[plugin_name(spec)] = true
+end
 
 vim.pack.add(opt_plugins, { load = false, confirm = false })
