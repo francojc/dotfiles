@@ -19,6 +19,9 @@
         ${builtins.readFile ./fzf.zsh}
 
         source <(COMPLETE=zsh koan) # autocomplete koan
+        if command -v dauber >/dev/null 2>&1; then
+          eval "$(_DAUBER_COMPLETE=source_zsh dauber)"
+        fi
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''
