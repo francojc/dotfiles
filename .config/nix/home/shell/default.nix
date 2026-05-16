@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   username,
   ...
 }: {
@@ -28,18 +29,14 @@
         ${builtins.readFile ./repo.zsh}
         ${builtins.readFile ./fzf.zsh}
 
-        source <(COMPLETE=zsh koan) # autocomplete koan
+        # Custom tool completions (not in carapace registry)
+        # Wrapped in functions so zsh-defer can schedule them safely —
+        # process substitutions must not be evaluated at parse time
+        _comp_koan()   { source <(COMPLETE=zsh koan); }
+        _comp_dauber() { command -v dauber &>/dev/null && eval "$(_DAUBER_COMPLETE=source_zsh dauber)"; }
+        zsh-defer _comp_koan
+        zsh-defer _comp_dauber
 
-        # Cache dauber completion — regenerate only when binary changes (~350ms saved)
-        _dauber_cache="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dauber-complete.zsh"
-        if command -v dauber >/dev/null 2>&1; then
-          if [[ ! -f "$_dauber_cache" ]] || [[ "$(command -v dauber)" -nt "$_dauber_cache" ]]; then
-            mkdir -p "$(dirname "$_dauber_cache")"
-            _DAUBER_COMPLETE=source_zsh dauber > "$_dauber_cache" 2>/dev/null
-          fi
-          source "$_dauber_cache"
-        fi
-        unset _dauber_cache
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''
@@ -154,8 +151,15 @@
           fi
         fi
       '';
-      # Other ZSH plugins
-      plugins = [];
+      plugins = [
+        {
+          # Defer slow completions until ZLE is idle (fires after first prompt)
+          # Prevents custom tool completions from blocking shell startup
+          name = "zsh-defer";
+          src = pkgs.zsh-defer;
+          file = "share/zsh-defer/zsh-defer.plugin.zsh";
+        }
+      ];
       shellAliases = {
         # Flatpak aliases (similar to brew workflow)
         flat = "flatpak";
@@ -177,7 +181,7 @@
       ];
     };
     carapace = {
-      enable = false;
+      enable = true; # covers 1000+ standard tools; custom tools handled via zsh-defer
       enableZshIntegration = true;
     };
     direnv = {
