@@ -41,8 +41,14 @@
 
       # Host-specific Homebrew packages (merged with shared apps.nix)
       homebrew = {
+        taps = [
+          "jundot/omlx"
+        ];
         brews = [
           # Mac-Minicore-only brews here
+          "llama.cpp" # LLaMA model inference
+          "ollama" # Ollama
+          "omlx"
         ];
         casks = [
           # Mac-Minicore-only casks here

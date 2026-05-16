@@ -25,29 +25,20 @@
       "librespeed/tap" # librespeed-cli
       "raine/workmux" # workmux
       "radiosilence/koan" # koan
-      "jundot/omlx"
     ];
 
     brews = [
       "borders" # jankyborders
-      "cairo" # 2D graphics library
-      "gdk-pixbuf" # image loading library
       "git-filter-repo" # remove files/dirs from git history
       "koan" # Navidrome TUI player
       "lazyssh" # lazyssh
-      "libffi" # Foreign Function Interface library
       "librespeed-cli"
-      "llama.cpp" # LLaMA model inference
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
       "macchanger" # MAC address changer
       "mole" # terminal cleanup app for macOS
-      "ninja" # build system
       "nmap" # network scanner
       "node" # Node.js
-      "ollama" # Ollama
-      "omlx"
-      "pango" # text layout library
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
@@ -55,9 +46,14 @@
       "sqly" # interactive SQL client
       "tree-sitter-cli" # tree-sitter CLI
       "vhs" # cli for programmable terminal gifs
-      "weasyprint" # HTML to PDF converter
       "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
+      # "cairo" # 2D graphics library
+      # "gdk-pixbuf" # image loading library
+      # "libffi" # Foreign Function Interface library
+      # "ninja" # build system
+      # "pango" # text layout library
+      # "weasyprint" # HTML to PDF converter
     ];
 
     casks = [
