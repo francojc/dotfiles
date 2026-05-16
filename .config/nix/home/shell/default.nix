@@ -8,6 +8,16 @@
     zsh = {
       enable = true;
       enableCompletion = true;
+      # Cache compinit: only re-audit fpath once per day
+      # Skips compaudit on subsequent starts (~1.3s saved per shell)
+      completionInit = ''
+        autoload -U compinit
+        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+        fi
+      '';
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       defaultKeymap = "viins";
@@ -19,9 +29,17 @@
         ${builtins.readFile ./fzf.zsh}
 
         source <(COMPLETE=zsh koan) # autocomplete koan
+
+        # Cache dauber completion — regenerate only when binary changes (~350ms saved)
+        _dauber_cache="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dauber-complete.zsh"
         if command -v dauber >/dev/null 2>&1; then
-          eval "$(_DAUBER_COMPLETE=source_zsh dauber)"
+          if [[ ! -f "$_dauber_cache" ]] || [[ "$(command -v dauber)" -nt "$_dauber_cache" ]]; then
+            mkdir -p "$(dirname "$_dauber_cache")"
+            _DAUBER_COMPLETE=source_zsh dauber > "$_dauber_cache" 2>/dev/null
+          fi
+          source "$_dauber_cache"
         fi
+        unset _dauber_cache
         bindkey '^F' autosuggest-accept # Ctrl+F to accept full suggestion
       '';
       profileExtra = ''

@@ -168,4 +168,8 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   environment.variables.HOMEBREW_NO_ANALYTICS = "1"; # Keep brew specific var
+
+  # Disable nix-darwin's compinit in /etc/zshrc — home-manager handles it
+  # with a cached approach, avoiding the ~1.3s compaudit penalty on every start
+  programs.zsh.enableCompletion = false;
 }
