@@ -38,11 +38,11 @@ readonly PI_TIMEOUT_REBALANCE="${PI_TIMEOUT_REBALANCE:-900}"  # 15 min default
 readonly PI_TIMEOUT_DAILY="${PI_TIMEOUT_DAILY:-1800}"  # 30 min default
 
 # Override provider/model via env if needed
-PI_PROVIDER="${PI_PROVIDER:-ollama}"
-PI_MODEL="${PI_MODEL:-kimi-k2.6:cloud}"
-PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-github-copilot}"
+PI_PROVIDER="${PI_PROVIDER:-openai-codex}"
+PI_MODEL="${PI_MODEL:-gpt-5.5}"
+PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-ollama}"
 # Use ${VAR-default} so PI_FALLBACK_MODEL= disables fallback for tests/debugging.
-PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL-claude-sonnet-4.6}"
+PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-gemma4:31b-cloud}"
 
 # Ensure required directories exist on every source
 mkdir -p "$LOG_DIR"
