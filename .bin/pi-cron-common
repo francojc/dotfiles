@@ -13,8 +13,8 @@ _load_pi_env() {
   fi
 
   local owner perms
-  owner=$(stat -f '%Su' "$PI_ENV_FILE" 2>/dev/null || stat -c '%U' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
-  perms=$(stat -f '%Lp' "$PI_ENV_FILE" 2>/dev/null || stat -c '%a' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+  owner=$(/usr/bin/stat -f '%Su' "$PI_ENV_FILE" 2>/dev/null || stat -c '%U' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+  perms=$(/usr/bin/stat -f '%Lp' "$PI_ENV_FILE" 2>/dev/null || stat -c '%a' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
 
   if [ "$owner" != "$(id -un)" ]; then
     log_warn "Pi env file owner is $owner, expected $(id -un): $PI_ENV_FILE"
@@ -42,7 +42,7 @@ PI_PROVIDER="${PI_PROVIDER:-openai-codex}"
 PI_MODEL="${PI_MODEL:-gpt-5.5}"
 PI_FALLBACK_PROVIDER="${PI_FALLBACK_PROVIDER:-ollama}"
 # Use ${VAR-default} so PI_FALLBACK_MODEL= disables fallback for tests/debugging.
-PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL:-gemma4:31b-cloud}"
+PI_FALLBACK_MODEL="${PI_FALLBACK_MODEL-}"
 
 # Ensure required directories exist on every source
 mkdir -p "$LOG_DIR"
@@ -258,12 +258,16 @@ pi_run() {
 # Exits non-zero if either step fails.
 qmd_refresh() {
   log_info "Refreshing qmd index: qmd update && qmd embed"
+  log_info "node: $(node -v 2>/dev/null || echo missing)"
+  log_info "qmd: $(command -v qmd 2>/dev/null || echo missing) $(qmd --version 2>/dev/null || true)"
   if ! qmd update; then
     log_error "qmd update failed (non-fatal — ingest already succeeded)"
+    log_info "If error mentions NODE_MODULE_VERSION or better_sqlite3.node, run: npm rebuild -g @tobilu/qmd || npm install -g @tobilu/qmd"
     return 0
   fi
   if ! qmd embed; then
     log_error "qmd embed failed (non-fatal — ingest already succeeded)"
+    log_info "If error mentions NODE_MODULE_VERSION or better_sqlite3.node, run: npm rebuild -g @tobilu/qmd || npm install -g @tobilu/qmd"
     return 0
   fi
   log_info "qmd index refresh complete"

@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Preflight checks for Pi cron jobs. Logs no secret values.
+
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/cron-preflight.log"
+RUN_MODEL_CHECK="${RUN_MODEL_CHECK:-1}"
+RUN_QMD_UPDATE="${RUN_QMD_UPDATE:-0}"
+
+main() {
+  local ok=0
+
+  log_info "Checking required commands"
+  for cmd in pi qmd node npm; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+      log_info "$cmd: $(command -v "$cmd")"
+    else
+      log_error "$cmd: missing"
+      ok=1
+    fi
+  done
+
+  log_info "node: $(node -v 2>/dev/null || echo missing)"
+  log_info "npm: $(npm -v 2>/dev/null || echo missing)"
+  log_info "qmd: $(qmd --version 2>/dev/null || echo missing)"
+  log_info "pi: $(pi --version 2>/dev/null || echo missing)"
+
+  if [ -f "$PI_ENV_FILE" ]; then
+    local owner perms
+    owner=$(/usr/bin/stat -f '%Su' "$PI_ENV_FILE" 2>/dev/null || stat -c '%U' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+    perms=$(/usr/bin/stat -f '%Lp' "$PI_ENV_FILE" 2>/dev/null || stat -c '%a' "$PI_ENV_FILE" 2>/dev/null || echo unknown)
+    log_info "env file: present owner=${owner} perms=${perms}"
+    [ "$owner" = "$(id -un)" ] || { log_error "env file owner mismatch"; ok=1; }
+    [ "$perms" = "600" ] || { log_error "env file perms should be 600"; ok=1; }
+  else
+    log_error "env file missing: $PI_ENV_FILE"
+    ok=1
+  fi
+
+  log_env_status PI_PROVIDER PI_MODEL PI_FALLBACK_PROVIDER PI_FALLBACK_MODEL KARAKEEP_API_ADDR KARAKEEP_API_KEY
+
+  if [ "$RUN_MODEL_CHECK" = "1" ]; then
+    log_info "Model smoke test: ${PI_PROVIDER}/${PI_MODEL}"
+    cd "$VAULT_DIR"
+    if pi --print "Return OK only." --provider "$PI_PROVIDER" --model "$PI_MODEL" --no-session >/tmp/pi-cron-preflight-model.out 2>/tmp/pi-cron-preflight-model.err; then
+      log_info "Model smoke test passed"
+    else
+      log_error "Model smoke test failed"
+      tail -n 20 /tmp/pi-cron-preflight-model.err >&2 || true
+      ok=1
+    fi
+  else
+    log_info "Model smoke test skipped (RUN_MODEL_CHECK=0)"
+  fi
+
+  if [ "$RUN_QMD_UPDATE" = "1" ]; then
+    log_info "qmd update smoke test"
+    cd "$VAULT_DIR"
+    if qmd update; then
+      log_info "qmd update passed"
+    else
+      log_error "qmd update failed"
+      ok=1
+    fi
+  else
+    log_info "qmd update skipped (RUN_QMD_UPDATE=0)"
+  fi
+
+  return "$ok"
+}
+
+if run_job "cron-preflight" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi

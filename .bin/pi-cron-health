@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Summarize Pi cron health. Logs no secret values.
+
+set -euo pipefail
+source "${HOME}/.bin/pi-cron-common"
+
+LOG_FILE="${LOG_DIR}/cron-health.log"
+
+_last_status() {
+  local file="$1"
+  if [ ! -f "$file" ]; then
+    echo "missing"
+    return 0
+  fi
+  grep -E "Job (completed|failed):" "$file" | tail -n 1 || echo "no job status"
+}
+
+_recent_errors() {
+  local file="$1"
+  if [ ! -f "$file" ]; then
+    return 0
+  fi
+  grep -E "ERROR|No API key|requires a subscription|ERR_DLOPEN_FAILED|Timed out" "$file" | tail -n 5 || true
+}
+
+main() {
+  log_info "Cron health summary"
+  log_info "node: $(node -v 2>/dev/null || echo missing)"
+  log_info "qmd: $(command -v qmd 2>/dev/null || echo missing) $(qmd --version 2>/dev/null || true)"
+  log_info "pi: $(command -v pi 2>/dev/null || echo missing)"
+  log_info "provider/model: ${PI_PROVIDER}/${PI_MODEL}; fallback: ${PI_FALLBACK_PROVIDER}/${PI_FALLBACK_MODEL:-none}"
+
+  local docs_total processed pending
+  docs_total=$(find "$VAULT_DIR/kb/sources/documents" -name '*.md' -type f | wc -l | tr -d ' ')
+  processed=$(wc -l < "$STATE_DIR/ingest-processed" 2>/dev/null | tr -d ' ' || echo 0)
+  pending=$(( docs_total - processed ))
+  log_info "ingest backlog: pending=${pending} processed=${processed} total=${docs_total}"
+
+  local job file
+  for job in karakeep-to-wiki daily-briefing wiki-ingest-scheduler monthly-review wiki-lint weekly-planning yearly-planning cron-preflight; do
+    file="$LOG_DIR/${job}.log"
+    log_info "${job}: $(_last_status "$file")"
+  done
+
+  log_info "Recent errors by log (last 5 each):"
+  for file in "$LOG_DIR"/*.log; do
+    [ -e "$file" ] || continue
+    local errs
+    errs=$(_recent_errors "$file")
+    if [ -n "$errs" ]; then
+      echo "--- $(basename "$file") ---"
+      echo "$errs"
+    fi
+  done
+}
+
+if run_job "cron-health" "$LOG_FILE" main; then
+  exit 0
+else
+  exit $?
+fi
