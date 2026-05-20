@@ -81,6 +81,8 @@
         export PI_MODEL="gpt-5.5"
         export PI_FALLBACK_PROVIDER="ollama"
         export PI_FALLBACK_MODEL="gemma4:31b-cloud"
+        # Manual updates preferred; skip startup version ping/notification.
+        export PI_SKIP_VERSION_CHECK=1
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
