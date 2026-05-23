@@ -111,6 +111,7 @@
     xan # data visualization from CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
+    zellij # Terminal multiplexer
     zoxide # Smarter cd command
   ];
 
