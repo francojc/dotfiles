@@ -777,7 +777,7 @@ local obsidian_workspaces = {
 local function setup_obsidian()
 	require("obsidian").setup({
 		legacy_commands = false,
-		ui = { enable = false },
+		-- ui = { enable = false },
 		checkbox = {
 			order = { " ", "x", "/", "-", ">", "~", "!", "?" },
 		},
@@ -799,7 +799,6 @@ local function setup_obsidian()
 		},
 		new_notes_location = "Inbox",
 		attachments = { folder = "./" },
-		completion = { nvim_cmp = false, blink = true },
 	})
 end
 

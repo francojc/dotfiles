@@ -30,6 +30,8 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
+      "helix" # text editor
+      "hf" # huggingface cli
       "koan" # Navidrome TUI player
       "lazyssh" # lazyssh
       "librespeed-cli"
