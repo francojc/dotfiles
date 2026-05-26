@@ -1,33 +1,38 @@
 [playback]
 software_volume = false
-replaygain = "album"
+replaygain = "track"
 ticker_fps = 8
 target_fps = 30
 show_fps = false
 pre_amp_db = 0.0
 art_size = 24
 
+[library]
+folders = ["/Users/jeridf/Music"]
+
+[remote]
+enabled = true
+url = "https://music.gerbil-matrix.ts.net"
+transcode_quality = "opus-128"
+download_workers = 5
+cache_limit = "25GB"
+
 [visualizer]
 enabled = true
-fps = 30
-mode = "terrain"
+fps = 60
+mode = "bars"
 scale = "bark"
 amplitude_scale = "aweight"
 bar_decay_ms = 50
 peak_decay_ms = 180
 palette = "mono"
 reactivity = 1.0
-bass_shake = true
+bass_shake = false
 matrix_overlay = false
 reactive_bg = false
 
-[radio]
-lookahead = 5
-batch_size = 5
-use_subsonic = true
-history_window = 200
-seed_window = 5
-discovery_weight = 0.3
+[organize]
+default = "standard"
 
 [graphql]
 enabled = true
@@ -39,7 +44,14 @@ access_token_ttl = "15m"
 refresh_token_ttl = "30d"
 cors_origins = []
 
+[radio]
+lookahead = 5
+batch_size = 5
+use_subsonic = true
+history_window = 200
+seed_window = 5
+discovery_weight = 0.3
+
 [discovery]
 analysis_on_scan = false
 acoustic_weight = 0.5
-
