@@ -73,6 +73,7 @@
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
     nurl # Nix URL fetcher helper
+    typescript # TypeScript compiler (tsc)
     python312 # Python 3.12 for uv and general use
     stow # Symlink manager
     uv # Modern Python package and project manager

@@ -56,31 +56,74 @@ function formatBranchLabel(branch: string, stats: GitStats | null, theme: Extens
 	return parts.join(theme.fg("dim", " "));
 }
 
-function getFooterUsage(ctx: ExtensionContext) {
-	let totalInput = 0;
-	let totalOutput = 0;
-	let totalCacheRead = 0;
-	let totalCacheWrite = 0;
-	let totalCost = 0;
+// -- Cache for footer usage totals to avoid O(n) scans on every render frame --
+type UsageCache = {
+	totalInput: number;
+	totalOutput: number;
+	totalCacheRead: number;
+	totalCacheWrite: number;
+	totalCost: number;
+	lastEntryCount: number;
+};
 
-	for (const entry of ctx.sessionManager.getEntries()) {
-		if (entry.type === "message" && entry.message.role === "assistant") {
+let usageCache: UsageCache = {
+	totalInput: 0,
+	totalOutput: 0,
+	totalCacheRead: 0,
+	totalCacheWrite: 0,
+	totalCost: 0,
+	lastEntryCount: 0,
+};
+
+function resetUsageCache() {
+	usageCache = {
+		totalInput: 0,
+		totalOutput: 0,
+		totalCacheRead: 0,
+		totalCacheWrite: 0,
+		totalCost: 0,
+		lastEntryCount: 0,
+	};
+}
+
+function getFooterUsage(ctx: ExtensionContext) {
+	const entries = ctx.sessionManager.getEntries();
+	const currentCount = entries.length;
+
+	// Branch switch or tree navigation may reduce entry count — reset
+	if (currentCount < usageCache.lastEntryCount) {
+		resetUsageCache();
+	}
+
+	// Only scan new entries since last call
+	for (let i = usageCache.lastEntryCount; i < currentCount; i++) {
+		const entry = entries[i];
+		if (entry?.type === "message" && entry.message.role === "assistant") {
 			const msg = entry.message as AssistantMessage;
-			totalInput += msg.usage.input;
-			totalOutput += msg.usage.output;
-			totalCacheRead += msg.usage.cacheRead;
-			totalCacheWrite += msg.usage.cacheWrite;
-			totalCost += msg.usage.cost.total;
+			usageCache.totalInput += msg.usage.input;
+			usageCache.totalOutput += msg.usage.output;
+			usageCache.totalCacheRead += msg.usage.cacheRead;
+			usageCache.totalCacheWrite += msg.usage.cacheWrite;
+			usageCache.totalCost += msg.usage.cost.total;
 		}
 	}
 
-	return { totalInput, totalOutput, totalCacheRead, totalCacheWrite, totalCost };
+	usageCache.lastEntryCount = currentCount;
+
+	return {
+		totalInput: usageCache.totalInput,
+		totalOutput: usageCache.totalOutput,
+		totalCacheRead: usageCache.totalCacheRead,
+		totalCacheWrite: usageCache.totalCacheWrite,
+		totalCost: usageCache.totalCost,
+	};
 }
 
 export default function (pi: ExtensionAPI) {
 	let refreshFooter: (() => Promise<void>) | undefined;
 
 	const installFooter = (ctx: ExtensionContext) => {
+		resetUsageCache();
 		ctx.ui.setFooter((tui, theme, footerData) => {
 			let stats: GitStats | null = null;
 
