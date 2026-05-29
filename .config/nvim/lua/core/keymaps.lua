@@ -7,17 +7,8 @@ g.maplocalleader = " "
 
 -- map() function -----
 local function map(mode, lhs, rhs, opts)
-	local options = { noremap = true, silent = true }
-	if opts then
-		options = vim.tbl_extend("force", options, opts)
-	end
-	if type(mode) == "table" then
-		for _, m in ipairs(mode) do
-			vim.api.nvim_set_keymap(m, lhs, rhs, options)
-		end
-	else
-		vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-	end
+	local options = vim.tbl_deep_extend("force", { silent = true }, opts or {})
+	vim.keymap.set(mode, lhs, rhs, options)
 end
 
 -- Vim -----------------
@@ -268,7 +259,7 @@ map("n", "<leader>oD", "<Cmd>Obsidian dailies<Cr>", { desc = "Daily notes picker
 map("n", "<leader>oL", "<Cmd>Obsidian links<Cr>", { desc = "Show all links in buffer" })
 map("n", "<leader>oN", "<Cmd>Obsidian new_from_template<Cr>", { desc = "Create new note from template" })
 map("n", "<leader>oT", "<Cmd>Obsidian tags<Cr>", { desc = "Search tags" })
-map("n", "<leader>oT", "<Cmd>Obsidian template<Cr>", { desc = "Insert template" })
+map("n", "<leader>ot", "<Cmd>Obsidian template<Cr>", { desc = "Insert template" })
 map("n", "<leader>ob", "<Cmd>Obsidian backlinks<Cr>", { desc = "Show backlinks" })
 map("n", "<leader>oc", "<Cmd>Obsidian toggle_checkbox<Cr>", { desc = "Toggle checkbox" })
 map("n", "<leader>od", "<Cmd>Obsidian today<Cr>", { desc = "Today's daily note" })
@@ -329,7 +320,7 @@ map("n", "<leader>tw", "<Cmd>lua Toggle_wrap()<Cr>", { desc = "Toggle word wrap"
 map("n", "<leader>uc", ":PackCheck<Cr>", { desc = "Check for updates" })
 map("n", "<leader>uu", ":PackUpdate<Cr>", { desc = "Update all plugins" })
 map("n", "<leader>uU", ":PackUpdate!<Cr>", { desc = "Force update all plugins" })
-map("n", "<leader>up", "<Cmd>lua _G.Pack_update_picker()<Cr>", { desc = "Update specific plugin" })
+map("n", "<leader>up", "<Cmd>lua require('core.pack-mgmt').update_picker()<Cr>", { desc = "Update specific plugin" })
 map("n", "<leader>us", ":PackStatus<Cr>", { desc = "Show plugin status" })
 map("n", "<leader>uC", ":PackClean<Cr>", { desc = "Clean unused plugins" })
 map("n", "<leader>uS", ":PackSync<Cr>", { desc = "Sync plugins" })

@@ -5,22 +5,30 @@ local a = vim.api
 -- personal group
 a.nvim_create_augroup("personal", { clear = true })
 
--- Remove trailing whitespace on save
+-- Remove trailing whitespace on save (non-special buffers only)
 a.nvim_create_autocmd("BufWritePre", {
 	group = "personal",
 	pattern = "*",
 	callback = function()
+		if vim.bo.buftype ~= "" then
+			return
+		end
 		local pos = vim.api.nvim_win_get_cursor(0)
-		vim.cmd([[%s/\s\+$//e]])
+		local saved_search = vim.fn.getreg("/")
+		vim.cmd([[keepjumps %s/\s\+$//e]])
+		vim.fn.setreg("/", saved_search)
 		vim.api.nvim_win_set_cursor(0, pos)
 	end,
 })
 
--- Highlight on yank
+-- Highlight on yank (non-special buffers only)
 a.nvim_create_autocmd("TextYankPost", {
 	group = "personal",
 	pattern = "*",
 	callback = function()
+		if vim.bo.buftype ~= "" then
+			return
+		end
 		vim.hl.on_yank()
 	end,
 })
@@ -155,20 +163,22 @@ vim.api.nvim_create_user_command("SpellLang", function()
 	end)
 end, {})
 
+-- Plugin management commands (delegate to pack-mgmt module)
+local pack = require("core.pack-mgmt")
+
 -- User command for updating plugins (workaround for vim.pack.update() display bug)
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
-	local force = opts.bang
-	_G.Pack_update_all(force)
+	pack.update_all(opts.bang)
 end, { desc = "Update all plugins", bang = true })
 
 -- Check for available updates
 vim.api.nvim_create_user_command("PackCheck", function()
-	_G.Pack_check_updates()
+	pack.check_updates()
 end, { desc = "Check for plugin updates" })
 
 -- Diagnose plugin fetch/connectivity failures
 vim.api.nvim_create_user_command("PackDiagnose", function()
-	_G.Pack_diagnose_fetch_failures()
+	pack.diagnose_fetch_failures()
 end, { desc = "Diagnose plugin remote fetch failures" })
 
 -- Update specific plugin
@@ -177,29 +187,29 @@ vim.api.nvim_create_user_command("PackUpdatePlugin", function(opts)
 		local plugins = vim.pack.get()
 		for _, plugin in ipairs(plugins) do
 			if plugin.spec.name == opts.args or vim.fn.fnamemodify(plugin.path, ":t") == opts.args then
-				_G.Pack_update_plugin(plugin.path)
+				pack.update_plugin(plugin.path)
 				return
 			end
 		end
 		vim.notify("Plugin not found: " .. opts.args, vim.log.levels.ERROR)
 	else
-		_G.Pack_update_picker()
+		pack.update_picker()
 	end
 end, { desc = "Update specific plugin", nargs = "?" })
 
 -- Clean unused plugins
 vim.api.nvim_create_user_command("PackClean", function()
-	_G.Pack_clean()
+	pack.clean()
 end, { desc = "Clean unused plugins" })
 
 -- Sync plugins
 vim.api.nvim_create_user_command("PackSync", function()
-	_G.Pack_sync()
+	pack.sync()
 end, { desc = "Sync plugins (install + update + clean)" })
 
 -- Show plugin status
 vim.api.nvim_create_user_command("PackStatus", function()
-	_G.Pack_status()
+	pack.status()
 end, { desc = "Show plugin status" })
 
 -- Check for plugin updates on startup (weekly)
@@ -208,8 +218,8 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	once = true,
 	callback = function()
 		vim.schedule(function()
-			if _G.Should_check_for_updates() then
-				_G.Pack_check_updates()
+			if pack.should_check_for_updates() then
+				pack.check_updates()
 			end
 		end)
 	end,
