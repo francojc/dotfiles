@@ -7,9 +7,13 @@
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Editor, type EditorTheme, Key, matchesKey, Text, truncateToWidth } from "@earendil-works/pi-tui";
+import { addLine, borderLine, dimHint } from "./tui-utils";
 import { Type } from "@sinclair/typebox";
 
+// ---------------------------------------------------------------------------
 // Types
+// ---------------------------------------------------------------------------
+
 interface QuestionOption {
 	value: string;
 	label: string;
@@ -40,7 +44,10 @@ interface QuestionnaireResult {
 	cancelled: boolean;
 }
 
+// ---------------------------------------------------------------------------
 // Schema
+// ---------------------------------------------------------------------------
+
 const QuestionOptionSchema = Type.Object({
 	value: Type.String({ description: "The value returned when selected" }),
 	label: Type.String({ description: "Display label for the option" }),
@@ -72,6 +79,138 @@ function errorResult(
 		details: { questions, answers: [], cancelled: true },
 	};
 }
+
+// ---------------------------------------------------------------------------
+// Sub-renderers
+// ---------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTheme = any;
+
+function renderTabBar(
+	questions: Question[],
+	answers: Map<string, Answer>,
+	currentTab: number,
+	theme: AnyTheme,
+): string {
+	const tabs: string[] = ["← "];
+	for (let i = 0; i < questions.length; i++) {
+		const isActive = i === currentTab;
+		const isAnswered = answers.has(questions[i].id);
+		const lbl = questions[i].label;
+		const box = isAnswered ? "■" : "□";
+		const color = isAnswered ? "success" : "muted";
+		const text = ` ${box} ${lbl} `;
+		const styled = isActive ? theme.bg("selectedBg", theme.fg("text", text)) : theme.fg(color, text);
+		tabs.push(`${styled} `);
+	}
+	const canSubmit = questions.every((q) => answers.has(q.id));
+	const isSubmitTab = currentTab === questions.length;
+	const submitText = " ✓ Submit ";
+	const submitStyled = isSubmitTab
+		? theme.bg("selectedBg", theme.fg("text", submitText))
+		: theme.fg(canSubmit ? "success" : "dim", submitText);
+	tabs.push(`${submitStyled} →`);
+	return ` ${tabs.join("")}`;
+}
+
+function renderOptions(
+	opts: RenderOption[],
+	optionIndex: number,
+	inputMode: boolean,
+	theme: AnyTheme,
+	add: (s: string) => void,
+): void {
+	for (let i = 0; i < opts.length; i++) {
+		const opt = opts[i];
+		const selected = i === optionIndex;
+		const isOther = opt.isOther === true;
+		const prefix = selected ? theme.fg("accent", "> ") : "  ";
+		const color = selected ? "accent" : "text";
+		if (isOther && inputMode) {
+			add(prefix + theme.fg("accent", `${i + 1}. ${opt.label} ✎`));
+		} else {
+			add(prefix + theme.fg(color, `${i + 1}. ${opt.label}`));
+		}
+		if (opt.description) {
+			add(`     ${theme.fg("muted", opt.description)}`);
+		}
+	}
+}
+
+function renderInputMode(
+	q: Question,
+	opts: RenderOption[],
+	optionIndex: number,
+	inputMode: boolean,
+	editor: Editor,
+	width: number,
+	theme: AnyTheme,
+	add: (s: string) => void,
+): void {
+	add(theme.fg("text", ` ${q.prompt}`));
+	add("");
+	renderOptions(opts, optionIndex, inputMode, theme, add);
+	add("");
+	add(theme.fg("muted", " Your answer:"));
+	for (const line of editor.render(width - 2)) {
+		add(` ${line}`);
+	}
+	add("");
+	add(theme.fg("dim", " Enter to submit • Esc to cancel"));
+}
+
+function renderSubmitTab(
+	questions: Question[],
+	answers: Map<string, Answer>,
+	theme: AnyTheme,
+	add: (s: string) => void,
+): void {
+	add(theme.fg("accent", theme.bold(" Ready to submit")));
+	add("");
+	for (const question of questions) {
+		const answer = answers.get(question.id);
+		if (answer) {
+			const prefix = answer.wasCustom ? "(wrote) " : "";
+			add(`${theme.fg("muted", ` ${question.label}: `)}${theme.fg("text", prefix + answer.label)}`);
+		}
+	}
+	add("");
+	const allAnswered = questions.every((q) => answers.has(q.id));
+	if (allAnswered) {
+		add(theme.fg("success", " Press Enter to submit"));
+	} else {
+		const missing = questions
+			.filter((q) => !answers.has(q.id))
+			.map((q) => q.label)
+			.join(", ");
+		add(theme.fg("warning", ` Unanswered: ${missing}`));
+	}
+}
+
+function renderQuestion(
+	q: Question,
+	opts: RenderOption[],
+	optionIndex: number,
+	inputMode: boolean,
+	theme: AnyTheme,
+	add: (s: string) => void,
+): void {
+	add(theme.fg("text", ` ${q.prompt}`));
+	add("");
+	renderOptions(opts, optionIndex, inputMode, theme, add);
+}
+
+function renderHelpFooter(isMulti: boolean, inputMode: boolean, theme: AnyTheme): string {
+	if (inputMode) return "";
+	return isMulti
+		? " Tab/←→ navigate • ↑↓ select • Enter confirm • Esc cancel"
+		: " ↑↓ navigate • Enter select • Esc cancel";
+}
+
+// ---------------------------------------------------------------------------
+// Extension
+// ---------------------------------------------------------------------------
 
 export default function questionnaire(pi: ExtensionAPI) {
 	pi.registerTool({
@@ -262,102 +401,27 @@ export default function questionnaire(pi: ExtensionAPI) {
 					const q = currentQuestion();
 					const opts = currentOptions();
 
-					// Helper to add truncated line
-					const add = (s: string) => lines.push(truncateToWidth(s, width));
+					const add = (s: string) => addLine(lines, s, width);
 
-					add(theme.fg("accent", "─".repeat(width)));
+					add(borderLine(width, theme));
 
-					// Tab bar (multi-question only)
 					if (isMulti) {
-						const tabs: string[] = ["← "];
-						for (let i = 0; i < questions.length; i++) {
-							const isActive = i === currentTab;
-							const isAnswered = answers.has(questions[i].id);
-							const lbl = questions[i].label;
-							const box = isAnswered ? "■" : "□";
-							const color = isAnswered ? "success" : "muted";
-							const text = ` ${box} ${lbl} `;
-							const styled = isActive ? theme.bg("selectedBg", theme.fg("text", text)) : theme.fg(color, text);
-							tabs.push(`${styled} `);
-						}
-						const canSubmit = allAnswered();
-						const isSubmitTab = currentTab === questions.length;
-						const submitText = " ✓ Submit ";
-						const submitStyled = isSubmitTab
-							? theme.bg("selectedBg", theme.fg("text", submitText))
-							: theme.fg(canSubmit ? "success" : "dim", submitText);
-						tabs.push(`${submitStyled} →`);
-						add(` ${tabs.join("")}`);
-						lines.push("");
+						add(renderTabBar(questions, answers, currentTab, theme));
+						add("");
 					}
 
-					// Helper to render options list
-					function renderOptions() {
-						for (let i = 0; i < opts.length; i++) {
-							const opt = opts[i];
-							const selected = i === optionIndex;
-							const isOther = opt.isOther === true;
-							const prefix = selected ? theme.fg("accent", "> ") : "  ";
-							const color = selected ? "accent" : "text";
-							// Mark "Type something" differently when in input mode
-							if (isOther && inputMode) {
-								add(prefix + theme.fg("accent", `${i + 1}. ${opt.label} ✎`));
-							} else {
-								add(prefix + theme.fg(color, `${i + 1}. ${opt.label}`));
-							}
-							if (opt.description) {
-								add(`     ${theme.fg("muted", opt.description)}`);
-							}
-						}
-					}
-
-					// Content
 					if (inputMode && q) {
-						add(theme.fg("text", ` ${q.prompt}`));
-						lines.push("");
-						// Show options for reference
-						renderOptions();
-						lines.push("");
-						add(theme.fg("muted", " Your answer:"));
-						for (const line of editor.render(width - 2)) {
-							add(` ${line}`);
-						}
-						lines.push("");
-						add(theme.fg("dim", " Enter to submit • Esc to cancel"));
+						renderInputMode(q, opts, optionIndex, inputMode, editor, width, theme, add);
 					} else if (currentTab === questions.length) {
-						add(theme.fg("accent", theme.bold(" Ready to submit")));
-						lines.push("");
-						for (const question of questions) {
-							const answer = answers.get(question.id);
-							if (answer) {
-								const prefix = answer.wasCustom ? "(wrote) " : "";
-								add(`${theme.fg("muted", ` ${question.label}: `)}${theme.fg("text", prefix + answer.label)}`);
-							}
-						}
-						lines.push("");
-						if (allAnswered()) {
-							add(theme.fg("success", " Press Enter to submit"));
-						} else {
-							const missing = questions
-								.filter((q) => !answers.has(q.id))
-								.map((q) => q.label)
-								.join(", ");
-							add(theme.fg("warning", ` Unanswered: ${missing}`));
-						}
+						renderSubmitTab(questions, answers, theme, add);
 					} else if (q) {
-						add(theme.fg("text", ` ${q.prompt}`));
-						lines.push("");
-						renderOptions();
+						renderQuestion(q, opts, optionIndex, inputMode, theme, add);
 					}
 
-					lines.push("");
-					if (!inputMode) {
-						const help = isMulti
-							? " Tab/←→ navigate • ↑↓ select • Enter confirm • Esc cancel"
-							: " ↑↓ navigate • Enter select • Esc cancel";
-						add(theme.fg("dim", help));
-					}
-					add(theme.fg("accent", "─".repeat(width)));
+					add("");
+					const help = renderHelpFooter(isMulti, inputMode, theme);
+					if (help) add(dimHint(help, theme));
+					add(borderLine(width, theme));
 
 					cachedLines = lines;
 					return lines;

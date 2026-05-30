@@ -12,7 +12,8 @@
 
 import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import { matchesKey, Text, truncateToWidth } from "@earendil-works/pi-tui";
+import { matchesKey, Text } from "@earendil-works/pi-tui";
+import { addLine, borderLine, dimHint } from "./tui-utils";
 import { Type } from "@sinclair/typebox";
 
 interface Todo {
@@ -65,30 +66,27 @@ class TodoListComponent {
 		const th = this.theme;
 
 		lines.push("");
-		const title = th.fg("accent", " Todos ");
-		const headerLine =
-			th.fg("borderMuted", "─".repeat(3)) + title + th.fg("borderMuted", "─".repeat(Math.max(0, width - 10)));
-		lines.push(truncateToWidth(headerLine, width));
+		addLine(lines, borderLine(width, th, th.fg("accent", " Todos ")), width);
 		lines.push("");
 
 		if (this.todos.length === 0) {
-			lines.push(truncateToWidth(`  ${th.fg("dim", "No todos yet. Ask the agent to add some!")}`, width));
+			addLine(lines, `  ${dimHint("No todos yet. Ask the agent to add some!", th)}`, width);
 		} else {
 			const done = this.todos.filter((t) => t.done).length;
 			const total = this.todos.length;
-			lines.push(truncateToWidth(`  ${th.fg("muted", `${done}/${total} completed`)}`, width));
+			addLine(lines, `  ${th.fg("muted", `${done}/${total} completed`)}`, width);
 			lines.push("");
 
 			for (const todo of this.todos) {
 				const check = todo.done ? th.fg("success", "✓") : th.fg("dim", "○");
 				const id = th.fg("accent", `#${todo.id}`);
 				const text = todo.done ? th.fg("dim", todo.text) : th.fg("text", todo.text);
-				lines.push(truncateToWidth(`  ${check} ${id} ${text}`, width));
+				addLine(lines, `  ${check} ${id} ${text}`, width);
 			}
 		}
 
 		lines.push("");
-		lines.push(truncateToWidth(`  ${th.fg("dim", "Press Escape to close")}`, width));
+		addLine(lines, `  ${dimHint("Press Escape to close", th)}`, width);
 		lines.push("");
 
 		this.cachedWidth = width;
@@ -106,17 +104,29 @@ export default function (pi: ExtensionAPI) {
 	// In-memory state (reconstructed from session on load)
 	let todos: Todo[] = [];
 	let nextId = 1;
+	let lastEntryCount = 0;
 
 	/**
 	 * Reconstruct state from session entries.
-	 * Scans tool results for this tool and applies them in order.
+	 * Incremental: only scans new entries since last call.
+	 * Each todo tool result carries the complete state snapshot,
+	 * so the last one found wins.
 	 */
-	const reconstructState = (ctx: ExtensionContext) => {
-		todos = [];
-		nextId = 1;
+	const reconstructState = (ctx: ExtensionContext, forceFull = false) => {
+		const entries = ctx.sessionManager.getBranch();
+		const currentCount = entries.length;
 
-		for (const entry of ctx.sessionManager.getBranch()) {
-			if (entry.type !== "message") continue;
+		// Detect branch switch / tree nav (entry count dropped) or explicit reset
+		if (forceFull || currentCount < lastEntryCount) {
+			todos = [];
+			nextId = 1;
+			lastEntryCount = 0;
+		}
+
+		// Scan only the delta since our last scan
+		for (let i = lastEntryCount; i < currentCount; i++) {
+			const entry = entries[i];
+			if (entry?.type !== "message") continue;
 			const msg = entry.message;
 			if (msg.role !== "toolResult" || msg.toolName !== "todo") continue;
 
@@ -126,13 +136,15 @@ export default function (pi: ExtensionAPI) {
 				nextId = details.nextId;
 			}
 		}
+
+		lastEntryCount = currentCount;
 	};
 
 	// Reconstruct state on session events
 	pi.on("session_start", async (_event, ctx) => reconstructState(ctx));
-	pi.on("session_switch", async (_event, ctx) => reconstructState(ctx));
-	pi.on("session_fork", async (_event, ctx) => reconstructState(ctx));
-	pi.on("session_tree", async (_event, ctx) => reconstructState(ctx));
+	pi.on("session_switch", async (_event, ctx) => reconstructState(ctx, true));
+	pi.on("session_fork", async (_event, ctx) => reconstructState(ctx, true));
+	pi.on("session_tree", async (_event, ctx) => reconstructState(ctx, true));
 
 	// Register the todo tool for the LLM
 	pi.registerTool({
