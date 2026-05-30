@@ -125,7 +125,7 @@
     glow # Markdown renderer
     khal # Calendar
     mpv-unwrapped # Media player
-    nicotine-plus # p2p file sharing/discovery client
+    # nicotine-plus # p2p file sharing/discovery client (disabled: broken dep chain on darwin)
     pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)
