@@ -4,7 +4,16 @@
  * Pure functions. No side effects. Theme-agnostic (accepts any theme object).
  */
 
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth } from "@earendil-works/pi-tui";
+
+/**
+ * No-op extension factory so Pi doesn't reject this file as a utility module
+ * living in extensions/. Other extensions import the named exports below.
+ */
+export default function (_pi: ExtensionAPI): void {
+	// Utility module — no extension registration needed.
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyTheme = any;
