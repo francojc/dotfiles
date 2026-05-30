@@ -12,6 +12,28 @@ local active = theme_config.colorscheme or "gruvbox"
 -- Each entry: setup function called once when the theme is first activated.
 -- Some themes (arthur, autumn) need no explicit setup.
 
+--- Shared tokyonight setup (all style variants use same plugin)
+local function _tokyonight_setup(style)
+	require("tokyonight").setup({
+		style = style,
+		light_style = "day",
+		transparent = false,
+		terminal_colors = true,
+		styles = {
+			comments = { italic = true },
+			keywords = { italic = true },
+			functions = {},
+			variables = {},
+			sidebars = "dark",
+			floats = "dark",
+		},
+		sidebars = { "qf", "help" },
+		day_brightness = 0.3,
+		hide_inactive_statusline = false,
+		dim_inactive = false,
+	})
+end
+
 local theme_setups = {
 	arthur = nil,
 	autumn = nil,
@@ -87,24 +109,19 @@ local theme_setups = {
 		require("onedark").setup({ style = "darker" })
 	end,
 	tokyonight = function()
-		require("tokyonight").setup({
-			style = "storm",
-			light_style = "day",
-			transparent = false,
-			terminal_colors = true,
-			styles = {
-				comments = { italic = true },
-				keywords = { italic = true },
-				functions = {},
-				variables = {},
-				sidebars = "dark",
-				floats = "dark",
-			},
-			sidebars = { "qf", "help" },
-			day_brightness = 0.3,
-			hide_inactive_statusline = false,
-			dim_inactive = false,
-		})
+		_tokyonight_setup("storm")
+	end,
+	["tokyonight-night"] = function()
+		_tokyonight_setup("night")
+	end,
+	["tokyonight-storm"] = function()
+		_tokyonight_setup("storm")
+	end,
+	["tokyonight-moon"] = function()
+		_tokyonight_setup("moon")
+	end,
+	["tokyonight-day"] = function()
+		_tokyonight_setup("day")
 	end,
 	vague = function()
 		require("vague").setup({})
@@ -173,7 +190,11 @@ local theme_packadd = {
 	kanso         = "kanso.nvim",
 	nightfox      = "nightfox.nvim",
 	onedark       = "onedark.nvim",
-	tokyonight    = "tokyonight.nvim",
+	tokyonight         = "tokyonight.nvim",
+	["tokyonight-night"] = "tokyonight.nvim",
+	["tokyonight-storm"] = "tokyonight.nvim",
+	["tokyonight-moon"]  = "tokyonight.nvim",
+	["tokyonight-day"]   = "tokyonight.nvim",
 	vague         = "vague.nvim",
 	vscode        = "vscode.nvim",
 	ayu           = "ayu-vim",

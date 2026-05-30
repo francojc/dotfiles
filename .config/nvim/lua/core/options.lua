@@ -62,6 +62,7 @@ opt.background = "dark"
 opt.winborder = "rounded"
 opt.showmode = false
 opt.cmdheight = 0
+opt.shortmess:append("I") -- suppress intro screen
 opt.formatexpr = "v:lua.require('conform').formatexpr()"
 opt.autoread = true
 opt.foldmethod = "indent"
