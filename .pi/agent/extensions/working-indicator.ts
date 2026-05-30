@@ -138,58 +138,50 @@ function describeMode(mode: IndicatorMode): string {
   return descriptions[mode];
 }
 
-// ── Per-session state (prevents leaks across session switches) ──────────────
+// ── Per-session state (module-level; only one session active at a time) ─────
 
 type SessionState = {
   mode: IndicatorMode;
   msgTimer: ReturnType<typeof setInterval> | null;
 };
 
-const sessionState = new WeakMap<ExtensionContext, SessionState>();
+let current: SessionState = { mode: "schwa", msgTimer: null };
 
-function getState(ctx: ExtensionContext): SessionState {
-  if (!sessionState.has(ctx)) {
-    sessionState.set(ctx, { mode: "schwa", msgTimer: null });
+function clearTimer(): void {
+  if (current.msgTimer) {
+    clearInterval(current.msgTimer);
+    current.msgTimer = null;
   }
-  return sessionState.get(ctx)!;
-}
-
-function clearState(ctx: ExtensionContext): void {
-  const state = sessionState.get(ctx);
-  if (state?.msgTimer) {
-    clearInterval(state.msgTimer);
-  }
-  sessionState.delete(ctx);
 }
 
 export default function (pi: ExtensionAPI) {
   const startCycling = (ctx: ExtensionContext) => {
-    const state = getState(ctx);
-    const messages = msgFor(state.mode);
+    const messages = msgFor(current.mode);
     if (messages.length === 0) {
       ctx.ui.setWorkingMessage(); // restore default
       return;
     }
     let i = 0;
     ctx.ui.setWorkingMessage(messages[0]);
-    state.msgTimer = setInterval(() => {
+    current.msgTimer = setInterval(() => {
       i = (i + 1) % messages.length;
-      ctx.ui.setWorkingMessage(messages[i]);
+      // Guard against stale ctx after session replacement
+      try {
+        ctx.ui.setWorkingMessage(messages[i]);
+      } catch {
+        clearTimer();
+      }
     }, 1600); // rotate every ~1.6s for readability
   };
 
   const stopCycling = (ctx: ExtensionContext) => {
-    const state = getState(ctx);
-    if (state.msgTimer) {
-      clearInterval(state.msgTimer);
-      state.msgTimer = null;
-    }
+    clearTimer();
     ctx.ui.setWorkingMessage(); // restore default
   };
 
   const apply = (ctx: ExtensionContext) => {
-    stopCycling(ctx);
-    ctx.ui.setWorkingIndicator(getIndicator(getState(ctx).mode));
+    clearTimer();
+    ctx.ui.setWorkingIndicator(getIndicator(current.mode));
     startCycling(ctx);
     ctx.ui.setStatus("indicator", undefined);
   };
@@ -199,8 +191,8 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("session_shutdown", async (_event, ctx) => {
-    stopCycling(ctx);
-    clearState(ctx);
+    clearTimer();
+    ctx.ui.setWorkingMessage();
   });
 
   pi.registerCommand("indicator", {
@@ -209,10 +201,8 @@ export default function (pi: ExtensionAPI) {
       const next = args.trim().toLowerCase() as IndicatorMode;
       const valid: IndicatorMode[] = ["schwa", "eye", "pulse", "bounce", "spinner", "none", "default"];
 
-      const state = getState(ctx);
-
       if (!next) {
-        ctx.ui.notify(`Current indicator: ${describeMode(state.mode)}`, "info");
+        ctx.ui.notify(`Current indicator: ${describeMode(current.mode)}`, "info");
         return;
       }
 
@@ -221,9 +211,9 @@ export default function (pi: ExtensionAPI) {
         return;
       }
 
-      state.mode = next;
+      current.mode = next;
       apply(ctx);
-      ctx.ui.notify(`Indicator → ${describeMode(state.mode)}`, "info");
+      ctx.ui.notify(`Indicator → ${describeMode(current.mode)}`, "info");
     },
   });
 }
