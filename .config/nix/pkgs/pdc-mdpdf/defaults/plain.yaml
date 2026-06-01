@@ -1,0 +1,3 @@
+# Pandoc defaults — generic plain output
+pdf-engine: typst
+template: "@share@/templates/plain.typ"

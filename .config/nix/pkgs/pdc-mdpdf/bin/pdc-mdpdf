@@ -1,0 +1,190 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# pdc-mdpdf — Markdown to PDF via Pandoc + Typst
+# Dependencies are guaranteed by the Nix wrapper (wrapProgram).
+
+PDC_MDPDF_SHARE="${PDC_MDPDF_SHARE:?PDC_MDPDF_SHARE must be set by Nix wrapper}"
+PDC_MDPDF_DEFAULT_PROFILE="${PDC_MDPDF_DEFAULT_PROFILE:-wfu-letter}"
+
+progname="$(basename "$0")"
+version="0.1.0"
+
+# --- helpers ---
+die()  { printf "Error: %s\n" "$*" >&2; exit 1; }
+warn() { printf "Warning: %s\n" "$*" >&2; }
+info() { printf "%s\n" "$*"; }
+
+usage() {
+  cat <<EOF
+Usage: $progname [options] <input.md>
+       $progname doctor
+
+Options:
+  -p, --profile NAME      Profile name (default: $PDC_MDPDF_DEFAULT_PROFILE)
+  --defaults FILE         Explicit Pandoc defaults file
+  -o, --output FILE       Output PDF path (default: input basename with .pdf)
+  -d, --date YYYY-MM-DD   Letter date (default: today)
+  --no-logo               Do not include profile logo
+  --color                 Use color logo and WFU gold accents
+  -n, --dry-run           Print command without executing
+  -h, --help              Show this help
+  --version               Show version
+
+Available profiles (from \$PDC_MDPDF_SHARE/defaults/):
+EOF
+  for f in "$PDC_MDPDF_SHARE"/defaults/*.yaml; do
+    [[ -f "$f" ]] || continue
+    printf "  %s\n" "$(basename "$f" .yaml)"
+  done
+}
+
+# --- doctor subcommand ---
+do_doctor() {
+  info "pdc-mdpdf version: $version"
+  info "pdc-mdpdf path:    $(command -v pdc-mdpdf || echo 'not on PATH')"
+  info "pandoc path:       $(command -v pandoc || echo 'NOT FOUND')"
+  info "typst path:        $(command -v typst || echo 'NOT FOUND')"
+  info "share directory:   $PDC_MDPDF_SHARE"
+  info "default profile:   $PDC_MDPDF_DEFAULT_PROFILE"
+  info "available profiles:"
+  for f in "$PDC_MDPDF_SHARE"/defaults/*.yaml; do
+    [[ -f "$f" ]] || continue
+    info "  - $(basename "$f" .yaml)"
+  done
+
+  info ""
+  if command -v pandoc &>/dev/null; then
+    info "pandoc version: $(pandoc --version | head -1)"
+  fi
+  if command -v typst &>/dev/null; then
+    info "typst version:  $(typst --version)"
+  fi
+}
+
+# --- argument parsing ---
+profile=""
+defaults_file=""
+output_file=""
+date_raw=""
+no_logo=false
+color_mode=false
+dry_run=false
+positional=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    doctor)
+      do_doctor
+      exit 0
+      ;;
+    -p|--profile)
+      profile="$2"; shift 2
+      ;;
+    --defaults)
+      defaults_file="$2"; shift 2
+      ;;
+    -o|--output)
+      output_file="$2"; shift 2
+      ;;
+    -d|--date)
+      date_raw="$2"; shift 2
+      ;;
+    --no-logo)
+      no_logo=true; shift
+      ;;
+    --color)
+      color_mode=true; shift
+      ;;
+    -n|--dry-run)
+      dry_run=true; shift
+      ;;
+    -h|--help)
+      usage; exit 0
+      ;;
+    --version)
+      info "$progname $version"; exit 0
+      ;;
+    -*)
+      die "Unknown option: $1"
+      ;;
+    *)
+      positional+=("$1"); shift
+      ;;
+  esac
+done
+
+if [[ ${#positional[@]} -ne 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+input="${positional[0]}"
+[[ -f "$input" ]] || die "file not found: $input"
+
+# --- resolve defaults file ---
+if [[ -z "$defaults_file" ]]; then
+  profile="${profile:-$PDC_MDPDF_DEFAULT_PROFILE}"
+  defaults_file="$PDC_MDPDF_SHARE/defaults/${profile}.yaml"
+  [[ -f "$defaults_file" ]] || die "profile '$profile' not found at $defaults_file"
+fi
+
+# --- resolve output path ---
+input_base="$(basename "$input")"
+output_file="${output_file:-${input_base%.md}.pdf}"
+
+# If output is relative, resolve against CWD (not input_dir)
+if [[ "$output_file" != /* ]]; then
+  output_file="$(pwd)/$output_file"
+fi
+
+# --- format date ---
+if [[ -n "$date_raw" ]]; then
+  [[ "$date_raw" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+    || die "invalid date format '$date_raw'. Use YYYY-MM-DD."
+  # Use coreutils date from wrapped PATH (handles Darwin vs GNU uniformly)
+  formatted_date="$(date -d "$date_raw" +"%B %d, %Y")" \
+    || die "could not parse date '$date_raw'"
+else
+  formatted_date="$(date +"%B %d, %Y")"
+fi
+
+# --- resolve color mode ---
+accent_color="000000"
+if $color_mode; then
+  accent_color="9E7E38"
+fi
+
+# --- resolve logo ---
+logo_meta=()
+if ! $no_logo; then
+  if $color_mode; then
+    logo_file="colorlogo.jpg"
+  else
+    logo_file="bwlogo.jpg"
+  fi
+  logo_path="$PDC_MDPDF_SHARE/assets/$logo_file"
+  if [[ -f "$logo_path" ]]; then
+    logo_meta=(-M "logo=$logo_path")
+  fi
+fi
+
+# --- build and execute pandoc command ---
+pandoc_cmd=(
+  pandoc
+  "$input"
+  --defaults="$defaults_file"
+  --pdf-engine-opt=--root=/
+  -M "date=$formatted_date"
+  -M "accent-color=$accent_color"
+  "${logo_meta[@]}"
+  -o "$output_file"
+)
+
+if $dry_run; then
+  info "Would run: ${pandoc_cmd[*]}"
+  exit 0
+fi
+
+info "Generating: $output_file"
+exec "${pandoc_cmd[@]}"

@@ -17,6 +17,7 @@
       ./tmux.nix
       ./vim.nix
       ./syncthing.nix
+      ./document-tools.nix
     ]
     ++ (
       if isDarwin
@@ -44,4 +45,6 @@
 
   programs.home-manager.enable = true;
   programs.zsh.enable = true;
+
+  custom.documentTools.enable = true;
 }

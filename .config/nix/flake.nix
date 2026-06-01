@@ -18,6 +18,7 @@
   };
 
   outputs = inputs @ {
+    self,
     nixpkgs,
     darwin,
     home-manager,
@@ -45,6 +46,7 @@
         inputs
         # Users and host info
         // {
+          inherit self;
           inherit hostname;
           username = hostConfig.username;
           useremail = hostConfig.useremail;
@@ -70,6 +72,7 @@
 
       # Common system modules (shared between Darwin and NixOS)
       commonModules = [
+        ./modules/shared/overlays.nix
         ./modules/shared/fonts.nix
         ./modules/shared/nix-core.nix
         ./modules/shared/packages.nix
@@ -130,6 +133,11 @@
       )
       hosts;
   in {
+    # Overlays for custom packages
+    overlays.default = final: prev: {
+      pdc-mdpdf = final.callPackage ./pkgs/pdc-mdpdf { };
+    };
+
     # Generate Darwin configurations for Darwin hosts
     darwinConfigurations = builtins.mapAttrs mkSystemConfig (filterHostsByPlatform "darwin");
 

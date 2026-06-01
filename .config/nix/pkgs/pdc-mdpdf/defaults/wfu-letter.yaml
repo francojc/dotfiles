@@ -1,0 +1,14 @@
+# Pandoc defaults — WFU letter of recommendation
+pdf-engine: typst
+template: "@share@/templates/wfu-letter.typ"
+metadata:
+  greeting: "To Whom It May Concern,"
+  closing: "Sincerely,"
+  signer: "Dr. Jerid Francom"
+  logo-width: "40%"
+  signature-block:
+    - "Associate Professor of Spanish and Linguistics"
+    - "Department of Spanish"
+    - "323 Greene Hall"
+    - "Wake Forest University"
+    - "Winston-Salem, NC 27109"
