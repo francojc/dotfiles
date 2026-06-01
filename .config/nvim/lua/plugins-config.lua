@@ -13,6 +13,14 @@ local theme_config = require("theme-config")
 ---=====================================================
 
 ---| Blink.cmp ----------------------------------
+local function native_pum_key(key)
+	return function(cmp)
+		if vim.fn.pumvisible() == 1 and not cmp.is_menu_visible() then
+			return vim.api.nvim_replace_termcodes(key, true, true, true)
+		end
+	end
+end
+
 require("blink.cmp").setup({
 	fuzzy = {
 		implementation = "lua",
@@ -42,22 +50,19 @@ require("blink.cmp").setup({
 		documentation = { auto_show = true },
 	},
 	keymap = {
-		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+		preset = "none",
+
+		["<C-space>"] = { "show" },
 		["<C-e>"] = { "cancel", "fallback" },
-		["<CR>"] = { "select_and_accept", "fallback" },
+		["<CR>"] = { native_pum_key("<C-y>"), "select_and_accept", "fallback" },
 
 		["<Tab>"] = { "snippet_forward", "fallback" },
 		["<S-Tab>"] = { "snippet_backward", "fallback" },
 
 		["<Up>"] = { "select_prev", "fallback" },
 		["<Down>"] = { "select_next", "fallback" },
-		["<C-p>"] = { "select_prev", "fallback_to_mappings" },
-		["<C-n>"] = { "select_next", "fallback_to_mappings" },
-
-		["<C-b>"] = { "scroll_documentation_up", "fallback" },
-		["<C-f>"] = { "scroll_documentation_down", "fallback" },
-
-		["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+		["<C-p>"] = { native_pum_key("<C-p>"), "select_prev" },
+		["<C-n>"] = { native_pum_key("<C-n>"), "select_next" },
 	},
 	signature = {
 		enabled = true,

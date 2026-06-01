@@ -27,7 +27,7 @@ vim.g.llama_config = {
 	ring_scope = 1024,
 	ring_update_ms = 1000,
 	-- Keymaps
-	keymap_fim_trigger = "<C-N>",    -- Trigger FIM
+	keymap_fim_trigger = "<M-l>",    -- Trigger FIM
 	keymap_fim_accept_full = "<Tab>", -- Accept full
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word

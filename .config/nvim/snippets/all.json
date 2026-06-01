@@ -1,1 +1,16 @@
-{}
+{
+  "dateLong": {
+    "prefix": "dateLong",
+    "body": [
+      "${CURRENT_MONTH_NAME} ${CURRENT_DATE}, ${CURRENT_YEAR}"
+    ],
+    "description": "Put the date in long formal format (Month DD, YYYY)"
+  },
+  "dateMed": {
+    "prefix": "dateMed",
+    "body": [
+      "${CURRENT_MONTH_NAME_SHORT} ${CURRENT_DATE}, ${CURRENT_YEAR}"
+    ],
+    "description": "Put the date in medium formal format (Mon DD, YYYY)"
+  }
+}
