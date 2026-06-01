@@ -65,6 +65,7 @@
       "bettershot" # screenshot tool
       "chatgpt" # ChatGPT
       "claude" # Claude Desktop
+      "dorso" # posture monitor
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
