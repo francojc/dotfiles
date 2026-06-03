@@ -1,0 +1,309 @@
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
+
+const CACHE_DIR = join(process.env.HOME || "/tmp", ".cache", "pi");
+const CACHE_FILE = join(CACHE_DIR, "opencode-go-models.json");
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_SCHEMA_VERSION = 2;
+
+const MODELS_DEV_URL = "https://models.dev/api.json";
+const OPENCODE_MODELS_URL = "https://opencode.ai/zen/go/v1/models";
+// Base URLs differ by API family:
+// - anthropic-messages: SDK appends /v1/messages → base must NOT include /v1
+// - openai-completions: SDK appends /chat/completions → base includes /v1
+const BASE_URL_ANTHROPIC = "https://opencode.ai/zen/go";
+const BASE_URL_OPENAI    = "https://opencode.ai/zen/go/v1";
+
+// ---------------------------------------------------------------------------
+// Endpoint routing table
+// Source: https://opencode.ai/docs/go/#endpoints
+// models.dev `provider.npm` is used as a cross-check, not a primary source.
+// ---------------------------------------------------------------------------
+
+type ApiKind = "anthropic-messages" | "openai-completions";
+
+const ENDPOINTS: Record<string, { api: ApiKind; baseUrl: string; sdk: string }> = {
+  // Anthropic Messages API → /zen/go/v1/messages
+  "minimax-m3":      { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
+  "minimax-m2.7":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
+  "minimax-m2.5":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
+  "qwen3.7-max":     { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
+  "qwen3.6-plus":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
+  // OpenAI Chat Completions → /zen/go/v1/chat/completions
+  "glm-5.1":           { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "glm-5":             { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "kimi-k2.5":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "kimi-k2.6":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "deepseek-v4-pro":   { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "deepseek-v4-flash": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "mimo-v2.5":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+  "mimo-v2.5-pro":     { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+};
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type ModelsDevModel = {
+  id: string;
+  name?: string;
+  family?: string;
+  reasoning?: boolean;
+  tool_call?: boolean;
+  modalities?: { input?: string[]; output?: string[] };
+  limit?: { context?: number; output?: number };
+  cost?: { input?: number; output?: number; cache_read?: number; cache_write?: number };
+  status?: string;
+  provider?: { npm?: string };
+};
+
+type PiModel = {
+  id: string;
+  name: string;
+  api: ApiKind;
+  baseUrl: string;
+  reasoning: boolean;
+  input: string[];
+  cost: { input: number; output: number; cacheRead: number; cacheWrite: number };
+  contextWindow: number;
+  maxTokens: number;
+  compat?: Record<string, any>;
+  thinkingLevelMap?: Record<string, string | null>;
+};
+
+type CacheEntry = {
+  schemaVersion: number;
+  fetchedAt: number;
+  models: PiModel[];
+};
+
+// ---------------------------------------------------------------------------
+// Per-model Pi-specific overrides
+// Add compat/thinkingLevelMap here for models that need special handling
+// ---------------------------------------------------------------------------
+
+const MODEL_OVERRIDES: Record<string, Partial<PiModel>> = {
+  "kimi-k2.6": {
+    compat: { thinkingFormat: "openai" },
+    thinkingLevelMap: {
+      off: "none",
+      minimal: null,
+      low: "low",
+      medium: "medium",
+      high: "high",
+      xhigh: null,
+    },
+  },
+  // Add overrides for other reasoning models as needed, e.g.:
+  // "deepseek-v4-pro": { compat: { thinkingFormat: "deepseek" } },
+  // "minimax-m3":      { compat: { forceAdaptiveThinking: true } },
+};
+
+// ---------------------------------------------------------------------------
+// Cache helpers
+// ---------------------------------------------------------------------------
+
+function ensureCacheDir(): void {
+  if (!existsSync(CACHE_DIR)) {
+    mkdirSync(CACHE_DIR, { recursive: true });
+  }
+}
+
+function readCache(): CacheEntry | null {
+  try {
+    if (!existsSync(CACHE_FILE)) return null;
+    const raw = readFileSync(CACHE_FILE, "utf-8");
+    const parsed = JSON.parse(raw) as CacheEntry;
+    if (parsed.schemaVersion !== CACHE_SCHEMA_VERSION) {
+      console.log(`[opencode-go-discovery] Cache schema v${parsed.schemaVersion ?? 1} != v${CACHE_SCHEMA_VERSION}, ignoring`);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(models: PiModel[]): void {
+  try {
+    ensureCacheDir();
+    const entry: CacheEntry = {
+      schemaVersion: CACHE_SCHEMA_VERSION,
+      fetchedAt: Date.now(),
+      models,
+    };
+    writeFileSync(CACHE_FILE, JSON.stringify(entry, null, 2));
+  } catch (err) {
+    console.warn(`[opencode-go-discovery] Failed to write cache: ${err}`);
+  }
+}
+
+function isStale(entry: CacheEntry): boolean {
+  return Date.now() - entry.fetchedAt > CACHE_TTL_MS;
+}
+
+// ---------------------------------------------------------------------------
+// Mapping
+// ---------------------------------------------------------------------------
+
+function mapInput(modalities?: { input?: string[] }): string[] {
+  if (!modalities?.input) return ["text"];
+  const inputs = modalities.input;
+  const result: string[] = ["text"];
+  if (inputs.includes("image")) result.push("image");
+  // Pi only supports "text" and "image" for input modalities
+  return result;
+}
+
+function buildModel(id: string, meta?: ModelsDevModel): PiModel | null {
+  const endpoint = ENDPOINTS[id];
+  if (!endpoint) {
+    console.warn(`[opencode-go-discovery] No endpoint mapping for "${id}", skipping`);
+    return null;
+  }
+
+  // Cross-check models.dev SDK hint; warn (don't fail) on mismatch
+  if (meta?.provider?.npm && meta.provider.npm !== endpoint.sdk) {
+    console.warn(
+      `[opencode-go-discovery] SDK hint mismatch for "${id}": table=${endpoint.sdk}, models.dev=${meta.provider.npm}`,
+    );
+  }
+
+  const base: PiModel = {
+    id,
+    name: meta?.name ?? id,
+    api: endpoint.api,
+    baseUrl: endpoint.baseUrl,
+    reasoning: meta?.reasoning ?? false,
+    input: mapInput(meta?.modalities),
+    cost: {
+      input: meta?.cost?.input ?? 0,
+      output: meta?.cost?.output ?? 0,
+      cacheRead: meta?.cost?.cache_read ?? 0,
+      cacheWrite: meta?.cost?.cache_write ?? 0,
+    },
+    contextWindow: meta?.limit?.context ?? 128000,
+    maxTokens: meta?.limit?.output ?? 16384,
+  };
+
+  const overrides = MODEL_OVERRIDES[id];
+  if (overrides) {
+    return { ...base, ...overrides };
+  }
+  return base;
+}
+
+// ---------------------------------------------------------------------------
+// Fetch
+// ---------------------------------------------------------------------------
+
+async function fetchModels(): Promise<PiModel[]> {
+  const [devRes, apiRes] = await Promise.all([
+    fetch(MODELS_DEV_URL).catch(() => null),
+    fetch(OPENCODE_MODELS_URL).catch(() => null),
+  ]);
+
+  // Parse models.dev metadata for opencode-go provider
+  let devModels: Record<string, ModelsDevModel> = {};
+  if (devRes?.ok) {
+    try {
+      const devData = (await devRes.json()) as Record<string, any>;
+      const ogProvider = devData["opencode-go"];
+      if (ogProvider?.models) {
+        devModels = ogProvider.models;
+      }
+    } catch (err) {
+      console.warn(`[opencode-go-discovery] Failed to parse models.dev: ${err}`);
+    }
+  } else {
+    console.warn(`[opencode-go-discovery] models.dev fetch failed: ${devRes?.status ?? "network error"}`);
+  }
+
+  // Parse active model list from OpenCode API
+  let activeIds: string[] = [];
+  if (apiRes?.ok) {
+    try {
+      const apiData = (await apiRes.json()) as { data: Array<{ id: string }> };
+      activeIds = apiData.data.map((m) => m.id);
+    } catch (err) {
+      console.warn(`[opencode-go-discovery] Failed to parse API models: ${err}`);
+    }
+  } else {
+    console.warn(`[opencode-go-discovery] OpenCode API fetch failed, using models.dev keys`);
+    activeIds = Object.keys(devModels);
+  }
+
+  if (activeIds.length === 0 && Object.keys(devModels).length === 0) {
+    throw new Error("No model data from any source");
+  }
+
+  // Build models for all active IDs, dropping deprecated and unknown-endpoint entries
+  const models: PiModel[] = [];
+  for (const id of activeIds) {
+    const meta = devModels[id];
+    if (meta?.status === "deprecated") {
+      console.log(`[opencode-go-discovery] Skipping deprecated model: ${id}`);
+      continue;
+    }
+    const m = buildModel(id, meta);
+    if (m) models.push(m);
+  }
+
+  if (models.length === 0) {
+    throw new Error("No models after filtering");
+  }
+
+  return models;
+}
+
+// ---------------------------------------------------------------------------
+// Provider registration
+// ---------------------------------------------------------------------------
+
+function registerProvider(pi: ExtensionAPI, models: PiModel[]): void {
+  pi.registerProvider("opencode-go", {
+    baseUrl: BASE_URL_OPENAI,
+    apiKey: "$OPENCODE_API_KEY",
+    // Provider-level api is a fallback only; each model overrides it with its own api + baseUrl + compat
+    api: "openai-completions",
+    models,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Extension entry point
+// ---------------------------------------------------------------------------
+
+export default async function (pi: ExtensionAPI) {
+  const cached = readCache();
+
+  if (cached) {
+    registerProvider(pi, cached.models);
+    console.log(`[opencode-go-discovery] Registered ${cached.models.length} models from cache`);
+  }
+
+  // Refresh if cache is missing or stale
+  if (!cached || isStale(cached)) {
+    try {
+      const fresh = await fetchModels();
+      writeCache(fresh);
+
+      if (!cached) {
+        registerProvider(pi, fresh);
+        console.log(`[opencode-go-discovery] Registered ${fresh.length} models from API`);
+      } else {
+        console.log(`[opencode-go-discovery] Background refresh cached ${fresh.length} models`);
+      }
+    } catch (err) {
+      console.warn(`[opencode-go-discovery] Fetch failed: ${err}`);
+      if (!cached) {
+        console.warn("[opencode-go-discovery] No cache available — provider not registered");
+      }
+    }
+  }
+}
