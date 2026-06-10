@@ -13,9 +13,9 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "zap";
+      cleanup = "none";
       upgrade = true;
-      extraFlags = [ "--force-cleanup" ];
+      extraFlags = ["--force-cleanup" "--zap"];
     };
 
     taps = [
@@ -24,8 +24,9 @@
       "acrogenesis/macchanger" # macchanger
       "keith/formulae" # reminders-cli
       "librespeed/tap" # librespeed-cli
-      "raine/workmux" # workmux
+      "nao1215/tap" # sqly
       "radiosilence/koan" # koan
+      "raine/workmux" # workmux
     ];
 
     brews = [

@@ -1,3 +1,6 @@
+[library]
+folders = ["/Users/jeridf/Music"]
+
 [playback]
 software_volume = false
 replaygain = "track"
@@ -7,15 +10,16 @@ show_fps = false
 pre_amp_db = 0.0
 art_size = 24
 
-[library]
-folders = ["/Users/jeridf/Music"]
-
 [remote]
 enabled = true
 url = "https://music.gerbil-matrix.ts.net"
+username = ""
 transcode_quality = "opus-128"
 download_workers = 5
 cache_limit = "25GB"
+
+[organize]
+default = "standard"
 
 [visualizer]
 enabled = true
@@ -31,8 +35,13 @@ bass_shake = false
 matrix_overlay = false
 reactive_bg = false
 
-[organize]
-default = "standard"
+[radio]
+lookahead = 5
+batch_size = 5
+use_subsonic = true
+history_window = 200
+seed_window = 5
+discovery_weight = 0.3
 
 [graphql]
 enabled = true
@@ -43,14 +52,6 @@ auth_enabled = true
 access_token_ttl = "15m"
 refresh_token_ttl = "30d"
 cors_origins = []
-
-[radio]
-lookahead = 5
-batch_size = 5
-use_subsonic = true
-history_window = 200
-seed_window = 5
-discovery_weight = 0.3
 
 [discovery]
 analysis_on_scan = false
