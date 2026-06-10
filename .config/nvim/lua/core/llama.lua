@@ -15,7 +15,7 @@ vim.g.llama_config = {
 	n_prefix = 512,
 	n_suffix = 64,
 	n_predict = 128,
-	stop_strings = {},
+	stop_strings_fim = {},
 	-- Timeout settings
 	t_max_prompt_ms = 1000,
 	t_max_predict_ms = 1000,
@@ -27,7 +27,7 @@ vim.g.llama_config = {
 	ring_scope = 1024,
 	ring_update_ms = 1000,
 	-- Keymaps
-	keymap_fim_trigger = "<M-l>",    -- Trigger FIM
+	keymap_fim_trigger = "<M-l>", -- Trigger FIM
 	keymap_fim_accept_full = "<Tab>", -- Accept full
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word

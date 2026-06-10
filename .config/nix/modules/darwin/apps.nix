@@ -19,6 +19,8 @@
     };
 
     taps = [
+      # Note: run `brew trust --tap <tap>` to trust the tap
+      # This creates a ~/.homebrew/trust.json file entry
       "Adembc/homebrew-tap" # lazyssh
       "FelixKratz/formulae" # borders
       "acrogenesis/macchanger" # macchanger
