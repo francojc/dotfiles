@@ -9,12 +9,41 @@ require("gitsigns").setup({
 require("mini.icons").setup({})
 require("mini.surround").setup({
 	custom_surroundings = {
+		-- Pandoc mark (bare ==text==, no braces). For CriticMarkup
+		-- highlight {==text==}, use the <leader>mh mapping in
+		-- after/ftplugin/markdown.lua or the text-object ih/ah.
 		h = {
 			-- Add:       sa h  (then motion)
 			-- Replace:   sr h
 			-- Delete:    sd h
 			output = function()
 				return { left = "==", right = "==" }
+			end,
+		},
+		-- CriticMarkup surrounds. Usage: sa{X}motion, sr{X}, sd{X}
+		-- See also: after/ftplugin/markdown.lua for <leader>m* wrappers.
+		i = {
+			-- Insert: {++text++}
+			output = function()
+				return { left = "{++", right = "++}" }
+			end,
+		},
+		d = {
+			-- Delete: {--text--}
+			output = function()
+				return { left = "{--", right = "--}" }
+			end,
+		},
+		c = {
+			-- Comment: {>>text<<}
+			output = function()
+				return { left = "{>>", right = "<<}" }
+			end,
+		},
+		x = {
+			-- Substitution: {~~text~~} (user adds ~>new manually)
+			output = function()
+				return { left = "{~~", right = "~~}" }
 			end,
 		},
 	},

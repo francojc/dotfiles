@@ -1,4 +1,39 @@
 {
+  "CriticMarkup insert": {
+    "prefix": "cins",
+    "body": [
+      "{++${1:text}++}$0"
+    ],
+    "description": "CriticMarkup: insertion {++text++}"
+  },
+  "CriticMarkup delete": {
+    "prefix": "cdel",
+    "body": [
+      "{--${1:text}--}$0"
+    ],
+    "description": "CriticMarkup: deletion {--text--}"
+  },
+  "CriticMarkup highlight": {
+    "prefix": "cmark",
+    "body": [
+      "{==${1:text}==}$0"
+    ],
+    "description": "CriticMarkup: highlight {==text==}"
+  },
+  "CriticMarkup comment": {
+    "prefix": "ccom",
+    "body": [
+      "{>>${1:comment}<<}$0"
+    ],
+    "description": "CriticMarkup: comment {>>text<<}"
+  },
+  "CriticMarkup substitute": {
+    "prefix": "csub",
+    "body": [
+      "{~~${1:old}~>${2:new}~~}$0"
+    ],
+    "description": "CriticMarkup: substitution {~~old~>new~~}"
+  },
   "Aider call": {
     "prefix": "caider",
     "body": [

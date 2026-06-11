@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# critic-pandoc: Convert markdown to DOCX/PDF with CriticMarkup
+# track changes via the local Pandoc Lua filter.
+#
+# Usage:
+#   critic-pandoc input.md                    # → input.docx (default)
+#   critic-pandoc input.md -o review.docx     # explicit output
+#   critic-pandoc input.md -f pdf             # → input.pdf
+#   critic-pandoc input.md -a "Your Name"     # custom author
+#   critic-pandoc -h                          # help
+#
+# Requires: pandoc (>= 3.0) and the Lua filter at
+#   ~/.config/nvim/lua/core/critic.lua
+#
+# The filter converts CriticMarkup to native Word track changes
+# (w:ins / w:del) when output is DOCX, and to styled spans
+# otherwise. Comments render as visible inline notes.
+
+set -euo pipefail
+
+VERSION="1.0.0"
+SCRIPT_NAME="critic-pandoc"
+
+# Defaults
+INPUT=""
+OUTPUT=""
+FORMAT="docx"
+AUTHOR="${CRITIC_AUTHOR:-Reviewer}"
+DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+FILTER="${HOME}/.config/nvim/lua/core/critic.lua"
+VERBOSE=false
+SHOW_HELP=false
+SHOW_VERSION=false
+
+usage() {
+  cat <<EOF
+$SCRIPT_NAME v$VERSION — Convert markdown to DOCX/PDF with CriticMarkup
+
+Usage:
+  $SCRIPT_NAME [OPTIONS] INPUT
+  $SCRIPT_NAME INPUT [OPTIONS]
+
+Options:
+  -h            Show this help
+  -v            Show version
+  -f FORMAT     Output format: docx (default), pdf, html
+  -o FILE       Output file (default: INPUT with .docx/.pdf/.html)
+  -a NAME       Reviewer name for track changes (default: \$CRITIC_AUTHOR or "Reviewer")
+  -d DATE       Date for track changes (default: now, UTC)
+  -V            Verbose (show pandoc command)
+  --filter PATH Override path to the Lua filter
+
+Pandoc's default markdown extensions (smart, strikeout, subscript, etc.)
+mangle CriticMarkup. This wrapper passes -f markdown-smart-strikeout-
+subscript-superscript-citations to disable them.
+
+Examples:
+  $SCRIPT_NAME draft.md
+  $SCRIPT_NAME draft.md -o review.docx -a "Jerid"
+  $SCRIPT_NAME draft.md -f pdf -a "Jerid"
+EOF
+}
+
+# Two-pass parse: first gather options, then find the input file.
+# This lets users put options after the input file.
+declare -a ARGS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h) SHOW_HELP=true; shift ;;
+    -v) SHOW_VERSION=true; shift ;;
+    -V) VERBOSE=true; shift ;;
+    -f) FORMAT="$2"; shift 2 ;;
+    -o) OUTPUT="$2"; shift 2 ;;
+    -a) AUTHOR="$2"; shift 2 ;;
+    -d) DATE="$2"; shift 2 ;;
+    --filter) FILTER="$2"; shift 2 ;;
+    --filter=*) FILTER="${1#*=}" ; shift ;;
+    -*) echo "Unknown option: $1" >&2; exit 1 ;;
+    *)  ARGS+=("$1"); shift ;;
+  esac
+done
+
+# First positional arg is the input
+if [[ ${#ARGS[@]} -gt 0 ]]; then
+  INPUT="${ARGS[0]}"
+fi
+
+if [[ "$SHOW_HELP" == "true" ]]; then
+  usage
+  exit 0
+fi
+if [[ "$SHOW_VERSION" == "true" ]]; then
+  echo "$SCRIPT_NAME $VERSION"
+  exit 0
+fi
+
+# Validate
+if [[ -z "$INPUT" ]]; then
+  echo "Error: no input file. Run with -h for help." >&2
+  exit 1
+fi
+if [[ ! -f "$INPUT" ]]; then
+  echo "Error: input file not found: $INPUT" >&2
+  exit 1
+fi
+if [[ ! -f "$FILTER" ]]; then
+  echo "Error: critic.lua filter not found at $FILTER" >&2
+  echo "       (expected at ~/.config/nvim/lua/core/critic.lua)" >&2
+  exit 1
+fi
+if ! command -v pandoc >/dev/null 2>&1; then
+  echo "Error: pandoc not found in PATH" >&2
+  exit 1
+fi
+
+# Default output
+if [[ -z "$OUTPUT" ]]; then
+  OUTPUT="${INPUT%.*}.${FORMAT}"
+fi
+
+# Build command. Use a stripped markdown format that disables
+# extensions that mangle CriticMarkup markers.
+INPUT_FORMAT="markdown-smart-strikeout-subscript-superscript-citations"
+CMD=(
+  pandoc "$INPUT"
+  -f "$INPUT_FORMAT"
+  -t "$FORMAT"
+  -o "$OUTPUT"
+  --lua-filter="$FILTER"
+  -M "author=${AUTHOR}"
+  -M "date=${DATE}"
+)
+
+if [[ "$VERBOSE" == "true" ]]; then
+  echo "+ ${CMD[*]}" >&2
+fi
+
+"${CMD[@]}"
+echo "Wrote $OUTPUT"
