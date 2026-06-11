@@ -80,6 +80,7 @@
       "rectangle" # window management
       "signal" # messaging
       "telegram" # messaging (bot)
+      "tidal" # music streaming
       "visual-studio-code" # code editor
       "vlc" # media player
       "zen" # browser
