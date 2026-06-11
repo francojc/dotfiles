@@ -21,3 +21,23 @@ client_secret.fetch = ["command", "pass", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
 start_date = "datetime.now() - timedelta(days=7)"
 end_date = "datetime.now() + timedelta(days=365)"
 
+[pair mailbox_calendar]
+a = "mailbox_local"
+b = "mailbox_remote"
+collections = ["from a", "from b"]
+conflict_resolution = "b wins"
+metadata = ["color", "displayname"]
+
+[storage mailbox_local]
+type = "filesystem"
+path = "~/.calendars/mailbox/"
+fileext = ".ics"
+
+[storage mailbox_remote]
+type = "caldav"
+url = "https://dav.mailbox.org/caldav/Y2FsOi8vMC8zMg"
+username.fetch = ["command", "pass", "MAILBOX/MAILBOX_USER"]
+password.fetch = ["command", "pass", "MAILBOX/MAILBOX_CALDAV_PASSWORD"]
+start_date = "datetime.now() - timedelta(days=7)"
+end_date = "datetime.now() + timedelta(days=365)"
+

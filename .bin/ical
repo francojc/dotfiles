@@ -86,12 +86,36 @@ check_dependencies() {
 }
 
 # Function to sync calendars
+# Soft-warns on Mailbox-only failure; dies on any other failure.
 sync_calendars() {
   echo "Syncing calendars with vdirsyncer..."
-  if ! vdirsyncer -v ERROR sync; then
-    die "vdirsyncer sync failed."
+  local sync_output sync_exit errors mailbox_errs other_errs
+  sync_exit=0  # Initialize for set -u (only set by || on non-zero exit)
+
+  # WARNING level so we can see which storage has issues on failure
+  sync_output=$(vdirsyncer -v WARNING sync 2>&1) || sync_exit=$?
+
+  # Suppress noisy "Skipping identical href" warnings (informational, not errors).
+  # Keep full output in $sync_output for error analysis below.
+  echo "$sync_output" | grep -v "Skipping identical href" || true
+
+  if [ "$sync_exit" -eq 0 ]; then
+    echo "Sync complete."
+    return 0
   fi
-  echo "Sync complete."
+
+  # Sync failed. Extract error lines, check if Mailbox-only.
+  errors=$(echo "$sync_output" | grep -iE "error|failed|exception" || true)
+  mailbox_errs=$(echo "$errors" | grep -i "mailbox" || true)
+  other_errs=$(echo "$errors" | grep -iv "mailbox" || true)
+
+  if [ -n "$mailbox_errs" ] && [ -z "$other_errs" ]; then
+    echo "Warning: Mailbox.org calendar sync failed. Continuing with other sources." >&2
+    echo "Details: $mailbox_errs" >&2
+    return 0
+  fi
+
+  die "vdirsyncer sync failed: $errors"
 }
 
 # Function to get the jq filter for converting reminders to ICS format

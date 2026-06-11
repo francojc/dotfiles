@@ -1,5 +1,10 @@
 [calendars]
 
+[[mailbox]]
+path = ~/.calendars/mailbox/Y2FsOi8vMC8zMg
+type = discover
+color = "#689D6A"
+
 [[francojc]]
 path = ~/.calendars/google/francojc@wfu.edu
 type = discover
@@ -55,7 +60,6 @@ weeknumbers = right
 [view]
 # event_view_always_visible = True
 event_view_weighting = 2
-
 
 [palette]
 # Gruvbox Dark Hard theme
