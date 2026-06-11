@@ -5,12 +5,6 @@ vim.opt_local.tabstop = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.expandtab = true
 
---| CriticMarkup highlights -----------------------------------
--- Define highlight groups (DiffAdd, DiffDelete, etc.) used by
--- queries/markdown_inline/highlights.scm.
-local critic_hl = require("core.critic-highlights")
-critic_hl.setup()
-
 --| CriticMarkup keymaps --------------------------------------
 -- Wrap selection (or insert at cursor) with CriticMarkup markers.
 -- See ../queries/markdown/highlights.scm for syntax highlighting.
