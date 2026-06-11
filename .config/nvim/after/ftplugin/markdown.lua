@@ -6,7 +6,7 @@ vim.opt_local.softtabstop = 2
 vim.opt_local.expandtab = true
 
 --| CriticMarkup keymaps --------------------------------------
--- Wrap selection (or insert at cursor) with CriticMarkup markers.
+-- Wrap selection with CriticMarkup markers.
 -- See ../queries/markdown/highlights.scm for syntax highlighting.
 -- See ../snippets/markdown.json for tab-completion snippets.
 local function map(mode, lhs, rhs, opts)
@@ -15,27 +15,55 @@ local function map(mode, lhs, rhs, opts)
 end
 
 --- Helpers ----------------------------------------------------
+local function visual_range()
+	local mode = vim.api.nvim_get_mode().mode
+	local start_row
+	local start_col
+	local end_row
+	local end_col
+
+	if mode:match("^[vV\22]") then
+		local start_pos = vim.fn.getpos("v")
+		local cursor = vim.api.nvim_win_get_cursor(0)
+		start_row = start_pos[2] - 1
+		start_col = start_pos[3] - 1
+		end_row = cursor[1] - 1
+		end_col = cursor[2] + 1
+	else
+		local start_pos = vim.fn.getpos("'<")
+		local end_pos = vim.fn.getpos("'>")
+		start_row = start_pos[2] - 1
+		start_col = start_pos[3] - 1
+		end_row = end_pos[2] - 1
+		end_col = end_pos[3]
+	end
+
+	if start_row > end_row or (start_row == end_row and start_col > end_col) then
+		start_row, end_row = end_row, start_row
+		start_col, end_col = end_col - 1, start_col + 1
+	end
+
+	return start_row, start_col, end_row, end_col
+end
+
+local function get_text(start_row, start_col, end_row, end_col)
+	return table.concat(vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col, {}), "\n")
+end
+
+local function replace_text(start_row, start_col, end_row, end_col, text)
+	vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, vim.split(text, "\n", { plain = true }))
+end
+
 -- Visual: surround selection with left/right markers
 local function surround_visual(left, right)
 	return function()
-		local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-		-- Save register contents we'll clobber
-		vim.cmd('normal! gv')
-		vim.cmd('normal! "_d')
-		local saved = vim.fn.getreg('"')
-		vim.fn.setreg('"', saved)
-		-- Re-select
-		vim.cmd('normal! gv')
-		-- Yank selection
-		vim.cmd('normal! y')
-		local sel = vim.fn.getreg('"')
-		-- Compose: left + sel + right
-		local replacement = left .. sel .. right
-		vim.cmd('normal! c' .. replacement)
+		local start_row, start_col, end_row, end_col = visual_range()
+		local sel = get_text(start_row, start_col, end_row, end_col)
+		replace_text(start_row, start_col, end_row, end_col, left .. sel .. right)
 	end
 end
 
---- Surround keymaps (work in normal and visual mode) ----------
+--- Surround keymaps (visual mode) -----------------------------
 -- Insert: {++ ++}
 map("v", "<leader>mi", surround_visual("{++", "++}"), { desc = "CriticMarkup: insert" })
 -- Delete: {-- --}
@@ -46,72 +74,66 @@ map("v", "<leader>mh", surround_visual("{==", "==}"), { desc = "CriticMarkup: hi
 map("v", "<leader>mc", surround_visual("{>>", "<<}"), { desc = "CriticMarkup: comment" })
 -- Substitution: {~~old~>new~~}  (prompt for new text)
 map("v", "<leader>ms", function()
-	local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-	vim.cmd('normal! gv')
-	vim.cmd('normal! y')
-	local sel = vim.fn.getreg('"')
+	local start_row, start_col, end_row, end_col = visual_range()
+	local sel = get_text(start_row, start_col, end_row, end_col)
 	vim.ui.input({ prompt = "Substitute with: " }, function(input)
 		if input == nil then
 			return
 		end
-		local replacement = "{~~" .. sel .. "~>" .. input .. "~~}"
-		vim.cmd('normal! c' .. vim.api.nvim_replace_termcodes(replacement, true, false, true))
+		replace_text(start_row, start_col, end_row, end_col, "{~~" .. sel .. "~>" .. input .. "~~}")
 	end)
 end, { desc = "CriticMarkup: substitute" })
 
---- Normal-mode insertions (insert markers at cursor) ---------
-map("n", "<leader>mI", "a{++<++>++}<Esc>F+", { desc = "CriticMarkup: insert (empty)" })
-map("n", "<leader>mD", "a{--<-->--}<Esc>F-", { desc = "CriticMarkup: delete (empty)" })
-map("n", "<leader>mH", "a{==<==>==}<Esc>F=", { desc = "CriticMarkup: highlight (empty)" })
-map("n", "<leader>mK", "a{>><<}><Esc>F>", { desc = "CriticMarkup: comment (empty)" })
-
 --- Text objects -----------------------------------------------
--- Find the closest matching open/close pair around cursor and
--- select inner/around. Single-line only.
-local function make_textobj(open_str, close_str)
+-- Find closest matching open/close pair around cursor and select inner/around.
+-- Single-line only.
+local function find_pair(line, cursor_col, open_str, close_str)
+	local cursor_idx = cursor_col + 1
+	local best = nil
+	local search_from = 1
+
+	while true do
+		local open_start, open_end = line:find(open_str, search_from, true)
+		if not open_start or open_start > cursor_idx then
+			break
+		end
+		local close_start, close_end = line:find(close_str, open_end + 1, true)
+		if close_start and cursor_idx <= close_end then
+			best = { open_start = open_start, open_end = open_end, close_start = close_start, close_end = close_end }
+		end
+		search_from = open_start + 1
+	end
+
+	return best
+end
+
+local function make_textobj(open_str, close_str, inner)
 	return function()
-		local lnum = vim.api.nvim_get_current_line()
-		local _, col = unpack(vim.api.nvim_win_get_cursor(0))
-		-- Search backward from cursor for open_str
-		local open_col = nil
-		for i = col, #open_str, -1 do
-			if i - #open_str + 1 >= 1 and lnum:sub(i - #open_str + 1, i) == open_str then
-				-- Verify there's a matching close before any other open
-				local rest = lnum:sub(i + 1)
-				local close_idx = rest:find(close_str, 1, true)
-				if close_idx then
-					open_col = i - #open_str + 1
-					break
-				end
-			end
-		end
-		if not open_col then
-			-- Cancel any pending visual/operator
+		local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+		local line = vim.api.nvim_get_current_line()
+		local pair = find_pair(line, col, open_str, close_str)
+		if not pair then
 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 			return
 		end
-		-- Find close after open
-		local rest = lnum:sub(open_col + #open_str)
-		local close_rel = rest:find(close_str, 1, true)
-		if not close_rel then
-			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
-			return
-		end
-		local close_col = open_col + #open_str + close_rel - 1
-		-- Determine mode: 'x' (visual) or 'o' (operator-pending)
-		local mode = vim.api.nvim_get_mode().mode
-		local is_inner = mode:sub(1, 1) == "i"
-		-- Position cursor on open delimiter (start) and enter visual
-		vim.api.nvim_win_set_cursor(0, { vim.api.nvim_get_current_line(), open_col - 1 })
-		vim.cmd("normal! v")
-		-- Move to end of selection
+
+		local start_col
 		local end_col
-		if is_inner then
-			end_col = close_col - 1
+		if inner then
+			start_col = pair.open_end
+			end_col = pair.close_start - 2
 		else
-			end_col = close_col + #close_str - 1
+			start_col = pair.open_start - 1
+			end_col = pair.close_end - 1
 		end
-		vim.api.nvim_win_set_cursor(0, { vim.api.nvim_get_current_line(), end_col })
+
+		if end_col < start_col then
+			return
+		end
+
+		vim.api.nvim_win_set_cursor(0, { row, start_col })
+		vim.cmd("normal! v")
+		vim.api.nvim_win_set_cursor(0, { row, end_col })
 	end
 end
 
@@ -119,49 +141,59 @@ end
 -- ic/ac = comment, ih/ah = highlight, ii/ai = insert, id/ad = delete
 -- ix/ax = substitution
 for _, mode in ipairs({ "x", "o" }) do
-	vim.keymap.set(mode, "ic", make_textobj("{>>", "<<}"), { buffer = true, silent = true, desc = "CriticMarkup: inner comment" })
-	vim.keymap.set(mode, "ac", make_textobj("{>>", "<<}"), { buffer = true, silent = true, desc = "CriticMarkup: around comment" })
-	vim.keymap.set(mode, "ih", make_textobj("{==", "==}"), { buffer = true, silent = true, desc = "CriticMarkup: inner highlight" })
-	vim.keymap.set(mode, "ah", make_textobj("{==", "==}"), { buffer = true, silent = true, desc = "CriticMarkup: around highlight" })
-	vim.keymap.set(mode, "ii", make_textobj("{++", "++}"), { buffer = true, silent = true, desc = "CriticMarkup: inner insert" })
-	vim.keymap.set(mode, "ai", make_textobj("{++", "++}"), { buffer = true, silent = true, desc = "CriticMarkup: around insert" })
-	vim.keymap.set(mode, "id", make_textobj("{--", "--}"), { buffer = true, silent = true, desc = "CriticMarkup: inner delete" })
-	vim.keymap.set(mode, "ad", make_textobj("{--", "--}"), { buffer = true, silent = true, desc = "CriticMarkup: around delete" })
-	vim.keymap.set(mode, "ix", make_textobj("{~~", "~~}"), { buffer = true, silent = true, desc = "CriticMarkup: inner substitution" })
-	vim.keymap.set(mode, "ax", make_textobj("{~~", "~~}"), { buffer = true, silent = true, desc = "CriticMarkup: around substitution" })
+	vim.keymap.set(mode, "ic", make_textobj("{>>", "<<}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner comment" })
+	vim.keymap.set(mode, "ac", make_textobj("{>>", "<<}", false), { buffer = true, silent = true, desc = "CriticMarkup: around comment" })
+	vim.keymap.set(mode, "ih", make_textobj("{==", "==}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner highlight" })
+	vim.keymap.set(mode, "ah", make_textobj("{==", "==}", false), { buffer = true, silent = true, desc = "CriticMarkup: around highlight" })
+	vim.keymap.set(mode, "ii", make_textobj("{++", "++}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner insert" })
+	vim.keymap.set(mode, "ai", make_textobj("{++", "++}", false), { buffer = true, silent = true, desc = "CriticMarkup: around insert" })
+	vim.keymap.set(mode, "id", make_textobj("{--", "--}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner delete" })
+	vim.keymap.set(mode, "ad", make_textobj("{--", "--}", false), { buffer = true, silent = true, desc = "CriticMarkup: around delete" })
+	vim.keymap.set(mode, "ix", make_textobj("{~~", "~~}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner substitution" })
+	vim.keymap.set(mode, "ax", make_textobj("{~~", "~~}", false), { buffer = true, silent = true, desc = "CriticMarkup: around substitution" })
 end
 
 --- User commands ---------------------------------------------
 -- :CriticConvert [format]   - convert current MD to DOCX/PDF
 vim.api.nvim_create_user_command("CriticConvert", function(opts)
 	local fmt = opts.args ~= "" and opts.args or "docx"
+	local output = vim.fn.expand("%:r") .. "." .. fmt
 	vim.cmd("write")
 	local cmd = {
 		"pandoc",
 		vim.fn.expand("%"),
 		"-f",
 		"markdown-smart-strikeout-subscript-superscript-citations",
+		"-t",
+		fmt,
 		"-o",
-		vim.fn.expand("%:r") .. "." .. fmt,
+		output,
 		"--lua-filter=" .. vim.fn.stdpath("config") .. "/lua/core/critic.lua",
 		"-M",
 		"author=" .. (vim.g.critic_author or "Reviewer"),
 		"-M",
-		"date=" .. os.date("%Y-%m-%dT%H:%M:%SZ"),
+		"date=" .. os.date("!%Y-%m-%dT%H:%M:%SZ"),
 	}
-	vim.fn.system(cmd)
-	if vim.v.shell_error == 0 then
-		vim.notify("Converted to " .. vim.fn.expand("%:r") .. "." .. fmt, vim.log.levels.INFO)
+	local result = vim.system(cmd, { text = true }):wait()
+	if result.code == 0 then
+		vim.b.critic_last_output = output
+		vim.notify("Converted to " .. output, vim.log.levels.INFO)
 	else
-		vim.notify("Pandoc error:\n" .. vim.fn.systemlist(cmd)[1], vim.log.levels.ERROR)
+		local msg = result.stderr ~= "" and result.stderr or result.stdout
+		vim.notify("Pandoc error:\n" .. msg, vim.log.levels.ERROR)
 	end
 end, { nargs = "?", desc = "CriticMarkup: convert to DOCX/PDF (default: docx)" })
 
 -- :CriticOpen  - open the last-converted DOCX
 vim.api.nvim_create_user_command("CriticOpen", function()
-	local docx = vim.fn.expand("%:r") .. ".docx"
+	local docx = vim.b.critic_last_output or (vim.fn.expand("%:r") .. ".docx")
 	if vim.fn.filereadable(docx) == 1 then
-		vim.fn.system("open " .. vim.fn.shellescape(docx))
+		if vim.ui.open then
+			vim.ui.open(docx)
+		else
+			local opener = vim.fn.has("mac") == 1 and "open" or "xdg-open"
+			vim.fn.system({ opener, docx })
+		end
 		vim.notify("Opened " .. docx, vim.log.levels.INFO)
 	else
 		vim.notify("No DOCX found. Run :CriticConvert first.", vim.log.levels.WARN)
