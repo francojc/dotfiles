@@ -9,7 +9,7 @@ import { join } from "node:path";
 const CACHE_DIR = join(process.env.HOME || "/tmp", ".cache", "pi");
 const CACHE_FILE = join(CACHE_DIR, "opencode-go-models.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-const CACHE_SCHEMA_VERSION = 2;
+const CACHE_SCHEMA_VERSION = 3;
 
 const MODELS_DEV_URL = "https://models.dev/api.json";
 const OPENCODE_MODELS_URL = "https://opencode.ai/zen/go/v1/models";
@@ -20,29 +20,30 @@ const BASE_URL_ANTHROPIC = "https://opencode.ai/zen/go";
 const BASE_URL_OPENAI    = "https://opencode.ai/zen/go/v1";
 
 // ---------------------------------------------------------------------------
-// Endpoint routing table
-// Source: https://opencode.ai/docs/go/#endpoints
-// models.dev `provider.npm` is used as a cross-check, not a primary source.
+// Endpoint routing
+// Source of truth for availability: https://opencode.ai/zen/go/v1/models
+// Metadata/routing hints: https://models.dev/api.json
+// If models.dev marks a model as Anthropic SDK, route to /v1/messages.
+// Otherwise default to OpenAI-compatible chat completions. This keeps new Go
+// models visible in Pi without needing a code edit every time OpenCode adds one.
 // ---------------------------------------------------------------------------
 
 type ApiKind = "anthropic-messages" | "openai-completions";
 
-const ENDPOINTS: Record<string, { api: ApiKind; baseUrl: string; sdk: string }> = {
-  // Anthropic Messages API → /zen/go/v1/messages
-  "minimax-m3":      { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
-  "minimax-m2.7":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
-  "minimax-m2.5":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
-  "qwen3.7-max":     { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
-  "qwen3.6-plus":    { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: "@ai-sdk/anthropic" },
-  // OpenAI Chat Completions → /zen/go/v1/chat/completions
-  "glm-5.1":           { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "glm-5":             { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "kimi-k2.5":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "kimi-k2.6":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "deepseek-v4-pro":   { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "deepseek-v4-flash": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "mimo-v2.5":         { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
-  "mimo-v2.5-pro":     { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: "@ai-sdk/openai-compatible" },
+type Endpoint = { api: ApiKind; baseUrl: string; sdk: string };
+
+const SDK_ANTHROPIC = "@ai-sdk/anthropic";
+const SDK_OPENAI_COMPATIBLE = "@ai-sdk/openai-compatible";
+
+// Explicit docs-backed mappings. Dynamic routing below handles new models.
+const ENDPOINT_OVERRIDES: Record<string, Endpoint> = {
+  "minimax-m3":   { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "minimax-m2.7": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "minimax-m2.5": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "qwen3.7-max":  { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "qwen3.7-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "qwen3.6-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "qwen3.5-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
 };
 
 // ---------------------------------------------------------------------------
@@ -160,17 +161,24 @@ function mapInput(modalities?: { input?: string[] }): string[] {
   return result;
 }
 
-function buildModel(id: string, meta?: ModelsDevModel): PiModel | null {
-  const endpoint = ENDPOINTS[id];
-  if (!endpoint) {
-    console.warn(`[opencode-go-discovery] No endpoint mapping for "${id}", skipping`);
-    return null;
+function endpointFor(id: string, meta?: ModelsDevModel): Endpoint {
+  const override = ENDPOINT_OVERRIDES[id];
+  if (override) return override;
+
+  if (meta?.provider?.npm === SDK_ANTHROPIC) {
+    return { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC };
   }
+
+  return { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: meta?.provider?.npm ?? SDK_OPENAI_COMPATIBLE };
+}
+
+function buildModel(id: string, meta?: ModelsDevModel): PiModel {
+  const endpoint = endpointFor(id, meta);
 
   // Cross-check models.dev SDK hint; warn (don't fail) on mismatch
   if (meta?.provider?.npm && meta.provider.npm !== endpoint.sdk) {
     console.warn(
-      `[opencode-go-discovery] SDK hint mismatch for "${id}": table=${endpoint.sdk}, models.dev=${meta.provider.npm}`,
+      `[opencode-go-discovery] SDK hint mismatch for "${id}": route=${endpoint.sdk}, models.dev=${meta.provider.npm}`,
     );
   }
 
@@ -242,7 +250,8 @@ async function fetchModels(): Promise<PiModel[]> {
     throw new Error("No model data from any source");
   }
 
-  // Build models for all active IDs, dropping deprecated and unknown-endpoint entries
+  // Build models for all active IDs from OpenCode. Unknown models default to
+  // OpenAI-compatible routing so Pi sees newly added Go models immediately.
   const models: PiModel[] = [];
   for (const id of activeIds) {
     const meta = devModels[id];
@@ -250,8 +259,10 @@ async function fetchModels(): Promise<PiModel[]> {
       console.log(`[opencode-go-discovery] Skipping deprecated model: ${id}`);
       continue;
     }
-    const m = buildModel(id, meta);
-    if (m) models.push(m);
+    if (!meta) {
+      console.warn(`[opencode-go-discovery] No models.dev metadata for "${id}", using defaults`);
+    }
+    models.push(buildModel(id, meta));
   }
 
   if (models.length === 0) {
