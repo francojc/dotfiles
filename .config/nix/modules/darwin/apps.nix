@@ -21,6 +21,7 @@
     taps = [
       # Note: run `brew trust --tap <tap>` to trust the tap
       # This creates a ~/.homebrew/trust.json file entry
+      "modem-dev/tap" # hunk
       "Adembc/homebrew-tap" # lazyssh
       "FelixKratz/formulae" # borders
       "acrogenesis/macchanger" # macchanger
@@ -32,6 +33,7 @@
     ];
 
     brews = [
+      "hunk" # git diff tool
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
       "helix" # text editor
