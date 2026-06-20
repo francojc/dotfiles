@@ -15,6 +15,10 @@
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak";
     };
+    nix-rosetta-builder = {
+      url = "github:cpick/nix-rosetta-builder";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -23,6 +27,7 @@
     darwin,
     home-manager,
     nix-flatpak,
+    nix-rosetta-builder,
     ...
   }: let
     # Import system definitions and host configurations
@@ -89,7 +94,11 @@
             ++ [
               # Darwin-specific modules
               ./modules/darwin/apps.nix
-
+              # Rosetta Linux builder
+              nix-rosetta-builder.darwinModules.default
+              {
+                nix-rosetta-builder.onDemand = true;
+              }
               # Home Manager integration for Darwin
               home-manager.darwinModules.home-manager
               {
@@ -135,7 +144,7 @@
   in {
     # Overlays for custom packages
     overlays.default = final: prev: {
-      pdc-mdpdf = final.callPackage ./pkgs/pdc-mdpdf { };
+      pdc-mdpdf = final.callPackage ./pkgs/pdc-mdpdf {};
     };
 
     # Generate Darwin configurations for Darwin hosts
