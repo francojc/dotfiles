@@ -94,7 +94,7 @@
             ++ [
               # Darwin-specific modules
               ./modules/darwin/apps.nix
-              # Rosetta Linux builder
+              # Rosetta Linux builder (bootstraps via Determinate native Linux builder)
               nix-rosetta-builder.darwinModules.default
               {
                 nix-rosetta-builder.onDemand = true;
