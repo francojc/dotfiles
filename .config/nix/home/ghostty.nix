@@ -88,6 +88,38 @@
       keybind = super+shift+enter=toggle_split_zoom
       keybind = super+shift+x=close_surface
 
+      # Tabs — tmux-mirror-shifted, super+shift+<chord>
+      # Supacode hooks new_tab/close_tab via GHOSTTY_ACTION_* (see AGENTS.md)
+      keybind = super+shift+t=new_tab
+      keybind = super+shift+w=close_tab
+      keybind = super+shift+bracket_right=next_tab
+      keybind = super+shift+bracket_left=previous_tab
+      keybind = super+shift+backslash=last_tab
+      keybind = super+shift+1=goto_tab:1
+      keybind = super+shift+2=goto_tab:2
+      keybind = super+shift+3=goto_tab:3
+      keybind = super+shift+4=goto_tab:4
+      keybind = super+shift+5=goto_tab:5
+      keybind = super+shift+comma=move_tab:-1
+      keybind = super+shift+period=move_tab:1
+      keybind = super+shift+quote=prompt_tab_title
+
+      # Equalize splits + search (direct chords)
+      keybind = super+shift+e=equalize_splits
+      keybind = super+f=start_search
+
+      # Leader sequence — ctrl+a prefix, true tmux-prefix parity
+      # NOTE: every Ctrl-A is swallowed by Ghostty (no timeout). Double-tap
+      # (ctrl+a>ctrl+a) sends a literal C-a to the app, like tmux send-prefix.
+      keybind = ctrl+a>ctrl+a=text:\x01
+      keybind = ctrl+a>r=reload_config
+      keybind = ctrl+a>x=reset
+      keybind = ctrl+a>shift+quote=prompt_surface_title
+      keybind = ctrl+a>s=write_scrollback_file:open
+      keybind = ctrl+a>j=jump_to_prompt:1
+      keybind = ctrl+a>k=jump_to_prompt:-1
+      keybind = ctrl+a>u=copy_url_to_clipboard
+
       # -- Oh-My-Pi
       # keybind = alt+backspace=text:\x1b\x7f
       # keybind = alt+enter=text:\n
