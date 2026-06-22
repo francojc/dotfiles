@@ -36,7 +36,7 @@
       "hunk" # git diff tool
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      "helix" # text editor
+      # "helix" # text editor
       "hf" # huggingface cli
       "koan" # Navidrome TUI player
       "lazyssh" # lazyssh
@@ -69,7 +69,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "chatgpt" # ChatGPT
+      # "chatgpt" # ChatGPT
       "claude" # Claude Desktop
       "dorso" # posture monitor
       "ghostty" # Terminal emulator
@@ -81,9 +81,10 @@
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
-      "telegram" # messaging (bot)
+      "supacode" # Agentic harness session manager
+      # "telegram" # messaging (bot)
       "tidal" # music streaming
-      "visual-studio-code" # code editor
+      # "visual-studio-code" # code editor
       "vlc" # media player
       "zen" # browser
       "zoom" # video conferencing
