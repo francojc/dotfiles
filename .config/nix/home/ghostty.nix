@@ -43,7 +43,8 @@
         else ""
       }
 
-      macos-titlebar-style = hidden
+      window-decoration = auto
+      # macos-titlebar-style = hidden
       macos-window-shadow = false
       macos-icon = custom-style
       macos-icon-frame = plastic
