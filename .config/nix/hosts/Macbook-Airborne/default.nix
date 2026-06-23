@@ -8,7 +8,7 @@
   useremail = "francojc@wfu.edu";
 
   # Theme selection for this host
-  theme = "tokyonight"; # options: arthur, ayu, blackmetal, catppuccin, gruvbox, kanso, nightfox, onedark, tokyonight, vague, vscode
+  theme = "gruvbox"; # options: arthur, ayu, blackmetal, catppuccin, gruvbox, kanso, nightfox, onedark, tokyonight, vague, vscode
 
   # Host-specific modules
   hostModules = [
@@ -22,15 +22,14 @@
           "transmission-cli" # command-line torrent client
         ];
         casks = [
-          # Macbook-Airborne-only casks here
-          # "calibre" # eBook management
-          "android-platform-tools" # ADB and Fastboot (for TVs)
-          "balenaetcher" # disk image writer
           "dropbox" # cloud storage
-          "lm-studio" # LLM model gui/cli
           "orbstack" # Docker alternative
-          "parallels" # virtualization
           "transmission" # torrent client
+          # "android-platform-tools" # ADB and Fastboot (for TVs)
+          # "balenaetcher" # disk image writer
+          # "calibre" # eBook management
+          # "lm-studio" # LLM model gui/cli
+          # "parallels" # virtualization
           # "transcribe"
         ];
       };
