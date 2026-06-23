@@ -1,432 +1,439 @@
 # Neovim Configuration
 
-A streamlined, modular Neovim configuration built on Neovim 0.12+ native functionality. Built on native Vim functionality where possible, with carefully selected plugins for enhanced productivity.
+Modular Neovim 0.12+ config using native `vim.pack`, native LSP, and small focused plugins. Core bias: built-ins first, plugins when they earn rent.
 
-## Features
+## Current Feature Set
 
-### Document Editing
+### Editing Core
 
-- **Quarto Integration**: Full support for Quarto documents with code execution
-- **Markdown Enhancement**: Custom keybindings for formatting, lists, and headers
-- **Obsidian Integration**: Note-taking and knowledge management
-- **Citation Management**: Pandoc references with completion support
-- **Image Handling**: Paste and render images directly in documents
+- Space is leader and localleader.
+- Native buffer navigation with `<Tab>` / `<S-Tab>`.
+- `jj` exits insert mode, `<Esc><Esc>` exits terminal mode.
+- Relative numbers, rounded borders, smartcase search, persistent undo, system clipboard, wrapped prose by default.
+- Auto-trim trailing whitespace on save and highlight yanks.
+- Lualine statusline with branch, diff, diagnostics, search count, progress, location, filetype, and llama.vim status.
+- Treesitter starts automatically per filetype, with regex syntax fallback.
+- Which-key uses Helix preset with leader-group labels.
+
+### Completion, Snippets, and AI
+
+- `blink.cmp` provides LSP, path, buffer, and snippet completion.
+- Friendly snippets plus local snippets from `snippets/`.
+- Emoji completion for Markdown and Quarto.
+- Command-line completion for `:` commands.
+- `llama.vim` provides local FIM/code completion through configured llama.cpp endpoint.
+  - Trigger: `<M-l>`
+  - Accept full: `<Tab>`
+  - Accept line: `<C-F>`
+  - Accept word: `<C-D>`
+
+### Documents and Prose
+
+- Quarto files (`*.qmd`) use `filetype=quarto`.
+- Markdown and Quarto support heading navigation with `]]` and `[[`.
+- Quarto code execution uses `quarto-nvim` + `vim-slime` with tmux target.
+- Otter provides embedded-code LSP support for Quarto chunks.
+- Markdown and Quarto lazy-load:
+  - `render-markdown.nvim`
+  - `image.nvim`
+  - `img-clip.nvim`
+  - `snacks-bibtex.nvim`
+- Markdown lazy-loads `obsidian.nvim`.
+- Neovim started inside an Obsidian vault also lazy-loads Obsidian support.
+- CriticMarkup support in Markdown/Quarto:
+  - Visual wrappers for insert/delete/highlight/comment/substitution.
+  - Text objects for CriticMarkup spans.
+  - `:CriticConvert [format]` converts current file through Pandoc using `lua/core/critic.lua`.
+  - `:CriticOpen` opens last converted DOCX.
+
+### Development Tools
+
+- Native `vim.lsp` configs with `blink.cmp` capabilities.
+- Conform formatting, with format-on-save enabled except Markdown and Quarto.
+- Gitsigns for hunks, blame, and word diff.
+- Diffview lazy-loads on command.
+- Snacks picker powers file, grep, LSP, help, search, GitHub, and UI-select workflows.
+- Yazi handles directory/file exploration. Netrw plugin disabled.
+- CSV/TSV viewing lazy-loads `csvview.nvim`.
+- Aerial outline lazy-loads on `:AerialToggle`.
+- Todo comments plugin declared and lazy command configured, with Snacks todo picker keymap.
 
 ### Language Support
 
-- **Bash**: Full LSP support with shfmt formatting
-- **Go**: gopls and golangci-lint-langserver
-- **Lua**: Native Neovim configuration language support
-- **Nix**: NixOS/Home Manager integration with nixd LSP
-- **Python**: Pyright LSP with Ruff formatting
-- **R**: Language server with code execution via Slime
-- **Typst**: tinymist LSP with preview
-- **YAML**: Quarto schema validation
+| Language/type | LSP | Formatting |
+| --- | --- | --- |
+| Bash/sh | `bashls` | `shfmt` |
+| Go | `gopls`, `golangci_lint_ls` | trim whitespace only |
+| JSON | `jsonls` | `jq` |
+| JSONC | `jsonls` | trim whitespace only |
+| Lua | `lua_ls` | `stylua` |
+| Markdown | `marksman` | `mdformat` manually, no format-on-save |
+| Nix | `nixd` | `alejandra` |
+| Python | `pyright` | `ruff`, with LSP fallback |
+| R/Rmd | `r_language_server` | `air` for R |
+| Quarto | `r_language_server`, Otter for chunks | injected formatter manually, no format-on-save |
+| Typst | `tinymist` | trim whitespace only |
+| YAML/YML | `yamlls` | trim whitespace only |
 
-### Modern Development Tools
+Notes:
 
-- **LSP**: Comprehensive language server protocol support
-- **Completion**: Blink.cmp with emoji and reference completion
-- **Git Integration**: Lazygit, Gitsigns, and Diffview
-- **File Management**: Snacks picker and Yazi file explorer
-- **Terminal**: Integrated Snacks terminal with tmux navigation
-- **GitHub Integration**: Issue/PR management via Snacks picker
+- Quarto YAML schema is detected from `quarto --paths` when available.
+- Nix LSP points at local dotfiles flake for NixOS, nix-darwin, and Home Manager options.
+- Language servers and external formatters are expected to be installed outside this config, likely through Nix.
 
-### Configuration Stats
+### Themes
 
-- **Total Plugins**: 44 (including 11 colorschemes: managed by Nix (themes.nix)
-- **Plugin Manager**: Neovim 0.12+ native vim.pack
-- **Philosophy**: Native Vim functionality preferred over plugin dependencies
+Themes are declared in `lua/plugins-pack.lua`. `lua/theme-config.lua` selects active theme. Only active theme loads eagerly; other theme plugins are installed as opt packages.
+
+Available colorscheme names:
+
+- `arthur`
+- `autumn`
+- `black-metal`
+- `catppuccin`
+- `gruvbox`
+- `kanso`
+- `nightfox`
+- `onedark`
+- `tokyonight`
+- `tokyonight-night`
+- `tokyonight-storm`
+- `tokyonight-moon`
+- `tokyonight-day`
+- `vague`
+- `vscode`
+- `ayu`
+
+Current default in this directory: `gruvbox`.
 
 ## Installation
 
 ### Prerequisites
 
-- Neovim >= 0.12+
+- Neovim >= 0.12
 - Git
-- Node.js (for some LSP servers)
-- Required formatters and language servers (installed automatically via LSP)
+- External tools as needed:
+  - LSPs: `bash-language-server`, `gopls`, `golangci-lint-langserver`, `lua-language-server`, `nixd`, `pyright`, `R` + `languageserver`, `tinymist`, `vscode-json-language-server`, `yaml-language-server`, `marksman`
+  - Formatters: `shfmt`, `jq`, `stylua`, `mdformat`, `alejandra`, `ruff`, `air`
+  - Document tools: `quarto`, `pandoc`, ImageMagick CLI, `yazi`, `gh`
 
 ### Setup
 
-1. Clone, symlink, or `stow` this configuration to your Neovim config directory.
-2. Start Neovim - plugins will be installed automatically via vim.pack
+1. Clone, symlink, or `stow` this directory to your Neovim config directory.
+2. Start Neovim.
+3. `vim.pack` installs declared plugins automatically.
 
-The first launch may take a moment as vim.pack downloads plugins in parallel
-
-### Updating
-
-Plugin management commands:
-
-```vim
-:PackUpdate        -- Update all plugins
-:PackUpdate!       -- Force update all plugins
-:PackUpdatePlugin  -- Update specific plugin (with picker if no name given)
-:PackCheck         -- Check for available updates (groups by major/minor/patch)
-:PackStatus        -- Show plugin status
-:PackClean         -- Remove unused plugins
-:PackSync          -- Install + update + clean
-```
-
-Weekly update checks are performed automatically on startup.
-
-## Key Bindings
-
-### Leader Key
-
-- Space (` `) is the leader key
-
-### File Operations
-
-- `<leader>ff` - Find files (Snacks picker)
-- `<leader>fg` - Live grep search
-- `<leader>fr` - Recent files
-- `<leader>fn` - New file
-
-### Buffer Management
-
-- `<Tab>` / `<S-Tab>` - Navigate to next/previous buffer
-- `<leader>bd` - Delete buffer
-- `<leader>bf` - Find buffer (Snacks picker)
-
-### Git Integration
-
-- `<leader>gg` - Lazygit
-- `<leader>gl` - Lazygit log
-- `<leader>gio` - GitHub issues (open)
-- `<leader>gpo` - GitHub PRs (open)
-- `<leader>gic` - Create GitHub issue
-- `<leader>gpc` - Create GitHub PR (draft, base=main)
-- `<leader>gpC` - Create GitHub PR (prompt)
-
-### Markdown Editing
-
-- `<leader>m1-4` - Insert markdown headings
-- `<leader>mu` - Unordered list item
-- `<leader>mo` - Ordered list item
-- `<leader>mt` - Task list item
-- `<leader>mb/mi/ms` - Bold/italic/strikethrough text
-- `<leader>mp` - Paste image (lazy-loaded on markdown/quarto files)
-
-### Code Execution (Quarto/R)
-
-- `<C-CR>` - Send current cell
-- `<leader>qa` - Send above
-- `<leader>qb` - Send below
-- `<leader>qf` - Send entire file
-
-### Obsidian
-
-- `<leader>on` - New note (lazy-loaded on markdown files)
-- `<leader>od` - Daily note
-- `<leader>of` - Follow link
-- `<leader>oc` - Toggle checkbox
-
-### File Explorer
-
-- `<leader>ey` - Open Yazi
-- `<leader>ec` - Open Yazi in cwd
-
-### Session Management
-
-- `<leader>ps` - Save session (prompts for name)
-- `<leader>pl` - Load last session
-- `<leader>pS` - Select session
-
-### Toggles
-
-- `<leader>ta` - Toggle Aerial code outline
-- `<leader>tb` - Toggle line blame
-- `<leader>tc` - Toggle color highlights
-- `<leader>td` - Toggle word diff
-- `<leader>ti` - Toggle image rendering
-- `<leader>tl` - Select spell language (en_us/es)
-- `<leader>tm` - Toggle markdown rendering
-- `<leader>tr` - Toggle R language server
-- `<leader>tR` - Toggle citation format (Pandoc/LaTeX)
-- `<leader>ts` - Toggle spell
-- `<leader>tv` - Toggle CSV view
-- `<leader>tw` - Toggle word wrap
-
-### Spell Language Management
-
-The configuration automatically detects project-specific spell settings:
-
-- Create `.nvim_spell_lang` in your project root with content `en_us` or `es`
-- Use `<leader>tl` to interactively change spell language for current project
-- Spell language persists per project directory
-
-### Session Management
-
-Sessions are automatically saved on exit to `~/.local/state/nvim/sessions/last.vim`. Manual session management available via `<leader>p*` keybindings.
+First launch may take a bit while plugin repos download. Tiny yak herd, normal.
 
 ## Plugin Management
 
-This configuration uses Neovim 0.12+ native **vim.pack** for plugin installation and management. All plugins are eagerly loaded for immediate availability. Plugins are automatically installed on first run.
+This config uses native `vim.pack` plus custom helpers in `lua/core/pack-mgmt.lua`.
 
-### Main Plugins
+Commands:
 
-**Core Functionality**:
+```vim
+:PackUpdate         " Update all plugins
+:PackUpdate!        " Force update all plugins
+:PackUpdatePlugin   " Update one plugin, picker when no name given
+:PackCheck          " Check available updates
+:PackDiagnose       " Diagnose plugin remote fetch failures
+:PackStatus         " Show plugin status
+:PackClean          " Remove undeclared plugins and lockfile entries
+:PackSync           " Update then clean
+```
 
-- **Completion**: blink.cmp with emoji and pandoc references
-- **LSP**: Native vim.lsp with multiple language servers
-- **UI**: which-key, theme-adaptive statusline
-- **Navigation**: Snacks picker
-- **Git**: gitsigns.nvim, lazygit.nvim
-- **Editing**: mini.nvim suite (icons, pairs, surround), copilot.vim, treesitter
-- **Formatting**: conform.nvim
+Leader shortcuts:
 
-**Documents & Markup**:
+- `<leader>uc` - Check updates
+- `<leader>uu` - Update all plugins
+- `<leader>uU` - Force update all plugins
+- `<leader>up` - Update one plugin
+- `<leader>us` - Plugin status
+- `<leader>uC` - Clean unused plugins
+- `<leader>uS` - Sync plugins
 
-- **quarto-nvim, otter.nvim**: Quarto document support
-- **obsidian.nvim**: Note-taking and knowledge management
-- **render-markdown.nvim**: Markdown rendering enhancement
-- **image.nvim, img-clip.nvim**: Image handling in documents
-- **snacks-bibtex.nvim**: Citation management
+Startup checks for plugin updates weekly.
 
-**Development Tools**:
+Current plugin shape:
 
-- **yazi.nvim**: File explorer
-- **aerial.nvim**: Code outline
-- **csvview.nvim**: CSV file viewing
-- **typst-preview.nvim**: Typst document preview
-- **quicker.nvim**: Quickfix list enhancement
+- 43 unique plugin directories declared.
+- Active colorscheme, completion, core UI, LSP helpers, treesitter, git signs, conform, yazi, and llama load eagerly.
+- Document/data/UI extras lazy-load by filetype or command.
+
+## Key Bindings
+
+### Core
+
+- `<C-s>` - Save file
+- `<C-a>` - Save all files
+- `<C-x>` - Quit all without saving
+- `<leader>x` - Save all and quit
+- `gh` / `gl` - First/last non-blank character on line
+- `go` / `gO` - Add line below/above
+- `j` / `k` - Move by visual line
+- `<C-u>` / `<C-d>` - Half-page scroll and center
+- `n` / `N` - Next/previous search result and center
+- Visual `p` - Paste without overwriting register
+- Visual `J` / `K` - Move selected lines down/up
+
+### Windows and Buffers
+
+- `<Tab>` / `<S-Tab>` - Next/previous buffer
+- `<leader>bd` - Delete buffer
+- `<leader>bo` - Close other buffers
+- `<leader>bf` - Find buffer
+- `<leader>wk` / `<leader>wj` - Resize up/down
+- `<leader>wh` / `<leader>wl` - Resize left/right
+
+### Files and Search
+
+- `<leader><leader>` - Smart picker
+- `<leader>ff` - Find files
+- `<leader>fg` - Live grep
+- `<leader>fr` - Recent files
+- `<leader>fc` - Resume picker
+- `<leader>fn` - New file
+- `<leader>sh` - Help tags
+- `<leader>sj` - Jumps
+- `<leader>sk` - Keymaps
+- `<leader>sm` - Marks
+- `<leader>sn` - Notifications
+- `<leader>sq` - Quickfix list
+- `<leader>sr` - Registers
+- `<leader>ss` - Spelling suggestions
+- `<leader>st` - Todo comments
+
+### Explorer
+
+- `<leader>ey` - Open Yazi
+- `<leader>ec` - Open Yazi in current working directory
+
+### Code, Diagnostics, and LSP
+
+- `<leader>ca` - Code actions
+- `<leader>cf` - Format buffer/range through Conform
+- `<leader>cn` - Collapse repeated spaces
+- `<leader>dd` - Diagnostic float
+- `gf` - Go to related diagnostic location
+- `K` - Hover
+- `gD` - Declaration
+- `grt` - Type definition
+- `vn` / `vs` - Expand/shrink LSP selection range
+- `<leader>lD` - Definitions
+- `<leader>lt` - Type definitions
+- `<leader>li` - Implementations
+- `<leader>lr` - References
+- `<leader>ls` - Document symbols
+- `<leader>lS` - Workspace symbols
+- `<leader>ln` - Rename
+- `<leader>lh` - Signature help
+
+### Git and GitHub
+
+- `<leader>gn` - Next git hunk
+- `<leader>gp` - Previous git hunk
+- `<leader>gd` - Diffview for uncommitted changes
+- `<leader>gh` - Current file history
+- `<leader>gH` - Repository history
+- `<leader>gx` - Close Diffview
+- `<leader>gio` - Open GitHub issues picker
+- `<leader>gpo` - Open GitHub PR picker
+- `<leader>gic` - Create GitHub issue with `gh`
+- `<leader>gpc` - Create draft PR against `main` with `gh pr create --fill`
+- `<leader>gpC` - Prompted PR creation
+
+### Markdown, Quarto, and CriticMarkup
+
+General Markdown mappings:
+
+- `<leader>m1` ... `<leader>m4` - Insert heading 1 to 4
+- `<leader>mu` - Unordered list item
+- `<leader>mo` - Ordered list item
+- `<leader>mt` - Task list item
+- Visual `<leader>mb` - Bold
+- Visual `<leader>mC` - Inline code
+- Visual `<leader>ml` - Link selection with URL from clipboard
+- `<leader>mp` - Paste image to `images/`
+- `]]` / `[[` - Next/previous heading in Markdown and Quarto
+
+In Markdown/Quarto buffers, buffer-local CriticMarkup mappings override some global visual Markdown mappings:
+
+- Visual `<leader>mi` - `{++insert++}`
+- Visual `<leader>md` - `{--delete--}`
+- Visual `<leader>mh` - `{==highlight==}`
+- Visual `<leader>mc` - `{>>comment<<}`
+- Visual `<leader>ms` - `{~~old~>new~~}` with prompt
+- Text objects: `ic`/`ac`, `ih`/`ah`, `ii`/`ai`, `id`/`ad`, `ix`/`ax`
+
+CriticMarkup commands:
+
+- `:CriticConvert [format]` - Convert with Pandoc, default `docx`
+- `:CriticOpen` - Open last converted DOCX
+
+### Quarto and Slime
+
+- `<C-CR>` - Send current Quarto cell
+- `<leader>qa` - Send above
+- `<leader>qb` - Send below
+- `<leader>qf` - Send whole file
+- `<leader>ql` - Send current line to Slime
+- `<leader>qr` - Send region to Slime
+
+### Obsidian
+
+- `<leader>on` - New note
+- `<leader>oN` - New note from template
+- `<leader>od` - Today's daily note
+- `<leader>oD` - Daily notes picker
+- `<leader>oy` - Yesterday's daily note
+- `<leader>ot` - Tomorrow's daily note
+- `<leader>of` - Follow link
+- `<leader>oo` - Open note in Obsidian app
+- `<leader>oq` - Quick switch notes
+- `<leader>os` - Search notes
+- `<leader>ob` - Backlinks
+- `<leader>oL` - Links or create new link from visual selection
+- `<leader>ol` - Link visual selection
+- `<leader>oe` - Extract visual selection to note
+- `<leader>oc` - Toggle checkbox
+- `<leader>oi` - Paste image
+- `<leader>or` - Rename note
+- `<leader>ow` - Switch workspace
+- `<leader>oC` - Table of contents
+- `<leader>oT` - Tags
+
+Configured workspaces:
+
+- `~/Obsidian/Notes/`
+- `~/Obsidian/Personal/`
+
+### References and Citations
+
+- `<leader>rb` - BibTeX citation picker
+- `<leader>tR` - Toggle citation command set between Pandoc and LaTeX formats
+
+Default loaded citation commands are Pandoc-oriented, for example `[@key]`, `@key`, `[-@key]`, and page/prefix variants.
+
+### Toggles
+
+- `<leader>ta` - Toggle Aerial outline
+- `<leader>tf` - Toggle Aerial nav window
+- `<leader>tb` - Toggle current-line blame
+- `<leader>tc` - Toggle color highlights
+- `<leader>td` - Toggle gitsigns word diff
+- `<leader>ti` - Toggle image rendering
+- `<leader>tl` - Select project spell language
+- `<leader>tm` - Toggle rendered Markdown
+- `<leader>tr` - Toggle R language server
+- `<leader>ts` - Toggle spell checking
+- `<leader>tv` - Toggle CSV view
+- `<leader>tw` - Toggle word wrap
+
+## Spell Language Management
+
+Project spell language is stored in `.nvim_spell_lang` at project root. Project root is detected by walking upward to `.git` or `.nvim_spell_lang`.
+
+- `<leader>tl` / `:SpellLang` writes `en_us` or `es` to `.nvim_spell_lang`.
+- Buffers default to `en_us` when no project file exists.
+- `<leader>ts` toggles spell checking.
 
 ## Configuration Structure
 
-```
+```text
 .
-├── init.lua                      # Main orchestrator (loads modules)
+├── init.lua                      # Main loader
 ├── lua/
-│   ├── theme-config.lua          # Theme configuration (Nix-managed symlink)
-│   ├── statusline-highlights.lua # Theme-adaptive statusline highlights
-│   ├── plugins-pack.lua          # vim.pack plugin declarations
-│   ├── plugins-config.lua        # Plugin configurations
+│   ├── theme-config.lua          # Active theme and color values
+│   ├── plugins-pack.lua          # vim.pack declarations, eager/opt split
+│   ├── plugins-config.lua        # Active plugin, LSP, lazy-load, and theme config
 │   ├── core/
-│   │   ├── options.lua           # Vim options & diagnostics
-│   │   ├── autocommands.lua      # Autocommands & user commands
-│   │   ├── keymaps.lua           # All key mappings
-│   │   └── functions.lua         # Helper functions (session, git, plugin mgmt)
-│   └── plugins/                  # Plugin lazy-loading configs (not currently used)
+│   │   ├── autocommands.lua      # Autocommands and user commands
+│   │   ├── critic.lua            # Pandoc CriticMarkup filter
+│   │   ├── functions.lua         # Toggles and buffer helpers
+│   │   ├── keymaps.lua           # Global keymaps
+│   │   ├── llama.lua             # llama.vim setup
+│   │   ├── options.lua           # Vim options and diagnostics
+│   │   └── pack-mgmt.lua         # vim.pack helper commands
+│   └── plugins/                  # Split plugin modules, currently not required by init.lua
 ├── after/
-│   └── ftplugin/                # Filetype-specific settings
-│       ├── markdown.lua
-│       └── quarto.lua
-└── README.md                     # This file
+│   └── ftplugin/
+│       ├── markdown.lua          # Markdown options, CriticMarkup maps, Critic commands
+│       └── quarto.lua            # Quarto options, sources Markdown ftplugin
+├── snippets/                     # Local snippets for blink.cmp/vim.snippet
+├── nvim-pack-lock.json           # vim.pack lockfile
+└── README.md
 ```
 
-### Module Responsibilities
+Load order:
 
-- **`init.lua`**: Orchestrates loading of all modules, Llama.vim configuration
-- **`plugins-pack.lua`**: Declares all plugins with vim.pack (all eager-loaded)
-- **`plugins-config.lua`**: Configures all plugins and LSP servers
-- **`lua/core/functions.lua`**: Helper functions for sessions, plugin management, git branch caching, search count caching, toggle functions
-- **`lua/core/autocommands.lua`**: Autocommands for git branch/search count updates, spell language, session auto-save, plugin update checks
-- **`lua/core/keymaps.lua`**: All key mappings including new session, spell, GitHub bindings
-- **`lua/statusline-highlights.lua`**: Theme-adaptive highlight groups for custom statusline
-- **`after/ftplugin/*.lua`**: Filetype-specific configurations
+1. Providers disabled, llama config set.
+2. `theme-config.lua` read to determine active colorscheme.
+3. `plugins-pack.lua` declares/installs eager and opt plugins.
+4. Core options, functions, autocommands, and keymaps load.
+5. `plugins-config.lua` configures plugins, LSP, and lazy-load hooks.
 
-## Adding New Plugins
+## Adding Plugins
 
-### Step 1: Declare the Plugin in `lua/plugins-pack.lua`
+1. Add plugin spec to `lua/plugins-pack.lua`.
+2. Decide eager vs opt.
+3. Add setup code to `lua/plugins-config.lua`, or lazy-load setup through filetype/command table.
+4. Add keymaps to `lua/core/keymaps.lua` if needed.
+5. Restart Neovim or run `:PackSync`.
 
-Add the plugin to the vim.pack declaration array:
+Minimal eager example:
 
 ```lua
-local eager_plugins = {
-  -- Existing plugins...
+table.insert(eager_plugins, { src = "https://github.com/author/plugin-name" })
+```
 
-  -- Add your plugin:
-  { src = "https://github.com/author/plugin-name" },
+Minimal lazy command example:
+
+```lua
+cmd_lazy.PluginCommand = {
+  "plugin-name",
+  function()
+    require("plugin-name").setup({})
+  end,
 }
-
-vim.pack.add(eager_plugins, { load = true, confirm = false })
 ```
-
-### Step 2: Configure the Plugin
-
-Add configuration to **`lua/plugins-config.lua`**:
-
-```lua
----| Your Plugin Name ----------------------------------
-require("your-plugin").setup({
-  -- Configuration here
-})
-```
-
-Place it in the appropriate section based on functionality:
-
-- Completion & snippets
-- Colorschemes & theming
-- Code formatting
-- Language servers (LSP)
-- Editor enhancements
-- Syntax & parsing
-- UI & navigation
-- References & citations
-
-### Step 3: Add Keybindings (if needed)
-
-Add keybindings to **`lua/core/keymaps.lua`**:
-
-```lua
--- Using the map() helper function
-map("n", "<leader>key", "<Cmd>PluginCommand<Cr>", { desc = "Description" })
-```
-
-### Step 4: Install the Plugin
-
-Restart Neovim. Plugins are automatically installed on first run.
-
-To manually trigger installation:
-
-```vim
-:PackSync
-```
-
-### Example: Adding a New LSP Server
-
-Let's say you want to add support for TypeScript:
-
-1. **Configure LSP** in `lua/plugins-config.lua`:
-   ```lua
-   ---| TypeScript Development ----------------------------------
-   vim.lsp.config.ts_ls = {
-     capabilities = capabilities,
-     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-   }
-   ```
-
-2. **Auto-enable by filetype** (update the FileType autocmd):
-   ```lua
-   -- Add to the filetype list in plugins-config.lua
-   "typescript",
-   "typescriptreact",
-   "javascript",
-   "javascriptreact",
-
-   -- Add to the server_map
-   typescript = "ts_ls",
-   typescriptreact = "ts_ls",
-   javascript = "ts_ls",
-   javascriptreact = "ts_ls",
-   ```
-
-### Example: Adding a New Plugin with Keybindings
-
-Let's say you want to add a test runner plugin:
-
-1. **Declare** in `lua/plugins-pack.lua`:
-   ```lua
-   { src = "https://github.com/author/test-runner.nvim" },
-   ```
-
-2. **Configure** in `lua/plugins-config.lua`:
-   ```lua
-   ---| Test Runner ----------------------------------
-   require("test-runner").setup({
-     adapters = { "jest", "pytest" },
-   })
-   ```
-
-3. **Add keybindings** in `lua/core/keymaps.lua`:
-   ```lua
-   map("n", "<leader>tt", "<Cmd>TestRun<Cr>", { desc = "Run nearest test" })
-   map("n", "<leader>tf", "<Cmd>TestFile<Cr>", { desc = "Run test file" })
-   ```
-
-4. **Restart Neovim** to install the plugin automatically.
-
-## Customization
-
-### Themes
-
-Current theme is set in `lua/theme-config.lua` (Nix-managed symlink). Available themes:
-
-- Gruvbox (default)
-- Vague
-- OneDark
-- Nightfox
-- Arthur
-- Autumn
-- Black Metal
-- Catppuccin
-- Tokyo Night
-- VS Code
-- Ayu
-
-Statusline highlights automatically adapt to active colorscheme via `lua/statusline-highlights.lua`.
-
-### Language Servers
-
-LSP configurations are in `lua/plugins-config.lua`. Currently supported:
-
-- **Bash**: bash-language-server
-- **Go**: gopls, golangci-lint-langserver
-- **JSON**: vscode-json-language-server
-- **Lua**: lua-language-server
-- **Markdown**: marksman
-- **Nix**: nixd (with NixOS/Darwin/Home Manager options)
-- **Python**: pyright
-- **R**: R Language Server
-- **Typst**: tinymist
-- **YAML**: yaml-language-server (with Quarto schema validation)
-- **Copilot**: copilot-language-server
-
-Modify as needed for your development environment. LSP capabilities are defined early in the file and used by all language server configs.
-
-### Document Settings
-
-Quarto and R integration settings can be found in `lua/plugins-config.lua`. Obsidian workspace paths may need adjustment for your setup (currently `~/Obsidian/Notes/` and `~/Obsidian/Personal/`).
-
-### Core Settings
-
-- **Options**: `lua/core/options.lua` - Vim options and diagnostics
-- **Keymaps**: `lua/core/keymaps.lua` - All key mappings
-- **Autocommands**: `lua/core/autocommands.lua` - Autocommands and user commands
-- **Helper Functions**: `lua/core/functions.lua` - Sessions, git caching, plugin management
 
 ## Troubleshooting
 
-### Plugin Issues
+### Plugins
 
-- Run `:PackClean` then `:PackSync` to refresh plugins
-- Check `:checkhealth` for system dependencies
-- Ensure plugins are in `~/.local/share/nvim/site/pack/core/start/`
-- View plugin status: `:PackStatus`
-- Check for available updates: `:PackCheck`
+- `:PackStatus` - inspect plugin state.
+- `:PackCheck` - check update availability.
+- `:PackDiagnose` - test remotes after fetch failures.
+- `:PackClean` then `:PackSync` - refresh declared plugin set.
 
-### LSP Issues
+### LSP
 
-- Ensure language servers are installed system-wide
-- Check LSP configuration: `:checkhealth vim.lsp`
-- Use `<leader>tr` to toggle R language server
-- Verify filetype association in plugins-config.lua FileType autocmd
+- Confirm external language server exists on `$PATH`.
+- Check `:checkhealth vim.lsp`.
+- Check filetype with `:set filetype?`.
+- Use `<leader>tr` if R LSP needs manual stop/start.
 
-### Performance
+### Formatting
 
-- Image rendering can be toggled with `<leader>ti`
-- Check startup time: `nvim --startuptime startup.log`
-- All plugins are eager-loaded for immediate availability
-- Disable unused plugins in `lua/plugins-pack.lua`
+- Confirm formatter executable exists on `$PATH`.
+- Use `<leader>cf` to format manually.
+- Markdown and Quarto do not format on save by design.
 
-### Spell Language
+### Documents
 
-- Check current spell language: `:set spelllang?`
-- Set project spell language: `<leader>tl` (creates `.nvim_spell_lang` file)
-- Toggle spell: `<leader>ts`
+- Image rendering starts disabled. Use `<leader>ti`.
+- `img-clip.nvim` stores pasted images under `images/` relative to current file.
+- `:CriticConvert` requires `pandoc` and the current buffer saved to disk.
+- Quarto schema support requires `quarto --paths` to work.
 
 ## Design Philosophy
 
-This configuration emphasizes:
-
-1. **Native First**: Use built-in Vim/Neovim functionality when possible (`:bnext/:bprevious` instead of buffer tabs)
-2. **Plugin Efficiency**: Avoid duplicate functionality (Snacks.nvim for picker, GitHub integration)
-3. **Neovim 0.12+**: Leverage modern Neovim features (vim.lsp, vim.system, native package manager)
-4. **Minimal UI**: Clean interface without startup screens or buffer tabs
-5. **Productivity Focus**: Balance powerful features with simplicity and performance
-6. **Project-Aware**: Spell language per project, auto-saved sessions, git branch caching
+1. Native Neovim first.
+2. `vim.pack` over external plugin manager.
+3. Eager-load core tools, lazy-load heavier document/data tooling.
+4. Strong prose/document workflow: Markdown, Quarto, Obsidian, citations, images, CriticMarkup.
+5. External dependencies managed outside Neovim, preferably with Nix.
 
 ## License
 
-This configuration is provided as-is.
+Provided as-is.
