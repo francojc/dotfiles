@@ -104,14 +104,22 @@ sync_calendars() {
     return 0
   fi
 
-  # Sync failed. Extract error lines, check if Mailbox-only.
-  errors=$(echo "$sync_output" | grep -iE "error|failed|exception" || true)
-  mailbox_errs=$(echo "$errors" | grep -i "mailbox" || true)
-  other_errs=$(echo "$errors" | grep -iv "mailbox" || true)
+  # Extract only the meaningful "Unknown error occurred" lines (drop the "Use -vdebug" noise).
+  errors=$(echo "$sync_output" | grep -E "^error: Unknown error" || true)
 
-  if [ -n "$mailbox_errs" ] && [ -z "$other_errs" ]; then
-    echo "Warning: Mailbox.org calendar sync failed. Continuing with other sources." >&2
-    echo "Details: $mailbox_errs" >&2
+  # Soft errors: safe to warn and continue
+  #   - Mailbox.org: known flaky server
+  #   - Server disconnected: transient network drop
+  #   - *.ics path errors: Google CalDAV phantom events (master recurring events
+  #     that appear in REPORT but return empty properties on multiget)
+  soft_errs=$(echo "$errors" | grep -iE "(mailbox|Server disconnected|\.ics$)" || true)
+  hard_errs=$(echo "$errors" | grep -ivE "(mailbox|Server disconnected|\.ics$)" || true)
+
+  if [ -z "$hard_errs" ]; then
+    if [ -n "$soft_errs" ]; then
+      echo "Warning: Some items failed to sync (transient or known Google CalDAV quirks). Continuing." >&2
+      echo "$soft_errs" >&2
+    fi
     return 0
   fi
 
