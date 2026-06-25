@@ -65,6 +65,10 @@
         name = "raine/workmux";
         trusted = true;
       } # workmux
+      {
+        name = "manaflow-ai/cmux";
+        trusted = true;
+      } # cmux
     ];
 
     brews = [
@@ -106,6 +110,7 @@
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       "claude" # Claude Desktop
+      "cmux" # cmux
       "dorso" # posture monitor
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
