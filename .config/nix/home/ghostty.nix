@@ -45,6 +45,7 @@
 
       window-decoration = auto
       # macos-titlebar-style = hidden
+      macos-window-buttons = hidden
       macos-window-shadow = false
       macos-icon = custom-style
       macos-icon-frame = plastic
