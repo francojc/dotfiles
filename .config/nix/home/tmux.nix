@@ -168,6 +168,19 @@
       set -g status-right-length 110
       set -g status-interval 60
 
+      # Battery icons (Nerd Font: single glyph + plug when charging)
+      set -g @batt_icon_charge_tier8 ''
+      set -g @batt_icon_charge_tier7 ''
+      set -g @batt_icon_charge_tier6 ''
+      set -g @batt_icon_charge_tier5 ''
+      set -g @batt_icon_charge_tier4 ''
+      set -g @batt_icon_charge_tier3 ''
+      set -g @batt_icon_charge_tier2 ''
+      set -g @batt_icon_charge_tier1 ''
+      set -g @batt_icon_status_charged ''
+      set -g @batt_icon_status_charging ''
+      set -g @batt_icon_status_attached ''
+
       # Pane border colors
       set -g pane-border-lines single
       set -g pane-border-style fg='${theme.colors.bg3}'
