@@ -13,26 +13,62 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "none";
+      cleanup = "zap";
       upgrade = true;
-      extraFlags = ["--force-cleanup" "--zap"];
+      extraEnv = {
+        HOMEBREW_NO_ANALYTICS = "1";
+        HOMEBREW_NO_ENV_HINTS = "1";
+      };
+      extraFlags = [];
     };
 
+    # Note: run `brew trust --tap <tap>` to trust the tap
+    # This creates a ~/.homebrew/trust.json file entry
     taps = [
-      # Note: run `brew trust --tap <tap>` to trust the tap
-      # This creates a ~/.homebrew/trust.json file entry
-      "modem-dev/tap" # hunk
-      "Adembc/homebrew-tap" # lazyssh
-      "FelixKratz/formulae" # borders
-      "acrogenesis/macchanger" # macchanger
-      "keith/formulae" # reminders-cli
-      "librespeed/tap" # librespeed-cli
-      "nao1215/tap" # sqly
-      "radiosilence/koan" # koan
-      "raine/workmux" # workmux
+      {
+        name = "acrogenesis/macchanger";
+        trusted = true;
+      } # macchanger
+      {
+        name = "adembc/tap";
+        trusted = true;
+      } # lazyssh
+      {
+        name = "felixkratz/formulae";
+        trusted = true;
+      } # borders
+      {
+        name = "herald-email/herald";
+        trusted = true;
+      } # herald
+      {
+        name = "keith/formulae";
+        trusted = true;
+      } # reminders-cli
+      {
+        name = "librespeed/tap";
+        trusted = true;
+      } # librespeed-cli
+      {
+        name = "modem-dev/tap";
+        trusted = true;
+      } # hunk
+      {
+        name = "nao1215/tap";
+        trusted = true;
+      } # sqly
+      {
+        name = "radiosilence/koan";
+        trusted = true;
+      } # koan
+      {
+        name = "raine/workmux";
+        trusted = true;
+      } # workmux
     ];
 
     brews = [
+      "herald" # herald
       "hunk" # git diff tool
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history

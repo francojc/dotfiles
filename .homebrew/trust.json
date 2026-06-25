@@ -1,0 +1,14 @@
+{
+  "trustedtaps": [
+    "acrogenesis/macchanger",
+    "adembc/tap",
+    "felixkratz/formulae",
+    "herald-email/herald",
+    "keith/formulae",
+    "librespeed/tap",
+    "modem-dev/tap",
+    "nao1215/tap",
+    "radiosilence/koan",
+    "raine/workmux"
+  ]
+}
