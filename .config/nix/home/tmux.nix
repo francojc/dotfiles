@@ -164,8 +164,8 @@
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
-      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h #[fg=${theme.colors.fg3}]▌ %H:%M #[fg=${theme.colors.yellow}]▌ #(~/.config/tmux/tmux-weather.sh) '
-      set -g status-right-length 90
+      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h #[fg=${theme.colors.green}]▌ #{battery_icon} #{battery_percentage} #[fg=${theme.colors.fg3}]▌ %H:%M #[fg=${theme.colors.yellow}]▌ #(~/.config/tmux/tmux-weather.sh) '
+      set -g status-right-length 110
       set -g status-interval 60
 
       # Pane border colors
@@ -185,6 +185,7 @@
       fzf-tmux-url
       vim-tmux-navigator
       yank
+      battery
     ];
   };
 
