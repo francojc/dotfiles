@@ -68,12 +68,11 @@
     ];
 
     brews = [
-      "herald" # herald
-      "hunk" # git diff tool
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      # "helix" # text editor
+      "herald" # herald
       "hf" # huggingface cli
+      "hunk" # git diff tool
       "koan" # Navidrome TUI player
       "lazyssh" # lazyssh
       "librespeed-cli"
@@ -94,6 +93,7 @@
       "yt-dlp" # YouTube video downloader
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
+      # "helix" # text editor
       # "libffi" # Foreign Function Interface library
       # "ninja" # build system
       # "pango" # text layout library
@@ -105,7 +105,6 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      # "chatgpt" # ChatGPT
       "claude" # Claude Desktop
       "dorso" # posture monitor
       "ghostty" # Terminal emulator
@@ -118,16 +117,17 @@
       "rectangle" # window management
       "signal" # messaging
       "supacode" # Agentic harness session manager
-      # "telegram" # messaging (bot)
       "tidal" # music streaming
-      # "visual-studio-code" # code editor
-      "vlc" # media player
       "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
       # "blackhole-2ch" # virtual audio driver
+      # "chatgpt" # ChatGPT
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
+      # "telegram" # messaging (bot)
+      # "visual-studio-code" # code editor
+      # "vlc" # media player
     ];
   };
 }
