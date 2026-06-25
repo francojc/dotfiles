@@ -164,8 +164,9 @@
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
-      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h '
-      set -g status-right-length 50
+      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h #[fg=${theme.colors.fg3}]▌ %H:%M #[fg=${theme.colors.yellow}]▌ #(~/.config/tmux/tmux-weather.sh) '
+      set -g status-right-length 90
+      set -g status-interval 60
 
       # Pane border colors
       set -g pane-border-lines single
@@ -189,6 +190,12 @@
 
   # Create tmux config directory
   xdg.configFile."tmux/.keep".text = "";
+
+  # Cached weather script for the status bar.
+  xdg.configFile."tmux/tmux-weather.sh" = {
+    source = ./tmux-weather.sh;
+    executable = true;
+  };
 
   # Create Obsidian directory structure
   home.file."Obsidian/Notes/.keep".text = "";
