@@ -116,7 +116,8 @@
       initial_window_width 600
       initial_window_height 600
       draw_minimal_borders yes
-      window_padding_width 2 2 0 2
+      # window_padding_width 2 2 0 2
+      window_padding_width 0
       placement_strategy center
       hide_window_decorations titlebar-only
       macos_show_window_title_in none
