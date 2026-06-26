@@ -164,22 +164,9 @@
       set -g window-status-current-format '#[fg=${theme.colors.yellow},bg=default] #I #[fg=${theme.colors.yellow}]#W'
 
       # Right side with theme colors
-      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h #[fg=${theme.colors.green}]▌ #{battery_icon} #{battery_percentage} #[fg=${theme.colors.fg3}]▌ %H:%M #[fg=${theme.colors.yellow}]▌ #(~/.config/tmux/tmux-weather.sh) '
+      set -g status-right '#[fg=${theme.colors.bright_red}]▌   #P #[fg=${theme.colors.accent}]▌   #h #[fg=${theme.colors.green}]▌ %H:%M #[fg=${theme.colors.yellow}]▌ #(~/.config/tmux/tmux-weather.sh) '
       set -g status-right-length 110
       set -g status-interval 60
-
-      # Battery icons (Nerd Font: single glyph + plug when charging)
-      set -g @batt_icon_charge_tier8 ''
-      set -g @batt_icon_charge_tier7 ''
-      set -g @batt_icon_charge_tier6 ''
-      set -g @batt_icon_charge_tier5 ''
-      set -g @batt_icon_charge_tier4 ''
-      set -g @batt_icon_charge_tier3 ''
-      set -g @batt_icon_charge_tier2 ''
-      set -g @batt_icon_charge_tier1 ''
-      set -g @batt_icon_status_charged ''
-      set -g @batt_icon_status_charging ''
-      set -g @batt_icon_status_attached ''
 
       # Pane border colors
       set -g pane-border-lines single
@@ -198,7 +185,6 @@
       fzf-tmux-url
       vim-tmux-navigator
       yank
-      battery
     ];
   };
 
