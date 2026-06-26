@@ -30,10 +30,6 @@
         trusted = true;
       } # macchanger
       {
-        name = "jundot/omlx";
-        trusted = true;
-      } # omlx
-      {
         name = "adembc/tap";
         trusted = true;
       } # lazyssh

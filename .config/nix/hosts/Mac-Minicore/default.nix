@@ -42,7 +42,10 @@
       # Host-specific Homebrew packages (merged with shared apps.nix)
       homebrew = {
         taps = [
-          "jundot/omlx"
+          {
+            name = "jundot/omlx";
+            trusted = true;
+          } # omlx
         ];
         brews = [
           # Mac-Minicore-only brews here
