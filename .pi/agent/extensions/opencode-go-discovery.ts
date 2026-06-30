@@ -10,6 +10,15 @@ const CACHE_DIR = join(process.env.HOME || "/tmp", ".cache", "pi");
 const CACHE_FILE = join(CACHE_DIR, "opencode-go-models.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const CACHE_SCHEMA_VERSION = 3;
+const QUIET_STARTUP = process.argv.includes("-p") || process.argv.includes("--print") || process.argv.includes("json") || process.env.PI_MODEL_DISCOVERY_DEBUG !== "1";
+
+function logInfo(message: string): void {
+  if (!QUIET_STARTUP) console.log(message);
+}
+
+function logWarn(message: string): void {
+  if (!QUIET_STARTUP) console.warn(message);
+}
 
 const MODELS_DEV_URL = "https://models.dev/api.json";
 const OPENCODE_MODELS_URL = "https://opencode.ai/zen/go/v1/models";
@@ -121,7 +130,7 @@ function readCache(): CacheEntry | null {
     const raw = readFileSync(CACHE_FILE, "utf-8");
     const parsed = JSON.parse(raw) as CacheEntry;
     if (parsed.schemaVersion !== CACHE_SCHEMA_VERSION) {
-      console.log(`[opencode-go-discovery] Cache schema v${parsed.schemaVersion ?? 1} != v${CACHE_SCHEMA_VERSION}, ignoring`);
+      logInfo(`[opencode-go-discovery] Cache schema v${parsed.schemaVersion ?? 1} != v${CACHE_SCHEMA_VERSION}, ignoring`);
       return null;
     }
     return parsed;
@@ -140,7 +149,7 @@ function writeCache(models: PiModel[]): void {
     };
     writeFileSync(CACHE_FILE, JSON.stringify(entry, null, 2));
   } catch (err) {
-    console.warn(`[opencode-go-discovery] Failed to write cache: ${err}`);
+    logWarn(`[opencode-go-discovery] Failed to write cache: ${err}`);
   }
 }
 
@@ -177,7 +186,7 @@ function buildModel(id: string, meta?: ModelsDevModel): PiModel {
 
   // Cross-check models.dev SDK hint; warn (don't fail) on mismatch
   if (meta?.provider?.npm && meta.provider.npm !== endpoint.sdk) {
-    console.warn(
+    logWarn(
       `[opencode-go-discovery] SDK hint mismatch for "${id}": route=${endpoint.sdk}, models.dev=${meta.provider.npm}`,
     );
   }
@@ -226,10 +235,10 @@ async function fetchModels(): Promise<PiModel[]> {
         devModels = ogProvider.models;
       }
     } catch (err) {
-      console.warn(`[opencode-go-discovery] Failed to parse models.dev: ${err}`);
+      logWarn(`[opencode-go-discovery] Failed to parse models.dev: ${err}`);
     }
   } else {
-    console.warn(`[opencode-go-discovery] models.dev fetch failed: ${devRes?.status ?? "network error"}`);
+    logWarn(`[opencode-go-discovery] models.dev fetch failed: ${devRes?.status ?? "network error"}`);
   }
 
   // Parse active model list from OpenCode API
@@ -239,10 +248,10 @@ async function fetchModels(): Promise<PiModel[]> {
       const apiData = (await apiRes.json()) as { data: Array<{ id: string }> };
       activeIds = apiData.data.map((m) => m.id);
     } catch (err) {
-      console.warn(`[opencode-go-discovery] Failed to parse API models: ${err}`);
+      logWarn(`[opencode-go-discovery] Failed to parse API models: ${err}`);
     }
   } else {
-    console.warn(`[opencode-go-discovery] OpenCode API fetch failed, using models.dev keys`);
+    logWarn(`[opencode-go-discovery] OpenCode API fetch failed, using models.dev keys`);
     activeIds = Object.keys(devModels);
   }
 
@@ -256,11 +265,11 @@ async function fetchModels(): Promise<PiModel[]> {
   for (const id of activeIds) {
     const meta = devModels[id];
     if (meta?.status === "deprecated") {
-      console.log(`[opencode-go-discovery] Skipping deprecated model: ${id}`);
+      logInfo(`[opencode-go-discovery] Skipping deprecated model: ${id}`);
       continue;
     }
     if (!meta) {
-      console.warn(`[opencode-go-discovery] No models.dev metadata for "${id}", using defaults`);
+      logWarn(`[opencode-go-discovery] No models.dev metadata for "${id}", using defaults`);
     }
     models.push(buildModel(id, meta));
   }
@@ -295,7 +304,7 @@ export default async function (pi: ExtensionAPI) {
 
   if (cached) {
     registerProvider(pi, cached.models);
-    console.log(`[opencode-go-discovery] Registered ${cached.models.length} models from cache`);
+    logInfo(`[opencode-go-discovery] Registered ${cached.models.length} models from cache`);
   }
 
   // Refresh if cache is missing or stale
@@ -306,14 +315,14 @@ export default async function (pi: ExtensionAPI) {
 
       if (!cached) {
         registerProvider(pi, fresh);
-        console.log(`[opencode-go-discovery] Registered ${fresh.length} models from API`);
+        logInfo(`[opencode-go-discovery] Registered ${fresh.length} models from API`);
       } else {
-        console.log(`[opencode-go-discovery] Background refresh cached ${fresh.length} models`);
+        logInfo(`[opencode-go-discovery] Background refresh cached ${fresh.length} models`);
       }
     } catch (err) {
-      console.warn(`[opencode-go-discovery] Fetch failed: ${err}`);
+      logWarn(`[opencode-go-discovery] Fetch failed: ${err}`);
       if (!cached) {
-        console.warn("[opencode-go-discovery] No cache available — provider not registered");
+        logWarn("[opencode-go-discovery] No cache available - provider not registered");
       }
     }
   }

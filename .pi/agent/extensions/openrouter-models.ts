@@ -9,6 +9,15 @@ import { join } from "node:path";
 const CACHE_DIR = join(process.env.HOME || "/tmp", ".cache", "pi");
 const CACHE_FILE = join(CACHE_DIR, "openrouter-models.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const QUIET_STARTUP = process.argv.includes("-p") || process.argv.includes("--print") || process.argv.includes("json") || process.env.PI_MODEL_DISCOVERY_DEBUG !== "1";
+
+function logInfo(message: string): void {
+  if (!QUIET_STARTUP) console.log(message);
+}
+
+function logWarn(message: string): void {
+  if (!QUIET_STARTUP) console.warn(message);
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -55,7 +64,7 @@ function writeCache(models: Model[]): void {
     const entry: CacheEntry = { fetchedAt: Date.now(), models };
     writeFileSync(CACHE_FILE, JSON.stringify(entry, null, 2));
   } catch (err) {
-    console.warn(`[openrouter-models] Failed to write cache: ${err}`);
+    logWarn(`[openrouter-models] Failed to write cache: ${err}`);
   }
 }
 
@@ -128,7 +137,7 @@ export default async function (pi: ExtensionAPI) {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (!apiKey) {
-    console.warn("[openrouter-models] OPENROUTER_API_KEY not set, skipping dynamic model fetch");
+    logWarn("[openrouter-models] OPENROUTER_API_KEY not set, skipping dynamic model fetch");
     return;
   }
 
@@ -138,7 +147,7 @@ export default async function (pi: ExtensionAPI) {
   if (cached) {
     hadCache = true;
     registerProvider(pi, cached.models);
-    console.log(`[openrouter-models] Registered ${cached.models.length} models from cache`);
+    logInfo(`[openrouter-models] Registered ${cached.models.length} models from cache`);
   }
 
   // Refresh if cache is missing or stale; skip if fresh cache exists
@@ -149,14 +158,14 @@ export default async function (pi: ExtensionAPI) {
 
       if (!hadCache) {
         registerProvider(pi, fresh);
-        console.log(`[openrouter-models] Registered ${fresh.length} models from API`);
+        logInfo(`[openrouter-models] Registered ${fresh.length} models from API`);
       } else {
-        console.log(`[openrouter-models] Background refresh cached ${fresh.length} models`);
+        logInfo(`[openrouter-models] Background refresh cached ${fresh.length} models`);
       }
     } catch (err) {
-      console.warn(`[openrouter-models] Background fetch failed: ${err}`);
+      logWarn(`[openrouter-models] Background fetch failed: ${err}`);
       if (!hadCache) {
-        console.warn("[openrouter-models] No cache available — provider not registered");
+        logWarn("[openrouter-models] No cache available - provider not registered");
       }
     }
   }

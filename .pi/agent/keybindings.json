@@ -3,6 +3,22 @@
     "alt+enter",
     "shift+enter"
   ],
+  "tui.editor.pageUp": [
+    "pageUp",
+    "super+shift+up"
+  ],
+  "tui.editor.pageDown": [
+    "pageDown",
+    "super+shift+down"
+  ],
+  "tui.select.pageUp": [
+    "pageUp",
+    "super+shift+up"
+  ],
+  "tui.select.pageDown": [
+    "pageDown",
+    "super+shift+down"
+  ],
   "app.message.followUp": [
     "ctrl+shift+enter"
   ]
