@@ -122,6 +122,7 @@
       "rectangle" # window management
       "signal" # messaging
       "supacode" # Agentic harness session manager
+      "telegram" # messaging (bot)
       "tidal" # music streaming
       "zen" # browser
       "zoom" # video conferencing
@@ -130,7 +131,6 @@
       # "chatgpt" # ChatGPT
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
-      # "telegram" # messaging (bot)
       # "visual-studio-code" # code editor
       # "vlc" # media player
     ];
