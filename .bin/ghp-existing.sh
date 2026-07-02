@@ -1,25 +1,32 @@
 #!/usr/bin/env bash
 # Applies a branch-protection ruleset (main branch, PR required, francojc bypasses)
-# to every repo currently owned by the personal account francojc.
+# to every repo under the given owner (defaults to the personal account francojc;
+# pass an org name like wfu-agentic-ai as $1 to target that org instead).
 #
-# Requires: gh CLI authenticated as francojc with 'repo' and 'admin:org' scope
-# (an admin-scoped classic PAT or `gh auth login` session — NOT the Hermes Agent token).
+# Usage:
+#   ghp-existing.sh                  # defaults to francojc
+#   ghp-existing wfu-agentic-ai      # targets the org instead
+#
+# Requires: gh CLI authenticated with 'repo' scope on personal repos, or
+# 'admin:org' scope when targeting an organization (an admin-scoped classic
+# PAT or `gh auth login` session — NOT the Hermes Agent token).
 
 set -euo pipefail
 
-OWNER="francojc"
+OWNER="${1:-francojc}"
+BYPASS_USER="francojc"   # you, regardless of which owner's repos are being protected
 RULESET_NAME="protect-main"
 
-# Get francojc's user ID once, for the bypass actor entry.
-USER_ID=$(gh api "/users/${OWNER}" --jq '.id')
+# Always look up francojc's ID for the bypass actor — /users/ resolves correctly
+# whether OWNER is francojc (personal) or an org like wfu-agentic-ai, since we
+# want *you* to bypass either way, not the org itself.
+USER_ID=$(gh api "/users/${BYPASS_USER}" --jq '.id')
 
-# Pull every repo (public + private) owned by francojc.
 REPOS=$(gh repo list "$OWNER" --limit 1000 --json name,isFork --jq '.[] | select(.isFork == false) | .name')
 
 for REPO in $REPOS; do
   echo "Processing ${OWNER}/${REPO}..."
 
-  # Skip if a ruleset with this name already exists (idempotency).
   EXISTING=$(gh api "/repos/${OWNER}/${REPO}/rulesets" --jq \
     ".[] | select(.name==\"${RULESET_NAME}\") | .id" 2>/dev/null || true)
 
@@ -28,25 +35,54 @@ for REPO in $REPOS; do
     continue
   fi
 
-  gh api \
+  PAYLOAD=$(cat <<JSON
+{
+  "name": "${RULESET_NAME}",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
+  },
+  "bypass_actors": [
+    {
+      "actor_id": ${USER_ID},
+      "actor_type": "User",
+      "bypass_mode": "always"
+    }
+  ],
+  "rules": [
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false
+      }
+    },
+    { "type": "non_fast_forward" },
+    { "type": "deletion" }
+  ]
+}
+JSON
+)
+
+  if echo "$PAYLOAD" | gh api \
     --method POST \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "/repos/${OWNER}/${REPO}/rulesets" \
-    -f name="${RULESET_NAME}" \
-    -f target="branch" \
-    -f enforcement="active" \
-    -f 'conditions[ref_name][include][]=~DEFAULT_BRANCH' \
-    -f 'bypass_actors[][actor_id]='"$USER_ID" \
-    -f 'bypass_actors[][actor_type]=User' \
-    -f 'bypass_actors[][bypass_mode]=always' \
-    -f 'rules[][type]=pull_request' \
-    -F 'rules[0][parameters][required_approving_review_count]=0' \
-    -f 'rules[][type]=non_fast_forward' \
-    -f 'rules[][type]=deletion' \
-    > /dev/null && echo "  -> Ruleset applied." || echo "  -> FAILED (check repo permissions/plan tier)."
+    --input - > /dev/null 2>/tmp/gh_err.log; then
+    echo "  -> Ruleset applied."
+  else
+    echo "  -> FAILED: $(cat /tmp/gh_err.log)"
+  fi
 
-  sleep 1  # be polite to the API rate limit
+  sleep 1
 done
 
 echo "Done."
