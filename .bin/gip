@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Git Init with `main` projected and by-pass for `francojc`
 #
 #   gip my-new-repo --public/private --source=. --push                 # personal

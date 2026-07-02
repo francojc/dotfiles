@@ -49,8 +49,9 @@ alias hermes='ssh_connect hermes-agent hermes'
 # --- GIT ALIASES ---
 # Git workflow shortcuts
 alias gi='git init'
-# note: `gip` is ./bin/gip to initialize a new repo with `main` protected (by-pass for `francojc`.
-
+# note:
+# - `gip` is ./bin/gip to initialize a new repo with `main` protected (by-pass for `francojc`.
+# - `gmp` is ./bin/gmp to protect the main branch of existing repos (by-pass for `francojc`.
 
 alias ga='git add'
 alias gaa='git add --all'
