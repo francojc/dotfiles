@@ -48,6 +48,10 @@ alias hermes='ssh_connect hermes-agent hermes'
 
 # --- GIT ALIASES ---
 # Git workflow shortcuts
+alias gi='git init'
+# note: `gip` is ./bin/gip to initialize a new repo with `main` protected (by-pass for `francojc`.
+
+
 alias ga='git add'
 alias gaa='git add --all'
 alias gba='git branch -a'
@@ -58,19 +62,23 @@ alias gcb='git checkout -b'     # Create and switch to new branch
 alias gco='git checkout'
 
 alias gc='git commit -m'
-alias gd='git diff'             # Show working tree diff
-alias gdf='git diff --name-only'  # List changed files in diff
 gdt() { nvim -f -c "DiffviewOpen $*"; }  # Open Diffview for a revision or range
 alias gf='git fetch'            # Fetch from remotes
 alias gb='gh browse > /dev/null 2>&1'
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+
+alias gd='git diff'             # Show working tree diff
+alias gdf='git diff --name-only'  # List changed files in diff
 alias gmt='git mergetool'       # Open Diffview merge UI for conflicts
+
 alias gp='git push'
 alias gpl='git pull'
 alias gr='git remote -v'        # Show remotes
+
 alias grb='git rebase -i'       # Interactive rebase
 alias grh='git reset HEAD'      # Unstage files
 alias grhh='git reset --hard HEAD'  # Hard reset (use carefully!)
+
 alias gss='git status'
 alias gst='git stash'           # Quick stash
 alias gstp='git stash pop'

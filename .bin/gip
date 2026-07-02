@@ -1,13 +1,13 @@
-# Add this function to your ~/.zshrc or ~/.bashrc, then use:
-#   ghp-new.sh my-new-repo --public/private --source=. --push          # personal (francojc)
-#   ghp-new.sh wfu-agentic-ai/my-new-repo --public/private --source=. --push  # org repo
+# Git Init with `main` projected and by-pass for `francojc`
+#
+#   gip my-new-repo --public/private --source=. --push                 # personal
+#   gip wfu-agentic-ai/my-new-repo --public/private --source=. --push  # org repo
+#
 # instead of `gh repo create ...` — same arguments, same behavior,
 # but it locks main immediately after creation.
 #
 # Applies to repos under francojc (personal) OR any org where `gh repo create`
-# is given an "owner/repo" name, e.g. wfu-agentic-ai/my-new-repo.
-# For ai-praxis, the org-wide ruleset already covers you — plain `gh repo create`
-# is fine there, this wrapper is redundant but harmless.
+# is given an "owner/repo" name
 
 ghc-protected() {
   local repo_arg="$1"

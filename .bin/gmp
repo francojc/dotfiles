@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
+
+# Git protect main branch (for existing repos)
+#
 # Applies a branch-protection ruleset (main branch, PR required, francojc bypasses)
 # to every repo under the given owner (defaults to the personal account francojc;
-# pass an org name like wfu-agentic-ai as $1 to target that org instead).
+# pass an org name to target that org instead).
 #
 # Usage:
-#   ghp-existing.sh                  # defaults to francojc
-#   ghp-existing wfu-agentic-ai      # targets the org instead
+#   gmp                     # defaults to francojc
+#   gmp wfu-agentic-ai      # targets the org instead
 #
 # Requires: gh CLI authenticated with 'repo' scope on personal repos, or
 # 'admin:org' scope when targeting an organization (an admin-scoped classic
-# PAT or `gh auth login` session — NOT the Hermes Agent token).
+# PAT or `gh auth login` session)
 
 set -euo pipefail
 
