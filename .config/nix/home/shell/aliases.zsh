@@ -44,8 +44,7 @@ alias rover='ssh_connect mini-rover'
 alias proxmox='ssh_connect minis-proxmox root'
 alias services='ssh_connect core-services root'
 alias media='ssh_connect media-services root'
-alias pi-meta='ssh_connect pi-meta root'
-alias pi-agents='ssh_connect pi-agents root'
+alias hermes='ssh_connect hermes-agent hermes'
 
 # --- GIT ALIASES ---
 # Git workflow shortcuts
