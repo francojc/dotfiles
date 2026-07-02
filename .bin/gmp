@@ -1,44 +1,88 @@
 #!/usr/bin/env bash
 
-# Git protect main branch (for existing repos)
+# Git main/default branch protection manager for existing repos.
 #
-# Applies a branch-protection ruleset (main branch, PR required, francojc bypasses)
-# to every repo under the given owner (defaults to the personal account francojc;
-# pass an org name to target that org instead).
+# Adds/audits/repairs a repository ruleset that requires PRs on the default
+# branch while allowing francojc to bypass. Bypass is tied to the GitHub actor,
+# not to a specific token.
 #
 # Usage:
-#   gmp                     # defaults to francojc
-#   gmp wfu-agentic-ai      # targets the org instead
+#   gmp --audit                  # default: read-only audit for francojc repos
+#   gmp --apply                  # create missing rulesets only
+#   gmp --repair                 # create missing rulesets and repair drift
+#   gmp --audit wfu-agentic-ai   # target an org/user owner
+#   gmp --owner wfu-agentic-ai --audit
 #
-# Requires: gh CLI authenticated with 'repo' scope on personal repos, or
-# 'admin:org' scope when targeting an organization (an admin-scoped classic
-# PAT or `gh auth login` session)
+# Requires: gh CLI authenticated with sufficient repo admin permissions.
 
 set -euo pipefail
 
-OWNER="${1:-francojc}"
-BYPASS_USER="francojc"   # you, regardless of which owner's repos are being protected
+OWNER="francojc"
+BYPASS_USER="francojc"
 RULESET_NAME="protect-main"
+MODE="audit"
+GH_ERR="${TMPDIR:-/tmp}/gmp-gh-err.$$"
+trap 'rm -f "$GH_ERR"' EXIT
 
-# Always look up francojc's ID for the bypass actor — /users/ resolves correctly
-# whether OWNER is francojc (personal) or an org like wfu-agentic-ai, since we
-# want *you* to bypass either way, not the org itself.
-USER_ID=$(gh api "/users/${BYPASS_USER}" --jq '.id')
+usage() {
+  awk '
+    NR == 1 { next }
+    /^#/ { sub(/^# ?/, ""); print; next }
+    NF == 0 { print; next }
+    { exit }
+  ' "$0"
+}
 
-REPOS=$(gh repo list "$OWNER" --limit 1000 --json name,isFork --jq '.[] | select(.isFork == false) | .name')
+fail() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
 
-for REPO in $REPOS; do
-  echo "Processing ${OWNER}/${REPO}..."
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --audit)
+      MODE="audit"
+      ;;
+    --apply)
+      MODE="apply"
+      ;;
+    --repair)
+      MODE="repair"
+      ;;
+    -o|--owner)
+      shift
+      [[ $# -gt 0 ]] || fail "--owner requires value"
+      OWNER="$1"
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      fail "unknown option: $1"
+      ;;
+    *)
+      OWNER="$1"
+      ;;
+  esac
+  shift
+done
 
-  EXISTING=$(gh api "/repos/${OWNER}/${REPO}/rulesets" --jq \
-    ".[] | select(.name==\"${RULESET_NAME}\") | .id" 2>/dev/null || true)
+[[ $# -eq 0 ]] || fail "too many arguments: $*"
 
-  if [[ -n "$EXISTING" ]]; then
-    echo "  -> Ruleset already present (id ${EXISTING}), skipping."
-    continue
-  fi
+api() {
+  gh api \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "$@"
+}
 
-  PAYLOAD=$(cat <<JSON
+build_payload() {
+  cat <<JSON
 {
   "name": "${RULESET_NAME}",
   "target": "branch",
@@ -72,20 +116,144 @@ for REPO in $REPOS; do
   ]
 }
 JSON
-)
+}
 
-  if echo "$PAYLOAD" | gh api \
-    --method POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    "/repos/${OWNER}/${REPO}/rulesets" \
-    --input - > /dev/null 2>/tmp/gh_err.log; then
-    echo "  -> Ruleset applied."
-  else
-    echo "  -> FAILED: $(cat /tmp/gh_err.log)"
+get_ruleset_ids() {
+  local repo="$1"
+  api "/repos/${OWNER}/${repo}/rulesets" \
+    --jq ".[] | select(.name==\"${RULESET_NAME}\") | .id" 2>/dev/null || true
+}
+
+validate_ruleset() {
+  local repo="$1"
+  local id="$2"
+  local detail active branch include exclude bypass pr nff deletion reasons
+
+  detail=$(api "/repos/${OWNER}/${repo}/rulesets/${id}" --jq "
+    [
+      (.enforcement == \"active\"),
+      (.target == \"branch\"),
+      (.conditions.ref_name.include == [\"~DEFAULT_BRANCH\"]),
+      (.conditions.ref_name.exclude == []),
+      ([.bypass_actors[]? | select(.actor_type==\"User\" and .actor_id==${USER_ID} and .bypass_mode==\"always\")] | length == 1),
+      ([.rules[].type] | index(\"pull_request\") != null),
+      ([.rules[].type] | index(\"non_fast_forward\") != null),
+      ([.rules[].type] | index(\"deletion\") != null)
+    ] | @tsv" 2>"$GH_ERR" || true)
+
+  if [[ -z "$detail" ]]; then
+    echo "unreadable_ruleset: $(tr '\n' ' ' < "$GH_ERR")"
+    return 0
   fi
 
-  sleep 1
+  IFS=$'\t' read -r active branch include exclude bypass pr nff deletion <<< "$detail"
+  reasons=()
+  [[ "$active" == "true" ]] || reasons+=("enforcement_not_active")
+  [[ "$branch" == "true" ]] || reasons+=("target_not_branch")
+  [[ "$include" == "true" ]] || reasons+=("include_not_default_branch")
+  [[ "$exclude" == "true" ]] || reasons+=("exclude_not_empty")
+  [[ "$bypass" == "true" ]] || reasons+=("francojc_bypass_missing")
+  [[ "$pr" == "true" ]] || reasons+=("pull_request_rule_missing")
+  [[ "$nff" == "true" ]] || reasons+=("non_fast_forward_rule_missing")
+  [[ "$deletion" == "true" ]] || reasons+=("deletion_rule_missing")
+
+  if [[ ${#reasons[@]} -eq 0 ]]; then
+    echo "ok"
+  else
+    echo "${reasons[*]}"
+  fi
+}
+
+create_ruleset() {
+  local repo="$1"
+  build_payload | api --method POST "/repos/${OWNER}/${repo}/rulesets" --input - >/dev/null 2>"$GH_ERR"
+}
+
+update_ruleset() {
+  local repo="$1"
+  local id="$2"
+  build_payload | api --method PUT "/repos/${OWNER}/${repo}/rulesets/${id}" --input - >/dev/null 2>"$GH_ERR"
+}
+
+USER_ID=$(api "/users/${BYPASS_USER}" --jq '.id')
+[[ -n "$USER_ID" ]] || fail "could not resolve GitHub user id for ${BYPASS_USER}"
+
+REPOS=$(gh repo list "$OWNER" --limit 1000 --json name,isFork --jq '.[] | select(.isFork == false) | .name')
+
+if [[ -z "$REPOS" ]]; then
+  echo "No non-fork repos found for ${OWNER}."
+  exit 0
+fi
+
+echo "Mode: ${MODE}"
+echo "Owner: ${OWNER}"
+echo "Bypass: ${BYPASS_USER} (${USER_ID})"
+echo
+
+ok=0
+missing=0
+bad=0
+changed=0
+failed=0
+
+for REPO in $REPOS; do
+  ids=()
+  while IFS= read -r id; do
+    [[ -n "$id" ]] && ids+=("$id")
+  done < <(get_ruleset_ids "$REPO")
+
+  if [[ ${#ids[@]} -eq 0 ]]; then
+    missing=$((missing + 1))
+    if [[ "$MODE" == "audit" ]]; then
+      echo "MISSING  ${OWNER}/${REPO}"
+    else
+      if create_ruleset "$REPO"; then
+        changed=$((changed + 1))
+        echo "CREATED  ${OWNER}/${REPO}"
+      else
+        failed=$((failed + 1))
+        echo "FAILED   ${OWNER}/${REPO}: $(tr '\n' ' ' < "$GH_ERR")"
+      fi
+    fi
+    continue
+  fi
+
+  if [[ ${#ids[@]} -gt 1 ]]; then
+    bad=$((bad + 1))
+    echo "DUPLICATE ${OWNER}/${REPO}: ${ids[*]} (manual cleanup needed)"
+    continue
+  fi
+
+  id="${ids[0]}"
+  result=$(validate_ruleset "$REPO" "$id")
+
+  if [[ "$result" == "ok" ]]; then
+    ok=$((ok + 1))
+    echo "OK       ${OWNER}/${REPO}"
+    continue
+  fi
+
+  bad=$((bad + 1))
+  if [[ "$MODE" == "repair" ]]; then
+    if update_ruleset "$REPO" "$id"; then
+      changed=$((changed + 1))
+      echo "REPAIRED ${OWNER}/${REPO}: ${result}"
+    else
+      failed=$((failed + 1))
+      echo "FAILED   ${OWNER}/${REPO}: $(tr '\n' ' ' < "$GH_ERR")"
+    fi
+  else
+    echo "BAD      ${OWNER}/${REPO}: ${result}"
+  fi
 done
 
-echo "Done."
+echo
+echo "Summary: ok=${ok} missing=${missing} bad=${bad} changed=${changed} failed=${failed}"
+
+if [[ "$MODE" == "audit" && ( $missing -gt 0 || $bad -gt 0 ) ]]; then
+  exit 2
+fi
+
+if [[ $failed -gt 0 ]]; then
+  exit 1
+fi

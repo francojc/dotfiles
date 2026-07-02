@@ -69,6 +69,10 @@
         name = "manaflow-ai/cmux";
         trusted = true;
       } # cmux
+      {
+        name = "my-monkeys/tap";
+        trusted = true;
+      } # opensuperwhisper
     ];
 
     brews = [
@@ -118,6 +122,7 @@
       "keycastr" # keystroke visualizer
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
+      "opensuperwhisper" # on-device dictation
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
