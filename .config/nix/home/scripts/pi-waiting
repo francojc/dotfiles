@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+set -u
+
+AGENT_DIR="${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}"
+EVENTS_FILE="$AGENT_DIR/pi-waiting-events.jsonl"
+LAST_FILE="$AGENT_DIR/pi-last-notification.json"
+
+message() {
+  local text="$1"
+  if command -v tmux >/dev/null 2>&1; then
+    tmux display-message "$text" 2>/dev/null || printf '%s\n' "$text" >&2
+  else
+    printf '%s\n' "$text" >&2
+  fi
+}
+
+need_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    message "Missing command: $1"
+    exit 127
+  fi
+}
+
+fold_records() {
+  if [[ ! -s "$EVENTS_FILE" ]]; then
+    printf '[]\n'
+    return
+  fi
+
+  jq -Rs '
+    split("\n")
+    | map(select(length > 0) | try fromjson catch empty)
+    | reduce .[] as $event ({};
+        if ($event.action == "waiting" and ($event.id // "") != "") then
+          .[$event.id] = $event
+        elif ($event.action == "clear" and ($event.id // "") != "") then
+          del(.[$event.id])
+        else
+          .
+        end
+      )
+    | [.[]]
+    | sort_by(.updatedAt // 0)
+    | reverse
+  ' <"$EVENTS_FILE"
+}
+
+valid_records() {
+  local records
+  records="$(fold_records)" || {
+    printf '[]\n'
+    return
+  }
+
+  jq -c '.[]' <<<"$records" | while IFS= read -r record; do
+    local pane live live_pane session window_index pane_index
+    pane="$(jq -r '.paneId // .id // empty' <<<"$record")"
+    [[ -n "$pane" ]] || continue
+
+    if live="$(tmux display-message -p -t "$pane" '#{pane_id}	#{session_name}	#{window_index}	#{pane_index}' 2>/dev/null)"; then
+      IFS=$'\t' read -r live_pane session window_index pane_index <<<"$live"
+      [[ -n "$live_pane" && -n "$session" && -n "$window_index" && -n "$pane_index" ]] || continue
+      jq -c \
+        --arg paneId "$live_pane" \
+        --arg session "$session" \
+        --arg windowIndex "$window_index" \
+        --arg paneIndex "$pane_index" \
+        '.paneId = $paneId
+         | .id = $paneId
+         | .session = $session
+         | .windowIndex = $windowIndex
+         | .paneIndex = $paneIndex
+         | .target = ($session + ":" + $windowIndex + "." + $paneIndex)' \
+        <<<"$record"
+    fi
+  done | jq -s 'sort_by(.updatedAt // 0) | reverse'
+}
+
+record_by_id() {
+  local id="$1"
+  valid_records | jq -c --arg id "$id" 'map(select((.id // "") == $id or (.paneId // "") == $id))[0] // empty'
+}
+
+latest_record() {
+  local records last_id record
+  records="$(valid_records)"
+
+  if [[ -s "$LAST_FILE" ]]; then
+    last_id="$(jq -r '.id // .paneId // empty' "$LAST_FILE" 2>/dev/null || true)"
+    if [[ -n "$last_id" ]]; then
+      record="$(jq -c --arg id "$last_id" 'map(select((.id // "") == $id or (.paneId // "") == $id))[0] // empty' <<<"$records")"
+      if [[ -n "$record" && "$record" != "null" ]]; then
+        printf '%s\n' "$record"
+        return
+      fi
+    fi
+  fi
+
+  jq -c '.[0] // empty' <<<"$records"
+}
+
+jump_record() {
+  local record="$1"
+  local pane live session window_index pane_index window_target target
+
+  pane="$(jq -r '.paneId // .id // empty' <<<"$record")"
+  if [[ -z "$pane" ]]; then
+    message "No pane id in Pi waiting record"
+    return 1
+  fi
+
+  if ! live="$(tmux display-message -p -t "$pane" '#{session_name}	#{window_index}	#{pane_index}' 2>/dev/null)"; then
+    message "Pi pane no longer exists: $pane"
+    return 1
+  fi
+
+  IFS=$'\t' read -r session window_index pane_index <<<"$live"
+  if [[ -z "$session" || -z "$window_index" || -z "$pane_index" ]]; then
+    message "Could not resolve Pi pane target: $pane"
+    return 1
+  fi
+
+  window_target="$session:$window_index"
+  target="$session:$window_index.$pane_index"
+
+  tmux switch-client -t "$session" 2>/dev/null || true
+  tmux select-window -t "$window_target" 2>/dev/null || true
+  tmux select-pane -t "$pane" 2>/dev/null || tmux select-pane -t "$target" 2>/dev/null
+}
+
+choose_record() {
+  local records count selection index
+  records="$(valid_records)"
+  count="$(jq 'length' <<<"$records")"
+
+  if [[ "$count" -eq 0 ]]; then
+    message "No awaiting Pi agents"
+    return 1
+  fi
+
+  need_cmd fzf
+
+  selection="$(jq -r '
+    to_entries[]
+    | [
+        (.key | tostring),
+        ((.value.updatedAt // 0) / 1000 | floor | strftime("%Y-%m-%d %H:%M:%S")),
+        (.value.project // "unknown"),
+        (.value.target // .value.paneId // "unknown"),
+        (.value.cwd // "")
+      ]
+    | @tsv
+  ' <<<"$records" | fzf --delimiter=$'\t' --with-nth=2.. --prompt='Pi waiting> ' --height=100% --border --reverse)" || return 1
+
+  [[ -n "$selection" ]] || return 1
+  index="${selection%%$'\t'*}"
+  jq -c ".[${index}]" <<<"$records"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: pi-waiting [--last | --list | --jump-id PANE_ID]
+
+Without flags, opens FZF chooser for awaiting Pi agents and jumps to selection.
+EOF
+}
+
+need_cmd jq
+need_cmd tmux
+
+case "${1:-}" in
+  --last)
+    record="$(latest_record)"
+    if [[ -z "$record" || "$record" == "null" ]]; then
+      message "No awaiting Pi agents"
+      exit 1
+    fi
+    jump_record "$record"
+    ;;
+  --list)
+    valid_records
+    ;;
+  --jump-id)
+    if [[ -z "${2:-}" ]]; then
+      message "Missing pane id"
+      exit 2
+    fi
+    record="$(record_by_id "$2")"
+    if [[ -z "$record" || "$record" == "null" ]]; then
+      message "No awaiting Pi agent for $2"
+      exit 1
+    fi
+    jump_record "$record"
+    ;;
+  -h|--help)
+    usage
+    ;;
+  "")
+    record="$(choose_record)" || exit $?
+    jump_record "$record"
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

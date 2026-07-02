@@ -6,7 +6,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-06-29
+- Last updated: 2026-07-02
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -25,6 +25,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/plannotator` | Toggle Plannotator plan mode. |
 | `/indicator` | Switch custom working indicator. |
 | `/todos` | Show current branch todo list. |
+| `/waiting` | List Pi agents awaiting attention and jump via TMUX. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
@@ -46,6 +47,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
+| `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
 | `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider models from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
@@ -73,6 +75,8 @@ Custom keybindings in `~/.pi/agent/keybindings.json`:
 
 Terminal notes:
 
+- TMUX `prefix N` jumps to the most recent Pi agent awaiting attention.
+- TMUX `prefix C-n` opens the awaiting Pi agent chooser in a popup.
 - Kitty and Ghostty configs map `Cmd+Shift+↑` / `Cmd+Shift+↓` to literal PageUp/PageDown escape sequences for Pi page scroll consistency.
 - Pi also binds `super+shift+up` / `super+shift+down` directly for page scroll when terminal protocols pass those keys through.
 - Ghostty has `macos-option-as-alt = right`, so right Option behaves as Alt. Some left Option chords may still work depending on macOS/layout handling.
@@ -222,6 +226,39 @@ Commands:
 Source checked:
 
 - `~/.pi/agent/extensions/working-indicator.ts`
+
+### Pi notify switch
+
+What it does:
+
+- Sends native terminal notifications when Pi finishes a turn and is ready for input.
+- Records the current TMUX pane as awaiting attention.
+- Clears the awaiting state when that Pi agent starts another turn or shuts down.
+- Validates TMUX pane ids before showing or jumping, so stale crash leftovers are ignored.
+
+Commands and shortcuts:
+
+- `/waiting` lists awaiting Pi agents from inside Pi and jumps via TMUX.
+- TMUX `prefix N` jumps to the most recent awaiting Pi agent.
+- TMUX `prefix C-n` opens an FZF chooser in a TMUX popup.
+- CLI helper: `pi-waiting --list`, `pi-waiting --last`, `pi-waiting --jump-id <pane-id>`.
+
+State files:
+
+- Event log: `~/.pi/agent/pi-waiting-events.jsonl`.
+- Last notification: `~/.pi/agent/pi-last-notification.json`.
+
+Gotchas:
+
+- Switching requires running Pi inside TMUX.
+- Native notification uses terminal OSC protocols: Kitty OSC 99, otherwise OSC 777 for Ghostty, iTerm2, WezTerm, and similar terminals.
+- The event log is append-only. Stale entries are filtered at switch time by live TMUX pane id.
+
+Sources checked:
+
+- `~/.pi/agent/extensions/pi-notify-switch.ts`
+- `~/.local/bin/pi-waiting`
+- `/Users/francojc/.dotfiles/.config/nix/home/tmux.nix`
 
 ### Vim editor
 

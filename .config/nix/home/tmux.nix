@@ -107,18 +107,9 @@
       # Floating calendar popup
       bind-key c display-popup -w 60% -h 40% -T "Calendar" -k "gcal -K .."
 
-      # Jump to last Claude notification pane
-      bind-key N run-shell '\
-        if [ -f ~/.claude/last-notification ]; then \
-          TARGET=$(cat ~/.claude/last-notification); \
-          tmux switch-client -t "$TARGET" 2>/dev/null; \
-          tmux select-window -t "$TARGET" 2>/dev/null; \
-          tmux select-pane -t "$TARGET" 2>/dev/null || \
-          tmux display-message "Could not find: $TARGET"; \
-        else \
-          tmux display-message "No recent Claude notification"; \
-        fi \
-      '
+      # Jump to Pi agents awaiting attention
+      bind-key N run-shell 'pi-waiting --last'
+      bind-key C-n display-popup -w 90% -h 70% -T "Awaiting Pi agents" -E 'pi-waiting'
 
       # kill pane
       bind x kill-pane
@@ -194,6 +185,12 @@
   # Cached weather script for the status bar.
   xdg.configFile."tmux/tmux-weather.sh" = {
     source = ./tmux-weather.sh;
+    executable = true;
+  };
+
+  # Pi awaiting-agent switcher.
+  home.file.".local/bin/pi-waiting" = {
+    source = ./scripts/pi-waiting;
     executable = true;
   };
 
