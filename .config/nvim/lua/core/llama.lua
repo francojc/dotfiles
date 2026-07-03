@@ -1,5 +1,6 @@
 ---| Llama.vim Configuration -----------------------------
--- AI-powered code completion using local llama.cpp server
+-- AI-powered code completion
+-- using local llama.cpp server
 
 local llama_api_key = vim.env.LLAMA_API_KEY or ""
 vim.g.llama_config = {

@@ -79,7 +79,6 @@
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
       "herald" # herald
-      "herdr" # agent-aware terminal multiplexer
       "hf" # huggingface cli
       "hunk" # git diff tool
       "koan" # Navidrome TUI player

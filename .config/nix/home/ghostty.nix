@@ -111,14 +111,14 @@
       # Leader sequence — ctrl+a prefix, true tmux-prefix parity
       # NOTE: every Ctrl-A is swallowed by Ghostty (no timeout). Double-tap
       # (ctrl+a>ctrl+a) sends a literal C-a to the app, like tmux send-prefix.
-      keybind = ctrl+a>ctrl+a=text:\x01
-      keybind = ctrl+a>r=reload_config
-      keybind = ctrl+a>x=reset
-      keybind = ctrl+a>shift+quote=prompt_surface_title
-      keybind = ctrl+a>s=write_scrollback_file:open
-      keybind = ctrl+a>j=jump_to_prompt:1
-      keybind = ctrl+a>k=jump_to_prompt:-1
-      keybind = ctrl+a>u=copy_url_to_clipboard
+      # keybind = ctrl+a>ctrl+a=text:\x01
+      # keybind = ctrl+a>r=reload_config
+      # keybind = ctrl+a>x=reset
+      # keybind = ctrl+a>shift+quote=prompt_surface_title
+      # keybind = ctrl+a>s=write_scrollback_file:open
+      # keybind = ctrl+a>j=jump_to_prompt:1
+      # keybind = ctrl+a>k=jump_to_prompt:-1
+      # keybind = ctrl+a>u=copy_url_to_clipboard
 
       # -- Oh-My-Pi
       # keybind = alt+backspace=text:\x1b\x7f
