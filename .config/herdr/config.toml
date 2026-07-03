@@ -1,0 +1,134 @@
+# Herdr config tuned for use inside an existing tmux session.
+#
+# Intended stack:
+#   Ghostty → tmux(prefix Ctrl-a) → herdr(prefix Ctrl-b) → agents/shells
+#
+# Design goals:
+# - Avoid conflict with tmux prefix Ctrl-a.
+# - Keep Herdr's default tmux-like prefix on Ctrl-b.
+# - Avoid direct/global key chords that could be intercepted by Ghostty/tmux/shell/editors.
+# - Disable Herdr mouse capture so tmux/Ghostty can handle mouse/clicks normally.
+# - Keep notifications inside Herdr at first, rather than relying on escape passthrough
+#   through tmux to Ghostty.
+
+onboarding = false
+
+[update]
+# Stay on stable unless intentionally testing preview builds.
+channel = "stable"
+version_check = true
+manifest_check = true
+
+[remote]
+# Let Herdr add conservative SSH keepalive fallback for `herdr --remote`, while
+# still respecting ~/.ssh/config first.
+manage_ssh_config = true
+
+[keys]
+# tmux uses Ctrl-a; Herdr can safely keep Ctrl-b.
+prefix = "ctrl+b"
+
+# Keep everything prefix-first. This avoids direct Ctrl/Alt chords being grabbed
+# before they reach shells, editors, tmux, or terminal apps.
+detach = "prefix+q"
+workspace_picker = "prefix+w"
+goto = "prefix+g"
+
+# Workspaces / worktrees
+new_workspace = "prefix+shift+n"
+new_worktree = "prefix+shift+g"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+
+# Tabs
+new_tab = "prefix+c"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
+rename_tab = "prefix+shift+t"
+close_tab = "prefix+shift+x"
+
+# Panes
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+swap_pane_left = "prefix+shift+h"
+swap_pane_down = "prefix+shift+j"
+swap_pane_up = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+split_vertical = "prefix+v"
+split_horizontal = "prefix+minus"
+close_pane = "prefix+x"
+zoom = "prefix+z"
+resize_mode = "prefix+r"
+copy_mode = "prefix+["
+toggle_sidebar = "prefix+b"
+
+# Leave this unset so Herdr does not reserve another pane-jump key.
+last_pane = ""
+
+# `remote_image_paste` is useful in `herdr --remote`, but Ctrl-v can collide
+# with paste expectations inside nested terminal stacks. Disable initially.
+# Re-enable later if Herdr remote image paste becomes important.
+remote_image_paste = ""
+
+# Navigate-mode keys. These are only active when Herdr's workspace/pane picker
+# mode is open, so plain hjkl here is relatively safe.
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+
+[ui]
+# Critical for nested tmux use: do not capture mouse clicks/drags/wheel events
+# for Herdr. This lets Ghostty/tmux handle normal click behavior and avoids
+# nested mouse-reporting weirdness.
+mouse_capture = false
+
+# Conservative UI defaults. Adjust to taste after the first trial.
+sidebar_width = 32
+sidebar_min_width = 18
+sidebar_max_width = 36
+mobile_width_threshold = 64
+redraw_on_focus_gained = true
+mouse_scroll_lines = 3
+confirm_close = true
+prompt_new_tab_name = true
+pane_borders = true
+pane_gaps = true
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "priority"
+accent = "cyan"
+
+# No right-click passthrough modifier needed when mouse_capture=false.
+right_click_passthrough_modifier = ""
+
+[ui.toast]
+# Start with Herdr-internal notifications. This avoids relying on terminal
+# notification escape sequences passing through tmux to Ghostty.
+#
+# Later, outside tmux or if passthrough works, try:
+#   delivery = "terminal"
+# to ask Ghostty for desktop notifications.
+delivery = "herdr"
+delay_seconds = 1
+
+[ui.toast.herdr]
+position = "bottom-right"
+
+[ui.toast.clipboard]
+enabled = true
+position = "bottom-center"
+
+[ui.sound]
+# Disable sound in nested/remote contexts by default. Turn on later if useful.
+enabled = false
+
+[experimental]
+# macOS-only. Leave off unless input-source problems appear in prefix mode.
+switch_ascii_input_source_in_prefix = false
