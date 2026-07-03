@@ -1,0 +1,22 @@
+{
+  "name": "pi-copilot-usage-local",
+  "version": "0.1.0-local.1",
+  "description": "Pi extension to track GitHub Copilot usage via GitHub CLI and Copilot agents SDK",
+  "dependencies": {
+    "@github/copilot-sdk": "^0.2.1"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "devDependencies": {
+    "jiti": "^2.7.0",
+    "typescript": "^6.0.3"
+  }
+}

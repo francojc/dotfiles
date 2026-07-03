@@ -7,6 +7,7 @@ Good news – the current guide is already accurate and in sync with the install
 - ✅ Last updated timestamp is current (2026-06-29)
 
 No changes needed. The guide is up to date with the current Pi setup.
+<<<<<<< Updated upstream
 **No changes needed.** Your PI-GUIDE.md is already accurate:
 
 ✅ **Packages match:**
@@ -21,4 +22,9 @@ All 11 extensions in `~/.pi/agent/extensions/` are documented.
 ✅ **Last updated:** 2026-06-29 (recent enough)
 
 Nothing to auto-update at this moment. The guide is current with your installed packages and local extensions. 🎯
+||||||| Stash base
+=======
+No API key for provider: github-copilot
+>>>>>>> Stashed changes
+No API key for provider: github-copilot
 No API key for provider: github-copilot

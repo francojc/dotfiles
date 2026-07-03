@@ -6,7 +6,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-02
+- Last updated: 2026-07-03
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -26,6 +26,10 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/indicator` | Switch custom working indicator. |
 | `/todos` | Show current branch todo list. |
 | `/waiting` | List Pi agents awaiting attention and jump via TMUX. |
+| `/copilot` | Show GitHub Copilot usage dashboard. |
+| `/copilot-quota` | Show Copilot quota and model billing view. |
+| `/copilot-models` | Show Copilot model billing metadata. |
+| `/copilot-sessions` | Browse Copilot SDK sessions. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
@@ -46,6 +50,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | Extension | What it does | User-facing controls |
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
+| `copilot-usage/` | Shows GitHub Copilot quota, token-based billing state, model billing metadata, and Copilot SDK sessions. | `/copilot`, `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
@@ -210,6 +215,44 @@ Best practices:
 Sources checked:
 
 - `~/.pi/agent/npm/node_modules/@ogulcancelik/pi-ghostty-theme-sync/README.md`
+
+### Copilot usage
+
+What it does:
+
+- Shows GitHub Copilot plan quota from `gh api /copilot_internal/user`.
+- Adds footer status like `Copilot: 830.1/1500 premium units left`.
+- Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
+- Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
+- Shows current Copilot model billing metadata. GitHub currently returns `token_prices` for models rather than old `billing.multiplier` values, so the model view labels these as `token-priced` when no multiplier is present.
+
+Commands and tool:
+
+- `/copilot` shows quota summary, Copilot CLI session counts, top repos/directories, and recent sessions.
+- `/copilot-quota` shows quota plus model billing metadata.
+- `/copilot-models` shows model billing metadata.
+- `/copilot-sessions` browses Copilot SDK sessions.
+- Agent tool: `copilot_usage`, with optional period `today`, `week`, `month`, or `all`.
+
+Requirements:
+
+- GitHub CLI must be installed and authenticated with `gh auth login`.
+- GitHub Copilot access must be active for the authenticated GitHub account.
+- Local dependency `@github/copilot-sdk` is installed under `~/.pi/agent/extensions/copilot-usage/node_modules`.
+
+Gotchas:
+
+- Uses GitHub's internal `/copilot_internal/user` endpoint. It works now but may change without notice.
+- GitHub Copilot billing has shifted toward token-based billing. Old premium-request multipliers may not appear in SDK model data.
+- Footer polling runs every 60 seconds after a short startup delay.
+- This is a local patched copy of `https://github.com/azs06/pi-copilot-usage`, not an npm package install.
+- Run `/reload` after edits or dependency updates.
+
+Sources checked:
+
+- `~/.pi/agent/extensions/copilot-usage/README.md`
+- `~/.pi/agent/extensions/copilot-usage/src/index.ts`
+- `~/.pi/agent/extensions/copilot-usage/package.json`
 
 ### Working indicator
 
