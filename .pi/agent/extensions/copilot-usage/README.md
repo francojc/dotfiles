@@ -1,32 +1,24 @@
 # pi-copilot-usage
 
-A **pi** extension that surfaces your GitHub Copilot Pro plan usage — quota, sessions, and model billing — directly inside pi, with a live footer indicator.
+A **pi** extension that surfaces GitHub Copilot quota, model billing metadata, and Copilot SDK session context directly inside pi.
 
 ## Features
 
 | What | How |
 |------|-----|
-| `/copilot` | Full dashboard: quota summary + session counts + top repos + recent sessions |
-| `/copilot-quota` | Focused quota panel: premium-interaction budget, chat, completions + model billing table |
-| `/copilot-sessions` | Browse all sessions newest-first; pick one to inspect full metadata |
-| `/copilot-models` | Model list with billing multipliers (free vs. premium-interaction cost) |
-| `copilot_usage` tool | LLM-callable tool returning structured JSON; supports `period` filter |
-| Footer status | Live `🟢/🟡/🔴 Copilot: N/300 premium left` indicator, refreshed every 60 s |
+| `/copilot` | Primary visual dashboard: quota, included buckets, model billing, compact sessions, recent sessions |
+| `/copilot-quota` | Secondary focused quota + model billing view, kept for compatibility |
+| `/copilot-models` | Secondary focused model billing view, kept for compatibility |
+| `/copilot-sessions` | Browse sessions newest-first and inspect full metadata |
+| `copilot_usage` tool | LLM-callable structured JSON; supports `period` filter |
+| Footer status | Live threshold meter like ` Copilot [██████░░░░] 60%`, refreshed every 60 s |
 
 ## Prerequisites
 
 - [pi coding agent](https://www.npmjs.com/package/@mariozechner/pi-coding-agent) installed globally
-- GitHub Copilot Pro subscription
-- GitHub CLI authenticated (`gh auth login`)
+- GitHub Copilot access for the authenticated GitHub account
+- GitHub CLI authenticated with `gh auth login`
 - Node.js ≥ 18
-
-## Installation
-
-```bash
-pi install https://github.com/azs06/pi-copilot-usage
-```
-
-Then inside a running pi session, reload with `/reload`. The extension is auto-discovered on all future sessions.
 
 ## How it works
 
@@ -34,85 +26,80 @@ Two data sources are used in parallel:
 
 | Source | What it provides |
 |--------|-----------------|
-| `gh api /copilot_internal/user` | Quota snapshots (premium interactions, chat, completions), plan name, reset date |
-| `@github/copilot-sdk` `CopilotClient` | Sessions list, auth status (login), CLI status (version), model list with billing multipliers |
+| `gh api /copilot_internal/user` | Quota snapshots, plan name, reset date, token-based billing flag |
+| `@github/copilot-sdk` `CopilotClient` | Sessions, auth status, CLI status, model billing metadata |
 
-The `CopilotClient` lazily starts the bundled Copilot CLI binary via stdio JSON-RPC on first use, and is stopped cleanly on `session_shutdown`.
+The SDK work runs in a short-lived child process so the main Pi process does not keep Copilot SDK sockets around after commands finish.
 
-### Caching & polling
+## Caching and polling
 
-- **Commands** share a 30-second TTL cache (`fetchAllCached`). Invoking `/copilot` then `/copilot-quota` within 30 s costs one API round-trip total.
-- **Footer polling** runs a lightweight `gh api` call every 60 seconds — independently of the command cache — to keep the premium-interactions counter current without fetching the full session list.
-- The first poll is intentionally **delayed by 3 seconds** after session start so it doesn't add latency to pi's startup path.
+- Commands share a 30-second TTL cache (`fetchAllCached`).
+- Footer polling uses a lightweight quota-only `gh api` request every 60 seconds.
+- The first footer poll is delayed by 3 seconds after session start so it does not slow Pi startup.
 
-## Commands
+## Main command
 
-### `/copilot` — full dashboard
+### `/copilot` – visual dashboard
 
-Shows everything in one panel:
+Shows one dashboard with compact sections:
 
-- GitHub login, plan name, quota reset date
-- Premium-interactions progress bar (`used / total`)
-- Chat and completions quota status
-- Session counts: total / today / this week / this month / active now / avg duration
-- Top repositories and directories by session count
-- 10 most recent sessions with timestamps, duration, repo, and AI summary
+- Quota hero with threshold glyph, remaining bar, percent remaining, plan, billing mode, reset date, usage, and overage status.
+- Included buckets such as chat and completions.
+- Model billing table, including free/included models and metered models sorted by a relative account-hit index, with compact token price details when available.
+- Session counts: total, today, this week, this month, active now, average duration.
+- Recent sessions, limited and compact.
 
-### `/copilot-quota` — quota panel
+Repository and directory leaderboards are intentionally not shown in the dashboard. Model availability and billing are more useful here.
 
-Focused view of your Pro plan budget:
+## Secondary commands
 
-- Premium-interactions entitlement, used, remaining, overage status — with a visual progress bar
-- Chat and completions status (unlimited or counted)
-- Any other quota buckets from the API
-- Full model billing table (see `/copilot-models` below)
+These are preserved for compatibility and focused browsing:
 
-### `/copilot-sessions` — session browser
+| Command | Purpose |
+|---------|---------|
+| `/copilot-quota` | Focused quota and model billing view |
+| `/copilot-models` | Focused model billing table |
+| `/copilot-sessions` | Interactive session browser with detail drill-down |
 
-Lists all sessions newest-first. Select one to see its full metadata:
+## `copilot_usage` tool
 
-- Session ID, start / last-active timestamps, duration
-- Remote flag, git root, repository, branch, working directory
-- AI-generated session summary (word-wrapped)
+The AI assistant can call this directly when it needs structured usage data. Useful prompts:
 
-### `/copilot-models` — model billing
-
-Two-section table:
-
-- **Free** — models that cost 0 premium interactions per request
-- **Premium** — models sorted by multiplier (e.g. `1×`, `1.5×`, `2×`) counted against your monthly quota
-
-### `copilot_usage` tool — LLM-accessible
-
-The AI assistant can call this directly. Useful prompts:
-
+- *"How much Copilot quota do I have left?"*
+- *"Which Copilot models are metered?"*
 - *"How many Copilot sessions did I have this week?"*
-- *"Which repository do I use Copilot in the most?"*
-- *"How many premium interactions do I have left this month?"*
 - *"Show me my recent Copilot sessions."*
 
-Accepts an optional `period` parameter: `today | week | month | all` (default `all`). Returns a structured JSON object containing quota snapshots, session counts, top repos/directories, model list, and recent session summaries.
+Accepts optional `period`: `today | week | month | all` (default `all`). Returns structured JSON with quota snapshots, model billing metadata, session counts, repository/directory counts for machine use, and recent session summaries.
 
 ## Footer status
 
 The footer indicator auto-updates every 60 seconds:
 
-| Icon | Meaning |
-|------|---------|
-| 🔄 | Loading / fetching |
-| 🟢 | > 25% premium interactions remaining |
-| 🟡 | 10–25% remaining |
-| 🔴 | < 10% remaining |
-| ⚫ | No sessions found |
+| Glyph | Meaning |
+|-------|---------|
+| `` | Loading or fetching |
+| `` | Healthy, > 25% quota remaining |
+| `` | Warning, 10–25% quota remaining |
+| `` | Critical, <= 10% remaining, or error |
+
+The bar always means **remaining quota**: full is good, empty is bad. Tiny battery brain, no math goblin required.
 
 ## File layout
 
-```
+```text
 pi-copilot-usage/
-├── package.json        ← @github/copilot-sdk dependency + pi extension entry point
+├── package.json
 ├── package-lock.json
-├── node_modules/       ← includes bundled Copilot CLI binary
+├── node_modules/
 ├── src/
-│   └── index.ts        ← extension source (~700 LOC)
+│   └── index.ts
 └── README.md
 ```
+
+## Gotchas
+
+- Uses GitHub's internal `/copilot_internal/user` endpoint. It works now but may change without notice.
+- GitHub Copilot billing metadata varies. Some models expose multipliers, others expose token prices. The dashboard compares metered models relative to the cheapest metered model, compacts large raw token-price integers into `K`/`M`/`B`/`T` labels, and treats all-zero token prices as included.
+- Nerd Font glyphs are intentional for the footer/dashboard aesthetic and require a compatible terminal font.
+- Run `/reload` after editing the extension.

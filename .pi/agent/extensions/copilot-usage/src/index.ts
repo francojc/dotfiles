@@ -125,6 +125,13 @@ interface FetchResult {
 const MS_PER_MIN = 60_000;
 const ACTIVE_THRESHOLD_MS = 15 * MS_PER_MIN;
 
+const GLYPH_LOADING = "";
+const GLYPH_CONNECTED = "";
+const GLYPH_WARNING = "";
+const GLYPH_ERROR = "";
+
+type QuotaThreshold = "healthy" | "warning" | "critical";
+
 function startOfDay(d: Date): Date {
 	return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
@@ -172,37 +179,50 @@ function billingDisplayForModel(m: ModelInfo): ModelBillingDisplay {
 	const billing = m.billing as RuntimeBilling | undefined;
 	const multiplier = billing?.multiplier;
 	const prices = billing?.token_prices;
+	const hasTokenCost = !!prices && [prices.input_price, prices.output_price, prices.cache_price].some((price) => typeof price === "number" && price > 0);
 	return {
 		id: m.id,
 		name: (m as { name?: string }).name ?? m.id,
 		multiplier,
-		free: multiplier === 0 || (!multiplier && !prices),
-		tokenPricing: prices ? {
-			batchSize: prices.batch_size,
-			input: prices.input_price,
-			output: prices.output_price,
-			cache: prices.cache_price,
+		free: multiplier === 0 || (!multiplier && !hasTokenCost),
+		tokenPricing: hasTokenCost ? {
+			batchSize: prices?.batch_size,
+			input: prices?.input_price,
+			output: prices?.output_price,
+			cache: prices?.cache_price,
 		} : undefined,
 	};
 }
 
 function modelCostLabel(m: ModelBillingDisplay): string {
 	if (m.multiplier !== undefined) return m.multiplier === 1 ? "1×" : `${m.multiplier}×`;
-	if (m.tokenPricing) return "token-priced";
+	if (m.tokenPricing) return "tokens";
 	return "included";
 }
 
-/**
- * Progress bar showing `percent` filled.
- * Uses a plain space for empty cells — block chars like ░ render wider
- * than █ in most terminal fonts, making the bar look inaccurate.
- * Width 30 gives ~3.3% resolution per cell.
- */
-function progressBar(percent: number, width = 30): string {
-	const clamped = Math.max(0, Math.min(100, percent));
-	const filled = Math.round((clamped / 100) * width);
+function clampPercent(percent: number): number {
+	return Math.max(0, Math.min(100, Number.isFinite(percent) ? percent : 0));
+}
+
+function quotaThreshold(percentRemaining: number): QuotaThreshold {
+	const pct = clampPercent(percentRemaining);
+	if (pct > 25) return "healthy";
+	if (pct > 10) return "warning";
+	return "critical";
+}
+
+function quotaThresholdGlyph(percentRemaining: number): string {
+	const threshold = quotaThreshold(percentRemaining);
+	if (threshold === "healthy") return GLYPH_CONNECTED;
+	if (threshold === "warning") return GLYPH_WARNING;
+	return GLYPH_ERROR;
+}
+
+function remainingBar(percentRemaining: number, width = 10): string {
+	const pct = clampPercent(percentRemaining);
+	const filled = Math.round((pct / 100) * width);
 	const empty = width - filled;
-	return `|${"█".repeat(filled)}${" ".repeat(empty)}| ${clamped.toFixed(1)}%`;
+	return `[${"█".repeat(filled)}${"░".repeat(empty)}]`;
 }
 
 // ---------------------------------------------------------------------------
@@ -300,6 +320,20 @@ function quotaValue(q: QuotaSnapshot): number {
 	return typeof q.quota_remaining === "number" ? q.quota_remaining : q.remaining;
 }
 
+function formatNumber(value: number, digits = 1): string {
+	return Number.isInteger(value) ? String(value) : value.toFixed(digits);
+}
+
+function quotaPercentText(percent: number, digits = 0): string {
+	return `${clampPercent(percent).toFixed(digits)}%`;
+}
+
+function formatQuotaStatus(q?: QuotaSnapshot, fallback = "Copilot"): string {
+	if (!q) return `${GLYPH_CONNECTED} ${fallback}`;
+	const pct = clampPercent(q.percent_remaining);
+	return `${quotaThresholdGlyph(pct)} Copilot ${remainingBar(pct)} ${quotaPercentText(pct)}`;
+}
+
 function quotaLines(stats: UsageStats): string[] {
 	const lines: string[] = [];
 	const snap = stats.quotaSnapshots ?? {};
@@ -327,7 +361,7 @@ function quotaLines(stats: UsageStats): string[] {
 		lines.push(`  Remaining    ${remainingText}  (${pi.percent_remaining.toFixed(1)}%)`);
 		lines.push(`  Billing      ${stats.tokenBasedBilling ? "token-based" : "request-based"}`);
 		lines.push(`  Overage      ${pi.overage_permitted ? `allowed (${pi.overage_count} used, ${pi.overage_entitlement ?? 0} available)` : "not permitted"}`);
-		lines.push(`               ${progressBar(100 - pi.percent_remaining)}  ${remainingText} left`);
+		lines.push(`               ${remainingBar(pi.percent_remaining, 30)}  ${remainingText} left`);
 		lines.push("");
 	}
 
@@ -359,92 +393,237 @@ function quotaLines(stats: UsageStats): string[] {
 function modelLines(stats: UsageStats): string[] {
 	const lines: string[] = [];
 	const models = stats.models ?? [];
-	const free = models.filter((m) => m.free);
-	const premium = models.filter((m) => !m.free).sort((a, b) => (a.multiplier ?? Number.MAX_SAFE_INTEGER) - (b.multiplier ?? Number.MAX_SAFE_INTEGER));
+	const free = models.filter((m) => m.free).sort((a, b) => a.id.localeCompare(b.id));
+	const premium = models.filter((m) => !m.free).sort((a, b) => modelSortKey(a) - modelSortKey(b) || a.id.localeCompare(b.id));
 
-	lines.push(bar("Model billing  (multiplier or token-priced)"));
+	lines.push(bar("Model billing  (relative account hit)"));
+	lines.push(`  ${pad("Included", 12)} ${free.length} models`);
+	lines.push(`  ${pad("Metered", 12)} ${premium.length} models`);
 	lines.push("");
-	lines.push(bar("Free  (0 multiplier)"));
+	lines.push(bar("Included / 0×"));
 	if (free.length === 0) {
 		lines.push("  (none)");
 	} else {
 		for (const m of free) {
-			lines.push(`  ${pad(m.id, 32)} ${m.name}`);
+			lines.push(`  ${pad(modelCostLabel(m), 12)} ${modelDisplayName(m)}`);
 		}
 	}
 	lines.push("");
-	lines.push(bar("Premium  (counts against your Copilot quota)"));
-	for (const m of premium) {
-		const cost = modelCostLabel(m);
-		lines.push(`  ${pad(m.id, 32)} ${pad(cost, 12)} ${m.name}`);
+	lines.push(bar("Metered / relative account hit"));
+	if (premium.length === 0) {
+		lines.push("  (none)");
+	} else {
+		lines.push(`  ${modelCostIndexNote(premium)}`);
+		lines.push(...meteredModelLines(premium, "  "));
+	}
+	return lines;
+}
+
+function quotaBucketStatus(q: QuotaSnapshot): string {
+	if (q.unlimited) return "✓ unlimited";
+	const remaining = quotaValue(q);
+	const entitlement = q.entitlement || q.remaining || remaining;
+	const pct = typeof q.percent_remaining === "number"
+		? q.percent_remaining
+		: entitlement > 0 ? (remaining / entitlement) * 100 : 0;
+	return `${remainingBar(pct, 12)} ${quotaPercentText(pct, 1)} · ${formatNumber(remaining)} / ${entitlement} left`;
+}
+
+function compactNumber(value: number): string {
+	const abs = Math.abs(value);
+	const units: Array<[number, string]> = [
+		[1_000_000_000_000, "T"],
+		[1_000_000_000, "B"],
+		[1_000_000, "M"],
+		[1_000, "K"],
+	];
+	for (const [factor, suffix] of units) {
+		if (abs >= factor) {
+			const compact = value / factor;
+			return `${Number.isInteger(compact) ? compact.toFixed(0) : compact.toFixed(1).replace(/\.0$/, "")}${suffix}`;
+		}
+	}
+	return String(value);
+}
+
+type ModelCostSource = "multiplier" | "output" | "blended";
+
+interface ModelCostBasis {
+	score: number;
+	source: ModelCostSource;
+}
+
+function modelCostBasis(m: ModelBillingDisplay): ModelCostBasis | undefined {
+	if (typeof m.multiplier === "number" && m.multiplier > 0) {
+		return { score: m.multiplier, source: "multiplier" };
+	}
+	const prices = m.tokenPricing;
+	if (!prices) return undefined;
+	if (typeof prices.output === "number" && prices.output > 0) {
+		return { score: prices.output, source: "output" };
+	}
+	const blended = [prices.input, prices.output, prices.cache]
+		.filter((price): price is number => typeof price === "number" && price > 0)
+		.reduce((sum, price) => sum + price, 0);
+	return blended > 0 ? { score: blended, source: "blended" } : undefined;
+}
+
+function modelTokenPriceSummary(m: ModelBillingDisplay): string {
+	const prices = m.tokenPricing;
+	if (!prices) return typeof m.multiplier === "number" ? `GitHub multiplier ${formatRelativeCost(m.multiplier)}` : "no price details";
+	const parts: string[] = [];
+	if (typeof prices.input === "number" && prices.input > 0) parts.push(`input ${compactNumber(prices.input)}`);
+	if (typeof prices.output === "number" && prices.output > 0) parts.push(`output ${compactNumber(prices.output)}`);
+	if (typeof prices.cache === "number" && prices.cache > 0) parts.push(`cache ${compactNumber(prices.cache)}`);
+	if (parts.length === 0) return "no price details";
+	const basis = typeof prices.batchSize === "number" && prices.batchSize > 0 ? `per ${compactNumber(prices.batchSize)} tokens: ` : "";
+	return `${basis}${parts.join(" · ")}`;
+}
+
+function modelSortKey(m: ModelBillingDisplay): number {
+	if (m.free) return 0;
+	return modelCostBasis(m)?.score ?? Number.MAX_SAFE_INTEGER;
+}
+
+function modelDisplayName(m: ModelBillingDisplay): string {
+	return m.name === m.id ? m.id : `${m.name} (${m.id})`;
+}
+
+function formatRelativeCost(relative: number): string {
+	return `${relative.toFixed(1)}×`;
+}
+
+function relativeCostGlyph(relative: number): string {
+	if (relative <= 3) return GLYPH_CONNECTED;
+	if (relative <= 8) return GLYPH_WARNING;
+	return GLYPH_ERROR;
+}
+
+function relativeCostBar(relative: number, maxRelative: number, width = 10): string {
+	const pct = maxRelative > 0 ? clampPercent((relative / maxRelative) * 100) : 0;
+	const filled = Math.max(1, Math.round((pct / 100) * width));
+	const empty = Math.max(0, width - filled);
+	return `[${"█".repeat(filled)}${"░".repeat(empty)}]`;
+}
+
+function modelCostIndexNote(models: ModelBillingDisplay[]): string {
+	const sources = new Set(models.map((m) => modelCostBasis(m)?.source).filter(Boolean));
+	if (sources.size === 1 && sources.has("multiplier")) return "Cost index = GitHub multiplier relative to cheapest metered model";
+	if (sources.size === 1 && sources.has("output")) return "Cost index = output token price relative to cheapest metered model";
+	if (sources.size === 1 && sources.has("blended")) return "Cost index = blended token price relative to cheapest metered model";
+	return "Cost index = relative from available GitHub billing metadata; token models prefer output price";
+}
+
+function meteredModelLines(models: ModelBillingDisplay[], indent = "  "): string[] {
+	const priced = models
+		.map((model) => ({ model, basis: modelCostBasis(model) }))
+		.filter((entry): entry is { model: ModelBillingDisplay; basis: ModelCostBasis } => !!entry.basis)
+		.sort((a, b) => a.basis.score - b.basis.score || a.model.id.localeCompare(b.model.id));
+	const unpriced = models
+		.filter((model) => !modelCostBasis(model))
+		.sort((a, b) => a.id.localeCompare(b.id));
+	if (priced.length === 0) return unpriced.map((model) => `${indent}${GLYPH_WARNING} ?     [░░░░░░░░░░] ${modelDisplayName(model)}  no comparable price metadata`);
+	const minScore = Math.max(1, Math.min(...priced.map((entry) => entry.basis.score)));
+	const comparisons = priced.map((entry) => ({ ...entry, relative: entry.basis.score / minScore }));
+	const maxRelative = Math.max(...comparisons.map((entry) => entry.relative));
+	const lines = comparisons.map(({ model, relative }) => {
+		const rel = formatRelativeCost(relative);
+		return `${indent}${relativeCostGlyph(relative)} ${pad(rel, 5)} ${relativeCostBar(relative, maxRelative)} ${modelDisplayName(model)}  ${modelTokenPriceSummary(model)}`;
+	});
+	for (const model of unpriced) {
+		lines.push(`${indent}${GLYPH_WARNING} ?     [░░░░░░░░░░] ${modelDisplayName(model)}  no comparable price metadata`);
 	}
 	return lines;
 }
 
 function overviewLines(stats: UsageStats): string[] {
 	const lines: string[] = [];
-	const snap = stats.quotaSnapshots;
+	const snap = stats.quotaSnapshots ?? {};
+	const pi = snap["premium_interactions"];
+	const unit = quotaUnitLabel(stats);
 
-	// ── Quota summary at the top ─────────────────────────────────────────────
-	if (snap) {
-		lines.push(bar("Copilot Pro Plan Quota"));
-		if (stats.login) lines.push(`  User         ${stats.login}`);
-		if (stats.copilotPlan) lines.push(`  Plan         ${stats.copilotPlan}`);
-		if (stats.quotaResetDate) lines.push(`  Resets       ${fmtDate(stats.quotaResetDate)}`);
-		lines.push("");
-
-		const pi = snap["premium_interactions"];
-		if (pi) {
-			const remaining = quotaValue(pi);
-			const used = Math.max(0, pi.entitlement - remaining);
-			const remainingText = Number.isInteger(remaining) ? String(remaining) : remaining.toFixed(1);
-			lines.push(`  ${quotaUnitLabel(stats)}: ${used.toFixed(1)} used / ${pi.entitlement} total`);
-			lines.push(`  ${progressBar(100 - pi.percent_remaining)}  ${remainingText} left`);
-		}
-		const chat = snap["chat"];
-		if (chat) lines.push(`  Chat: ${chat.unlimited ? "✓ unlimited" : `${chat.remaining} remaining`}`);
-		const comp = snap["completions"];
-		if (comp) lines.push(`  Completions: ${comp.unlimited ? "✓ unlimited" : `${comp.remaining} remaining`}`);
+	lines.push(bar("Copilot dashboard", 58));
+	if (pi) {
+		const pct = clampPercent(pi.percent_remaining);
+		const glyph = quotaThresholdGlyph(pct);
+		const remaining = quotaValue(pi);
+		const used = Math.max(0, pi.entitlement - remaining);
+		const overage = pi.overage_permitted
+			? `allowed (${pi.overage_count} used, ${pi.overage_entitlement ?? 0} available)`
+			: "not permitted";
+		lines.push(`${glyph} Copilot quota ${remainingBar(pct, 18)} ${quotaPercentText(pct, 1)} remaining`);
+		lines.push(`  ${pad("Plan", 12)} ${stats.copilotPlan ?? "unknown"}`);
+		if (stats.login) lines.push(`  ${pad("User", 12)} ${stats.login}`);
+		if (stats.cliVersion) lines.push(`  ${pad("CLI", 12)} v${stats.cliVersion}`);
+		lines.push(`  ${pad("Billing", 12)} ${stats.tokenBasedBilling ? "token-based" : "request-based"}`);
+		lines.push(`  ${pad("Units", 12)} ${formatNumber(remaining)} / ${pi.entitlement} ${unit} left`);
+		lines.push(`  ${pad("Used", 12)} ${formatNumber(used)} ${unit}`);
+		lines.push(`  ${pad("Reset", 12)} ${stats.quotaResetDate ? fmtDate(stats.quotaResetDate) : "unknown"}`);
+		lines.push(`  ${pad("Overage", 12)} ${overage}`);
+	} else {
+		lines.push(`${GLYPH_WARNING} Copilot quota unavailable`);
+		if (stats.login) lines.push(`  ${pad("User", 12)} ${stats.login}`);
+		if (stats.copilotPlan) lines.push(`  ${pad("Plan", 12)} ${stats.copilotPlan}`);
 	}
+	lines.push(`  ${pad("Fetched", 12)} ${fmtDate(stats.fetchedAt)} ${fmtTime(stats.fetchedAt)}`);
 
-	// ── Session overview ─────────────────────────────────────────────────────
 	lines.push("");
-	lines.push(bar("Session counts (Copilot CLI)"));
-	if (stats.cliVersion) lines.push(`  CLI          v${stats.cliVersion}`);
-	lines.push(`  ${pad("Total", 12)} ${stats.total}`);
-	lines.push(`  ${pad("Today", 12)} ${stats.today}`);
-	lines.push(`  ${pad("This week", 12)} ${stats.thisWeek}`);
-	lines.push(`  ${pad("This month", 12)} ${stats.thisMonth}`);
-	lines.push(`  ${pad("Active now", 12)} ${stats.activeSessions}`);
-	lines.push(`  ${pad("Avg duration", 12)} ${fmtDuration(stats.avgDurationMinutes)}`);
-
-	const topRepos = Object.entries(stats.byRepository).sort(([, a], [, b]) => b - a).slice(0, 5);
-	if (topRepos.length > 0) {
-		lines.push("");
-		lines.push(bar("Top repositories"));
-		for (const [repo, count] of topRepos) {
-			lines.push(`  ${pad(repo, 32)} ${count}×`);
-		}
+	lines.push(bar("Included buckets", 58));
+	const includedRows: Array<[string, QuotaSnapshot | undefined]> = [
+		["Chat", snap["chat"]],
+		["Completions", snap["completions"]],
+	];
+	for (const [label, bucket] of includedRows) {
+		lines.push(`  ${pad(label, 14)} ${bucket ? quotaBucketStatus(bucket) : "unknown"}`);
 	}
-
-	const topDirs = Object.entries(stats.byDirectory).sort(([, a], [, b]) => b - a).slice(0, 5);
-	if (topDirs.length > 0) {
-		lines.push("");
-		lines.push(bar("Top directories"));
-		for (const [dir, count] of topDirs) {
-			lines.push(`  ${pad(dir, 32)} ${count}×`);
-		}
+	for (const [key, bucket] of Object.entries(snap)) {
+		if (["premium_interactions", "chat", "completions"].includes(key)) continue;
+		lines.push(`  ${pad(key, 14)} ${quotaBucketStatus(bucket)}`);
 	}
 
 	lines.push("");
-	lines.push(bar("Recent sessions"));
-	for (const s of stats.recentSessions.slice(0, 10)) {
-		const active = s.isActive ? "🟢 " : "   ";
-		const when = `${fmtDate(s.modifiedTime)} ${fmtTime(s.modifiedTime)}`;
-		const dur = fmtDuration(s.durationMinutes);
-		const repo = s.repository ? ` [${s.repository}]` : s.cwd ? ` [${shortPath(s.cwd)}]` : "";
-		const summary = s.summary ? `  ${s.summary.slice(0, 48)}` : "";
-		lines.push(`${active}${when}  (${dur})${repo}${summary}`);
+	lines.push(bar("Models", 58));
+	const models = stats.models ?? [];
+	if (models.length === 0) {
+		lines.push("  Model billing metadata unavailable");
+	} else {
+		const included = models.filter((m) => m.free).sort((a, b) => a.id.localeCompare(b.id));
+		const metered = models.filter((m) => !m.free).sort((a, b) => modelSortKey(a) - modelSortKey(b) || a.id.localeCompare(b.id));
+		lines.push(`  ${pad("Included", 12)} ${included.length} models`);
+		lines.push(`  ${pad("Metered", 12)} ${metered.length} models`);
+		if (included.length > 0) {
+			lines.push("");
+			lines.push("  Included / 0×");
+			for (const m of included) lines.push(`    ${pad(modelCostLabel(m), 12)} ${modelDisplayName(m)}`);
+		}
+		if (metered.length > 0) {
+			lines.push("");
+			lines.push("  Metered / relative account hit");
+			lines.push(`    ${modelCostIndexNote(metered)}`);
+			lines.push(...meteredModelLines(metered, "    "));
+		}
+	}
+
+	lines.push("");
+	lines.push(bar("Sessions", 58));
+	lines.push(`  ${pad("Total", 10)} ${pad(String(stats.total), 6)} ${pad("Today", 10)} ${stats.today}`);
+	lines.push(`  ${pad("Week", 10)} ${pad(String(stats.thisWeek), 6)} ${pad("Month", 10)} ${stats.thisMonth}`);
+	lines.push(`  ${pad("Active", 10)} ${pad(String(stats.activeSessions), 6)} ${pad("Avg", 10)} ${fmtDuration(stats.avgDurationMinutes)}`);
+
+	lines.push("");
+	lines.push(bar("Recent sessions", 58));
+	const recent = stats.recentSessions.slice(0, 6);
+	if (recent.length === 0) {
+		lines.push("  No recent Copilot sessions found");
+	} else {
+		for (const s of recent) {
+			const active = s.isActive ? GLYPH_CONNECTED : " ";
+			const when = `${fmtDate(s.modifiedTime)} ${fmtTime(s.modifiedTime)}`;
+			const dur = fmtDuration(s.durationMinutes);
+			const repo = s.repository ? s.repository : s.cwd ? shortPath(s.cwd) : "unknown";
+			const summary = s.summary ? `  ${s.summary.slice(0, 54)}` : "";
+			lines.push(`${active} ${when}  ${pad(dur, 8)} ${repo}${summary}`);
+		}
 	}
 
 	return lines;
@@ -454,7 +633,7 @@ function overviewLines(stats: UsageStats): string[] {
 function sessionListLines(sessions: SessionMetadata[]): string[] {
 	const now = Date.now();
 	return sessions.map((s) => {
-		const active = now - s.modifiedTime.getTime() < ACTIVE_THRESHOLD_MS ? "🟢 " : "   ";
+		const active = now - s.modifiedTime.getTime() < ACTIVE_THRESHOLD_MS ? `${GLYPH_CONNECTED} ` : "  ";
 		const when = `${fmtDate(s.modifiedTime.toISOString())} ${fmtTime(s.modifiedTime.toISOString())}`;
 		const dur = fmtDuration(Math.round(Math.max(0, s.modifiedTime.getTime() - s.startTime.getTime()) / MS_PER_MIN));
 		const repo = s.context?.repository ?? (s.context?.cwd ? shortPath(s.context.cwd) : "");
@@ -497,12 +676,8 @@ function sessionDetailLines(s: SessionMetadata): string[] {
 
 function statusLabel(stats: UsageStats): string {
 	const pi = stats.quotaSnapshots?.["premium_interactions"];
-	if (!pi) return `🟢 Copilot: ${stats.total} sessions`;
-	const pct = pi.percent_remaining;
-	const icon = pct > 25 ? "🟢" : pct > 10 ? "🟡" : "🔴";
-	const remaining = quotaValue(pi);
-	const remainingText = Number.isInteger(remaining) ? String(remaining) : remaining.toFixed(1);
-	return `${icon} Copilot: ${remainingText}/${pi.entitlement} ${quotaUnitLabel(stats)} left`;
+	if (!pi) return `${GLYPH_CONNECTED} Copilot ${stats.total} sessions`;
+	return formatQuotaStatus(pi);
 }
 
 // ---------------------------------------------------------------------------
@@ -599,12 +774,7 @@ export default function (pi: ExtensionAPI) {
 			const userInfo = await fetchCopilotUserInfo();
 			const pi_q = userInfo.quota_snapshots?.["premium_interactions"];
 			if (pi_q && setStatus) {
-				const pct = pi_q.percent_remaining;
-				const icon = pct > 25 ? "🟢" : pct > 10 ? "🟡" : "🔴";
-				const remaining = quotaValue(pi_q);
-				const remainingText = Number.isInteger(remaining) ? String(remaining) : remaining.toFixed(1);
-				const unit = userInfo.token_based_billing || pi_q.token_based_billing ? "premium units" : "premium interactions";
-				setStatus("copilot-usage", `${icon} Copilot: ${remainingText}/${pi_q.entitlement} ${unit} left`);
+				setStatus("copilot-usage", formatQuotaStatus(pi_q));
 			}
 		} catch {
 			// Silently ignore – will retry next cycle
@@ -638,7 +808,7 @@ export default function (pi: ExtensionAPI) {
 	// ── Lifecycle ─────────────────────────────────────────────────────────────
 
 	pi.on("session_start", async (_event, ctx) => {
-		ctx.ui.setStatus("copilot-usage", "🔄 Copilot: loading…");
+		ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot loading…`);
 		startPolling(ctx.ui.setStatus.bind(ctx.ui));
 	});
 
@@ -650,9 +820,9 @@ export default function (pi: ExtensionAPI) {
 	// ── /copilot – full overview ───────────────────────────────────────────────
 
 	pi.registerCommand("copilot", {
-		description: "Show GitHub Copilot usage dashboard (quota + sessions)",
+		description: "Show GitHub Copilot usage dashboard (quota, models, sessions)",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", "🔄 Copilot: fetching…");
+			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching…`);
 			try {
 				const { sessions, userInfo, status, auth, models } = await fetchAllCached();
 				const stats = computeStats(sessions, userInfo, status, auth, models);
@@ -661,7 +831,7 @@ export default function (pi: ExtensionAPI) {
 			} catch (err) {
 				await stopClient(); // fix #4: stop + clear cache; don't orphan old client
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", "🔴 Copilot: error");
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -670,9 +840,9 @@ export default function (pi: ExtensionAPI) {
 	// ── /copilot-quota – focused quota panel ──────────────────────────────────
 
 	pi.registerCommand("copilot-quota", {
-		description: "Show Copilot plan quota (premium units or interactions remaining)",
+		description: "Secondary focused Copilot quota and model billing view",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", "🔄 Copilot: fetching quota…");
+			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching quota…`);
 			try {
 				// fix #3: use shared cache — no separate listModels/getStatus calls
 				const { userInfo, status, auth, models } = await fetchAllCached();
@@ -688,7 +858,7 @@ export default function (pi: ExtensionAPI) {
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", "🔴 Copilot: error");
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -699,15 +869,15 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copilot-sessions", {
 		description: "Browse GitHub Copilot sessions",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", "🔄 Copilot: fetching sessions…");
+			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching sessions…`);
 			try {
 				const { sessions } = await fetchAllCached(); // fix #3
 				if (sessions.length === 0) {
 					ctx.ui.notify("No Copilot sessions found.", "info");
-					ctx.ui.setStatus("copilot-usage", "⚫ Copilot: 0 sessions");
+					ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot 0 sessions`);
 					return;
 				}
-				ctx.ui.setStatus("copilot-usage", `🟢 Copilot: ${sessions.length} sessions`);
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot ${sessions.length} sessions`);
 
 				// fix #2: sort once here and pass to sessionListLines (was sorted twice)
 				const sorted = [...sessions].sort((a, b) => b.modifiedTime.getTime() - a.modifiedTime.getTime());
@@ -723,7 +893,7 @@ export default function (pi: ExtensionAPI) {
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", "🔴 Copilot: error");
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -732,18 +902,18 @@ export default function (pi: ExtensionAPI) {
 	// ── /copilot-models – model billing table ─────────────────────────────────
 
 	pi.registerCommand("copilot-models", {
-		description: "Show Copilot model list with premium-interaction costs",
+		description: "Secondary focused Copilot model billing view",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", "🔄 Copilot: fetching models…");
+			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching models…`);
 			try {
 				const { auth, models } = await fetchAllCached(); // fix #3
 				const stats = computeStats([], undefined, undefined, auth, models);
-				ctx.ui.setStatus("copilot-usage", `🟢 Copilot: ${(models ?? []).length} models`);
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot ${(models ?? []).length} models`);
 				await ctx.ui.select("Copilot Models & Billing", modelLines(stats));
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", "🔴 Copilot: error");
+				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -756,8 +926,8 @@ export default function (pi: ExtensionAPI) {
 		label: "Copilot Usage",
 		description:
 			"Fetch GitHub Copilot plan usage: premium quota remaining, " +
-			"session counts by period, top repositories, model billing multipliers, and recent sessions.",
-		promptSnippet: "Fetch GitHub Copilot quota and session usage statistics",
+			"model billing metadata, session counts by period, and recent sessions.",
+		promptSnippet: "Fetch GitHub Copilot quota, model billing, and session usage statistics",
 		parameters: Type.Object({
 			period: Type.Optional(StringEnum(["today", "week", "month", "all"] as const)),
 		}),

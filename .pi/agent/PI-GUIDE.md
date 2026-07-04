@@ -26,9 +26,9 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/indicator` | Switch custom working indicator. |
 | `/todos` | Show current branch todo list. |
 | `/waiting` | List Pi agents awaiting attention and jump via TMUX. |
-| `/copilot` | Show GitHub Copilot usage dashboard. |
-| `/copilot-quota` | Show Copilot quota and model billing view. |
-| `/copilot-models` | Show Copilot model billing metadata. |
+| `/copilot` | Show visual GitHub Copilot dashboard: quota, model billing, sessions. |
+| `/copilot-quota` | Secondary focused Copilot quota/model view. |
+| `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
@@ -50,7 +50,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | Extension | What it does | User-facing controls |
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
-| `copilot-usage/` | Shows GitHub Copilot quota, token-based billing state, model billing metadata, and Copilot SDK sessions. | `/copilot`, `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
+| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
@@ -221,16 +221,16 @@ Sources checked:
 What it does:
 
 - Shows GitHub Copilot plan quota from `gh api /copilot_internal/user`.
-- Adds footer status like `Copilot: 830.1/1500 premium units left`.
+- Adds a threshold footer meter like ` Copilot [██████░░░░] 60%`, where the bar means quota remaining.
 - Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
 - Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
-- Shows current Copilot model billing metadata. GitHub currently returns `token_prices` for models rather than old `billing.multiplier` values, so the model view labels these as `token-priced` when no multiplier is present.
+- Shows current Copilot model billing metadata. GitHub may return old-style `billing.multiplier` values or newer `token_prices`, so the dashboard displays whichever metadata is available, compares metered models relative to the cheapest metered model, compacts large raw token-price integers, and treats all-zero token prices as included.
 
 Commands and tool:
 
-- `/copilot` shows quota summary, Copilot CLI session counts, top repos/directories, and recent sessions.
-- `/copilot-quota` shows quota plus model billing metadata.
-- `/copilot-models` shows model billing metadata.
+- `/copilot` is the primary visual dashboard: quota, included buckets, model billing, compact session counts, and recent sessions.
+- `/copilot-quota` is a secondary focused quota plus model billing view.
+- `/copilot-models` is a secondary focused model billing view.
 - `/copilot-sessions` browses Copilot SDK sessions.
 - Agent tool: `copilot_usage`, with optional period `today`, `week`, `month`, or `all`.
 
