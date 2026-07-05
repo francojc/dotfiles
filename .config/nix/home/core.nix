@@ -64,6 +64,7 @@
     carapace # Command-line completion
     codespell # Spell checker
     direnv # Environment manager
+    forgejo-cli # `fj` CLI for Forgejo (like `gh` for GitHub)
     gh # GitHub CLI
     git # Version control system
     go # Go programming language
