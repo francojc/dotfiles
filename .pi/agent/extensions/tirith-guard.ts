@@ -13,7 +13,7 @@
 //   TIRITH_FAIL_OPEN        — "1" to allow on error (default: deny)
 
 import { execFile, execFileSync } from "node:child_process";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 function hookEvent(event: string, detail?: string) {
   try {

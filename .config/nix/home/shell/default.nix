@@ -51,7 +51,7 @@
 
         # tirith (pkgs.tirith) if in Nix store
         # /etc/profiles/per-user/francojc/bin/tirith
-        if [[ -f "${pkgs.tirith}" ]] then
+        if [[ -d "${pkgs.tirith}" ]] then
           eval "$(tirith init --shell zsh)"
         fi
 

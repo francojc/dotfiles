@@ -63,6 +63,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `supacode/index.ts` | Emits Supacode OSC lifecycle/notification signals when running inside Supacode. | Automatic inside Supacode surfaces. |
 | `pi-guide-autoupdate.ts` | Detects package/local-extension changes and runs guide maintenance in background on interactive startup. | Automatic. Footer status only. |
 | `tui-utils.ts` | Shared helper module for local TUI extensions. | No direct user controls. |
+| `tirith-guard.ts` | Intercepts every `bash` tool call and runs `tirith check` before execution. | Automatic. Control via `TIRITH_BIN`, `TIRITH_HOOK_WARN_ACTION`, `TIRITH_FAIL_OPEN`. |
 
 ## Keybindings and terminal notes
 
@@ -431,6 +432,38 @@ Environment gates:
 Source checked:
 
 - `~/.pi/agent/extensions/supacode/index.ts`
+
+### Tirith guard
+
+What it does:
+
+- Hooks `tool_call` events for the Pi `bash` tool.
+- Runs `tirith check --json --non-interactive --shell posix -- <command>`.
+- Allows exit 0, warns on exit 2, blocks on exit 1 or exit 3 (WarnAck).
+- Emits `hook-event` telemetry to tirith for check results, timeouts, and blocks.
+
+Configuration:
+
+- `TIRITH_BIN` — path to tirith binary (default: `tirith`).
+- `TIRITH_HOOK_WARN_ACTION` — `allow` or `deny` for exit 2 warnings (default: `allow`).
+- `TIRITH_FAIL_OPEN` — set to `1` to allow commands when tirith itself errors or is missing (default: block).
+
+Shell hooks outside Pi:
+
+- Managed in nix: `~/.dotfiles/.config/nix/home/shell/default.nix` (`profileExtra`).
+- Do not run `tirith setup pi-cli` or `tirith init` manually; nix rebuilds overwrite those changes.
+
+Gotchas:
+
+- Synchronous 10-second check blocks the tool-call pipeline.
+- Missing tirith binary blocks all `bash` calls unless `TIRITH_FAIL_OPEN=1`.
+- Exit 3 (WarnAck) is treated as block because Pi cannot prompt for acknowledgement.
+- Only the `bash` tool is guarded; file edits, web search, and other tools are not intercepted.
+- stderr warnings may not always be visible in every Pi UI mode.
+
+Source checked:
+
+- `~/.pi/agent/extensions/tirith-guard.ts`
 
 ### Pi Guide autoupdate
 
