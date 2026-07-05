@@ -6,7 +6,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-03
+- Last updated: 2026-07-05
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -54,6 +54,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
+| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider models from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider models from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
 | `searxng.ts` | Adds `web_search` tool via self-hosted SearXNG. | Agent tool. `SEARXNG_URL` optional. |
@@ -364,6 +365,19 @@ Source checked:
 
 ### Dynamic model providers
 
+Copilot API:
+
+- Extension: `copilot-api-discovery.ts`
+- Registers `copilot-api` provider from the raw GitHub Copilot `/models` endpoint, separate from Pi's built-in `github-copilot` provider and separate from the Copilot SDK usage dashboard.
+- Uses `GITHUB_COPILOT_API_KEY` for provider auth and discovery. `GITHUB_COPILOT_BASE_URL` is optional and defaults to `https://api.githubcopilot.com`.
+- Caches model metadata at `~/.cache/pi/copilot-api-models.json`.
+- Refreshes stale cache after 12 hours.
+- Includes chat models that are not disabled and do not explicitly disable tool calls. It does not require `model_picker_enabled`, so API-usable models such as `gpt-4o` can appear even when Copilot Chat picker models differ.
+- Registers models through Pi's `openai-completions` adapter with conservative compatibility flags: no reasoning controls, no developer role, no store support.
+- Gotcha: this provider does not use Pi's built-in Copilot OAuth refresh path. If `GITHUB_COPILOT_API_KEY` expires, refresh that environment variable before using `copilot-api/*` models.
+- Check models with `pi --list-models copilot-api`; use with `pi --model copilot-api/gpt-4o`.
+- Startup model-discovery logs are quiet by default. Set `PI_MODEL_DISCOVERY_DEBUG=1` to show them in interactive runs.
+
 OpenCode Go:
 
 - Extension: `opencode-go-discovery.ts`
@@ -383,6 +397,7 @@ OpenRouter:
 
 Sources checked:
 
+- `~/.pi/agent/extensions/copilot-api-discovery.ts`
 - `~/.pi/agent/extensions/opencode-go-discovery.ts`
 - `~/.pi/agent/extensions/openrouter-models.ts`
 
