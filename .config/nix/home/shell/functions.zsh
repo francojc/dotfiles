@@ -17,12 +17,9 @@ syncr() {
     minicore) remote="jeridf@mac-minicore" ;;
     airborne) remote="francojc@macbook-airborne" ;;
     rover) remote="jeridf@mini-rover" ;;
-    pi-meta) remote="root@pi-meta" ;;
-    monitor-services) remote="root@monitor-services" ;;
-    monitor-pi) remote="root@monitor-pi" ;;
     *)
       echo "Unknown remote: $1"
-      echo "Available: minicore, airborne, rover, pi-meta, monitor-pi, monitor-services"
+      echo "Available: minicore, airborne, rover"
       echo "Usage: syncr <remote> <local_path> <remote_path>"
       return 1
       ;;

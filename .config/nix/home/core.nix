@@ -103,16 +103,15 @@
     speedtest-cli # Internet speed test
     sqlite # SQLite database engine
     starship # Shell prompt
+    tirith # Terminal-based security for devs and AI
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
-    tt # CLI typing test (my fork: ~/.local/bin/tt)
     which # Command location utility
     whosthere # Local Area Network discovery tool
     xan # data visualization from CSV files
     yazi-unwrapped # Terminal file manager
     yq-go # YAML processor
-    zellij # Terminal multiplexer
     zoxide # Smarter cd command
   ];
 

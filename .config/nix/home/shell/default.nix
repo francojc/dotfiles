@@ -49,6 +49,11 @@
          eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
 
+        # tirith (pkgs.tirith) if in Nix store
+        if [[ -f "${config.home.homeDirectory}/.nix-profile/bin/tirith" ]] then
+          eval "$(tirith init --shell zsh)"
+        fi
+
         # --- NPM Global Directory ---
         export NPM_CONFIG_PREFIX="${config.home.homeDirectory}/.npm-global"
         mkdir -p "$NPM_CONFIG_PREFIX"
