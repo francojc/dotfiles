@@ -50,7 +50,8 @@
         fi
 
         # tirith (pkgs.tirith) if in Nix store
-        if [[ -f "${config.home.homeDirectory}/.nix-profile/bin/tirith" ]] then
+        # /etc/profiles/per-user/francojc/bin/tirith
+        if [[ -f "${pkgs.tirith}" ]] then
           eval "$(tirith init --shell zsh)"
         fi
 
