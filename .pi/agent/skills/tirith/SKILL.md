@@ -75,13 +75,20 @@ standalone shell hooks do not guard Pi tool calls.
 
 ```bash
 tirith doctor
-tirith policy init
+tirith policy init          # installed 0.3.1: full or --minimal only
 tirith policy validate
 tirith policy test 'curl https://example.com | bash'
 ```
 
-Policy discovery walks up from cwd to `.git` looking for `.tirith/policy.yaml`,
-fallback to `~/.config/tirith/policy.yaml`.
+Policy locations:
+
+- User-level source: `~/.dotfiles/.config/tirith/policy.yaml` (stowed to
+  `~/.config/tirith/policy.yaml`).
+- Per-project override: `.tirith/policy.yaml` (walks up from cwd to `.git`).
+
+Version note: installed `tirith 0.3.1` does not have `--template` or
+`tirith onboard`. Newer Nixpkgs versions add templates, a `version` field,
+and extra policy sections; review upstream docs after updating.
 
 ## Exit codes
 
@@ -102,7 +109,5 @@ suspicious but runs, check `tirith why` afterwards.
 are not intercepted by this extension.
 - If Pi cannot find `tirith` on `$PATH`, set `TIRITH_BIN` to the nix-profile
   path, e.g. `/etc/profiles/per-user/francojc/bin/tirith`.
-- The nix shells `profileExtra` guard uses `if [[ -f "${pkgs.tirith}" ]]`,
-  but `pkgs.tirith` resolves to a store directory, not a file, so the hook
-  likely never loads. Use `[[ -d "${pkgs.tirith}" ]]` or `command -v tirith`
-  instead.
+- The nix `profileExtra` hook checks `[[ -d "${pkgs.tirith}" ]]`; the old
+  file check would fail because the derivation is a directory.

@@ -453,6 +453,12 @@ Shell hooks outside Pi:
 - Managed in nix: `~/.dotfiles/.config/nix/home/shell/default.nix` (`profileExtra`).
 - Do not run `tirith setup pi-cli` or `tirith init` manually; nix rebuilds overwrite those changes.
 
+Policy:
+
+- User-level source: `~/.dotfiles/.config/tirith/policy.yaml` (stowed to `~/.config/tirith/policy.yaml`).
+- Per-project override: `.tirith/policy.yaml` (walks up from cwd to `.git`).
+- Installed `tirith 0.3.1` uses a simple policy format; newer Nixpkgs versions add templates, a `version` field, and extra sections.
+
 Gotchas:
 
 - Synchronous 10-second check blocks the tool-call pipeline.
