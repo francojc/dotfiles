@@ -66,7 +66,7 @@ Before restoring the dotfiles, ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone --depth 1 https://github.com/francojc/dotfiles.git ~/.dotfiles
+   git clone --depth 1 https://codeberg.org/shimmy/dotfiles.git ~/.dotfiles
    ```
 
 2. Navigate to the dotfiles directory:
@@ -152,7 +152,7 @@ Before setting up the NixOS configuration, ensure you have the following:
 1. **Clone the repository**:
 
    ```bash
-   git clone --depth 1 https://github.com/francojc/dotfiles.git ~/.dotfiles
+   git clone --depth 1 https://codeberg.org/shimmy/dotfiles.git ~/.dotfiles
    ```
 
 2. **Navigate to the dotfiles directory**:
