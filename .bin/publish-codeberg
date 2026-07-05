@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: publish-codeberg [options]
+
+Publish current Git repo to Codeberg Pages.
+
+Defaults:
+  - Detect Codeberg owner/repo from remote
+  - Infer site URL:
+      owner/pages      -> https://owner.codeberg.page/
+      owner/repo-name  -> https://owner.codeberg.page/repo-name/
+  - Deploy rendered files to branch: pages
+  - Use source directory: _site
+  - Render Quarto project if _quarto.yml or _quarto.yaml exists
+  - Store deploy worktrees under ~/.cache/codeberg-pages-worktrees/<owner>/<repo>
+
+Options:
+  -y, --yes              Do not prompt
+  -n, --dry-run          Print plan only
+  --no-render            Skip Quarto render
+  --source DIR           Static output directory to publish (default: _site)
+  --branch BRANCH        Deploy branch (default: pages)
+  --remote REMOTE        Git remote to use (default: origin if Codeberg, otherwise first Codeberg remote)
+  --site URL             Override inferred site URL
+  --worktree DIR         Override deploy worktree location
+  -m, --message MESSAGE  Deploy commit message (default: deploy: publish site)
+  -h, --help             Show help
+
+Examples:
+  publish-codeberg
+  publish-codeberg --yes
+  publish-codeberg --dry-run
+  publish-codeberg --source dist --no-render
+  publish-codeberg --site https://example.org/
+EOF
+}
+
+YES=0
+DRY_RUN=0
+RENDER=auto
+SOURCE_DIR_REL="_site"
+DEPLOY_BRANCH="pages"
+REMOTE_NAME=""
+SITE_URL=""
+WORKTREE=""
+COMMIT_MESSAGE="deploy: publish site"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -y|--yes)
+      YES=1
+      shift
+      ;;
+    -n|--dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    --no-render)
+      RENDER=0
+      shift
+      ;;
+    --source)
+      SOURCE_DIR_REL="${2:-}"
+      [[ -n "$SOURCE_DIR_REL" ]] || { echo "--source requires a directory" >&2; exit 2; }
+      shift 2
+      ;;
+    --branch)
+      DEPLOY_BRANCH="${2:-}"
+      [[ -n "$DEPLOY_BRANCH" ]] || { echo "--branch requires a branch name" >&2; exit 2; }
+      shift 2
+      ;;
+    --remote)
+      REMOTE_NAME="${2:-}"
+      [[ -n "$REMOTE_NAME" ]] || { echo "--remote requires a remote name" >&2; exit 2; }
+      shift 2
+      ;;
+    --site)
+      SITE_URL="${2:-}"
+      [[ -n "$SITE_URL" ]] || { echo "--site requires a URL" >&2; exit 2; }
+      shift 2
+      ;;
+    --worktree)
+      WORKTREE="${2:-}"
+      [[ -n "$WORKTREE" ]] || { echo "--worktree requires a directory" >&2; exit 2; }
+      shift 2
+      ;;
+    -m|--message)
+      COMMIT_MESSAGE="${2:-}"
+      [[ -n "$COMMIT_MESSAGE" ]] || { echo "--message requires text" >&2; exit 2; }
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+need_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "Missing command: $1" >&2
+    exit 1
+  fi
+}
+
+prompt_yes_no() {
+  local prompt="$1"
+  if [[ "$YES" -eq 1 ]]; then
+    return 0
+  fi
+  if [[ ! -t 0 ]]; then
+    echo "$prompt" >&2
+    echo "Non-interactive shell. Re-run with --yes to proceed." >&2
+    exit 1
+  fi
+  local reply
+  read -r -p "$prompt [y/N] " reply
+  [[ "$reply" == "y" || "$reply" == "Y" || "$reply" == "yes" || "$reply" == "YES" ]]
+}
+
+normalize_url() {
+  local url="$1"
+  [[ "$url" == */ ]] || url="$url/"
+  printf '%s' "$url"
+}
+
+parse_codeberg_remote() {
+  local url="$1"
+  local path=""
+
+  url="${url%.git}"
+  url="${url%/}"
+
+  case "$url" in
+    https://codeberg.org/*)
+      path="${url#https://codeberg.org/}"
+      ;;
+    http://codeberg.org/*)
+      path="${url#http://codeberg.org/}"
+      ;;
+    ssh://git@codeberg.org/*)
+      path="${url#ssh://git@codeberg.org/}"
+      ;;
+    git@codeberg.org:*)
+      path="${url#git@codeberg.org:}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  local owner repo extra
+  IFS='/' read -r owner repo extra <<< "$path"
+  [[ -n "${owner:-}" && -n "${repo:-}" && -z "${extra:-}" ]] || return 1
+
+  printf '%s\t%s' "$owner" "$repo"
+}
+
+remote_url_for() {
+  git remote get-url "$1" 2>/dev/null || return 1
+}
+
+find_codeberg_remote() {
+  if [[ -n "$REMOTE_NAME" ]]; then
+    local url
+    url="$(remote_url_for "$REMOTE_NAME")" || {
+      echo "Remote not found: $REMOTE_NAME" >&2
+      exit 1
+    }
+    parse_codeberg_remote "$url" >/dev/null || {
+      echo "Remote is not Codeberg: $REMOTE_NAME -> $url" >&2
+      exit 1
+    }
+    printf '%s\t%s' "$REMOTE_NAME" "$url"
+    return 0
+  fi
+
+  if remote_url_for origin >/dev/null 2>&1; then
+    local origin_url
+    origin_url="$(remote_url_for origin)"
+    if parse_codeberg_remote "$origin_url" >/dev/null; then
+      printf '%s\t%s' origin "$origin_url"
+      return 0
+    fi
+  fi
+
+  local remote url
+  while IFS= read -r remote; do
+    url="$(remote_url_for "$remote" || true)"
+    if [[ -n "$url" ]] && parse_codeberg_remote "$url" >/dev/null; then
+      printf '%s\t%s' "$remote" "$url"
+      return 0
+    fi
+  done < <(git remote)
+
+  echo "No Codeberg remote found. Use --remote REMOTE if needed." >&2
+  exit 1
+}
+
+extract_quarto_site_url() {
+  local file="$1"
+  awk -F: '
+    /^[[:space:]]*site-url:[[:space:]]*/ {
+      sub(/^[[:space:]]*site-url:[[:space:]]*/, "")
+      gsub(/^[[:space:]]*["'"'"']?/, "")
+      gsub(/["'"'"']?[[:space:]]*$/, "")
+      print
+      exit
+    }
+  ' "$file"
+}
+
+need_cmd git
+need_cmd rsync
+
+GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+  echo "Not inside a Git repository." >&2
+  exit 1
+}
+cd "$GIT_ROOT"
+
+CURRENT_BRANCH="$(git branch --show-current || true)"
+if [[ "$CURRENT_BRANCH" == "$DEPLOY_BRANCH" ]]; then
+  echo "Current branch is deploy branch '$DEPLOY_BRANCH'. Run from source branch, not deploy worktree." >&2
+  exit 1
+fi
+
+REMOTE_INFO="$(find_codeberg_remote)"
+REMOTE_NAME="$(printf '%s' "$REMOTE_INFO" | cut -f1)"
+REMOTE_URL="$(printf '%s' "$REMOTE_INFO" | cut -f2-)"
+OWNER_REPO="$(parse_codeberg_remote "$REMOTE_URL")"
+OWNER="$(printf '%s' "$OWNER_REPO" | cut -f1)"
+REPO="$(printf '%s' "$OWNER_REPO" | cut -f2)"
+
+if [[ -z "$SITE_URL" ]]; then
+  if [[ "$REPO" == "pages" ]]; then
+    SITE_URL="https://${OWNER}.codeberg.page/"
+  else
+    SITE_URL="https://${OWNER}.codeberg.page/${REPO}/"
+  fi
+fi
+SITE_URL="$(normalize_url "$SITE_URL")"
+
+if [[ -z "$WORKTREE" ]]; then
+  CACHE_ROOT="${XDG_CACHE_HOME:-$HOME/.cache}/codeberg-pages-worktrees"
+  WORKTREE="$CACHE_ROOT/$OWNER/$REPO"
+fi
+
+SOURCE_DIR_ABS="$GIT_ROOT/$SOURCE_DIR_REL"
+SHOULD_RENDER=0
+if [[ "$RENDER" == "auto" ]]; then
+  if [[ -f "$GIT_ROOT/_quarto.yml" || -f "$GIT_ROOT/_quarto.yaml" ]]; then
+    SHOULD_RENDER=1
+  fi
+elif [[ "$RENDER" == "1" ]]; then
+  SHOULD_RENDER=1
+fi
+
+QUARTO_FILE=""
+[[ -f "$GIT_ROOT/_quarto.yml" ]] && QUARTO_FILE="$GIT_ROOT/_quarto.yml"
+[[ -z "$QUARTO_FILE" && -f "$GIT_ROOT/_quarto.yaml" ]] && QUARTO_FILE="$GIT_ROOT/_quarto.yaml"
+
+SITE_URL_WARNING=""
+if [[ -n "$QUARTO_FILE" ]]; then
+  FOUND_SITE_URL="$(extract_quarto_site_url "$QUARTO_FILE" || true)"
+  if [[ -n "$FOUND_SITE_URL" ]]; then
+    if [[ "$(normalize_url "$FOUND_SITE_URL")" != "$SITE_URL" ]]; then
+      SITE_URL_WARNING="Quarto site-url mismatch: found '$FOUND_SITE_URL', expected '$SITE_URL'"
+    fi
+  fi
+fi
+
+cat <<EOF
+Codeberg Pages publish plan
+
+Repo:          $OWNER/$REPO
+Remote:        $REMOTE_NAME ($REMOTE_URL)
+Source branch: ${CURRENT_BRANCH:-detached}
+Deploy branch: $DEPLOY_BRANCH
+Source dir:    $SOURCE_DIR_REL
+Render:        $([[ "$SHOULD_RENDER" -eq 1 ]] && echo "quarto render" || echo "skip")
+Worktree:      $WORKTREE
+Target URL:    $SITE_URL
+EOF
+
+if [[ -n "$SITE_URL_WARNING" ]]; then
+  echo
+  echo "Warning: $SITE_URL_WARNING"
+fi
+
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo
+  echo "Warning: source tree has uncommitted changes. Deploy will include current working files."
+fi
+
+echo
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "Dry run. No changes made."
+  exit 0
+fi
+
+prompt_yes_no "Proceed with publish?" || {
+  echo "Canceled."
+  exit 1
+}
+
+if [[ "$SHOULD_RENDER" -eq 1 ]]; then
+  need_cmd quarto
+  echo "Rendering Quarto site..."
+  quarto render
+fi
+
+if [[ ! -d "$SOURCE_DIR_ABS" ]]; then
+  echo "Source directory not found: $SOURCE_DIR_ABS" >&2
+  echo "Use --source DIR or render site first." >&2
+  exit 1
+fi
+
+git worktree prune >/dev/null 2>&1 || true
+
+if [[ ! -d "$WORKTREE" ]]; then
+  echo "Deploy worktree missing. Creating: $WORKTREE"
+  mkdir -p "$(dirname "$WORKTREE")"
+
+  if git show-ref --verify --quiet "refs/heads/$DEPLOY_BRANCH"; then
+    git worktree add "$WORKTREE" "$DEPLOY_BRANCH"
+  elif git ls-remote --exit-code --heads "$REMOTE_NAME" "$DEPLOY_BRANCH" >/dev/null 2>&1; then
+    git fetch "$REMOTE_NAME" "$DEPLOY_BRANCH:$DEPLOY_BRANCH"
+    git worktree add "$WORKTREE" "$DEPLOY_BRANCH"
+  else
+    git worktree add --orphan -b "$DEPLOY_BRANCH" "$WORKTREE"
+  fi
+fi
+
+if [[ ! -d "$WORKTREE/.git" && ! -f "$WORKTREE/.git" ]]; then
+  echo "Worktree path is not a Git worktree: $WORKTREE" >&2
+  exit 1
+fi
+
+WORKTREE_BRANCH="$(git -C "$WORKTREE" branch --show-current || true)"
+if [[ "$WORKTREE_BRANCH" != "$DEPLOY_BRANCH" ]]; then
+  echo "Wrong worktree branch: $WORKTREE_BRANCH" >&2
+  echo "Expected: $DEPLOY_BRANCH" >&2
+  exit 1
+fi
+
+if [[ -n "$(git -C "$WORKTREE" status --porcelain)" ]]; then
+  echo "Deploy worktree has uncommitted changes: $WORKTREE" >&2
+  echo "Clean it before publishing." >&2
+  exit 1
+fi
+
+if git ls-remote --exit-code --heads "$REMOTE_NAME" "$DEPLOY_BRANCH" >/dev/null 2>&1; then
+  echo "Updating deploy worktree from remote..."
+  git -C "$WORKTREE" pull --ff-only "$REMOTE_NAME" "$DEPLOY_BRANCH"
+fi
+
+echo "Syncing $SOURCE_DIR_REL/ to deploy worktree..."
+rsync -a --delete --exclude '.git' "$SOURCE_DIR_ABS/" "$WORKTREE/"
+touch "$WORKTREE/.nojekyll"
+
+echo "Committing deploy branch..."
+git -C "$WORKTREE" add -A
+
+if git -C "$WORKTREE" diff --cached --quiet; then
+  echo "No published changes. Nothing to push."
+  exit 0
+fi
+
+git -C "$WORKTREE" commit -m "$COMMIT_MESSAGE"
+git -C "$WORKTREE" push -u "$REMOTE_NAME" "$DEPLOY_BRANCH"
+
+echo
+echo "Published: $SITE_URL"
