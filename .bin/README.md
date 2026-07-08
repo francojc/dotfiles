@@ -13,6 +13,7 @@ This directory contains a flat collection of personal scripts and small tools. T
 - net- = Networking
 - pdc- = Pandoc / document conversion
 - q- = Quarto helpers
+- ssh- = SSH key management
 - wx = Weather
 
 AI tools intentionally unchanged: imagey, speechy, extracty, transcribe, ical, myllama, am, vds, chat_interface.py.
@@ -66,6 +67,17 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 - qlive -- Quarto live preview (entr, render, preview)
 
+### ssh- (SSH key management)
+
+- ssh-key-setup — Generate an Ed25519 SSH key, add it to ssh-agent, copy the public key to the clipboard, and run a verification smoke test.
+  - Known services: `github`, `gitlab`, `bitbucket`, `codeberg`, `forgejo` (custom services also supported).
+  - After copying the public key, optionally opens the service’s SSH key settings URL in the default browser (`open` on macOS, `xdg-open` on Linux); defaults to Yes.
+  - Usage examples:
+    - `ssh-key-setup` — prompt for identity and service.
+    - `ssh-key-setup francojc github` — generate a key for GitHub.
+    - `ssh-key-setup -n francojc github` — dry-run; print commands without executing.
+    - `ssh-key-setup -f francojc github` — overwrite an existing key without prompting.
+
 ### google- (Google Drive)
 
 - google-drive-files.sh -- Open Google Drive file list in browser
@@ -103,6 +115,7 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 - gh-cop-models: OPENAI_API_KEY required
 - wx: relies on wttr.in (no API key needed)
+- ssh-key-setup: OpenSSH (`ssh-keygen`, `ssh-add`, `ssh`) and a clipboard tool (`pbcopy` on macOS, `xclip` or `xsel` on Linux). `SSH_DIR` overrides the default `~/.ssh` output directory.
 - Common dependencies: curl, jq, git, gh, ffmpeg, yt-dlp (depending on the script)
 
 ## Notes on portability

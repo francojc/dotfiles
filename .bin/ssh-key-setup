@@ -1,0 +1,356 @@
+#!/usr/bin/env bash
+# Interactive SSH key generator, agent loader, and verification helper.
+# Usage: ssh-key-setup [options] [<identity>] [<service>]
+
+set -Eeuo pipefail
+
+SCRIPT_NAME="ssh-key-setup"
+
+# shellcheck source=common
+. "$(dirname "$0")/common"
+
+SCRIPT_VERSION="1.0.0"
+
+# ---------------------------------------------------------------------------
+# Service registry
+# ---------------------------------------------------------------------------
+
+declare -A SERVICE_URLS
+SERVICE_URLS=(
+  [github]="https://github.com/settings/keys"
+  [gitlab]="https://gitlab.com/profile/keys"
+  [bitbucket]="https://bitbucket.org/account-settings/ssh-keys/"
+  [codeberg]="https://codeberg.org/user/settings/keys"
+  [forgejo]="https://forgejo.gerbil-matrix.ts.net/user/settings/keys"
+)
+
+declare -A SERVICE_HOSTS
+SERVICE_HOSTS=(
+  [github]="git@github.com"
+  [gitlab]="git@gitlab.com"
+  [bitbucket]="git@bitbucket.org"
+  [codeberg]="git@codeberg.org"
+  [forgejo]="git@forgejo.gerbil-matrix.ts.net"
+)
+
+declare -A SERVICE_DOCS
+SERVICE_DOCS=(
+  [github]="https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
+  [gitlab]="https://docs.gitlab.com/ee/user/ssh.html"
+  [bitbucket]="https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/"
+  [codeberg]="https://docs.codeberg.org/security/ssh-key/"
+  [forgejo]="https://forgejo.org/docs/latest/user/git-with-forgejo/"
+)
+
+list_services() {
+  local name
+  for name in "${!SERVICE_URLS[@]}"; do
+    printf "  %s\n" "$name"
+  done | sort
+}
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+usage() {
+  cat <<EOF
+Usage: ${SCRIPT_NAME} [options] [<identity>] [<service>]
+
+Generate an Ed25519 SSH key for a service, add it to ssh-agent, copy the
+public key to the clipboard, and run a verification smoke test.
+
+Arguments:
+  <identity>    Name/email to embed in the key comment (prompted if omitted).
+  <service>     Known service alias: github, gitlab, bitbucket, codeberg,
+                forgejo, or a custom label (prompted if omitted).
+
+Options:
+  -h, --help       Show this help message.
+  --version        Show version.
+  -v, --verbose    Increase verbosity.
+  -q, --quiet      Suppress non-error output.
+  -n, --dry-run    Print commands without executing them.
+  -f, --force      Overwrite an existing key file without prompting.
+
+Examples:
+  ${SCRIPT_NAME}
+  ${SCRIPT_NAME} francojc github
+  ${SCRIPT_NAME} -n francojc github
+  ${SCRIPT_NAME} -f francojc github
+EOF
+}
+
+sanitize_filename_part() {
+  # Replace whitespace, slashes, and common unsafe characters with hyphens.
+  # Keep @ and dots to preserve identity@service style.
+  printf '%s' "$1" | tr -s ' /\\:;*?"<>|' '-'
+}
+
+check_file_overwrite() {
+  local file="$1"
+  local force="$2"
+  if [[ -e "$file" ]]; then
+    if [[ "$force" -eq 1 ]]; then
+      log_warn "Overwriting existing file (forced): $file"
+      return 0
+    fi
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      log_warn "File already exists; a real run would prompt here (or use --force): $file"
+      return 0
+    fi
+    read -rp "File already exists: $file. Overwrite? [y/N] " answer
+    case "$answer" in
+      [Yy]*) return 0 ;;
+      *) die "Aborted." ;;
+    esac
+  fi
+}
+
+detect_clipboard_tool() {
+  if command -v pbcopy >/dev/null 2>&1; then
+    echo "pbcopy"
+  elif command -v xclip >/dev/null 2>&1; then
+    echo "xclip"
+  elif command -v xsel >/dev/null 2>&1; then
+    echo "xsel"
+  else
+    echo ""
+  fi
+}
+
+copy_to_clipboard() {
+  local file="$1"
+  local tool
+  tool=$(detect_clipboard_tool)
+  [[ -z "$tool" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    local cmd
+    case "$tool" in
+      pbcopy) cmd="pbcopy < $file" ;;
+      xclip) cmd="xclip -selection clipboard < $file" ;;
+      xsel) cmd="xsel --clipboard --input < $file" ;;
+    esac
+    printf "+ %s\n" "$cmd"
+    log_info "Would copy $file to clipboard using $tool"
+    return 0
+  fi
+
+  case "$tool" in
+    pbcopy) pbcopy < "$file" ;;
+    xclip) xclip -selection clipboard < "$file" ;;
+    xsel) xsel --clipboard --input < "$file" ;;
+  esac
+}
+
+detect_open_tool() {
+  if command -v open >/dev/null 2>&1; then
+    echo "open"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    echo "xdg-open"
+  else
+    echo ""
+  fi
+}
+
+open_in_browser() {
+  local url="$1"
+  local tool
+  tool=$(detect_open_tool)
+  [[ -z "$tool" ]] && return 0
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    printf "+ %s %s\n" "$tool" "$url"
+    log_info "Would open $url in browser using $tool"
+    return 0
+  fi
+
+  "$tool" "$url"
+}
+
+run_ssh_test() {
+  local host="$1"
+  local key_path="$2"
+  local output=""
+  local code=0
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    printf "+ ssh -T -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -i %s %s\n" "$key_path" "$host"
+    log_info "Would inspect the SSH greeting from $host to determine success."
+    return 0
+  fi
+
+  # Disable ERR trap; git@hosts intentionally return non-zero on success.
+  trap - ERR
+  output=$(ssh -T -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -i "$key_path" "$host" 2>&1) || code=$?
+  trap on_err ERR
+
+  if [[ "$code" -eq 0 ]]; then
+    log_info "SSH smoke test succeeded."
+    return 0
+  fi
+
+  # Known failure signatures.
+  if [[ "$output" == *"Permission denied"* ]] || \
+     [[ "$output" == *"Could not resolve"* ]] || \
+     [[ "$output" == *"No route to host"* ]] || \
+     [[ "$output" == *"Connection refused"* ]] || \
+     [[ "$output" == *"Host key verification failed"* ]]; then
+    log_error "SSH smoke test failed."
+    log_error "$output"
+    return 1
+  fi
+
+  # Known success greetings.
+  if [[ "$output" == *"successfully authenticated"* ]] || \
+     [[ "$output" == *"Welcome to GitLab"* ]] || \
+     [[ "$output" == *"logged in as"* ]]; then
+    log_info "SSH smoke test succeeded."
+    [[ "$VERBOSE" -ge 1 ]] && log_info "$output"
+    return 0
+  fi
+
+  log_warn "SSH smoke test returned exit code $code with an unexpected response."
+  log_warn "$output"
+  log_warn "If the message indicates success, your key is working."
+  return 0
+}
+
+main() {
+  local identity=""
+  local service=""
+  local force=0
+  local show_help=0 show_version=0
+  local OPTIND=1 opt
+
+  while getopts ":hvqnf-:" opt; do
+    case "$opt" in
+      h) show_help=1 ;;
+      v) VERBOSE=$((VERBOSE+1)) ;;
+      q) QUIET=1 ;;
+      n) DRY_RUN=1 ;;
+      f) force=1 ;;
+      -) case "$OPTARG" in
+           help) show_help=1 ;;
+           version) show_version=1 ;;
+           verbose) VERBOSE=$((VERBOSE+1)) ;;
+           quiet) QUIET=1 ;;
+           dry-run) DRY_RUN=1 ;;
+           force) force=1 ;;
+           *) die "Unknown long option --$OPTARG" ;;
+         esac ;;
+      \?) die "Unknown option: -$OPTARG" ;;
+    esac
+  done
+  shift $((OPTIND-1)) || true
+
+  [[ $show_help -eq 1 ]] && { usage; exit 0; }
+  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
+
+  if [[ $# -gt 0 ]]; then
+    identity="$1"
+    shift
+  fi
+  if [[ $# -gt 0 ]]; then
+    service="$1"
+    shift
+  fi
+  [[ $# -gt 0 ]] && die "Unexpected arguments: $*"
+
+  # Identity prompt
+  if [[ -z "$identity" ]]; then
+    read -rp "Identity (e.g., email or username): " identity
+    [[ -z "$identity" ]] && die "Identity is required."
+  fi
+
+  # Service prompt
+  if [[ -z "$service" ]]; then
+    log_info "Known services:"
+    list_services
+    read -rp "Service name (or a custom label): " service
+    [[ -z "$service" ]] && die "Service name is required."
+  fi
+
+  local url host
+  if [[ -v SERVICE_URLS[$service] ]]; then
+    url="${SERVICE_URLS[$service]}"
+    host="${SERVICE_HOSTS[$service]}"
+  else
+    log_info "Custom service: $service"
+    read -rp "SSH key settings URL (optional): " url
+    read -rp "SSH host to test (e.g., git@example.com): " host
+    [[ -z "$host" ]] && die "SSH host is required for custom services."
+  fi
+
+  local safe_identity safe_service
+  safe_identity=$(sanitize_filename_part "$identity")
+  safe_service=$(sanitize_filename_part "$service")
+  local key_name="id_ed25519_${safe_identity}@${safe_service}"
+  local ssh_dir="${SSH_DIR:-$HOME/.ssh}"
+  local key_path="$ssh_dir/$key_name"
+  local pub_path="$key_path.pub"
+
+  # Ensure SSH directory exists.
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    run mkdir -p "$ssh_dir"
+  else
+    [[ -d "$ssh_dir" ]] || mkdir -p "$ssh_dir"
+  fi
+
+  # Prompt (and optionally remove) existing files so ssh-keygen does not ask again.
+  if [[ -e "$key_path" || -e "$pub_path" ]]; then
+    check_file_overwrite "$key_path" "$force"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      run rm -f "$key_path" "$pub_path"
+    else
+      rm -f "$key_path" "$pub_path"
+    fi
+  fi
+
+  # Generate key.
+  log_info "Generating Ed25519 key: $key_path"
+  run ssh-keygen -t ed25519 -a 100 -C "$identity@$service" -f "$key_path"
+
+  # Add to agent.
+  log_info "Adding key to ssh-agent..."
+  run ssh-add "$key_path"
+
+  # Copy public key to clipboard.
+  log_info "Copying public key to clipboard..."
+  copy_to_clipboard "$pub_path"
+
+  # Instructions.
+  echo ""
+  log_info "Your public key has been copied to the clipboard."
+  if [[ -n "$url" ]]; then
+    log_info "Add it to the service at: $url"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      open_in_browser "$url"
+    elif [[ -t 0 ]]; then
+      local answer
+      read -rp "Open settings URL in browser? [Y/n] " answer || answer=""
+      case "$answer" in
+        [Nn]*) ;;
+        *) open_in_browser "$url" ;;
+      esac
+    fi
+  fi
+  if [[ -v SERVICE_DOCS[$service] ]]; then
+    log_info "Docs: ${SERVICE_DOCS[$service]}"
+  fi
+  echo ""
+  # Verification code is optional; tolerate EOF (e.g. non-interactive dry-run).
+  read -rp "Paste the key, then enter the verification code shown (optional): " verification_code || true
+
+  # Smoke test.
+  echo ""
+  log_info "Running SSH smoke test to $host..."
+  run_ssh_test "$host" "$key_path"
+
+  echo ""
+  log_info "Done."
+}
+
+main "$@"
+
