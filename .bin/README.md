@@ -115,7 +115,7 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 - gh-cop-models: OPENAI_API_KEY required
 - wx: relies on wttr.in (no API key needed)
-- ssh-key-setup: OpenSSH (`ssh-keygen`, `ssh-add`, `ssh`) and a clipboard tool (`pbcopy` on macOS, `xclip` or `xsel` on Linux). `SSH_DIR` overrides the default `~/.ssh` output directory.
+- ssh-key-setup: OpenSSH (`ssh-keygen`, `ssh-add`, `ssh`) and a clipboard tool (`pbcopy` on macOS, `xclip` or `xsel` on Linux). `SSH_DIR` overrides the default `~/.ssh` output directory; `SSH_CONNECT_TIMEOUT` overrides the 10-second smoke-test timeout.
 - Common dependencies: curl, jq, git, gh, ffmpeg, yt-dlp (depending on the script)
 
 ## Notes on portability

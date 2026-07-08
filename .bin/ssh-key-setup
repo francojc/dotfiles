@@ -9,44 +9,103 @@ SCRIPT_NAME="ssh-key-setup"
 # shellcheck source=common
 . "$(dirname "$0")/common"
 
-SCRIPT_VERSION="1.0.0"
+SCRIPT_VERSION="1.1.0"
 
 # ---------------------------------------------------------------------------
 # Service registry
 # ---------------------------------------------------------------------------
 
-declare -A SERVICE_URLS
-SERVICE_URLS=(
-  [github]="https://github.com/settings/keys"
-  [gitlab]="https://gitlab.com/profile/keys"
-  [bitbucket]="https://bitbucket.org/account-settings/ssh-keys/"
-  [codeberg]="https://codeberg.org/user/settings/keys"
-  [forgejo]="https://forgejo.gerbil-matrix.ts.net/user/settings/keys"
-)
-
-declare -A SERVICE_HOSTS
-SERVICE_HOSTS=(
-  [github]="git@github.com"
-  [gitlab]="git@gitlab.com"
-  [bitbucket]="git@bitbucket.org"
-  [codeberg]="git@codeberg.org"
-  [forgejo]="git@forgejo.gerbil-matrix.ts.net"
-)
-
-declare -A SERVICE_DOCS
-SERVICE_DOCS=(
-  [github]="https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
-  [gitlab]="https://docs.gitlab.com/ee/user/ssh.html"
-  [bitbucket]="https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/"
-  [codeberg]="https://docs.codeberg.org/security/ssh-key/"
-  [forgejo]="https://forgejo.org/docs/latest/user/git-with-forgejo/"
-)
-
 list_services() {
-  local name
-  for name in "${!SERVICE_URLS[@]}"; do
-    printf "  %s\n" "$name"
-  done | sort
+  printf "  %s\n" bitbucket codeberg forgejo github gitlab | sort
+}
+
+service_url() {
+  case "$1" in
+    github) printf "%s\n" "https://github.com/settings/keys" ;;
+    gitlab) printf "%s\n" "https://gitlab.com/profile/keys" ;;
+    bitbucket) printf "%s\n" "https://bitbucket.org/account-settings/ssh-keys/" ;;
+    codeberg) printf "%s\n" "https://codeberg.org/user/settings/keys" ;;
+    forgejo) printf "%s\n" "https://forgejo.gerbil-matrix.ts.net/user/settings/keys" ;;
+    *) return 1 ;;
+  esac
+}
+
+service_host() {
+  case "$1" in
+    github) printf "%s\n" "git@github.com" ;;
+    gitlab) printf "%s\n" "git@gitlab.com" ;;
+    bitbucket) printf "%s\n" "git@bitbucket.org" ;;
+    codeberg) printf "%s\n" "git@codeberg.org" ;;
+    forgejo) printf "%s\n" "git@forgejo.gerbil-matrix.ts.net" ;;
+    *) return 1 ;;
+  esac
+}
+
+service_docs() {
+  case "$1" in
+    github) printf "%s\n" "https://docs.github.com/en/authentication/connecting-to-github-with-ssh" ;;
+    gitlab) printf "%s\n" "https://docs.gitlab.com/ee/user/ssh.html" ;;
+    bitbucket) printf "%s\n" "https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/" ;;
+    codeberg) printf "%s\n" "https://docs.codeberg.org/security/ssh-key/" ;;
+    forgejo) printf "%s\n" "https://forgejo.org/docs/latest/user/git-with-forgejo/" ;;
+    *) return 1 ;;
+  esac
+}
+
+is_known_service() {
+  service_url "$1" >/dev/null 2>&1
+}
+
+CLIPBOARD_TOOL=""
+OPEN_TOOL=""
+SSH_CONNECT_TIMEOUT="${SSH_CONNECT_TIMEOUT:-10}"
+SSH_STRICT_HOST_KEY_CHECKING="${SSH_STRICT_HOST_KEY_CHECKING:-accept-new}"
+SSH_COMMON_OPTIONS=(
+  -o "BatchMode=yes"
+  -o "ConnectTimeout=${SSH_CONNECT_TIMEOUT}"
+  -o "StrictHostKeyChecking=${SSH_STRICT_HOST_KEY_CHECKING}"
+  -o "IdentitiesOnly=yes"
+  -o "PasswordAuthentication=no"
+  -o "KbdInteractiveAuthentication=no"
+  -o "NumberOfPasswordPrompts=0"
+)
+
+clipboard_command_for_tool() {
+  local tool="$1"
+  local file="$2"
+  case "$tool" in
+    pbcopy) printf "pbcopy < %s\n" "$file" ;;
+    xclip) printf "xclip -selection clipboard < %s\n" "$file" ;;
+    xsel) printf "xsel --clipboard --input < %s\n" "$file" ;;
+    *) return 1 ;;
+  esac
+}
+
+choose_dry_run_clipboard_tool() {
+  case "$(uname -s 2>/dev/null || printf unknown)" in
+    Darwin) printf "%s\n" "pbcopy" ;;
+    *) printf "%s\n" "xclip" ;;
+  esac
+}
+
+preflight() {
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    return 0
+  fi
+
+  require ssh-keygen ssh-add ssh
+
+  CLIPBOARD_TOOL=$(detect_clipboard_tool)
+  [[ -z "$CLIPBOARD_TOOL" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
+
+  OPEN_TOOL=$(detect_open_tool)
+
+  local agent_status=0
+  ssh-add -l >/dev/null 2>&1 || agent_status=$?
+  case "$agent_status" in
+    0|1) ;;
+    *) die "ssh-agent is unavailable. Start ssh-agent, then retry." ;;
+  esac
 }
 
 # ---------------------------------------------------------------------------
@@ -87,24 +146,41 @@ sanitize_filename_part() {
   printf '%s' "$1" | tr -s ' /\\:;*?"<>|' '-'
 }
 
-check_file_overwrite() {
-  local file="$1"
-  local force="$2"
-  if [[ -e "$file" ]]; then
-    if [[ "$force" -eq 1 ]]; then
+check_key_overwrite() {
+  local key_path="$1"
+  local pub_path="$2"
+  local force="$3"
+  local existing=()
+  local file answer
+
+  for file in "$key_path" "$pub_path"; do
+    [[ -e "$file" ]] && existing+=("$file")
+  done
+  [[ "${#existing[@]}" -eq 0 ]] && return 0
+
+  if [[ "$force" -eq 1 ]]; then
+    for file in "${existing[@]}"; do
       log_warn "Overwriting existing file (forced): $file"
-      return 0
-    fi
-    if [[ "$DRY_RUN" -eq 1 ]]; then
-      log_warn "File already exists; a real run would prompt here (or use --force): $file"
-      return 0
-    fi
-    read -rp "File already exists: $file. Overwrite? [y/N] " answer
-    case "$answer" in
-      [Yy]*) return 0 ;;
-      *) die "Aborted." ;;
-    esac
+    done
+    return 0
   fi
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    for file in "${existing[@]}"; do
+      log_warn "File already exists; a real run would prompt here (or use --force): $file"
+    done
+    return 0
+  fi
+
+  log_warn "Existing key file(s):"
+  for file in "${existing[@]}"; do
+    log_warn "  $file"
+  done
+  read -rp "Overwrite existing key file(s)? [y/N] " answer
+  case "$answer" in
+    [Yy]*) return 0 ;;
+    *) die "Aborted." ;;
+  esac
 }
 
 detect_clipboard_tool() {
@@ -121,26 +197,23 @@ detect_clipboard_tool() {
 
 copy_to_clipboard() {
   local file="$1"
-  local tool
-  tool=$(detect_clipboard_tool)
-  [[ -z "$tool" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
+  local tool="$CLIPBOARD_TOOL"
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    local cmd
-    case "$tool" in
-      pbcopy) cmd="pbcopy < $file" ;;
-      xclip) cmd="xclip -selection clipboard < $file" ;;
-      xsel) cmd="xsel --clipboard --input < $file" ;;
-    esac
-    printf "+ %s\n" "$cmd"
+    [[ -z "$tool" ]] && tool=$(detect_clipboard_tool)
+    [[ -z "$tool" ]] && tool=$(choose_dry_run_clipboard_tool)
+    printf "+ %s\n" "$(clipboard_command_for_tool "$tool" "$file")"
     log_info "Would copy $file to clipboard using $tool"
     return 0
   fi
+
+  [[ -z "$tool" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
 
   case "$tool" in
     pbcopy) pbcopy < "$file" ;;
     xclip) xclip -selection clipboard < "$file" ;;
     xsel) xsel --clipboard --input < "$file" ;;
+    *) die "Unsupported clipboard tool: $tool" ;;
   esac
 }
 
@@ -156,8 +229,8 @@ detect_open_tool() {
 
 open_in_browser() {
   local url="$1"
-  local tool
-  tool=$(detect_open_tool)
+  local tool="$OPEN_TOOL"
+  [[ -z "$tool" ]] && tool=$(detect_open_tool)
   [[ -z "$tool" ]] && return 0
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
@@ -176,45 +249,59 @@ run_ssh_test() {
   local code=0
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    printf "+ ssh -T -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -i %s %s\n" "$key_path" "$host"
+    printf "+ ssh -T"
+    printf " %q" "${SSH_COMMON_OPTIONS[@]}" -i "$key_path" "$host"
+    printf "\n"
     log_info "Would inspect the SSH greeting from $host to determine success."
     return 0
   fi
 
-  # Disable ERR trap; git@hosts intentionally return non-zero on success.
-  trap - ERR
-  output=$(ssh -T -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes -i "$key_path" "$host" 2>&1) || code=$?
-  trap on_err ERR
+  # Git hosts often return non-zero on successful auth, so keep this in an if condition.
+  if output=$(ssh -T "${SSH_COMMON_OPTIONS[@]}" -i "$key_path" "$host" 2>&1); then
+    code=0
+  else
+    code=$?
+  fi
 
   if [[ "$code" -eq 0 ]]; then
     log_info "SSH smoke test succeeded."
+    [[ "$VERBOSE" -ge 1 && -n "$output" ]] && log_info "$output"
+    return 0
+  fi
+
+  # Known success greetings.
+  if [[ "$output" == *"successfully authenticated"* ]] || \
+     [[ "$output" == *"You've successfully authenticated"* ]] || \
+     [[ "$output" == *"Welcome to GitLab"* ]] || \
+     [[ "$output" == *"logged in as"* ]] || \
+     [[ "$output" == *"authenticated via ssh key"* ]] || \
+     [[ "$output" == *"Shell access is disabled"* ]]; then
+    log_info "SSH smoke test succeeded."
+    [[ "$VERBOSE" -ge 1 ]] && log_info "$output"
     return 0
   fi
 
   # Known failure signatures.
   if [[ "$output" == *"Permission denied"* ]] || \
      [[ "$output" == *"Could not resolve"* ]] || \
+     [[ "$output" == *"Name or service not known"* ]] || \
      [[ "$output" == *"No route to host"* ]] || \
+     [[ "$output" == *"Network is unreachable"* ]] || \
      [[ "$output" == *"Connection refused"* ]] || \
-     [[ "$output" == *"Host key verification failed"* ]]; then
+     [[ "$output" == *"Connection timed out"* ]] || \
+     [[ "$output" == *"Operation timed out"* ]] || \
+     [[ "$output" == *"Connection closed"* ]] || \
+     [[ "$output" == *"Host key verification failed"* ]] || \
+     [[ "$output" == *"REMOTE HOST IDENTIFICATION HAS CHANGED"* ]]; then
     log_error "SSH smoke test failed."
     log_error "$output"
     return 1
   fi
 
-  # Known success greetings.
-  if [[ "$output" == *"successfully authenticated"* ]] || \
-     [[ "$output" == *"Welcome to GitLab"* ]] || \
-     [[ "$output" == *"logged in as"* ]]; then
-    log_info "SSH smoke test succeeded."
-    [[ "$VERBOSE" -ge 1 ]] && log_info "$output"
-    return 0
-  fi
-
   log_warn "SSH smoke test returned exit code $code with an unexpected response."
   log_warn "$output"
-  log_warn "If the message indicates success, your key is working."
-  return 0
+  log_warn "Could not confirm success. Inspect message above."
+  return 2
 }
 
 main() {
@@ -273,9 +360,9 @@ main() {
   fi
 
   local url host
-  if [[ -v SERVICE_URLS[$service] ]]; then
-    url="${SERVICE_URLS[$service]}"
-    host="${SERVICE_HOSTS[$service]}"
+  if is_known_service "$service"; then
+    url=$(service_url "$service")
+    host=$(service_host "$service")
   else
     log_info "Custom service: $service"
     read -rp "SSH key settings URL (optional): " url
@@ -291,16 +378,20 @@ main() {
   local key_path="$ssh_dir/$key_name"
   local pub_path="$key_path.pub"
 
+  preflight
+
   # Ensure SSH directory exists.
   if [[ "$DRY_RUN" -eq 1 ]]; then
     run mkdir -p "$ssh_dir"
+    run chmod 700 "$ssh_dir"
   else
     [[ -d "$ssh_dir" ]] || mkdir -p "$ssh_dir"
+    chmod 700 "$ssh_dir"
   fi
 
   # Prompt (and optionally remove) existing files so ssh-keygen does not ask again.
   if [[ -e "$key_path" || -e "$pub_path" ]]; then
-    check_file_overwrite "$key_path" "$force"
+    check_key_overwrite "$key_path" "$pub_path" "$force"
     if [[ "$DRY_RUN" -eq 1 ]]; then
       run rm -f "$key_path" "$pub_path"
     else
@@ -336,17 +427,22 @@ main() {
       esac
     fi
   fi
-  if [[ -v SERVICE_DOCS[$service] ]]; then
-    log_info "Docs: ${SERVICE_DOCS[$service]}"
+  local docs verification_code
+  if docs=$(service_docs "$service"); then
+    log_info "Docs: $docs"
   fi
   echo ""
-  # Verification code is optional; tolerate EOF (e.g. non-interactive dry-run).
-  read -rp "Paste the key, then enter the verification code shown (optional): " verification_code || true
+  # Confirmation is optional; tolerate EOF (e.g. non-interactive dry-run).
+  read -rp "Paste/add the key in the service, then press Enter to continue: " verification_code || true
 
   # Smoke test.
   echo ""
   log_info "Running SSH smoke test to $host..."
-  run_ssh_test "$host" "$key_path"
+  if run_ssh_test "$host" "$key_path"; then
+    :
+  else
+    exit $?
+  fi
 
   echo ""
   log_info "Done."
