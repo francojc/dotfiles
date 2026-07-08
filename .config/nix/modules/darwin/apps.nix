@@ -125,10 +125,12 @@
       "opensuperwhisper" # on-device dictation
       "raycast" # productivity launcher
       "rectangle" # window management
+      "rustdesk" # remote desktop
       "signal" # messaging
       "supacode" # Agentic harness session manager
       "telegram" # messaging (bot)
       "tidal" # music streaming
+      "visual-studio-code" # code editor
       "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
@@ -136,7 +138,6 @@
       # "chatgpt" # ChatGPT
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
-      # "visual-studio-code" # code editor
       # "vlc" # media player
     ];
   };
