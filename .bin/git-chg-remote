@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#
+# chg-remote - Switch the git "origin" remote to a new URL.
+#
+# Usage: chg-remote <argument>
+#
+# The <argument> should be the new remote URL to use as origin.
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: ${0##*/} <argument>
+
+Switch the git "origin" remote to <argument>.
+
+Commands executed:
+  git remote rename origin github
+  git remote add origin <argument>
+  git remote remove github
+  git ls-remote
+  git fetch origin
+  git branch --set-upstream-to=origin/main main
+
+Options:
+  -h, --help    Show this help message and exit.
+EOF
+}
+
+if [[ $# -eq 0 ]] || [[ $# -gt 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+new_remote="$1"
+
+if ! command -v git >/dev/null 2>&1; then
+  printf 'Error: git not found in PATH\n' >&2
+  exit 1
+fi
+
+if [[ ! -d .git ]]; then
+  printf 'Error: not at the root of a git repository\n' >&2
+  exit 1
+fi
+
+printf '==> Renaming current origin to github...\n'
+git remote rename origin github
+
+printf '==> Adding new origin: %s\n' "$new_remote"
+git remote add origin "$new_remote"
+
+printf '==> Removing github remote...\n'
+git remote remove github
+
+printf '==> Listing refs on new origin...\n'
+git ls-remote
+
+printf '==> Fetching from new origin...\n'
+git fetch origin
+
+current_branch=$(git branch --show-current)
+if [[ "$current_branch" == "main" ]]; then
+  printf '==> Setting main to track origin/main...\n'
+  git branch --set-upstream-to=origin/main main
+else
+  printf 'Warning: current branch is "%s", not main; skipping upstream setup\n' "$current_branch" >&2
+fi
+
+printf '==> Done.\n'
