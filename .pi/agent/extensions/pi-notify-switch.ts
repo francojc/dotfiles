@@ -144,7 +144,7 @@ export default function (pi: ExtensionAPI) {
     clearWaiting("agent_start");
   });
 
-  pi.on("agent_end", async (_event, ctx) => {
+  pi.on("agent_settled", async (_event, ctx) => {
     if (ctx.mode !== "tui") return;
 
     const tmux = getTmuxInfo();
