@@ -262,7 +262,7 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` and a compact `codex … 5h … wk` footer status.
+- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status`; the custom footer renders its status as a Copilot-style five-hour bar plus compact weekly percentage, for example ` Codex [███████░░░] 71% · wk 93%`.
 - `/codex-status` shows the ChatGPT/Codex plan, current five-hour and weekly rate-limit windows, reset times, credits, and any model-specific buckets returned by OpenAI. Use `/codex-status --refresh` to bypass its five-minute in-memory cache.
 - The footer status appears only for `openai-codex/*` models and clears when another provider is selected. This complements Copilot's provider-specific status; only the active subscription provider's indicator is shown.
 

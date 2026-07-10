@@ -45,6 +45,32 @@ function sanitizeStatusText(text: string): string {
 	return text.replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim();
 }
 
+function clampPercent(percent: number): number {
+	return Math.max(0, Math.min(100, Number.isFinite(percent) ? percent : 0));
+}
+
+function quotaGlyph(percent: number): string {
+	if (percent > 25) return "";
+	if (percent > 10) return "";
+	return "";
+}
+
+function remainingBar(percent: number, width = 10): string {
+	const filled = Math.round((clampPercent(percent) / 100) * width);
+	return `[${"█".repeat(filled)}${"░".repeat(width - filled)}]`;
+}
+
+function formatCodexUsageStatus(status: string): string {
+	const match = status.match(/^codex(?:\s+(.+?))?\s+(\d{1,3})%\s+5h\s+(\d{1,3})%\s+wk$/i);
+	if (!match) return status;
+
+	const [, variant, rawFiveHour, rawWeekly] = match;
+	const fiveHour = clampPercent(Number(rawFiveHour));
+	const weekly = clampPercent(Number(rawWeekly));
+	const label = variant ? `Codex ${variant}` : "Codex";
+	return `${quotaGlyph(fiveHour)} ${label} ${remainingBar(fiveHour)} ${fiveHour.toFixed(0)}% · wk ${weekly.toFixed(0)}%`;
+}
+
 function formatBranchLabel(branch: string, stats: GitStats | null, theme: ExtensionContext["ui"]["theme"]): string {
 	if (!stats) return theme.fg("accent", branch);
 
@@ -220,6 +246,7 @@ export default function (pi: ExtensionAPI) {
 							const status = sanitizeStatusText(text);
 							if (!status) return "";
 							if (key === "idle") return `${theme.fg("dim", "voice: ")}${status}`;
+							if (key === "codex-usage") return formatCodexUsageStatus(status);
 							return status;
 						})
 						.filter(Boolean);
