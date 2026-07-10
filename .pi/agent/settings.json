@@ -8,8 +8,10 @@
   "defaultThinkingLevel": "high",
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
   "theme": "ghostty-sync-f4e5674f",
+  "externalEditor": "nvim",
   "hideThinkingBlock": true,
   "showCacheMissNotices": true,
+  "outputPad": 0,
   "transport": "auto",
   "terminal": {
     "showTerminalProgress": true,
