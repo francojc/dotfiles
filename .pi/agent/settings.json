@@ -1,0 +1,40 @@
+{
+  "lastChangelogVersion": "0.80.6",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
+  "defaultThinkingLevel": "high",
+  "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
+  "theme": "ghostty-sync-f4e5674f",
+  "hideThinkingBlock": true,
+  "showCacheMissNotices": true,
+  "transport": "auto",
+  "terminal": {
+    "showTerminalProgress": true,
+    "clearOnShrink": true
+  },
+  "warnings": {
+    "anthropicExtraUsage": true
+  },
+  "packages": [
+    "npm:pi-caveman@1.0.7",
+    "npm:pi-btw@0.4.1",
+    "npm:@plannotator/pi-extension",
+    "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.2"
+  ],
+  "enabledModels": [
+    "opencode-go/glm-5.2",
+    "opencode-go/minimax-m3",
+    "opencode-go/qwen3.7-max",
+    "opencode-go/deepseek-v4-flash",
+    "opencode-go/deepseek-v4-pro",
+    "opencode-go/mimo-v2.5-pro",
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.6-sol",
+    "github-copilot/claude-sonnet-5",
+    "github-copilot/gemini-3.5-flash",
+    "copilot-api/kimi-k2.7-code"
+  ]
+}
