@@ -66,10 +66,6 @@
         trusted = true;
       } # workmux
       {
-        name = "manaflow-ai/cmux";
-        trusted = true;
-      } # cmux
-      {
         name = "my-monkeys/tap";
         trusted = true;
       } # opensuperwhisper
@@ -78,11 +74,11 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      "herald" # herald
+      # "herald" # herald
       "hf" # huggingface cli
       "hunk" # git diff tool
       "koan" # Navidrome TUI player
-      "lazyssh" # lazyssh
+      # "lazyssh" # lazyssh
       "librespeed-cli"
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
@@ -94,10 +90,10 @@
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
-      "sqly" # interactive SQL client
+      # "sqly" # interactive SQL client
       "tree-sitter-cli" # tree-sitter CLI
       "vhs" # cli for programmable terminal gifs
-      "workmux" # agentic ai multiplexer
+      # "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
@@ -109,12 +105,11 @@
     ];
 
     casks = [
+      "anythingllm" # llm harness/desktop app
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "claude" # Claude Desktop
-      "cmux" # cmux
       "dorso" # posture monitor
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
@@ -125,9 +120,7 @@
       "opensuperwhisper" # on-device dictation
       "raycast" # productivity launcher
       "rectangle" # window management
-      "rustdesk" # remote desktop
       "signal" # messaging
-      "supacode" # Agentic harness session manager
       "telegram" # messaging (bot)
       "tidal" # music streaming
       "visual-studio-code" # code editor
