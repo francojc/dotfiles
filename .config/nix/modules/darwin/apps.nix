@@ -74,11 +74,9 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      # "herald" # herald
       "hf" # huggingface cli
       "hunk" # git diff tool
       "koan" # Navidrome TUI player
-      # "lazyssh" # lazyssh
       "librespeed-cli"
       "llm" # llm.dataset.io
       "llmfit" # LLM system fit
@@ -86,22 +84,25 @@
       "mole" # terminal cleanup app for macOS
       "nmap" # network scanner
       "node" # Node.js
+      "officecli" # AI-accessible office suite conversion/creation
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
-      # "sqly" # interactive SQL client
       "tree-sitter-cli" # tree-sitter CLI
       "vhs" # cli for programmable terminal gifs
-      # "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
       # "helix" # text editor
+      # "herald" # herald
+      # "lazyssh" # lazyssh
       # "libffi" # Foreign Function Interface library
       # "ninja" # build system
       # "pango" # text layout library
+      # "sqly" # interactive SQL client
       # "weasyprint" # HTML to PDF converter
+      # "workmux" # agentic ai multiplexer
     ];
 
     casks = [
