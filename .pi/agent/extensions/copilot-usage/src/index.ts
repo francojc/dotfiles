@@ -19,7 +19,7 @@
 import { execFile } from "node:child_process";
 import { join } from "node:path";
 import { promisify } from "node:util";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
 import type {
@@ -736,9 +736,16 @@ export default function (pi: ExtensionAPI) {
 	// fix #3: TTL cache — avoids redundant full API round-trips on repeat commands
 	let fetchCache: { data: FetchResult; ts: number } | null = null;
 	let pollTimer: ReturnType<typeof setTimeout> | null = null;
-	let isPolling = false; // guard against re-entrant polling calls
-	// Store only the one function we need — not the whole ExtensionContext
-	let setStatus: ((id: string, text: string) => void) | null = null;
+	let pollGeneration = 0;
+	// Store only the one function we need — not the whole ExtensionContext.
+	let setStatus: ((id: string, text: string | undefined) => void) | null = null;
+
+	const isCopilotProvider = (provider: string | undefined): boolean =>
+		provider === "github-copilot" || provider === "copilot-api";
+
+	const setCopilotStatus = (ctx: ExtensionContext, text: string | undefined): void => {
+		ctx.ui.setStatus("copilot-usage", isCopilotProvider(ctx.model?.provider) ? text : undefined);
+	};
 
 	async function stopClient(): Promise<void> {
 		fetchCache = null;
@@ -767,53 +774,67 @@ export default function (pi: ExtensionAPI) {
 	 * Uses recursive setTimeout so the next poll only schedules *after*
 	 * this one completes — prevents overlapping gh processes.
 	 */
-	async function refreshQuotaStatus(): Promise<void> {
-		if (isPolling || !setStatus) return; // already running or shut down
-		isPolling = true;
+	async function refreshQuotaStatus(generation: number): Promise<void> {
+		if (generation !== pollGeneration || !setStatus) return;
 		try {
 			const userInfo = await fetchCopilotUserInfo();
 			const pi_q = userInfo.quota_snapshots?.["premium_interactions"];
-			if (pi_q && setStatus) {
+			if (generation === pollGeneration && pi_q && setStatus) {
 				setStatus("copilot-usage", formatQuotaStatus(pi_q));
 			}
 		} catch {
-			// Silently ignore – will retry next cycle
+			// Silently ignore – will retry next cycle while this provider remains active.
 		} finally {
-			isPolling = false;
-			// Schedule next poll only after this one fully completes
-			if (setStatus !== null) {
-				pollTimer = setTimeout(refreshQuotaStatus, POLL_INTERVAL_MS);
+			// Schedule only if this request still belongs to the selected Copilot provider.
+			if (generation === pollGeneration && setStatus !== null) {
+				pollTimer = setTimeout(() => void refreshQuotaStatus(generation), POLL_INTERVAL_MS);
 			}
 		}
 	}
 
-	// fix #6: delay first fetch by 3 s to avoid blocking session startup
-	function startPolling(fn: (id: string, text: string) => void): void {
-		stopPolling();
-		setStatus = fn;
-		// Delay the first gh call so it doesn't slow down session startup;
-		// subsequent calls chain via setTimeout inside refreshQuotaStatus finally block
-		pollTimer = setTimeout(refreshQuotaStatus, 3_000);
-	}
-
 	function stopPolling(): void {
-		setStatus = null; // signals refreshQuotaStatus not to reschedule
+		pollGeneration += 1; // invalidates timer callbacks and in-flight responses
+		setStatus = null;
 		if (pollTimer) {
 			clearTimeout(pollTimer);
 			pollTimer = null;
 		}
-		fetchCache = null; // invalidate cached data on session end (fix #3)
+		fetchCache = null;
+	}
+
+	// Delay the first fetch so session startup does not block. Every active polling
+	// generation chains its own recursive timeout after a request completes.
+	function startPolling(fn: (id: string, text: string | undefined) => void): void {
+		stopPolling();
+		setStatus = fn;
+		const generation = ++pollGeneration;
+		pollTimer = setTimeout(() => void refreshQuotaStatus(generation), 3_000);
+	}
+
+	function syncCopilotStatus(ctx: ExtensionContext, provider: string | undefined): void {
+		stopPolling();
+		if (!isCopilotProvider(provider)) {
+			setCopilotStatus(ctx, undefined);
+			return;
+		}
+
+		setCopilotStatus(ctx, `${GLYPH_LOADING} Copilot loading…`);
+		startPolling(ctx.ui.setStatus.bind(ctx.ui));
 	}
 
 	// ── Lifecycle ─────────────────────────────────────────────────────────────
 
 	pi.on("session_start", async (_event, ctx) => {
-		ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot loading…`);
-		startPolling(ctx.ui.setStatus.bind(ctx.ui));
+		syncCopilotStatus(ctx, ctx.model?.provider);
 	});
 
-	pi.on("session_shutdown", async () => {
+	pi.on("model_select", async (event, ctx) => {
+		syncCopilotStatus(ctx, event.model.provider);
+	});
+
+	pi.on("session_shutdown", async (_event, ctx) => {
 		stopPolling();
+		ctx.ui.setStatus("copilot-usage", undefined);
 		await stopClient();
 	});
 
@@ -822,16 +843,16 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copilot", {
 		description: "Show GitHub Copilot usage dashboard (quota, models, sessions)",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching…`);
+			setCopilotStatus(ctx, `${GLYPH_LOADING} Copilot fetching…`);
 			try {
 				const { sessions, userInfo, status, auth, models } = await fetchAllCached();
 				const stats = computeStats(sessions, userInfo, status, auth, models);
-				ctx.ui.setStatus("copilot-usage", statusLabel(stats));
+				setCopilotStatus(ctx, statusLabel(stats));
 				await ctx.ui.select("GitHub Copilot Usage", overviewLines(stats));
 			} catch (err) {
 				await stopClient(); // fix #4: stop + clear cache; don't orphan old client
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
+				setCopilotStatus(ctx, `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -842,12 +863,12 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copilot-quota", {
 		description: "Secondary focused Copilot quota and model billing view",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching quota…`);
+			setCopilotStatus(ctx, `${GLYPH_LOADING} Copilot fetching quota…`);
 			try {
 				// fix #3: use shared cache — no separate listModels/getStatus calls
 				const { userInfo, status, auth, models } = await fetchAllCached();
 				const stats = computeStats([], userInfo, status, auth, models);
-				ctx.ui.setStatus("copilot-usage", statusLabel(stats));
+				setCopilotStatus(ctx, statusLabel(stats));
 				// Combine quota + model billing in one view
 				const lines = [
 					...quotaLines(stats),
@@ -858,7 +879,7 @@ export default function (pi: ExtensionAPI) {
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
+				setCopilotStatus(ctx, `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -869,15 +890,15 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copilot-sessions", {
 		description: "Browse GitHub Copilot sessions",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching sessions…`);
+			setCopilotStatus(ctx, `${GLYPH_LOADING} Copilot fetching sessions…`);
 			try {
 				const { sessions } = await fetchAllCached(); // fix #3
 				if (sessions.length === 0) {
 					ctx.ui.notify("No Copilot sessions found.", "info");
-					ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot 0 sessions`);
+					setCopilotStatus(ctx, `${GLYPH_CONNECTED} Copilot 0 sessions`);
 					return;
 				}
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot ${sessions.length} sessions`);
+				setCopilotStatus(ctx, `${GLYPH_CONNECTED} Copilot ${sessions.length} sessions`);
 
 				// fix #2: sort once here and pass to sessionListLines (was sorted twice)
 				const sorted = [...sessions].sort((a, b) => b.modifiedTime.getTime() - a.modifiedTime.getTime());
@@ -893,7 +914,7 @@ export default function (pi: ExtensionAPI) {
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
+				setCopilotStatus(ctx, `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},
@@ -904,16 +925,16 @@ export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copilot-models", {
 		description: "Secondary focused Copilot model billing view",
 		handler: async (_args, ctx) => {
-			ctx.ui.setStatus("copilot-usage", `${GLYPH_LOADING} Copilot fetching models…`);
+			setCopilotStatus(ctx, `${GLYPH_LOADING} Copilot fetching models…`);
 			try {
 				const { auth, models } = await fetchAllCached(); // fix #3
 				const stats = computeStats([], undefined, undefined, auth, models);
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_CONNECTED} Copilot ${(models ?? []).length} models`);
+				setCopilotStatus(ctx, `${GLYPH_CONNECTED} Copilot ${(models ?? []).length} models`);
 				await ctx.ui.select("Copilot Models & Billing", modelLines(stats));
 			} catch (err) {
 				await stopClient(); // fix #4
 				const msg = err instanceof Error ? err.message : String(err);
-				ctx.ui.setStatus("copilot-usage", `${GLYPH_ERROR} Copilot error`);
+				setCopilotStatus(ctx, `${GLYPH_ERROR} Copilot error`);
 				ctx.ui.notify(`Copilot error: ${msg}`, "error");
 			}
 		},

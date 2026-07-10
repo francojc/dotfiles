@@ -24,7 +24,8 @@
     "npm:pi-caveman@1.0.7",
     "npm:pi-btw@0.4.1",
     "npm:@plannotator/pi-extension",
-    "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.2"
+    "npm:@ogulcancelik/pi-ghostty-theme-sync@0.1.2",
+    "npm:@narumitw/pi-codex-usage@0.12.0"
   ],
   "enabledModels": [
     "opencode-go/glm-5.2",
