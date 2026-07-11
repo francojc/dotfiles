@@ -117,6 +117,7 @@
       "kap" # screen recording
       "keycastr" # keystroke visualizer
       "kitty" # terminal emulator (moved to Nix)
+      "lm-studio" # LLM interface
       "obsidian" # note-taking
       "opensuperwhisper" # on-device dictation
       "raycast" # productivity launcher

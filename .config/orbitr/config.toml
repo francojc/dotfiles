@@ -13,3 +13,5 @@ no_color = false
 semantic_scholar_api_key = ""
 zotero_user_id = ""
 zotero_api_key = ""
+karakeep_api_key = ""
+karakeep_server_url = "https://notes.gerbil-matrix.ts.net"
