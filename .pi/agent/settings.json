@@ -7,7 +7,7 @@
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "medium",
   "shellCommandPrefix": "shopt -s expand_aliases\neval \"$(grep '^alias ' ~/.zshrc)\"",
-  "theme": "ghostty-sync-f4e5674f",
+  "theme": "ghostty-sync-e13299c9",
   "externalEditor": "nvim",
   "hideThinkingBlock": false,
   "showCacheMissNotices": true,
