@@ -49,6 +49,8 @@ NOTES:
     - Overwrites existing ~/.variables.env file
     - Only extracts the password (first line) of each entry
     - Uses base filename as variable name
+    - Removes accidental trailing .gpg suffixes from entry names
+    - Skips names that are not valid shell variable names
 
 EOF
 }
@@ -90,9 +92,20 @@ extract_passwords() {
     password=$(pass show "$entry_path" 2>/dev/null | head -n 1)
 
     if [[ -n "$password" ]]; then
-      # Extract just the key name (last part of the path)
+      # Extract just the key name (last part of the path).
+      # A pass entry named NAME.gpg is stored as NAME.gpg.gpg; remove
+      # that accidental suffix so generated exports remain valid.
       local key_name
       key_name=$(basename "$entry_path")
+      key_name="${key_name%.gpg}"
+
+      # Shell variable names may contain only letters, digits, and
+      # underscores, and may not start with a digit.
+      if [[ ! "$key_name" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+        printf 'Skipping invalid environment variable name: %s\n' "$key_name" >&2
+        continue
+      fi
+
       printf "export %s=%q\n" "$key_name" "$password" >> "$temp_exports"
     fi
   done < <(find "$pass_dir" -name "*.gpg" -type f | sort)
