@@ -278,6 +278,29 @@ Sources checked:
 - `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
 - `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts`
 
+### OpenCode Go usage
+
+What it does:
+
+- Shows a Codex-shaped remaining-quota footer meter only while an `opencode-go/*` model is selected, for example ` OpenCode Go [███████░░░] 71% · wk 93%`.
+- `/opencode-go-status` shows five-hour, weekly, and monthly remaining percentage plus reset time. Use `/opencode-go-status --refresh` to bypass its short fresh cache.
+- Uses a 60-second fresh cache, a 10-minute stale fallback, and 60-second recursive polling after a short startup delay. Switching away from OpenCode Go or shutting down clears its status and invalidates late poll results.
+
+Runtime environment inputs:
+
+- By default, the extension reads `pass show USER/OPENCODE_GO_WORKSPACE_ID` for the workspace ID and `pass show COOKIE/OPENCODE_GO_AUTH_COOKIE` for the logged-in browser's raw `auth` cookie value. Store only the cookie value, not Netscape `cookies.txt` metadata or an `auth=` prefix.
+- `OPENCODE_GO_WORKSPACE_ID` and `OPENCODE_GO_AUTH_COOKIE` remain optional runtime-environment overrides, useful where `pass` is unavailable. Renew the cookie pass entry after dashboard authentication expires.
+- Do not commit either value, place it in `settings.json`, write it to logs/cache/error reports, or put it in Nix expressions/store paths. Treat the cookie like a password.
+
+#### Brittle integration breadcrumb
+
+- **Undocumented source:** `GET https://opencode.ai/workspace/<workspace-id>/go`, authenticated with `Cookie: auth=<cookie>`. By default, credentials come from `pass` entries `USER/OPENCODE_GO_WORKSPACE_ID` and `COOKIE/OPENCODE_GO_AUTH_COOKIE`; runtime environment values override them. This is dashboard HTML, not a supported public usage API.
+- **Parser signature:** dashboard hydration is currently expected to contain `rollingUsage:$R[n]={usagePercent:<number>,resetInSec:<number>}`, plus `weeklyUsage` and `monthlyUsage` equivalents in either property order. `usagePercent` is used quota, so the widget displays `100 - usagePercent` as remaining quota.
+- **Failure display:** missing credentials, expired auth, request failure, or a changed hydration layout displays `OpenCode Go unavailable`; stale data may be shown for at most 10 minutes. Cookie/header values are intentionally omitted from all errors.
+- **Do not confuse endpoints:** `https://opencode.ai/zen/go/v1` is the inference/model endpoint used by `opencode-go-discovery.ts`; it does not expose the subscription usage snapshot.
+- **Update procedure:** if the command/footer becomes unavailable, first renew the browser auth cookie and verify the workspace ID. Then inspect authenticated dashboard HTML for changed hydration fields, update `parseWindow` in `opencode-go-usage.ts`, run the formatter/lifecycle checks, and update this section with the new parser signature and source date.
+- **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts). Checked 2026-07-13.
+
 ### Working indicator
 
 What it does:

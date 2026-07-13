@@ -22,6 +22,7 @@ import { promisify } from "node:util";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
+import { clampPercent, quotaGlyph, remainingBar } from "../../subscription-usage-status";
 import type {
 	GetAuthStatusResponse,
 	GetStatusResponse,
@@ -130,8 +131,6 @@ const GLYPH_CONNECTED = "";
 const GLYPH_WARNING = "";
 const GLYPH_ERROR = "";
 
-type QuotaThreshold = "healthy" | "warning" | "critical";
-
 function startOfDay(d: Date): Date {
 	return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
@@ -200,29 +199,8 @@ function modelCostLabel(m: ModelBillingDisplay): string {
 	return "included";
 }
 
-function clampPercent(percent: number): number {
-	return Math.max(0, Math.min(100, Number.isFinite(percent) ? percent : 0));
-}
-
-function quotaThreshold(percentRemaining: number): QuotaThreshold {
-	const pct = clampPercent(percentRemaining);
-	if (pct > 25) return "healthy";
-	if (pct > 10) return "warning";
-	return "critical";
-}
-
 function quotaThresholdGlyph(percentRemaining: number): string {
-	const threshold = quotaThreshold(percentRemaining);
-	if (threshold === "healthy") return GLYPH_CONNECTED;
-	if (threshold === "warning") return GLYPH_WARNING;
-	return GLYPH_ERROR;
-}
-
-function remainingBar(percentRemaining: number, width = 10): string {
-	const pct = clampPercent(percentRemaining);
-	const filled = Math.round((pct / 100) * width);
-	const empty = width - filled;
-	return `[${"█".repeat(filled)}${"░".repeat(empty)}]`;
+	return quotaGlyph(percentRemaining);
 }
 
 // ---------------------------------------------------------------------------
