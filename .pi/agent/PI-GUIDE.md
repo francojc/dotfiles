@@ -65,6 +65,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `supacode/index.ts` | Emits Supacode OSC lifecycle/notification signals when running inside Supacode. | Automatic inside Supacode surfaces. |
 | `pi-guide-autoupdate.ts` | Detects package/local-extension changes and runs guide maintenance in background on interactive startup. | Automatic. Footer status only. |
 | `tui-utils.ts` | Shared helper module for local TUI extensions. | No direct user controls. |
+| `subscription-usage-status.ts` | Shared quota/glyph/bar utility for Codex, Copilot, and OpenCode Go compact footer status. No-op extension factory so Pi's auto-discovery accepts it as a utility module. | No direct user controls. |
 | `tirith-guard.ts` | Intercepts every `bash` tool call and runs `tirith check` before execution. | Automatic. Control via `TIRITH_BIN`, `TIRITH_HOOK_WARN_ACTION`, `TIRITH_FAIL_OPEN`. |
 
 ## Keybindings and terminal notes

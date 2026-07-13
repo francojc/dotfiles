@@ -1,3 +1,11 @@
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
+/**
+ * No-op extension factory. This utility lives in Pi's auto-discovered
+ * extensions directory, so it must also satisfy the extension module contract.
+ */
+export default function (_pi: ExtensionAPI): void {}
+
 export type SubscriptionUsageWindow = {
 	remainingPercent: number;
 	resetAt?: Date;
