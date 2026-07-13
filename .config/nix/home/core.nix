@@ -50,6 +50,7 @@
     cargo # Rust package manager, needed for many Neovim plugins
 
     # Academic/document rendering (for Quarto, markdown, snacks.nvim)
+    mermaid-cli # Mermaid diagram generator (mmdc)
     tectonic # LaTeX rendering for math expressions
     chafa # Terminal image viewer (optional, enhances image support)
     websocat # WebSocket client
