@@ -6,6 +6,7 @@ vim.opt_local.softtabstop = 2
 vim.opt_local.expandtab = true
 
 --| CriticMarkup keymaps --------------------------------------
+-- Leader mappings use <leader>mC* so regular Markdown mappings stay under <leader>m*.
 -- Wrap selection with CriticMarkup markers.
 -- See ../queries/markdown/highlights.scm for syntax highlighting.
 -- See ../snippets/markdown.json for tab-completion snippets.
@@ -65,15 +66,15 @@ end
 
 --- Surround keymaps (visual mode) -----------------------------
 -- Insert: {++ ++}
-map("v", "<leader>mi", surround_visual("{++", "++}"), { desc = "CriticMarkup: insert" })
+map("v", "<leader>mCi", surround_visual("{++", "++}"), { desc = "CriticMarkup: insert" })
 -- Delete: {-- --}
-map("v", "<leader>md", surround_visual("{--", "--}"), { desc = "CriticMarkup: delete" })
+map("v", "<leader>mCd", surround_visual("{--", "--}"), { desc = "CriticMarkup: delete" })
 -- Highlight: {== ==}
-map("v", "<leader>mh", surround_visual("{==", "==}"), { desc = "CriticMarkup: highlight" })
+map("v", "<leader>mCh", surround_visual("{==", "==}"), { desc = "CriticMarkup: highlight" })
 -- Comment: {>> <<}
-map("v", "<leader>mc", surround_visual("{>>", "<<}"), { desc = "CriticMarkup: comment" })
+map("v", "<leader>mCc", surround_visual("{>>", "<<}"), { desc = "CriticMarkup: comment" })
 -- Substitution: {~~old~>new~~}  (prompt for new text)
-map("v", "<leader>ms", function()
+map("v", "<leader>mCs", function()
 	local start_row, start_col, end_row, end_col = visual_range()
 	local sel = get_text(start_row, start_col, end_row, end_col)
 	vim.ui.input({ prompt = "Substitute with: " }, function(input)
@@ -137,20 +138,72 @@ local function make_textobj(open_str, close_str, inner)
 	end
 end
 
--- Bind: text-object keys (work as xmap + omap)
+-- Bind: text-object keys (work as xmap + omap).
+-- These intentionally use standard i/a text-object notation; <leader>mC is
+-- reserved for leader mappings and cannot serve as an operator-pending object prefix.
 -- ic/ac = comment, ih/ah = highlight, ii/ai = insert, id/ad = delete
 -- ix/ax = substitution
 for _, mode in ipairs({ "x", "o" }) do
-	vim.keymap.set(mode, "ic", make_textobj("{>>", "<<}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner comment" })
-	vim.keymap.set(mode, "ac", make_textobj("{>>", "<<}", false), { buffer = true, silent = true, desc = "CriticMarkup: around comment" })
-	vim.keymap.set(mode, "ih", make_textobj("{==", "==}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner highlight" })
-	vim.keymap.set(mode, "ah", make_textobj("{==", "==}", false), { buffer = true, silent = true, desc = "CriticMarkup: around highlight" })
-	vim.keymap.set(mode, "ii", make_textobj("{++", "++}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner insert" })
-	vim.keymap.set(mode, "ai", make_textobj("{++", "++}", false), { buffer = true, silent = true, desc = "CriticMarkup: around insert" })
-	vim.keymap.set(mode, "id", make_textobj("{--", "--}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner delete" })
-	vim.keymap.set(mode, "ad", make_textobj("{--", "--}", false), { buffer = true, silent = true, desc = "CriticMarkup: around delete" })
-	vim.keymap.set(mode, "ix", make_textobj("{~~", "~~}", true), { buffer = true, silent = true, desc = "CriticMarkup: inner substitution" })
-	vim.keymap.set(mode, "ax", make_textobj("{~~", "~~}", false), { buffer = true, silent = true, desc = "CriticMarkup: around substitution" })
+	vim.keymap.set(
+		mode,
+		"ic",
+		make_textobj("{>>", "<<}", true),
+		{ buffer = true, silent = true, desc = "CriticMarkup: inner comment" }
+	)
+	vim.keymap.set(
+		mode,
+		"ac",
+		make_textobj("{>>", "<<}", false),
+		{ buffer = true, silent = true, desc = "CriticMarkup: around comment" }
+	)
+	vim.keymap.set(
+		mode,
+		"ih",
+		make_textobj("{==", "==}", true),
+		{ buffer = true, silent = true, desc = "CriticMarkup: inner highlight" }
+	)
+	vim.keymap.set(
+		mode,
+		"ah",
+		make_textobj("{==", "==}", false),
+		{ buffer = true, silent = true, desc = "CriticMarkup: around highlight" }
+	)
+	vim.keymap.set(
+		mode,
+		"ii",
+		make_textobj("{++", "++}", true),
+		{ buffer = true, silent = true, desc = "CriticMarkup: inner insert" }
+	)
+	vim.keymap.set(
+		mode,
+		"ai",
+		make_textobj("{++", "++}", false),
+		{ buffer = true, silent = true, desc = "CriticMarkup: around insert" }
+	)
+	vim.keymap.set(
+		mode,
+		"id",
+		make_textobj("{--", "--}", true),
+		{ buffer = true, silent = true, desc = "CriticMarkup: inner delete" }
+	)
+	vim.keymap.set(
+		mode,
+		"ad",
+		make_textobj("{--", "--}", false),
+		{ buffer = true, silent = true, desc = "CriticMarkup: around delete" }
+	)
+	vim.keymap.set(
+		mode,
+		"ix",
+		make_textobj("{~~", "~~}", true),
+		{ buffer = true, silent = true, desc = "CriticMarkup: inner substitution" }
+	)
+	vim.keymap.set(
+		mode,
+		"ax",
+		make_textobj("{~~", "~~}", false),
+		{ buffer = true, silent = true, desc = "CriticMarkup: around substitution" }
+	)
 end
 
 --- User commands ---------------------------------------------

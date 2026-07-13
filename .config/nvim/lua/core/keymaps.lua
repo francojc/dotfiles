@@ -248,8 +248,8 @@ map("v", "<leader>ms", 'c~~<C-r>"~~<Esc>', { desc = "Strikethrough" })
 -- Highlight (Pandoc mark ==…==)
 map("v", "<leader>mh", 'c==<C-r>"==<Esc>', { desc = "Highlight (==mark==)" })
 --- Code blocks
-map("v", "<leader>mc", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
-map("v", "<leader>mC", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
+map("v", "<leader>mcb", 'c```\n<C-r>"\n```<Esc>', { desc = "Code Block" })
+map("v", "<leader>mci", 'c`<C-r>"`<Esc>', { desc = "Inline Code" })
 -- Headings
 map("n", "<leader>m1", "I# <Esc>", { desc = "Heading 1" })
 map("n", "<leader>m2", "I## <Esc>", { desc = "Heading 2" })

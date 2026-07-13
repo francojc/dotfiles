@@ -251,18 +251,22 @@ General Markdown mappings:
 - `<leader>mo` - Ordered list item
 - `<leader>mt` - Task list item
 - Visual `<leader>mb` - Bold
-- Visual `<leader>mC` - Inline code
+- Visual `<leader>mi` - Italic
+- Visual `<leader>ms` - Strikethrough
+- Visual `<leader>mh` - Pandoc highlight (`==mark==`)
+- Visual `<leader>mcb` - Code block
+- Visual `<leader>mci` - Inline code
 - Visual `<leader>ml` - Link selection with URL from clipboard
 - `<leader>mp` - Paste image to `images/`
 - `]]` / `[[` - Next/previous heading in Markdown and Quarto
 
-In Markdown/Quarto buffers, buffer-local CriticMarkup mappings override some global visual Markdown mappings:
+CriticMarkup mappings use `<leader>mC` prefix in Markdown/Quarto buffers:
 
-- Visual `<leader>mi` - `{++insert++}`
-- Visual `<leader>md` - `{--delete--}`
-- Visual `<leader>mh` - `{==highlight==}`
-- Visual `<leader>mc` - `{>>comment<<}`
-- Visual `<leader>ms` - `{~~old~>new~~}` with prompt
+- Visual `<leader>mCi` - `{++insert++}`
+- Visual `<leader>mCd` - `{--delete--}`
+- Visual `<leader>mCh` - `{==highlight==}`
+- Visual `<leader>mCc` - `{>>comment<<}`
+- Visual `<leader>mCs` - `{~~old~>new~~}` with prompt
 - Text objects: `ic`/`ac`, `ih`/`ah`, `ii`/`ai`, `id`/`ad`, `ix`/`ax`
 
 CriticMarkup commands:

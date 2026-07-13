@@ -619,7 +619,8 @@ require("mini.surround").setup({
 				return { left = "==", right = "==" }
 			end,
 		},
-		-- CriticMarkup surrounds. Usage: sa{X}motion, sr{X}, sd{X}
+		-- CriticMarkup leader wrappers use <leader>mC* in Markdown buffers.
+		-- Mini.surround alternatives: sa{X}motion, sr{X}, sd{X}.
 		i = {
 			-- Insert: {++text++}
 			output = function()
@@ -761,7 +762,9 @@ wk.add({
 	{ "<leader>h", group = "Help", icon = "󰋗" },
 	{ "<leader>l", group = "LSP", icon = "󰅩" },
 	{ "<leader>lc", group = "Call Hierarchy", icon = "󰘦" },
-	{ "<leader>m", group = "Markdown", icon = "󰉫" },
+	{ "<leader>m", group = "Markdown", mode = { "n", "v" }, icon = "󰉫" },
+	{ "<leader>mc", group = "Code", mode = "v", icon = "" },
+	{ "<leader>mC", group = "CriticMarkup", mode = "v", icon = "" },
 	{ "<leader>o", group = "Obsidian", icon = "󱞁" },
 	{ "<leader>q", group = "Quarto", icon = "󰠮" },
 	{ "<leader>r", group = "References", icon = "󰒋" },
