@@ -211,9 +211,21 @@ map("n", "<leader>lD", "<Cmd>lua Snacks.picker.lsp_definitions()<Cr>", { desc = 
 map("n", "<leader>lt", "<Cmd>lua Snacks.picker.lsp_type_definitions()<Cr>", { desc = "Type definitions" })
 map("n", "<leader>li", "<Cmd>lua Snacks.picker.lsp_implementations()<Cr>", { desc = "Implementations" })
 map("n", "<leader>lr", "<Cmd>lua Snacks.picker.lsp_references()<Cr>", { desc = "References" })
--- Incremental selection (Neovim 0.12+ LSP textDocument/selectionRange)
-map({ "n", "v" }, "vn", "<Cmd>lua vim.lsp.buf.selection_range(0)<Cr>", { desc = "LSP: expand selection (next)" })
-map({ "n", "v" }, "vs", "<Cmd>lua vim.lsp.buf.selection_range(-1)<Cr>", { desc = "LSP: shrink selection" })
+-- Incremental selection (Tree-sitter first, LSP fallback)
+local function select_syntax_node(tree_action, lsp_direction)
+	local ok, parser = pcall(vim.treesitter.get_parser, 0)
+	if ok and parser then
+		vim.treesitter.select(tree_action)
+	else
+		vim.lsp.buf.selection_range(lsp_direction)
+	end
+end
+map({ "n", "v" }, "vn", function()
+	select_syntax_node("parent", 0)
+end, { desc = "Syntax-aware: expand selection" })
+map({ "n", "v" }, "vs", function()
+	select_syntax_node("child", -1)
+end, { desc = "Syntax-aware: shrink selection" })
 -- Symbols
 map("n", "<leader>ls", "<Cmd>lua Snacks.picker.lsp_symbols()<Cr>", { desc = "Document symbols" })
 map("n", "<leader>lS", "<Cmd>lua Snacks.picker.lsp_workspace_symbols()<Cr>", { desc = "Workspace symbols" })

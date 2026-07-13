@@ -218,7 +218,7 @@ Current plugin shape:
 - `K` - Hover
 - `gD` - Declaration
 - `grt` - Type definition
-- `vn` / `vs` - Expand/shrink LSP selection range
+- `vn` / `vs` - Expand/shrink syntax-aware Tree-sitter selection; fall back to LSP selection ranges without a parser
 - `<leader>lD` - Definitions
 - `<leader>lt` - Type definitions
 - `<leader>li` - Implementations
