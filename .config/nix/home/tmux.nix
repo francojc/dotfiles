@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   theme,
   ...
 }: {
@@ -179,8 +180,17 @@
     ];
   };
 
-  # Create tmux config directory
-  xdg.configFile."tmux/.keep".text = "";
+  # Create empty directories with .keep files so other tooling
+  # (e.g., tmux weather script, Obsidian) has somewhere to write.
+  # Only creates the .keep files if they do not already exist,
+  # preserving any user modifications to these directories.
+  #
+  # Must run after writeBoundary since this is a filesystem mutation.
+  home.activation.createKeepFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.config/tmux" "$HOME/Obsidian/Notes"
+    test -e "$HOME/.config/tmux/.keep" || : > "$HOME/.config/tmux/.keep"
+    test -e "$HOME/Obsidian/Notes/.keep" || : > "$HOME/Obsidian/Notes/.keep"
+  '';
 
   # Cached weather script for the status bar.
   xdg.configFile."tmux/tmux-weather.sh" = {
@@ -193,7 +203,4 @@
     source = ./scripts/pi-waiting;
     executable = true;
   };
-
-  # Create Obsidian directory structure
-  home.file."Obsidian/Notes/.keep".text = "";
 }
