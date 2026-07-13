@@ -45,8 +45,11 @@
 .pi/agent/sessions/*
 .pi/agent/auth.json
 .pi/agent/settings.json
-.pi/agent/pi-waiting-events.jsonl
+.pi/agent/pi-guide-autoupdate-state.json
+.pi/agent/pi-guide-autoupdate.lock
+.pi/agent/pi-guide-maintainer.log
 .pi/agent/pi-last-notification.json
+.pi/agent/pi-waiting-events.jsonl
 .pi/models/
 .pi/agent/themes/
 
