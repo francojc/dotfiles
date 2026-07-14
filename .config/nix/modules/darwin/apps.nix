@@ -112,6 +112,7 @@
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       "dorso" # posture monitor
+      "fluidvoice" # TTS on device
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
@@ -119,7 +120,7 @@
       "kitty" # terminal emulator (moved to Nix)
       "lm-studio" # LLM interface
       "obsidian" # note-taking
-      "opensuperwhisper" # on-device dictation
+      "opensuperwhisper" # TTS on device
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging

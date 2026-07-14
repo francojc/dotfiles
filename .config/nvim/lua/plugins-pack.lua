@@ -15,22 +15,22 @@
 -- is placed in eager_plugins; remaining themes go to opt_plugins.
 
 local theme_registry = {
-	arthur        = { src = "https://github.com/thenewvu/vim-colors-arthur" },
-	autumn        = { src = "https://github.com/wolloda/vim-autumn" },
+	arthur = { src = "https://github.com/thenewvu/vim-colors-arthur" },
+	autumn = { src = "https://github.com/wolloda/vim-autumn" },
 	["black-metal"] = { src = "https://github.com/metalelf0/black-metal-theme-neovim" },
-	catppuccin    = { src = "https://github.com/catppuccin/nvim",           name = "catppuccin" },
-	gruvbox       = { src = "https://github.com/ellisonleao/gruvbox.nvim" },
-	kanso         = { src = "https://github.com/webhooked/kanso.nvim" },
-	nightfox      = { src = "https://github.com/EdenEast/nightfox.nvim" },
-	onedark       = { src = "https://github.com/navarasu/onedark.nvim" },
-	tokyonight         = { src = "https://github.com/folke/tokyonight.nvim" },
+	catppuccin = { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	gruvbox = { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+	kanso = { src = "https://github.com/webhooked/kanso.nvim" },
+	nightfox = { src = "https://github.com/EdenEast/nightfox.nvim" },
+	onedark = { src = "https://github.com/navarasu/onedark.nvim" },
+	tokyonight = { src = "https://github.com/folke/tokyonight.nvim" },
 	["tokyonight-night"] = { src = "https://github.com/folke/tokyonight.nvim" },
 	["tokyonight-storm"] = { src = "https://github.com/folke/tokyonight.nvim" },
-	["tokyonight-moon"]  = { src = "https://github.com/folke/tokyonight.nvim" },
-	["tokyonight-day"]   = { src = "https://github.com/folke/tokyonight.nvim" },
-	vague         = { src = "https://github.com/vague2k/vague.nvim" },
-	vscode        = { src = "https://github.com/Mofiqul/vscode.nvim" },
-	ayu           = { src = "https://github.com/ayu-theme/ayu-vim" },
+	["tokyonight-moon"] = { src = "https://github.com/folke/tokyonight.nvim" },
+	["tokyonight-day"] = { src = "https://github.com/folke/tokyonight.nvim" },
+	vague = { src = "https://github.com/vague2k/vague.nvim" },
+	vscode = { src = "https://github.com/Mofiqul/vscode.nvim" },
+	ayu = { src = "https://github.com/ayu-theme/ayu-vim" },
 }
 
 local active_theme = vim.g.active_colorscheme or "gruvbox"
@@ -56,6 +56,7 @@ local eager_plugins = {
 		version = "v1", -- branch
 	},
 	{ src = "https://github.com/brenoprata10/nvim-highlight-colors" },
+	{ src = "https://github.com/christoomey/vim-titlecase" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator" },
 	{ src = "https://github.com/echasnovski/mini.icons" },
 	{ src = "https://github.com/echasnovski/mini.surround" },

@@ -40,6 +40,7 @@ Modular Neovim 0.12+ config using native `vim.pack`, native LSP, and small focus
   - `snacks-bibtex.nvim`
 - Markdown lazy-loads `obsidian.nvim`.
 - Neovim started inside an Obsidian vault also lazy-loads Obsidian support.
+- `vim-titlecase` provides global English-style title casing. It preserves all-caps acronyms and supports motions, text objects, visual selections, and whole lines.
 - CriticMarkup support in Markdown/Quarto:
   - Visual wrappers for insert/delete/highlight/comment/substitution.
   - Text objects for CriticMarkup spans.
@@ -156,8 +157,8 @@ Startup checks for plugin updates weekly.
 
 Current plugin shape:
 
-- 43 unique plugin directories declared.
-- Active colorscheme, completion, core UI, LSP helpers, treesitter, git signs, conform, yazi, and llama load eagerly.
+- 44 unique plugin directories declared.
+- Active colorscheme, completion, core UI, LSP helpers, treesitter, git signs, conform, yazi, llama, and title casing load eagerly.
 - Document/data/UI extras lazy-load by filetype or command.
 
 ## Key Bindings
@@ -175,6 +176,9 @@ Current plugin shape:
 - `n` / `N` - Next/previous search result and center
 - Visual `p` - Paste without overwriting register
 - Visual `J` / `K` - Move selected lines down/up
+- `gz{motion}` - Titlecase text covered by motion or text object, for example `gzi'` for text inside single quotes
+- Visual `gz` - Titlecase selection
+- `gzz` - Titlecase current line
 
 ### Windows and Buffers
 
