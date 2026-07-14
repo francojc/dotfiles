@@ -1,5 +1,6 @@
 {
   "trustedtaps": [
+    "1broseidon/tap",
     "acrogenesis/macchanger",
     "adembc/tap",
     "felixkratz/formulae",

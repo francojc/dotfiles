@@ -69,12 +69,17 @@
         name = "my-monkeys/tap";
         trusted = true;
       } # opensuperwhisper
+      {
+        name = "1broseidon/tap";
+        trusted = true;
+      } # ketch
     ];
 
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
       "hf" # huggingface cli
+      "ketch" # web search, library docs, scraping cli
       "hunk" # git diff tool
       "koan" # Navidrome TUI player
       "librespeed-cli"
