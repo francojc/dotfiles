@@ -95,7 +95,7 @@
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "tree-sitter-cli" # tree-sitter CLI
-      "vhs" # cli for programmable terminal gifs
+      # "vhs" # cli for programmable terminal gifs
       "yt-dlp" # YouTube video downloader
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
