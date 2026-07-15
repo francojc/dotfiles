@@ -14,7 +14,7 @@ const SKILL_DIR = join(AGENT_DIR, "skills", "pi-guide-maintainer");
 const STATE_FILE = join(AGENT_DIR, "pi-guide-autoupdate-state.json");
 const LOCK_FILE = join(AGENT_DIR, "pi-guide-autoupdate.lock");
 const LOG_FILE = join(AGENT_DIR, "pi-guide-maintainer.log");
-const DEFAULT_GUIDE_MODEL = "github-copilot/claude-haiku-4.5";
+const DEFAULT_GUIDE_MODEL = "openai-codex/gpt-5.4-mini";
 const LOCK_STALE_MS = 60 * 60 * 1000;
 const STATUS_CLEAR_MS = 10_000;
 
@@ -97,22 +97,6 @@ function readLastFingerprint(): string | null {
   return typeof state?.fingerprint === "string" ? state.fingerprint : null;
 }
 
-function writeState(fingerprint: string): void {
-  writeFileSync(
-    STATE_FILE,
-    JSON.stringify(
-      {
-        fingerprint,
-        lastRunAt: new Date().toISOString(),
-        scope: "packages+local-extensions",
-        model: getGuideModel(),
-      },
-      null,
-      2,
-    ),
-  );
-}
-
 function isLockFresh(): boolean {
   if (!existsSync(LOCK_FILE)) return false;
   try {
@@ -179,11 +163,24 @@ function spawnGuideUpdate(ctx: ExtensionContext, fingerprint: string): boolean {
     prompt,
   ];
 
+  const state = JSON.stringify(
+    {
+      fingerprint,
+      lastRunAt: new Date().toISOString(),
+      scope: "packages+local-extensions",
+      model: getGuideModel(),
+    },
+    null,
+    2,
+  );
+  const stateTempFile = `${STATE_FILE}.tmp`;
   const command = [
-    `trap 'rm -f ${shQuote(LOCK_FILE)}' EXIT`,
+    `trap 'rm -f ${shQuote(LOCK_FILE)} ${shQuote(stateTempFile)}' EXIT`,
     `cd ${shQuote(AGENT_DIR)}`,
     `PI_GUIDE_AUTORUN=1 PI_SKIP_VERSION_CHECK=1 PI_MODEL_DISCOVERY_DEBUG=0 ${shQuote(getPiBinary())} ${args.map(shQuote).join(" ")}`,
-  ].join("; ");
+    `printf '%s' ${shQuote(state)} > ${shQuote(stateTempFile)}`,
+    `mv ${shQuote(stateTempFile)} ${shQuote(STATE_FILE)}`,
+  ].join(" && ");
 
   let logFd: number | undefined;
   try {
@@ -201,7 +198,6 @@ function spawnGuideUpdate(ctx: ExtensionContext, fingerprint: string): boolean {
     });
 
     child.unref();
-    writeState(fingerprint);
     setTemporaryStatus(ctx, "guide: updating in background");
     return true;
   } catch (error) {

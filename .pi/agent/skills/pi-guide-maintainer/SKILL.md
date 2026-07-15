@@ -10,7 +10,7 @@ description: Maintain Jerid's user-facing Pi Guide markdown document for install
 Maintain the living Pi Guide at:
 
 - `~/.pi/agent/PI-GUIDE.md`
-- Dotfiles path: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
+- Dotfiles path: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
 
 The guide is user-facing. It should explain what Jerid can do with current Pi setup, not merely list implementation details.
 

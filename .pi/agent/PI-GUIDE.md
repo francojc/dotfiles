@@ -5,8 +5,8 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 ## Maintenance
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
-- Dotfiles file: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-14
+- Dotfiles file: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
+- Last updated: 2026-07-15
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -31,18 +31,19 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
 | `/codex-status [--refresh]` | Show ChatGPT Codex plan, quota windows, reset times, credits, and model buckets. |
+| `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
 
-Configured in `~/.pi/agent/settings.json` and installed under `~/.pi/agent/npm/`.
+Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~/.pi/agent/npm/`.
 
 | Package | Version/config | What it adds |
 | --- | --- | --- |
 | `pi-caveman` | `1.0.7` | Terse output modes and status indicator. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | npm range in package: `^0.21.3` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
 | `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex plan, usage windows, credits, and provider-aware footer status. |
 
@@ -59,6 +60,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
 | `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider models from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider models from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
+| `opencode-go-usage.ts` | Shows provider-gated OpenCode Go subscription usage in the custom footer. | `/opencode-go-status [--refresh]`; credentials from `pass` or environment. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
 | `searxng.ts` | Adds `web_search` tool via self-hosted SearXNG. | Agent tool. `SEARXNG_URL` optional. |
 | `questionnaire.ts` | Adds interactive questionnaire tool for clarifying choices. | Agent tool. |
@@ -217,7 +219,7 @@ Configuration:
 - Built-in package config: `plannotator.json` inside package.
 - Global config: `~/.pi/agent/plannotator.json`.
 - Project config: `<cwd>/.pi/plannotator.json`.
-- Package uses `node-pty`; install scripts are approved in `~/.pi/agent/npm/package.json` via `allowScripts`.
+- Package uses `node-pty`; verify its native module loads after npm reinstalls or platform changes.
 
 Best practices:
 
@@ -379,7 +381,7 @@ Sources checked:
 
 - `~/.pi/agent/extensions/pi-notify-switch.ts`
 - `~/.local/bin/pi-waiting`
-- `/Users/francojc/.dotfiles/.config/nix/home/tmux.nix`
+- `~/.dotfiles/.config/nix/home/tmux.nix`
 
 ### Vim editor
 
@@ -569,7 +571,8 @@ Configuration:
 - Disable: `PI_GUIDE_AUTOUPDATE=0`.
 - Model override: `PI_GUIDE_MODEL=<provider/model>`.
 - Pi binary override: `PI_GUIDE_PI_BIN=/path/to/pi`.
-- Default model: `github-copilot/claude-haiku-4.5` with thinking off.
+- Default model: `openai-codex/gpt-5.4-mini` with thinking off.
+- Successful runs update the state fingerprint; failed background runs leave it unchanged so the next interactive startup retries.
 - State file: `~/.pi/agent/pi-guide-autoupdate-state.json`.
 - Lock file: `~/.pi/agent/pi-guide-autoupdate.lock`.
 - Log file: `~/.pi/agent/pi-guide-maintainer.log`.
