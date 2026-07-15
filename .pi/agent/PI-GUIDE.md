@@ -6,7 +6,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `/Users/francojc/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-05
+- Last updated: 2026-07-14
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -31,6 +31,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
 | `/codex-status [--refresh]` | Show ChatGPT Codex plan, quota windows, reset times, credits, and model buckets. |
+| `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
@@ -94,6 +95,35 @@ Terminal notes:
 - Current `/btw` scroll works with `↑` and `↓`, plus mouse/trackpad wheel.
 
 ## Extension notes
+
+### Ketch research skill
+
+What it does:
+
+- Directs agents to Ketch's narrowest research surface: external web search, known-page scraping, public OSS code search, library documentation, or bounded site crawls.
+- Uses stateless CLI by default. If Pi exposes Ketch MCP research tools, agents use those for research calls and reserve CLI for configuration and operator actions.
+- Keeps local repository inspection with local CLI tools and academic literature/citation work with `orbitr`.
+
+Use:
+
+- `/skill:ketch-research <research task>` loads it explicitly. Pi also loads it automatically when task matches its description.
+- `ketch config` shows active and available backends.
+- `ketch doctor` checks configured search, code, docs, browser, and cache surfaces without writing.
+
+Gotchas:
+
+- `--scrape` fetches search-result content. Bound unknown pages with `--max-chars 4000` to `8000` plus `--trim`; verify source content and provenance rather than trusting snippets or result rank.
+- `ketch extract` consumes supplied HTML only. It does not fetch, cache, render, or probe `/llms.txt`.
+- Batch scrape can return per-URL failures in otherwise successful output. Check every result.
+- Correct validation errors rather than retrying unchanged. Rotate configured backend once for upstream/rate-limit failures; reduce scope after timeout.
+- `ketch config init`, `ketch config set`, and `ketch browser install` write or download. `ketch cache clear` deletes every cached page. Confirm before any.
+- Default to `--json` for research and scripts. Do not expose credentials from `ketch config` output.
+
+Sources checked:
+
+- `~/.pi/agent/skills/ketch-research/SKILL.md`
+- [Official Ketch skill](https://raw.githubusercontent.com/1broseidon/ketch/refs/heads/main/skills/ketch/SKILL.md), checked 2026-07-14.
+- `ketch --help` and command help, checked 2026-07-14.
 
 ### pi-caveman
 

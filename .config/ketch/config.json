@@ -1,0 +1,34 @@
+{
+  "config_path": "/Users/francojc/.config/ketch/config.json",
+  "backend": "searxng",
+  "searxng_url": "https://search.gerbil-matrix.ts.net",
+  "brave_api_key_set": false,
+  "exa_api_key_set": false,
+  "firecrawl_api_key_set": false,
+  "keenable_api_key_set": false,
+  "browser": "helium",
+  "limit": 5,
+  "cache_ttl": "72h",
+  "code_backend": "grepapp",
+  "docs_backend": "context7",
+  "context7_api_key_set": false,
+  "sourcegraph_url": "https://sourcegraph.com",
+  "github_token_source": "gh-cli",
+  "github_token_set": true,
+  "available_backends": [
+    "brave",
+    "ddg",
+    "searxng",
+    "exa",
+    "firecrawl",
+    "keenable"
+  ],
+  "available_code_backends": [
+    "grepapp",
+    "sourcegraph",
+    "github"
+  ],
+  "available_doc_backends": [
+    "context7"
+  ]
+}
