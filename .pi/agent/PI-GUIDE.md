@@ -33,6 +33,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/codex-status [--refresh]` | Show ChatGPT Codex plan, quota windows, reset times, credits, and model buckets. |
 | `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
+| `/skill:hunk-review` | Inspect and guide live Hunk Git-diff review sessions. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
@@ -126,6 +127,33 @@ Sources checked:
 - `~/.pi/agent/skills/ketch-research/SKILL.md`
 - [Official Ketch skill](https://raw.githubusercontent.com/1broseidon/ketch/refs/heads/main/skills/ketch/SKILL.md), checked 2026-07-14.
 - `ketch --help` and command help, checked 2026-07-14.
+
+### Hunk review skill
+
+What it does:
+
+- Lets Pi inspect, navigate, reload, and annotate live Hunk review sessions through `hunk session *`.
+- Keeps Hunk TUI user-owned. Pi does not run interactive `hunk diff`, `show`, `patch`, `pager`, or `difftool` commands.
+
+Use:
+
+- Start Hunk yourself, for example `hunk diff` or `hunk show`.
+- Ask Pi to review or walk through the live diff, or load `/skill:hunk-review <task>` explicitly.
+- Pi begins with `hunk session review --repo . --json`; raw patch text needs explicit `--include-patch`.
+- Pi can navigate views, reload a session, and add inline comments with `hunk session comment add` or batched `comment apply`.
+
+Gotchas:
+
+- No active session means Pi asks you to open Hunk first.
+- `--repo` matches loaded repo root. Use session ID when multiple windows share one repo.
+- `hunk diff` includes untracked files. Reload with `hunk session reload --repo . -- diff --exclude-untracked` for tracked changes only.
+- Skill is bundled with installed Homebrew `hunk 0.17.1`; refresh local copy after Hunk updates if its official skill changes.
+
+Sources checked:
+
+- `hunk skill path` → `/opt/homebrew/Cellar/hunk/0.17.1/libexec/skills/hunk-review/SKILL.md`
+- `~/.pi/agent/skills/hunk-review/SKILL.md`
+- `hunk --help`
 
 ### pi-caveman
 

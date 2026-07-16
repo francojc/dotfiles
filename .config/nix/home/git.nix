@@ -25,6 +25,8 @@
         else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 
       # Diff and merge tools
+      core.pager = "hunk pager"; # assumes `hunk` install
+      pager.diff = "hunk pager";
       diff.tool = "nvimdiff";
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
