@@ -17,6 +17,10 @@ syncr() {
     minicore) remote="jeridf@mac-minicore" ;;
     airborne) remote="francojc@macbook-airborne" ;;
     rover) remote="jeridf@mini-rover" ;;
+    monitors) remote="jeridf@monitor-services" ;;
+    services) remote="root@core-services" ;;
+    media) remote="root@media-services" ;;
+    hermes) remote="hermes@hermes-agent" ;;
     *)
       echo "Unknown remote: $1"
       echo "Available: minicore, airborne, rover"
