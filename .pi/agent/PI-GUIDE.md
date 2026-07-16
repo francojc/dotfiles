@@ -45,7 +45,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex plan, usage windows, credits, and provider-aware footer status. |
+| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex plan, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
 
 ## Local extensions
 
@@ -54,7 +54,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | Extension | What it does | User-facing controls |
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
-| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
+| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
@@ -284,6 +284,34 @@ Gotchas:
 - Footer polling runs every 60 seconds after a short startup delay, but only while `github-copilot/*` or `copilot-api/*` is selected. Switching away cancels polling, invalidates its cache, and clears the status.
 - This is a local patched copy of `https://github.com/azs06/pi-copilot-usage`, not an npm package install.
 - Run `/reload` after edits or dependency updates.
+
+Sources checked:
+
+- `~/.pi/agent/extensions/copilot-usage/README.md`
+- `~/.pi/agent/extensions/copilot-usage/src/index.ts`
+- `~/.pi/agent/extensions/copilot-api-discovery.ts`
+- `~/.pi/agent/extensions/tirith-guard.ts`
+- `~/.pi/agent/extensions/subscription-usage-status.ts`
+
+### OpenAI Codex usage
+
+What it does:
+
+- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status`; the custom footer renders its status as a Copilot-style five-hour bar plus compact weekly percentage, for example ` Codex [███████░░░] 71% · wk 93%`.
+- `/codex-status` shows the ChatGPT/Codex plan, current five-hour and weekly rate-limit windows, reset times, credits, and any model-specific buckets returned by OpenAI. Use `/codex-status --refresh` to bypass its five-minute in-memory cache.
+- The footer status appears only for `openai-codex/*` models and clears when another provider is selected. This complements Copilot's provider-specific status; only the active subscription provider's indicator is shown.
+
+Auth and data caveats:
+
+- It uses Pi's existing `openai-codex` OAuth subscription auth first; run `/login openai-codex` if that auth is unavailable. Codex CLI app-server is an optional fallback, not a requirement for the normal Pi-auth path.
+- It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
+- The usage endpoint is current snapshot data, not a persistent consumption ledger, and is an undocumented backend endpoint that OpenAI may change. OpenAI API keys do not expose ChatGPT subscription quota.
+- Reload Pi after installing or updating the package.
+
+Sources checked:
+
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts`
 
 Sources checked:
 
