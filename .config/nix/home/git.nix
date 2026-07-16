@@ -13,6 +13,7 @@
     signing = {
       format = null;
     };
+    iniContent.pager.diff = lib.mkForce "hunk pager";
     settings = {
       user.name = "francojc";
       user.email = useremail;
@@ -26,7 +27,6 @@
 
       # Diff and merge tools
       core.pager = "hunk pager"; # assumes `hunk` install
-      pager.diff = "hunk pager";
       diff.tool = "nvimdiff";
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
