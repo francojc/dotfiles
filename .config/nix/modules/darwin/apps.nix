@@ -50,10 +50,6 @@
         trusted = true;
       } # librespeed-cli
       {
-        name = "modem-dev/tap";
-        trusted = true;
-      } # hunk
-      {
         name = "nao1215/tap";
         trusted = true;
       } # sqly
