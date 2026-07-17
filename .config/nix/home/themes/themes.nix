@@ -126,7 +126,7 @@
       colors = {
         # Background colors
         bg0_hard = "#1d2021";
-        bg0 = "#282828";
+        bg0 = "#1d2021";
         bg1 = "#3c3836";
         bg2 = "#504945";
         bg3 = "#665c54";

@@ -117,7 +117,6 @@
       initial_window_width 600
       initial_window_height 600
       draw_minimal_borders yes
-      # window_padding_width 2 2 0 2
       window_padding_width 0
       placement_strategy center
       # Keep window dimensions aligned to terminal cells, minimizing edge remainder.
