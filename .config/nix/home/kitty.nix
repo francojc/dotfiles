@@ -26,19 +26,20 @@
         if hostname == "Mac-Minicore"
         then 20
         else if hostname == "Macbook-Airborne"
-        then 16
-        else 14
+        then 18
+        else 16
       )}
 
       ## Advanced Font Rendering
-      modify_font cell_width 105%
+      # modify_font cell_width 105%
       # modify_font cell_height 0px
       # font_features JetBrainsMono-NerdFont-Mono -liga -hint
 
       # Text Rendering -----------------------------------------
       ## Drawing and Composition
       # box_drawing_scale 0.001, 0.85, 1, 1.5
-      # text_composition_strategy 1.0 30
+      # Slight macOS contrast boost for crisper text.
+      text_composition_strategy 1.0 10
       # text_fg_override_threshold 3
 
       # Performance Tuning -------------------------------------
@@ -100,7 +101,7 @@
 
       ## Color and Border Settings
       window_border_width 1pt
-      inactive_text_alpha .50
+      inactive_text_alpha 1.0
 
       # User Experience ----------------------------------------
       ## Interaction Preferences
@@ -119,6 +120,8 @@
       # window_padding_width 2 2 0 2
       window_padding_width 0
       placement_strategy center
+      # Keep window dimensions aligned to terminal cells, minimizing edge remainder.
+      resize_in_steps yes
       hide_window_decorations titlebar-only
       macos_show_window_title_in none
 

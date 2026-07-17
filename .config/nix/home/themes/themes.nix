@@ -172,7 +172,7 @@
         cursor_color = "#fe8019";
       };
       kitty = {
-        theme_name = "gruvbox";
+        theme_name = "Gruvbox Dark Hard";
       };
       vim = {
         colorscheme = "gruvbox";
@@ -700,5 +700,4 @@ in {
       }
     }
   '';
-
 }
