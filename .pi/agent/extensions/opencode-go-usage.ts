@@ -167,14 +167,16 @@ export default function (pi: ExtensionAPI) {
 	async function refreshStatus(generation: number): Promise<void> {
 		if (generation !== pollGeneration || !setStatus) return;
 		const result = await getSnapshot();
-		if (generation === pollGeneration && setStatus) {
+		// stopPolling bumps pollGeneration, so a stale generation check alone
+		// covers cancellation that happened during the await.
+		if (generation === pollGeneration) {
 			if (result.ok) {
-				setStatus(STATUS_KEY, formatRawCompactSubscriptionStatus("opencode-go", result.snapshot));
+				setStatus?.(STATUS_KEY, formatRawCompactSubscriptionStatus("opencode-go", result.snapshot) ?? "OpenCode Go unavailable");
 			} else {
-				setStatus(STATUS_KEY, "OpenCode Go unavailable");
+				setStatus?.(STATUS_KEY, "OpenCode Go unavailable");
 			}
 		}
-		if (generation === pollGeneration && setStatus) {
+		if (generation === pollGeneration) {
 			pollTimer = setTimeout(() => void refreshStatus(generation), POLL_INTERVAL_MS);
 		}
 	}

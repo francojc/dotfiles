@@ -78,7 +78,7 @@ type PiModel = {
   api: ApiKind;
   baseUrl: string;
   reasoning: boolean;
-  input: string[];
+  input: Array<"text" | "image">;
   cost: { input: number; output: number; cacheRead: number; cacheWrite: number };
   contextWindow: number;
   maxTokens: number;
@@ -161,10 +161,10 @@ function isStale(entry: CacheEntry): boolean {
 // Mapping
 // ---------------------------------------------------------------------------
 
-function mapInput(modalities?: { input?: string[] }): string[] {
+function mapInput(modalities?: { input?: string[] }): Array<"text" | "image"> {
   if (!modalities?.input) return ["text"];
   const inputs = modalities.input;
-  const result: string[] = ["text"];
+  const result: Array<"text" | "image"> = ["text"];
   if (inputs.includes("image")) result.push("image");
   // Pi only supports "text" and "image" for input modalities
   return result;

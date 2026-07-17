@@ -81,7 +81,7 @@ type PiModel = {
   id: string;
   name: string;
   reasoning: boolean;
-  input: string[];
+  input: Array<"text" | "image">;
   cost: { input: number; output: number; cacheRead: number; cacheWrite: number };
   contextWindow: number;
   maxTokens: number;

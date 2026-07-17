@@ -14,7 +14,7 @@ import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { matchesKey, Text } from "@earendil-works/pi-tui";
 import { addLine, borderLine, dimHint } from "./tui-utils";
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 interface Todo {
 	id: number;
@@ -140,10 +140,8 @@ export default function (pi: ExtensionAPI) {
 		lastEntryCount = currentCount;
 	};
 
-	// Reconstruct state on session events
+	// Session replacement creates a fresh extension instance, then emits session_start.
 	pi.on("session_start", async (_event, ctx) => reconstructState(ctx));
-	pi.on("session_switch", async (_event, ctx) => reconstructState(ctx, true));
-	pi.on("session_fork", async (_event, ctx) => reconstructState(ctx, true));
 	pi.on("session_tree", async (_event, ctx) => reconstructState(ctx, true));
 
 	// Register the todo tool for the LLM

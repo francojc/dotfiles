@@ -8,7 +8,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Editor, type EditorTheme, Key, matchesKey, Text, truncateToWidth } from "@earendil-works/pi-tui";
 import { addLine, borderLine, dimHint } from "./tui-utils";
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 // ---------------------------------------------------------------------------
 // Types

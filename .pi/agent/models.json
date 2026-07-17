@@ -3,12 +3,7 @@
     "ollama": {
       "api": "openai-completions",
       "apiKey": "ollama",
-      "baseUrl": "http://100.101.38.4:11434/v1",
-      "compat": {
-        "reasoningEffortMap": {
-          "minimal": "low"
-        }
-      }
+      "baseUrl": "http://100.101.38.4:11434/v1"
     },
     "llama-router": {
       "api": "openai-completions",
@@ -17,9 +12,6 @@
       "compat": {
         "supportsDeveloperRole": false,
         "supportsReasoningEffort": false,
-        "reasoningEffortMap": {
-          "minimal": "low"
-        },
         "requiresThinkingAsText": true
       }
     },

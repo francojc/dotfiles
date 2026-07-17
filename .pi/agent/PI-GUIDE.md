@@ -6,7 +6,10 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-15
+- Last updated: 2026-07-17
+- Pi compatibility audit: `0.80.10`; `pi --list-models` completed cleanly and all configured `enabledModels` resolved.
+- Compatibility cleanup completed 2026-07-17: custom footer now reads thinking level from `pi.getThinkingLevel()`; todo state relies on replacement-session `session_start`; local tools import current `typebox`; removed ignored `compat.reasoningEffortMap` config.
+- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`.
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
@@ -46,7 +49,9 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex plan, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
+| `@narumitw/pi-codex-usage` | `0.17.2` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
+| `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
+| `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
 ## Local extensions
 
@@ -56,6 +61,10 @@ Loaded from `~/.pi/agent/extensions/`.
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
 | `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. |
+| `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
+| `opencode-go-discovery.ts` | Registers `opencode-go` models from OpenCode + models.dev metadata and caches them locally. | Requires `OPENCODE_API_KEY` for actual use; `pi --list-models opencode-go`. |
+| `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
+| `pi-guide-autoupdate.ts` | Fingerprints packages and local TS/JS/MJS/CJS extensions, then spawns a background `/skill:pi-guide-maintainer` run when they change. | Automatic on interactive session start; status only. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
@@ -286,7 +295,7 @@ Sources checked:
 What it does:
 
 - Shows GitHub Copilot plan quota from `gh api /copilot_internal/user`.
-- Adds a threshold footer meter like ` Copilot [██████░░░░] 60%`, where the bar means quota remaining.
+- Adds a threshold footer meter like ` Copilot [██████░░░░] 60%`, where the bar means remaining quota.
 - Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
 - Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
 - Shows current Copilot model billing metadata. GitHub may return old-style `billing.multiplier` values or newer `token_prices`, so the dashboard displays whichever metadata is available, compares metered models relative to the cheapest metered model, compacts large raw token-price integers, and treats all-zero token prices as included.
@@ -310,13 +319,14 @@ Gotchas:
 - Uses GitHub's internal `/copilot_internal/user` endpoint. It works now but may change without notice.
 - GitHub Copilot billing has shifted toward token-based billing. Old premium-request multipliers may not appear in SDK model data.
 - Footer polling runs every 60 seconds after a short startup delay, but only while `github-copilot/*` or `copilot-api/*` is selected. Switching away cancels polling, invalidates its cache, and clears the status.
-- This is a local patched copy of `https://github.com/azs06/pi-copilot-usage`, not an npm package install.
+- The local extension is split between `extensions/copilot-usage/index.ts` and `extensions/copilot-usage/src/index.ts`; the package entrypoint re-exports the main source file.
 - Run `/reload` after edits or dependency updates.
 
 Sources checked:
 
 - `~/.pi/agent/extensions/copilot-usage/README.md`
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
+- `~/.pi/agent/extensions/copilot-usage/package.json`
 - `~/.pi/agent/extensions/copilot-api-discovery.ts`
 - `~/.pi/agent/extensions/tirith-guard.ts`
 - `~/.pi/agent/extensions/subscription-usage-status.ts`
@@ -325,15 +335,16 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status`; the custom footer renders its status as a Copilot-style five-hour bar plus compact weekly percentage, for example ` Codex [███████░░░] 71% · wk 93%`.
-- `/codex-status` shows the ChatGPT/Codex plan, current five-hour and weekly rate-limit windows, reset times, credits, and any model-specific buckets returned by OpenAI. Use `/codex-status --refresh` to bypass its five-minute in-memory cache.
-- The footer status appears only for `openai-codex/*` models and clears when another provider is selected. This complements Copilot's provider-specific status; only the active subscription provider's indicator is shown.
+- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
+- The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
+- Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
 
 Auth and data caveats:
 
-- It uses Pi's existing `openai-codex` OAuth subscription auth first; run `/login openai-codex` if that auth is unavailable. Codex CLI app-server is an optional fallback, not a requirement for the normal Pi-auth path.
+- It uses Pi's existing `openai-codex` subscription auth first; Codex CLI app-server is only a fallback when Pi auth is unavailable.
 - It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
-- The usage endpoint is current snapshot data, not a persistent consumption ledger, and is an undocumented backend endpoint that OpenAI may change. OpenAI API keys do not expose ChatGPT subscription quota.
+- The usage endpoint is a snapshot, not a ledger, and OpenAI can change it without notice. OpenAI API keys do not expose ChatGPT subscription quota.
 - Reload Pi after installing or updating the package.
 
 Sources checked:
@@ -351,15 +362,16 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status`; the custom footer renders its status as a Copilot-style five-hour bar plus compact weekly percentage, for example ` Codex [███████░░░] 71% · wk 93%`.
-- `/codex-status` shows the ChatGPT/Codex plan, current five-hour and weekly rate-limit windows, reset times, credits, and any model-specific buckets returned by OpenAI. Use `/codex-status --refresh` to bypass its five-minute in-memory cache.
-- The footer status appears only for `openai-codex/*` models and clears when another provider is selected. This complements Copilot's provider-specific status; only the active subscription provider's indicator is shown.
+- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
+- The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
+- Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
 
 Auth and data caveats:
 
-- It uses Pi's existing `openai-codex` OAuth subscription auth first; run `/login openai-codex` if that auth is unavailable. Codex CLI app-server is an optional fallback, not a requirement for the normal Pi-auth path.
+- It uses Pi's existing `openai-codex` subscription auth first; Codex CLI app-server is only a fallback when Pi auth is unavailable.
 - It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
-- The usage endpoint is current snapshot data, not a persistent consumption ledger, and is an undocumented backend endpoint that OpenAI may change. OpenAI API keys do not expose ChatGPT subscription quota.
+- The usage endpoint is a snapshot, not a ledger, and OpenAI can change it without notice. OpenAI API keys do not expose ChatGPT subscription quota.
 - Reload Pi after installing or updating the package.
 
 Sources checked:
@@ -371,7 +383,7 @@ Sources checked:
 
 What it does:
 
-- Shows a Codex-shaped remaining-quota footer meter only while an `opencode-go/*` model is selected, for example ` OpenCode Go [███████░░░] 71% · wk 93%`.
+- Shows a Codex-shaped remaining-quota footer meter only while an `opencode-go/*` model is selected.
 - `/opencode-go-status` shows five-hour, weekly, and monthly remaining percentage plus reset time. Use `/opencode-go-status --refresh` to bypass its short fresh cache.
 - Uses a 60-second fresh cache, a 10-minute stale fallback, and 60-second recursive polling after a short startup delay. Switching away from OpenCode Go or shutting down clears its status and invalidates late poll results.
 

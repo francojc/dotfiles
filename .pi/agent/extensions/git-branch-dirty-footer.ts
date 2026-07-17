@@ -195,11 +195,10 @@ export default function (pi: ExtensionAPI) {
 						leftWidth = visibleWidth(left);
 					}
 
-					const sessionContext = ctx.sessionManager.buildSessionContext();
 					const modelName = ctx.model?.id || "no-model";
 					let right = theme.fg("muted", modelName);
 					if (ctx.model?.reasoning) {
-						const thinkingLevel = sessionContext.thinkingLevel || "off";
+						const thinkingLevel = pi.getThinkingLevel();
 						right = `${theme.fg("muted", modelName)}${theme.fg("dim", ":")}${theme.fg("accent", thinkingLevel)}`;
 					}
 					if (footerData.getAvailableProviderCount() > 1 && ctx.model) {
