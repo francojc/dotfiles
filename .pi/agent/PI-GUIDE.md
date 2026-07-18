@@ -49,7 +49,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.17.2` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
+| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -335,7 +335,7 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
 - `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
 - The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
 - Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
@@ -362,7 +362,7 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
 - `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
 - The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
 - Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.

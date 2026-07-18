@@ -390,7 +390,7 @@
         "maxTokens": 65536
       }
     ],
-    "checkedAt": 1784292282939
+    "checkedAt": 1784342169590
   },
   "mistral": {
     "models": [
@@ -978,7 +978,7 @@
         "maxTokens": 128000
       }
     ],
-    "checkedAt": 1784292283146
+    "checkedAt": 1784342169551
   },
   "deepseek": {
     "models": [
@@ -1047,7 +1047,7 @@
         }
       }
     ],
-    "checkedAt": 1784292282991
+    "checkedAt": 1784342169435
   },
   "anthropic": {
     "models": [
@@ -1375,7 +1375,7 @@
         }
       }
     ],
-    "checkedAt": 1784292282879
+    "checkedAt": 1784342169676
   },
   "zai": {
     "models": [
@@ -1543,7 +1543,7 @@
         "maxTokens": 131072
       }
     ],
-    "checkedAt": 1784292282798
+    "checkedAt": 1784342169634
   },
   "opencode": {
     "models": [
@@ -2936,7 +2936,7 @@
         "maxTokens": 65536
       }
     ],
-    "checkedAt": 1784292282877
+    "checkedAt": 1784342169418
   },
   "google": {
     "models": [
@@ -3314,7 +3314,7 @@
         }
       }
     ],
-    "checkedAt": 1784292283018
+    "checkedAt": 1784342169503
   },
   "openrouter": {
     "models": [
@@ -9764,7 +9764,7 @@
         }
       }
     ],
-    "checkedAt": 1784292282769
+    "checkedAt": 1784342169497
   },
   "openai-codex": {
     "models": [
@@ -10002,7 +10002,7 @@
         }
       }
     ],
-    "checkedAt": 1784292282874
+    "checkedAt": 1784342169413
   },
   "openai": {
     "models": [
@@ -11112,6 +11112,6 @@
         "maxTokens": 100000
       }
     ],
-    "checkedAt": 1784292282998
+    "checkedAt": 1784342169557
   }
 }
