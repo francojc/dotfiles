@@ -13,6 +13,34 @@ This directory contains a flat collection of personal scripts and small tools. T
 - net- = Networking
 - pdc- = Pandoc / document conversion
 - q- = Quarto helpers
+
+## `marker-convert` — multi-format to Markdown
+
+`marker-convert` produces Pandoc Markdown while preserving semantic structure.
+It uses Pandoc directly for DOCX, HTML, EPUB, RTF, ODT, and markup formats, and
+routes PDFs to `marker_single` for layout-aware extraction and OCR. It no
+longer renders semantic documents through an intermediate PDF.
+
+```sh
+marker-convert report.docx
+marker-convert book.epub --output notes/book.md
+marker-convert page.html --output-dir notes
+marker-convert scan.pdf --use-llm --gemini_api_key "$GEMINI_API_KEY"
+```
+
+By default output is `./marker_output/<input-stem>.md`; extracted media is kept
+in the adjacent `<output-stem>-assets/` directory. Use `--output FILE` for an
+exact path or `--output-dir DIR` for a directory. `--engine auto|pandoc|marker`
+selects or overrides routing. Marker options can be passed after `--` (or as
+unrecognised options); `--use-llm` is opt-in and falls back to local processing
+when it is not used or credentials are unavailable.
+
+Pandoc, `marker_single`, and their model dependencies are checked only for the
+selected route. `officecli` is not the default exporter: its CLI is a schema-
+driven reader/editor for DOCX/XLSX/PPTX, not a Markdown conversion command.
+It remains useful for future structured Office inspection. Optional Docling or
+MarkItDown installations can be selected explicitly with `--engine` when
+available; they are not required for the core Pandoc/Marker routes.
 - ssh- = SSH key management
 - wx = Weather
 

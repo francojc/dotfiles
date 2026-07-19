@@ -1,144 +1,250 @@
 #!/usr/bin/env bash
-# Wrapper script to convert various document formats using Pandoc + Marker
+# Convert documents to semantic Pandoc Markdown, or PDFs through Marker.
 
-set -e
+set -Eeuo pipefail
+IFS=$' \t\n'
+
+VERSION="2.0.0"
+SCRIPT_NAME="marker-convert"
+OUTPUT_DIR="./marker_output"
+OUTPUT_FILE=""
+ENGINE="auto"
+KEEP_PDF=0
+LLM_MODE="local"
+PANDOC_OPTS=()
+MARKER_OPTS=()
+INPUT=""
+WORK_DIR=""
 
 usage() {
-    cat <<EOF
-Usage: marker-convert <input_file> [--output_dir <dir>] [marker options...]
+  cat <<'EOF'
+Usage: marker-convert INPUT [OPTIONS] [-- MARKER_OPTIONS...]
 
-Converts DOCX, PPTX, XLSX, HTML, EPUB, and other formats to markdown using:
-  - Pandoc for DOCX/PPTX/EPUB/HTML → PDF conversion
-  - Marker for PDF → Markdown conversion (with ML/OCR)
+Convert a document to Pandoc Markdown. Semantic formats use Pandoc directly;
+PDFs use Marker for layout-aware extraction and OCR.
+
+Output:
+  -o, --output FILE       Exact Markdown output path
+  -d, --output-dir DIR    Output directory (default: ./marker_output)
+      --output_dir DIR    Legacy spelling of --output-dir
+      --assets-dir DIR    Override the extracted-media directory
+
+Routing:
+      --engine ENGINE     auto, pandoc, marker, docling, or markitdown
+      --pandoc-option ARG Pass one additional option to Pandoc (repeatable)
+      --use-llm           Enable Marker LLM processing when using Marker
+      --no-llm            Force local Marker/OCR processing (default)
+      --keep-pdf          Retained for compatibility; no PDF intermediary is made
+  -h, --help              Show this help
+      --version           Show version
 
 Examples:
-  marker-convert document.docx
-  marker-convert presentation.pptx --output_dir ./output
-  marker-convert document.pdf --use_llm --gemini_api_key "\$GEMINI_API_KEY"
+  marker-convert report.docx
+  marker-convert book.epub --output ./notes/book.md
+  marker-convert page.html --output-dir ./notes
+  marker-convert scan.pdf --use-llm --gemini_api_key "$GEMINI_API_KEY"
+  marker-convert scan.pdf --engine marker -- --page_range 1-3
 
-Options:
-  --output_dir <dir>    Output directory (default: ./marker_output)
-  --keep-pdf            Keep intermediate PDF file
-  All other options are passed directly to marker_single
-
-Supported formats: PDF, DOCX, PPTX, EPUB, HTML, ODT, RST, and more
+Pandoc writes Pandoc Markdown and extracts media to <stem>-assets beside the
+Markdown file. Marker options after -- (and unrecognised options) are passed
+through unchanged. LLM use is opt-in; if unavailable, local processing remains.
 EOF
-    exit 1
 }
 
-# Check for input file
-if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    usage
-fi
+die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
+log() { printf '%s\n' "$*" >&2; }
+need() { command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"; }
 
-# Verify marker and marker dependencies are installed
-# Assumes marker_single is in PATH
-if ! command -v marker_single >/dev/null 2>&1; then
-    echo "Error: marker_single command not found. Please install Marker."
-    exit 1
-fi
-# Verify pandoc is installed
-if ! command -v pandoc >/dev/null 2>&1; then
-    echo "Error: pandoc command not found. Please install Pandoc."
-    exit 1
-fi
-# Verify tectonic is installed for PDF generation
-if ! command -v tectonic >/dev/null 2>&1; then
-    echo "Error: tectonic command not found. Please install Tectonic for PDF generation."
-    exit 1
-fi
-# Verify weasyprint is installed for DOCX/PPTX/ODT handling
-if ! command -v weasyprint >/dev/null 2>&1; then
-    echo "Error: weasyprint command not found. Please install WeasyPrint."
-    exit 1
-fi
+cleanup() {
+  local status=$?
+  if [[ -n "$WORK_DIR" && -d "$WORK_DIR" ]]; then
+    rm -rf -- "$WORK_DIR"
+  fi
+  return "$status"
+}
+trap cleanup EXIT INT TERM
 
+is_option_with_arg() {
+  case "$1" in
+    --page_range|--output_format|--output_dir|--converter_cls|--llm_service|--config_json|--processors|--lowres_image_dpi|--highres_image_dpi|--layout_batch_size|--force_layout_block|--disable_tqdm|--max_expand_frac|--detection_batch_size|--ocr_error_batch_size|--recognition_batch_size|--ocr_task_name|--gap_threshold|--list_gap_threshold|--block_relabel_str|--min_x_indent|--x_start_tolerance|--x_end_tolerance|--debug_data_folder|--model_max_length|--equation_batch_size|--common_element_threshold|--common_element_min_blocks|--max_concurrency|--image_expansion_ratio|--image_description_prompt|--max_table_rows|--max_table_iterations|--table_rewriting_prompt|--output-format|--page-range|--llm-service|--config-json|--config)
+      return 0 ;;
+  esac
+  return 1
+}
 
-INPUT_FILE="$1"
-shift
-
-# Check if file exists
-if [ ! -f "$INPUT_FILE" ]; then
-    echo "Error: File '$INPUT_FILE' not found"
-    exit 1
-fi
-
-# Parse options
-OUTPUT_DIR="./marker_output"
-KEEP_PDF=false
-MARKER_OPTS=()
-
-while [ $# -gt 0 ]; do
-    case "$1" in
-        --output_dir|--output-dir)
-            OUTPUT_DIR="$2"
-            shift 2
-            ;;
-        --keep-pdf)
-            KEEP_PDF=true
-            shift
-            ;;
-        *)
-            MARKER_OPTS+=("$1")
-            shift
-            ;;
-    esac
+while (($#)); do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --version) printf '%s %s\n' "$SCRIPT_NAME" "$VERSION"; exit 0 ;;
+    --) shift; MARKER_OPTS+=("$@"); break ;;
+    -o|--output) (($# >= 2)) || die "$1 requires a file"; OUTPUT_FILE=$2; shift 2 ;;
+    -d|--output-dir|--output_dir) (($# >= 2)) || die "$1 requires a directory"; OUTPUT_DIR=$2; shift 2 ;;
+    --assets-dir) (($# >= 2)) || die "$1 requires a directory"; ASSETS_DIR_OVERRIDE=$2; shift 2 ;;
+    --engine) (($# >= 2)) || die "$1 requires an engine"; ENGINE=$2; shift 2 ;;
+    --pandoc-option) (($# >= 2)) || die "$1 requires an argument"; PANDOC_OPTS+=("$2"); shift 2 ;;
+    --use-llm) LLM_MODE="llm"; shift ;;
+    --no-llm) LLM_MODE="local"; shift ;;
+    --keep-pdf) KEEP_PDF=1; shift ;;
+    --input) (($# >= 2)) || die "--input requires a file"; INPUT=$2; shift 2 ;;
+    -*)
+      option=$1
+      MARKER_OPTS+=("$option")
+      # Known Marker value options are listed above. For future Marker options,
+      # also preserve an immediately following non-option as its value.
+      if is_option_with_arg "$option" && (($# >= 2)); then
+        MARKER_OPTS+=("$2"); shift 2
+      elif (($# >= 2)) && [[ "$2" != -* ]]; then
+        MARKER_OPTS+=("$2"); shift 2
+      else
+        shift
+      fi
+      ;;
+    *)
+      [[ -z "$INPUT" ]] || die "only one input file is supported: '$1'"
+      INPUT=$1; shift ;;
+  esac
 done
 
-# Get file extension
-EXT="${INPUT_FILE##*.}"
-EXT_LOWER=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
-BASENAME=$(basename "$INPUT_FILE" ."$EXT")
+[[ -n "$INPUT" ]] || { usage >&2; exit 2; }
+[[ -f "$INPUT" ]] || die "input file not found: $INPUT"
+INPUT=$(cd "$(dirname "$INPUT")" && printf '%s/%s' "$PWD" "$(basename "$INPUT")")
 
-# Create output directory
-mkdir -p "$OUTPUT_DIR"
+case "$ENGINE" in auto|pandoc|marker|docling|markitdown) ;; *) die "unknown engine: $ENGINE" ;; esac
 
-# Determine if we need to convert to PDF first
-case "$EXT_LOWER" in
-    pdf)
-        echo "→ Input is PDF, processing directly with Marker..."
-        marker_single "$INPUT_FILE" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
-        ;;
-    docx|doc|pptx|ppt|odt)
-        # Marker has built-in DOCX/PPTX/ODT support via WeasyPrint
-        # Just pass directly to Marker - it handles the conversion internally
-        echo "→ Processing $EXT_LOWER with Marker (built-in conversion)..."
-        marker_single "$INPUT_FILE" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
-        ;;
-    epub|html|htm|rtf|rst)
-        # For these formats, convert to PDF first with Pandoc
-        TEMP_PDF="/tmp/${BASENAME}_temp.pdf"
-        echo "→ Converting $EXT_LOWER to PDF with Pandoc..."
+filename=$(basename "$INPUT")
+stem=${filename%.*}
+ext=${filename##*.}
+ext=${ext,,}
+if [[ "$filename" != *.* ]]; then stem=$filename; ext=""; fi
+[[ -n "$stem" ]] || stem=$filename
 
-        if pandoc "$INPUT_FILE" --pdf-engine=tectonic -o "$TEMP_PDF" 2>/dev/null; then
-            echo "✓ Conversion successful with Tectonic"
-        else
-            echo "Error: Pandoc conversion failed for $EXT_LOWER"
-            echo "Suggestion: Export as PDF manually and use: marker-convert file.pdf"
-            exit 1
-        fi
-
-        echo "→ Processing PDF with Marker..."
-        marker_single "$TEMP_PDF" --output_dir "$OUTPUT_DIR" "${MARKER_OPTS[@]}"
-
-        if [ "$KEEP_PDF" = false ]; then
-            rm -f "$TEMP_PDF"
-            echo "✓ Cleaned up temporary PDF"
-        else
-            mv "$TEMP_PDF" "$OUTPUT_DIR/${BASENAME}.pdf"
-            echo "✓ Kept PDF: $OUTPUT_DIR/${BASENAME}.pdf"
-        fi
-        ;;
-    xlsx|xls)
-        echo "Error: Excel files require special handling"
-        echo "Suggestion: Export to CSV and process separately, or use a spreadsheet-to-PDF converter"
-        exit 1
-        ;;
-    *)
-        echo "Error: Unsupported file format: .$EXT"
-        echo "Supported: PDF, DOCX, PPTX, EPUB, HTML, ODT, RTF, RST"
-        exit 1
-        ;;
+case "$ext" in
+  pdf) AUTO_ENGINE=marker ;;
+  docx|html|htm|epub|rtf|odt|rst|org|txt|text|md|markdown|tex|latex|textile|csv|tsv) AUTO_ENGINE=pandoc ;;
+  *) AUTO_ENGINE="" ;;
+esac
+case "$ext" in
+  htm) INPUT_FORMAT=html ;;
+  md|markdown) INPUT_FORMAT=markdown ;;
+  txt|text) INPUT_FORMAT=markdown ;;
+  tex) INPUT_FORMAT=latex ;;
+  *) INPUT_FORMAT="${ext:-markdown}" ;;
 esac
 
-echo "✓ Conversion complete! Output in: $OUTPUT_DIR"
+if [[ -n "$OUTPUT_FILE" ]]; then
+  if [[ "$OUTPUT_FILE" != /* ]]; then OUTPUT_FILE="$PWD/$OUTPUT_FILE"; fi
+  output_name=$(basename "$OUTPUT_FILE")
+  [[ "$output_name" == *.md ]] || die "--output must name a .md file"
+else
+  [[ "$OUTPUT_DIR" == /* ]] || OUTPUT_DIR="$PWD/$OUTPUT_DIR"
+  OUTPUT_FILE="$OUTPUT_DIR/$stem.md"
+fi
+mkdir -p -- "$(dirname "$OUTPUT_FILE")"
+
+output_stem=$(basename "$OUTPUT_FILE" .md)
+if [[ -n "${ASSETS_DIR_OVERRIDE:-}" ]]; then
+  ASSETS_DIR="$ASSETS_DIR_OVERRIDE"
+  [[ "$ASSETS_DIR" == /* ]] || ASSETS_DIR="$PWD/$ASSETS_DIR"
+else
+  ASSETS_DIR="$(dirname "$OUTPUT_FILE")/${output_stem}-assets"
+fi
+
+selected_engine=$ENGINE
+if [[ "$selected_engine" == auto ]]; then
+  selected_engine=$AUTO_ENGINE
+  [[ -n "$selected_engine" ]] || die "unsupported .$ext input; use a Pandoc-supported format, --engine docling/markitdown, or a PDF for Marker"
+fi
+
+WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/marker-convert.XXXXXXXX")
+tmp_md="$WORK_DIR/output.md"
+tmp_assets="$WORK_DIR/assets"
+
+pandoc_convert() {
+  need pandoc
+  mkdir -p -- "$tmp_assets"
+  log "→ Pandoc: $ext → Pandoc Markdown"
+  pandoc "$INPUT" --from="$INPUT_FORMAT" --resource-path="$(dirname "$INPUT")" --to=markdown --wrap=none --extract-media="$tmp_assets" "${PANDOC_OPTS[@]}" -o "$tmp_md"
+  # Pandoc normally writes media references relative to the extraction directory.
+  # Move the directory as a unit and retain those links relative to the output.
+  if [[ -d "$tmp_assets" ]] && find "$tmp_assets" -type f -print -quit | grep -q .; then
+    mkdir -p -- "$ASSETS_DIR"
+    cp -R -- "$tmp_assets/". "$ASSETS_DIR/"
+    # Pandoc may emit the absolute extraction path; it must not leak a
+    # temporary filename into the durable Markdown document.
+    TMP_ASSETS="$tmp_assets" ASSET_PREFIX="$(basename "$ASSETS_DIR")" perl -0pi -e '
+      my ($old, $new) = ($ENV{TMP_ASSETS}, $ENV{ASSET_PREFIX});
+      s{\Q$old\E}{$new}g;
+    ' "$tmp_md"
+  fi
+  mv -f -- "$tmp_md" "$OUTPUT_FILE"
+}
+
+marker_convert() {
+  need marker_single
+  log "→ Marker: PDF → Markdown"
+  local -a args=("$INPUT" --output_dir "$WORK_DIR" --output_format markdown)
+  if [[ "$LLM_MODE" == llm ]]; then
+    args+=(--use_llm)
+    if ! marker_single "${args[@]}" "${MARKER_OPTS[@]}"; then
+      log "Warning: Marker LLM processing failed; retrying with local OCR/layout processing."
+      rm -rf -- "$WORK_DIR"
+      mkdir -p -- "$WORK_DIR"
+      marker_single "$INPUT" --output_dir "$WORK_DIR" --output_format markdown "${MARKER_OPTS[@]}"
+    fi
+  else
+    marker_single "${args[@]}" "${MARKER_OPTS[@]}"
+  fi
+  local generated
+  generated=$(find "$WORK_DIR" -type f -name '*.md' -print -quit)
+  [[ -n "$generated" ]] || die "Marker completed without producing Markdown"
+  local asset_count=0
+  while IFS= read -r -d '' asset; do
+    [[ "$asset" == "$generated" ]] && continue
+    if ((asset_count == 0)); then mkdir -p -- "$ASSETS_DIR"; fi
+    cp -p -- "$asset" "$ASSETS_DIR/"
+    asset_count=$((asset_count + 1))
+  done < <(find "$WORK_DIR" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.svg' \) -print0)
+  cp -- "$generated" "$OUTPUT_FILE"
+  # Marker writes image links relative to its temporary output directory. Since
+  # assets are kept in a sibling directory, update bare image references.
+  local asset_prefix asset_name
+  asset_prefix=$(basename "$ASSETS_DIR")
+  if [[ -d "$ASSETS_DIR" ]]; then
+    while IFS= read -r -d '' asset; do
+      asset_name=$(basename "$asset")
+      ASSET_PREFIX="$asset_prefix" ASSET_NAME="$asset_name" perl -0pi -e '
+        my ($p, $n) = ($ENV{ASSET_PREFIX}, $ENV{ASSET_NAME});
+        s{(!\[[^\]]*\]\()\Q$n\E(?=[)#])}{$1 . "$p/$n"}ge;
+      ' "$OUTPUT_FILE"
+    done < <(find "$ASSETS_DIR" -type f -print0)
+  fi
+}
+
+external_convert() {
+  case "$selected_engine" in
+    docling)
+      command -v docling >/dev/null 2>&1 || die "--engine docling requested, but docling is not installed"
+      log "→ Docling (optional engine)"
+      docling convert "$INPUT" --to md --output "$tmp_md" || die "Docling conversion failed"
+      ;;
+    markitdown)
+      command -v markitdown >/dev/null 2>&1 || die "--engine markitdown requested, but markitdown is not installed"
+      log "→ MarkItDown (optional engine)"
+      markitdown "$INPUT" -o "$tmp_md" || die "MarkItDown conversion failed"
+      ;;
+  esac
+  [[ -s "$tmp_md" ]] || die "$selected_engine produced no Markdown"
+  mv -f -- "$tmp_md" "$OUTPUT_FILE"
+}
+
+case "$selected_engine" in
+  pandoc) pandoc_convert ;;
+  marker) [[ "$ext" == pdf ]] || die "Marker routing currently requires a PDF input"; marker_convert ;;
+  docling|markitdown) external_convert ;;
+  *) die "no route available for .$ext; install Pandoc, Marker, Docling, or MarkItDown as appropriate" ;;
+esac
+
+# Keep legacy flag harmless but make it clear no PDF was fabricated.
+if ((KEEP_PDF)); then log "Note: --keep-pdf ignored; semantic conversion creates no intermediate PDF."; fi
+log "✓ Wrote: $OUTPUT_FILE"
+[[ -d "$ASSETS_DIR" ]] && log "✓ Assets: $ASSETS_DIR"
