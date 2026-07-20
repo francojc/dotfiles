@@ -50,7 +50,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
+| `@narumitw/pi-codex-usage` | `0.17.2` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -69,8 +69,8 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
-| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider models from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
-| `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider models from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
+| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
+| `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
 | `opencode-go-usage.ts` | Shows provider-gated OpenCode Go subscription usage in the custom footer. | `/opencode-go-status [--refresh]`; credentials from `pass` or environment. |
 | `opencode-go-costs.ts` | Reports local OpenCode Go response costs across persisted Pi sessions. | `/opencode-go-costs [day\|week\|30d\|all]`; defaults to `week`. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
@@ -296,7 +296,7 @@ Sources checked:
 
 What it does:
 
-- Shows GitHub Copilot plan quota from `gh api /copilot_internal/user`.
+- Shows GitHub Copilot quota from `gh api /copilot_internal/user`.
 - Adds a threshold footer meter like ` Copilot [██████░░░░] 60%`, where the bar means remaining quota.
 - Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
 - Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
@@ -329,42 +329,12 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/README.md`
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
-- `~/.pi/agent/extensions/copilot-api-discovery.ts`
-- `~/.pi/agent/extensions/tirith-guard.ts`
-- `~/.pi/agent/extensions/subscription-usage-status.ts`
 
 ### OpenAI Codex usage
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
-- `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
-- The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
-- Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
-
-Auth and data caveats:
-
-- It uses Pi's existing `openai-codex` subscription auth first; Codex CLI app-server is only a fallback when Pi auth is unavailable.
-- It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
-- The usage endpoint is a snapshot, not a ledger, and OpenAI can change it without notice. OpenAI API keys do not expose ChatGPT subscription quota.
-- Reload Pi after installing or updating the package.
-
-Sources checked:
-
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts`
-
-Sources checked:
-
-- `~/.pi/agent/extensions/copilot-usage/README.md`
-- `~/.pi/agent/extensions/copilot-usage/src/index.ts`
-- `~/.pi/agent/extensions/copilot-usage/package.json`
-
-### OpenAI Codex usage
-
-What it does:
-
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
 - `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
 - The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
 - Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
@@ -658,9 +628,7 @@ Source checked:
 When package or extension state changes:
 
 - Run `~/.pi/agent/skills/pi-guide-maintainer/scripts/inventory.mjs`.
-- Compare `settings.json` package list to guide.
-- Read relevant package README and package manifest.
-- Inspect extension entrypoint source for commands, shortcuts, config, and gotchas.
-- Update user-facing notes.
-- Remove stale entries for removed packages/extensions.
-- Tell user what changed and whether `/reload` is needed.
+- Read docs and source for changed packages or extensions.
+- Update the relevant sections above.
+- Remove stale entries after uninstall/removal.
+- Keep `PI-GUIDE.md` and `~/.pi/agent/PI-GUIDE.md` aligned.
