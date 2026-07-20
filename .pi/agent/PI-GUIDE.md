@@ -35,6 +35,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
 | `/codex-status [--refresh]` | Show ChatGPT Codex plan, quota windows, reset times, credits, and model buckets. |
 | `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
+| `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
 | `/skill:hunk-review` | Inspect and guide live Hunk Git-diff review sessions. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
@@ -71,6 +72,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider models from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider models from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
 | `opencode-go-usage.ts` | Shows provider-gated OpenCode Go subscription usage in the custom footer. | `/opencode-go-status [--refresh]`; credentials from `pass` or environment. |
+| `opencode-go-costs.ts` | Reports local OpenCode Go response costs across persisted Pi sessions. | `/opencode-go-costs [day\|week\|30d\|all]`; defaults to `week`. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
 | `searxng.ts` | Adds `web_search` tool via self-hosted SearXNG. | Agent tool. `SEARXNG_URL` optional. |
 | `questionnaire.ts` | Adds interactive questionnaire tool for clarifying choices. | Agent tool. |
@@ -386,6 +388,8 @@ What it does:
 - Shows a Codex-shaped remaining-quota footer meter only while an `opencode-go/*` model is selected.
 - `/opencode-go-status` shows five-hour, weekly, and monthly remaining percentage plus reset time. Use `/opencode-go-status --refresh` to bypass its short fresh cache.
 - Uses a 60-second fresh cache, a 10-minute stale fallback, and 60-second recursive polling after a short startup delay. Switching away from OpenCode Go or shutting down clears its status and invalidates late poll results.
+- `/opencode-go-costs [day|week|30d|all]` scans persisted Pi session JSONL files and reports daily spend bars, spend by model, and highest/lowest-cost responses. It defaults to `week`.
+- Cost values are Pi's per-response provider-price records, not a Go dashboard ledger. Forked/copied history is deduplicated by provider response ID. It only reports usage made through Pi on this machine, and `lowest-cost` means cheapest response, not quality-adjusted value.
 
 Runtime environment inputs:
 

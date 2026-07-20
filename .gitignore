@@ -45,6 +45,7 @@
 .pi/agent/sessions/*
 .pi/agent/auth.json
 .pi/agent/settings.json
+.pi/agent/models-store.json
 .pi/agent/pi-guide-autoupdate-state.json
 .pi/agent/pi-guide-autoupdate.lock
 .pi/agent/pi-guide-maintainer.log
