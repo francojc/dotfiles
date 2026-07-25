@@ -50,7 +50,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.24.2` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.25.0` | ChatGPT Codex subscription usage, `/codex-status`, and provider-aware footer status with 5-hour and weekly windows. Deprecated in favor of `@narumitw/pi-usage`. |
+| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex subscription usage, `/codex-status`, and provider-aware footer status with 5-hour and weekly windows. Deprecated in favor of `@narumitw/pi-usage`. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
