@@ -12,9 +12,9 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`.
 - Refresh after package, extension, skill, or keybinding changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
-- Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`.
-- Disable background guide updates with `PI_GUIDE_AUTOUPDATE=0`.
-- Override background guide model with `PI_GUIDE_MODEL=<provider/model>`.
+- Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`
+- Disable background guide updates with `PI_GUIDE_AUTOUPDATE=0`
+- Override background guide model with `PI_GUIDE_MODEL=<provider/model>`
 - After config changes, run `/reload` in Pi when possible.
 
 ## Quick commands
@@ -33,7 +33,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-quota` | Secondary focused Copilot quota/model view. |
 | `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
-| `/codex-status [--refresh]` | Show ChatGPT Codex plan, quota windows, reset times, credits, and model buckets. |
+| `/codex-status [--refresh]` | Show ChatGPT plan, quota windows, reset times, credits, and model buckets. |
 | `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
 | `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
@@ -48,9 +48,9 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | --- | --- | --- |
 | `pi-caveman` | `1.0.7` | Terse output modes and status indicator. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | npm range in package: `^0.23.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | npm range in package: `^0.24.2` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.17.2` | ChatGPT/Codex plan usage, 5-hour and weekly windows, credits, cached `/codex-status`, and provider-aware footer status. |
+| `@narumitw/pi-codex-usage` | `0.25.0` | ChatGPT Codex subscription usage, `/codex-status`, and provider-aware footer status with 5-hour and weekly windows. Deprecated in favor of `@narumitw/pi-usage`. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -173,11 +173,12 @@ What it does:
 - Compresses assistant prose while keeping technical substance.
 - Hooks system prompt before agent turns.
 - Stores default config in `~/.pi/agent/caveman.json`.
+- Shows an animated footer status while active, unless disabled in config.
 
 Commands:
 
 - `/caveman` toggles caveman mode.
-- `/caveman lite`, `full`, `ultra`, `micro` choose compression style.
+- `/caveman lite`, `full`, `ultra`, `wenyan-lite`, `wenyan`, `wenyan-ultra`, `micro` choose compression style.
 - `/caveman off`, `stop`, or `quit` disables it.
 - `/caveman config` opens settings dialog.
 
@@ -190,15 +191,17 @@ Best practices:
 Sources checked:
 
 - `~/.pi/agent/npm/node_modules/pi-caveman/README.md`
+- `~/.pi/agent/npm/node_modules/pi-caveman/package.json`
 
 ### pi-btw
 
 What it does:
 
 - Opens a parallel side-agent thread while main agent can continue working.
-- Contextual `/btw <question>` inherits current main session context.
-- `/btw:tangent <question>` starts a contextless side thread.
+- Contextual `/btw` inherits current main session context.
+- `/btw:tangent` starts a contextless side thread.
 - Hidden thread state stays out of main LLM context until handed off.
+- The overlay keeps the current main session visible underneath.
 
 Commands:
 
@@ -212,8 +215,8 @@ Commands:
 
 Overlay controls:
 
-- `Ctrl+LeftOption+W` toggles focus on Jerid's Mac keyboard.
-- `Alt+/` is documented default, but may fail on Mac layouts.
+- `Alt+/` toggles focus on most terminals.
+- `Ctrl+Alt+W` is the fallback focus toggle.
 - `Esc` dismisses overlay when focused.
 - `↑` / `↓` scroll transcript by line.
 - Mouse/trackpad wheel scrolls transcript.
@@ -237,6 +240,7 @@ Gotchas:
 Sources checked:
 
 - `~/.pi/agent/npm/node_modules/pi-btw/README.md`
+- `~/.pi/agent/npm/node_modules/pi-btw/package.json`
 - `~/.pi/agent/npm/node_modules/pi-btw/extensions/btw.ts`
 
 ### Plannotator
@@ -246,11 +250,15 @@ What it does:
 - Adds plan mode with a browser UI for reviewing, annotating, approving, or denying plans.
 - Planning phase restricts destructive behavior and focuses the agent on producing checklist plans.
 - Approved plans move into execution with full tool access.
+- Supports code review, markdown annotation, and last-message annotation in the browser UI.
 
 Commands and shortcuts:
 
 - `pi --plan` starts Pi in plan mode.
 - `/plannotator` toggles plan mode during a session.
+- `/plannotator-review` opens the code review UI for current changes.
+- `/plannotator-annotate <file>` opens a markdown file in the annotation UI.
+- `/plannotator-last` annotates the last assistant message.
 - `Ctrl+Alt+P` toggles plan mode.
 
 Configuration:
@@ -269,6 +277,7 @@ Best practices:
 Sources checked:
 
 - `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/README.md`
+- `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/package.json`
 
 ### Ghostty theme sync
 
@@ -334,14 +343,15 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.17.2` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
+- The global package `npm:@narumitw/pi-codex-usage@0.25.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
 - `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
 - The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
+- It emits a deprecation warning on session start, because the package is deprecated in favor of `@narumitw/pi-usage`.
 - Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
 
 Auth and data caveats:
 
-- It uses Pi's existing `openai-codex` subscription auth first; Codex CLI app-server is only a fallback when Pi auth is unavailable.
+- It uses Pi's existing `openai-codex` subscription auth first. Codex CLI app-server is only a fallback when Pi auth is unavailable.
 - It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
 - The usage endpoint is a snapshot, not a ledger, and OpenAI can change it without notice. OpenAI API keys do not expose ChatGPT subscription quota.
 - Reload Pi after installing or updating the package.
@@ -350,6 +360,7 @@ Sources checked:
 
 - `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
 - `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
 
 ### OpenCode Go usage
 
@@ -398,237 +409,5 @@ What it does:
 
 - Sends native terminal notifications when Pi finishes a turn and is ready for input.
 - Records the current TMUX pane as awaiting attention.
-- Clears the awaiting state when that Pi agent starts another turn or shuts down.
-- Validates TMUX pane ids before showing or jumping, so stale crash leftovers are ignored.
 
-Commands and shortcuts:
-
-- `/waiting` lists awaiting Pi agents from inside Pi and jumps via TMUX.
-- TMUX `prefix N` jumps to the most recent awaiting Pi agent.
-- TMUX `prefix C-n` opens an FZF chooser in a TMUX popup.
-- CLI helper: `pi-waiting --list`, `pi-waiting --last`, `pi-waiting --jump-id <pane-id>`.
-
-State files:
-
-- Event log: `~/.pi/agent/pi-waiting-events.jsonl`.
-- Last notification: `~/.pi/agent/pi-last-notification.json`.
-
-Gotchas:
-
-- Switching requires running Pi inside TMUX.
-- Native notification uses terminal OSC protocols: Kitty OSC 99, otherwise OSC 777 for Ghostty, iTerm2, WezTerm, and similar terminals.
-- The event log is append-only. Stale entries are filtered at switch time by live TMUX pane id.
-
-Sources checked:
-
-- `~/.pi/agent/extensions/pi-notify-switch.ts`
-- `~/.local/bin/pi-waiting`
-- `~/.dotfiles/.config/nix/home/tmux.nix`
-
-### Vim editor
-
-What it does:
-
-- Replaces main Pi input editor with modal Vim-like editing.
-
-Normal-mode basics:
-
-- `Esc` from insert enters normal mode.
-- `i`, `I`, `a`, `A` enter insert at common Vim positions.
-- `h/j/k/l`, `w`, `b`, `0`, `$` navigate.
-- `x`, `d`, `D`, `c`, `C`, `p`, `u` edit.
-
-Gotcha:
-
-- This is a lightweight Vim emulation over Pi's editor, not full Vim.
-
-Source checked:
-
-- `~/.pi/agent/extensions/vim-editor.ts`
-
-### SearXNG web search
-
-What it does:
-
-- Adds `web_search` tool using self-hosted SearXNG.
-
-Configuration:
-
-- Default URL: `https://search.gerbil-matrix.ts.net`
-- Override with `SEARXNG_URL`.
-- SearXNG server must support JSON format.
-
-Supported categories:
-
-- `general`
-- `science`
-- `news`
-
-Source checked:
-
-- `~/.pi/agent/extensions/searxng.ts`
-
-### Todo tool
-
-What it does:
-
-- Gives agent a branch-aware todo list with actions: `list`, `add`, `toggle`, `clear`.
-- `/todos` opens interactive todo viewer.
-
-Best practices:
-
-- Use for in-session task tracking when work has multiple steps.
-- Clear when task branch is complete.
-
-Source checked:
-
-- `~/.pi/agent/extensions/todo.ts`
-
-### Dynamic model providers
-
-Copilot API:
-
-- Extension: `copilot-api-discovery.ts`
-- Registers `copilot-api` provider from the raw GitHub Copilot `/models` endpoint, separate from Pi's built-in `github-copilot` provider and separate from the Copilot SDK usage dashboard.
-- Uses `GITHUB_COPILOT_API_KEY` for provider auth and discovery. `GITHUB_COPILOT_BASE_URL` is optional and defaults to `https://api.githubcopilot.com`.
-- Caches model metadata at `~/.cache/pi/copilot-api-models.json`.
-- Refreshes stale cache after 12 hours.
-- Includes chat models that are not disabled and do not explicitly disable tool calls. It does not require `model_picker_enabled`, so API-usable models such as `gpt-4o` can appear even when Copilot Chat picker models differ.
-- Registers models through Pi's `openai-completions` adapter with conservative compatibility flags: no reasoning controls, no developer role, no store support.
-- Gotcha: this provider does not use Pi's built-in Copilot OAuth refresh path. If `GITHUB_COPILOT_API_KEY` expires, refresh that environment variable before using `copilot-api/*` models.
-- Check models with `pi --list-models copilot-api`; use with `pi --model copilot-api/gpt-4o`.
-- Startup model-discovery logs are quiet by default. Set `PI_MODEL_DISCOVERY_DEBUG=1` to show them in interactive runs.
-
-OpenCode Go:
-
-- Extension: `opencode-go-discovery.ts`
-- Registers `opencode-go` provider.
-- Caches model metadata at `~/.cache/pi/opencode-go-models.json`.
-- Refreshes stale cache after 24 hours.
-- Uses `OPENCODE_API_KEY` for provider auth.
-- Startup model-discovery logs are quiet by default. Set `PI_MODEL_DISCOVERY_DEBUG=1` to show them in interactive runs.
-
-OpenRouter:
-
-- Extension: `openrouter-models.ts`
-- Registers `openrouter` provider when `OPENROUTER_API_KEY` is set.
-- Caches model metadata at `~/.cache/pi/openrouter-models.json`.
-- Refreshes stale cache after 24 hours.
-- Startup model-discovery logs are quiet by default. Set `PI_MODEL_DISCOVERY_DEBUG=1` to show them in interactive runs.
-
-Sources checked:
-
-- `~/.pi/agent/extensions/copilot-api-discovery.ts`
-- `~/.pi/agent/extensions/opencode-go-discovery.ts`
-- `~/.pi/agent/extensions/openrouter-models.ts`
-
-### Questionnaire tool
-
-What it does:
-
-- Lets agent ask one or more structured questions with selectable options and optional typed responses.
-
-Best practices:
-
-- Use when requirements are ambiguous and choices matter.
-- Prefer questionnaire over guessing when multiple valid directions exist.
-
-Source checked:
-
-- `~/.pi/agent/extensions/questionnaire.ts`
-
-### Supacode integration
-
-What it does:
-
-- Emits OSC 3008 lifecycle and notification signals to Supacode when running inside a Supacode surface.
-- No-op outside Supacode.
-
-Environment gates:
-
-- `SUPACODE_SURFACE_ID`
-- `SUPACODE_SOCKET_PATH` optional for local pid tracking.
-
-Source checked:
-
-- `~/.pi/agent/extensions/supacode/index.ts`
-
-### Tirith guard
-
-What it does:
-
-- Hooks `tool_call` events for the Pi `bash` tool.
-- Runs `tirith check --json --non-interactive --shell posix -- <command>`.
-- Allows exit 0, warns on exit 2, blocks on exit 1 or exit 3 (WarnAck).
-- Emits `hook-event` telemetry to tirith for check results, timeouts, and blocks.
-
-Configuration:
-
-- `TIRITH_BIN` — path to tirith binary (default: `tirith`).
-- `TIRITH_HOOK_WARN_ACTION` — `allow` or `deny` for exit 2 warnings (default: `allow`).
-- `TIRITH_FAIL_OPEN` — set to `1` to allow commands when tirith itself errors or is missing (default: block).
-
-Shell hooks outside Pi:
-
-- Managed in nix: `~/.dotfiles/.config/nix/home/shell/default.nix` (`profileExtra`).
-- Do not run `tirith setup pi-cli` or `tirith init` manually; nix rebuilds overwrite those changes.
-
-Policy:
-
-- User-level source: `~/.dotfiles/.config/tirith/policy.yaml` (stowed to `~/.config/tirith/policy.yaml`).
-- Per-project override: `.tirith/policy.yaml` (walks up from cwd to `.git`).
-- Installed `tirith 0.3.1` uses a simple policy format; newer Nixpkgs versions add templates, a `version` field, and extra sections.
-
-Gotchas:
-
-- Synchronous 10-second check blocks the tool-call pipeline.
-- Missing tirith binary blocks all `bash` calls unless `TIRITH_FAIL_OPEN=1`.
-- Exit 3 (WarnAck) is treated as block because Pi cannot prompt for acknowledgement.
-- Only the `bash` tool is guarded; file edits, web search, and other tools are not intercepted.
-- stderr warnings may not always be visible in every Pi UI mode.
-
-Source checked:
-
-- `~/.pi/agent/extensions/tirith-guard.ts`
-
-### Pi Guide autoupdate
-
-What it does:
-
-- On interactive `session_start`, fingerprints installed packages and local extension source files.
-- If fingerprint changed, spawns a detached `pi -p` background run using `/skill:pi-guide-maintainer`.
-- Updates `PI-GUIDE.md` without cluttering the active session.
-- Shows a tiny footer status like `guide: updating in background`, then clears it.
-- Does nothing in non-interactive modes such as `pi -p`, JSON, or RPC.
-
-Scope:
-
-- Watches `settings.json` package list.
-- Watches `npm/package.json` and `npm/package-lock.json`.
-- Watches `extensions/**/*.ts|js|mjs|cjs`.
-- Does not watch skills or standalone keybinding changes.
-
-Configuration:
-
-- Disable: `PI_GUIDE_AUTOUPDATE=0`.
-- Model override: `PI_GUIDE_MODEL=<provider/model>`.
-- Pi binary override: `PI_GUIDE_PI_BIN=/path/to/pi`.
-- Default model: `openai-codex/gpt-5.4-mini` with thinking off.
-- Successful runs update the state fingerprint; failed background runs leave it unchanged so the next interactive startup retries.
-- State file: `~/.pi/agent/pi-guide-autoupdate-state.json`.
-- Lock file: `~/.pi/agent/pi-guide-autoupdate.lock`.
-- Log file: `~/.pi/agent/pi-guide-maintainer.log`.
-
-Source checked:
-
-- `~/.pi/agent/extensions/pi-guide-autoupdate.ts`
-
-## Maintenance checklist
-
-When package or extension state changes:
-
-- Run `~/.pi/agent/skills/pi-guide-maintainer/scripts/inventory.mjs`.
-- Read docs and source for changed packages or extensions.
-- Update the relevant sections above.
-- Remove stale entries after uninstall/removal.
-- Keep `PI-GUIDE.md` and `~/.pi/agent/PI-GUIDE.md` aligned.
+[235 more lines in file. Use offset=401 to continue.]
