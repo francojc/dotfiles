@@ -7,18 +7,17 @@
     # Enable some useful shells
     vim = {
       enable = true;
-      plugins = with pkgs.vimPlugins;
-        [
-          # Plugins: 
-          llama-vim # FIM completion from llama.cpp (self-hosted)
-          fzf-vim # FZF
-          vim-fugitive # Git integration (for statusline branch)
-          vim-commentary # Commenting
-          vim-markdown # Markdown support
-          vim-surround # Surround text objects
-          vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
-          vim-which-key # Keybindings
-        ];
+      plugins = with pkgs.vimPlugins; [
+        # Plugins:
+        llama-vim # FIM completion from llama.cpp (self-hosted)
+        fzf-vim # FZF
+        vim-fugitive # Git integration (for statusline branch)
+        vim-commentary # Commenting
+        vim-markdown # Markdown support
+        vim-surround # Surround text objects
+        vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
+        vim-which-key # Keybindings
+      ];
       extraConfig = ''
         " LLAMA.VIM -----------------------------------------------
         let g:llama_config = {
@@ -31,7 +30,7 @@
             \ 'n_prefix': 512,
             \ 'n_suffix': 64,
             \ 'n_predict': 128,
-            \ 'stop_strings': [],
+            \ 'stop_strings_fim': [],
             \ 't_max_prompt_ms': 1000,
             \ 't_max_predict_ms': 1000,
             \ 'max_cache_keys': 250,
@@ -81,7 +80,7 @@
         set noswapfile            " Disable swap files
         set nobackup              " Disable backup files
         set cursorline            " Highlight current line
-        colorscheme retrobox 
+        colorscheme retrobox
         set background=${theme.vim.background}
 
         " STATUSLINE -----------------------------------------------
