@@ -47,10 +47,11 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | Package | Version/config | What it adds |
 | --- | --- | --- |
 | `pi-caveman` | `1.0.7` | Terse output modes and status indicator. |
+
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.24.2` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | ChatGPT Codex subscription usage, `/codex-status`, and provider-aware footer status with 5-hour and weekly windows. Deprecated in favor of `@narumitw/pi-usage`. |
+| `@narumitw/pi-usage` | `0.28.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -339,28 +340,27 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
 
-### OpenAI Codex usage
+### OpenAI/OpenRouter usage
 
 What it does:
 
-- The global package `npm:@narumitw/pi-codex-usage@0.25.0` adds `/codex-status` and an auto-updating footer status while an `openai-codex/*` model is active.
-- `/codex-status` accepts `--refresh`, `--no-statusline`, `--clear-statusline`, and `--timeout <1-120>`.
-- The footer shows a compact statusline item, refreshes every five minutes while `openai-codex` stays selected, and clears when switching away.
-- It emits a deprecation warning on session start, because the package is deprecated in favor of `@narumitw/pi-usage`.
-- Status display is provider-scoped, so only the active subscription provider shows a footer meter at a time.
+- The global package `npm:@narumitw/pi-usage@0.28.0` adds `/usage` as the main usage menu.
+- `/codex-status` remains as an argument-free compatibility alias during migration.
+- The menu covers OpenAI Codex subscription windows, resets, credits, model buckets, and OpenRouter per-key spend/credit limits.
+- It keeps the compact statusline scoped to the currently selected supported provider and runtime account.
+- Cross-provider queries are explicit menu actions, not slash-command flags.
 
 Auth and data caveats:
 
-- It uses Pi's existing `openai-codex` subscription auth first. Codex CLI app-server is only a fallback when Pi auth is unavailable.
-- It does not read auth files directly or print bearer tokens. Do not copy credentials into settings, logs, or issue reports.
-- The usage endpoint is a snapshot, not a ledger, and OpenAI can change it without notice. OpenAI API keys do not expose ChatGPT subscription quota.
+- It resolves credentials through Pi and does not read Pi auth files, Codex CLI auth, or provider auth files directly.
+- OpenAI Codex usage is subscription usage, not API billing. OpenRouter usage is API-key spend/credit tracking, not consumer subscription quota.
+- The package does not pretend those limits have the same semantics.
 - Reload Pi after installing or updating the package.
 
 Sources checked:
 
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-usage/README.md`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-usage/package.json`
 
 ### OpenCode Go usage
 
