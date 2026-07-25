@@ -22,13 +22,7 @@
       extraFlags = [];
     };
 
-    # Note: run `brew trust --tap <tap>` to trust the tap
-    # This creates a ~/.homebrew/trust.json file entry
     taps = [
-      {
-        name = "acrogenesis/macchanger";
-        trusted = true;
-      } # macchanger
       {
         name = "adembc/tap";
         trusted = true;
@@ -62,10 +56,6 @@
         trusted = true;
       } # workmux
       {
-        name = "my-monkeys/tap";
-        trusted = true;
-      } # opensuperwhisper
-      {
         name = "1broseidon/tap";
         trusted = true;
       } # ketch
@@ -74,14 +64,12 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      "hf" # huggingface cli
-      "ketch" # web search, library docs, scraping cli
       "hunk" # git diff tool
+      "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
+      "lazyssh" # lazyssh
       "librespeed-cli"
       "llm" # llm.dataset.io
-      "llmfit" # LLM system fit
-      "macchanger" # MAC address changer
       "mole" # terminal cleanup app for macOS
       "nmap" # network scanner
       "node" # Node.js
@@ -91,19 +79,18 @@
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
       "tree-sitter-cli" # tree-sitter CLI
-      # "vhs" # cli for programmable terminal gifs
+      "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
       # "helix" # text editor
       # "herald" # herald
-      # "lazyssh" # lazyssh
       # "libffi" # Foreign Function Interface library
       # "ninja" # build system
       # "pango" # text layout library
       # "sqly" # interactive SQL client
+      # "vhs" # cli for programmable terminal gifs
       # "weasyprint" # HTML to PDF converter
-      # "workmux" # agentic ai multiplexer
     ];
 
     casks = [
@@ -119,9 +106,7 @@
       "kap" # screen recording
       "keycastr" # keystroke visualizer
       "kitty" # terminal emulator (moved to Nix)
-      "lm-studio" # LLM interface
       "obsidian" # note-taking
-      "opensuperwhisper" # TTS on device
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging

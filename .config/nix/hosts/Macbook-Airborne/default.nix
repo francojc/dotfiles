@@ -17,9 +17,16 @@
     # Host-specific Homebrew packages (merged with shared apps.nix)
     {
       homebrew = {
+        taps = [
+          {
+            name = "acrogenesis/macchanger";
+            trusted = true;
+          } # macchanger
+        ];
         brews = [
           # Macbook-Airborne-only brews here
           "transmission-cli" # command-line torrent client
+          "macchanger" # MAC address changer
         ];
         casks = [
           "dropbox" # cloud storage
@@ -28,8 +35,6 @@
           # "android-platform-tools" # ADB and Fastboot (for TVs)
           # "balenaetcher" # disk image writer
           # "calibre" # eBook management
-          # "lm-studio" # LLM model gui/cli
-          # "parallels" # virtualization
           # "transcribe"
         ];
       };

@@ -48,9 +48,9 @@
     # Build dependencies for Neovim plugins (e.g., blink.cmp)
     rustc # Rust compiler, needed for many Neovim plugins
     cargo # Rust package manager, needed for many Neovim plugins
+    ghostscript # PostScript/PDF interpreter (used by Snacks.image)
 
     # Academic/document rendering (for Quarto, markdown, snacks.nvim)
-    mermaid-cli # Mermaid diagram generator (mmdc)
     tectonic # LaTeX rendering for math expressions
     chafa # Terminal image viewer (optional, enhances image support)
     websocat # WebSocket client
@@ -65,7 +65,7 @@
     carapace # Command-line completion
     codespell # Spell checker
     direnv # Environment manager
-    forgejo-cli # `fj` CLI for Forgejo (like `gh` for GitHub)
+    forgejo-cli # `fj` CLI for Forgejo
     gh # GitHub CLI
     git # Version control system
     go # Go programming language
@@ -121,12 +121,10 @@
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
     ffmpeg # Multimedia framework
-    ghostscript # PostScript/PDF interpreter (used by Snacks.image)
     imagemagick # Image manipulation
     glow # Markdown renderer
     khal # Calendar
     mpv-unwrapped # Media player
-    # nicotine-plus # p2p file sharing/discovery client (disabled: broken dep chain on darwin)
     pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)

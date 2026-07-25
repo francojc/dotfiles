@@ -52,10 +52,13 @@
           "llama.cpp" # LLaMA model inference
           "ollama" # Ollama
           "omlx"
+          "hf" # huggingface cli
+          "llmfit" # LLM system fit
         ];
         casks = [
           # Mac-Minicore-only casks here
           "google-drive" # Google Drive sync
+          "lm-studio" # LLM interface
         ];
       };
 
