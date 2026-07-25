@@ -51,7 +51,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | npm range in package: `^0.24.2` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.28.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
+| `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -344,7 +344,7 @@ Sources checked:
 
 What it does:
 
-- The global package `npm:@narumitw/pi-usage@0.28.0` adds `/usage` as the main usage menu.
+- The global package `npm:@narumitw/pi-usage@0.31.0` adds `/usage` as the main usage menu.
 - `/codex-status` remains as an argument-free compatibility alias during migration.
 - The menu covers OpenAI Codex subscription windows, resets, credits, model buckets, and OpenRouter per-key spend/credit limits.
 - It keeps the compact statusline scoped to the currently selected supported provider and runtime account.
