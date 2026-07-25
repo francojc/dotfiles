@@ -1,10 +1,32 @@
 {
+  "codeberg.org": {
+    "tags": [
+      "version control"
+    ],
+    "last_seen": "2026-07-25T10:38:31-04:00",
+    "ssh_count": 1
+  },
+  "forgejo": {
+    "tags": [
+      "version control"
+    ],
+    "last_seen": "2026-07-25T10:38:23-04:00",
+    "ssh_count": 1
+  },
   "minicore": {
     "last_seen": "2025-09-20T00:40:47-04:00",
     "ssh_count": 1
   },
   "proxmox": {
     "last_seen": "2025-09-17T09:09:21-04:00",
+    "ssh_count": 1
+  },
+  "proxmox-ls": {
+    "tags": [
+      "box"
+    ],
+    "last_seen": "2026-07-25T10:36:07-04:00",
+    "pinned_at": "2026-07-25T10:37:29-04:00",
     "ssh_count": 1
   },
   "rover": {
