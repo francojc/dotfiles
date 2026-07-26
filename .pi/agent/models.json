@@ -16,26 +16,20 @@
       }
     },
     "omlx": {
-      "baseUrl": "http://127.0.0.1:8085/v1",
+      "baseUrl": "http://100.101.38.4:8085/v1",
       "api": "openai-completions",
       "apiKey": "omlx-dvdxabi3afaw07ai",
       "authHeader": true,
       "models": [
         {
-          "id": "supergemma4-26b-uncensored-mlx-4bit-v2",
-          "name": "supergemma4-26b-uncensored-mlx-4bit-v2",
-          "reasoning": false,
+          "id": "Qwen3.6-35B-A3B-UD-MLX-4bit",
+          "name": "Qwen3.6 35B A3B UD MLX 4bit",
+          "reasoning": true,
           "input": [
-            "text"
+            "text",
+            "image"
           ],
-          "cost": {
-            "input": 0,
-            "output": 0,
-            "cacheRead": 0,
-            "cacheWrite": 0
-          },
-          "contextWindow": 32768,
-          "maxTokens": 32768
+          "contextWindow": 32768
         }
       ]
     }
