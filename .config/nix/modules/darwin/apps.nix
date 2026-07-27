@@ -56,9 +56,13 @@
         trusted = true;
       } # workmux
       {
-        name = "1broseidon/tap";
+        name = "1broseidon/tap"; # ketch
         trusted = true;
-      } # ketch
+      }
+      {
+        name = "westpoint-io/lazyrsync"; # lazyrsync
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -67,6 +71,7 @@
       "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
+      "lazyrsync" # tui for managing rsync
       "lazyssh" # lazyssh
       "librespeed-cli"
       "llm" # llm.dataset.io
