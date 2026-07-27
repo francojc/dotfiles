@@ -13,7 +13,19 @@
         "supportsDeveloperRole": false,
         "supportsReasoningEffort": false,
         "requiresThinkingAsText": true
-      }
+      },
+      "models": [
+        {
+          "id": "Qwen3.5-9B-UD-Q4_K_XL",
+          "name": "Qwen3.5 9B UD Q4_K_XL",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 8192
+        }
+      ]
     },
     "omlx": {
       "baseUrl": "http://100.101.38.4:8085/v1",

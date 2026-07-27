@@ -13,17 +13,17 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
-    ../../modules/darwin/llama-server.nix
+    ../../modules/darwin/llama-qwen-server.nix
     ../../modules/darwin/llama-embed-server.nix
     ../../modules/darwin/llama-fim-server.nix
 
     # Inline module for host-specific service configuration
     {
       custom.services = {
-        # Local model router (OpenAI-compatible) on :8081
-        llamaRouter = {
+        # Fixed Qwen3.5 9B chat endpoint on :8081
+        llamaQwen = {
           enable = true;
-          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-router.sh";
+          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-qwen.sh";
         };
 
         # Dedicated embeddings endpoint on :8082
