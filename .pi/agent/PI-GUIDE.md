@@ -6,11 +6,11 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-07-17
-- Pi compatibility audit: `0.80.10`; `pi --list-models` completed cleanly and all configured `enabledModels` resolved.
-- Compatibility cleanup completed 2026-07-17: custom footer now reads thinking level from `pi.getThinkingLevel()`; todo state relies on replacement-session `session_start`; local tools import current `typebox`; removed ignored `compat.reasoningEffortMap` config.
+- Last updated: 2026-08-08
+- Pi compatibility audit: `0.82.1`; `pi --list-models` completed cleanly and all configured `enabledModels` resolved.
+- Compatibility cleanup completed 2026-08-08: custom footer now reads thinking level from `pi.getThinkingLevel()`; todo state relies on replacement-session `session_start`; local tools import current `typebox`; removed ignored `compat.reasoningEffortMap` config.
 - Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`.
-- Refresh after package, extension, skill, or keybinding changes.
+- Refresh after package or local-extension changes.
 - Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
 - Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`
 - Disable background guide updates with `PI_GUIDE_AUTOUPDATE=0`
@@ -47,11 +47,10 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | Package | Version/config | What it adds |
 | --- | --- | --- |
 | `pi-caveman` | `1.0.7` | Terse output modes and status indicator. |
-
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | npm range in package: `^0.24.2` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | `0.25.0` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
+| `@narumitw/pi-usage` | `0.34.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -70,8 +69,8 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
-| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider from the raw GitHub Copilot OpenAI-compatible API. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
-| `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider from OpenCode/model metadata. | Requires `OPENCODE_API_KEY` for actual use. |
+| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider from the raw GitHub Copilot OpenAI-compatible API and caches discovered models locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
+| `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider from OpenCode/model metadata and caches discovered models locally. | Requires `OPENCODE_API_KEY` for actual use. |
 | `opencode-go-usage.ts` | Shows provider-gated OpenCode Go subscription usage in the custom footer. | `/opencode-go-status [--refresh]`; credentials from `pass` or environment. |
 | `opencode-go-costs.ts` | Reports local OpenCode Go response costs across persisted Pi sessions. | `/opencode-go-costs [day\|week\|30d\|all]`; defaults to `week`. |
 | `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
