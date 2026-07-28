@@ -1,0 +1,15 @@
+skip_delete_warning = false
+hints = false
+last_profile = ""
+
+[theme]
+accent = "lightblue"
+on_accent = "black"
+secondary = "lightcyan"
+border = "gray"
+muted = "darkgray"
+added = "green"
+modified = "yellow"
+deleted = "red"
+warn = "yellow"
+bytes = "blue"
