@@ -39,9 +39,6 @@ in {
         StandardErrorPath = "/Users/${username}/.llama.cpp/logs/qwen-stderr.log";
         # Loaded at login but started only through llama-profile.sh, preventing Bonsai overlap.
         RunAtLoad = false;
-        KeepAlive = {
-          SuccessfulExit = false;
-        };
         ProcessType = "Interactive";
         Nice = cfg.nice;
         ThrottleInterval = 30;
