@@ -6,7 +6,7 @@ a = "google_calendar_local"
 b = "google_calendar_remote"
 collections = ["from a", "from b"]
 conflict_resolution = "b wins"
-metadata = ["color", "displayname"]
+metadata = ["color", "displayname", "description", "order"]
 
 [storage google_calendar_local]
 type = "filesystem"
@@ -19,14 +19,15 @@ token_file = "~/.vdirsyncer/google_calendar_token"
 client_id.fetch = ["command", "pass", "GOOGLE/GOOGLE_CALENDAR_CLIENT"]
 client_secret.fetch = ["command", "pass", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
 start_date = "datetime.now() - timedelta(days=7)"
-end_date = "datetime.now() + timedelta(days=365)"
+end_date = "datetime.now() + timedelta(days=180)"
+item_types = ["VEVENT"]
 
 [pair mailbox_calendar]
 a = "mailbox_local"
 b = "mailbox_remote"
 collections = ["from a", "from b"]
 conflict_resolution = "b wins"
-metadata = ["color", "displayname"]
+metadata = ["color", "displayname", "description", "order"]
 
 [storage mailbox_local]
 type = "filesystem"
@@ -39,5 +40,6 @@ url = "https://dav.mailbox.org/caldav/Y2FsOi8vMC8zMg"
 username.fetch = ["command", "pass", "MAILBOX/MAILBOX_USER"]
 password.fetch = ["command", "pass", "MAILBOX/MAILBOX_CALDAV_PASSWORD"]
 start_date = "datetime.now() - timedelta(days=7)"
-end_date = "datetime.now() + timedelta(days=365)"
+end_date = "datetime.now() + timedelta(days=180)"
+item_types = ["VEVENT"]
 
