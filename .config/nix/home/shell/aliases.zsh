@@ -37,6 +37,8 @@ alias rm='rm -v'      # Remove with verbose output
 alias path='echo -e ${PATH//:/\\n}'
 
 # --- SSH ALIASES ---
+# Lazyssh
+alias lssh='lazyssh'
 # Individual aliases using ssh_connect() from functions.zsh
 alias minicore='ssh_connect mac-minicore'
 alias airborne='ssh_connect macbook-airborne francojc'
