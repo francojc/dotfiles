@@ -312,6 +312,14 @@ map("n", "<leader>sq", "<Cmd>lua Snacks.picker.qflist()<Cr>", { desc = "Quickfix
 map("n", "<leader>sr", "<Cmd>lua Snacks.picker.registers()<Cr>", { desc = "Search registers" })
 map("n", "<leader>ss", "<Cmd>lua Snacks.picker.spelling()<Cr>", { desc = "Spelling suggestions" })
 map("n", "<leader>st", "<Cmd>lua Snacks.picker.todo_comments()<Cr>", { desc = "Search todos" })
+map(
+	"n",
+	"<leader>sT",
+	"<Cmd>lua Snacks.picker.todo_comments({ keywords = { 'TODO', 'FIX', 'FIXME' } })<Cr>",
+	{ desc = "Search TODO/FIX/FIXME" }
+)
+map("n", "]t", "<Cmd>lua require('todo-comments').jump_next()<Cr>", { desc = "Next todo comment" })
+map("n", "[t", "<Cmd>lua require('todo-comments').jump_prev()<Cr>", { desc = "Prev todo comment" })
 
 -- Toggle ------------------------------------
 map("n", "<leader>tR", "<Cmd>lua Toggle_citation_format()<CR>", { desc = "Toggle citation format (Pandoc/LaTeX)" })

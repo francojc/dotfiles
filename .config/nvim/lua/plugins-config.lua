@@ -736,6 +736,12 @@ require("snacks").setup({
 -- Register Snacks picker as the vim.ui.select backend
 vim.ui.select = Snacks.picker.ui_select
 
+---| Todo Comments ----------------------------------
+-- Loaded eagerly: highlighting is per-buffer and always-on.
+-- Setup after Snacks so the plugin self-registers its picker source
+-- (Snacks.picker.sources.todo_comments).
+require("todo-comments").setup({})
+
 ---| WhichKey ----------------------------------
 require("which-key").setup({
 	preset = "helix",
@@ -1131,12 +1137,6 @@ local cmd_lazy = {
 			require("aerial").setup({
 				post_jump_cmd = "normal! zt",
 			})
-		end,
-	},
-	TodoTelescope = {
-		"todo-comments.nvim",
-		function()
-			require("todo-comments").setup({})
 		end,
 	},
 }

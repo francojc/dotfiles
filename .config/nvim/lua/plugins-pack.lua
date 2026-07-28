@@ -61,6 +61,7 @@ local eager_plugins = {
 	{ src = "https://github.com/echasnovski/mini.icons" },
 	{ src = "https://github.com/echasnovski/mini.surround" },
 	{ src = "https://github.com/folke/snacks.nvim" },
+	{ src = "https://github.com/folke/todo-comments.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
@@ -99,7 +100,6 @@ end
 local lazy_plugins = {
 	{ src = "https://github.com/3rd/image.nvim" },
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
-	{ src = "https://github.com/folke/todo-comments.nvim" },
 	{ src = "https://github.com/hakonharnes/img-clip.nvim" },
 	{ src = "https://github.com/hat0uma/csvview.nvim" },
 	{ src = "https://github.com/jmbuhr/otter.nvim" },
