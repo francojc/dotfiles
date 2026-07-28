@@ -339,12 +339,34 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
 
+### OpenAI Codex usage
+
+What it does:
+
+- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` as the main Codex usage command.
+- Shows Codex plan, 5-hour and weekly usage windows, reset times, extra buckets when available, and credits.
+- Adds a compact statusline item automatically while the selected model uses `openai-codex`.
+- Uses Pi auth first, then falls back to `codex app-server --listen stdio://` when needed.
+- Supports `--refresh`, `--no-statusline`, and `--clear-statusline`.
+
+Auth and data caveats:
+
+- It resolves credentials through Pi first and does not read Pi or Codex auth files directly.
+- OpenAI API keys are not ChatGPT Codex subscription auth.
+- Usage snapshots are cached briefly unless refreshed.
+- Reload Pi after installing or updating the package.
+
+Sources checked:
+
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
+
 ### OpenAI/OpenRouter usage
 
 What it does:
 
 - The global package `npm:@narumitw/pi-usage@0.31.0` adds `/usage` as the main usage menu.
-- `/codex-status` remains as an argument-free compatibility alias during migration.
+- `/codex-status` is retained as a compatibility alias.
 - The menu covers OpenAI Codex subscription windows, resets, credits, model buckets, and OpenRouter per-key spend/credit limits.
 - It keeps the compact statusline scoped to the currently selected supported provider and runtime account.
 - Cross-provider queries are explicit menu actions, not slash-command flags.
