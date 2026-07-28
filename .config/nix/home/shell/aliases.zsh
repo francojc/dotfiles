@@ -50,8 +50,11 @@ alias homeassistant='ssh_connect homeassistant jeridf'
 alias hermes='ssh_connect hermes-agent hermes'
 
 # --- GIT ALIASES ---
+# Lazygit
+alias lgit='lazygit'
 # Git workflow shortcuts
 alias gi='git init'
+# FIXME: I've disrtributed my git repos across GitHub, Codeberg, and a self-hosted Forgejo. These scripts need to be adjusted, if used at all.
 # note:
 # - `gip` is ./bin/gip to initialize a new repo with `main` protected (by-pass for `francojc`.
 # - `gmp` is ./bin/gmp to protect the main branch of existing repos (by-pass for `francojc`.
