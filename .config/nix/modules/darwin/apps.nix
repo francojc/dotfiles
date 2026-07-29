@@ -24,33 +24,33 @@
 
     taps = [
       {
-        name = "adembc/tap";
+        name = "adembc/tap"; # lazyssh
         trusted = true;
-      } # lazyssh
+      }
       {
-        name = "felixkratz/formulae";
+        name = "felixkratz/formulae"; # borders
         trusted = true;
-      } # borders
+      }
       {
-        name = "keith/formulae";
+        name = "keith/formulae"; # reminders-cli
         trusted = true;
-      } # reminders-cli
+      }
       {
-        name = "librespeed/tap";
+        name = "librespeed/tap"; # librespeed-cli
         trusted = true;
-      } # librespeed-cli
+      }
       {
-        name = "nao1215/tap";
+        name = "nao1215/tap"; # sqly
         trusted = true;
-      } # sqly
+      }
       {
-        name = "radiosilence/koan";
+        name = "radiosilence/koan"; # koan
         trusted = true;
-      } # koan
+      }
       {
-        name = "raine/workmux";
+        name = "raine/workmux"; # workmux
         trusted = true;
-      } # workmux
+      }
       {
         name = "1broseidon/tap"; # ketch
         trusted = true;
@@ -59,12 +59,15 @@
         name = "westpoint-io/lazyrsync"; # lazyrsync
         trusted = true;
       }
+      {
+        name = "shobhit99/tap"; # supercmd
+        trusted = true;
+      }
     ];
 
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      # "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
       "lazyrsync" # tui for managing rsync
@@ -85,6 +88,7 @@
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
       # "helix" # text editor
+      # "hunk" # git diff tool
       # "libffi" # Foreign Function Interface library
       # "ninja" # build system
       # "pango" # text layout library
@@ -94,32 +98,33 @@
     ];
 
     casks = [
-      "anythingllm" # llm harness/desktop app
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "dorso" # posture monitor
       "fluidvoice" # TTS on device
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
-      "keycastr" # keystroke visualizer
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
+      "supercmd" # raycast alternative in swift
       "telegram" # messaging (bot)
-      "tidal" # music streaming
-      "visual-studio-code" # code editor
       "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
+      # "anythingllm" # llm harness/desktop app
       # "blackhole-2ch" # virtual audio driver
       # "chatgpt" # ChatGPT
+      # "dorso" # posture monitor
+      # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
+      # "tidal" # music streaming
+      # "visual-studio-code" # code editor
       # "vlc" # media player
     ];
   };
