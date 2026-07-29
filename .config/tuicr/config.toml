@@ -6,8 +6,12 @@ mouse = true
 leader = ";"                  # configurable prefix for leader shortcuts
 comment_vim = false           # vim modal editing in the review comment box
 review_watch_interval_ms = 1000 # set to 0 to disable persisted-review polling
+no_update_check = true
 
-[[comment_types]]
-id = "issue"
-color = "red"
-definition = "must fix before merge"
+comment_types = [
+  { id = "note", color = "orange", label = "question", definition = "ask for clarification"},
+  { id = "suggestion", color = "yellow", definition = "possible improvements" },
+  { id = "issue", color = "red", definition = "problems to fix" },
+  { id = "praise", color = "green", definition = "positive feedback" },
+  { id = "nit", color = "blue", label = "nitpick", definition = "small optional tweaks" },
+]
