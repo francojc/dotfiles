@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# mailsync-work — sync Work Gmail → maildir, then index with notmuch.
+# Invoked by launchd every 5 min. flock-guarded against overlap.
+set -uo pipefail
+
+# launchd runs with minimal PATH; add nix profile + standard bins.
+export PATH="/etc/profiles/per-user/jeridf/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.bin"
+
+LOG_DIR="$HOME/.local/state"
+LOG="$LOG_DIR/mailsync-work.log"
+LOCK="/tmp/mailsync-work.lock"
+mkdir -p "$LOG_DIR"
+
+MBSYNC="$(command -v mbsync || echo /etc/profiles/per-user/jeridf/bin/mbsync)"
+NOTMUCH="$(command -v notmuch || echo /etc/profiles/per-user/jeridf/bin/notmuch)"
+
+# mkdir-based lock (macOS lacks flock); stale lock auto-cleared via trap.
+if ! mkdir "$LOCK" 2>/dev/null; then
+  echo "$(date '+%F %T') another instance running, skipping" >>"$LOG"
+  exit 0
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+
+{
+  echo "=== $(date '+%F %T') sync start"
+  "$MBSYNC" -c "$HOME/.mbsyncrc" work
+  rc_mb=$?
+  "$NOTMUCH" new
+  rc_nm=$?
+  echo "=== $(date '+%F %T') done mbsync=$rc_mb notmuch=$rc_nm"
+} >>"$LOG" 2>&1
+
+# Keep log from growing forever: truncate to last 2000 lines if > 1MB.
+if [ -f "$LOG" ] && [ "$(stat -f%z "$LOG")" -gt 1048576 ]; then
+  tail -2000 "$LOG" > "$LOG.tmp" && mv "$LOG.tmp" "$LOG"
+fi

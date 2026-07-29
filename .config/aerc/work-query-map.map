@@ -1,0 +1,10 @@
+# notmuch query-map for Work-nm — mirrors Work IMAP folder layout.
+Inbox = tag:inbox
+Starred = tag:flagged
+Archive = folder:"[Gmail]/All Mail"
+Sent = tag:sent
+Drafts = tag:draft
+Spam = tag:spam
+Trash = tag:deleted
+Unread = tag:unread
+All = *

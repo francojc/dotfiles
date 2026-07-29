@@ -50,7 +50,7 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | `0.25.0` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.34.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits, with `/codex-status` retained as an alias. |
+| `@narumitw/pi-usage` | `0.38.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. `/codex-status` is now a compatibility alias. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -310,6 +310,7 @@ What it does:
 - Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
 - Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
 - Shows current Copilot model billing metadata. GitHub may return old-style `billing.multiplier` values or newer `token_prices`, so the dashboard displays whichever metadata is available, compares metered models relative to the cheapest metered model, compacts large raw token-price integers, and treats all-zero token prices as included.
+- The footer only stays active while a GitHub Copilot or `copilot-api` model is selected, and it refreshes on a 60 s polling loop after a short startup delay.
 
 Commands and tool:
 

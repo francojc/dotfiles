@@ -124,7 +124,9 @@
     ffmpeg # Multimedia framework
     imagemagick # Image manipulation
     glow # Markdown renderer
+    isync # IMAP/maildir sync (mbsync)
     khal # Calendar
+    notmuch # Mail indexer/search engine
     mpv-unwrapped # Media player
     pandoc # Document converter
     pianobar # Pandora client

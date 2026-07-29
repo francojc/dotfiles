@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# notmuch-uninstall — roll back the notmuch/mbsync Work-mail setup.
+# Idempotent. Does NOT touch Gmail or the IMAP accounts in aerc.
+# Does NOT run home-manager (see final reminder).
+set -uo pipefail
+
+PLIST="$HOME/Library/LaunchAgents/edu.wfu.mailsync.plist"
+ACCOUNTS="$HOME/.dotfiles/.config/aerc/accounts.conf"
+
+echo "== launchd agent"
+if [ -f "$PLIST" ]; then
+  launchctl bootout "gui/$(id -u)" "$PLIST" 2>/dev/null || true
+  rm -f "$PLIST"
+  echo "  removed $PLIST"
+else
+  echo "  no plist, skipping"
+fi
+
+echo "== accounts.conf [Work-nm] block"
+if grep -q '^# >>> notmuch$' "$ACCOUNTS" 2>/dev/null; then
+  sed -i '' '/^# >>> notmuch$/,/^# <<< notmuch$/d' "$ACCOUNTS"
+  echo "  removed block"
+else
+  echo "  no block found, skipping"
+fi
+
+echo "== files"
+rm -f "$HOME/.mbsyncrc" && echo "  removed ~/.mbsyncrc"
+rm -f "$HOME/.notmuch-config" && echo "  removed ~/.notmuch-config"
+rm -rf "$HOME/Mail/work" && echo "  removed ~/Mail/work"
+rm -f "$HOME/.config/aerc/work-query-map.map" \
+      "$HOME/.dotfiles/.config/aerc/work-query-map.map" && echo "  removed work-query-map.map"
+rm -f "$HOME/.local/state/mailsync-work.log" /tmp/mailsync-work.lock 2>/dev/null
+
+cat <<'EOF'
+
+Done. Manual leftover (not automated):
+  Remove `isync` and `notmuch` from mediaDocumentPackages in
+  ~/.config/nix/home/core.nix, then run `just darwin` (needs sudo).
+  (.bin/mailsync-work and .bin/notmuch-uninstall can also be deleted.)
+EOF
