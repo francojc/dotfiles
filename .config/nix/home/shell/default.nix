@@ -181,6 +181,11 @@
     };
 
     # Enable some useful tools
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      historyWidget.command = ""; # avoid conflict with atuin
+    };
     atuin = {
       enable = true;
       enableZshIntegration = true;
@@ -198,10 +203,6 @@
       nix-direnv.enable = true;
     };
     eza = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    fzf = {
       enable = true;
       enableZshIntegration = true;
     };
