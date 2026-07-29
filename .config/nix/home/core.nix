@@ -109,6 +109,7 @@
     tldr # Simplified man pages
     tmux # Terminal multiplexer
     tree # Directory listing tool
+    # tuicr # Git code review
     which # Command location utility
     whosthere # Local Area Network discovery tool
     xan # data visualization from CSV files

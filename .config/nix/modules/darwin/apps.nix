@@ -32,10 +32,6 @@
         trusted = true;
       } # borders
       {
-        name = "herald-email/herald";
-        trusted = true;
-      } # herald
-      {
         name = "keith/formulae";
         trusted = true;
       } # reminders-cli
@@ -68,7 +64,7 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
-      "hunk" # git diff tool
+      # "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
       "lazyrsync" # tui for managing rsync
@@ -89,7 +85,6 @@
       # "cairo" # 2D graphics library
       # "gdk-pixbuf" # image loading library
       # "helix" # text editor
-      # "herald" # herald
       # "libffi" # Foreign Function Interface library
       # "ninja" # build system
       # "pango" # text layout library

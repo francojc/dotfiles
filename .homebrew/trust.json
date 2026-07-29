@@ -4,11 +4,11 @@
     "acrogenesis/macchanger",
     "adembc/tap",
     "felixkratz/formulae",
-    "herald-email/herald",
     "keith/formulae",
     "librespeed/tap",
     "nao1215/tap",
     "radiosilence/koan",
-    "raine/workmux"
+    "raine/workmux",
+    "westpoint-io/lazyrsync"
   ]
 }
