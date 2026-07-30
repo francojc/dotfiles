@@ -38,6 +38,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
 | `/skill:hunk-review` | Inspect and guide live Hunk Git-diff review sessions. |
+| `/skill:tuicr` | Launch and consume tuicr Git-diff review sessions. |
 | `/skill:pi-guide-maintainer` | Update or extend this guide. |
 
 ## Installed packages
@@ -165,6 +166,39 @@ Sources checked:
 - `hunk skill path` → `/opt/homebrew/Cellar/hunk/0.17.1/libexec/skills/hunk-review/SKILL.md`
 - `~/.pi/agent/skills/hunk-review/SKILL.md`
 - `hunk --help`
+
+### tuicr review skill
+
+What it does:
+
+- Opens `tuicr` in a detached tmux pane, so Pi remains available while you review.
+- Reads persisted, user-authored line, range, file, and review comments through `tuicr review comments` JSON.
+- Treats `issue`, `suggestion`, `note`, and `praise` according to their configured intent. Pi never writes or impersonates your review comments during user-led review.
+
+Use:
+
+- Ask Pi to review its changes with tuicr, or run `/skill:tuicr` explicitly.
+- Start a direct review: `~/.pi/agent/skills/tuicr/scripts/tuicr-tmux.sh . -w`.
+- Review a range: `~/.pi/agent/skills/tuicr/scripts/tuicr-tmux.sh . -r main..HEAD`.
+- Add comments in tuicr, then tell Pi “comments ready.”
+
+Recommendation:
+
+- Make tuicr default review workflow. Its persisted JSON comments map directly to Pi fixes and it can later submit GitHub/GitLab reviews.
+- Keep Hunk during a short trial for its existing live-session navigation. Retire it after several tuicr reviews if no workflow remains unique to Hunk.
+
+Gotchas:
+
+- Requires Pi inside tmux. Wrapper returns pane ID without switching focus; use `Ctrl-b` then arrow keys to enter review pane.
+- Local Git reviews work with Codeberg/Forgejo remotes. Tuicr remote submission supports GitHub and GitLab, not Forgejo.
+- Multiple active sessions require a specific slug. Check with `tuicr review list --repo .`.
+- Reload Pi once to discover new skill: `/reload`.
+
+Sources checked:
+
+- `~/.pi/agent/skills/tuicr/SKILL.md`
+- `~/.pi/agent/skills/tuicr/scripts/tuicr-tmux.sh`
+- [tuicr review CLI](https://github.com/agavra/tuicr/blob/main/docs/REVIEW_CLI.md), checked 2026-07-29.
 
 ### pi-caveman
 
