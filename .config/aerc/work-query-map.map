@@ -1,10 +1,8 @@
 # notmuch query-map for Work-nm — mirrors Work IMAP folder layout.
-Inbox = folder:INBOX
-Starred = folder:"[Gmail]/Starred"
-Archive = folder:"[Gmail]/All Mail"
-Sent = folder:"[Gmail]/Sent Mail"
-Drafts = folder:"[Gmail]/Drafts"
-Spam = folder:"[Gmail]/Spam"
-Trash = folder:"[Gmail]/Trash"
-Unread = tag:unread
-All = *
+  Inbox = folder:Inbox
+  Starred = folder:"[Gmail]/Starred"
+  Archive = folder:"[Gmail]/All Mail"
+  Sent = folder:"[Gmail]/Sent Mail"
+  Drafts = folder:"[Gmail]/Drafts"
+  Spam = folder:"[Gmail]/Spam"
+  Trash = folder:"[Gmail]/Trash"

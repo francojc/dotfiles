@@ -14,12 +14,19 @@ mkdir -p "$LOG_DIR"
 MBSYNC="$(command -v mbsync)"
 NOTMUCH="$(command -v notmuch)"
 
-# mkdir-based lock (macOS lacks flock); stale lock auto-cleared via trap.
+# mkdir-based lock (macOS lacks flock). Detect and recover lock left by a killed run.
 if ! mkdir "$LOCK" 2>/dev/null; then
-  echo "$(date '+%F %T') another instance running, skipping" >>"$LOG"
-  exit 0
+  pid="$(cat "$LOCK/pid" 2>/dev/null || true)"
+  if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+    echo "$(date '+%F %T') another instance running (pid $pid), skipping" >>"$LOG"
+    exit 0
+  fi
+  echo "$(date '+%F %T') removing stale lock" >>"$LOG"
+  rm -rf "$LOCK"
+  mkdir "$LOCK"
 fi
-trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+echo "$$" >"$LOCK/pid"
+trap 'rm -rf "$LOCK"' EXIT
 
 echo "=== $(date '+%F %T') sync start" >>"$LOG"
 "$MBSYNC" -c "$HOME/.mbsyncrc" work >>"$LOG" 2>&1
