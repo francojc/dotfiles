@@ -107,7 +107,7 @@
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
-      "obsidian" # note-taking
+      # "obsidian" # note-taking
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging

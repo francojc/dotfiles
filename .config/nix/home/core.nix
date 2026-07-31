@@ -54,6 +54,7 @@
     tectonic # LaTeX rendering for math expressions
     chafa # Terminal image viewer (optional, enhances image support)
     websocat # WebSocket client
+    obsidian # Note-taking
   ];
 
   # Development and system tools
