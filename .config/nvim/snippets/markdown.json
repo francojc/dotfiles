@@ -69,6 +69,13 @@
     ],
     "description": "Inline TODO HTML comment"
   },
+  "Inline FIX comment": {
+    "prefix": "fix",
+    "body": [
+      "<!-- FIX: ${0} -->"
+    ],
+    "description": "Inline FIX HTML comment"
+  },
   "Inline INFO comment": {
     "prefix": "info",
     "body": [

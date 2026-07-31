@@ -1,7 +1,12 @@
 {
   "Quarto Code Block": {
     "prefix": "qcode",
-    "body": ["```{${1:language}}", "#| label: ${2:label}", "${0}", "```"],
+    "body": [
+      "```{${1:language}}",
+      "#| label: ${2:label}",
+      "${0}",
+      "```"
+    ],
     "description": "A Quarto code block with language specification"
   },
   "Callout Block: Tip": {
@@ -84,6 +89,13 @@
       "<!-- TODO: ${0} -->"
     ],
     "description": "Inline TODO HTML comment"
+  },
+  "Inline FIX comment": {
+    "prefix": "fix",
+    "body": [
+      "<!-- FIX: ${0} -->"
+    ],
+    "description": "Inline FIX HTML comment"
   },
   "Inline INFO comment": {
     "prefix": "info",
