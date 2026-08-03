@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Sync read-only planner vdirs pair by pair, then import Apple Reminders.
+# Never stops after one failed provider; exit status reports any failure.
+set -uo pipefail
+
+status=0
+
+redact() {
+  sed -E \
+    -e 's#(https?://)[^/@[:space:]]+@#\1[REDACTED]@#g' \
+    -e 's/([Pp]assword|[Tt]oken|[Ss]ecret|[Cc]lient[ _-]?[Ss]ecret)[=:][^[:space:]]+/\1=[REDACTED]/g'
+}
+
+run_pair() {
+  local pair output rc
+  pair="$1"
+  output=$(vdirsyncer -v ERROR sync "$pair" 2>&1)
+  rc=$?
+  if [ "$rc" -eq 0 ]; then
+    printf 'calendar sync: %s OK\n' "$pair"
+    return 0
+  fi
+
+  printf 'calendar sync: %s FAILED (exit %s)\n' "$pair" "$rc" >&2
+  printf '%s\n' "$output" | redact >&2
+  return "$rc"
+}
+
+if ! run_pair mailbox_calendar; then
+  status=1
+fi
+if ! run_pair google_calendar; then
+  status=1
+fi
+
+if output=$("$HOME/.bin/ical-import" 2>&1); then
+  printf 'reminders import: OK\n'
+else
+  rc=$?
+  status=1
+  printf 'reminders import: FAILED (exit %s)\n' "$rc" >&2
+  printf '%s\n' "$output" | redact >&2
+fi
+
+exit "$status"

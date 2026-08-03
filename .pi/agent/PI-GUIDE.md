@@ -49,8 +49,9 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | --- | --- | --- |
 | `pi-caveman` | `^1.0.7`, installed `1.0.8` | Terse output modes and status indicator. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | unpinned, installed `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
+| `@narumitw/pi-usage` | `0.46.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits. `/codex-status` is retained as a compatibility alias. |
 | `@narumitw/pi-codex-usage` | `0.12.0` | `/codex-status` plus compact Codex statusline support. Shows plan, 5-hour and weekly windows, reset times, and credits. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |

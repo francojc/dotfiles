@@ -15,6 +15,7 @@ fileext = ".ics"
 
 [storage google_calendar_remote]
 type = "google_calendar"
+read_only = true
 token_file = "~/.vdirsyncer/google_calendar_token"
 client_id.fetch = ["command", "pass", "GOOGLE/GOOGLE_CALENDAR_CLIENT"]
 client_secret.fetch = ["command", "pass", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
@@ -36,6 +37,7 @@ fileext = ".ics"
 
 [storage mailbox_remote]
 type = "caldav"
+read_only = true
 url = "https://dav.mailbox.org/caldav/Y2FsOi8vMC8zMg"
 username.fetch = ["command", "pass", "MAILBOX/MAILBOX_USER"]
 password.fetch = ["command", "pass", "MAILBOX/MAILBOX_CALDAV_PASSWORD"]
