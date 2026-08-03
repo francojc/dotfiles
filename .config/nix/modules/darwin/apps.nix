@@ -102,12 +102,12 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
+      "chatgpt" # ChatGPT
       "fluidvoice" # TTS on device
       "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
-      # "obsidian" # note-taking
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
@@ -118,11 +118,11 @@
       "zotero" # reference manager
       # "anythingllm" # llm harness/desktop app
       # "blackhole-2ch" # virtual audio driver
-      # "chatgpt" # ChatGPT
       # "dorso" # posture monitor
       # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
+      # "obsidian" # note-taking
       # "tidal" # music streaming
       # "visual-studio-code" # code editor
       # "vlc" # media player
