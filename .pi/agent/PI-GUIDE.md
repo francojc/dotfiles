@@ -47,11 +47,10 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 
 | Package | Version/config | What it adds |
 | --- | --- | --- |
-| `pi-caveman` | `1.0.7` | Terse output modes and status indicator. |
+| `pi-caveman` | `^1.0.7`, installed `1.0.8` | Terse output modes and status indicator. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | `0.25.0` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | unpinned, installed `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows and OpenRouter API-key spend/credit limits. `/codex-status` is retained as a compatibility alias. |
 | `@narumitw/pi-codex-usage` | `0.12.0` | `/codex-status` plus compact Codex statusline support. Shows plan, 5-hour and weekly windows, reset times, and credits. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
@@ -63,7 +62,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | Extension | What it does | User-facing controls |
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
-| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. Requires `gh auth login` and active Copilot access for quota. |
+| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot or `copilot-api` provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. Requires `gh auth login` and active Copilot access for quota. |
 | `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers `opencode-go` models from OpenCode + models.dev metadata and caches them locally. | Requires `OPENCODE_API_KEY` for actual use; `pi --list-models opencode-go`. |
 | `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
@@ -301,7 +300,7 @@ Configuration:
 - Built-in package config: `plannotator.json` inside package.
 - Global config: `~/.pi/agent/plannotator.json`.
 - Project config: `<cwd>/.pi/plannotator.json`.
-- Package uses `node-pty`; verify its native module loads after npm reinstalls or platform changes.
+- Package uses `node-pty`; on NixOS, `make` must be on `PATH` for package installs or updates. Use `nix shell nixpkgs#gnumake -c pi install ...` if it is not. Verify the native module loads after npm reinstalls or platform changes.
 
 Best practices:
 

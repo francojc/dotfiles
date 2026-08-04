@@ -18,6 +18,11 @@
 # - orbitr        (Academic lit search and management)
 # Update: uv tool upgrade --all
 {pkgs, ...}: let
+  # TODO: remove override once nixpkgs glances tests stop racing/failing under Python 3.14.
+  glancesNoCheck = pkgs.glances.overridePythonAttrs (_old: {
+    doCheck = false;
+  });
+
   # Define packages primarily used with or by Neovim
   neovimPackages = with pkgs; [
     # Core dependencies
@@ -70,6 +75,7 @@
     gh # GitHub CLI
     git # Version control system
     go # Go programming language
+    gnumake # Native Node addon builds, including Pi Plannotator's node-pty
     home-manager # Essential for this config
     lazygit # TUI Git client
     neovim # Stable Neovim 0.12+
@@ -96,7 +102,7 @@
     fd # find replacement
     file # File type identification
     fzf # General fuzzy finder
-    glances # System monitoring tool
+    glancesNoCheck # System monitoring tool
     jq # JSON processor
     ncdu # Disk usage analyzer
     pass # Password manager

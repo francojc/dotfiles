@@ -23,7 +23,7 @@
       credential.helper =
         if pkgs.stdenv.isDarwin
         then "osxkeychain"
-        else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
+        else "${pkgs.gitFull}/bin/git-credential-libsecret";
 
       # Diff and merge tools
       core.pager = "hunk pager"; # assumes `hunk` install
