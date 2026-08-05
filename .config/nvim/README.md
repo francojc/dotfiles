@@ -11,7 +11,7 @@ Modular Neovim 0.12+ config using native `vim.pack`, native LSP, and small focus
 - `jj` exits insert mode, `<Esc><Esc>` exits terminal mode.
 - Relative numbers, rounded borders, smartcase search, persistent undo, system clipboard, wrapped prose by default.
 - Auto-trim trailing whitespace on save and highlight yanks.
-- Lualine statusline with branch, diff, diagnostics, search count, progress, location, filetype, and llama.vim status.
+- Per-window Lualine statuslines with Powerline section separators, branch, diff, diagnostics, search count, progress, location, filetype, and llama.vim status. Inactive split statuslines use an accent from current theme; Lualine regenerates palette after every colorscheme switch.
 - Treesitter starts automatically per filetype, with regex syntax fallback.
 - Which-key uses Helix preset with leader-group labels.
 

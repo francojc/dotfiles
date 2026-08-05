@@ -649,33 +649,67 @@ require("mini.surround").setup({
 })
 
 ---| Lualine ----------------------------------
-require("lualine").setup({
-	options = {
-		theme = "auto",
-		component_separators = { left = "|", right = "|" },
-		section_separators = { left = "", right = "" },
-		globalstatus = false,
-	},
-	sections = {
-		lualine_a = { "mode" },
-		lualine_b = { "branch", "diff", "diagnostics" },
-		lualine_c = { { "filename", path = 1 } }, -- relative path
-		lualine_x = {
-			{
-				function()
-					return vim.g.llama_status or ""
-				end,
-				color = { fg = "#918374" },
-			},
-			"filetype",
+-- Give inactive windows a muted accent statusline, rather than lualine's
+-- nearly identical default. Palette comes from lualine's generated "auto"
+-- theme, so it follows each colorscheme without fixed colour values.
+local function blend_hex(foreground, background, amount)
+	local fr, fg, fb = foreground:match("#(%x%x)(%x%x)(%x%x)")
+	local br, bg, bb = background:match("#(%x%x)(%x%x)(%x%x)")
+	if not fr or not br then
+		return foreground
+	end
+
+	local function blend_channel(foreground_channel, background_channel)
+		return math.floor(tonumber(foreground_channel, 16) * amount + tonumber(background_channel, 16) * (1 - amount) + 0.5)
+	end
+
+	return string.format("#%02x%02x%02x", blend_channel(fr, br), blend_channel(fg, bg), blend_channel(fb, bb))
+end
+
+local function split_statusline_theme()
+	package.loaded["lualine.themes.auto"] = nil
+	local theme = vim.deepcopy(require("lualine.themes.auto"))
+	local inactive = vim.deepcopy(theme.normal.c)
+	inactive.bg = blend_hex(theme.normal.a.bg, theme.normal.c.bg, 0.25)
+	theme.inactive = { a = inactive, b = vim.deepcopy(inactive), c = vim.deepcopy(inactive) }
+	return theme
+end
+
+local function setup_lualine()
+	require("lualine").setup({
+		options = {
+			theme = split_statusline_theme(),
+			component_separators = { left = "|", right = "|" },
+			section_separators = { left = "", right = "" },
+			globalstatus = false,
 		},
-		lualine_y = { "searchcount", "progress" },
-		lualine_z = { "location" },
-	},
-	inactive_sections = {
-		lualine_c = { { "filename", path = 1 } },
-		lualine_x = { "location" },
-	},
+		sections = {
+			lualine_a = { "mode" },
+			lualine_b = { "branch", "diff", "diagnostics" },
+			lualine_c = { { "filename", path = 1 } }, -- relative path
+			lualine_x = {
+				{
+					function()
+						return vim.g.llama_status or ""
+					end,
+					color = "Comment",
+				},
+				"filetype",
+			},
+			lualine_y = { "searchcount", "progress" },
+			lualine_z = { "location" },
+		},
+		inactive_sections = {
+			lualine_c = { { "filename", path = 1 } },
+			lualine_x = { "location" },
+		},
+	})
+end
+
+setup_lualine()
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = vim.api.nvim_create_augroup("lualine-theme", { clear = true }),
+	callback = setup_lualine,
 })
 
 ---| Snacks ----------------------------------

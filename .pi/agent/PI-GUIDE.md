@@ -51,8 +51,11 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.46.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. `/codex-status` is retained as a compatibility alias. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | `/codex-status` plus compact Codex statusline support. Shows plan, 5-hour and weekly windows, reset times, and credits. |
+| `@narumitw/pi-usage` | `0.49.2` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. The successor to `/codex-status`; no Codex CLI fallback. |
+| `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, Markdown annotation, code review, and optional external plan handoff. |
+| `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Syncs Pi theme from the active Ghostty palette on startup. |
+| `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
+| `pi-caveman` | `1.0.8` | Terse output modes and status indicator. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
 
@@ -71,19 +74,6 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
-| `copilot-api-discovery.ts` | Registers dynamic `copilot-api` provider from the raw GitHub Copilot OpenAI-compatible API and caches discovered models locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; use `pi --list-models copilot-api`. |
-| `opencode-go-discovery.ts` | Registers dynamic `opencode-go` provider from OpenCode/model metadata and caches discovered models locally. | Requires `OPENCODE_API_KEY` for actual use. |
-| `opencode-go-usage.ts` | Shows provider-gated OpenCode Go subscription usage in the custom footer. | `/opencode-go-status [--refresh]`; credentials from `pass` or environment. |
-| `opencode-go-costs.ts` | Reports local OpenCode Go response costs across persisted Pi sessions. | `/opencode-go-costs [day\|week\|30d\|all]`; defaults to `week`. |
-| `openrouter-models.ts` | Registers dynamic OpenRouter models from API/cache. | Requires `OPENROUTER_API_KEY`. |
-| `searxng.ts` | Adds `web_search` tool via self-hosted SearXNG. | Agent tool. `SEARXNG_URL` optional. |
-| `questionnaire.ts` | Adds interactive questionnaire tool for clarifying choices. | Agent tool. |
-| `todo.ts` | Adds persistent todo tool and `/todos` viewer for current branch. | `/todos`, agent `todo` tool. |
-| `supacode/index.ts` | Emits Supacode OSC lifecycle/notification signals when running inside Supacode. | Automatic inside Supacode surfaces. |
-| `pi-guide-autoupdate.ts` | Detects package/local-extension changes and runs guide maintenance in background on interactive startup. | Automatic. Footer status only. |
-| `tui-utils.ts` | Shared helper module for local TUI extensions. | No direct user controls. |
-| `subscription-usage-status.ts` | Shared quota/glyph/bar utility for Codex, Copilot, and OpenCode Go compact footer status. No-op extension factory so Pi's auto-discovery accepts it as a utility module. | No direct user controls. |
-| `tirith-guard.ts` | Intercepts every `bash` tool call and runs `tirith check` before execution. | Automatic. Control via `TIRITH_BIN`, `TIRITH_HOOK_WARN_ACTION`, `TIRITH_FAIL_OPEN`. |
 
 ## Keybindings and terminal notes
 
