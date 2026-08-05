@@ -13,7 +13,6 @@
     signing = {
       format = null;
     };
-    iniContent.pager.diff = lib.mkForce "hunk pager";
     settings = {
       user.name = "francojc";
       user.email = useremail;
@@ -23,10 +22,9 @@
       credential.helper =
         if pkgs.stdenv.isDarwin
         then "osxkeychain"
-        else "${pkgs.gitFull}/bin/git-credential-libsecret";
+        else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 
       # Diff and merge tools
-      core.pager = "hunk pager"; # assumes `hunk` install
       diff.tool = "nvimdiff";
       difftool.nvimdiff.cmd = "nvim -d $LOCAL $REMOTE";
       difftool.prompt = false;
