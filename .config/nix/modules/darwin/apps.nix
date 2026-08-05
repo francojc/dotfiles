@@ -70,7 +70,7 @@
       "git-filter-repo" # remove files/dirs from git history
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
-      "lazyrsync" # tui for managing rsync
+      # "lazyrsync" # tui for managing rsync
       "lazyssh" # lazyssh
       "librespeed-cli"
       "llm" # llm.dataset.io
@@ -108,6 +108,7 @@
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
+      "obsidian" # note-taking
       "raycast" # productivity launcher
       "rectangle" # window management
       "signal" # messaging
@@ -122,7 +123,6 @@
       # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
-      # "obsidian" # note-taking
       # "tidal" # music streaming
       # "visual-studio-code" # code editor
       # "vlc" # media player
