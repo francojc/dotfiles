@@ -51,13 +51,14 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-usage` | `0.49.2` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. The successor to `/codex-status`; no Codex CLI fallback. |
+| `@narumitw/pi-codex-usage` | `0.12.0` | `/codex-status` for ChatGPT Codex subscription usage, plus a compact statusline item while `openai-codex` is active. Falls back to `codex app-server` only if Pi auth is unavailable. |
+| `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. The successor to `/codex-status`; no Codex CLI fallback. |
 | `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, Markdown annotation, code review, and optional external plan handoff. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Syncs Pi theme from the active Ghostty palette on startup. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
 | `pi-caveman` | `1.0.8` | Terse output modes and status indicator. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
-| `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage and dynamic model discovery. |
+| `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage, Codex usage, and dynamic model discovery. |
 
 ## Local extensions
 
@@ -70,6 +71,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers `opencode-go` models from OpenCode + models.dev metadata and caches them locally. | Requires `OPENCODE_API_KEY` for actual use; `pi --list-models opencode-go`. |
 | `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
+| `subscription-usage-status.ts` | Shared formatter/parser helpers for Codex and OpenCode Go compact subscription status. | Used by `@narumitw/pi-codex-usage` and `opencode-go-usage.ts`. |
 | `pi-guide-autoupdate.ts` | Fingerprints packages and local TS/JS/MJS/CJS extensions, then spawns a background `/skill:pi-guide-maintainer` run when they change. | Automatic on interactive session start; status only. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
@@ -365,6 +367,11 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
+- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
+- `~/.pi/agent/extensions/opencode-go-usage.ts`
+- `~/.pi/agent/extensions/opencode-go-costs.ts`
+- `~/.pi/agent/extensions/subscription-usage-status.ts`
 
 ### OpenAI Codex usage
 
