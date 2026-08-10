@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+# Review, preview, and fast-forward merge a Forgejo pull request.
+
+SCRIPT_NAME="fj-pr-merge"; SCRIPT_VERSION="0.1.0"
+. "$(dirname "$0")/common"
+
+usage() {
+  cat <<'EOF'
+Usage: fj-pr-merge [PR_NUMBER]
+
+Review, preview, then fast-forward merge a Forgejo pull request.
+
+Without PR_NUMBER, lists open pull requests and prompts for one.
+
+Safety:
+  - Requires a clean worktree before preview and merge.
+  - Never merges a non-fast-forward pull request.
+  - Prompts before merge and push.
+  - Never deletes an agent's remote branch.
+
+Options:
+  -h, --help       Show this help
+  --version         Show version
+EOF
+}
+
+confirm() {
+  local prompt="$1" answer
+  read -r -p "$prompt [y/N] " answer
+  [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]]
+}
+
+choose_pr() {
+  local -a prs=()
+  local line choice
+
+  while IFS= read -r line; do
+    # Fj wraps values in Unicode bidi-isolate markers, even in minimal mode.
+    [[ "$line" =~ ^#[^0-9]*([0-9]+)[^0-9]*: ]] || continue
+    prs+=("${BASH_REMATCH[1]}")
+    printf '%2d) %s\n' "${#prs[@]}" "$line" >&2
+  done < <(fj --style minimal pr search --state open)
+
+  ((${#prs[@]})) || die "No open pull requests"
+
+  while true; do
+    read -r -p "Choose PR [1-${#prs[@]}], or q to quit: " choice >&2
+    [[ "$choice" == "q" || "$choice" == "Q" ]] && return 2
+    if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#prs[@]})); then
+      printf '%s\n' "${prs[choice-1]}"
+      return
+    fi
+    log_warn "Choose number from list."
+  done
+}
+
+main() {
+  local pr="${1:-}" main_branch review_branch
+
+  case "$pr" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --version)
+      print_version
+      exit 0
+      ;;
+  esac
+
+  [[ $# -le 1 ]] || die "Usage: $SCRIPT_NAME [PR_NUMBER]"
+  require git fj
+  git rev-parse --is-inside-work-tree >/dev/null || die "Run inside a Git repository"
+  [[ -z "$(git status --porcelain)" ]] || die "Worktree dirty. Commit or stash first."
+
+  if [[ -z "$pr" ]]; then
+    if pr="$(choose_pr)"; then
+      :
+    else
+      local choose_status=$?
+      [[ "$choose_status" -eq 2 ]] && exit 0
+      exit "$choose_status"
+    fi
+  fi
+  [[ "$pr" =~ ^[0-9]+$ ]] || die "PR number must be numeric"
+
+  main_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||' || true)"
+  main_branch="${main_branch:-main}"
+  review_branch="review/pr-$pr"
+
+  log_info "Pull request #$pr"
+  fj --style minimal pr view "$pr" body
+  printf '\nChanged files:\n'
+  fj --style minimal pr view "$pr" files
+  printf '\nDiff:\n'
+  fj --style minimal pr view "$pr" diff
+
+  confirm "Check out PR #$pr for local preview?" || exit 0
+
+  git fetch origin "$main_branch" "refs/pull/$pr/head:refs/remotes/origin/pr/$pr"
+  git show-ref --verify --quiet "refs/heads/$review_branch" && die "Local branch exists: $review_branch"
+
+  git switch -c "$review_branch" "origin/pr/$pr"
+  printf '\nLocal diff against origin/%s:\n' "$main_branch"
+  git diff "origin/$main_branch...HEAD"
+
+  printf '\nPreview active on %s. Inspect in Obsidian or editor.\n' "$review_branch"
+  read -r -p "Press Enter when review is complete. " _
+
+  [[ -z "$(git status --porcelain)" ]] || die "Preview changed files. Commit, stash, or discard changes before merge."
+
+  if ! confirm "Merge PR #$pr into $main_branch?"; then
+    git switch "$main_branch"
+    log_info "Not merged. Review branch kept: $review_branch"
+    exit 0
+  fi
+
+  git switch "$main_branch"
+  git pull --ff-only origin "$main_branch"
+  git merge --ff-only "origin/pr/$pr" || die "PR cannot fast-forward. Update or rebase PR; no merge made."
+
+  printf '\nCommits ready to push:\n'
+  git log --oneline "origin/$main_branch..HEAD"
+
+  if ! confirm "Push $main_branch to origin?"; then
+    log_warn "Local $main_branch contains PR. Push manually: git push origin $main_branch"
+    exit 0
+  fi
+
+  git push origin "$main_branch"
+
+  if fj pr close "$pr" --with-msg "Merged manually into $main_branch."; then
+    log_info "PR #$pr closed."
+  else
+    log_warn "Main pushed, but PR #$pr remains open. Close manually: fj pr close $pr"
+  fi
+
+  if confirm "Delete local review branch $review_branch?"; then
+    git branch -d "$review_branch"
+  fi
+
+  log_info "PR #$pr merged and pushed."
+}
+
+main "$@"
