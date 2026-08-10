@@ -7,12 +7,12 @@ description: Maintain Jerid's user-facing Pi Guide markdown document for install
 
 ## Purpose
 
-Maintain the living Pi Guide at:
+Maintain shared Pi Guide at:
 
 - `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles path: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
 
-The guide is user-facing. It should explain what Jerid can do with current Pi setup, not merely list implementation details.
+Guide is user-facing, curated context. It explains durable Pi behavior, not machine state. Exact package versions, model settings, theme, and local extension inventory belong in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 
 ## When to use
 
@@ -37,9 +37,10 @@ Use this skill when:
   - `~/.pi/agent/npm/node_modules/<package>/package.json`
   - Extension entrypoint source when docs do not answer behavior questions.
 4. For local extensions, inspect source enough to document commands, tools, shortcuts, UI changes, environment variables, and persistence.
-5. Update `PI-GUIDE.md` with concise user-facing notes.
-6. Keep guide accurate to installed/current config. Remove stale entries when packages/extensions are removed.
-7. Report changed sections and any uncertainty.
+5. Update `PI-GUIDE.md` only when behavior or user-facing guidance changed. Do not update it for version-only, model-only, theme-only, audit-only, or source-check-date changes.
+6. Keep `PI-INVENTORY.local.md` machine-local and untracked. Do not add it to Git or copy its values into guide.
+7. Remove stale guide entries only when shared setup intentionally removes behavior, not because one machine lacks a package or extension.
+8. Report changed sections and any uncertainty.
 
 ## Optional inventory helper
 
@@ -49,7 +50,7 @@ Run from skill directory or repo root:
 ~/.pi/agent/skills/pi-guide-maintainer/scripts/inventory.mjs
 ```
 
-This prints packages, local extensions, skills, and keybindings as a quick starting point. Still inspect docs/source before making behavioral claims.
+This prints local state as a quick starting point. It is not shared-guide content. Still inspect docs/source before making behavioral claims.
 
 ## Guide structure
 
@@ -63,6 +64,8 @@ Preserve this broad structure unless user asks otherwise:
 6. `## Keybindings and terminal notes`
 7. `## Extension notes`
 8. `## Maintenance checklist`
+
+Do not add timestamps, exact installed versions, compatibility-audit results, selected models, generated theme names, or source-check dates. Link to `PI-INVENTORY.local.md` when current local state matters.
 
 For each extension/package note:
 
@@ -83,6 +86,7 @@ For each extension/package note:
 - Use 2 spaces for nested list indentation.
 - Do not hard-wrap lines.
 - Do not expose secrets. Reference environment variable names only.
+- Do not edit `PI-GUIDE.md` from a background machine-state update.
 
 ## Safety rules
 

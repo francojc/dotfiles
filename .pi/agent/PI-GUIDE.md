@@ -6,16 +6,11 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 - Canonical file: `~/.pi/agent/PI-GUIDE.md`
 - Dotfiles file: `~/.dotfiles/.pi/agent/PI-GUIDE.md`
-- Last updated: 2026-08-08
-- Pi compatibility audit: `0.82.1`; `pi --list-models` completed cleanly and all configured `enabledModels` resolved.
-- Compatibility cleanup completed 2026-08-08: custom footer now reads thinking level from `pi.getThinkingLevel()`; todo state relies on replacement-session `session_start`; local tools import current `typebox`; removed ignored `compat.reasoningEffortMap` config.
+- This file is shared, curated context. Update it only for durable behavior, commands, configuration, or gotchas.
+- Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
+- `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
+- Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
 - Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`.
-- Refresh after package or local-extension changes.
-- Package and local-extension changes trigger background guide maintenance on next interactive Pi startup.
-- Background guide update log: `~/.pi/agent/pi-guide-maintainer.log`
-- Disable background guide updates with `PI_GUIDE_AUTOUPDATE=0`
-- Override background guide model with `PI_GUIDE_MODEL=<provider/model>`
-- After config changes, run `/reload` in Pi when possible.
 
 ## Quick commands
 
@@ -33,7 +28,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-quota` | Secondary focused Copilot quota/model view. |
 | `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
-| `/codex-status [--refresh]` | Show ChatGPT plan, quota windows, reset times, credits, and model buckets. |
+| `/usage` | Show current-provider Codex, Copilot, or OpenRouter usage. |
 | `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
 | `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
@@ -43,18 +38,17 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 
 ## Installed packages
 
-Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~/.pi/agent/npm/`.
+Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-INVENTORY.local.md`.
 
-| Package | Version/config | What it adds |
-| --- | --- | --- |
-| `pi-caveman` | `^1.0.7`, installed `1.0.8` | Terse output modes and status indicator. |
-| `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | `^0.26.4` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
-| `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `^0.12.0` | `/codex-status` for ChatGPT Codex subscription usage, plus a compact statusline item while `openai-codex` is active. Falls back to `codex app-server` only if Pi auth is unavailable. |
-| `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. The successor to `/codex-status`; no Codex CLI fallback. |
-| `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
-| `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage, Codex usage, and dynamic model discovery. |
+| Package | What it adds |
+| --- | --- |
+| `pi-caveman` | Terse output modes and status indicator. |
+| `pi-btw` | Parallel side conversations in overlay, with handoff back to main session. |
+| `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@ogulcancelik/pi-ghostty-theme-sync` | Sync Pi theme from active Ghostty palette. |
+| `@narumitw/pi-usage` | `/usage` menu for current-provider usage, including Codex, Copilot, and OpenRouter usage data. |
+| `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
+| `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
 
 ## Local extensions
 
@@ -67,8 +61,8 @@ Loaded from `~/.pi/agent/extensions/`.
 | `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
 | `opencode-go-discovery.ts` | Registers `opencode-go` models from OpenCode + models.dev metadata and caches them locally. | Requires `OPENCODE_API_KEY` for actual use; `pi --list-models opencode-go`. |
 | `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
-| `subscription-usage-status.ts` | Shared formatter/parser helpers for Codex and OpenCode Go compact subscription status. | Used by `@narumitw/pi-codex-usage` and `opencode-go-usage.ts`. |
-| `pi-guide-autoupdate.ts` | Fingerprints packages and local TS/JS/MJS/CJS extensions, then spawns a background `/skill:pi-guide-maintainer` run when they change. | Automatic on interactive session start; status only. |
+| `subscription-usage-status.ts` | Shared formatter/parser helpers for compact subscription status. | Used by `opencode-go-usage.ts`. |
+| `pi-guide-autoupdate.ts` | Writes ignored local package, model, and extension inventory. It never edits this shared guide. | Automatic on interactive session start; set `PI_GUIDE_AUTOUPDATE=0` to disable. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
@@ -126,8 +120,8 @@ Gotchas:
 Sources checked:
 
 - `~/.pi/agent/skills/ketch-research/SKILL.md`
-- [Official Ketch skill](https://raw.githubusercontent.com/1broseidon/ketch/refs/heads/main/skills/ketch/SKILL.md), checked 2026-07-14.
-- `ketch --help` and command help, checked 2026-07-14.
+- [Official Ketch skill](https://raw.githubusercontent.com/1broseidon/ketch/refs/heads/main/skills/ketch/SKILL.md).
+- `ketch --help` and command help.
 
 ### Hunk review skill
 
@@ -187,7 +181,7 @@ Sources checked:
 
 - `~/.pi/agent/skills/tuicr/SKILL.md`
 - `~/.pi/agent/skills/tuicr/scripts/tuicr-tmux.sh`
-- [tuicr review CLI](https://github.com/agavra/tuicr/blob/main/docs/REVIEW_CLI.md), checked 2026-07-29.
+- [tuicr review CLI](https://github.com/agavra/tuicr/blob/main/docs/REVIEW_CLI.md).
 
 ### pi-caveman
 
@@ -256,7 +250,7 @@ Best practices:
 
 Gotchas:
 
-- Overlay placement and hide-on-unfocus are not configurable in `pi-btw@0.4.1`.
+- Overlay placement and hide-on-unfocus are not configurable in current `pi-btw`.
 - Focus toggle intentionally keeps overlay visible. `Esc` dismisses it.
 - Shortcuts and page-scroll bindings are hardcoded in extension source, not in `keybindings.json`.
 
@@ -363,40 +357,15 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
 - `~/.pi/agent/extensions/opencode-go-usage.ts`
 - `~/.pi/agent/extensions/opencode-go-costs.ts`
 - `~/.pi/agent/extensions/subscription-usage-status.ts`
-
-### OpenAI Codex usage
-
-What it does:
-
-- The global package `npm:@narumitw/pi-codex-usage@0.12.0` adds `/codex-status` as the main Codex usage command.
-- Shows Codex plan, 5-hour and weekly usage windows, reset times, extra buckets when available, and credits.
-- Adds a compact statusline item automatically while the selected model uses `openai-codex`.
-- Uses Pi auth first, then falls back to `codex app-server --listen stdio://` when needed.
-- Supports `--refresh`, `--no-statusline`, and `--clear-statusline`.
-
-Auth and data caveats:
-
-- It resolves credentials through Pi first and does not read Pi or Codex auth files directly.
-- OpenAI API keys are not ChatGPT Codex subscription auth.
-- Usage snapshots are cached briefly unless refreshed.
-- Reload Pi after installing or updating the package.
-
-Sources checked:
-
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/README.md`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-codex-usage/package.json`
 
 ### OpenAI/OpenRouter usage
 
 What it does:
 
-- The global package `npm:@narumitw/pi-usage@0.31.0` adds `/usage` as the main usage menu.
-- `/codex-status` is retained as a compatibility alias.
+- The global `@narumitw/pi-usage` package adds `/usage` as the main usage menu.
 - The menu covers OpenAI Codex subscription windows, resets, credits, model buckets, and OpenRouter per-key spend/credit limits.
 - It keeps the compact statusline scoped to the currently selected supported provider and runtime account.
 - Cross-provider queries are explicit menu actions, not slash-command flags.
@@ -436,7 +405,7 @@ Runtime environment inputs:
 - **Failure display:** missing credentials, expired auth, request failure, or a changed hydration layout displays `OpenCode Go unavailable`; stale data may be shown for at most 10 minutes. Cookie/header values are intentionally omitted from all errors.
 - **Do not confuse endpoints:** `https://opencode.ai/zen/go/v1` is the inference/model endpoint used by `opencode-go-discovery.ts`; it does not expose the subscription usage snapshot.
 - **Update procedure:** if the command/footer becomes unavailable, first renew the browser auth cookie and verify the workspace ID. Then inspect authenticated dashboard HTML for changed hydration fields, update `parseWindow` in `opencode-go-usage.ts`, run the formatter/lifecycle checks, and update this section with the new parser signature and source date.
-- **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts). Checked 2026-07-13.
+- **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts).
 
 ### Working indicator
 
