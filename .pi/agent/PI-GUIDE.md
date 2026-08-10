@@ -49,14 +49,10 @@ Loaded as Pi packages through `~/.pi/agent/settings.json` and installed under `~
 | --- | --- | --- |
 | `pi-caveman` | `^1.0.7`, installed `1.0.8` | Terse output modes and status indicator. |
 | `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
+| `@plannotator/pi-extension` | `^0.26.4` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Sync Pi theme from active Ghostty palette. |
-| `@narumitw/pi-codex-usage` | `0.12.0` | `/codex-status` for ChatGPT Codex subscription usage, plus a compact statusline item while `openai-codex` is active. Falls back to `codex app-server` only if Pi auth is unavailable. |
+| `@narumitw/pi-codex-usage` | `^0.12.0` | `/codex-status` for ChatGPT Codex subscription usage, plus a compact statusline item while `openai-codex` is active. Falls back to `codex app-server` only if Pi auth is unavailable. |
 | `@narumitw/pi-usage` | `0.31.0` | `/usage` menu for current-provider usage. Covers OpenAI Codex subscription windows, GitHub Copilot allowances, and OpenRouter API-key spend/credit limits. The successor to `/codex-status`; no Codex CLI fallback. |
-| `@plannotator/pi-extension` | `0.25.1` | Plan mode, browser-based plan review/annotation, Markdown annotation, code review, and optional external plan handoff. |
-| `@ogulcancelik/pi-ghostty-theme-sync` | `0.1.2` | Syncs Pi theme from the active Ghostty palette on startup. |
-| `pi-btw` | `0.4.1` | Parallel side conversations in overlay, with handoff back to main session. |
-| `pi-caveman` | `1.0.8` | Terse output modes and status indicator. |
 | `@github/copilot-sdk` | `0.2.1` (extension dependency) | Powers the Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth for quota data. |
 | `@earendil-works/pi-coding-agent` | runtime API | Needed by local extensions, including Copilot usage, Codex usage, and dynamic model discovery. |
 
