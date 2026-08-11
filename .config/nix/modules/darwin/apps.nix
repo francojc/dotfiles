@@ -102,6 +102,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
+      "brave-browser"
       "chatgpt" # ChatGPT
       "fluidvoice" # TTS on device
       "ghostty" # Terminal emulator
