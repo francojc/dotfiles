@@ -203,15 +203,18 @@ Exit: same aliases work across Darwin and NixOS machines.
 
 ## Phase 5 – integrate session-sync config
 
-Update `.pi/agent/session-sync.json` only if needed:
+Configure `.pi/agent/session-sync.json` with only Pi session pull/push targets:
 
 ```json
 {
-  "host": "rover"
+  "host": "minicore"
+}
+{
+  "host": "airborne"
 }
 ```
 
-No change expected because existing session-sync config already uses `rover`.
+Do not add `rover`, `forgejo`, or `codeberg.org`. They remain SSH aliases, not Pi session-sync targets.
 
 Run session-sync status command once extension exists:
 
@@ -221,7 +224,7 @@ Run session-sync status command once extension exists:
 
 Checks:
 
-- [ ] Session-sync discovers `rover` via new generated alias.
+- [ ] Session-sync discovers `minicore` and `airborne` via generated aliases.
 - [ ] Remote `$HOME` resolves through SSH.
 - [ ] No session files or SSH secrets enter Git.
 
