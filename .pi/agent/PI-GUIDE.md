@@ -66,6 +66,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
+| `session-sync.json` | Trusted SSH destination and project-path mappings for planned Pi session pull/push extension. | Config only. No session data is tracked. |
 
 ## Keybindings and terminal notes
 
@@ -93,6 +94,27 @@ Terminal notes:
 - Current `/btw` scroll works with `↑` and `↓`, plus mouse/trackpad wheel.
 
 ## Extension notes
+
+### SSH alias management
+
+What it does:
+
+- Home Manager generates `~/.ssh/config.d/nix-managed.conf` from `.config/nix/home/ssh-aliases.nix` for stable cross-machine aliases: `forgejo`, `codeberg.org`, `rover`, `minicore`, and `airborne`.
+- Main `~/.ssh/config` remains app/user-managed dispatcher. It includes OrbStack first, then Nix fragment. Nix does not replace main SSH config.
+
+Gotchas:
+
+- Do not edit generated fragment. Change `.config/nix/home/ssh-aliases.nix`, then apply normal Nix/Home Manager deployment for host.
+- Keep OrbStack include first. Its `orb` host requires placement before host blocks.
+- SSH usually uses first obtained value. Keep alias definitions out of later main-config blocks.
+- Private keys stay outside Nix and Git. `IdentityFile` values only name local key paths.
+- `forgejo` relies on Tailscale MagicDNS, not tracked tailnet domain.
+
+Sources checked:
+
+- `.config/nix/home/default.nix`
+- `.config/nix/home/ssh-aliases.nix`
+- `~/.ssh/config`
 
 ### Ketch research skill
 

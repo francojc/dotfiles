@@ -18,6 +18,7 @@
       ./vim.nix
       ./syncthing.nix
       ./document-tools.nix
+      ./ssh-aliases.nix
     ]
     ++ (
       if isDarwin
