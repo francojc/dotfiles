@@ -68,6 +68,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
 | `session-sync/` | Checks trusted SSH destinations and pulls new Pi session transcripts. | `/session-sync-status`, `/session-sync-pull [host]` |
 | `session-sync.json` | Trusted SSH source/destination registry roots for session-sync extension. | Config only. No session data is tracked. |
+| `auto-session-name.ts` | Sets content-derived session display names, then refreshes them with a cheap title model. | `/autoname` |
 
 ## Keybindings and terminal notes
 
@@ -432,6 +433,38 @@ Runtime environment inputs:
 - **Do not confuse endpoints:** `https://opencode.ai/zen/go/v1` is the inference/model endpoint used by `opencode-go-discovery.ts`; it does not expose the subscription usage snapshot.
 - **Update procedure:** if the command/footer becomes unavailable, first renew the browser auth cookie and verify the workspace ID. Then inspect authenticated dashboard HTML for changed hydration fields, update `parseWindow` in `opencode-go-usage.ts`, run the formatter/lifecycle checks, and update this section with the new parser signature and source date.
 - **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts).
+
+### Automatic session names
+
+What it does:
+
+- Gives persistent sessions a fallback title from first substantive prompt before first assistant response writes JSONL.
+- Generates a short content title after first settled turn, then every four user turns. The current default is OpenRouter's paid `openai/gpt-oss-20b` model.
+- Treats `/name <title>` as a manual pin. Auto-refresh stops until `/autoname auto` or `/autoname refresh --force`.
+- Stores per-session auto/manual state in session custom entries, so reload, resume, and fork flows retain naming behavior.
+
+Commands and configuration:
+
+- `/autoname` shows mode, model, and refresh interval.
+- `/autoname off` pins current title.
+- `/autoname auto` unpins and refreshes title.
+- `/autoname refresh` refreshes unpinned title. Add `--force` to replace a manual title.
+- `/autoname model <provider/model>` changes and persists title model.
+- `~/.pi/agent/auto-session-name.json` configures enabled state, title model, refresh interval, and transcript bound.
+
+Gotchas:
+
+- Pi session JSONL filenames remain timestamp plus UUID. This extension changes Pi session display names in footer and `/resume`, not physical filenames.
+- Each refresh sends at most `maxTranscriptChars` conversation text to configured title provider. Switch model or disable extension for sensitive conversations.
+- Model price and availability can change. Set another configured paid model with `/autoname model <provider/model>` when needed.
+- Run `/reload` after extension edits. Config changes apply to new or resumed session runtimes.
+
+Sources checked:
+
+- `~/.pi/agent/extensions/auto-session-name.ts`
+- `~/.pi/agent/auto-session-name.json`
+- `@earendil-works/pi-coding-agent/docs/extensions.md`
+- `@earendil-works/pi-coding-agent/docs/session-format.md`
 
 ### Working indicator
 

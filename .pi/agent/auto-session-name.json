@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "model": "openrouter/openai/gpt-oss-20b",
+  "refreshEveryUserTurns": 4,
+  "maxTranscriptChars": 6000
+}
