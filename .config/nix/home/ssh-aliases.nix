@@ -22,10 +22,14 @@
       HostName mac-minicore
       User jeridf
       Port 22
+      IdentityFile ~/.ssh/id_ed25519_workstation
+      IdentitiesOnly yes
 
     Host airborne
       HostName macbook-airborne
       User francojc
       Port 22
+      IdentityFile ~/.ssh/id_ed25519_workstation
+      IdentitiesOnly yes
   '';
 }
