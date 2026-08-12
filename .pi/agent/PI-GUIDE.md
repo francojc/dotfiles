@@ -101,7 +101,7 @@ Terminal notes:
 What it does:
 
 - Home Manager generates `~/.ssh/config.d/nix-managed.conf` from `.config/nix/home/ssh-aliases.nix` for stable cross-machine aliases: `forgejo`, `codeberg.org`, `rover`, `minicore`, and `airborne`.
-- `/session-sync-status` reads the explicit `~/.pi/agent/session-sync.json` source/destination allowlist. Targets are `minicore` and `airborne`; it checks noninteractive SSH, remote `$HOME`, remote `rsync`, remote Pi session-registry presence, and registry session count. It does not transfer session files.
+- `/session-sync-status` reads the explicit `~/.pi/agent/session-sync.json` source/destination allowlist. Targets are `minicore` and `airborne`; it omits current machine, then checks each remote target for noninteractive SSH, remote `$HOME`, remote `rsync`, remote Pi session-registry presence, and registry session count. It does not transfer session files.
 - Main `~/.ssh/config` remains app/user-managed dispatcher. It includes OrbStack first, then Nix fragment. Nix does not replace main SSH config.
 
 Gotchas:

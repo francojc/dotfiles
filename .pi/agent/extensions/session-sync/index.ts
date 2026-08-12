@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { hostname } from "node:os";
 import { getAgentDir, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 type Destination = {
@@ -70,6 +71,15 @@ async function loadConfig(): Promise<Config> {
 	}
 }
 
+async function isLocalDestination(pi: ExtensionAPI, destination: Destination): Promise<boolean> {
+	const localHostname = hostname().toLowerCase();
+	if (destination.host.toLowerCase() === localHostname) return true;
+
+	const result = await pi.exec("ssh", ["-G", destination.host], { timeout: SSH_TIMEOUT_MS });
+	const configuredHostname = /^hostname (.+)$/m.exec(result.stdout)?.[1]?.toLowerCase();
+	return configuredHostname === localHostname;
+}
+
 async function checkDestination(pi: ExtensionAPI, destination: Destination): Promise<DestinationStatus> {
 	const remoteScript = [
 		`root="$HOME/${destination.sessionRoot}"`,
@@ -116,7 +126,18 @@ export default function sessionSyncExtension(pi: ExtensionAPI) {
 				await ctx.ui.select("Session Sync Status", [error instanceof Error ? error.message : String(error)]);
 				return;
 			}
-			const statuses = await Promise.all(config.destinations.map((destination) => checkDestination(pi, destination)));
+			const destinationsWithLocation = await Promise.all(
+				config.destinations.map(async (destination) => ({
+					destination,
+					isLocal: await isLocalDestination(pi, destination),
+				})),
+			);
+			const remoteDestinations = destinationsWithLocation.filter(({ isLocal }) => !isLocal).map(({ destination }) => destination);
+			if (remoteDestinations.length === 0) {
+				await ctx.ui.select("Session Sync Status", ["No remote session-sync destinations configured."]);
+				return;
+			}
+			const statuses = await Promise.all(remoteDestinations.map((destination) => checkDestination(pi, destination)));
 			await ctx.ui.select("Session Sync Status", statuses.flatMap((status) => status.lines));
 		},
 	});
