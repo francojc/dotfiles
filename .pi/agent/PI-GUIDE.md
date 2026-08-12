@@ -66,7 +66,8 @@ Loaded from `~/.pi/agent/extensions/`.
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
 | `vim-editor.ts` | Vim-like normal/insert mode for Pi input editor. | `Esc`, `i`, `a`, `h/j/k/l`, `w`, `b`, `d`, `c`, `p`, `u` in normal mode. |
-| `session-sync.json` | Trusted SSH destination and project-path mappings for planned Pi session pull/push extension. | Config only. No session data is tracked. |
+| `session-sync/` | Tests trusted SSH destinations for planned explicit Pi session pull/push. | `/session-sync-status` |
+| `session-sync.json` | Trusted SSH destination and project-path mappings for session-sync extension. | Config only. No session data is tracked. |
 
 ## Keybindings and terminal notes
 
@@ -100,6 +101,7 @@ Terminal notes:
 What it does:
 
 - Home Manager generates `~/.ssh/config.d/nix-managed.conf` from `.config/nix/home/ssh-aliases.nix` for stable cross-machine aliases: `forgejo`, `codeberg.org`, `rover`, `minicore`, and `airborne`.
+- `/session-sync-status` reads the explicit `~/.pi/agent/session-sync.json` destination allowlist, checks noninteractive SSH, remote `$HOME`, remote `rsync`, session-root presence, and current-cwd project mapping. It does not transfer session files.
 - Main `~/.ssh/config` remains app/user-managed dispatcher. It includes OrbStack first, then Nix fragment. Nix does not replace main SSH config.
 
 Gotchas:
@@ -109,6 +111,7 @@ Gotchas:
 - SSH usually uses first obtained value. Keep alias definitions out of later main-config blocks.
 - Private keys stay outside Nix and Git. `IdentityFile` values only name local key paths.
 - `forgejo` relies on Tailscale MagicDNS, not tracked tailnet domain.
+- Run `/reload` after session-sync extension edits.
 
 Sources checked:
 
