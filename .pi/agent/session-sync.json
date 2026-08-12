@@ -4,13 +4,12 @@
       "host": "rover",
       "label": "Mini Rover",
       "default": true,
-      "sessionRoot": ".dotfiles/.pi/agent/sessions",
-      "projects": [
-        {
-          "localPath": "/Users/jeridf/.dotfiles",
-          "remotePath": "/home/jeridf/.dotfiles"
-        }
-      ]
+      "sessionRoot": ".dotfiles/.pi/agent/sessions"
+    },
+    {
+      "host": "airborne",
+      "label": "Macbook Airborne",
+      "sessionRoot": ".dotfiles/.pi/agent/sessions"
     }
   ]
 }
