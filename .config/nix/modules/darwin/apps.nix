@@ -24,23 +24,11 @@
 
     taps = [
       {
-        name = "adembc/tap"; # lazyssh
-        trusted = true;
-      }
-      {
         name = "felixkratz/formulae"; # borders
         trusted = true;
       }
       {
         name = "keith/formulae"; # reminders-cli
-        trusted = true;
-      }
-      {
-        name = "librespeed/tap"; # librespeed-cli
-        trusted = true;
-      }
-      {
-        name = "nao1215/tap"; # sqly
         trusted = true;
       }
       {
@@ -56,10 +44,6 @@
         trusted = true;
       }
       {
-        name = "westpoint-io/lazyrsync"; # lazyrsync
-        trusted = true;
-      }
-      {
         name = "shobhit99/tap"; # supercmd
         trusted = true;
       }
@@ -68,16 +52,14 @@
     brews = [
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
+      "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
-      # "lazyrsync" # tui for managing rsync
-      "lazyssh" # lazyssh
-      "librespeed-cli"
       "llm" # llm.dataset.io
       "mole" # terminal cleanup app for macOS
       "nmap" # network scanner
       "node" # Node.js
-      "officecli" # AI-accessible office suite conversion/creation
+      "officecli" # AI-accessible office conversion/creation
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
@@ -85,16 +67,7 @@
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
-      # "cairo" # 2D graphics library
-      # "gdk-pixbuf" # image loading library
-      # "helix" # text editor
-      # "hunk" # git diff tool
-      # "libffi" # Foreign Function Interface library
-      # "ninja" # build system
-      # "pango" # text layout library
-      # "sqly" # interactive SQL client
       # "vhs" # cli for programmable terminal gifs
-      # "weasyprint" # HTML to PDF converter
     ];
 
     casks = [
@@ -124,7 +97,6 @@
       # "keycastr" # keystroke visualizer
       # "loopback" # audio routing
       # "obs" # OBS Studio for streaming and recording
-      # "tidal" # music streaming
       # "visual-studio-code" # code editor
       # "vlc" # media player
     ];
