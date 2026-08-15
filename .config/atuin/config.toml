@@ -25,6 +25,7 @@ syntax_highlight = true
 
 [tmux]
 enabled = true
+width = "100%"
 
 # History and Search Behavior
 [history]
