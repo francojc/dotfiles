@@ -1,3 +1,4 @@
+search_mode = "daemon-fuzzy"
 # Atuin Configuration
 # Organized into logical sections with clear, concise settings
 
@@ -12,9 +13,15 @@ enter_accept = true
 
 # User Interface
 [ui]
-keymap_mode = "vim-insert"
-keymap_cursor = { emacs = "blink-block", vim_insert = "blink-bar", vim_normal = "steady-block" }
+keymap_mode = "vim-normal"
+keymap_cursor = {
+  emacs = "blink-block",
+  vim_insert = "blink-bar",
+  vim_normal = "steady-block"
+}
 show_numeric_shortcuts = false
+columns = ["duration", "time", "host", "command"]
+syntax_highlight = true
 
 [tmux]
 enabled = true
@@ -57,4 +64,7 @@ ignored_commands = [
 
 # Dotfiles Management
 [dotfiles]
+enabled = true
+
+[ai]
 enabled = true
