@@ -4,7 +4,7 @@ sources = [
 ]
 max_results = 10
 format = "detail"
-cache_dir = "/Users/francojc/.cache/orbitr"
+cache_dir = "~/.cache/orbitr"
 no_cache = false
 no_pager = false
 no_color = false
