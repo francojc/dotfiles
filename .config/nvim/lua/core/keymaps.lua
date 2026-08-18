@@ -72,8 +72,6 @@ map("v", "<leader>cn", ":s/\\s\\+/ /g<CR>", { desc = "Remove extra spaces (selec
 
 -- Diagnostics/Debug -----------------------------
 map("n", "<leader>dd", "<Cmd>lua vim.diagnostic.open_float()<Cr>", { desc = "Show diagnostics" })
--- Neovim 0.12+: gf in diagnostic float jumps to related locations
-map("n", "gf", "<Cmd>lua vim.diagnostic.goto_related()<Cr>", { desc = "Go to related diagnostic" })
 
 -- Explore -------------------------------
 -- Yazi

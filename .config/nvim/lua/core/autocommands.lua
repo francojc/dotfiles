@@ -75,6 +75,19 @@ a.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Treesitter heading folds in Markdown and Quarto
+-- Neovim 0.12 provides vim.treesitter.foldexpr(); missing parsers yield no folds.
+a.nvim_create_autocmd("FileType", {
+	group = "personal",
+	pattern = { "markdown", "quarto" },
+	callback = function()
+		vim.opt_local.foldmethod = "expr"
+		vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.opt_local.foldlevel = 99 -- start unfolded
+		vim.opt_local.foldenable = true
+	end,
+})
+
 -- Slime cell delimiter for R, Quarto, Markdown
 vim.api.nvim_create_autocmd("FileType", {
 	-- limit to only certain filetypes
