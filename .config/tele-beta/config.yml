@@ -1,0 +1,107 @@
+telegram:
+  api_id: 0
+  api_hash: ""
+
+ui:
+  date_format: "15:04"
+  history_limit: 50
+  # Themes follow the terminal background: a dark one and a light one, each
+  # named here. Leave this out for the built-in tele-dark and tele-light. See
+  # docs/themes.md.
+  # theme:
+  #   dark: my-dark
+  #   light: my-light
+
+photos:
+  eager_full_quality: true  # download full resolution in background on chat open
+
+# Keybindings — every action with its current default keys (see docs/keybindings.md).
+# Uncomment a line and change its key(s) to override that action in that context.
+# One key replaces the defaults; a chord is space-separated tokens ("g g" = g then g).
+# keybindings:                # uncomment a line to override an action's default keys
+#   global:
+#     dismiss_toast: "ctrl+x"
+#     focus_chat: "2"
+#     focus_chatlist: "1"
+#     focus_folders: "0"
+#     focus_next: ["l", "right"]
+#     focus_prev: ["h", "left"]
+#     quit: ["ctrl+c", "ctrl+q", "q"]
+#     show_help: "?"
+#   folders:
+#     confirm: "enter"
+#     down: ["down", "j"]
+#     up: ["k", "up"]
+#   chatlist:
+#     confirm: "enter"
+#     down: ["down", "j"]
+#     go_bottom: "G"
+#     go_top: "g g"
+#     open_context_menu: "space"
+#     scroll_half_down: "ctrl+d"
+#     scroll_half_up: "ctrl+u"
+#     search: "/"
+#     up: ["k", "up"]
+#   chat:
+#     attach: "u"
+#     cancel_upload: "x"
+#     confirm: "enter"
+#     copy_message: "y"
+#     cursor_down: "j"
+#     cursor_up: "k"
+#     down: ["ctrl+j", "down"]
+#     download_file: "s"
+#     edit: "e"
+#     forward: "f"
+#     go_bottom: "G"
+#     go_top: "g g"
+#     insert: ["a", "i"]
+#     normal: "esc"
+#     open_context_menu: "space"
+#     open_external: "O"
+#     open_in_viewer: "o"
+#     play_voice: "p"
+#     react: "t"
+#     reply: "r"
+#     scroll_half_down: "ctrl+d"
+#     scroll_half_up: "ctrl+u"
+#     search: "/"
+#     up: ["ctrl+k", "up"]
+#   composer:
+#     confirm: "enter"
+#     normal: "esc"
+#     paste_image: "ctrl+v"
+#     toggle_send_as: "ctrl+t"
+#   search:
+#     cancel: "esc"
+#     confirm: "enter"
+#     down: ["ctrl+j", "down"]
+#     up: ["ctrl+k", "up"]
+#   filepicker:
+#     cancel: "esc"
+#     confirm: "enter"
+#     down: ["ctrl+j", "down", "j"]
+#     up: ["ctrl+k", "k", "up"]
+#   context_menu:
+#     cancel: ["esc", "space"]
+#     confirm: "enter"
+#     copy_message: "y"
+#     delete: "d"
+#     down: ["down", "j"]
+#     download_file: "s"
+#     edit: "e"
+#     forward: "f"
+#     jump_to_original: "g"
+#     open_external: "O"
+#     open_in_viewer: "o"
+#     play_voice: "p"
+#     react: "t"
+#     reply: "r"
+#     up: ["k", "up"]
+#   delete_submenu:
+#     cancel: "esc"
+#     confirm: "enter"
+#     delete_me: "m"
+#     delete_revoke: "a"
+#     down: ["down", "j"]
+#     up: ["k", "up"]
