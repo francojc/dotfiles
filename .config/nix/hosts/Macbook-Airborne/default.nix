@@ -13,6 +13,10 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
+    ../../modules/darwin/copilot-api.nix
+    {
+      custom.services.copilotApi.enable = true;
+    }
 
     # Host-specific Homebrew packages (merged with shared apps.nix)
     {
