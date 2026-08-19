@@ -8,6 +8,11 @@
       IdentityFile ~/.ssh/id_ed25519_forgejo
       IdentitiesOnly yes
 
+    Host forgejo.gerbil-matrix.ts.net
+      User forgejo
+      IdentityFile ~/.ssh/id_ed25519_forgejo
+      IdentitiesOnly yes
+
     Host codeberg.org
       User git
       IdentityFile ~/.ssh/id_ed25519_codeberg

@@ -47,6 +47,14 @@
         name = "shobhit99/tap"; # supercmd
         trusted = true;
       }
+      {
+        name = "sorokin-vladimir/tap"; # tele/tele-beta
+        trusted = true;
+      }
+      {
+        name = "ashuttl/linecast"; # linecast
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -55,6 +63,7 @@
       "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
+      "linecast" # TUI weather
       "llm" # llm.dataset.io
       "mole" # terminal cleanup app for macOS
       "nmap" # network scanner
@@ -64,6 +73,7 @@
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
+      "tele-beta" # telegram cli
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
