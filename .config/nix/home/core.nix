@@ -103,6 +103,7 @@
     fzf # General fuzzy finder
     glancesNoCheck # System monitoring tool
     jq # JSON processor
+    mpack # encoding/decoding MIME types
     ncdu # Disk usage analyzer
     pass # Password manager
     rclone # Cloud storage sync (Google Drive, S3, etc.)
