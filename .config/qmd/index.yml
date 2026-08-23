@@ -1,12 +1,12 @@
 collections:
   wiki:
-    path: /Users/jeridf/Obsidian/Notes/kb/wiki
+    path: /Users/francojc/Obsidian/Notes/kb/wiki
     pattern: "**/*.md"
   documents:
-    path: /Users/jeridf/Obsidian/Notes/kb/sources/documents
+    path: /Users/francojc/Obsidian/Notes/kb/sources/documents
     pattern: "**/*.md"
   web:
-    path: /Users/jeridf/Obsidian/Notes/kb/sources/web
+    path: /Users/francojc/Obsidian/Notes/kb/sources/web
     pattern: "**/*.md"
 models:
   embed: hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf
