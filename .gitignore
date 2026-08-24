@@ -20,6 +20,7 @@
 .config/aerc/token.pickle
 .config/gh/*
 .config/git/*
+.config/hunk/state.json
 .config/kitty/kitty.conf
 .config/mole/*
 .config/nicotine/*
@@ -52,6 +53,7 @@
 .pi/agent/pi-guide-maintainer.log
 .pi/agent/pi-last-notification.json
 .pi/agent/pi-waiting-events.jsonl
+.pi/agent/trust.json
 .pi/models/
 .pi/agent/themes/
 
