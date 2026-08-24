@@ -48,6 +48,7 @@ alias services='ssh_connect core-services root'
 alias media='ssh_connect media-services root'
 alias homeassistant='ssh_connect homeassistant jeridf'
 alias hermes='ssh_connect hermes-agent hermes'
+alias omarchy='ssh_connect omarchy omarchy'
 
 # --- GIT ALIASES ---
 # Lazygit

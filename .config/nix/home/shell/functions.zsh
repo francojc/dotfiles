@@ -21,6 +21,7 @@ syncr() {
     services) remote="root@core-services" ;;
     media) remote="root@media-services" ;;
     hermes) remote="hermes@hermes-agent" ;;
+    omarchy) remote="omarchy@omarchy" ;;
     *)
       echo "Unknown remote: $1"
       echo "Available: minicore, airborne, rover"
