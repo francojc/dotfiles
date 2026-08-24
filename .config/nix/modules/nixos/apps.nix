@@ -24,9 +24,12 @@
     # Packages (equivalent to homebrew.brews + homebrew.casks)
     packages = [
       # Development Tools
-      "app.zen_browser.zen" # Privacy-focused browser
+      # -- Find a list of Flatpak package IDs at https://flathub.org/apps
+      # -- Get package IDs using the command: flatpak search <package_name> | awk '{print $1}'
+      # "app.zen_browser.zen" # Privacy-focused browser
       "org.chromium.Chromium" # Chromium browser
       "com.geekbench.Geekbench6" # System benchmarking
+      "page.tesk.Refine" # Gnome tweaks
 
       # Communication
 
@@ -53,13 +56,14 @@
 
   # NixOS System Packages (complementary to Flatpak packages)
   environment.systemPackages = with pkgs; [
+    brave-origin # Brave browser
     coreutils # GNU core utilities
-    # aider-chat
     dconf-editor
     dconf2nix
     gcc
     ghostty
     glibc
+    gnome-extensions-manager
     gnome-tweaks
     gnomeExtensions.paperwm
     gnomeExtensions.clipboard-indicator
