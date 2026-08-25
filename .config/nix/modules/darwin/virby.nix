@@ -15,11 +15,10 @@
         "https://virby-nix-darwin.cachix.org"
       ];
       extra-trusted-public-keys = [
-        "virby-nix-darwin.cachix.org-1:z9GiEZeBU5bEeoDQjyfHPMGPBaIQJOOvYOOjGMKI
-lLo="
+        "virby-nix-darwin.cachix.org-1:z9GiEZeBU5bEeoDQjyfHPMGPBaIQJOOvYOOjGMKIlLo="
       ];
     };
   };
 
-  services.virby.enable = false;
+  services.virby.enable = true;
 }
