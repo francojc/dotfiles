@@ -47,6 +47,7 @@
 .pi/agent/auth.json
 .pi/agent/settings.json
 .pi/agent/models-store.json
+.pi/agent/pi-crash.log
 .pi/agent/PI-INVENTORY.local.md
 .pi/agent/pi-guide-autoupdate-state.json
 .pi/agent/pi-guide-autoupdate.lock
