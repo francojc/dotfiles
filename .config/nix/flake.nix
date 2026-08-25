@@ -15,10 +15,14 @@
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak";
     };
-    # nix-rosetta-builder = {
-    #   url = "github:cpick/nix-rosetta-builder";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    determinate = {
+      url = "https://flakehub.com/f/DeterminateSystems/3";
+    };
+    virby = {
+      url = "github:quinneden/virby-nix-darwin";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+    #
   };
 
   outputs = inputs @ {
@@ -27,7 +31,8 @@
     darwin,
     home-manager,
     nix-flatpak,
-    # nix-rosetta-builder,
+    determinate,
+    virby,
     ...
   }: let
     # Import system definitions and host configurations

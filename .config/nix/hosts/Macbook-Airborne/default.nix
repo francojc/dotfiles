@@ -13,6 +13,7 @@
   # Host-specific modules
   hostModules = [
     ../../profiles/darwin/configuration.nix
+    ../../modules/darwin/virby.nix
     ../../modules/darwin/copilot-api.nix
     {
       custom.services.copilotApi.enable = true;
