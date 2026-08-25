@@ -20,5 +20,12 @@
     };
   };
 
-  services.virby.enable = true;
+  services.virby = {
+    enable = true;
+    supportDeterminateNix = true;
+    onDemand.enable = true;
+    cores = 4;
+    memory = 8192;
+    rosetta = false;
+  };
 }
