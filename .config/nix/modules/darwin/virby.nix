@@ -21,5 +21,5 @@ lLo="
     };
   };
 
-  services.virby.enable = true;
+  services.virby.enable = false;
 }
