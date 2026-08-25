@@ -16,7 +16,7 @@
       url = "github:gmodena/nix-flatpak";
     };
     determinate = {
-      url = "https://flakehub.com/f/DeterminateSystems/3";
+      url = "github:DeterminateSystems/determinate";
     };
     virby = {
       url = "github:quinneden/virby-nix-darwin";
