@@ -55,6 +55,7 @@
 .pi/agent/pi-last-notification.json
 .pi/agent/pi-waiting-events.jsonl
 .pi/agent/trust.json
+.pi/agent/google-workspace/
 .pi/models/
 .pi/agent/themes/
 

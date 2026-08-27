@@ -4,31 +4,37 @@
 path = ~/.calendars/mailbox/Y2FsOi8vMC8zMg
 type = discover
 color = "#689D6A"
+readonly = true
 
 [[francojc]]
 path = ~/.calendars/google/francojc@wfu.edu
 type = discover
 color = "#D79921"
-
-[[jerid.francom]]
-path = ~/.calendars/google/jerid.francom@gmail.com
-type = discover
-color = "#689D6A"
+readonly = true
 
 [[holidays]]
 path = ~/.calendars/google/cln2stbjc4hmgrrcd5i62ua0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual
 type = discover
 color = "#928374"
+readonly = true
+
+[[ff.hopkins]]
+path = ~/.calendars/google/c_516533b3e888c01ae0934691f9108a1d7feff01daf6702e382af2e7198d0bd6a@group.calendar.google.com
+type = discover
+color = "#83A598"
+readonly = true
 
 [[spanish.department]]
 path = ~/.calendars/google/wfu.edu_27uakldtgi42knb0bbcs50flgk@group.calendar.google.com
 type = discover
 color = "#FE8019"
+readonly = true
 
 [[deans.office]]
 path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.google.com
 type = discover
 color = "#CC241D"
+readonly = true
 
 [[Reminders]]
 path = ~/.calendars/local/reminders/
@@ -37,7 +43,7 @@ color = "#B16286"
 readonly = false
 
 [default]
-default_calendar = Scheduled
+# No default calendar: khal must never create an event implicitly.
 highlight_event_days = True
 show_all_days = True
 

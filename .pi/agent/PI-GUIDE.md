@@ -69,6 +69,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `session-sync/` | Checks trusted SSH destinations and pulls new Pi session transcripts. | `/session-sync-status`, `/session-sync-pull [host]` |
 | `session-sync.json` | Trusted SSH source/destination registry roots for session-sync extension. | Config only. No session data is tracked. |
 | `auto-session-name.ts` | Sets content-derived session display names, then refreshes them with a cheap title model. | `/autoname` |
+| `google-workspace/` | Google Drive, Docs, Sheets, and Slides tools with OAuth token refresh. Vendored from `Geun-Oh/pi-google-workspace`, adapted so client credentials stay in `pass`/env and only tokens touch disk. | `/gws-setup`, `/gws-logout`; 15 `google_*` agent tools. |
 
 ## Keybindings and terminal notes
 
@@ -120,6 +121,24 @@ Sources checked:
 - `.config/nix/home/default.nix`
 - `.config/nix/home/ssh-aliases.nix`
 - `~/.ssh/config`
+
+### Google Workspace
+
+What it does:
+
+- Vendored from `Geun-Oh/pi-google-workspace` (MIT) into `agent/extensions/google-workspace/`. 15 `google_*` tools: Drive list/download/upload/create-folder, Docs read/create/append/replace/download (incl. `md` export via built-in Docs-to-Markdown converter), Sheets create/read/update, Slides read/replace-text, plus status.
+- OAuth: `/gws-setup` runs browser consent via local callback server on `http://127.0.0.1:53682/oauth2callback` (manual code paste fallback). `/gws-logout` deletes tokens.
+
+Credentials:
+
+- Client ID/Secret resolve from `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` env or `pass show GWS/GOOGLE_CLIENT_ID` / `GWS/GOOGLE_CLIENT_SECRET`. Never written to disk.
+- Tokens only in `~/.pi/agent/google-workspace/oauth.json` (0600, outside repo).
+
+Gotchas:
+
+- First consent must return a `refresh_token`; if missing or scopes changed, re-run `/gws-setup`.
+- Google Cloud project needs Drive, Docs, Sheets, Slides APIs enabled; account must be a test user while consent screen is in Testing.
+- No session footer status by design; check `google_workspace_status` tool instead.
 
 ### Ketch research skill
 

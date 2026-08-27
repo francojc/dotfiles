@@ -4,8 +4,10 @@ status_path = "~/.vdirsyncer/status/"
 [pair google_calendar]
 a = "google_calendar_local"
 b = "google_calendar_remote"
-collections = ["from a", "from b"]
+# Pull remote collections only. Local changes get discarded, never uploaded.
+collections = ["from b"]
 conflict_resolution = "b wins"
+partial_sync = "revert"
 metadata = ["color", "displayname", "description", "order"]
 
 [storage google_calendar_local]
@@ -26,8 +28,10 @@ item_types = ["VEVENT"]
 [pair mailbox_calendar]
 a = "mailbox_local"
 b = "mailbox_remote"
-collections = ["from a", "from b"]
+# Pull remote collections only. Local changes get discarded, never uploaded.
+collections = ["from b"]
 conflict_resolution = "b wins"
+partial_sync = "revert"
 metadata = ["color", "displayname", "description", "order"]
 
 [storage mailbox_local]
