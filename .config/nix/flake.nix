@@ -43,7 +43,7 @@
       "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
       "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
       "Mini-Rover" = import ./hosts/Mini-Rover/default.nix;
-      "Parallels-Quattro" = import ./hosts/Parallels-Quattro/default.nix;
+      "nixos-quattro" = import ./hosts/nixos-quattro/default.nix;
     };
 
     # Unified configuration builder for both Darwin and NixOS

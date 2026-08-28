@@ -88,7 +88,7 @@ This flake manages three distinct hosts with different hardware platforms and pu
 | **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | ayu | macOS | - |
 | **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
 | **Mini-Rover** | x86_64-linux (Mac Mini 2011) | nightfox | i3 (X11) | - |
-| **Parallels-Quattro** | aarch64-linux (Parallels on Apple Silicon) | ayu | Hyprland + Quickshell | Tailscale |
+| **nixos-quattro** | aarch64-linux (Parallels on Apple Silicon) | ayu | Hyprland + Quickshell | Tailscale |
 
 ### Mac-Minicore
 
@@ -100,7 +100,7 @@ Includes custom keyboard mapping (Fn key → Right Option).
 
 Portable development machine running macOS on Apple Silicon (MacBook Air M2/M3). Configured with the "gruvbox" theme. Runs only the **reddix** service for lightweight operation, relying on Mac-Minicore for AI services via Tailscale.
 
-### Parallels-Quattro
+### nixos-quattro
 
 Apple Silicon NixOS lab host for a Hyprland + Quickshell proof of concept. The full implementation plan, Parallels VM creation instructions, guest partitioning/install sequence, validation checklist, and rollback path are in [`docs/nixos-quattro-parallels.md`](docs/nixos-quattro-parallels.md).
 
