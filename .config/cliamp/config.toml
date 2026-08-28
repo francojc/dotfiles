@@ -1,0 +1,72 @@
+# CLIAMP config
+
+# Default volume in dB (range: volume_min to 6)
+volume = 0
+
+# Minimum volume floor in dB (range: -90 to 0, default: -50)
+# Controls how low the volume control can go.
+volume_min = -50
+
+# Repeat mode: "off", "all", or "one"
+repeat = "off"
+
+# Start with shuffle enabled
+shuffle = false
+
+# Start with mono output (L+R downmix)
+mono = false
+
+# Initial directory for the file browser ('o' key)
+initial_directory = "~/Music"
+
+# Shift+Left/Right seek jump in seconds
+seek_large_step_sec = 30
+
+# EQ preset: "Flat", "Rock", "Pop", "Jazz", "Classical",
+#             "Bass Boost", "Treble Boost", "Vocal", "Electronic", "Acoustic"
+# Leave empty or "Custom" to use manual eq values below
+eq_preset = "Small Speakers"
+
+# 10-band EQ gains in dB (range: -12 to 12)
+# Bands: 70Hz, 180Hz, 320Hz, 600Hz, 1kHz, 3kHz, 6kHz, 12kHz, 14kHz, 16kHz
+# Saved Custom curve; applied when eq_preset is "Custom" or empty
+eq = [7, 5, 4, 2, 1, 0, -1, 0, 1, 2]
+
+# Manual EQ changes update this curve automatically. Cycling presets with e
+# keeps it available, and both values are restored after restart.
+
+# Visualizer mode (leave empty for default Bars)
+# Options: Bars, BarsDot, Rain, BarsOutline, Bricks, Columns, ClassicPeak, Wave, Scatter, Flame, Retro, Pulse, Matrix, Binary, Sakura, Firework, Bubbles, Logo, Terrain, Scope, Heartbeat, Butterfly, Ascii, Firefly, Mosaic, Sand, Geyser, ClassicLED, Stereo, Mirror, None
+# Mirror draws tapered Braille bars around a persistent horizontal center axis.
+visualizer = "ClassicLED"
+
+# Visualizer volume linking (default: true)
+# When true, bar height follows the current volume level (classic behavior).
+# Set to false to decouple the visualizer from volume — bars stay visible
+# even at very low volume levels.
+vis_volume_linked = true
+
+# Reduce CPU usage by lowering UI cadence and disabling visualization.
+# This has the same effect as starting with --low-power.
+low_power = false
+
+# Simplified mode: artist/title and time strip without a visualizer or playlist.
+# No visualizer or playback controls are shown.
+simplified = false
+
+# UI theme name (see available themes in ~/.config/cliamp/themes/)
+theme = ""
+
+# Log level: "debug", "info", "warn", or "error" (default "info")
+# Logs are written to ~/.config/cliamp/cliamp.log
+log_level = "info"
+
+provider = "navidrome"
+
+[navidrome]
+url      = "${NAVIDROME_URL}"
+user     = "${NAVIDROME_USER}"
+password = "${NAVIDROME_PASS}"
+
+[ytmusic]
+enabled = true

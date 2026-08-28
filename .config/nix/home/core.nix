@@ -128,9 +128,10 @@
   # Media and document processing
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
+    cliamp # Audio player (tui)
     ffmpeg # Multimedia framework
-    imagemagick # Image manipulation
     glow # Markdown renderer
+    imagemagick # Image manipulation
     khal # Calendar
     mpv-unwrapped # Media player
     pandoc # Document converter
