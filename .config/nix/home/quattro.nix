@@ -106,10 +106,31 @@
 
   xdg.configFile."quickshell/shell.qml".text = ''
     import Quickshell
+    import Quickshell.Hyprland
+    import Quickshell.Io
     import QtQuick
 
-    ShellRoot {
+    Scope {
+      SystemClock {
+        id: clock
+        precision: SystemClock.Minutes
+      }
+
+      // Example calls: `qs ipc call bar workspace 2` and `qs ipc call bar toggle`.
+      IpcHandler {
+        target: "bar"
+
+        function workspace(id: int): void {
+          Hyprland.dispatch("workspace " + id)
+        }
+
+        function toggle(): void {
+          panel.visible = !panel.visible
+        }
+      }
+
       PanelWindow {
+        id: panel
         anchors {
           top: true
           left: true
@@ -124,35 +145,40 @@
           border.color: "#${builtins.substring 1 6 theme.colors.accent}"
           border.width: 1
 
-          Text {
+          Row {
             anchors.left: parent.left
             anchors.leftMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            color: "#${builtins.substring 1 6 theme.colors.fg0}"
-            font.bold: true
-            text: "NixOS Quattro Lab"
+            spacing: 8
+
+            Repeater {
+              model: Hyprland.workspaces
+
+              delegate: Text {
+                required property var modelData
+                color: modelData.focused ? "#${builtins.substring 1 6 theme.colors.accent}" : modelData.active ? "#${builtins.substring 1 6 theme.colors.fg0}" : "#${builtins.substring 1 6 theme.colors.fg3}"
+                text: modelData.name
+
+                MouseArea {
+                  anchors.fill: parent
+                  onClicked: modelData.activate()
+                }
+              }
+            }
           }
 
           Text {
             anchors.centerIn: parent
             color: "#${builtins.substring 1 6 theme.colors.fg1}"
-            text: "Hyprland · Quickshell · aarch64"
-          }
-
-          Timer {
-            interval: 1000
-            running: true
-            repeat: true
-            onTriggered: clock.text = Qt.formatTime(new Date(), "hh:mm")
+            text: Hyprland.focusedWorkspace ? "Hyprland · " + Hyprland.focusedWorkspace.name : "Hyprland · Quickshell · aarch64"
           }
 
           Text {
-            id: clock
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
             color: "#${builtins.substring 1 6 theme.colors.fg1}"
-            text: Qt.formatTime(new Date(), "hh:mm")
+            text: Qt.formatDateTime(clock.date, "ddd HH:mm")
           }
         }
       }
