@@ -87,8 +87,8 @@ Clone this repository into the installed root, then install the guest configurat
 
 ```bash
 mkdir -p /mnt/home/jeridf
-git clone https://github.com/francojc/dotfiles.git /mnt/home/jeridf/dotfiles
-cd /mnt/home/jeridf/dotfiles/.config/nix
+git clone https://github.com/francojc/dotfiles.git /mnt/home/jeridf/.dotfiles
+cd /mnt/home/jeridf/.dotfiles/.config/nix
 nixos-install --flake .#nixos-quattro
 reboot
 ```
@@ -96,7 +96,7 @@ reboot
 The checkout is copied in by the installer as root-owned. After the first login, make it editable by the configured account:
 
 ```bash
-sudo chown -R "$USER":users ~/dotfiles
+sudo chown -R "$USER":users ~/.dotfiles
 ```
 
 If the installer reports hardware-specific requirements, use `nixos-generate-config --root /mnt` to inspect them and add only the needed options in a local host override. Do not overwrite the repository's shared modules blindly.
@@ -138,7 +138,7 @@ If the installer reports hardware-specific requirements, use `nixos-generate-con
    ```
 
 5. Verify: `hyprctl monitors`, Quickshell panel presence, `loginctl`, `systemctl --user status hypridle`, clipboard history, launcher, lock, audio keys, and screenshot command.
-6. Roll back a failed activation from a TTY with `sudo nixos-rebuild switch --rollback`, or select the earlier systemd-boot generation.
+6. Roll back a failed activation from a TTY with `sudo nixos-rebuild switch --rollback`, or select the earlier GRUB generation.
 
 ## Deliberate non-goals and risks
 
