@@ -138,7 +138,7 @@ If the installer reports hardware-specific requirements, use `nixos-generate-con
    ```
 
 5. Verify: `hyprctl monitors`, Quickshell panel presence, `loginctl`, `systemctl --user status hypridle`, clipboard history, launcher, lock, audio keys, and screenshot command.
-6. Roll back a failed activation from a TTY with `sudo nixos-rebuild switch --rollback`, or select the earlier GRUB generation.
+6. Roll back a failed activation from a TTY with `sudo nixos-rebuild switch --rollback`, or select the earlier systemd-boot generation.
 
 ## Deliberate non-goals and risks
 
