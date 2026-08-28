@@ -54,7 +54,8 @@ On either Apple Silicon Mac:
 2. Select a current **NixOS `aarch64-linux` installer ISO**. The official NixOS minimal `aarch64-linux` image works, as does Determinate Systems' installer ISO (`https://install.determinate.systems/nixos-iso/stable/aarch64-linux`), which pre-enables flakes and ships Determinate Nix and `fh`. Either flavor is worth the same here: the ISO is only the bootstrap environment and the installed guest comes from `nixos-install --flake .#nixos-quattro`. Do not use an x86_64 ISO/image.
 3. Configure the VM with an initial 4 vCPU, 8 GiB RAM, and 60–80 GiB disk. These values are starting points for a graphical lab, not requirements.
 4. Enable Parallels 3D acceleration before installing. Hyprland needs an accelerated virtual GPU to be useful.
-5. Use NAT initially. The shared NixOS baseline enables the Tailscale service; authenticate it only after the first successful graphical login if remote access is wanted.
+5. Set Parallels' **Send macOS system shortcuts** option to **Never** while installing and booting. Otherwise Parallels can intercept boot-menu input and make systemd-boot's static `Boot in 5s.` screen look frozen.
+6. Use NAT initially. The shared NixOS baseline enables the Tailscale service; authenticate it only after the first successful graphical login if remote access is wanted.
 
 Keep macOS as the host desktop. This guest is a contained Wayland lab; it does not replace macOS's compositor or security model.
 
