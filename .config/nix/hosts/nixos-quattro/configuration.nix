@@ -4,13 +4,8 @@
   ...
 }: {
   # The guide creates this EFI system partition and labels the root filesystem.
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-    device = "nodev";
-  };
-  boot.loader.efi.canTouchEfiVariables = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.availableKernelModules = [
     "virtio_pci"
     "virtio_blk"
