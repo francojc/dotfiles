@@ -55,23 +55,26 @@
   };
 
   # NixOS System Packages (complementary to Flatpak packages)
-  environment.systemPackages = with pkgs; [
-    brave-origin # Brave browser
-    coreutils # GNU core utilities
-    dconf-editor
-    dconf2nix
-    gcc
-    ghostty
-    glibc
-    gnome-extensions-manager
-    gnome-tweaks
-    gnomeExtensions.paperwm
-    gnomeExtensions.clipboard-indicator
-    gnomeExtensions.extension-list
-    pinentry-tty
-    wl-clipboard
-    xclip
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      brave-origin # Brave browser
+      coreutils # GNU core utilities
+      dconf-editor
+      dconf2nix
+      gcc
+      ghostty
+      glibc
+      pinentry-tty
+      wl-clipboard
+      xclip
+    ]
+    # These GNOME helpers are optional because the Quattro guest is a
+    # Hyprland-only aarch64 system, and not every extension is built there.
+    ++ lib.optional (builtins.hasAttr "gnome-extensions-manager" pkgs) gnome-extensions-manager
+    ++ lib.optional (builtins.hasAttr "gnome-tweaks" pkgs) gnome-tweaks
+    ++ lib.optional (builtins.hasAttr "paperwm" gnomeExtensions) gnomeExtensions.paperwm
+    ++ lib.optional (builtins.hasAttr "clipboard-indicator" gnomeExtensions) gnomeExtensions.clipboard-indicator
+    ++ lib.optional (builtins.hasAttr "extension-list" gnomeExtensions) gnomeExtensions.extension-list;
 
   # Programs
   programs.dconf.enable = true;
