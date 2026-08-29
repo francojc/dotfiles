@@ -11,7 +11,7 @@
     configType = "hyprlang";
     settings = {
       "$mod" = "SUPER";
-      monitor = [",preferred,auto,1"];
+      monitor = ["Virtual-1,2560x1600@59.97,auto,1.6"];
 
       input = {
         kb_layout = "us";
