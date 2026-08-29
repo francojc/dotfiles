@@ -5,6 +5,8 @@
 }: {
   # The guide creates this EFI system partition and labels the root filesystem.
   boot.loader.systemd-boot.enable = true;
+  # Parallels UEFI can stall systemd-boot's interactive timeout path.
+  boot.loader.timeout = 0;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.availableKernelModules = [
     "virtio_pci"
