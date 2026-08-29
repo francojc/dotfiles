@@ -1,8 +1,31 @@
 {
   hostname,
   theme,
+  pkgs,
   ...
-}: {
+}: let
+  kittySoftware = pkgs.writeShellApplication {
+    name = "kitty";
+    text = ''
+      exec env LIBGL_ALWAYS_SOFTWARE=1 ${pkgs.kitty}/bin/kitty "$@"
+    '';
+  };
+in {
+  home.packages = [kittySoftware];
+
+  # Prefer the virgl-safe renderer for launcher/menu starts as well as shell starts.
+  xdg.desktopEntries.kitty = {
+    name = "Kitty";
+    genericName = "Terminal emulator";
+    exec = "${kittySoftware}/bin/kitty";
+    terminal = false;
+    type = "Application";
+    categories = ["System" "TerminalEmulator"];
+    settings = {
+      StartupWMClass = "kitty";
+    };
+  };
+
   xdg.configFile."kitty/kitty.conf" = {
     text = ''
       # ~/.config/kitty/kitty.conf
@@ -110,7 +133,7 @@
 
       ## Feedback Mechanisms
       enable_audio_bell yes
-      visual_bell_duration 0.25
+      visual_bell_duration 0.0
       bell_on_tab " "
 
       # Window Management (Minimal - Tmux handles most) --------

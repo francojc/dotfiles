@@ -44,7 +44,7 @@
       };
 
       bind = [
-        "$mod, Return, exec, kitty"
+        "$mod, Return, exec, env LIBGL_ALWAYS_SOFTWARE=1 kitty"
         "$mod, Space, exec, fuzzel"
         "$mod, Q, killactive"
         "$mod, F, fullscreen"

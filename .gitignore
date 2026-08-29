@@ -16,6 +16,25 @@
 .config/pi-cron/env
 
 # Application configuration directories
+# Browser profiles are runtime state/cache, not portable dotfiles.
+.config/BraveSoftware/
+
+# Home Manager writes generated symlinks into XDG config on NixOS.
+# The declarative sources live under .config/nix/home/*.nix instead.
+.config/direnv/
+.config/environment.d/
+.config/fontconfig/
+.config/git/
+.config/hypr/
+.config/quickshell/
+.config/systemd/
+.config/tmux/
+.config/wezterm/
+
+# Runtime/generated app state that should live in real ~/.config, not dotfiles.
+.config/carapace/
+.config/gh/
+
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
 .config/gh/*
