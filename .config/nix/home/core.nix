@@ -162,5 +162,9 @@ in {
     enable = true;
     defaultCacheTtl = 34560000;
     maxCacheTtl = 34560000;
+    pinentry.package = pkgs.pinentry-tty;
+    extraConfig = ''
+      allow-loopback-pinentry
+    '';
   };
 }

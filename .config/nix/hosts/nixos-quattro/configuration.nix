@@ -26,6 +26,17 @@
 
   networking.networkmanager.enable = true;
 
+  # Allow SSH into the Parallels guest from the host/lab network.
+  services.openssh = {
+    enable = true;
+    openFirewall = true;
+    settings = {
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = true;
+      PermitRootLogin = "no";
+    };
+  };
+
   users.users.${username}.extraGroups = [
     "wheel"
     "networkmanager"
