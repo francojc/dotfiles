@@ -3,7 +3,7 @@
   system = "aarch64-linux";
   username = "jeridf";
   useremail = "francojc@wfu.edu";
-  theme = "ayu";
+  theme = "nightfox";
 
   hostModules = [
     ../../profiles/nixos/configuration.nix

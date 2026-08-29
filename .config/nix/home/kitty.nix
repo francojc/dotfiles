@@ -97,7 +97,6 @@
       ## Cursor Styling
       cursor_shape beam
       cursor_blink_interval -1
-      cursor_trail 6
 
       ## Color and Border Settings
       window_border_width 1pt
