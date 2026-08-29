@@ -44,7 +44,7 @@
       };
 
       bind = [
-        "$mod, Return, exec, ghostty"
+        "$mod, Return, exec, kitty"
         "$mod, Space, exec, fuzzel"
         "$mod, Q, killactive"
         "$mod, F, fullscreen"

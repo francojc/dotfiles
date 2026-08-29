@@ -31,6 +31,7 @@
     fuzzel
     grim
     hyprpaper
+    kitty
     libnotify
     networkmanagerapplet
     pavucontrol
