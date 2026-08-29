@@ -8,7 +8,7 @@ Create an Apple-Silicon-friendly NixOS desktop lab that recreates the useful par
 
 - Hyprland for a keyboard-first Wayland compositor and workspaces;
 - Quickshell for a single, small desktop-shell process;
-- a coherent theme shared with the existing Ghostty/terminal/editor configuration;
+- a coherent theme shared with the existing Kitty/terminal/editor configuration;
 - lock, idle, portal, launcher, clipboard, notification, screenshot, and audio helpers;
 - a rollbackable, flake-based configuration suitable for a Parallels Desktop ARM guest.
 
@@ -105,7 +105,7 @@ If the installer reports hardware-specific requirements, use `nixos-generate-con
 ### 3. First boot and host integration
 
 1. Log in at the `tuigreet` prompt. It starts `Hyprland`.
-2. Open Ghostty with `Super+Return`; use `Super+Space` for Fuzzel.
+2. Open Kitty with `Super+Return`; use `Super+Space` for Fuzzel.
 3. Confirm Wayland and renderer state:
 
    ```bash
