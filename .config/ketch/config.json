@@ -1,12 +1,10 @@
 {
   "config_path": "/Users/francojc/.config/ketch/config.json",
-  "backend": "searxng",
-  "searxng_url": "https://search.gerbil-matrix.ts.net",
   "brave_api_key_set": false,
   "exa_api_key_set": false,
   "firecrawl_api_key_set": false,
   "keenable_api_key_set": false,
-  "browser": "helium",
+  "browser": "brave",
   "limit": 5,
   "cache_ttl": "72h",
   "code_backend": "grepapp",
@@ -18,7 +16,6 @@
   "available_backends": [
     "brave",
     "ddg",
-    "searxng",
     "exa",
     "firecrawl",
     "keenable"

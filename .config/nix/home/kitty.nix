@@ -2,6 +2,7 @@
   hostname,
   theme,
   pkgs,
+  lib,
   ...
 }: let
   kittySoftware = pkgs.writeShellApplication {
@@ -14,7 +15,8 @@ in {
   home.packages = [kittySoftware];
 
   # Prefer the virgl-safe renderer for launcher/menu starts as well as shell starts.
-  xdg.desktopEntries.kitty = {
+  # xdg.desktopEntries is Linux-only; skip on macOS/darwin.
+  xdg.desktopEntries.kitty = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     name = "Kitty";
     genericName = "Terminal emulator";
     exec = "${kittySoftware}/bin/kitty";
