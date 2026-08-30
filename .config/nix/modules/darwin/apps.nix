@@ -3,10 +3,10 @@
 {pkgs, ...}: {
   # Add system packages
   environment.systemPackages = with pkgs; [
-    # nix-darwin specific apps on nixpkgs
+    brave # Brave browser
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
-    terminal-notifier # macOS notifications from command line
     gcal # GNU cal command
+    terminal-notifier # macOS notifications from command line
   ];
 
   homebrew = {
@@ -85,7 +85,6 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "brave-browser"
       "chatgpt" # ChatGPT
       "fluidvoice" # TTS on device
       "ghostty" # Terminal emulator
