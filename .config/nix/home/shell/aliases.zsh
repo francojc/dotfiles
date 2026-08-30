@@ -125,6 +125,17 @@ alias gdrive='cd ~/Google\ Drive/My\ Drive/'
 # --- MAIL ALIASES ---
 alias mail='aerc -C ~/.config/aerc/aerc.conf -A ~/.config/aerc/accounts.conf -B ~/.config/aerc/binds.conf'
 
+# --- KETCH ---
+# Web + code + docs research (backend brave, code github)
+alias ks='ketch search'                      # web search (brave)
+alias kss='ketch search --scrape --max-chars 8000 --trim'   # search + content
+alias kc='ketch code -b github'              # code search, github
+alias kd='ketch docs --tokens 6000'          # library docs (context7)
+alias ksc='ketch scrape'                     # URL -> clean markdown
+alias kx='pbpaste | ketch extract'           # clipboard HTML -> markdown
+alias kdr='ketch doctor'                     # backend/browser/cache health
+alias kcr='ketch crawl'                      # site crawl
+
 # --- MISC ---
 alias last='fc -ln -1'
 alias lastrun='fc -e -'

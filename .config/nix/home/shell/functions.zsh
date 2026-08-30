@@ -87,6 +87,19 @@ function r() {
   fi
 }
 
+# --- KETCH ---
+# ketch search as JSON, piped through jq
+# Usage: ksj [ketch-search-flags] - pretty-print search results
+function ksj() {
+  ketch search --json "$@" | jq
+}
+
+# ketch code search (github backend) as JSON, piped through jq
+# Usage: kcj [ketch-code-flags] - pretty-print code results
+function kcj() {
+  ketch code -b github --json "$@" | jq
+}
+
 # Quick tree view
 # Usage: qtree [directory] [depth] - lists directory tree with custom depth
 function qtree() {
