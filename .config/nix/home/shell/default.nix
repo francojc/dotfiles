@@ -81,14 +81,15 @@
         export GCAL='-s 1 --iso-week-number=yes'
         export OLLAMA_HOST='100.101.38.4:11434'
 
+        # --- CLI TOOLS ---
+        export KETCH_CONFIG="${config.home.homeDirectory}/.config/ketch/config.json"
+
         # --- PI ENV VARIABLES ---
         # update provider/model with subscription changes
         export PI_PROVIDER="openai-codex"
-        export PI_MODEL="gpt-5.5"
+        export PI_MODEL="gpt-5.6-luna"
         export PI_FALLBACK_PROVIDER="ollama"
         export PI_FALLBACK_MODEL="gemma4:31b-cloud"
-        # Manual updates preferred; skip startup version ping/notification.
-        export PI_SKIP_VERSION_CHECK=1
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
