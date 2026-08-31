@@ -3,7 +3,6 @@
 {pkgs, ...}: {
   # Add system packages
   environment.systemPackages = with pkgs; [
-    brave # Brave browser
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
     terminal-notifier # macOS notifications from command line

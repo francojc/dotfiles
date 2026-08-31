@@ -57,7 +57,6 @@
   # NixOS System Packages (complementary to Flatpak packages)
   environment.systemPackages = with pkgs;
     [
-      brave-origin # Brave browser
       coreutils # GNU core utilities
       dconf-editor
       dconf2nix
