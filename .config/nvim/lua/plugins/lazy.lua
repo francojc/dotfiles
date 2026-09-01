@@ -42,7 +42,8 @@ local function setup_obsidian()
 			date_format = "%B %-d, %Y",
 			time_format = "%H:%M",
 		},
-		new_notes_location = "Inbox",
+		notes_subdir = "Inbox",
+		new_notes_location = "notes_subdir",
 		attachments = { folder = "./" },
 	})
 end
