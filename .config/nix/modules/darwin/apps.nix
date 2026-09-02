@@ -54,6 +54,10 @@
         name = "ashuttl/linecast"; # linecast
         trusted = true;
       }
+      {
+        name = "as-foss/mandible"; # mandible
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -65,6 +69,7 @@
       "linecast" # TUI weather
       "llm" # llm.dataset.io
       "mole" # terminal cleanup app for macOS
+      "mandible" # macOS app launcher
       "nmap" # network scanner
       "node" # Node.js
       "officecli" # AI-accessible office conversion/creation
