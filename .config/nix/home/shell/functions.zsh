@@ -1,12 +1,13 @@
 # --- GENERAL-PURPOSE SHELL FUNCTIONS ---
 
 # SSH connection helper
-# Usage: ssh_connect [host] [user] - connects to SSH server with optional user override
+# Usage: ssh_connect [host] [user] - host is an ssh_config alias; user overrides config User
 ssh_connect() {
   local host="$1"
   local user="$2"
-  [ -z "$user" ] && user="jeridf"
-  TERM=xterm-256color ssh "$user@$host"
+  local target="$host"
+  [ -n "$user" ] && target="$user@$host"
+  TERM=xterm-256color ssh "$target"
 }
 
 # Rsync files to a remote host (skips files newer on remote)
@@ -14,14 +15,14 @@ ssh_connect() {
 syncr() {
   local remote
   case "$1" in
-    minicore) remote="jeridf@mac-minicore" ;;
-    airborne) remote="francojc@macbook-airborne" ;;
-    rover) remote="jeridf@mini-rover" ;;
-    monitors) remote="jeridf@monitor-services" ;;
-    services) remote="root@core-services" ;;
-    media) remote="root@media-services" ;;
-    hermes) remote="hermes@hermes-agent" ;;
-    omarchy) remote="omarchy@omarchy" ;;
+    minicore) remote="minicore" ;;
+    airborne) remote="airborne" ;;
+    rover) remote="rover" ;;
+    monitors) remote="monitors" ;;
+    services) remote="services" ;;
+    media) remote="media" ;;
+    hermes) remote="hermes" ;;
+    omarchy) remote="omarchy" ;;
     *)
       echo "Unknown remote: $1"
       echo "Available: minicore, airborne, rover"

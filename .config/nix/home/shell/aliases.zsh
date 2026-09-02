@@ -37,18 +37,19 @@ alias rm='rm -v'      # Remove with verbose output
 alias path='echo -e ${PATH//:/\\n}'
 
 # --- SSH ALIASES ---
-# Individual aliases using ssh_connect() from functions.zsh
-alias minicore='ssh_connect mac-minicore'
-alias airborne='ssh_connect macbook-airborne francojc'
-alias rover='ssh_connect mini-rover'
-alias proxmox='ssh_connect minis-proxmox root'
+# Hosts are ssh_config aliases from config.d/nix-managed.conf, which carry the
+# FQDN HostName, User and key. Pass a user only for hosts with no config entry.
+alias minicore='ssh_connect minicore'
+alias airborne='ssh_connect airborne'
+alias rover='ssh_connect rover'
+alias proxmox='ssh_connect proxmox'
 alias adguard='ssh_connect adguard jeridf'
-alias monitors='ssh_connect monitor-services jeridf'
-alias services='ssh_connect core-services root'
-alias media='ssh_connect media-services root'
-alias homeassistant='ssh_connect homeassistant jeridf'
-alias hermes='ssh_connect hermes-agent hermes'
-alias omarchy='ssh_connect omarchy omarchy'
+alias monitors='ssh_connect monitors'
+alias services='ssh_connect services'
+alias media='ssh_connect media'
+alias homeassistant='ssh_connect homeassistant'
+alias hermes='ssh_connect hermes'
+alias omarchy='ssh_connect omarchy'
 
 # --- GIT ALIASES ---
 # Lazygit
