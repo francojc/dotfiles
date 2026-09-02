@@ -2,37 +2,37 @@
 
 [[mailbox]]
 path = ~/.calendars/mailbox/Y2FsOi8vMC8zMg
-type = discover
+type = calendar
 color = "#689D6A"
 readonly = true
 
 [[francojc]]
 path = ~/.calendars/google/francojc@wfu.edu
-type = discover
+type = calendar
 color = "#D79921"
 readonly = true
 
 [[holidays]]
 path = ~/.calendars/google/cln2stbjc4hmgrrcd5i62ua0ctp6utbg5pr2sor1dhimsp31e8n6errfctm6abj3dtmg@virtual
-type = discover
+type = calendar
 color = "#928374"
 readonly = true
 
-[[ff.hopkins]]
+[[ff-hopkins]]
 path = ~/.calendars/google/c_516533b3e888c01ae0934691f9108a1d7feff01daf6702e382af2e7198d0bd6a@group.calendar.google.com
-type = discover
+type = calendar
 color = "#83A598"
 readonly = true
 
-[[spanish.department]]
+[[spanish-department]]
 path = ~/.calendars/google/wfu.edu_27uakldtgi42knb0bbcs50flgk@group.calendar.google.com
-type = discover
+type = calendar
 color = "#FE8019"
 readonly = true
 
-[[deans.office]]
+[[deans-office]]
 path = ~/.calendars/google/wfu.edu_r4ojj0ivt8k7ci6l7p5khbvovc@group.calendar.google.com
-type = discover
+type = calendar
 color = "#CC241D"
 readonly = true
 
@@ -128,5 +128,4 @@ editcp = light gray, '', '', '#EBDBB2', '#282828'
 popupbg = light gray, '', '', '#EBDBB2', '#282828'
 popupper = light gray, '', '', '#EBDBB2', '#282828'
 caption = light gray, '', '', '#EBDBB2', ''
-
 
