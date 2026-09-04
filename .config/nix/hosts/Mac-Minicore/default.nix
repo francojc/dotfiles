@@ -16,10 +16,13 @@
     ../../modules/darwin/llama-qwen-server.nix
     ../../modules/darwin/llama-embed-server.nix
     ../../modules/darwin/llama-fim-server.nix
+    ../../modules/darwin/copilot-api.nix
 
     # Inline module for host-specific service configuration
     {
       custom.services = {
+        copilotApi.enable = true;
+
         # Fixed Qwen3.5 9B chat endpoint on :8081
         llamaQwen = {
           enable = true;

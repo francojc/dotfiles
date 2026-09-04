@@ -21,7 +21,7 @@
   };
 
   services.virby = {
-    enable = true;
+    enable = false;
     supportDeterminateNix = true;
     onDemand.enable = true;
     cores = 4;
