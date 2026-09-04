@@ -9,7 +9,7 @@ import { join } from "node:path";
 const CACHE_DIR = join(process.env.HOME || "/tmp", ".cache", "pi");
 const CACHE_FILE = join(CACHE_DIR, "opencode-go-models.json");
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-const CACHE_SCHEMA_VERSION = 3;
+const CACHE_SCHEMA_VERSION = 5;
 const QUIET_STARTUP = process.argv.includes("-p") || process.argv.includes("--print") || process.argv.includes("json") || process.env.PI_MODEL_DISCOVERY_DEBUG !== "1";
 
 function logInfo(message: string): void {
@@ -37,22 +37,25 @@ const BASE_URL_OPENAI    = "https://opencode.ai/zen/go/v1";
 // models visible in Pi without needing a code edit every time OpenCode adds one.
 // ---------------------------------------------------------------------------
 
-type ApiKind = "anthropic-messages" | "openai-completions";
+type ApiKind = "anthropic-messages" | "openai-completions" | "openai-responses";
 
 type Endpoint = { api: ApiKind; baseUrl: string; sdk: string };
 
 const SDK_ANTHROPIC = "@ai-sdk/anthropic";
+const SDK_OPENAI = "@ai-sdk/openai";
 const SDK_OPENAI_COMPATIBLE = "@ai-sdk/openai-compatible";
 
 // Explicit docs-backed mappings. Dynamic routing below handles new models.
 const ENDPOINT_OVERRIDES: Record<string, Endpoint> = {
   "minimax-m3":   { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
-  "minimax-m2.7": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "minimax-m2.7": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
   "minimax-m2.5": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
-  "qwen3.7-max":  { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
-  "qwen3.7-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
-  "qwen3.6-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
-  "qwen3.5-plus": { api: "anthropic-messages", baseUrl: BASE_URL_ANTHROPIC, sdk: SDK_ANTHROPIC },
+  "qwen3.7-max":  { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
+  "qwen3.7-plus": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
+  "qwen3.6-plus": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
+  "qwen3.5-plus": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
+  "qwen3.8-flash": { api: "openai-completions", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI_COMPATIBLE },
+  "gpt-5.6-luna": { api: "openai-responses", baseUrl: BASE_URL_OPENAI, sdk: SDK_OPENAI },
 };
 
 // ---------------------------------------------------------------------------
@@ -98,20 +101,97 @@ type CacheEntry = {
 // ---------------------------------------------------------------------------
 
 const MODEL_OVERRIDES: Record<string, Partial<PiModel>> = {
-  "kimi-k2.6": {
-    compat: { thinkingFormat: "openai" },
+  // OpenCode Go exposes provider-specific effort tiers. Null hides an effort
+  // level from Pi instead of sending an invalid value to the upstream API.
+  "kimi-k3": {
     thinkingLevelMap: {
-      off: "none",
+      off: null,
+      minimal: null,
+      low: null,
+      medium: null,
+      high: null,
+      xhigh: null,
+      max: "max",
+    },
+  },
+  "kimi-k2.6": {
+    compat: {
+      thinkingFormat: "deepseek",
+      supportsReasoningEffort: false,
+    },
+    thinkingLevelMap: {
+      minimal: null,
+      low: null,
+      medium: null,
+    },
+  },
+  "deepseek-v4-pro": {
+    compat: {
+      thinkingFormat: "deepseek",
+      requiresReasoningContentOnAssistantMessages: true,
+    },
+    thinkingLevelMap: {
+      minimal: null,
+      low: null,
+      medium: null,
+      high: "high",
+      xhigh: null,
+      max: "max",
+    },
+  },
+  "deepseek-v4-flash": {
+    compat: {
+      thinkingFormat: "deepseek",
+      requiresReasoningContentOnAssistantMessages: true,
+    },
+    thinkingLevelMap: {
+      minimal: null,
+      low: "low",
+      medium: null,
+      high: "high",
+      xhigh: null,
+      max: "max",
+    },
+  },
+  "glm-5.2": {
+    thinkingLevelMap: {
+      off: null,
+      minimal: null,
+      low: null,
+      medium: null,
+      high: "high",
+      xhigh: null,
+      max: "max",
+    },
+  },
+  "glm-5.3": {
+    thinkingLevelMap: {
+      off: null,
+      minimal: null,
+      low: "low",
+      medium: null,
+      high: "high",
+      xhigh: null,
+      max: "max",
+    },
+  },
+  "qwen3.6-plus": {
+    compat: {
+      thinkingFormat: "qwen",
+      supportsReasoningEffort: true,
+    },
+  },
+  "gpt-5.6-luna": {
+    thinkingLevelMap: {
+      off: null,
       minimal: null,
       low: "low",
       medium: "medium",
       high: "high",
-      xhigh: null,
+      xhigh: "xhigh",
+      max: "max",
     },
   },
-  // Add overrides for other reasoning models as needed, e.g.:
-  // "deepseek-v4-pro": { compat: { thinkingFormat: "deepseek" } },
-  // "minimax-m3":      { compat: { forceAdaptiveThinking: true } },
 };
 
 // ---------------------------------------------------------------------------
