@@ -236,6 +236,9 @@ require("vscode").setup({
 	},
 })
 
+---| Iceberg ----------------------------------
+-- No Lua setup required; `iceberg.vim` provides `:colorscheme iceberg`.
+
 ---| Activate Colorscheme ----------------------------------
 if theme_config.colorscheme == "ayu" then
 	vim.g.ayucolor = "mirage" -- set ayu theme to mirage

@@ -93,6 +93,7 @@ Available colorscheme names:
 - `black-metal`
 - `catppuccin`
 - `gruvbox`
+- `iceberg`
 - `kanso`
 - `nightfox`
 - `onedark`

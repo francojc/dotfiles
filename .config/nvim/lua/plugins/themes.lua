@@ -90,6 +90,7 @@ local theme_setups = {
 			overrides = {},
 		})
 	end,
+	iceberg = nil,
 	kanso = function()
 		require("kanso").setup({
 			backround = { dark = "zen" },
@@ -187,6 +188,7 @@ local theme_packadd = {
 	["black-metal"] = "black-metal-theme-neovim",
 	catppuccin    = "catppuccin",
 	gruvbox       = "gruvbox.nvim",
+	iceberg       = "iceberg.vim",
 	kanso         = "kanso.nvim",
 	nightfox      = "nightfox.nvim",
 	onedark       = "onedark.nvim",

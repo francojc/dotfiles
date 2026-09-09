@@ -20,6 +20,7 @@ local theme_registry = {
 	["black-metal"] = { src = "https://github.com/metalelf0/black-metal-theme-neovim" },
 	catppuccin = { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	gruvbox = { src = "https://github.com/ellisonleao/gruvbox.nvim" },
+	iceberg = { src = "https://github.com/cocopon/iceberg.vim", name = "iceberg.vim" },
 	kanso = { src = "https://github.com/webhooked/kanso.nvim" },
 	nightfox = { src = "https://github.com/EdenEast/nightfox.nvim" },
 	onedark = { src = "https://github.com/navarasu/onedark.nvim" },
