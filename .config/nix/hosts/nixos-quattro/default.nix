@@ -3,7 +3,7 @@
   system = "aarch64-linux";
   username = "jeridf";
   useremail = "francojc@wfu.edu";
-  theme = "ayu";
+  theme = "ayu"; # options: arthur, ayu, blackmetal, catppuccin, gruvbox, iceberg, kanso, nightfox, onedark, tokyonight, vague, vscode
 
   hostModules = [
     ../../profiles/nixos/configuration.nix

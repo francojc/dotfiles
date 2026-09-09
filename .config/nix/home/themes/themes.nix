@@ -621,6 +621,67 @@
       };
     };
 
+    iceberg = let
+      colors = {
+        # Background colors
+        bg0 = "#161821";
+        bg1 = "#1e2132";
+        bg2 = "#272c42";
+        bg3 = "#3d425b";
+        bg4 = "#5b6389";
+
+        # Foreground colors
+        fg0 = "#d2d4de";
+        fg1 = "#c6c8d1";
+        fg2 = "#818596";
+        fg3 = "#6b7089";
+
+        # Accent colors
+        red = "#e27878";
+        green = "#b4be82";
+        yellow = "#e2a478";
+        blue = "#84a0c6";
+        purple = "#a093c7";
+        aqua = "#89b8c2";
+        orange = "#e2a478";
+
+        # Bright colors
+        bright_red = "#e98989";
+        bright_green = "#c0ca8e";
+        bright_yellow = "#e9b189";
+        bright_blue = "#91acd1";
+        bright_purple = "#ada0d3";
+        bright_aqua = "#95c4ce";
+        bright_orange = "#e9b189";
+
+        # Special
+        cursor = "#c6c8d1";
+        accent = "#84a0c6";
+      };
+    in {
+      name = "iceberg";
+      inherit colors;
+      ghostty = {
+        theme = "Iceberg Dark";
+        cursor_color = "#c6c8d1";
+      };
+      kitty = {
+        theme_name = "Iceberg Dark";
+      };
+      vim = {
+        colorscheme = "iceberg";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "iceberg";
+        colors = {
+          bg = "#161821";
+          fg = "#c6c8d1";
+          yellow = "#e2a478";
+        };
+      };
+    };
+
     ayu = let
       colors = {
         # Background colors

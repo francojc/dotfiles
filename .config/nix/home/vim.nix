@@ -17,6 +17,7 @@
         vim-surround # Surround text objects
         vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
         vim-which-key # Keybindings
+        iceberg-vim # Iceberg colorscheme
       ];
       extraConfig = ''
         " LLAMA.VIM -----------------------------------------------
@@ -80,8 +81,9 @@
         set noswapfile            " Disable swap files
         set nobackup              " Disable backup files
         set cursorline            " Highlight current line
-        colorscheme retrobox
         set background=${theme.vim.background}
+        " Only installed colorschemes may be selected here.
+        colorscheme ${if theme.name == "iceberg" then theme.vim.colorscheme else "retrobox"}
 
         " STATUSLINE -----------------------------------------------
         set laststatus=2          " Always show statusline
@@ -153,17 +155,17 @@
 
         " Statusline highlight groups (linked to existing groups for theme compat)
         function! SetupStatuslineColors()
-          hi StatusLineModeNormal  guifg=#282828 guibg=#a89984 gui=bold ctermfg=235 ctermbg=246 cterm=bold
-          hi StatusLineModeInsert  guifg=#282828 guibg=#83a598 gui=bold ctermfg=235 ctermbg=109 cterm=bold
-          hi StatusLineModeVisual  guifg=#282828 guibg=#fabd2f gui=bold ctermfg=235 ctermbg=214 cterm=bold
-          hi StatusLineModeReplace guifg=#282828 guibg=#fb4934 gui=bold ctermfg=235 ctermbg=167 cterm=bold
-          hi StatusLineModeCommand guifg=#282828 guibg=#b8bb26 gui=bold ctermfg=235 ctermbg=142 cterm=bold
-          hi StatusLineModified   guifg=#fb4934 guibg=#3c3836 gui=bold ctermfg=167 ctermbg=237 cterm=bold
-          hi StatusLineGit        guifg=#b8bb26 guibg=#3c3836 gui=NONE ctermfg=142 ctermbg=237
-          hi StatusLineFile       guifg=#ebdbb2 guibg=#3c3836 gui=NONE ctermfg=223 ctermbg=237
-          hi StatusLineSearch     guifg=#fabd2f guibg=#3c3836 gui=NONE ctermfg=214 ctermbg=237
-          hi StatusLineType       guifg=#282828 guibg=#a89984 gui=NONE ctermfg=235 ctermbg=246
-          hi StatusLinePos        guifg=#ebdbb2 guibg=#504945 gui=NONE ctermfg=223 ctermbg=239
+          hi StatusLineModeNormal  guifg=${theme.colors.bg0} guibg=${theme.colors.fg3} gui=bold
+          hi StatusLineModeInsert  guifg=${theme.colors.bg0} guibg=${theme.colors.blue} gui=bold
+          hi StatusLineModeVisual  guifg=${theme.colors.bg0} guibg=${theme.colors.yellow} gui=bold
+          hi StatusLineModeReplace guifg=${theme.colors.bg0} guibg=${theme.colors.bright_red} gui=bold
+          hi StatusLineModeCommand guifg=${theme.colors.bg0} guibg=${theme.colors.bright_green} gui=bold
+          hi StatusLineModified   guifg=${theme.colors.bright_red} guibg=${theme.colors.bg1} gui=bold
+          hi StatusLineGit        guifg=${theme.colors.bright_green} guibg=${theme.colors.bg1} gui=NONE
+          hi StatusLineFile       guifg=${theme.colors.fg1} guibg=${theme.colors.bg1} gui=NONE
+          hi StatusLineSearch     guifg=${theme.colors.bright_yellow} guibg=${theme.colors.bg1} gui=NONE
+          hi StatusLineType       guifg=${theme.colors.bg0} guibg=${theme.colors.fg3} gui=NONE
+          hi StatusLinePos        guifg=${theme.colors.fg1} guibg=${theme.colors.bg2} gui=NONE
         endfunction
 
         augroup StatuslineColors
@@ -259,11 +261,11 @@
 
         " Highlight groups (defined after colorscheme loads)
         function! SetupWhichKeyColors()
-          hi WhichKey          guifg=#fabd2f gui=bold
-          hi WhichKeySeperator guifg=#504945 gui=NONE
-          hi WhichKeyGroup     guifg=#83a598 gui=bold
-          hi WhichKeyDesc      guifg=#ebdbb2 gui=NONE
-          hi WhichKeyFloating  guibg=#1d2021
+          hi WhichKey          guifg=${theme.colors.bright_yellow} gui=bold
+          hi WhichKeySeperator guifg=${theme.colors.bg2} gui=NONE
+          hi WhichKeyGroup     guifg=${theme.colors.bright_blue} gui=bold
+          hi WhichKeyDesc      guifg=${theme.colors.fg1} gui=NONE
+          hi WhichKeyFloating  guibg=${theme.colors.bg0}
         endfunction
         augroup WhichKeyColors
           autocmd!
