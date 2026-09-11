@@ -10,4 +10,4 @@ alias wmm='workmux merge'
 alias wmr='workmux remove'
 
 # --- AIDER ALIASES ---
-alias aider-commit='aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)'
+alias aider-commit='env -u PYTHONPATH -u PYTHONHOME aider --openai-api-base "$GITHUB_COPILOT_BASE_URL" --openai-api-key "$GITHUB_COPILOT_API_KEY" --config $(realpath ~/.config/aider/commit.yml)'

@@ -10,4 +10,3 @@ no-attribute-author: true
 no-attribute-committer: true
 show-diffs: false
 gitignore: false
-restore-chat-history: false
