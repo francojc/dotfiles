@@ -18,6 +18,7 @@
 # Application configuration directories
 # Browser profiles are runtime state/cache, not portable dotfiles.
 .config/BraveSoftware/
+.config/fiskeretta/
 
 # Home Manager writes generated symlinks into XDG config on NixOS.
 # The declarative sources live under .config/nix/home/*.nix instead.

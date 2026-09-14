@@ -43,7 +43,7 @@
         trusted = true;
       }
       {
-        name = "shobhit99/tap"; # supercmd
+        name = "abue-ammar/tinycast"; # tinycast
         trusted = true;
       }
       {
@@ -96,12 +96,10 @@
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
-      "raycast" # productivity launcher
-      "rectangle" # window management
+      # "rectangle" # window management
       "signal" # messaging
-      "supercmd" # raycast alternative in swift
+      "tinycast" # raycast alternative
       "telegram" # messaging (bot)
-      "zen" # browser
       "zoom" # video conferencing
       "zotero" # reference manager
       # "anythingllm" # llm harness/desktop app
