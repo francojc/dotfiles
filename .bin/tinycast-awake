@@ -16,6 +16,10 @@
 # Two independent caffeinate processes can run concurrently:
 #   main.pid  — toggled by on/off/toggle
 #   watch.pid — driven by the detached watcher
+#
+# Feedback: SwiftBar icon is the only user-facing status surface. No
+# notification banners — toggle/watch actions are silent and the icon
+# flips within ~5s on the next SwiftBar refresh.
 
 set -Eeuo pipefail
 
@@ -60,11 +64,6 @@ _acquire_lock() {
 
 _release_lock() {
   rmdir "$LOCK_DIR" 2>/dev/null || true
-}
-
-_notify() {
-  /usr/bin/osascript -e "display notification \"$2\" with title \"$1\"" \
-    >/dev/null 2>&1 || true
 }
 
 # Returns 0 if PID file points to a live caffeinate -di process.
@@ -122,21 +121,14 @@ _watcher_alive() {
 
 cmd_on() {
   if _pid_alive "$MAIN_PID_FILE"; then
-    _notify "Mac Awake" "Sleep prevention already enabled."
     return 0
   fi
   rm -f "$MAIN_PID_FILE"
-  if _start_caffeinate "$MAIN_PID_FILE"; then
-    _notify "Mac Awake" "Display and system sleep prevention enabled."
-  else
-    _notify "Mac Awake" "Failed to start caffeinate."
-    return 1
-  fi
+  _start_caffeinate "$MAIN_PID_FILE" || return 1
 }
 
 cmd_off() {
   _stop_caffeinate "$MAIN_PID_FILE"
-  _notify "Mac Sleep" "Normal display and system sleep restored."
 }
 
 cmd_toggle() {
@@ -153,7 +145,6 @@ cmd_watch() {
   local cur_watcher
   cur_watcher=$(cat "$WATCHER_PID_FILE" 2>/dev/null || true)
   if [[ -n "$cur_watcher" ]] && kill -0 "$cur_watcher" 2>/dev/null; then
-    _notify "Mac Awake" "Watcher already running."
     return 0
   fi
 
@@ -168,8 +159,6 @@ cmd_watch() {
   # parent shell exiting (Tinycast may exec us via a short-lived shell).
   nohup "$script_dir/tinycast-awake-watch" >>"$LOG_FILE" 2>&1 &
   disown
-  sleep 0.2
-  _notify "Mac Awake" "Watcher started (pattern: $pattern)."
 }
 
 cmd_unwatch() {
@@ -180,7 +169,6 @@ cmd_unwatch() {
   fi
   _stop_caffeinate "$WATCH_PID_FILE"
   rm -f "$WATCHER_PID_FILE"
-  _notify "Mac Sleep" "Watcher stopped."
 }
 
 cmd_status() {
@@ -210,10 +198,9 @@ EOF
 
 # Status is read-only and doesn't need lock protection.
 if [[ "${1:-toggle}" != "status" ]]; then
-  if ! _acquire_lock; then
-    _notify "Mac Awake" "Another awake operation in progress."
-    exit 0
-  fi
+  # Concurrent invocations (e.g. double-pressed hotkey) silently no-op rather
+  # than notify — the second press is idempotent because state converges.
+  _acquire_lock || exit 0
 fi
 
 case "${1:-toggle}" in

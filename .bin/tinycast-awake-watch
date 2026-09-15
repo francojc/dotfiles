@@ -11,6 +11,10 @@
 #
 # Name intentionally does NOT contain 'pi' so it never appears in a ps
 # snapshot as a candidate match for the default pattern.
+#
+# Feedback: silent. SwiftBar is the only user-facing state surface; the
+# menu bar icon flips within ~5s. Wake/sleep transitions write a line to
+# awake.log for debugging.
 
 set -Eeuo pipefail
 
@@ -23,11 +27,6 @@ LOG_FILE="$STATE_DIR/awake.log"
 
 GRACE_SECONDS=15
 POLL_SECONDS=5
-
-_notify() {
-  /usr/bin/osascript -e "display notification \"$2\" with title \"$1\"" \
-    >/dev/null 2>&1 || true
-}
 
 _pid_alive() {
   local pid
@@ -85,10 +84,10 @@ while true; do
       pid=$!
       echo "$pid" >"$WATCH_PID_FILE"
       sleep 0.05
-      if kill -0 "$pid" 2>/dev/null; then
-        _notify "Mac Awake" "Watching '$pattern': sleep prevention enabled."
-      else
+      if ! kill -0 "$pid" 2>/dev/null; then
         rm -f "$WATCH_PID_FILE"
+      else
+        echo "$(date -Iseconds) watcher: caffeinate started (pid=$pid)" >>"$LOG_FILE"
       fi
     fi
   else
@@ -97,7 +96,7 @@ while true; do
       pid=$(cat "$WATCH_PID_FILE")
       kill "$pid" 2>/dev/null || true
       rm -f "$WATCH_PID_FILE"
-      _notify "Mac Sleep" "Process '$pattern' gone. Sleep restored."
+      echo "$(date -Iseconds) watcher: caffeinate stopped (grace expired)" >>"$LOG_FILE"
     fi
   fi
 
