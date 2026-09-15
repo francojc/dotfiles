@@ -1,0 +1,228 @@
+#!/usr/bin/env bash
+
+# tinycast-awake — toggle macOS sleep prevention from Tinycast
+#
+# Subcommands:
+#   on | off | toggle     manual caffeinate -di, no watching
+#   watch [PATTERN]       start detached watcher; PATTERN matches running processes
+#   unwatch               stop watcher and its caffeinate
+#   status                print manual + watch state + overall
+#
+# Default PATTERN matches the Pi coding agent's npm package path segment:
+#   (^|/)pi-coding-agent(/|$)
+# Override to match another CLI / agent (e.g. 'node.*claude-code').
+#
+# State lives under ~/.local/state/tinycast/ (XDG-style, never in the repo).
+# Two independent caffeinate processes can run concurrently:
+#   main.pid  — toggled by on/off/toggle
+#   watch.pid — driven by the detached watcher
+
+set -Eeuo pipefail
+
+STATE_DIR="${TINYCAST_STATE_DIR:-$HOME/.local/state/tinycast}"
+mkdir -p "$STATE_DIR"
+
+MAIN_PID_FILE="$STATE_DIR/main.pid"
+WATCH_PID_FILE="$STATE_DIR/watch.pid"
+PATTERN_FILE="$STATE_DIR/watch.pattern"
+WATCHER_PID_FILE="$STATE_DIR/watcher.pid"
+LOG_FILE="$STATE_DIR/awake.log"
+LOCK_DIR="$STATE_DIR/.lock.d"
+
+# Anchor on path boundaries so 'pi' substring matches elsewhere (like 'pipe')
+# do not trigger. pgrep -f uses POSIX-extended regex by default.
+DEFAULT_PI_PATTERN='(^|/)pi-coding-agent(/|$)'
+STALE_LOCK_SECONDS=60
+
+# --- helpers ---------------------------------------------------------------
+
+# POSIX-portable mkdir lock. mkdir is atomic, so concurrent invocations
+# serialize cleanly. Stale lock detection by mtime: any dir older than
+# STALE_LOCK_SECONDS is treated as abandoned.
+_acquire_lock() {
+  local now mtime
+  if [[ -d "$LOCK_DIR" ]]; then
+    # /usr/bin/stat on macOS is BSD; nix shadowed the system PATH so we call
+    # the BSD binary explicitly (GNU coreutils uses -c %Y, BSD uses -f %m).
+    mtime=$(/usr/bin/stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0)
+    now=$(date +%s)
+    if (( now - mtime < STALE_LOCK_SECONDS )); then
+      return 1
+    fi
+    rmdir "$LOCK_DIR" 2>/dev/null || true
+  fi
+  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    return 1
+  fi
+  trap _release_lock EXIT INT TERM
+  return 0
+}
+
+_release_lock() {
+  rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+
+_notify() {
+  /usr/bin/osascript -e "display notification \"$2\" with title \"$1\"" \
+    >/dev/null 2>&1 || true
+}
+
+# Returns 0 if PID file points to a live caffeinate -di process.
+# Verifies the args to defend against PID reuse after a crash.
+_pid_alive() {
+  local pid_file="$1"
+  local pid
+  pid=$(cat "$pid_file" 2>/dev/null) || return 1
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  ps -p "$pid" -o args= 2>/dev/null | grep -q -- 'caffeinate.*-d'
+}
+
+_start_caffeinate() {
+  local pid_file="$1"
+  /usr/bin/caffeinate -di </dev/null >>"$LOG_FILE" 2>&1 &
+  local pid=$!
+  echo "$pid" >"$pid_file"
+  # Give the kernel a beat to actually schedule caffeinate.
+  sleep 0.05
+  if ! kill -0 "$pid" 2>/dev/null; then
+    rm -f "$pid_file"
+    return 1
+  fi
+}
+
+_stop_caffeinate() {
+  local pid_file="$1"
+  local pid
+  pid=$(cat "$pid_file" 2>/dev/null) || return 0
+  if [[ "$pid" =~ ^[0-9]+$ ]]; then
+    kill "$pid" 2>/dev/null || true
+  fi
+  rm -f "$pid_file"
+}
+
+_watch_active() {
+  local watcher_pid
+  watcher_pid=$(cat "$WATCHER_PID_FILE" 2>/dev/null) || return 1
+  [[ "$watcher_pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$watcher_pid" 2>/dev/null || return 1
+  _pid_alive "$WATCH_PID_FILE"
+}
+
+# Watcher is alive regardless of whether its caffeinate is currently running.
+# Useful for status reporting: 'watcher on' is independent of current matches.
+_watcher_alive() {
+  local watcher_pid
+  watcher_pid=$(cat "$WATCHER_PID_FILE" 2>/dev/null) || return 1
+  [[ "$watcher_pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$watcher_pid" 2>/dev/null
+}
+
+# --- subcommands -----------------------------------------------------------
+
+cmd_on() {
+  if _pid_alive "$MAIN_PID_FILE"; then
+    _notify "Mac Awake" "Sleep prevention already enabled."
+    return 0
+  fi
+  rm -f "$MAIN_PID_FILE"
+  if _start_caffeinate "$MAIN_PID_FILE"; then
+    _notify "Mac Awake" "Display and system sleep prevention enabled."
+  else
+    _notify "Mac Awake" "Failed to start caffeinate."
+    return 1
+  fi
+}
+
+cmd_off() {
+  _stop_caffeinate "$MAIN_PID_FILE"
+  _notify "Mac Sleep" "Normal display and system sleep restored."
+}
+
+cmd_toggle() {
+  if _pid_alive "$MAIN_PID_FILE"; then
+    cmd_off
+  else
+    cmd_on
+  fi
+}
+
+cmd_watch() {
+  local pattern="${1:-$DEFAULT_PI_PATTERN}"
+
+  local cur_watcher
+  cur_watcher=$(cat "$WATCHER_PID_FILE" 2>/dev/null || true)
+  if [[ -n "$cur_watcher" ]] && kill -0 "$cur_watcher" 2>/dev/null; then
+    _notify "Mac Awake" "Watcher already running."
+    return 0
+  fi
+
+  echo "$pattern" >"$PATTERN_FILE"
+
+  # Resolve our own location so we can launch the sibling watcher script
+  # regardless of PATH or how Tinycast invoked us.
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  # Detach: nohup + disown + redirected stdio so the watcher survives the
+  # parent shell exiting (Tinycast may exec us via a short-lived shell).
+  nohup "$script_dir/tinycast-awake-watch" >>"$LOG_FILE" 2>&1 &
+  disown
+  sleep 0.2
+  _notify "Mac Awake" "Watcher started (pattern: $pattern)."
+}
+
+cmd_unwatch() {
+  local watcher_pid
+  watcher_pid=$(cat "$WATCHER_PID_FILE" 2>/dev/null || true)
+  if [[ -n "$watcher_pid" ]] && [[ "$watcher_pid" =~ ^[0-9]+$ ]]; then
+    kill "$watcher_pid" 2>/dev/null || true
+  fi
+  _stop_caffeinate "$WATCH_PID_FILE"
+  rm -f "$WATCHER_PID_FILE"
+  _notify "Mac Sleep" "Watcher stopped."
+}
+
+cmd_status() {
+  local manual="off"
+  local watch="off"
+  local pattern="-"
+  _pid_alive "$MAIN_PID_FILE" && manual="on"
+  _watcher_alive && watch="on"
+  [[ -f "$PATTERN_FILE" ]] && pattern=$(cat "$PATTERN_FILE")
+  echo "manual:  $manual"
+  echo "watch:   $watch"
+  echo "pattern: $pattern"
+  if _pid_alive "$MAIN_PID_FILE" || _watch_active; then
+    echo "overall: awake"
+  else
+    echo "overall: sleep allowed"
+  fi
+}
+
+cmd_usage() {
+  cat <<EOF
+Usage: $(basename "$0") {on|off|toggle|watch [PATTERN]|unwatch|status}
+EOF
+}
+
+# --- main ------------------------------------------------------------------
+
+# Status is read-only and doesn't need lock protection.
+if [[ "${1:-toggle}" != "status" ]]; then
+  if ! _acquire_lock; then
+    _notify "Mac Awake" "Another awake operation in progress."
+    exit 0
+  fi
+fi
+
+case "${1:-toggle}" in
+  on|start)              cmd_on ;;
+  off|stop)              cmd_off ;;
+  toggle)                cmd_toggle ;;
+  watch)                 shift; cmd_watch "$@" ;;
+  unwatch)               cmd_unwatch ;;
+  status)                cmd_status ;;
+  -h|--help|help)        cmd_usage ;;
+  *)                     cmd_usage >&2; exit 1 ;;
+esac

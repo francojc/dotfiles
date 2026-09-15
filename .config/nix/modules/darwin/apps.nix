@@ -99,6 +99,7 @@
       "obsidian" # note-taking
       # "rectangle" # window management
       "signal" # messaging
+      "swiftbar" # menu-bar status icons (used by tinycast-awake plugin)
       "tinycast" # raycast alternative
       "telegram" # messaging (bot)
       "zoom" # video conferencing
