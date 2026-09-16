@@ -137,7 +137,7 @@
     pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)
-    quarto # Scientific publishing system
+    # quarto # Scientific publishing system
     typst # Document preparation system
     vdirsyncer # CalDAV/CardDAV sync
   ];

@@ -97,6 +97,7 @@
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
+      "quarto" # document editor
       # "rectangle" # window management
       "signal" # messaging
       "swiftbar" # menu-bar status icons (used by tinycast-awake plugin)

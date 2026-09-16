@@ -37,8 +37,6 @@
 
       corePackages = with pkgs; [
         git
-        pandoc
-        quarto
         typst
         tinymist
         ruff
