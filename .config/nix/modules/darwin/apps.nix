@@ -73,6 +73,7 @@
       "nmap" # network scanner
       "node" # Node.js
       "officecli" # AI-accessible office conversion/creation
+      "pandoc" # document conversion
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility

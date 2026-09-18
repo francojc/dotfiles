@@ -134,10 +134,8 @@
     imagemagick # Image manipulation
     khal # Calendar
     mpv-unwrapped # Media player
-    pandoc # Document converter
     pianobar # Pandora client
     poppler-utils # PDF utilities (pdftotext, etc.)
-    # quarto # Scientific publishing system
     typst # Document preparation system
     vdirsyncer # CalDAV/CardDAV sync
   ];
