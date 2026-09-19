@@ -58,6 +58,11 @@
         name = "as-foss/mandible"; # mandible
         trusted = true;
       }
+      {
+        name = "jundot/omlx"; # omlx llm
+        clone_target = "https://github.com/jundot/omlx";
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -73,6 +78,7 @@
       "nmap" # network scanner
       "node" # Node.js
       "officecli" # AI-accessible office conversion/creation
+      "jundot/omlx/omlx" # llm
       "pandoc" # Document converter
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
