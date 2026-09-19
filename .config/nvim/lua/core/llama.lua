@@ -8,6 +8,10 @@ if not llama_api_key or llama_api_key == "" then
 	llama_api_key = ""
 end
 
+-- FIM configuration:
+-- viable models:
+-- - ggml-org/Qwen2.5-Coder-7B-Q8_0-GGUF
+-- - ggml-org/Qwen2.5-Coder-3B-Q8_0-GGUF
 vim.g.llama_config = {
 	-- Behavior
 	enable_at_startup = true,
@@ -16,7 +20,7 @@ vim.g.llama_config = {
 	-- Server connection
 	endpoint_fim = "http://100.101.38.4:8080/infill",
 	api_key = llama_api_key,
-	model_fim = "ggml-org/Qwen2.5-Coder-3B-Q8_0-GGUF", -- added specific model
+	model_fim = "ggml-org/Qwen2.5-Coder-7B-Q8_0-GGUF",
 	-- Disable llama.vim instruction-editing mappings (FIM-only settings)
 	keymap_inst_trigger = "",
 	keymap_inst_rerun = "",
@@ -24,9 +28,9 @@ vim.g.llama_config = {
 	keymap_inst_accept = "",
 	keymap_inst_cancel = "",
 	-- Context settings
-	n_prefix = 512,
-	n_suffix = 64,
-	n_predict = 128,
+	n_prefix = 192,
+	n_suffix = 96,
+	n_predict = 96,
 	stop_strings_fim = {},
 	-- Timeout settings
 	t_max_prompt_ms = 1000,
@@ -34,9 +38,9 @@ vim.g.llama_config = {
 	-- Cache settings
 	max_cache_keys = 250,
 	-- Ring buffer
-	ring_n_chunks = 16,
-	ring_chunk_size = 32,
-	ring_scope = 1024,
+	ring_n_chunks = 0,
+	ring_chunk_size = 16,
+	ring_scope = 256,
 	ring_update_ms = 1000,
 	-- Keymaps
 	keymap_fim_trigger = "<M-l>", -- Trigger FIM
