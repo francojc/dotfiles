@@ -63,6 +63,10 @@
         clone_target = "https://github.com/jundot/omlx";
         trusted = true;
       }
+      {
+        name = "shobhit99/tap"; # supercmd
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -106,6 +110,7 @@
       "obsidian" # note-taking
       "quarto" # document editor
       "signal" # messaging
+      "supercmd" # launcher+
       "swiftbar" # menu-bar status icons
       "tinycast" # raycast alternative
       "telegram" # messaging (bot)
