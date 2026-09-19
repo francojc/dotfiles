@@ -73,7 +73,7 @@
       "nmap" # network scanner
       "node" # Node.js
       "officecli" # AI-accessible office conversion/creation
-      "pandoc" # document conversion
+      "pandoc" # Document converter
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
@@ -99,9 +99,8 @@
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "quarto" # document editor
-      # "rectangle" # window management
       "signal" # messaging
-      "swiftbar" # menu-bar status icons (used by tinycast-awake plugin)
+      "swiftbar" # menu-bar status icons
       "tinycast" # raycast alternative
       "telegram" # messaging (bot)
       "zoom" # video conferencing
