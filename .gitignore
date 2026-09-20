@@ -83,3 +83,4 @@
 .config/matcha/*
 .config/llama/llama-api-key
 .pi/agent/models-store.json
+.config/bifrost-gateway/

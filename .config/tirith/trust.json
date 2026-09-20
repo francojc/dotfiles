@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "pattern": "copilot-api",
+      "ttl_expires": "2026-09-20T16:55:48.041973+00:00",
+      "added": "2026-09-20T15:55:48.041993+00:00",
+      "source": "cli"
+    }
+  ]
+}
