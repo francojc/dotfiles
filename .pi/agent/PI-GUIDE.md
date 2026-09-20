@@ -31,6 +31,10 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/usage` | Show current-provider Codex, Copilot, or OpenRouter usage. |
 | `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
 | `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
+| `/typesafe status` | Show TypeSafe consent, auth, usage, spend estimate, and caps. |
+| `/typesafe enable` | Allow agent `typesafe_evaluate` calls for current session after data notice. |
+| `/typesafe playground` | Edit and run Jev request without adding result to model context. |
+| `/skill:typesafe-ai` | Design TypeSafe System One judgments and integrations using live docs. |
 | `/skill:ketch-research` | Research web pages, OSS code, and library docs with Ketch. |
 | `/skill:hunk-review` | Inspect and guide live Hunk Git-diff review sessions. |
 | `/skill:tuicr` | Launch and consume tuicr Git-diff review sessions. |
@@ -47,6 +51,7 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `@ogulcancelik/pi-ghostty-theme-sync` | Sync Pi theme from active Ghostty palette. |
 | `@narumitw/pi-usage` | `/usage` menu for current-provider usage, including Codex, Copilot, and OpenRouter usage data. |
+| `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
 | `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
 | `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
 
@@ -140,6 +145,38 @@ Gotchas:
 - First consent must return a `refresh_token`; if missing or scopes changed, re-run `/gws-setup`.
 - Google Cloud project needs Drive, Docs, Sheets, Slides APIs enabled; account must be a test user while consent screen is in Testing.
 - No session footer status by design; check `google_workspace_status` tool instead.
+
+### TypeSafe System One
+
+What it does:
+
+- `pi-typesafe` exposes Jev as a sidecar judgment tool, not a selectable Pi chat model. It evaluates supplied state with typed Choice, Score, and Noul questions and returns probabilities rather than prose.
+- `/typesafe test` and `/typesafe playground` keep results out of main model context. `typesafe_evaluate` returns results to agent context.
+- `typesafe-ai` skill guides integration design and requires reading current TypeSafe docs and relevant cookbooks before implementation.
+
+Use:
+
+- Run `/typesafe enable` each session before agent tool calls. Consent is session-local; use `/typesafe disable` to stop future calls.
+- Use Jev for narrow semantic judgments: routing, triage, ranking, extraction from known candidates, answer checks, and rubric scoring. Keep calculations, exact lookups, policy, and actions in code.
+- Batch independent questions over same state. Include `other` or `unclear` when Choice candidates may not cover input. Treat probability and confidence as uncertainty signals, never authorization.
+- For this setup, `TYPESAFE_API_KEY` comes from `pass` entry `API/TYPESAFE_API_KEY` through generated `~/.variables.env`. Run `pass-to-env`, then start new Pi process after key changes.
+
+Limits and gotchas:
+
+- Only explicitly submitted state and questions go to TypeSafe. Do not send secrets, sensitive student data, unpublished review material, or protected institutional data without authorization.
+- Bundled extension targets direct `https://api.typesafe.ai` with `jev-latest`. OpenCode Zen also offers Jev through `/zen/v1/systemone`, but bundled extension does not expose Zen backend. Do not add Jev to Pi `models.json`: Pi chat-provider APIs do not support System One response shape.
+- Default limits: 32 questions and 64 KiB JSON per request, 20 attempts per session, 15 s timeout, no retries. Daily caps are unset unless `PI_TYPESAFE_MAX_REQUESTS_PER_DAY`, `PI_TYPESAFE_MAX_INPUT_TOKENS_PER_DAY`, or `PI_TYPESAFE_MAX_USD_PER_DAY` is set.
+- Session limit resets on session start or reload. Daily counters persist in `~/.pi/agent/pi-typesafe/usage.json`.
+- Direct TypeSafe and OpenCode Zen use separate keys, routing, model IDs, billing, and usage ledgers. Prefer direct key for bundled extension; consider Zen adapter only after concrete need.
+
+Sources checked:
+
+- `~/.pi/agent/npm/node_modules/pi-typesafe/README.md`
+- `~/.pi/agent/npm/node_modules/pi-typesafe/dist/extension.js`
+- `~/.pi/agent/npm/node_modules/pi-typesafe/dist/client.js`
+- `~/.pi/agent/skills/typesafe-ai/SKILL.md`
+- [TypeSafe documentation index](https://docs.typesafe.ai/llms.txt)
+- [OpenCode Zen endpoints](https://opencode.ai/docs/zen/)
 
 ### Ketch research skill
 
