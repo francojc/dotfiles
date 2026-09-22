@@ -28,9 +28,9 @@ vim.g.llama_config = {
 	keymap_inst_accept = "",
 	keymap_inst_cancel = "",
 	-- Context settings
-	n_prefix = 192,
-	n_suffix = 96,
-	n_predict = 96,
+	n_prefix = 384,
+	n_suffix = 192,
+	n_predict = 128,
 	stop_strings_fim = {},
 	-- Timeout settings
 	t_max_prompt_ms = 1000,
@@ -38,9 +38,9 @@ vim.g.llama_config = {
 	-- Cache settings
 	max_cache_keys = 250,
 	-- Ring buffer
-	ring_n_chunks = 0,
-	ring_chunk_size = 16,
-	ring_scope = 256,
+	ring_n_chunks = 4,
+	ring_chunk_size = 32,
+	ring_scope = 512,
 	ring_update_ms = 1000,
 	-- Keymaps
 	keymap_fim_trigger = "<M-l>", -- Trigger FIM
@@ -52,7 +52,7 @@ vim.g.llama_config = {
 }
 
 -- llama.vim's built-in :LlamaStatus always checks both FIM and instruction
--- endpoints. Replace it after plugin setup with an authenticated FIM-only check.
+-- endpoints. Replace with a custom command that only checks FIM
 vim.schedule(function()
 	vim.api.nvim_create_user_command("LlamaStatus", function()
 		local config = vim.g.llama_config

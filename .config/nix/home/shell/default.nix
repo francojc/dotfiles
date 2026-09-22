@@ -67,6 +67,7 @@
         export PATH="${config.home.homeDirectory}/.npm-global/bin:$PATH" # npm global
         export PATH="${config.home.homeDirectory}/.orbstack/bin:$PATH" # orbstack
         export PATH="${config.home.homeDirectory}/go/bin:$PATH" # go
+        export PATH="${config.home.homeDirectory}/.local/share/bob/nvim-bin:$PATH" # bob-managed Neovim
         export PATH="/usr/local/sbin:$PATH"
 
         # --- ENVIRONMENT VARIABLES ---

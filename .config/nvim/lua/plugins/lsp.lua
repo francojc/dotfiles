@@ -47,7 +47,7 @@ local function get_home_dir()
 end
 
 local function get_hostname()
-	return os.getenv("HOSTNAME") or vim.loop.os_gethostname() or ""
+	return os.getenv("HOSTNAME") or vim.uv.os_gethostname() or ""
 end
 
 vim.lsp.config.nixd = {
