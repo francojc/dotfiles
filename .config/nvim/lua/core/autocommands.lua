@@ -29,7 +29,7 @@ a.nvim_create_autocmd("TextYankPost", {
 		if vim.bo.buftype ~= "" then
 			return
 		end
-		vim.hl.on_yank()
+		vim.hl.hl_op()
 	end,
 })
 

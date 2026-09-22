@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-Modular Neovim 0.12+ config using native `vim.pack`, native LSP, and small focused plugins. Core bias: built-ins first, plugins when they earn rent.
+Modular Neovim 0.13+ config using native `vim.pack`, native LSP, and small focused plugins. Core bias: built-ins first, plugins when they earn rent.
 
 ## Current Feature Set
 
@@ -112,7 +112,7 @@ Current default in this directory: `gruvbox`.
 
 ### Prerequisites
 
-- Neovim >= 0.12
+- Neovim >= 0.13
 - Git
 - External tools as needed:
   - LSPs: `bash-language-server`, `gopls`, `golangci-lint-langserver`, `lua-language-server`, `nixd`, `pyright`, `R` + `languageserver`, `tinymist`, `vscode-json-language-server`, `yaml-language-server`, `marksman`

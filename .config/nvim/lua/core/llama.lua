@@ -47,6 +47,8 @@ vim.g.llama_config = {
 	keymap_fim_accept_full = "<Tab>", -- Accept full
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word
+	keymap_fim_next = "<C-l>", -- Next FIM suggestion
+	keymap_fim_prev = "<C-h>", -- Previous FIM suggestion
 	-- Info
 	show_info = 2, -- 0=off, 1=statusline, 2=inline
 }
