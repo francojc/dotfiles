@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "days": {
+    "2026-09-21": {
+      "requestsStarted": 4,
+      "requestsSucceeded": 4,
+      "requestsFailed": 0,
+      "inputTokens": 1930,
+      "outputTokens": 152
+    }
+  }
+}

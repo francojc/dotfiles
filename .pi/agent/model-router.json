@@ -1,0 +1,11 @@
+{
+  "mode": "shadow",
+  "routes": {
+    "fast": "opencode/deepseek-v4.1-flash",
+    "balanced": "opencode/glm-5.3",
+    "deep": "openai-codex/gpt-6-astra"
+  },
+  "minConfidence": 0.6,
+  "maxSwitchesPerSession": 5,
+  "logFile": "~/.cache/pi/model-router.jsonl"
+}
