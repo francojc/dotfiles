@@ -70,15 +70,30 @@ local eager_plugins = {
 	{ src = "https://github.com/moyiz/blink-emoji.nvim" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
-	{ src = "https://github.com/neovim-treesitter/treesitter-parser-registry" },
 	{
-		src = "https://github.com/neovim-treesitter/nvim-treesitter",
+		src = "https://github.com/nvim-treesitter/nvim-treesitter",
+		-- vim.pack calls this field `version`; it selects Git branch `main`.
 		version = "main",
-		dependencies = { "neovim-treesitter/treesitter-parser-registry" },
 	},
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
 }
+
+-- Native vim.pack equivalent of plugin-manager `build = ":TSUpdate"`.
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(ev)
+		local data = ev.data
+		if data.spec.name ~= "nvim-treesitter" or (data.kind ~= "install" and data.kind ~= "update") then
+			return
+		end
+		if not data.active then
+			vim.cmd.packadd("nvim-treesitter")
+		end
+		vim.schedule(function()
+			pcall(vim.cmd, "TSUpdate")
+		end)
+	end,
+})
 
 vim.pack.add(eager_plugins, { load = true, confirm = false })
 
