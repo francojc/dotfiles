@@ -382,13 +382,6 @@ vim.lsp.config.nixd = {
 						.. get_hostname()
 						.. ".options",
 				},
-				home_manager = {
-					expr = '(builtins.getFlake "'
-						.. get_home_dir()
-						.. '/.dotfiles/.config/nix").homeConfigurations.'
-						.. get_hostname()
-						.. ".options",
-				},
 			},
 		},
 	},
@@ -663,7 +656,9 @@ local function blend_hex(foreground, background, amount)
 	end
 
 	local function blend_channel(foreground_channel, background_channel)
-		return math.floor(tonumber(foreground_channel, 16) * amount + tonumber(background_channel, 16) * (1 - amount) + 0.5)
+		return math.floor(
+			tonumber(foreground_channel, 16) * amount + tonumber(background_channel, 16) * (1 - amount) + 0.5
+		)
 	end
 
 	return string.format("#%02x%02x%02x", blend_channel(fr, br), blend_channel(fg, bg), blend_channel(fb, bb))
