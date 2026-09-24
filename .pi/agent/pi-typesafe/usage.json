@@ -16,11 +16,18 @@
       "outputTokens": 494
     },
     "2026-09-23": {
-      "requestsStarted": 8,
-      "requestsSucceeded": 7,
+      "requestsStarted": 36,
+      "requestsSucceeded": 35,
       "requestsFailed": 1,
-      "inputTokens": 3655,
-      "outputTokens": 266
+      "inputTokens": 18264,
+      "outputTokens": 1330
+    },
+    "2026-09-24": {
+      "requestsStarted": 2,
+      "requestsSucceeded": 2,
+      "requestsFailed": 0,
+      "inputTokens": 981,
+      "outputTokens": 76
     }
   }
 }

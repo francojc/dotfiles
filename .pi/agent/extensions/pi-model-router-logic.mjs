@@ -6,9 +6,9 @@ export function defaultConfig() {
   return {
     mode: "shadow",
     routes: {
-      fast: "opencode/deepseek-v4.1-flash",
-      balanced: "opencode/glm-5.3",
-      deep: "openai-codex/gpt-6-astra",
+      fast: "openai-codex/gpt-6-luna",
+      balanced: "opencode/deepseek-v4.1-flash",
+      deep: "openai-codex/gpt-6-sol",
     },
     minConfidence: 0.6,
     maxSwitchesPerSession: 5,
