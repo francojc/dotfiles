@@ -22,6 +22,7 @@ syncr() {
     services) remote="services" ;;
     media) remote="media" ;;
     hermes) remote="hermes" ;;
+    bifrost) remote="bifrost" ;;
     omarchy) remote="omarchy" ;;
     *)
       echo "Unknown remote: $1"

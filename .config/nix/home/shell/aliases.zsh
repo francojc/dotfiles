@@ -49,6 +49,7 @@ alias services='ssh_connect services'
 alias media='ssh_connect media'
 alias homeassistant='ssh_connect homeassistant'
 alias hermes='ssh_connect hermes'
+alias bifrost='ssh_connect jeridf'
 alias omarchy='ssh_connect omarchy'
 
 # --- GIT ALIASES ---
