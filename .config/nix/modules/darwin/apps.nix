@@ -67,6 +67,10 @@
         name = "shobhit99/tap"; # supercmd
         trusted = true;
       }
+      {
+        name = "synapseq-foundation/synapseq"; # synapseq
+        trusted = true;
+      }
     ];
 
     brews = [
@@ -88,6 +92,7 @@
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
       "signal-cli" # Signal CLI
+      "synapseq" # binaural sounds generator
       "tele-beta" # telegram cli
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
@@ -100,6 +105,7 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
+      "breaktimer" # break timer
       "caffeine" # keep macOS awake
       "chatgpt" # ChatGPT
       "fluidvoice" # TTS on device
