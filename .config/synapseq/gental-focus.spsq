@@ -1,0 +1,20 @@
+# Gentle focus-oriented listening session
+# Sound design only; no cognitive outcome implied.
+
+# Presets
+soft
+  tone 220 monaural 8 amplitude 8
+  noise pink smooth 30 amplitude 7
+
+steady
+  tone 220 monaural 10 amplitude 8
+  noise pink smooth 30 amplitude 7
+
+# Timeline
+00:00:00 silence
+00:00:20 soft ease-in
+00:02:00 soft smooth
+00:10:00 steady smooth
+00:18:00 steady smooth
+00:23:00 soft ease-out
+00:25:00 silence

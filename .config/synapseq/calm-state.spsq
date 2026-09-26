@@ -1,0 +1,24 @@
+## Calm State (15 minutes)
+##
+## Calm State is a soothing sequence crafted to guide listeners into a
+## tranquil and relaxed mental state.
+## It uses gentle soundscapes and subtle binaural tones to ease stress
+## and foster a sense of peace.
+
+# Presets
+alpha-one
+  noise pink smooth 25 amplitude 50
+  tone 200 binaural 10 amplitude 20
+
+alpha-two
+  noise pink smooth 25 amplitude 70
+  tone 200 binaural 8 amplitude 15
+
+# Timeline
+00:00:00 silence
+00:00:15 alpha-one
+00:02:00 alpha-one
+00:06:00 alpha-two
+00:11:00 alpha-two
+00:13:00 alpha-one
+00:15:00 silence

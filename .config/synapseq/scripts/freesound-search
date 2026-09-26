@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# Search Freesound for field-recording/nature ambience.
+# API key source: pass API/FREESOUND_API_KEY
+#
+# Usage:
+#   freesound-search [--query WORDS] [--min-duration SECONDS] [--max-duration SECONDS] [--limit N] [--all-licenses]
+#
+# Output: raw JSON from Freesound APIv2. Pipe to jq if desired.
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: freesound-search [OPTIONS]
+
+Searches Freesound for sounds tagged both "field-recording" and "nature".
+Defaults to CC0-only results and 3 records. Output is raw JSON.
+
+Options:
+  --query WORDS         Search Freesound metadata for WORDS
+  --min-duration SEC    Require duration at least SEC seconds
+  --max-duration SEC    Require duration no longer than SEC seconds
+  --limit N             Result count, 1–150 (default: 3)
+  --all-licenses        Do not restrict results to CC0
+  -h, --help            Show this help
+
+Examples:
+  freesound-search --query beach --min-duration 1200 --max-duration 1500 --limit 5 \
+    | jq '.results[] | {id, name, username, license, duration, url}'
+  freesound-search --query forest --all-licenses
+EOF
+}
+
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+command -v pass >/dev/null 2>&1 || { echo "Error: pass is required" >&2; exit 1; }
+
+query=''
+min_duration=''
+max_duration=''
+limit=3
+cc0_only=true
+
+while (($#)); do
+  case "$1" in
+    --query)
+      [[ $# -ge 2 ]] || { echo "Error: --query requires a value" >&2; exit 1; }
+      query="$2"
+      shift 2
+      ;;
+    --min-duration)
+      [[ $# -ge 2 ]] || { echo "Error: --min-duration requires a value" >&2; exit 1; }
+      min_duration="$2"
+      shift 2
+      ;;
+    --max-duration)
+      [[ $# -ge 2 ]] || { echo "Error: --max-duration requires a value" >&2; exit 1; }
+      max_duration="$2"
+      shift 2
+      ;;
+    --limit)
+      [[ $# -ge 2 ]] || { echo "Error: --limit requires a value" >&2; exit 1; }
+      limit="$2"
+      shift 2
+      ;;
+    --all-licenses)
+      cc0_only=false
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Error: unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+[[ "$limit" =~ ^[0-9]+$ ]] && ((limit >= 1 && limit <= 150)) || {
+  echo "Error: --limit must be an integer from 1 to 150" >&2
+  exit 1
+}
+
+for option in min_duration max_duration; do
+  value="${!option}"
+  if [[ -n "$value" ]]; then
+    [[ "$value" =~ ^[0-9]+([.][0-9]+)?$ ]] && awk "BEGIN { exit !($value > 0) }" || {
+      echo "Error: --${option//_/-} must be a positive number of seconds" >&2
+      exit 1
+    }
+  fi
+done
+if [[ -n "$min_duration" && -n "$max_duration" ]] && ! awk "BEGIN { exit !($min_duration <= $max_duration) }"; then
+  echo "Error: --min-duration cannot exceed --max-duration" >&2
+  exit 1
+fi
+
+filter='tag:"field-recording" tag:"nature"'
+if [[ "$cc0_only" == true ]]; then
+  filter+=' license:"Creative Commons 0"'
+fi
+if [[ -n "$min_duration" || -n "$max_duration" ]]; then
+  filter+=" duration:[${min_duration:-*} TO ${max_duration:-*}]"
+fi
+
+api_key=$(pass API/FREESOUND_API_KEY) || {
+  echo "Error: API key not found: API/FREESOUND_API_KEY" >&2
+  exit 1
+}
+
+args=(
+  --fail --silent --show-error
+  -H "Authorization: Token $api_key"
+  --get 'https://freesound.org/apiv2/search/'
+  --data-urlencode "filter=$filter"
+  --data-urlencode 'fields=id,name,username,license,duration,url,previews,tags,description'
+  --data-urlencode "page_size=$limit"
+)
+if [[ -n "$query" ]]; then
+  args+=(--data-urlencode "query=$query")
+fi
+
+curl "${args[@]}"

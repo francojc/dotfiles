@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Download a Freesound low-quality MP3 preview safely and atomically.
+# Input URL must come from Freesound API `previews.preview-lq-mp3`.
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: freesound-download-preview URL OUTPUT
+
+Downloads a Freesound low-quality MP3 preview. Refuses non-Freesound preview
+URLs, existing outputs, files above 30 MiB, and transfers exceeding 5 minutes.
+EOF
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+[[ $# -eq 2 ]] || { usage >&2; exit 1; }
+
+command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
+
+url="$1"
+output="$2"
+case "$url" in
+  https://cdn.freesound.org/previews/*-lq.mp3) ;;
+  *) echo "Error: URL must be a Freesound preview-lq-mp3 URL" >&2; exit 1 ;;
+esac
+[[ ! -e "$output" ]] || { echo "Error: output already exists: $output" >&2; exit 1; }
+
+content_length=$(curl --fail --location --silent --show-error --head --connect-timeout 15 "$url" \
+  | awk 'BEGIN { IGNORECASE = 1 } /^content-length:/ { gsub("\r", "", $2); print $2; exit }')
+[[ "$content_length" =~ ^[0-9]+$ ]] || { echo "Error: preview size unavailable" >&2; exit 1; }
+((content_length <= 30 * 1024 * 1024)) || {
+  echo "Error: preview is $content_length bytes, above 30 MiB limit" >&2
+  exit 1
+}
+
+mkdir -p "$(dirname "$output")"
+temporary="${output}.part.$$"
+trap 'rm -f "$temporary"' EXIT
+
+curl --fail --location --silent --show-error \
+  --connect-timeout 15 \
+  --max-time 300 \
+  --retry 2 \
+  --retry-delay 2 \
+  --output "$temporary" \
+  "$url"
+
+actual_size=$(wc -c < "$temporary")
+[[ "$actual_size" == "$content_length" ]] || {
+  echo "Error: incomplete download: expected $content_length bytes, got $actual_size" >&2
+  exit 1
+}
+
+mv "$temporary" "$output"
+trap - EXIT
+printf 'Downloaded: %s (%s bytes)\n' "$output" "$actual_size"

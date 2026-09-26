@@ -1,0 +1,26 @@
+# Quiet beach focus listening session (20 minutes)
+# Sound design only; no cognitive outcome implied.
+
+# Options
+@samplerate 44100
+@volume 80
+@ambiance beach audio/freesound/freesound-721591
+
+# Presets
+settle
+  ambiance beach amplitude 10
+  noise brown smooth 30 amplitude 3
+  tone 220 monaural 8 amplitude 4
+
+focus
+  ambiance beach amplitude 12
+  noise brown smooth 30 amplitude 4
+  tone 220 monaural 9 amplitude 5
+
+# Timeline
+00:00:00 silence
+00:00:30 settle ease-in
+00:05:00 focus smooth
+00:17:00 focus smooth
+00:19:00 settle ease-out
+00:20:00 silence
