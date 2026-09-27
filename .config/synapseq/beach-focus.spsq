@@ -8,14 +8,12 @@
 
 # Presets
 settle
-  ambiance beach amplitude 10
-  noise brown smooth 30 amplitude 3
-  tone 220 monaural 8 amplitude 4
+  ambiance beach amplitude 50
+  tone 220 binaural 10 amplitude 20
 
 focus
-  ambiance beach amplitude 12
-  noise brown smooth 30 amplitude 4
-  tone 220 monaural 9 amplitude 5
+  ambiance beach amplitude 70
+  tone 220 binaural 8 amplitude 15
 
 # Timeline
 00:00:00 silence

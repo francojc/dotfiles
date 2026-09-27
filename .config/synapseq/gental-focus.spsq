@@ -4,11 +4,11 @@
 # Presets
 soft
   tone 220 monaural 8 amplitude 8
-  noise pink smooth 30 amplitude 7
+  noise brown smooth 30 amplitude 7
 
 steady
   tone 220 monaural 10 amplitude 8
-  noise pink smooth 30 amplitude 7
+  noise brown smooth 30 amplitude 7
 
 # Timeline
 00:00:00 silence

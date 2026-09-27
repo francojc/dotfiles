@@ -7,11 +7,11 @@
 
 # Presets
 alpha-one
-  noise pink smooth 25 amplitude 50
+  noise brown smooth 25 amplitude 50
   tone 200 binaural 10 amplitude 20
 
 alpha-two
-  noise pink smooth 25 amplitude 70
+  noise brown smooth 25 amplitude 70
   tone 200 binaural 8 amplitude 15
 
 # Timeline
