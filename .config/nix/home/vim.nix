@@ -2,23 +2,30 @@
   pkgs,
   theme,
   ...
-}: {
+}: let
+  # Only the active theme's Vim colorscheme plugin is installed. Each theme
+  # declares `vim.plugins` as nixpkgs `vimPlugins` attribute names; themes with
+  # no Vim-compatible package (Lua-only palettes) declare an empty list and use
+  # a built-in colorscheme (see themes.nix).
+  themePlugins = builtins.map (name: pkgs.vimPlugins.${name}) (theme.vim.plugins or []);
+in {
   programs = {
     # Enable some useful shells
     vim = {
       enable = true;
-      plugins = with pkgs.vimPlugins; [
-        # Plugins:
-        llama-vim # FIM completion from llama.cpp (self-hosted)
-        fzf-vim # FZF
-        vim-fugitive # Git integration (for statusline branch)
-        vim-commentary # Commenting
-        vim-markdown # Markdown support
-        vim-surround # Surround text objects
-        vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
-        vim-which-key # Keybindings
-        iceberg-vim # Iceberg colorscheme
-      ];
+      plugins = with pkgs.vimPlugins;
+        [
+          # Plugins:
+          llama-vim # FIM completion from llama.cpp (self-hosted)
+          fzf-vim # FZF
+          vim-fugitive # Git integration (for statusline branch)
+          vim-commentary # Commenting
+          vim-markdown # Markdown support
+          vim-surround # Surround text objects
+          vim-tmux-navigator # Navigate Vim/Tmux panes with C-h/j/k/l
+          vim-which-key # Keybindings
+        ]
+        ++ themePlugins;
       extraConfig = ''
         " LLAMA.VIM -----------------------------------------------
         let g:llama_config = {
@@ -82,8 +89,8 @@
         set nobackup              " Disable backup files
         set cursorline            " Highlight current line
         set background=${theme.vim.background}
-        " Only installed colorschemes may be selected here.
-        colorscheme ${if theme.name == "iceberg" then theme.vim.colorscheme else "retrobox"}
+        " Colorscheme is provisioned from the Nix theme selection.
+        colorscheme ${theme.vim.colorscheme}
 
         " STATUSLINE -----------------------------------------------
         set laststatus=2          " Always show statusline

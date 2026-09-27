@@ -50,6 +50,7 @@
       vim = {
         colorscheme = "desert";
         background = "dark";
+        plugins = [];
       };
       neovim = {
         colorscheme = "arthur";
@@ -111,6 +112,7 @@
       vim = {
         colorscheme = "zenbones";
         background = "dark";
+        plugins = ["zenbones-nvim"];
       };
       neovim = {
         colorscheme = "marduk";
@@ -177,6 +179,7 @@
       vim = {
         colorscheme = "gruvbox";
         background = "dark";
+        plugins = ["gruvbox"];
       };
       neovim = {
         colorscheme = "gruvbox";
@@ -238,6 +241,7 @@
       vim = {
         colorscheme = "zenbones";
         background = "dark";
+        plugins = ["zenbones-nvim"];
       };
       neovim = {
         colorscheme = "kanso";
@@ -297,8 +301,11 @@
         theme_name = "nightfox";
       };
       vim = {
-        colorscheme = "nightfox";
+        # nightfox.nvim ships only a Lua shim for `colors/nightfox.vim`,
+        # so Vim falls back to the built-in retrobox.
+        colorscheme = "retrobox";
         background = "dark";
+        plugins = [];
       };
       neovim = {
         colorscheme = "nightfox";
@@ -366,6 +373,7 @@
       vim = {
         colorscheme = "onedark";
         background = "dark";
+        plugins = ["onedark-vim"];
       };
       neovim = {
         colorscheme = "onedark";
@@ -425,8 +433,10 @@
         theme_name = "tokyonight";
       };
       vim = {
-        colorscheme = "tokyonight";
+        # tokyonight.nvim ships only Lua `colors/*.lua`; Vim falls back.
+        colorscheme = "retrobox";
         background = "dark";
+        plugins = [];
       };
       neovim = {
         colorscheme = "tokyonight-night";
@@ -479,8 +489,8 @@
       name = "tender";
       inherit colors;
       ghostty = {
-        # Ghostty ships no `Tender` theme; a custom theme file is generated
-        # from CUSTOM_THEME below (see home/ghostty.nix).
+        # Ghostty ships no `Tender` theme; this `customTheme` block is written
+        # to the Nix store and referenced by absolute path (see home/ghostty.nix).
         theme = "tender";
         cursor_color = "#73cef4";
         customTheme = ''
@@ -515,6 +525,7 @@
       vim = {
         colorscheme = "tender";
         background = "dark";
+        plugins = ["tender-vim"];
       };
       neovim = {
         colorscheme = "tender";
@@ -574,8 +585,9 @@
         theme_name = "catppuccin";
       };
       vim = {
-        colorscheme = "catppuccin";
+        colorscheme = "catppuccin_mocha";
         background = "dark";
+        plugins = ["catppuccin-vim"];
       };
       neovim = {
         colorscheme = "catppuccin";
@@ -635,8 +647,10 @@
         theme_name = "vscode";
       };
       vim = {
-        colorscheme = "vscode";
+        # vscode.nvim ships only Lua `colors/vscode.lua`; Vim falls back.
+        colorscheme = "retrobox";
         background = "dark";
+        plugins = [];
       };
       neovim = {
         colorscheme = "vscode";
@@ -696,8 +710,10 @@
         theme_name = "vague";
       };
       vim = {
-        colorscheme = "vague";
+        # vague.nvim ships only Lua `colors/vague.lua`; Vim falls back.
+        colorscheme = "retrobox";
         background = "dark";
+        plugins = [];
       };
       neovim = {
         colorscheme = "vague";
@@ -759,6 +775,7 @@
       vim = {
         colorscheme = "iceberg";
         background = "dark";
+        plugins = ["iceberg-vim"];
       };
       neovim = {
         colorscheme = "iceberg";
@@ -820,6 +837,7 @@
       vim = {
         colorscheme = "ayu";
         background = "dark";
+        plugins = ["ayu-vim"];
       };
       neovim = {
         colorscheme = "ayu";

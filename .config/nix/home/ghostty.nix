@@ -1,9 +1,17 @@
 {
   hostname,
   theme,
-  lib,
+  pkgs,
   ...
-}: {
+}: let
+  # Ghostty ships no `tender` theme, so one is generated in the Nix store and
+  # referenced by absolute path. Themes without `ghostty.customTheme` use their
+  # bundled Ghostty theme name instead.
+  ghosttyTheme =
+    if (theme.ghostty.customTheme or null) != null
+    then "${pkgs.writeText "ghostty-theme-${theme.name}" theme.ghostty.customTheme}"
+    else theme.ghostty.theme;
+in {
   xdg.configFile."ghostty/config" = {
     text = ''
       # Ghostty config
@@ -40,7 +48,7 @@
       macos-icon-ghost-color = ${theme.ghostty.cursor_color}
 
       # Theme
-      theme = ${theme.ghostty.theme}
+      theme = ${ghosttyTheme}
 
       # Keybindings ------
       # -- R specific
@@ -54,10 +62,4 @@
       # keybind = alt+enter=text:\n
     '';
   };
-
-  # Custom theme file for palettes Ghostty does not ship (e.g. tender).
-  xdg.configFile."ghostty/themes/${theme.name}" =
-    lib.mkIf ((theme.ghostty.customTheme or null) != null) {
-      text = theme.ghostty.customTheme or "";
-    };
 }
