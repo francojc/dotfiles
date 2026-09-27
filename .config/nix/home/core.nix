@@ -77,6 +77,7 @@
     gnumake # Native Node addon builds, including Pi Plannotator's node-pty
     home-manager # Essential for this config
     lazygit # TUI Git client
+    marp-cli # Markdown presentation tool
     neovim # Stable Neovim 0.12+
     nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
