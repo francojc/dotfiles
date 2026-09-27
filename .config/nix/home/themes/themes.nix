@@ -438,6 +438,94 @@
       };
     };
 
+    tender = let
+      colors = {
+        # Background colors
+        bg0 = "#1d1d1d";
+        bg1 = "#282828";
+        bg2 = "#323232";
+        bg3 = "#444444";
+        bg4 = "#666666";
+
+        # Foreground colors
+        fg0 = "#eeeeee";
+        fg1 = "#dadada";
+        fg2 = "#b3deef";
+        fg3 = "#999999";
+
+        # Accent colors
+        red = "#f43753";
+        green = "#c9d05c";
+        yellow = "#ffc24b";
+        blue = "#73cef4";
+        purple = "#d3b987";
+        aqua = "#b3deef";
+        orange = "#9faa00";
+
+        # Bright colors
+        bright_red = "#f43753";
+        bright_green = "#c9d05c";
+        bright_yellow = "#ffc24b";
+        bright_blue = "#73cef4";
+        bright_purple = "#d3b987";
+        bright_aqua = "#b3deef";
+        bright_orange = "#d3b987";
+
+        # Special
+        cursor = "#73cef4";
+        accent = "#73cef4";
+      };
+    in {
+      name = "tender";
+      inherit colors;
+      ghostty = {
+        # Ghostty ships no `Tender` theme; a custom theme file is generated
+        # from CUSTOM_THEME below (see home/ghostty.nix).
+        theme = "tender";
+        cursor_color = "#73cef4";
+        customTheme = ''
+          background = #282828
+          foreground = #eeeeee
+          cursor-color = #73cef4
+          cursor-text = #282828
+          selection-background = #323232
+          selection-foreground = #eeeeee
+
+          palette = 0=#282828
+          palette = 1=#f43753
+          palette = 2=#c9d05c
+          palette = 3=#ffc24b
+          palette = 4=#73cef4
+          palette = 5=#d3b987
+          palette = 6=#b3deef
+          palette = 7=#eeeeee
+          palette = 8=#666666
+          palette = 9=#f43753
+          palette = 10=#c9d05c
+          palette = 11=#ffc24b
+          palette = 12=#73cef4
+          palette = 13=#d3b987
+          palette = 14=#b3deef
+          palette = 15=#ffffff
+        '';
+      };
+      kitty = {
+        theme_name = "tender";
+      };
+      vim = {
+        colorscheme = "tender";
+        background = "dark";
+      };
+      neovim = {
+        colorscheme = "tender";
+        colors = {
+          bg = "#282828";
+          fg = "#eeeeee";
+          yellow = "#ffc24b";
+        };
+      };
+    };
+
     catppuccin = let
       colors = {
         # Background colors

@@ -32,6 +32,7 @@ local theme_registry = {
 	vague = { src = "https://github.com/vague2k/vague.nvim" },
 	vscode = { src = "https://github.com/Mofiqul/vscode.nvim" },
 	ayu = { src = "https://github.com/ayu-theme/ayu-vim" },
+	tender = { src = "https://github.com/jacoborus/tender.vim", name = "tender.vim" },
 }
 
 local active_theme = vim.g.active_colorscheme or "gruvbox"

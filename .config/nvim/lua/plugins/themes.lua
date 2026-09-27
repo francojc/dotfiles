@@ -140,6 +140,7 @@ local theme_setups = {
 	ayu = function()
 		vim.g.ayucolor = "mirage"
 	end,
+	tender = nil,
 }
 
 -- Tracks which themes have already had setup() called (within this session).
@@ -200,6 +201,7 @@ local theme_packadd = {
 	vague         = "vague.nvim",
 	vscode        = "vscode.nvim",
 	ayu           = "ayu-vim",
+	tender        = "tender.vim",
 }
 
 --===========================================================================

@@ -1,6 +1,7 @@
 {
   hostname,
   theme,
+  lib,
   ...
 }: {
   xdg.configFile."ghostty/config" = {
@@ -53,4 +54,10 @@
       # keybind = alt+enter=text:\n
     '';
   };
+
+  # Custom theme file for palettes Ghostty does not ship (e.g. tender).
+  xdg.configFile."ghostty/themes/${theme.name}" =
+    lib.mkIf ((theme.ghostty.customTheme or null) != null) {
+      text = theme.ghostty.customTheme or "";
+    };
 }
