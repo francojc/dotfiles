@@ -4,13 +4,15 @@
 set -Eeuo pipefail
 IFS=$' \t\n'
 
-VERSION="2.0.0"
+VERSION="2.1.0"
 SCRIPT_NAME="marker-convert"
 OUTPUT_DIR="./marker_output"
 OUTPUT_FILE=""
 ENGINE="auto"
 KEEP_PDF=0
 LLM_MODE="local"
+STRIP_COMMENTS=0
+CLEAN=0
 PANDOC_OPTS=()
 MARKER_OPTS=()
 INPUT=""
@@ -38,12 +40,20 @@ Routing:
   -h, --help              Show this help
       --version           Show version
 
+Cleanup (opt-in):
+      --strip-comments    Drop comments from the source. Pandoc route only
+                          (DOCX/ODT/EPUB and similar)
+      --clean             Tidy the Markdown: strip a leading BOM, trim trailing
+                          whitespace, and collapse runs of blank lines outside
+                          fenced and indented code blocks
+
 Examples:
   marker-convert report.docx
   marker-convert book.epub --output ./notes/book.md
   marker-convert page.html --output-dir ./notes
   marker-convert scan.pdf --use-llm --gemini_api_key "$GEMINI_API_KEY"
   marker-convert scan.pdf --engine marker -- --page_range 1-3
+  marker-convert report.docx --strip-comments --clean
 
 Pandoc writes Pandoc Markdown and extracts media to <stem>-assets beside the
 Markdown file. Marker options after -- (and unrecognised options) are passed
@@ -85,6 +95,8 @@ while (($#)); do
     --use-llm) LLM_MODE="llm"; shift ;;
     --no-llm) LLM_MODE="local"; shift ;;
     --keep-pdf) KEEP_PDF=1; shift ;;
+    --strip-comments) STRIP_COMMENTS=1; shift ;;
+    --clean) CLEAN=1; shift ;;
     --input) (($# >= 2)) || die "--input requires a file"; INPUT=$2; shift 2 ;;
     -*)
       option=$1
@@ -159,11 +171,61 @@ WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/marker-convert.XXXXXXXX")
 tmp_md="$WORK_DIR/output.md"
 tmp_assets="$WORK_DIR/assets"
 
+clean_output() {
+  ((CLEAN)) || return 0
+  # Blank lines and trailing whitespace inside code blocks are content, so the
+  # cleaner is fence- and indentation-aware. Indented blocks matter because the
+  # Pandoc Markdown writer emits them for code without a language attribute.
+  perl -0pi -e '
+    s/^\xEF\xBB\xBF//;
+    my @in = split /\n/, $_, -1;
+    my @out;
+    my $in_fence = 0;
+    my $in_code  = 0;
+    my $blanks   = 0;
+    for my $line (@in) {
+      my $is_fence = ($line =~ /^[ \t]*(?:```|~~~)/);
+      if ($in_fence) {
+        push @out, $line;
+        $in_fence = 0 if $is_fence;
+        next;
+      }
+      if ($is_fence) {
+        if ($blanks > 0) { push @out, ""; $blanks = 0; }
+        $in_code = 0;
+        $in_fence = 1;
+        push @out, $line;
+        next;
+      }
+      my $blank    = ($line =~ /^[ \t]*$/);
+      my $indented = ($line =~ /^(?: {4}|\t)/);
+      if ($blank) {
+        if ($in_code) { push @out, ""; }   # blank line inside indented code
+        else          { $blanks++; }
+        next;
+      }
+      if ($indented && ($in_code || $blanks > 0 || !@out)) {
+        if ($blanks > 0) { push @out, ""; $blanks = 0; }
+        $in_code = 1;
+        push @out, $line;                  # keep code line byte-for-byte
+        next;
+      }
+      if ($blanks > 0) { push @out, ""; $blanks = 0; }
+      $in_code = 0;
+      $line =~ s/[ \t]+$//;
+      push @out, $line;
+    }
+    $_ = join("\n", @out);
+  ' "$OUTPUT_FILE"
+}
+
 pandoc_convert() {
   need pandoc
   mkdir -p -- "$tmp_assets"
+  local -a strip_opts=()
+  if ((STRIP_COMMENTS)); then strip_opts+=(--strip-comments); fi
   log "→ Pandoc: $ext → Pandoc Markdown"
-  pandoc "$INPUT" --from="$INPUT_FORMAT" --resource-path="$(dirname "$INPUT")" --to=markdown --wrap=none --extract-media="$tmp_assets" "${PANDOC_OPTS[@]}" -o "$tmp_md"
+  pandoc "$INPUT" --from="$INPUT_FORMAT" --resource-path="$(dirname "$INPUT")" --to=markdown --wrap=none --extract-media="$tmp_assets" "${strip_opts[@]}" "${PANDOC_OPTS[@]}" -o "$tmp_md"
   # Pandoc normally writes media references relative to the extraction directory.
   # Move the directory as a unit and retain those links relative to the output.
   if [[ -d "$tmp_assets" ]] && find "$tmp_assets" -type f -print -quit | grep -q .; then
@@ -244,7 +306,12 @@ case "$selected_engine" in
   *) die "no route available for .$ext; install Pandoc, Marker, Docling, or MarkItDown as appropriate" ;;
 esac
 
+if ((STRIP_COMMENTS)) && [[ "$selected_engine" != pandoc ]]; then
+  log "Note: --strip-comments applies only to the Pandoc route; ignored for $selected_engine."
+fi
+clean_output
+
 # Keep legacy flag harmless but make it clear no PDF was fabricated.
 if ((KEEP_PDF)); then log "Note: --keep-pdf ignored; semantic conversion creates no intermediate PDF."; fi
 log "✓ Wrote: $OUTPUT_FILE"
-[[ -d "$ASSETS_DIR" ]] && log "✓ Assets: $ASSETS_DIR"
+if [[ -d "$ASSETS_DIR" ]]; then log "✓ Assets: $ASSETS_DIR"; fi

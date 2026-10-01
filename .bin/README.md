@@ -26,6 +26,7 @@ marker-convert report.docx
 marker-convert book.epub --output notes/book.md
 marker-convert page.html --output-dir notes
 marker-convert scan.pdf --use-llm --gemini_api_key "$GEMINI_API_KEY"
+marker-convert report.docx --strip-comments --clean
 ```
 
 By default output is `./marker_output/<input-stem>.md`; extracted media is kept
@@ -33,7 +34,10 @@ in the adjacent `<output-stem>-assets/` directory. Use `--output FILE` for an
 exact path or `--output-dir DIR` for a directory. `--engine auto|pandoc|marker`
 selects or overrides routing. Marker options can be passed after `--` (or as
 unrecognised options); `--use-llm` is opt-in and falls back to local processing
-when it is not used or credentials are unavailable.
+when it is not used or credentials are unavailable. For DOCX-style cleanup,
+`--strip-comments` drops source comments (Pandoc route only) and `--clean`
+strips a leading BOM, trims trailing whitespace, and collapses runs of blank
+lines while leaving fenced and indented code blocks untouched. Both are opt-in.
 
 Pandoc, `marker_single`, and their model dependencies are checked only for the
 selected route. `officecli` is not the default exporter: its CLI is a schema-
