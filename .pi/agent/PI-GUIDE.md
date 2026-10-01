@@ -49,7 +49,6 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `pi-caveman` | Terse output modes and status indicator. |
 | `pi-btw` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
-| `@ogulcancelik/pi-ghostty-theme-sync` | Sync Pi theme from active Ghostty palette. |
 | `@narumitw/pi-usage` | `/usage` menu for current-provider usage, including Codex, Copilot, and OpenRouter usage data. |
 | `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
 | `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
@@ -404,28 +403,6 @@ Sources checked:
 
 - `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/README.md`
 - `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/package.json`
-
-### Ghostty theme sync
-
-What it does:
-
-- Reads active Ghostty colors using `ghostty +show-config`.
-- Writes `~/.pi/agent/themes/ghostty-sync-<hash>.json`.
-- Sets Pi theme to matching generated theme.
-- Removes older `ghostty-sync-*` generated themes.
-
-Requirements:
-
-- Ghostty installed and available in `PATH`.
-
-Best practices:
-
-- Let it run automatically at startup.
-- If Ghostty theme changes, reload Pi or restart session to regenerate/switch theme.
-
-Sources checked:
-
-- `~/.pi/agent/npm/node_modules/@ogulcancelik/pi-ghostty-theme-sync/README.md`
 
 ### Copilot usage
 

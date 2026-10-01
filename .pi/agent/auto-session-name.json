@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "model": "openrouter/openai/gpt-oss-20b",
+  "model": "opencode/qwen3.8-flash",
   "refreshEveryUserTurns": 4,
   "maxTranscriptChars": 6000
 }

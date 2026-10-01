@@ -1,5 +1,20 @@
 # --- GENERAL-PURPOSE SHELL FUNCTIONS ---
 
+# Launch Pi without provider API keys from the shell environment.
+# Pi can still use credentials stored through /login.
+pi() {
+  env \
+    -u ANTHROPIC_API_KEY \
+    -u DEEPSEEK_API_KEY \
+    -u GEMINI_API_KEY \
+    -u MISTRAL_API_KEY \
+    -u OPENAI_API_KEY \
+    -u OPENCODE_API_KEY \
+    -u OPENROUTER_API_KEY \
+    -u ZAI_API_KEY \
+    command pi "$@"
+}
+
 # SSH connection helper
 # Usage: ssh_connect [host] [user] - host is an ssh_config alias; user overrides config User
 ssh_connect() {
