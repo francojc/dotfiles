@@ -3,7 +3,7 @@
 
 # Color and Appearance
 options(
-  radian.color_scheme = "nord-darker",
+  radian.color_scheme = "native",
   radian.tab_size = 2,
   radian.auto_width = TRUE
 )
