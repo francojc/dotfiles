@@ -6,16 +6,17 @@
 # - Consistent Python version (nix 3.12)
 #
 # Current UV tools:
-# - aider-chat    (AI code assistant)
-# - marker-pdf    (PDF/DOCX converter)
-# - mlx           ( )
-# - mlx-lm        (Apple MLX language models)
-# - termaid       (Create mermaid diagrams in the terminal)
-# - pyzotero      (Zotero API)
-# - repoindex     (git repository index)
-# My tools (on PyPi) -------
-# - dauber        (Canvas management cli tool)
-# - orbitr        (Academic lit search and management)
+#
+# aider-chat v0.86.2
+# dauber v0.1.15
+# marker-pdf v2.0.0
+# mlx v0.32.1
+# mlx-lm v0.31.3
+# orbitr v0.4.0
+# pyzotero v1.14.0
+# repoindex v2.2.1
+# termaid v0.8.0
+#
 # Update: uv tool upgrade --all
 {pkgs, ...}: let
   # TODO: remove override once nixpkgs glances tests stop racing/failing under Python 3.14.
