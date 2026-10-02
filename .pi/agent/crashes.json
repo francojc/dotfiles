@@ -1,0 +1,22 @@
+[
+  {
+    "timestamp": "2026-10-02T12:31:05.393Z",
+    "version": "1.0.0",
+    "kind": "uncaught_exception",
+    "message": "This extension ctx is stale after session replacement or reload. Do not use a captured pi or command ctx after ctx.newSession(), ctx.fork(), ctx.switchSession(), or ctx.reload(). For newSession, fork, and switchSession, move post-replacement work into withSession and use the ctx passed to withSession. For reload, do not use the old ctx after await ctx.reload().",
+    "stack": "Error: This extension ctx is stale after session replacement or reload. Do not use a captured pi or command ctx after ctx.newSession(), ctx.fork(), ctx.switchSession(), or ctx.reload(). For newSession, fork, and switchSession, move post-replacement work into withSession and use the ctx passed to withSession. For reload, do not use the old ctx after await ctx.reload().\n    at ExtensionRunner.assertActive (file:///Users/francojc/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/chunks/chunk-33XOIQ5N.js:513:13443)\n    at get ui (file:///Users/francojc/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/chunks/chunk-33XOIQ5N.js:513:15876)\n    at Timeout._onTimeout (/Users/francojc/.pi/agent/extensions/pi-guide-autoupdate.ts:95:26)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)",
+    "sessionFile": "/Users/francojc/.pi/agent/sessions/--Users-francojc-.dotfiles-.pi-agent--/2026-10-02T12-31-01-801Z_01a0fc98-b6a8-7792-9128-648cf151e514.jsonl",
+    "cwd": "/Users/francojc/.dotfiles/.pi/agent",
+    "notified": true
+  },
+  {
+    "timestamp": "2026-10-02T12:39:13.734Z",
+    "version": "1.0.0",
+    "kind": "uncaught_exception",
+    "message": "This extension ctx is stale after session replacement or reload. Do not use a captured pi or command ctx after ctx.newSession(), ctx.fork(), ctx.switchSession(), or ctx.reload(). For newSession, fork, and switchSession, move post-replacement work into withSession and use the ctx passed to withSession. For reload, do not use the old ctx after await ctx.reload().",
+    "stack": "Error: This extension ctx is stale after session replacement or reload. Do not use a captured pi or command ctx after ctx.newSession(), ctx.fork(), ctx.switchSession(), or ctx.reload(). For newSession, fork, and switchSession, move post-replacement work into withSession and use the ctx passed to withSession. For reload, do not use the old ctx after await ctx.reload().\n    at ExtensionRunner.assertActive (file:///Users/francojc/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/chunks/chunk-33XOIQ5N.js:513:13443)\n    at get ui (file:///Users/francojc/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/dist/bundle/chunks/chunk-33XOIQ5N.js:513:15876)\n    at Timeout._onTimeout (/Users/francojc/.pi/agent/extensions/pi-guide-autoupdate.ts:95:26)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)",
+    "sessionFile": "/Users/francojc/.pi/agent/sessions/--Users-francojc-.dotfiles-.pi-agent--/2026-10-02T12-39-06-927Z_01a0fca0-1dae-70bc-ac35-ace765564ebb.jsonl",
+    "cwd": "/Users/francojc/.dotfiles/.pi/agent",
+    "notified": true
+  }
+]

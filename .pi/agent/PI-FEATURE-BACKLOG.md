@@ -27,6 +27,18 @@ Register of Pi changelog features worth exploring, with relevance notes and a st
 - Pi version at last review: 0.99.2.
 - Local context: many local extensions under `~/.pi/agent/extensions/`, packages installed via `~/.pi/agent/npm/`, TypeSafe, Ketch, worktree and coordinator workflows, course repos (Quarto, R, Spanish pedagogy).
 
+## 1.0.0 (2026-10-01)
+
+| Item | What it does | Why it may matter here | Status | Next action |
+| --- | --- | --- | --- | --- |
+| Fullscreen TUI default | Starts Pi in fullscreen mode; `tuiMode: "regular"` restores normal scrollback. | Current terminal workflow may rely on regular scrollback; this is a behavior-changing default. | `new` | Test fullscreen and set explicit mode if needed. |
+| Leaner codemode | Cuts prompt tokens by about 40% and improves recovery guidance in script errors. | We use codemode heavily; lower overhead and clearer failures matter. | `new` | Compare prompt size and error recovery in a real script. |
+| Image generation in codemode | Scripts can call `models.generateImages()` using session credentials. | Useful for course materials and vocabulary assets; cost is tracked in session. | `new` | Prototype one course asset. |
+| Radius login and MCP setup | `/login` supports Radius login and can configure its MCP server. | Potentially useful if Radius becomes part of the provider/MCP workflow. | `new` | Try only if using Radius. |
+| Anthropic copy-code login | Supports headless login when browser runs on another machine. | Useful for remote or SSH-based environments. | `new` | Use if browser callback is unavailable. |
+| MCP OAuth hardening | Supports explicit auth-server metadata, issuer checks, per-server credentials, and scope-preserving step-up auth. | Relevant to existing MCP setup; improves correctness and account isolation. | `new` | Review current MCP auth and test multi-server credentials. |
+| Header-only quiet startup | `quietStartup: "header"` keeps version and key hints while hiding other startup details. | Could reduce startup noise without hiding useful orientation. | `adopted` | Try if startup output feels excessive. |
+
 ## 0.99.2 (2026-09-30)
 
 | Item | What it does | Why it may matter here | Status | Next action |
@@ -71,6 +83,12 @@ Register of Pi changelog features worth exploring, with relevance notes and a st
 | `fullscreenWheelScrollLines` setting | Controls fullscreen mouse-wheel scrolling, `"auto"` accelerates fast spins. | Terminal comfort preference. | `new` | Set only if scrolling feels off. |
 | Tool call argument display | Tools without a custom renderer show `key=value` arguments; MCP calls are titled `server/tool`. | Improves readability of MCP and custom tool calls. | `new` | Nothing to configure. |
 | Session file created on first user message | Prevents losing a new session when Pi exits before the first response. | Reliability fix for short or interrupted sessions. | `new` | Nothing to configure. |
+
+## 0.87.1 (2026-09-22)
+
+| Item | What it does | Why it may matter here | Status | Next action |
+| --- | --- | --- | --- | --- |
+| Claude Opus 5.5, GPT-6 Sol, GPT-6 Luna | Adds frontier models across supported providers, including GitHub Copilot; xAI defaults to Grok 4.7. | Model availability may affect quality and cost comparisons across configured providers. | `new` | Check provider availability and compare only against current models. |
 
 ## Earlier releases still worth revisiting
 

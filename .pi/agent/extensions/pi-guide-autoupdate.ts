@@ -56,7 +56,7 @@ function bulletList(items: string[], empty = "None"): string[] {
   return items.length ? items.map((item) => `- \`${item}\``) : [`- ${empty}`];
 }
 
-function writeInventory(ctx: ExtensionContext): void {
+function writeInventory(ctx: ExtensionContext): ReturnType<typeof setTimeout> | undefined {
   const settings = readJson<Settings>(SETTINGS_FILE) || {};
   const manifest = readJson<PackageManifest>(NPM_PACKAGE_FILE) || {};
   const packages = settings.packages || [];
@@ -92,16 +92,28 @@ function writeInventory(ctx: ExtensionContext): void {
   try {
     writeFileSync(INVENTORY_FILE, lines.join("\n"));
     ctx.ui.setStatus("pi-inventory", "inventory: refreshed");
-    setTimeout(() => ctx.ui.setStatus("pi-inventory", undefined), 10_000).unref?.();
+    const timer = setTimeout(() => ctx.ui.setStatus("pi-inventory", undefined), 10_000);
+    timer.unref?.();
+    return timer;
   } catch {
     ctx.ui.setStatus("pi-inventory", "inventory: refresh failed");
   }
 }
 
 export default function (pi: ExtensionAPI) {
+  let statusTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function clearStatusTimer(): void {
+    clearTimeout(statusTimer);
+    statusTimer = undefined;
+  }
+
   pi.on("session_start", async (_event, ctx) => {
+    clearStatusTimer();
     if (process.env.PI_GUIDE_AUTOUPDATE === "0") return;
     if (ctx.mode !== "tui") return;
-    writeInventory(ctx);
+    statusTimer = writeInventory(ctx);
   });
+
+  pi.on("session_shutdown", clearStatusTimer);
 }
