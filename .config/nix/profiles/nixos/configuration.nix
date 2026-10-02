@@ -34,7 +34,7 @@
 
   # --- System Packages (Common) ---
   environment.systemPackages = with pkgs; [
-    ghostty
+    kitty
   ];
 
   # --- Sound (from original config) ---

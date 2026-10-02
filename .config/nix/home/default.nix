@@ -10,7 +10,6 @@
       ./themes/themes.nix
       ./core.nix
       ./git.nix
-      ./ghostty.nix
       ./kitty.nix
       ./wezterm.nix
       ./shell/default.nix

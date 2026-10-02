@@ -40,10 +40,6 @@
     in {
       name = "arthur";
       inherit colors;
-      ghostty = {
-        theme = "Desert";
-        cursor_color = "#ffa500";
-      };
       kitty = {
         theme_name = "arthur";
       };
@@ -102,10 +98,6 @@
     in {
       name = "blackmetal";
       inherit colors;
-      ghostty = {
-        theme = "Black Metal (Marduk)";
-        cursor_color = "#c1c1c1";
-      };
       kitty = {
         theme_name = "blackmetal";
       };
@@ -169,10 +161,6 @@
     in {
       name = "gruvbox";
       inherit colors;
-      ghostty = {
-        theme = "Gruvbox Dark Hard";
-        cursor_color = "#fe8019";
-      };
       kitty = {
         theme_name = "Gruvbox Dark Hard";
       };
@@ -231,10 +219,6 @@
     in {
       name = "kanso";
       inherit colors;
-      ghostty = {
-        theme = "Kanso Ink";
-        cursor_color = "#DCA561";
-      };
       kitty = {
         theme_name = "kanso";
       };
@@ -293,10 +277,6 @@
     in {
       name = "nightfox";
       inherit colors;
-      ghostty = {
-        theme = "nightfox";
-        cursor_color = "#719cd6";
-      };
       kitty = {
         theme_name = "nightfox";
       };
@@ -363,10 +343,6 @@
     in {
       name = "onedark";
       inherit colors;
-      ghostty = {
-        theme = "One Half Dark";
-        cursor_color = "#61afef";
-      };
       kitty = {
         theme_name = "onedark";
       };
@@ -425,10 +401,6 @@
     in {
       name = "tokyonight";
       inherit colors;
-      ghostty = {
-        theme = "tokyonight";
-        cursor_color = "#7aa2f7";
-      };
       kitty = {
         theme_name = "tokyonight";
       };
@@ -488,37 +460,6 @@
     in {
       name = "tender";
       inherit colors;
-      ghostty = {
-        # Ghostty ships no `Tender` theme; this `customTheme` block is written
-        # to the Nix store and referenced by absolute path (see home/ghostty.nix).
-        theme = "tender";
-        cursor_color = "#73cef4";
-        customTheme = ''
-          background = #282828
-          foreground = #eeeeee
-          cursor-color = #73cef4
-          cursor-text = #282828
-          selection-background = #323232
-          selection-foreground = #eeeeee
-
-          palette = 0=#282828
-          palette = 1=#f43753
-          palette = 2=#c9d05c
-          palette = 3=#ffc24b
-          palette = 4=#73cef4
-          palette = 5=#d3b987
-          palette = 6=#b3deef
-          palette = 7=#eeeeee
-          palette = 8=#666666
-          palette = 9=#f43753
-          palette = 10=#c9d05c
-          palette = 11=#ffc24b
-          palette = 12=#73cef4
-          palette = 13=#d3b987
-          palette = 14=#b3deef
-          palette = 15=#ffffff
-        '';
-      };
       kitty = {
         theme_name = "tender";
       };
@@ -577,10 +518,6 @@
     in {
       name = "catppuccin";
       inherit colors;
-      ghostty = {
-        theme = "Catppuccin Mocha";
-        cursor_color = "#f5e0dc";
-      };
       kitty = {
         theme_name = "catppuccin";
       };
@@ -639,10 +576,6 @@
     in {
       name = "vscode";
       inherit colors;
-      ghostty = {
-        theme = "Dark+";
-        cursor_color = "#569cd6";
-      };
       kitty = {
         theme_name = "vscode";
       };
@@ -702,10 +635,6 @@
     in {
       name = "vague";
       inherit colors;
-      ghostty = {
-        theme = "vague";
-        cursor_color = "#8db4d4";
-      };
       kitty = {
         theme_name = "vague";
       };
@@ -765,10 +694,6 @@
     in {
       name = "iceberg";
       inherit colors;
-      ghostty = {
-        theme = "Iceberg Dark";
-        cursor_color = "#c6c8d1";
-      };
       kitty = {
         theme_name = "Iceberg Dark";
       };
@@ -827,10 +752,6 @@
     in {
       name = "ayu";
       inherit colors;
-      ghostty = {
-        theme = "Ayu Mirage";
-        cursor_color = "#FFCC66";
-      };
       kitty = {
         theme_name = "Ayu Mirage";
       };

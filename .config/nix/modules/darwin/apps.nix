@@ -43,14 +43,6 @@
         trusted = true;
       }
       {
-        name = "abue-ammar/tinycast"; # tinycast
-        trusted = true;
-      }
-      {
-        name = "sorokin-vladimir/tap"; # tele/tele-beta
-        trusted = true;
-      }
-      {
         name = "ashuttl/linecast"; # linecast
         trusted = true;
       }
@@ -91,9 +83,7 @@
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
-      "signal-cli" # Signal CLI
       "synapseq" # binaural sounds generator
-      "tele-beta" # telegram cli
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
@@ -105,31 +95,18 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "breaktimer" # break timer
-      "caffeine" # keep macOS awake
       "chatgpt" # ChatGPT
-      "fluidvoice" # TTS on device
-      "ghostty" # Terminal emulator
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "quarto" # document editor
-      "signal" # messaging
       "supercmd" # launcher+
       "swiftbar" # menu-bar status icons
-      "tinycast" # raycast alternative
       "telegram" # messaging (bot)
       "zoom" # video conferencing
       "zotero" # reference manager
-      # "anythingllm" # llm harness/desktop app
-      # "blackhole-2ch" # virtual audio driver
-      # "dorso" # posture monitor
       # "keycastr" # keystroke visualizer
-      # "loopback" # audio routing
-      # "obs" # OBS Studio for streaming and recording
-      # "visual-studio-code" # code editor
-      # "vlc" # media player
     ];
   };
 }

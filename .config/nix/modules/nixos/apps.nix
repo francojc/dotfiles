@@ -61,7 +61,6 @@
       dconf-editor
       dconf2nix
       gcc
-      ghostty
       glibc
       pinentry-tty
       wl-clipboard

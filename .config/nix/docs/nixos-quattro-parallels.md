@@ -40,7 +40,7 @@ The Home Manager-generated `~/.config/quickshell/shell.qml` is a meaningful vert
 | Tiling/window workflow | Hyprland bindings, workspaces, focus and move commands | app rules, scratchpads, monitor-specific layout |
 | Single shell process | Quickshell starts from Hyprland | tray, notification daemon, menu and IPC |
 | Themed desktop | Host-selected theme colors | declarative wallpaper, font, spacing tokens |
-| Terminal | Kitty on `Super+Return` | Ghostty needs OpenGL 4.3; Parallels Linux VirGL exposes OpenGL 4.0 in this VM |
+| Terminal | Kitty on `Super+Return` | Kitty works with OpenGL capability exposed by Parallels Linux VirGL |
 | Launcher | Fuzzel (`Super+Space`) | Quickshell launcher panel, retain Fuzzel fallback |
 | Notifications | SwayNotificationCenter | Quickshell notification server after UX design |
 | Lock/idle | Hyprlock + Hypridle | visual lock theme and suspend policy |
@@ -191,7 +191,7 @@ Normal boot skips systemd-boot menu and starts default generation immediately. `
    nix shell nixpkgs#mesa-demos -c glxinfo -B | grep -E 'OpenGL vendor|OpenGL renderer|OpenGL version'
    ```
 
-   Do not expect Ghostty to work with this accelerated Parallels path. Current VM reports OpenGL 4.0, while Ghostty requires 4.3. [Parallels' Linux documentation](https://kb.parallels.com/en/124138) guarantees OpenGL 3.3; its [Parallels 27 OpenGL 4.3 announcement](https://kb.parallels.com/en/115487) applies to Windows guests. [VirGL is expected for new ARM Linux VMs](https://kb.parallels.com/en/128518). Kitty works within available OpenGL capability.
+   Kitty works with the OpenGL capability exposed by this accelerated Parallels path. Current VM reports OpenGL 4.0. [Parallels' Linux documentation](https://kb.parallels.com/en/124138) guarantees OpenGL 3.3; its [Parallels 27 OpenGL 4.3 announcement](https://kb.parallels.com/en/115487) applies to Windows guests. [VirGL is expected for new ARM Linux VMs](https://kb.parallels.com/en/128518).
 
 5. `home/quattro.nix` persists this tested display mode:
 
@@ -235,7 +235,7 @@ Run `hyprctl reload` after Home Manager changes to Hyprland settings. Use a grap
 
 3. Verify guest: `hyprctl monitors`, Quickshell panel, `loginctl`, `systemctl --user status hypridle`, clipboard history, launcher, lock, audio keys, screenshot command.
 4. Verify virtual graphics: `+virgl`, loaded `virtio_gpu`, non-`llvmpipe` renderer, expected `Virtual-1` display mode.
-5. Verify Kitty opens with `Super+Return`. Ghostty failure with `OpenGLOutdated` is expected on this Parallels Linux VirGL stack, not a Quattro configuration failure.
+5. Verify Kitty opens with `Super+Return` on this Parallels Linux VirGL stack.
 6. Roll back a bad activation from graphical session or TTY with `sudo nixos-rebuild switch --rollback`. If system cannot reach a shell, boot ISO first, mount target, then rebuild known-good flake revision. Do not rely on interactive systemd-boot menu in this Parallels configuration.
 
 ## Deliberate non-goals and risks
@@ -243,7 +243,7 @@ Run `hyprctl reload` after Home Manager changes to Hyprland settings. Use a grap
 - This POC does not copy Omarchy code, branding, package scripts, or x86_64-only dependencies.
 - It does not claim every Omarchy Quattro component has a NixOS equivalent.
 - Quickshell development moves quickly. Keep custom QML narrow and validate in ARM guest before expanding it.
-- Parallels VirtIO/VirGL is host-managed. `+virgl` proves acceleration exists; it does not imply OpenGL 4.3 or Ghostty compatibility.
+- Parallels VirtIO/VirGL is host-managed. `+virgl` proves acceleration exists; it does not imply OpenGL 4.3.
 - VM hardware changes require VM state `stopped`, not suspended. Always confirm with `prlctl list -a`.
 - Current guest has no disk encryption or production backup policy. Add both only after desktop loop is stable.
 

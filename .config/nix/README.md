@@ -25,7 +25,6 @@
 ├── home
 │   ├── core.nix
 │   ├── default.nix
-│   ├── ghostty.nix
 │   ├── git.nix
 │   ├── i3
 │   │   └── default.nix
@@ -144,7 +143,7 @@ The configuration supports 11 distinct themes, each with carefully coordinated c
 - **Definition**: All themes are defined in `home/themes.nix` with color palettes and application-specific settings
 - **Selection**: Each host declares its theme in `hosts/*/default.nix` (e.g., `theme = "ayu";`)
 - **Application**: Themes are applied system-wide to:
-  - Terminal emulators (Ghostty, Kitty, WezTerm)
+  - Terminal emulators (Kitty, WezTerm)
   - Editors (Vim, Neovim)
   - TUI applications (ncspot)
 - **Customization**: Each theme includes mappings for application-specific color schemes and cursor colors

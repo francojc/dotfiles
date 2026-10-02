@@ -116,6 +116,32 @@ in {
       color16 ${theme.colors.orange}
       color17 ${theme.colors.bright_orange}
 
+      ${lib.optionalString (theme.name == "tender") ''
+        # Tender palette
+        background #282828
+        foreground #eeeeee
+        selection_background #323232
+        selection_foreground #eeeeee
+        cursor #73cef4
+        cursor_text_color #282828
+        color0 #282828
+        color1 #f43753
+        color2 #c9d05c
+        color3 #ffc24b
+        color4 #73cef4
+        color5 #d3b987
+        color6 #b3deef
+        color7 #eeeeee
+        color8 #666666
+        color9 #f43753
+        color10 #c9d05c
+        color11 #ffc24b
+        color12 #73cef4
+        color13 #d3b987
+        color14 #b3deef
+        color15 #ffffff
+      ''}
+
       ## Transparency and Opacity
       background_opacity 1.0
 

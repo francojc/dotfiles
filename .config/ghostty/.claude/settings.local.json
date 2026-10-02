@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(hostname)",
-      "Bash(ghostty:*)"
-    ],
-    "deny": []
-  }
-}
