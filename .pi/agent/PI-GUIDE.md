@@ -510,7 +510,8 @@ Sources checked:
 
 What it does:
 
-- Replaces Pi's default spinner and working message with custom modes.
+- Replaces Pi's default spinner and working message with custom modes in TUI sessions.
+- Custom frames use active Pi theme's accent color and refresh after theme changes; message timers stop on session shutdown.
 
 Commands:
 

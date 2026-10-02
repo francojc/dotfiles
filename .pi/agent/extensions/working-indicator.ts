@@ -18,14 +18,6 @@ import type { ExtensionAPI, ExtensionContext, WorkingIndicatorOptions } from "@e
 
 type IndicatorMode = "schwa" | "eye" | "pulse" | "bounce" | "spinner" | "none" | "default";
 
-// Theme colors hardcoded to match ghostty-sync Gruvbox palette
-const ACCENT = "\x1b[38;2;177;98;134m"; // #b16286 mauve
-const RESET = "\x1b[39m";
-
-function a(text: string): string {
-  return `${ACCENT}${text}${RESET}`;
-}
-
 // ── Nerdy verb banks ──
 const MSG_SCHWA = [
   "mulling…", "parsing…", "glossing…", "brooding…", "theorizing…",
@@ -61,7 +53,8 @@ function msgFor(mode: IndicatorMode): string[] {
   }
 }
 
-function getIndicator(mode: IndicatorMode): WorkingIndicatorOptions | undefined {
+function getIndicator(mode: IndicatorMode, ctx: ExtensionContext): WorkingIndicatorOptions | undefined {
+  const a = (text: string) => ctx.ui.theme.fg("accent", text);
   switch (mode) {
     case "schwa":
       return {
@@ -162,11 +155,17 @@ export default function (pi: ExtensionAPI) {
       return;
     }
     let i = 0;
+    let accent = ctx.ui.theme.fg("accent", "ə");
     ctx.ui.setWorkingMessage(messages[0]);
     current.msgTimer = setInterval(() => {
       i = (i + 1) % messages.length;
       // Guard against stale ctx after session replacement
       try {
+        const nextAccent = ctx.ui.theme.fg("accent", "ə");
+        if (nextAccent !== accent) {
+          accent = nextAccent;
+          ctx.ui.setWorkingIndicator(getIndicator(current.mode, ctx));
+        }
         ctx.ui.setWorkingMessage(messages[i]);
       } catch {
         clearTimer();
@@ -174,14 +173,10 @@ export default function (pi: ExtensionAPI) {
     }, 1600); // rotate every ~1.6s for readability
   };
 
-  const stopCycling = (ctx: ExtensionContext) => {
-    clearTimer();
-    ctx.ui.setWorkingMessage(); // restore default
-  };
-
   const apply = (ctx: ExtensionContext) => {
     clearTimer();
-    ctx.ui.setWorkingIndicator(getIndicator(current.mode));
+    if (ctx.mode !== "tui") return;
+    ctx.ui.setWorkingIndicator(getIndicator(current.mode, ctx));
     startCycling(ctx);
     ctx.ui.setStatus("indicator", undefined);
   };

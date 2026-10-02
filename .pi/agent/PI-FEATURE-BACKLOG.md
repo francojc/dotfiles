@@ -111,7 +111,6 @@ Pick from here when there is time for hands-on work.
 2. Add one small MCP server, confirm background connection behavior, and try `searchTools()` and `describeNamespace()`.
 3. Compare virtual models against the local `pi-model-router.ts` extension and decide on one approach.
 4. Try prompt cache warming on a long working session and check `/session` cost effects.
-5. ~~Test the `system` theme against the Ghostty theme sync package.~~ Adopted: `system` theme enabled; Ghostty sync package removed.
 
 ## Future changelog template
 
