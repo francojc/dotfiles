@@ -34,16 +34,6 @@
     ],
     "description": "CriticMarkup: substitution {~~old~>new~~}"
   },
-  "Aider call": {
-    "prefix": "caider",
-    "body": [
-      "<!--",
-      "-- ${1:}",
-      "-->",
-      "${0:}"
-    ],
-    "description": "Aider call"
-  },
   "HTML inline comment": {
     "prefix": "cinlinehtml",
     "body": [

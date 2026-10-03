@@ -1,9 +1,9 @@
 {
   "mode": "shadow",
   "routes": {
-    "fast": "openai-codex/gpt-6-luna",
-    "balanced": "openai-codex/gpt-6.1-sol",
-    "deep": "openai-codex/gpt-6-astra"
+    "fast": "openai/gpt-6-luna",
+    "balanced": "openai/gpt-6.1-sol",
+    "deep": "openai/gpt-6-astra"
   },
   "minConfidence": 0.6,
   "maxSwitchesPerSession": 5,

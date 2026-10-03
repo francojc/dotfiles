@@ -42,15 +42,6 @@
     ],
     "description": "A Quarto dive deeper callout block"
   },
-  "Aider call": {
-    "prefix": "caider",
-    "body": [
-      "<!--",
-      "-- ${0}",
-      "-->"
-    ],
-    "description": "Aider call"
-  },
   "Code block: label": {
     "prefix": "cblabel",
     "body": [

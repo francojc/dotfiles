@@ -7,7 +7,6 @@
 #
 # Current UV tools:
 #
-# aider-chat v0.86.2
 # dauber v0.1.15
 # marker-pdf v2.0.0
 # mlx v0.32.1

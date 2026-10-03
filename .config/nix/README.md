@@ -150,6 +150,25 @@ The configuration supports 11 distinct themes, each with carefully coordinated c
 
 To change a host's theme, edit the `theme` attribute in the host's `default.nix` file and rebuild.
 
+## AI Commit Workflow
+
+`pi-commit`, defined in `home/shell/ai.zsh`, sends the staged Git diff to Pi and commits its generated Conventional Commit message. Pi runs once with no tools, extensions, project context, or saved session; Git creates the commit and runs normal hooks. The configured Pi model and credentials must work without extension-provided model registration.
+
+```zsh
+gaa && pi-commit && gpl && gp
+# Equivalent shortcut:
+gaclp
+```
+
+The chain stops on failure, including an empty index, invalid model output, changed staged contents, or failed commit hooks. Unstaged changes are excluded. Staged contents are sent to the configured model provider; no saved session does not imply no provider-side retention. Legacy chat-history ignore rules remain to prevent accidental staging of old logs.
+
+After deploying the shell configuration, start a new shell. To load only this function into the current shell immediately:
+
+```zsh
+source ~/.config/nix/home/shell/ai.zsh
+alias gaclp='gaa && pi-commit && gpl && gp'
+```
+
 ## Python Environment
 
 ### Three-Layer System
@@ -162,7 +181,7 @@ To change a host's theme, edit the `theme` attribute in the host's `default.nix`
 
 2. **UV (CLI Tools)**: Modern Python package manager
 
-   - Manages: `aider`, `marker-pdf`, `mlx-lm`, `zotero-mcp`, etc.
+   - Manages: `marker-pdf`, `mlx-lm`, `zotero-mcp`, etc.
    - Uses nix Python via `UV_PYTHON` environment variable
    - Faster than nix packages for rapidly-updating tools
 

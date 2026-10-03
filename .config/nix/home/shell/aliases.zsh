@@ -2,7 +2,7 @@
 
 # --- META ALIASES ---
 # Git workflow shortcut - combines git add, commit, pull, and push operations
-alias gaclp='gaa; aider-commit; gpl; gp;' # Git add, commit, pull, and push
+alias gaclp='gaa && pi-commit && gpl && gp' # Git add, commit, pull, and push
 
 # --- DIRECTORY NAVIGATION ---
 # Basic directory navigation for quick path movement
