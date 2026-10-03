@@ -37,7 +37,6 @@
           "dropbox" # cloud storage
           "orbstack" # Docker alternative
           "transmission" # torrent client
-          "utm" # virtual machine manager
           # "android-platform-tools" # ADB and Fastboot (for TVs)
           # "balenaetcher" # disk image writer
           # "calibre" # eBook management
