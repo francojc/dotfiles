@@ -58,3 +58,29 @@ options(
   )
 )
 
+# Completion Menu Colors
+# The completion popup is styled by prompt_toolkit, independently of
+# radian.color_scheme (which only drives syntax highlighting). Override it via
+# an on-load hook. Requires the reticulate R package.
+options(
+  radian.on_load_hooks = list(function() {
+    reticulate::py_run_string("
+from radian.app import get_app
+from prompt_toolkit.styles import Style, merge_styles
+
+session = get_app().session
+session.style = merge_styles([
+    session.style,
+    Style.from_dict({
+        'completion-menu.completion': 'bg:#303030 #eeeeee',
+        'completion-menu.completion.current': 'bg:#005f87 #ffffff',
+        'completion-menu.meta.completion': 'bg:#303030 #bbbbbb',
+        'completion-menu.meta.completion.current': 'bg:#005f87 #ffffff',
+        'completion-menu.scrollbar.background': 'bg:#444444',
+        'completion-menu.scrollbar.button': 'bg:#888888',
+    }),
+])
+")
+  })
+)
+
