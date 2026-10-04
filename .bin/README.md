@@ -101,14 +101,18 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 ### ssh- (SSH key management)
 
-- ssh-key-setup — Generate an Ed25519 SSH key, add it to ssh-agent, copy the public key to the clipboard, and run a verification smoke test.
-  - Known services: `github`, `gitlab`, `bitbucket`, `codeberg`, `forgejo` (custom services also supported).
-  - After copying the public key, optionally opens the service’s SSH key settings URL in the default browser (`open` on macOS, `xdg-open` on Linux); defaults to Yes.
-  - Usage examples:
-    - `ssh-key-setup` — prompt for identity and service.
-    - `ssh-key-setup francojc github` — generate a key for GitHub.
-    - `ssh-key-setup -n francojc github` — dry-run; print commands without executing.
-    - `ssh-key-setup -f francojc github` — overwrite an existing key without prompting.
+- `ssh-key-setup` – Collision-safe Ed25519 generation with explicit nickname/purpose: `id_ed25519_<nickname>_<purpose>`, comment `<nickname> <purpose>`. Labels match `[a-z][a-z0-9_-]*`; unsafe labels are rejected, not sanitized. Version 2 replaces old identity/service arguments; `-f`/`--force` is rejected, never an overwrite permission.
+  - Default performs local generation only; OpenSSH prompts for passphrase. Agent loading (`--load-agent`), clipboard (`--copy`), browser (`--open-url https://...`), and remote smoke test (`--check-remote user@host`) require separate explicit flags. No built-in destination guessing or browser prompts.
+  - Refuses private/public collisions, directories, and dangling/live symlinks. Generates in mode-700 staging under SSH directory, then publishes each file with Bash `noclobber`; late regular-file/symlink collisions cannot overwrite existing keys. Publication is not atomic across both files. Failed generation/publication leaves reported partial new paths for manual inspection and explicit cleanup, never automatic deletion of destination paths. Successful staging is removed.
+  - Requires trusted, user-controlled SSH directory/ancestor paths. Root SSH-directory symlink is rejected; hostile same-user directory replacement and nonregular-file races are outside this guard. Existing directory permissions remain unchanged; new directories use mode 700, published files mode 600.
+  - Stdout contains one JSON registry-entry suggestion after successful publication, also with `--quiet`; diagnostics use stderr. Fingerprint is observed, while creation/review/backup/replacement metadata stays null, authorization list empty, scope incomplete. No runtime/repository registry is read or changed. Review device record and set `replaces` to reviewed old fingerprint before merging rotation suggestion. Opt-in failure exits nonzero but keeps generated pair and emitted suggestion.
+  - Remote test ignores user SSH config, agent/default identities, multiplex sessions, and password fallback; requires existing trusted host key, never accepts new host keys or updates trust. Smoke-test result does not populate authorization metadata.
+  - Safe examples (no live generation):
+    - `ssh-key-setup -n airborne forgejo`
+    - `ssh-key-setup -n --replacement-name id_ed25519_airborne_forgejo_2027 airborne forgejo`
+    - `ssh-key-setup -n --load-agent --copy --open-url https://codeberg.org/user/settings/keys --check-remote git@codeberg.org airborne codeberg`
+  - Replacement name must be distinct `id_ed25519_<nickname>_<purpose>_<suffix>`, suffix `[a-z0-9][a-z0-9_-]*`; original pair remains untouched. Live generation requires separate approval.
+  - Isolated tests: `.bin/tests/ssh-key-setup/run.sh`; see adjacent README for interpreter selection and coverage limits.
 
 ### google- (Google Drive)
 
@@ -147,7 +151,7 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 - gh-cop-models: OPENAI_API_KEY required
 - wx: relies on wttr.in (no API key needed)
-- ssh-key-setup: OpenSSH (`ssh-keygen`, `ssh-add`, `ssh`) and a clipboard tool (`pbcopy` on macOS, `xclip` or `xsel` on Linux). `SSH_DIR` overrides the default `~/.ssh` output directory; `SSH_CONNECT_TIMEOUT` overrides the 10-second smoke-test timeout.
+- ssh-key-setup: Bash 3.2+, `ssh-keygen`, `jq`, and standard file utilities. `SSH_DIR` overrides default `~/.ssh` output directory. `ssh-add`, clipboard tool (`pbcopy`, `xclip`, `xsel`), browser opener (`open`, `xdg-open`), and `ssh` are required only for selected opt-ins; remote timeout fixed at 10 seconds. Dry-run performs validation and collision checks only, without dependency execution, writes, or registry output.
 - Common dependencies: curl, jq, git, gh, ffmpeg, yt-dlp (depending on the script)
 
 ## Notes on portability

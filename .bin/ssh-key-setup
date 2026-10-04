@@ -1,452 +1,180 @@
 #!/usr/bin/env bash
-# Interactive SSH key generator, agent loader, and verification helper.
-# Usage: ssh-key-setup [options] [<identity>] [<service>]
-
+# Collision-safe generation. Bash 3.2 or newer.
 set -Eeuo pipefail
-
-SCRIPT_NAME="ssh-key-setup"
-
-# shellcheck source=common
+SCRIPT_NAME=ssh-key-setup
 . "$(dirname "$0")/common"
-
-SCRIPT_VERSION="1.1.0"
-
-# ---------------------------------------------------------------------------
-# Service registry
-# ---------------------------------------------------------------------------
-
-list_services() {
-  printf "  %s\n" bitbucket codeberg forgejo github gitlab | sort
-}
-
-service_url() {
-  case "$1" in
-    github) printf "%s\n" "https://github.com/settings/keys" ;;
-    gitlab) printf "%s\n" "https://gitlab.com/profile/keys" ;;
-    bitbucket) printf "%s\n" "https://bitbucket.org/account-settings/ssh-keys/" ;;
-    codeberg) printf "%s\n" "https://codeberg.org/user/settings/keys" ;;
-    forgejo) printf "%s\n" "https://forgejo.gerbil-matrix.ts.net/user/settings/keys" ;;
-    *) return 1 ;;
-  esac
-}
-
-service_host() {
-  case "$1" in
-    github) printf "%s\n" "git@github.com" ;;
-    gitlab) printf "%s\n" "git@gitlab.com" ;;
-    bitbucket) printf "%s\n" "git@bitbucket.org" ;;
-    codeberg) printf "%s\n" "git@codeberg.org" ;;
-    forgejo) printf "%s\n" "git@forgejo.gerbil-matrix.ts.net" ;;
-    *) return 1 ;;
-  esac
-}
-
-service_docs() {
-  case "$1" in
-    github) printf "%s\n" "https://docs.github.com/en/authentication/connecting-to-github-with-ssh" ;;
-    gitlab) printf "%s\n" "https://docs.gitlab.com/ee/user/ssh.html" ;;
-    bitbucket) printf "%s\n" "https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/" ;;
-    codeberg) printf "%s\n" "https://docs.codeberg.org/security/ssh-key/" ;;
-    forgejo) printf "%s\n" "https://forgejo.org/docs/latest/user/git-with-forgejo/" ;;
-    *) return 1 ;;
-  esac
-}
-
-is_known_service() {
-  service_url "$1" >/dev/null 2>&1
-}
-
-CLIPBOARD_TOOL=""
-OPEN_TOOL=""
-SSH_CONNECT_TIMEOUT="${SSH_CONNECT_TIMEOUT:-10}"
-SSH_STRICT_HOST_KEY_CHECKING="${SSH_STRICT_HOST_KEY_CHECKING:-accept-new}"
-SSH_COMMON_OPTIONS=(
-  -o "BatchMode=yes"
-  -o "ConnectTimeout=${SSH_CONNECT_TIMEOUT}"
-  -o "StrictHostKeyChecking=${SSH_STRICT_HOST_KEY_CHECKING}"
-  -o "IdentitiesOnly=yes"
-  -o "PasswordAuthentication=no"
-  -o "KbdInteractiveAuthentication=no"
-  -o "NumberOfPasswordPrompts=0"
-)
-
-clipboard_command_for_tool() {
-  local tool="$1"
-  local file="$2"
-  case "$tool" in
-    pbcopy) printf "pbcopy < %s\n" "$file" ;;
-    xclip) printf "xclip -selection clipboard < %s\n" "$file" ;;
-    xsel) printf "xsel --clipboard --input < %s\n" "$file" ;;
-    *) return 1 ;;
-  esac
-}
-
-choose_dry_run_clipboard_tool() {
-  case "$(uname -s 2>/dev/null || printf unknown)" in
-    Darwin) printf "%s\n" "pbcopy" ;;
-    *) printf "%s\n" "xclip" ;;
-  esac
-}
-
-preflight() {
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    return 0
-  fi
-
-  require ssh-keygen ssh-add ssh
-
-  CLIPBOARD_TOOL=$(detect_clipboard_tool)
-  [[ -z "$CLIPBOARD_TOOL" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
-
-  OPEN_TOOL=$(detect_open_tool)
-
-  local agent_status=0
-  ssh-add -l >/dev/null 2>&1 || agent_status=$?
-  case "$agent_status" in
-    0|1) ;;
-    *) die "ssh-agent is unavailable. Start ssh-agent, then retry." ;;
-  esac
-}
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+SCRIPT_VERSION=2.0.0
+# Keep stdout machine-readable; never print failing command arguments.
+log_info() { [[ "$QUIET" -eq 1 ]] || printf 'INFO %s\n' "$*" >&2; }
+trap 'log_error "Operation failed; inspect reported paths before explicit cleanup."; exit 1' ERR
 
 usage() {
-  cat <<EOF
-Usage: ${SCRIPT_NAME} [options] [<identity>] [<service>]
+  printf '%s\n' 'Usage: ssh-key-setup [options] <nickname> <purpose>
 
-Generate an Ed25519 SSH key for a service, add it to ssh-agent, copy the
-public key to the clipboard, and run a verification smoke test.
+Generate id_ed25519_<nickname>_<purpose>, comment: <nickname> <purpose>.
+Labels must match [a-z][a-z0-9_-]*. No hostname guessing or sanitizing.
+SSH_DIR overrides $HOME/.ssh. Existing directories are not chmodded.
+OpenSSH prompts for a passphrase; no passphrase CLI option is provided.
 
-Arguments:
-  <identity>    Name/email to embed in the key comment (prompted if omitted).
-  <service>     Known service alias: github, gitlab, bitbucket, codeberg,
-                forgejo, or a custom label (prompted if omitted).
+  -h, --help                Show help
+      --version             Show version
+  -v, --verbose             Increase verbosity
+  -q, --quiet               Suppress informational diagnostics
+  -n, --dry-run             Show intent only; no writes or tool execution
+      --replacement-name NAME
+                            Distinct id_ed25519_<nickname>_<purpose>_<suffix>
+                            Suffix must match [a-z0-9][a-z0-9_-]*
+      --load-agent          Load generated key into existing agent
+      --copy                Copy public key (pbcopy, xclip, or xsel)
+      --open-url URL        Open explicit https:// URL in browser
+      --check-remote HOST   Explicit SSH smoke test, isolated key/config
 
-Options:
-  -h, --help       Show this help message.
-  --version        Show version.
-  -v, --verbose    Increase verbosity.
-  -q, --quiet      Suppress non-error output.
-  -n, --dry-run    Print commands without executing them.
-  -f, --force      Overwrite an existing key file without prompting.
+-f/--force removed: collisions always fail, including dangling symlinks.
+Default has no agent, clipboard, browser, or remote side effects.
+Success emits one JSON registry-entry suggestion on stdout. Review before
+merging into registry; dates, backup, replaces remain null, scope unknown,
+authorized empty. No registry is read or edited. For rotation, link replaces
+only after reviewing old fingerprint. Failed generation/publication reports
+partial new paths for explicit cleanup; never removes existing material.
 
-Examples:
-  ${SCRIPT_NAME}
-  ${SCRIPT_NAME} francojc github
-  ${SCRIPT_NAME} -n francojc github
-  ${SCRIPT_NAME} -f francojc github
-EOF
+Examples (live generation requires separate approval):
+  ssh-key-setup -n airborne forgejo
+  ssh-key-setup -n --replacement-name id_ed25519_airborne_forgejo_2027 airborne forgejo'
 }
 
-sanitize_filename_part() {
-  # Replace whitespace, slashes, and common unsafe characters with hyphens.
-  # Keep @ and dots to preserve identity@service style.
-  printf '%s' "$1" | tr -s ' /\\:;*?"<>|' '-'
-}
-
-check_key_overwrite() {
-  local key_path="$1"
-  local pub_path="$2"
-  local force="$3"
-  local existing=()
-  local file answer
-
-  for file in "$key_path" "$pub_path"; do
-    [[ -e "$file" ]] && existing+=("$file")
+valid_label() { [[ "$1" =~ ^[a-z][a-z0-9_-]*$ ]]; }
+refuse_collision() {
+  local path
+  for path in "$@"; do
+    [[ ! -e "$path" && ! -L "$path" ]] || die "Collision; refusing existing path: $path"
   done
-  [[ "${#existing[@]}" -eq 0 ]] && return 0
-
-  if [[ "$force" -eq 1 ]]; then
-    for file in "${existing[@]}"; do
-      log_warn "Overwriting existing file (forced): $file"
-    done
-    return 0
-  fi
-
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    for file in "${existing[@]}"; do
-      log_warn "File already exists; a real run would prompt here (or use --force): $file"
-    done
-    return 0
-  fi
-
-  log_warn "Existing key file(s):"
-  for file in "${existing[@]}"; do
-    log_warn "  $file"
-  done
-  read -rp "Overwrite existing key file(s)? [y/N] " answer
-  case "$answer" in
-    [Yy]*) return 0 ;;
-    *) die "Aborted." ;;
-  esac
 }
-
-detect_clipboard_tool() {
-  if command -v pbcopy >/dev/null 2>&1; then
-    echo "pbcopy"
-  elif command -v xclip >/dev/null 2>&1; then
-    echo "xclip"
-  elif command -v xsel >/dev/null 2>&1; then
-    echo "xsel"
-  else
-    echo ""
-  fi
-}
-
-copy_to_clipboard() {
-  local file="$1"
-  local tool="$CLIPBOARD_TOOL"
-
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    [[ -z "$tool" ]] && tool=$(detect_clipboard_tool)
-    [[ -z "$tool" ]] && tool=$(choose_dry_run_clipboard_tool)
-    printf "+ %s\n" "$(clipboard_command_for_tool "$tool" "$file")"
-    log_info "Would copy $file to clipboard using $tool"
-    return 0
-  fi
-
-  [[ -z "$tool" ]] && die "No clipboard tool found. Install pbcopy (macOS), xclip, or xsel (Linux)."
-
-  case "$tool" in
-    pbcopy) pbcopy < "$file" ;;
-    xclip) xclip -selection clipboard < "$file" ;;
-    xsel) xsel --clipboard --input < "$file" ;;
-    *) die "Unsupported clipboard tool: $tool" ;;
-  esac
-}
-
-detect_open_tool() {
-  if command -v open >/dev/null 2>&1; then
-    echo "open"
-  elif command -v xdg-open >/dev/null 2>&1; then
-    echo "xdg-open"
-  else
-    echo ""
-  fi
-}
-
-open_in_browser() {
-  local url="$1"
-  local tool="$OPEN_TOOL"
-  [[ -z "$tool" ]] && tool=$(detect_open_tool)
-  [[ -z "$tool" ]] && return 0
-
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    printf "+ %s %s\n" "$tool" "$url"
-    log_info "Would open $url in browser using $tool"
-    return 0
-  fi
-
-  "$tool" "$url"
-}
-
-run_ssh_test() {
-  local host="$1"
-  local key_path="$2"
-  local output=""
-  local code=0
-
-  if [[ "$DRY_RUN" -eq 1 ]]; then
-    printf "+ ssh -T"
-    printf " %q" "${SSH_COMMON_OPTIONS[@]}" -i "$key_path" "$host"
-    printf "\n"
-    log_info "Would inspect the SSH greeting from $host to determine success."
-    return 0
-  fi
-
-  # Git hosts often return non-zero on successful auth, so keep this in an if condition.
-  if output=$(ssh -T "${SSH_COMMON_OPTIONS[@]}" -i "$key_path" "$host" 2>&1); then
-    code=0
-  else
-    code=$?
-  fi
-
-  if [[ "$code" -eq 0 ]]; then
-    log_info "SSH smoke test succeeded."
-    [[ "$VERBOSE" -ge 1 && -n "$output" ]] && log_info "$output"
-    return 0
-  fi
-
-  # Known success greetings.
-  if [[ "$output" == *"successfully authenticated"* ]] || \
-     [[ "$output" == *"You've successfully authenticated"* ]] || \
-     [[ "$output" == *"Welcome to GitLab"* ]] || \
-     [[ "$output" == *"logged in as"* ]] || \
-     [[ "$output" == *"authenticated via ssh key"* ]] || \
-     [[ "$output" == *"Shell access is disabled"* ]]; then
-    log_info "SSH smoke test succeeded."
-    [[ "$VERBOSE" -ge 1 ]] && log_info "$output"
-    return 0
-  fi
-
-  # Known failure signatures.
-  if [[ "$output" == *"Permission denied"* ]] || \
-     [[ "$output" == *"Could not resolve"* ]] || \
-     [[ "$output" == *"Name or service not known"* ]] || \
-     [[ "$output" == *"No route to host"* ]] || \
-     [[ "$output" == *"Network is unreachable"* ]] || \
-     [[ "$output" == *"Connection refused"* ]] || \
-     [[ "$output" == *"Connection timed out"* ]] || \
-     [[ "$output" == *"Operation timed out"* ]] || \
-     [[ "$output" == *"Connection closed"* ]] || \
-     [[ "$output" == *"Host key verification failed"* ]] || \
-     [[ "$output" == *"REMOTE HOST IDENTIFICATION HAS CHANGED"* ]]; then
-    log_error "SSH smoke test failed."
-    log_error "$output"
-    return 1
-  fi
-
-  log_warn "SSH smoke test returned exit code $code with an unexpected response."
-  log_warn "$output"
-  log_warn "Could not confirm success. Inspect message above."
-  return 2
-}
+show_command() { printf '+' >&2; printf ' %q' "$@" >&2; printf '\n' >&2; }
 
 main() {
-  local identity=""
-  local service=""
-  local force=0
-  local show_help=0 show_version=0
-  local OPTIND=1 opt
-
-  while getopts ":hvqnf-:" opt; do
-    case "$opt" in
-      h) show_help=1 ;;
-      v) VERBOSE=$((VERBOSE+1)) ;;
-      q) QUIET=1 ;;
-      n) DRY_RUN=1 ;;
-      f) force=1 ;;
-      -) case "$OPTARG" in
-           help) show_help=1 ;;
-           version) show_version=1 ;;
-           verbose) VERBOSE=$((VERBOSE+1)) ;;
-           quiet) QUIET=1 ;;
-           dry-run) DRY_RUN=1 ;;
-           force) force=1 ;;
-           *) die "Unknown long option --$OPTARG" ;;
-         esac ;;
-      \?) die "Unknown option: -$OPTARG" ;;
+  local replacement='' agent=0 copy=0 url='' remote='' nickname purpose
+  local clipboard='' browser='' arg
+  local positional=()
+  while [[ $# -gt 0 ]]; do
+    arg=$1
+    shift
+    case "$arg" in
+      -h|--help) usage; return 0 ;;
+      --version) print_version; return 0 ;;
+      -v|--verbose) VERBOSE=$((VERBOSE+1)) ;;
+      -q|--quiet) QUIET=1 ;;
+      -n|--dry-run) DRY_RUN=1 ;;
+      -f|--force) die "--force removed; existing keys cannot be overwritten." ;;
+      --load-agent) agent=1 ;;
+      --copy) copy=1 ;;
+      --replacement-name|--open-url|--check-remote)
+        [[ $# -gt 0 && -n "$1" && "$1" != -* ]] || die "Missing value for $arg"
+        case "$arg" in
+          --replacement-name) replacement=$1 ;;
+          --open-url) url=$1 ;;
+          --check-remote) remote=$1 ;;
+        esac
+        shift ;;
+      --) positional+=("$@"); break ;;
+      -*) die "Unknown option: $arg" ;;
+      *) positional+=("$arg") ;;
     esac
   done
-  shift $((OPTIND-1)) || true
-
-  [[ $show_help -eq 1 ]] && { usage; exit 0; }
-  [[ $show_version -eq 1 ]] && { print_version; exit 0; }
-
-  if [[ $# -gt 0 ]]; then
-    identity="$1"
-    shift
+  [[ ${#positional[@]} -eq 2 ]] || die "Explicit nickname and purpose required; see --help."
+  nickname=${positional[0]}; purpose=${positional[1]}
+  valid_label "$nickname" && valid_label "$purpose" || die "Invalid nickname or purpose."
+  local name="id_ed25519_${nickname}_${purpose}" suffix
+  if [[ -n "$replacement" ]]; then
+    [[ "$replacement" == "${name}_"* ]] || die "Replacement must use distinct ${name}_<suffix> name."
+    suffix=${replacement#"${name}_"}
+    [[ "$suffix" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || die "Invalid replacement suffix."
+    name=$replacement
   fi
-  if [[ $# -gt 0 ]]; then
-    service="$1"
-    shift
-  fi
-  [[ $# -gt 0 ]] && die "Unexpected arguments: $*"
-
-  # Identity prompt
-  if [[ -z "$identity" ]]; then
-    read -rp "Identity (e.g., email or username): " identity
-    [[ -z "$identity" ]] && die "Identity is required."
-  fi
-
-  # Service prompt
-  if [[ -z "$service" ]]; then
-    log_info "Known services:"
-    list_services
-    read -rp "Service name (or a custom label): " service
-    [[ -z "$service" ]] && die "Service name is required."
-  fi
-
-  local url host
-  if is_known_service "$service"; then
-    url=$(service_url "$service")
-    host=$(service_host "$service")
-  else
-    log_info "Custom service: $service"
-    read -rp "SSH key settings URL (optional): " url
-    read -rp "SSH host to test (e.g., git@example.com): " host
-    [[ -z "$host" ]] && die "SSH host is required for custom services."
-  fi
-
-  local safe_identity safe_service
-  safe_identity=$(sanitize_filename_part "$identity")
-  safe_service=$(sanitize_filename_part "$service")
-  local key_name="id_ed25519_${safe_identity}@${safe_service}"
-  local ssh_dir="${SSH_DIR:-$HOME/.ssh}"
-  local key_path="$ssh_dir/$key_name"
-  local pub_path="$key_path.pub"
-
-  preflight
-
-  # Ensure SSH directory exists.
+  [[ -z "$url" || "$url" =~ ^https://[a-zA-Z0-9][a-zA-Z0-9./:_?=\&%+-]*$ ]] || die "Expected explicit https:// URL."
+  [[ -z "$remote" || "$remote" =~ ^[a-zA-Z0-9][a-zA-Z0-9@._-]*$ ]] || die "Invalid SSH host/user@host."
+  local ssh_dir=${SSH_DIR:-$HOME/.ssh}
+  [[ ! -L "$ssh_dir" ]] || die "SSH directory symlink refused."
+  [[ ! -e "$ssh_dir" || -d "$ssh_dir" ]] || die "SSH directory is not a directory."
+  local key_path="$ssh_dir/$name" pub_path="$ssh_dir/$name.pub"
+  refuse_collision "$key_path" "$pub_path"
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    run mkdir -p "$ssh_dir"
-    run chmod 700 "$ssh_dir"
-  else
-    [[ -d "$ssh_dir" ]] || mkdir -p "$ssh_dir"
-    chmod 700 "$ssh_dir"
+    show_command ssh-keygen -t ed25519 -a 100 -C "$nickname $purpose" -f '<private staging directory>/key'
+    log_info "Would publish without overwrite: $key_path and $pub_path"
+    [[ "$agent" -eq 0 ]] || show_command ssh-add "$key_path"
+    [[ "$copy" -eq 0 ]] || log_info "Would copy $pub_path"
+    [[ -z "$url" ]] || log_info "Would open $url"
+    [[ -z "$remote" ]] || log_info "Would test $remote using only $key_path"
+    log_info 'Would emit registry-entry suggestion after successful generation; fingerprint not yet known.'
+    return 0
   fi
-
-  # Prompt (and optionally remove) existing files so ssh-keygen does not ask again.
-  if [[ -e "$key_path" || -e "$pub_path" ]]; then
-    check_key_overwrite "$key_path" "$pub_path" "$force"
-    if [[ "$DRY_RUN" -eq 1 ]]; then
-      run rm -f "$key_path" "$pub_path"
-    else
-      rm -f "$key_path" "$pub_path"
-    fi
+  require ssh-keygen jq mktemp cat mkdir chmod rm
+  [[ "$agent" -eq 0 ]] || require ssh-add
+  if [[ "$copy" -eq 1 ]]; then
+    for arg in pbcopy xclip xsel; do
+      if command -v "$arg" >/dev/null 2>&1; then clipboard=$arg; break; fi
+    done
+    [[ -n "$clipboard" ]] || die "No clipboard tool available."
   fi
-
-  # Generate key.
-  log_info "Generating Ed25519 key: $key_path"
-  run ssh-keygen -t ed25519 -a 100 -C "$identity@$service" -f "$key_path"
-
-  # Add to agent.
-  log_info "Adding key to ssh-agent..."
-  run ssh-add "$key_path"
-
-  # Copy public key to clipboard.
-  log_info "Copying public key to clipboard..."
-  copy_to_clipboard "$pub_path"
-
-  # Instructions.
-  echo ""
-  log_info "Your public key has been copied to the clipboard."
   if [[ -n "$url" ]]; then
-    log_info "Add it to the service at: $url"
-    if [[ "$DRY_RUN" -eq 1 ]]; then
-      open_in_browser "$url"
-    elif [[ -t 0 ]]; then
-      local answer
-      read -rp "Open settings URL in browser? [Y/n] " answer || answer=""
-      case "$answer" in
-        [Nn]*) ;;
-        *) open_in_browser "$url" ;;
-      esac
+    for arg in open xdg-open; do
+      if command -v "$arg" >/dev/null 2>&1; then browser=$arg; break; fi
+    done
+    [[ -n "$browser" ]] || die "No browser opener available."
+  fi
+  [[ -z "$remote" ]] || require ssh
+  umask 077
+  [[ -d "$ssh_dir" ]] || mkdir -m 700 -p "$ssh_dir"
+  local stage fingerprint suggestion
+  stage=$(mktemp -d "$ssh_dir/.ssh-key-setup.XXXXXXXX")
+  chmod 700 "$stage"
+  log_info "Staging new material: $stage; on failure inspect this directory for explicit cleanup."
+  if ! ssh-keygen -t ed25519 -a 100 -C "$nickname $purpose" -f "$stage/key" >&2; then
+    die "Generation failed; no destination published. Partial new output may remain: $stage"
+  fi
+  [[ -f "$stage/key" && ! -L "$stage/key" && -f "$stage/key.pub" && ! -L "$stage/key.pub" ]] || die "Incomplete generation; inspect $stage"
+  if ! fingerprint=$(ssh-keygen -E sha256 -lf "$stage/key.pub"); then
+    die "Fingerprint failed; inspect $stage"
+  fi
+  fingerprint=${fingerprint#* }; fingerprint=${fingerprint%% *}
+  [[ "$fingerprint" =~ ^SHA256:[A-Za-z0-9+/]{43}$ ]] || die "Invalid generated fingerprint; inspect $stage"
+  suggestion=$(jq -n --arg name "$name" --arg fp "$fingerprint" --arg purpose "$purpose" --arg device "$nickname" '
+    {name:$name,fingerprint:$fp,purpose:$purpose,status:"active",
+     holders:[{device:$device,path:$name,private_key_expected:true,material_state:"present",observed_at:null}],
+     created:null,review_after_months:null,backup:null,replaces:null,
+     authorization_scope_complete:false,notes:"Generated key; review protection and authorization scope.",authorized:[]}')
+  # noclobber reserves each destination at open time, not merely in preflight.
+  # Never use ssh-keygen on destination: its overwrite prompt is not a guard.
+  # Retain all partial new output on failure; do not unlink another process's files.
+  if ! (set -o noclobber; cat "$stage/key" > "$key_path"); then
+    die "Private publication failed; inspect $key_path and $stage for explicit cleanup."
+  fi
+  if ! (set -o noclobber; cat "$stage/key.pub" > "$pub_path"); then
+    die "Public publication failed; new private output remains at $key_path; inspect $pub_path and $stage for explicit cleanup."
+  fi
+  rm -rf "$stage"
+  printf '%s\n' "$suggestion"
+  log_info "Generated $key_path. Review suggestion; registry unchanged."
+  [[ "$agent" -eq 0 ]] || ssh-add "$key_path"
+  if [[ "$copy" -eq 1 ]]; then
+    case "$clipboard" in
+      pbcopy) pbcopy < "$pub_path" ;;
+      xclip) xclip -selection clipboard < "$pub_path" ;;
+      xsel) xsel --clipboard --input < "$pub_path" ;;
+    esac
+  fi
+  [[ -z "$url" ]] || "$browser" "$url"
+  if [[ -n "$remote" ]]; then
+    # No user config, agent/default identities, password fallback, host-trust writes,
+    # proxy commands, or automatic multiplex-session reuse.
+    local output code=0
+    output=$(ssh -F /dev/null -T -i "$key_path" -o IdentitiesOnly=yes -o IdentityAgent=none \
+      -o BatchMode=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+      -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ControlMaster=no \
+      -o ControlPath=none -o ConnectTimeout=10 "$remote" 2>&1) || code=$?
+    if [[ "$code" -ne 0 && "$output" != *'successfully authenticated'* ]]; then
+      die "Remote test unconfirmed (exit $code); generated pair remains."
     fi
+    log_info 'Remote smoke test accepted; authorization metadata still requires review.'
   fi
-  local docs verification_code
-  if docs=$(service_docs "$service"); then
-    log_info "Docs: $docs"
-  fi
-  echo ""
-  # Confirmation is optional; tolerate EOF (e.g. non-interactive dry-run).
-  read -rp "Paste/add the key in the service, then press Enter to continue: " verification_code || true
-
-  # Smoke test.
-  echo ""
-  log_info "Running SSH smoke test to $host..."
-  if run_ssh_test "$host" "$key_path"; then
-    :
-  else
-    exit $?
-  fi
-
-  echo ""
-  log_info "Done."
 }
-
 main "$@"
-

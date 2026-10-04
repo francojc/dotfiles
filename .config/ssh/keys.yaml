@@ -1,0 +1,171 @@
+version: 1
+devices:
+  airborne:
+    hostnames:
+      - macbook-airborne
+    provisioning: inventoried
+  minicore:
+    hostnames:
+      - mac-minicore
+    provisioning: unprovisioned
+  rover:
+    hostnames:
+      - mini-rover
+    provisioning: unprovisioned
+  quattro:
+    hostnames:
+      - nixos-quattro
+    provisioning: unprovisioned
+keys:
+  - name: id_ed25519_airborne_forgejo
+    fingerprint: SHA256:2uikUsy/rGyU1EWnDqFWHGKlZ6UoVzy5tOXwqQutUeI
+    purpose: forgejo
+    status: active
+    holders:
+      - device: airborne
+        path: id_ed25519_forgejo
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Retain; rename candidate after separate migration approval. Service account identity unknown; SSH transport user forgejo is not account evidence.
+    authorized:
+      - kind: account
+        host: forgejo.gerbil-matrix.ts.net
+        account: null
+        repository: null
+        ssh_alias: forgejo
+        verification_status: unverified
+        verified_at: null
+        revocation_status: not_started
+        revoked_at: null
+        evidence: Local client configuration reference only; effective remote authorization not tested.
+  - name: id_ed25519
+    fingerprint: SHA256:IRTc3TlFNfGfZY09dsXQEnuB08qJFKmiOe80hdnt/DI
+    purpose: unknown
+    status: active
+    holders:
+      - device: airborne
+        path: id_ed25519
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Retain unchanged; investigate implicit default selection and authorization scope. No explicit client reference does not prove disuse.
+    authorized: []
+  - name: id_ed25519_airborne_workstations
+    fingerprint: SHA256:VeEIw4MvvMvwvalXHQGes3lmzyq2YZynohJAaHXISrc
+    purpose: workstations
+    status: active
+    holders:
+      - device: airborne
+        path: id_ed25519_workstation
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Retain; rename candidate after separate migration approval. Destination login names inferred from client configuration only.
+    authorized:
+      - kind: server
+        host: mac-minicore.gerbil-matrix.ts.net
+        account: jeridf
+        repository: null
+        ssh_alias: minicore
+        verification_status: unverified
+        verified_at: null
+        revocation_status: not_started
+        revoked_at: null
+        evidence: Local client configuration reference only; effective remote authorization not tested.
+      - kind: server
+        host: macbook-airborne.gerbil-matrix.ts.net
+        account: francojc
+        repository: null
+        ssh_alias: airborne
+        verification_status: unverified
+        verified_at: null
+        revocation_status: not_started
+        revoked_at: null
+        evidence: Local client configuration reference only; effective remote authorization not tested.
+  - name: id_ed25519_airborne_nixos
+    fingerprint: SHA256:pWLRa50op5h04FekVEigpzY1ft0rZ5FpnP8sCAMW7oE
+    purpose: nixos
+    status: active
+    holders:
+      - device: airborne
+        path: nixos-machine
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Investigate current VM use before rename. Local client reference exists; no connection attempted.
+    authorized:
+      - kind: server
+        host: nixos.machine
+        account: francojc
+        repository: null
+        ssh_alias: nixos.machine
+        verification_status: unverified
+        verified_at: null
+        revocation_status: not_started
+        revoked_at: null
+        evidence: Local client configuration reference only; effective remote authorization not tested.
+  - name: id_ed25519_airborne_paos
+    fingerprint: SHA256:tUbpROy8Wotf0adtBFK2GiiCj+veiJHOmtjvivuDPHg
+    purpose: unknown
+    status: active
+    holders:
+      - device: airborne
+        path: paos_ed25519
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Investigate PAOS tooling and authorization scope; desired label provisional. Filename alone does not establish purpose. No rename or retirement approved.
+    authorized: []
+  - name: id_ed25519_airborne_codeberg
+    fingerprint: SHA256:zsf1OeVUFg6GT4IvvDytyWTF2FHTtG815if4UOqqLFc
+    purpose: codeberg
+    status: active
+    holders:
+      - device: airborne
+        path: id_ed25519_codeberg
+        private_key_expected: true
+        material_state: present
+        observed_at: "2026-10-04T18:10:14Z"
+    created: null
+    review_after_months: null
+    backup: null
+    replaces: null
+    authorization_scope_complete: false
+    notes: Retain; rename candidate after separate migration approval. Service account identity unknown; SSH transport user git is not account evidence.
+    authorized:
+      - kind: account
+        host: codeberg.org
+        account: null
+        repository: null
+        ssh_alias: codeberg.org
+        verification_status: unverified
+        verified_at: null
+        revocation_status: not_started
+        revoked_at: null
+        evidence: Local client configuration reference only; effective remote authorization not tested.
