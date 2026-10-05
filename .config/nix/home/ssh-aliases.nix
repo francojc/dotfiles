@@ -68,7 +68,7 @@ in {
       HostName forgejo.${tailnet}
       HostKeyAlias forgejo
       User forgejo
-      IdentityFile ~/.ssh/id_ed25519_forgejo
+      IdentityFile ~/.ssh/id_ed25519_omarchy_forgejo
       IdentitiesOnly yes
 
     Host codeberg.org
