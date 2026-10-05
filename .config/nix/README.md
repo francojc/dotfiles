@@ -1,4 +1,4 @@
-# My Nix Darwin/NixOS Configuration
+# My Nix Darwin/NixOS/Omarchy Configuration
 
 <!--toc:start-->
 
@@ -88,6 +88,7 @@ This flake manages three distinct hosts with different hardware platforms and pu
 | **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
 | **Mini-Rover** | x86_64-linux (Mac Mini 2011) | nightfox | i3 (X11) | - |
 | **nixos-quattro** | aarch64-linux (Parallels on Apple Silicon) | ayu | Hyprland + Quickshell | Tailscale |
+| **omarchy** | aarch64-linux (Arch Linux + Hyprland) | tokyonight | Omarchy (Home Manager standalone) | - |
 
 ### Mac-Minicore
 
@@ -106,6 +107,10 @@ Apple Silicon NixOS lab host for a Hyprland + Quickshell proof of concept. The f
 ### Mini-Rover
 
 Legacy NixOS workstation running on x86_64 (Mac Mini 2011). Configured with the "nightfox" theme and i3 window manager on X11. This is a pure NixOS configuration without the Darwin-specific services.
+
+### omarchy
+
+Arch Linux + Hyprland desktop managed by [Omarchy](https://omarchy.org/). Unlike the other Linux hosts, this is **not** a NixOS system: Omarchy owns the OS, and Nix manages only the user environment through a standalone Home Manager configuration (`homeConfigurations.omarchy`). The host sets `platform = "arch"` to route it away from `nixosConfigurations`, and `home/default.nix` uses `isArch` to select Arch-adjusted modules (`home/arch-core.nix`, `modules/arch/`) that avoid shadowing Omarchy's packages and fighting its theme engine. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md) for the full design.
 
 ## Custom Services
 
@@ -271,6 +276,28 @@ This configuration supports two Darwin hosts: `Mac-Minicore` and `Macbook-Airbor
    ```bash
    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
    ```
+
+### For Arch / Omarchy
+
+Omarchy is Arch Linux + Hyprland. Install Nix (the [Determinate Systems installer](https://docs.determinate.systems/) is recommended), then apply the standalone Home Manager configuration. This does not touch the OS; it only links the user environment.
+
+1. **Install Nix** (Determinate Systems, multi-user):
+   ```bash
+   curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+   ```
+
+2. **Apply the configuration**:
+   ```bash
+   home-manager switch --flake ~/.dotfiles/.config/nix#omarchy
+   # or, from the nix directory: just omarchy
+   ```
+
+3. **Build without activating**:
+   ```bash
+   nix build .#homeConfigurations.omarchy.activationPackage
+   ```
+
+The host lives in `hosts/omarchy/default.nix`. System packages stay managed by Omarchy (`omarchy pkg add`, `pacman`, `yay`); only packages Omarchy does not ship are installed by Nix. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md).
 
 ### Common Operations
 

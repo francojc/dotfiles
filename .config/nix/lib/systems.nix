@@ -51,6 +51,19 @@ let
 
     # Get all Linux systems
     getLinuxSystems = getSystemsForPlatform "linux";
+
+    # Resolve the effective platform for a host. A host may override the
+    # platform implied by its nixpkgs `system`; this is how an Omarchy host
+    # (Arch Linux running on an `aarch64-linux` nixpkgs system) is told apart
+    # from a NixOS host that uses the same nixpkgs system.
+    platformOf = host:
+      if host ? platform && host.platform != null
+      then host.platform
+      else supportedSystems.${host.system}.platform;
+
+    # True when a host is managed as an Arch/Omarchy user environment
+    # (standalone Home Manager) rather than a NixOS/darwin system.
+    isArchHost = host: platformOf host == "arch";
   };
 in {
   inherit supportedSystems helpers;

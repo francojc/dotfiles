@@ -35,6 +35,21 @@ nixos:
 
 ############################################################################
 #
+#  Arch / Omarchy related commands
+#
+############################################################################
+
+# Build and activate the Omarchy standalone Home Manager configuration.
+# Omarchy owns the OS; this only switches the user environment.
+omarchy:
+  home-manager switch --flake .#omarchy
+
+# Build the Omarchy Home Manager configuration without activating it
+omarchy-build:
+  nix build .#homeConfigurations.omarchy.activationPackage
+
+############################################################################
+#
 #  Nix related commands
 #
 ############################################################################
