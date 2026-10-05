@@ -50,25 +50,29 @@ in {
       # Generate local device/service keys and register public keys before activation.
     ''
     + lib.optionalString (keyPaths.nickname != null) ''
-        # Match alias and literal FQDN for existing Git remotes.
-        Host forgejo forgejo.${tailnet}
-          HostName forgejo.${tailnet}
-          HostKeyAlias forgejo
-          User forgejo
-          IdentityFile ${keyPaths.services.forgejo}
-          IdentitiesOnly yes
+      # Match alias and literal FQDN for existing Git remotes.
+      Host forgejo forgejo.${tailnet}
+        HostName forgejo.${tailnet}
+        HostKeyAlias forgejo
+        User forgejo
+        IdentityFile ${keyPaths.services.forgejo}
+        IdentitiesOnly yes
 
-        Host codeberg.org
-          User git
-          IdentityFile ${keyPaths.services.codeberg}
-          IdentitiesOnly yes
+      Host codeberg.org
+        User git
+        IdentityFile ${keyPaths.services.codeberg}
+        IdentitiesOnly yes
 
-        Host github.com
-          User git
-          IdentityFile ${keyPaths.services.github}
-          IdentitiesOnly yes
+      Host github.com
+        User git
+        IdentityFile ${keyPaths.services.github}
+        IdentitiesOnly yes
 
-      # --- tailnet boxes (generated) ---
-      ${builtins.concatStringsSep "\n" (map plainHosts)}
-    '';
+    ''
+    + lib.concatMapStringsSep "\n" (entry: ''
+      Host ${entry.host}
+        HostName ${entry.name}
+        User ${entry.user}
+    '')
+    plainHosts;
 }
