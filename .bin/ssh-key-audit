@@ -1,0 +1,269 @@
+#!/usr/bin/env bash
+# Local, read-only SSH inventory. Never invokes SSH, agent, or enrollment tools.
+SCRIPT_NAME=ssh-key-audit
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd -P)
+# shellcheck source=common
+. "$SCRIPT_DIR/common"
+# Common error trap includes command text: replace before inspecting anything.
+trap 'printf "ERROR audit setup failed\n" >&2; exit 2' ERR
+SCRIPT_VERSION=0.1.0
+JSON=0 STRICT=0 INIT=0
+REGISTRY=${SSH_KEYS_REGISTRY:-${XDG_CONFIG_HOME:-$HOME/.config}/ssh/keys.yaml}
+SSH_ROOT=${SSH_DIR:-$HOME/.ssh}
+DEVICE=${SSH_KEY_AUDIT_DEVICE:-}
+EXPLICIT=0
+[[ -z "$DEVICE" ]] || EXPLICIT=1
+# Even argument errors honor --json regardless of option ordering.
+for arg in "$@"; do [[ "$arg" != --json ]] || JSON=1; done
+fail() {
+  printf 'ERROR %s\n' "$1" >&2
+  if [[ "$JSON" == 1 ]]; then
+    printf '{"version":1,"completed":false,"findings":[{"severity":"error","code":"operation_failed","message":"Audit failed; see stderr"}]}\n'
+  fi
+  exit 2
+}
+trap 'fail "Required audit operation failed"' ERR
+while (($#)); do
+  case "$1" in
+    -h|--help)
+      printf '%s\n' 'Usage: ssh-key-audit [--registry PATH] [--ssh-dir PATH] [--device NICKNAME]' '  --json --strict --init --verbose --version --help' '  --check-remote SSH_ALIAS: unsupported; optional checker skipped; no network operations' 'Exit: 0 completed; 1 strict warnings; 2 invalid input or required operation failure.'
+      exit 0 ;;
+    --version) print_version; exit 0 ;;
+    --json) JSON=1 ;;
+    --strict) STRICT=1 ;;
+    --init) INIT=1 ;;
+    -v|--verbose) VERBOSE=1 ;;
+    --registry|--ssh-dir|--device)
+      opt=$1
+      [[ $# -ge 2 && -n "$2" && "$2" != --* ]] || fail 'Option requires nonempty value'
+      case "$opt" in
+        --registry) REGISTRY=$2 ;;
+        --ssh-dir) SSH_ROOT=$2 ;;
+        --device) DEVICE=$2; EXPLICIT=1 ;;
+      esac
+      shift ;;
+    --check-remote) fail 'Remote checking unsupported; optional checker skipped' ;;
+    *) fail 'Unknown argument' ;;
+  esac
+  shift
+done
+[[ "$INIT:$JSON" != 1:1 ]] || fail '--init and --json are mutually exclusive'
+for cmd in jq yq ssh-keygen find stat mktemp hostname date awk base64 grep id ls tr rm; do
+  command -v "$cmd" >/dev/null 2>&1 || fail "Missing dependency: $cmd"
+done
+[[ $(yq --version) == *'version v4.'* ]] || fail 'Mike Farah yq v4 required'
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/ssh-key-audit.XXXXXXXX") || fail 'Cannot create scratch directory'
+trap 'rm -rf "$TMP"' EXIT
+trap 'exit 2' HUP INT TERM
+: > "$TMP/findings"
+: > "$TMP/inventory"
+WARNINGS=0 ERRORS=0
+finding() {
+  local severity=$1 code=$2 message=$3 path=${4:-}
+  jq -cn --arg severity "$severity" --arg code "$code" --arg message "$message" --arg path "$path" \
+    '{severity:$severity,code:$code,message:$message,path:(if $path == "" then null else $path end)}' >> "$TMP/findings"
+  case "$severity" in warning) WARNINGS=$((WARNINGS+1));; error) ERRORS=$((ERRORS+1));; esac
+}
+HOST=$(hostname | tr '[:upper:]' '[:lower:]')
+HOST=${HOST%%.*}
+if [[ "$INIT" == 1 ]]; then
+  DEVICE=${DEVICE:-local}
+  jq -en --arg d "$DEVICE" '$d | test("^[a-z][a-z0-9_-]*$")' >/dev/null || fail 'Invalid device nickname'
+  jq -n --arg d "$DEVICE" --arg h "$HOST" \
+    '{version:1,devices:{($d):{hostnames:[$h],provisioning:"inventoried"}},keys:[]}' > "$TMP/registry"
+else
+  [[ -r "$REGISTRY" && -f "$REGISTRY" ]] || fail 'Registry missing or unreadable'
+  # Inspect YAML nodes before JSON conversion (conversion alone retains duplicate keys).
+  if ! yq -o=json '[{"maps":[.. | select(tag == "!!map") | keys],"tags":[.. | tag]}]' "$REGISTRY" > "$TMP/nodes" 2>/dev/null; then
+    fail 'Malformed YAML'
+  fi
+  jq -se 'length == 1 and (.[0] | length == 1) and
+    (.[0][0].maps | all(length == (unique | length))) and
+    (.[0][0].tags | all(IN("!!map","!!seq","!!str","!!int","!!float","!!bool","!!null")))' "$TMP/nodes" >/dev/null || fail 'Duplicate YAML keys, multiple documents, or unsupported tags'
+  yq -o=json '.' "$REGISTRY" > "$TMP/input" 2>/dev/null || fail 'Cannot convert registry'
+  jq -e -f "$SCRIPT_DIR/ssh-key-audit-lib/validate.jq" "$TMP/input" > "$TMP/registry" 2>/dev/null || fail 'Registry violates v1 contract'
+  if [[ "$EXPLICIT" == 1 ]]; then
+    jq -e --arg d "$DEVICE" '.devices | has($d)' "$TMP/registry" >/dev/null || fail 'Unknown explicit device'
+  else
+    DEVICE=$(jq -r --arg h "$HOST" '.devices | to_entries[] | select(.value.hostnames | index($h)) | .key' "$TMP/registry")
+  fi
+fi
+[[ -n "$DEVICE" ]] || finding info unknown_device 'Hostname unmatched; device-specific missing checks skipped'
+
+# stat dialect is detected, not guessed from platform name.
+if stat -f '%u %Lp' "$TMP" >/dev/null 2>&1; then STAT=bsd; else STAT=gnu; fi
+permissions() {
+  local file=$1 rel=$2 metadata owner mode acl
+  if [[ "$STAT" == bsd ]]; then
+    metadata=$(stat -f '%u %Lp' "$file" 2>/dev/null) || { finding info permission_gap 'Ownership/mode unavailable' "$rel"; return; }
+  else
+    metadata=$(stat -c '%u %a' "$file" 2>/dev/null) || { finding info permission_gap 'Ownership/mode unavailable' "$rel"; return; }
+  fi
+  owner=${metadata%% *}; mode=${metadata##* }
+  if [[ "$owner" != "$(id -u)" ]] || (( (8#$mode & 077) != 0 )); then
+    finding warning unsafe_permissions 'Owner or group/other mode exposes key storage' "$rel"
+  fi
+  if [[ "$STAT" == bsd ]]; then
+    acl=$(ls -lde "$file" 2>/dev/null) || { finding info acl_gap 'ACL inspection unavailable' "$rel"; return; }
+    if [[ "$acl" == *$'\n'* ]]; then finding warning acl_present 'Extended ACL requires access review' "$rel"; fi
+  elif command -v getfacl >/dev/null 2>&1; then
+    acl=$(getfacl -cp "$file" 2>/dev/null) || { finding info acl_gap 'ACL inspection unavailable' "$rel"; return; }
+    if printf '%s\n' "$acl" | grep -Eq '^(default:|user:[^:]|group:[^:]|mask:)'; then
+      finding warning acl_present 'Extended ACL requires access review' "$rel"
+    fi
+  else finding info acl_gap 'getfacl unavailable; mode bits do not prove isolation' "$rel"
+  fi
+}
+fingerprint() {
+  local out
+  out=$(ssh-keygen -l -E sha256 -f "$1" </dev/null 2>/dev/null) || return 1
+  # Multi-key files are not owned single-key companions.
+  [[ "$out" != *$'\n'* ]] || return 1
+  printf '%s\n' "$out" | awk '{print $2}'
+}
+if [[ ! -d "$SSH_ROOT" ]]; then
+  finding error ssh_directory_missing 'SSH directory missing'
+else
+  SSH_ROOT=$(cd "$SSH_ROOT" && pwd -P)
+  permissions "$SSH_ROOT" '.'
+  find "$SSH_ROOT" -path "$SSH_ROOT/retired" -prune -o \( -type f -o -type l -o -type d \) -print0 > "$TMP/files" || fail 'SSH traversal failed'
+  while IFS= read -r -d '' file; do
+    rel=${file#"$SSH_ROOT/"}
+    case "$rel" in *$'\n'*|*$'\r'*|*$'\t'*) finding info unsupported_path 'Control-character path excluded'; continue;; esac
+    if [[ -L "$file" ]]; then
+      finding info symlink_excluded 'Symlink excluded; target not inspected' "$rel"
+      continue
+    fi
+    if [[ -d "$file" ]]; then
+      [[ "$file" == "$SSH_ROOT" ]] || permissions "$file" "$rel"
+      continue
+    fi
+    case "${file##*/}" in authorized_keys|authorized_keys2|known_hosts|known_hosts.old|*-cert.pub) continue;; esac
+    if [[ "${file##*/}" == config ]]; then
+      if grep -Eiq '^[[:space:]]*(Include|IdentityFile)[[:space:]]' "$file"; then
+        finding info config_references 'SSH config references not expanded; included/external identities may be out of scope' "$rel"
+      fi
+      continue
+    fi
+    hardware=false private=false public=false fp='' protection=not_applicable match=uncheckable
+    if [[ "$file" == *.pub ]]; then
+      public=true
+      fp=$(fingerprint "$file") || { finding error invalid_public_key 'Invalid public-key companion' "$rel"; continue; }
+      if ssh-keygen -l -f "$file" </dev/null 2>/dev/null | grep -q -- '-CERT)'; then continue; fi
+      base=${rel%.pub}
+      [[ -f "$SSH_ROOT/$base" && ! -L "$SSH_ROOT/$base" ]] || finding info public_only 'Public key has no inspected private companion' "$rel"
+    else
+      first=''
+      IFS= read -r first < "$file" || true
+      case "$first" in
+        '-----BEGIN OPENSSH PRIVATE KEY-----'|'-----BEGIN RSA PRIVATE KEY-----'|'-----BEGIN DSA PRIVATE KEY-----'|'-----BEGIN EC PRIVATE KEY-----'|'-----BEGIN PRIVATE KEY-----'|'-----BEGIN ENCRYPTED PRIVATE KEY-----') private=true ;;
+        *) continue ;;
+      esac
+      base=$rel
+      permissions "$file" "$rel"
+      # Inspect decoded OpenSSH type marker only; never invoke -y for security keys.
+      # No decoded private bytes are retained or emitted. grep consumes whole stream.
+      if [[ "$first" == '-----BEGIN OPENSSH PRIVATE KEY-----' ]]; then
+        if awk 'NR>1 && !/^-----/ {printf "%s", $0}' "$file" | base64 -d 2>/dev/null | LC_ALL=C grep -aE 'sk-(ssh-ed25519|ecdsa-sha2-nistp256)@openssh.com' >/dev/null; then hardware=true; fi
+      fi
+      # Some formats fall back to filename.pub. Never let that implicit lookup
+      # follow a companion symlink (including a link outside scan boundary).
+      fp=''
+      if [[ ! -L "$file.pub" ]]; then fp=$(fingerprint "$file") || fp=''; fi
+      if [[ "$hardware" == true ]]; then
+        finding info hardware_uncheckable 'Hardware key: no touch, PIN, or private derivation attempted' "$rel"
+        protection=hardware_uncheckable
+      else
+        derived=''
+        if derived=$(SSH_ASKPASS_REQUIRE=never SSH_ASKPASS=/usr/bin/false DISPLAY= ssh-keygen -y -P '' -f "$file" </dev/null 2>/dev/null); then
+          protection=empty_passphrase
+          finding warning empty_passphrase 'Software private key usable with empty passphrase' "$rel"
+          actual=$(printf '%s\n' "$derived" | ssh-keygen -l -E sha256 -f /dev/stdin 2>/dev/null | awk '{print $2}') || fail 'Derived public fingerprint unavailable'
+          fp=$actual
+          if [[ -f "$file.pub" && ! -L "$file.pub" ]]; then
+            companion=$(fingerprint "$file.pub") || companion=''
+            if [[ -n "$companion" && "$companion" != "$fp" ]]; then
+              finding error pair_mismatch 'Private/public fingerprints differ' "$rel"; match=mismatch
+            elif [[ -n "$companion" ]]; then match=matched; fi
+          fi
+        else
+          protection=encrypted_or_uncheckable
+          finding info private_uncheckable 'Empty-passphrase check failed; encryption/protection not proven' "$rel"
+        fi
+        unset derived
+      fi
+      [[ -f "$file.pub" && ! -L "$file.pub" ]] || finding warning missing_public 'Private key missing inspected .pub companion' "$rel"
+      [[ -n "$fp" ]] || { finding info fingerprint_uncheckable 'Private fingerprint unavailable' "$rel"; continue; }
+    fi
+    [[ "$fp" == SHA256:* ]] || { finding error invalid_fingerprint 'Cannot determine SHA256 fingerprint' "$rel"; continue; }
+    jq -cn --arg path "$base" --arg fp "$fp" --argjson private "$private" --argjson hardware "$hardware" --arg protection "$protection" --arg match "$match" \
+      '{path:$path,fingerprint:$fp,private:$private,hardware:$hardware,protection:$protection,pair_match:$match}' >> "$TMP/inventory"
+    if [[ "$INIT" == 0 ]]; then
+      entry=$(jq -c --arg fp "$fp" '.keys[] | select(.fingerprint==$fp)' "$TMP/registry")
+      if [[ -z "$entry" ]]; then finding warning unregistered_key 'Local fingerprint absent from registry' "$rel"
+      else
+        desired=$(jq -r '.name' <<< "$entry")
+        [[ "${base##*/}" == "$desired" ]] || finding warning naming 'Current filename differs from desired name' "$rel"
+        if [[ -n "$DEVICE" ]] && ! jq -e --arg d "$DEVICE" --arg p "$base" '.holders | any(.device==$d and .path==$p)' <<< "$entry" >/dev/null; then
+          finding warning holder_path_drift 'Fingerprint found outside recorded local holder path' "$rel"
+        fi
+        if [[ "$private" == true && "$hardware" == false ]] && jq -e '[.holders[] | select(.private_key_expected and (.material_state | IN("present","unknown"))) | .device] | unique | length > 1' <<< "$entry" >/dev/null; then
+          finding warning shared_software_key 'Software private key recorded on multiple devices' "$rel"
+        fi
+      fi
+    fi
+  done < "$TMP/files"
+fi
+jq -s 'group_by([.path,.fingerprint]) | map((map(select(.private)) + .)[0] + {private:any(.[];.private),hardware:any(.[];.hardware)})' "$TMP/inventory" > "$TMP/local"
+if [[ "$VERBOSE" == 1 ]]; then
+  printf 'INFO device=%s; local observations=%s; SSH includes/symlinks not expanded\n' "${DEVICE:-unknown}" "$(jq 'length' "$TMP/local")" >&2
+fi
+if [[ "$INIT" == 1 ]]; then
+  [[ "$ERRORS" == 0 ]] || fail 'Inventory errors; starter registry not emitted'
+  jq --arg d "$DEVICE" --slurpfile local "$TMP/local" '.keys=[$local[0][] | {
+    name:(.path | split("/") | last),fingerprint:.fingerprint,purpose:"unknown",status:"active",
+    holders:[{device:$d,path:.path,private_key_expected:.private,material_state:"present",observed_at:null}],
+    created:null,review_after_months:null,backup:null,replaces:null,authorization_scope_complete:false,notes:"",authorized:[]}]
+    | .keys |= (group_by(.fingerprint) | map(.[0] + {holders:map(.holders[]) }))' "$TMP/registry" > "$TMP/starter"
+  jq -e -f "$SCRIPT_DIR/ssh-key-audit-lib/validate.jq" "$TMP/starter" >/dev/null 2>&1 || fail 'Starter registry cannot satisfy contract'
+  yq -P -o=yaml '.' "$TMP/starter"
+  jq -r '.severity+" "+.code+": "+.message' "$TMP/findings" >&2
+else
+  while IFS= read -r entry; do
+    fp=$(jq -r '.fingerprint' <<< "$entry")
+    if jq -e '.status=="retiring" and ((.authorization_scope_complete|not) or (.authorized | any(.revocation_status!="completed")))' <<< "$entry" >/dev/null; then
+      finding warning pending_revocation "Retiring key has unresolved scope/revocation: $fp"
+    fi
+    if jq -e '.created==null or (.authorization_scope_complete|not)' <<< "$entry" >/dev/null; then
+      finding info metadata_unknown "Creation date or authorization scope unknown: $fp"
+    fi
+    if jq -e --arg today "$(date -u +%Y-%m-%d)" '
+      .created!=null and .review_after_months!=null and
+      ((.created | split("-") | map(tonumber)) as $c |
+       ($today | split("-") | map(tonumber)) as $t |
+       ($t[0]*12+$t[1]-$c[0]*12-$c[1]) as $elapsed |
+       ([31,(if ($t[0]%4==0 and ($t[0]%100!=0 or $t[0]%400==0)) then 29 else 28 end),31,30,31,30,31,31,30,31,30,31][$t[1]-1]) as $days |
+       $elapsed > .review_after_months or ($elapsed == .review_after_months and $t[2] >= ([$c[2],$days]|min)))' <<< "$entry" >/dev/null; then
+      finding info age_review "Creation date reached review interval: $fp"
+    fi
+    while IFS= read -r holder; do
+      path=$(jq -r '.path' <<< "$holder")
+      if ! jq -e --arg p "$path" --arg fp "$fp" 'any(.[]; .path==$p and .fingerprint==$fp and .private)' "$TMP/local" >/dev/null; then
+        finding warning missing_expected_private 'Expected local private material not confirmed at holder path' "$path"
+      fi
+    done < <(jq -c --arg d "$DEVICE" '.holders[] | select(.device==$d and .private_key_expected and (.material_state | IN("present","unknown")))' <<< "$entry")
+  done < <(jq -c '.keys[]' "$TMP/registry")
+  if [[ -n "$DEVICE" ]] && jq -e --arg d "$DEVICE" '.devices[$d].provisioning=="unprovisioned"' "$TMP/registry" >/dev/null; then
+    finding info unprovisioned 'Current device inventory marked unprovisioned'
+  fi
+  if [[ "$JSON" == 1 ]]; then
+    jq -n --arg device "$DEVICE" --argjson errors "$ERRORS" --argjson warnings "$WARNINGS" --slurpfile findings "$TMP/findings" --slurpfile inventory "$TMP/local" \
+      '{version:1,completed:true,device:(if $device=="" then null else $device end),errors:$errors,warnings:$warnings,findings:$findings,inventory:$inventory[0]}'
+  else
+    jq -r '.severity+" "+.code+": "+.message+(if .path==null then "" else " ["+.path+"]" end)' "$TMP/findings"
+    printf 'Audit complete: %s errors, %s warnings\n' "$ERRORS" "$WARNINGS"
+  fi
+fi
+[[ "$ERRORS" == 0 ]] || exit 2
+[[ "$STRICT" == 0 || "$WARNINGS" == 0 ]] || exit 1
+exit 0
