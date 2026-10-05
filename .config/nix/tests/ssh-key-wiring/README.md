@@ -6,9 +6,9 @@ Run from any directory:
 bash .config/nix/tests/ssh-key-wiring/run.sh
 ```
 
-Six isolated evaluation groups cover Airborne, Minicore, Rover, Omarchy, excluded Quattro, and unknown host. Require Nix and Python 3; no dependency downloads, activation, key inspection, agent interaction, or network operations. Tests verify four nickname mappings, exact Forgejo/Codeberg/GitHub paths and directives, audit environment, registry source location/existence, `force = false`, and Airborne registry-management exclusion. No readiness gates or legacy fallback remain. Exact block comparison proves other aliases removed. Excluded/unknown hosts get comment-only config and no audit-device environment. Generate missing keys locally and register public keys before activation.
+Six isolated evaluation groups cover Airborne, Minicore, Rover, Omarchy, excluded Quattro, and unknown host. Require Nix and Python 3; no dependency downloads, activation, key inspection, agent interaction, or network operations. Tests verify four nickname mappings, exact Forgejo/Codeberg/GitHub paths and directives, audit environment, registry source location/existence, `force = false`, and registry management enabled on every host. No readiness gates or legacy fallback remain. Exact block comparison also checks four shared tailnet aliases. Excluded/unknown hosts get shared aliases but no device-specific Git blocks or audit-device environment. Generate missing keys locally and register public keys before activation.
 
-Full Home Manager evaluation also requires cached flake inputs. Before new files are tracked, ordinary Git-backed flake evaluation excludes them. Evaluate a repository-root path snapshot instead; choosing only `.config/nix` as snapshot root loses sibling `.config/ssh/keys.yaml`:
+Full Home Manager evaluation also requires cached flake inputs. Before new files are tracked, ordinary Git-backed flake evaluation excludes them. Registry source is a regular file at `home/ssh-keys.yaml`, inside flake root. For selected-option checks before tracking new files, evaluate a repository-root path snapshot instead:
 
 ```bash
 repo=$(git rev-parse --show-toplevel)

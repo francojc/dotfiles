@@ -31,12 +31,10 @@
     }
   ];
 in {
-  # Airborne's ~/.config resolves into dotfiles; managing this target could
-  # back up and replace the canonical registry. Other hosts need filesystem
-  # review before activation. Registry contains public metadata only.
+  # Registry contains public metadata only. Source stays inside flake root so
+  # pure evaluation can access it on every host.
   xdg.configFile."ssh/keys.yaml" = {
-    enable = hostname != "Macbook-Airborne";
-    source = ../../ssh/keys.yaml;
+    source = ./ssh-keys.yaml;
     force = false;
   };
 

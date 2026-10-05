@@ -28,7 +28,7 @@ for host, nickname in nicknames.items():
   assert result["environment"] == ({"SSH_KEY_AUDIT_DEVICE": nickname} if nickname else {}), host
   assert result["registryExists"] and result["registrySourceCorrect"], host
   assert result["registryForce"] is False, host
-  assert result["registryEnabled"] is (nickname != "airborne"), host
+  assert result["registryEnabled"] is True, host
   assert result["warnings"] == [], host
 
   blocks = {}
@@ -59,6 +59,15 @@ for host, nickname in nicknames.items():
       "User": "git", "IdentityFile": services["github"], "IdentitiesOnly": "yes",
     },
   } if nickname else {}
+  expected.update({
+    alias: {"HostName": name, "User": user}
+    for alias, name, user in (
+      ("services", "core-services", "root"),
+      ("media", "media-services", "root"),
+      ("homeassistant", "homeassistant", "jeridf"),
+      ("proxmox", "minis-proxmox", "root"),
+    )
+  })
   assert blocks == expected, host
   print(f"PASS {host}: device/service paths, registry and exact SSH blocks")
 print("All 6 SSH wiring groups passed; evaluation only, no activation or SSH operations.")

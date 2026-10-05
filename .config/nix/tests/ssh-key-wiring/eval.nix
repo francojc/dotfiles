@@ -1,6 +1,8 @@
 let
   hosts = ["Macbook-Airborne" "Mac-Minicore" "Mini-Rover" "omarchy" "nixos-quattro" "future-host"];
   lib = {
+    concatMapStringsSep = separator: f: values:
+      builtins.concatStringsSep separator (map f values);
     optionalAttrs = condition: attrs:
       if condition
       then attrs
@@ -19,9 +21,9 @@ let
     environment = module.home.sessionVariables;
     warnings = module.warnings or [];
     registryExists = builtins.pathExists registry.source;
-    registrySourceCorrect = registry.source == ../../../ssh/keys.yaml;
+    registrySourceCorrect = registry.source == ../../home/ssh-keys.yaml;
     registryForce = registry.force;
-    registryEnabled = registry.enable;
+    registryEnabled = registry.enable or true;
   };
 in
   builtins.listToAttrs (map (hostname: {
