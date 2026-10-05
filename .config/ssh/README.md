@@ -48,9 +48,17 @@ All four identities and users are confirmed in `flake.nix` and `hosts/*/default.
 
 Home Manager receives the exact `hostname` argument through `extraSpecialArgs`; staged Phase 5 wiring uses that explicit mapping for `SSH_KEY_AUDIT_DEVICE`. Hostname fallback lowercases and removes the domain suffix; no hyphen splitting. Require normalized aliases to be unique across devices.
 
-`provisioning` records inventory state only: `unprovisioned` or `inventoried`. It does not authorize deployment and does not prove all keys exist. Per-device/per-key path cutover readiness remains explicit in Nix configuration and migration records; do not infer readiness from the desired name or provisioning field.
+`provisioning` records inventory state only: `unprovisioned` or `inventoried`. It does not authorize deployment and does not prove all keys exist. Current Nix wiring selects declared service paths without readiness gates. Provisioning metadata still does not prove keys exist or authorize generation, activation, or retirement; see current service-only wiring below.
 
-## Staged Home Manager paths and deployment gates
+## Current service-only Home Manager wiring
+
+Current configuration supersedes historical staged wiring below. Four devices (`airborne`, `minicore`, `rover`, `omarchy`) select three services (`forgejo`, `codeberg`, `github`) using `~/.ssh/id_ed25519_<device>_<service>`. No readiness/provisioning gate or legacy fallback remains in Nix. Generate missing pairs locally with `ssh-key-setup <device> <service>`, register public keys with destinations, and review filesystem topology before activation. Preserve existing Airborne Forgejo pair.
+
+Only these service Host blocks remain in `nix-managed.conf`. Workstation/tailnet aliases removed; Quattro and unsupported hosts get comment-only config and no audit-device environment. Other SSH includes, default identities, actual key files, and remote authorizations are untouched. Removing a config reference does not prove a key unused or authorize deletion. Registry inventory/provisioning fields remain audit metadata, not config-selection gates; Omarchy starts unprovisioned.
+
+Airborne registry-management exclusion and `force = false` remain. Six isolated wiring tests cover all supported devices, excluded Quattro, and unknown host. No activation implied.
+
+## Historical staged Home Manager paths and deployment gates
 
 Implementation: `.config/nix/home/ssh-aliases.nix` stages public registry metadata via `xdg.configFile."ssh/keys.yaml"`, with `force = false`. Entry explicitly disabled on Airborne because runtime path resolves to canonical repository file through `~/.config` symlink. Audit reads that existing file directly; Home Manager must not move it to a backup or replace it with a store symlink. Other hosts retain staged deployment, pending their own filesystem review before activation. `.config/nix/home/ssh-key-paths.nix` holds explicit host mappings, inventory state, and independent readiness flags for Forgejo, Codeberg, and workstation keys. It never reads private-key contents or probes live key files. VM, PAOS, and default-key references remain outside this change.
 

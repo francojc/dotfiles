@@ -6,7 +6,7 @@ Run from any directory:
 bash .config/nix/tests/ssh-key-wiring/run.sh
 ```
 
-Five isolated evaluation groups cover Airborne, Minicore, Rover, Quattro, and unsupported host. Require Nix and Python 3; no dependency downloads, activation, key inspection, agent interaction, or network operations. Tests verify explicit nickname/provisioning mappings, per-service readiness, current versus intended paths, environment settings, registry source location and existence, `force = false`, Airborne-only registry management exclusion, readiness warnings, and every SSH block's exact directives. Only approved Airborne Forgejo readiness is true; proposed Forgejo identity uses renamed path. All other devices/services retain legacy selection. This declaration does not claim activation completed. Generic tailnet hosts retain default/agent identity selection.
+Six isolated evaluation groups cover Airborne, Minicore, Rover, Omarchy, excluded Quattro, and unknown host. Require Nix and Python 3; no dependency downloads, activation, key inspection, agent interaction, or network operations. Tests verify four nickname mappings, exact Forgejo/Codeberg/GitHub paths and directives, audit environment, registry source location/existence, `force = false`, and Airborne registry-management exclusion. No readiness gates or legacy fallback remain. Exact block comparison proves other aliases removed. Excluded/unknown hosts get comment-only config and no audit-device environment. Generate missing keys locally and register public keys before activation.
 
 Full Home Manager evaluation also requires cached flake inputs. Before new files are tracked, ordinary Git-backed flake evaluation excludes them. Evaluate a repository-root path snapshot instead; choosing only `.config/nix` as snapshot root loses sibling `.config/ssh/keys.yaml`:
 
@@ -15,7 +15,7 @@ repo=$(git rev-parse --show-toplevel)
 nix eval --offline --impure --json \
   --expr "builtins.getFlake \"path:$repo?dir=.config/nix\"" \
   --apply 'f: builtins.mapAttrs (_: system: builtins.mapAttrs (_: hm: {
-    device = hm.home.sessionVariables.SSH_KEY_AUDIT_DEVICE;
+    device = hm.home.sessionVariables.SSH_KEY_AUDIT_DEVICE or null;
     ssh = hm.home.file.".ssh/config.d/nix-managed.conf".text;
     registryExists = builtins.pathExists hm.xdg.configFile."ssh/keys.yaml".source;
     force = hm.xdg.configFile."ssh/keys.yaml".force;

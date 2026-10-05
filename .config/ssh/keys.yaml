@@ -12,6 +12,10 @@ devices:
     hostnames:
       - mini-rover
     provisioning: unprovisioned
+  omarchy:
+    hostnames:
+      - omarchy
+    provisioning: unprovisioned
   quattro:
     hostnames:
       - nixos-quattro

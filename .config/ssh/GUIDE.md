@@ -2,6 +2,14 @@
 
 Use this guide for routine review and planning. Commands labeled **local check** inspect local state; they do not authorize repairs. Workflows labeled **approval required** change access or key material and must be reviewed separately. Never paste private keys, passphrases, or tokens into Git, chat, logs, or a Nix expression.
 
+## Current wiring override
+
+Nix now declares only Forgejo, Codeberg, and GitHub identities on Airborne, Minicore, Rover, and Omarchy: `~/.ssh/id_ed25519_<device>_<service>`. No readiness flags or legacy fallback. Other managed Host aliases removed; Quattro gets no service blocks. Historical checkpoint/workflows below describe earlier staged state, not current config selection.
+
+Before activation, generate missing pairs on their owning device with `ssh-key-setup <device> <service>`, register public keys, and review registry deployment topology. Existing Airborne Forgejo pair stays unchanged. Generator refuses collisions and emits registry suggestions; it does not register keys or update registry automatically. Omarchy device metadata exists, but no keys or authorizations are inferred. Inventory metadata remains useful even though Nix readiness gates are gone.
+
+Repository edits do not activate config. Actual key files and remote authorizations remain untouched; removing aliases is not proof that corresponding keys can be deleted.
+
 ## 1. Start here
 
 On Airborne, run this **local check**:

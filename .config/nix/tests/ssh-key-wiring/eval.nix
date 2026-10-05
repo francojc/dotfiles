@@ -1,14 +1,14 @@
 let
-  hosts = ["Macbook-Airborne" "Mac-Minicore" "Mini-Rover" "nixos-quattro" "future-host"];
+  hosts = ["Macbook-Airborne" "Mac-Minicore" "Mini-Rover" "omarchy" "nixos-quattro" "future-host"];
   lib = {
     optionalAttrs = condition: attrs:
       if condition
       then attrs
       else {};
-    optional = condition: value:
+    optionalString = condition: value:
       if condition
-      then [value]
-      else [];
+      then value
+      else "";
   };
   evaluate = hostname: let
     module = import ../../home/ssh-aliases.nix {inherit hostname lib;};
@@ -17,7 +17,7 @@ let
     paths = import ../../home/ssh-key-paths.nix {inherit hostname;};
     config = module.home.file.".ssh/config.d/nix-managed.conf".text;
     environment = module.home.sessionVariables;
-    warnings = module.warnings;
+    warnings = module.warnings or [];
     registryExists = builtins.pathExists registry.source;
     registrySourceCorrect = registry.source == ../../../ssh/keys.yaml;
     registryForce = registry.force;
