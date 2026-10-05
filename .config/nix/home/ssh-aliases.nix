@@ -7,6 +7,29 @@
   # Use FQDN: macOS does not apply Tailscale's supplemental search domain
   # consistently to unqualified names.
   tailnet = "gerbil-matrix.ts.net";
+
+  plainHosts = [
+    {
+      host = "services";
+      name = "core-services";
+      user = "root";
+    }
+    {
+      host = "media";
+      name = "media-services";
+      user = "root";
+    }
+    {
+      host = "homeassistant";
+      name = "homeassistant";
+      user = "jeridf";
+    }
+    {
+      host = "proxmox";
+      name = "minis-proxmox";
+      user = "root";
+    }
+  ];
 in {
   # Airborne's ~/.config resolves into dotfiles; managing this target could
   # back up and replace the canonical registry. Other hosts need filesystem
@@ -27,22 +50,25 @@ in {
       # Generate local device/service keys and register public keys before activation.
     ''
     + lib.optionalString (keyPaths.nickname != null) ''
-      # Match alias and literal FQDN for existing Git remotes.
-      Host forgejo forgejo.${tailnet}
-        HostName forgejo.${tailnet}
-        HostKeyAlias forgejo
-        User forgejo
-        IdentityFile ${keyPaths.services.forgejo}
-        IdentitiesOnly yes
+        # Match alias and literal FQDN for existing Git remotes.
+        Host forgejo forgejo.${tailnet}
+          HostName forgejo.${tailnet}
+          HostKeyAlias forgejo
+          User forgejo
+          IdentityFile ${keyPaths.services.forgejo}
+          IdentitiesOnly yes
 
-      Host codeberg.org
-        User git
-        IdentityFile ${keyPaths.services.codeberg}
-        IdentitiesOnly yes
+        Host codeberg.org
+          User git
+          IdentityFile ${keyPaths.services.codeberg}
+          IdentitiesOnly yes
 
-      Host github.com
-        User git
-        IdentityFile ${keyPaths.services.github}
-        IdentitiesOnly yes
+        Host github.com
+          User git
+          IdentityFile ${keyPaths.services.github}
+          IdentitiesOnly yes
+
+      # --- tailnet boxes (generated) ---
+      ${builtins.concatStringsSep "\n" (map plainHosts)}
     '';
 }
