@@ -88,6 +88,7 @@
     entr # Event notify tool
     file # File type identification
     glancesNoCheck # System monitoring tool
+    just # run project commands
     mpack # encoding/decoding MIME types
     ncdu # Disk usage analyzer
     pass # Password manager
