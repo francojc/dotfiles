@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "completed": true,
+  "device": "airborne",
+  "errors": 0,
+  "warnings": 18,
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "id_ed25519_codeberg.pub"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "id_ed25519"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "id_ed25519_airborne_forgejo"
+    },
+    {
+      "severity": "info",
+      "code": "private_uncheckable",
+      "message": "Empty-passphrase check failed; encryption/protection not proven",
+      "path": "id_ed25519_airborne_omarchy"
+    },
+    {
+      "severity": "warning",
+      "code": "unregistered_key",
+      "message": "Local fingerprint absent from registry",
+      "path": "id_ed25519_airborne_omarchy"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "paos_ed25519.pub"
+    },
+    {
+      "severity": "info",
+      "code": "config_references",
+      "message": "SSH config references not expanded; included/external identities may be out of scope",
+      "path": "config"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "id_ed25519_codeberg"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "id_ed25519_codeberg"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "nixos-machine.pub"
+    },
+    {
+      "severity": "info",
+      "code": "symlink_excluded",
+      "message": "Symlink excluded; target not inspected",
+      "path": "id_ed25519_forgejo.pub"
+    },
+    {
+      "severity": "info",
+      "code": "symlink_excluded",
+      "message": "Symlink excluded; target not inspected",
+      "path": "id_ed25519_forgejo"
+    },
+    {
+      "severity": "warning",
+      "code": "unsafe_permissions",
+      "message": "Owner or group/other mode exposes key storage",
+      "path": "paos"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "id_ed25519_workstation.pub"
+    },
+    {
+      "severity": "warning",
+      "code": "unsafe_permissions",
+      "message": "Owner or group/other mode exposes key storage",
+      "path": "config.d"
+    },
+    {
+      "severity": "info",
+      "code": "symlink_excluded",
+      "message": "Symlink excluded; target not inspected",
+      "path": "config.d/nix-managed.conf"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "id_ed25519_workstation"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "id_ed25519_workstation"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "paos_ed25519"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "paos_ed25519"
+    },
+    {
+      "severity": "warning",
+      "code": "empty_passphrase",
+      "message": "Software private key usable with empty passphrase",
+      "path": "nixos-machine"
+    },
+    {
+      "severity": "warning",
+      "code": "naming",
+      "message": "Current filename differs from desired name",
+      "path": "nixos-machine"
+    },
+    {
+      "severity": "warning",
+      "code": "unregistered_key",
+      "message": "Local fingerprint absent from registry",
+      "path": "id_ed25519_airborne_omarchy.pub"
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:2uikUsy/rGyU1EWnDqFWHGKlZ6UoVzy5tOXwqQutUeI",
+      "path": null
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:IRTc3TlFNfGfZY09dsXQEnuB08qJFKmiOe80hdnt/DI",
+      "path": null
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:VeEIw4MvvMvwvalXHQGes3lmzyq2YZynohJAaHXISrc",
+      "path": null
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:pWLRa50op5h04FekVEigpzY1ft0rZ5FpnP8sCAMW7oE",
+      "path": null
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:tUbpROy8Wotf0adtBFK2GiiCj+veiJHOmtjvivuDPHg",
+      "path": null
+    },
+    {
+      "severity": "info",
+      "code": "metadata_unknown",
+      "message": "Creation date or authorization scope unknown: SHA256:zsf1OeVUFg6GT4IvvDytyWTF2FHTtG815if4UOqqLFc",
+      "path": null
+    }
+  ],
+  "inventory": [
+    {
+      "path": "id_ed25519",
+      "fingerprint": "SHA256:IRTc3TlFNfGfZY09dsXQEnuB08qJFKmiOe80hdnt/DI",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    },
+    {
+      "path": "id_ed25519_airborne_forgejo",
+      "fingerprint": "SHA256:2uikUsy/rGyU1EWnDqFWHGKlZ6UoVzy5tOXwqQutUeI",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    },
+    {
+      "path": "id_ed25519_airborne_omarchy",
+      "fingerprint": "SHA256:l1YN6vZLS8lGl+VFIlXLBDFYCp5VfD4gCR2Pj9+iRaY",
+      "private": true,
+      "hardware": false,
+      "protection": "encrypted_or_uncheckable",
+      "pair_match": "uncheckable"
+    },
+    {
+      "path": "id_ed25519_codeberg",
+      "fingerprint": "SHA256:zsf1OeVUFg6GT4IvvDytyWTF2FHTtG815if4UOqqLFc",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    },
+    {
+      "path": "id_ed25519_workstation",
+      "fingerprint": "SHA256:VeEIw4MvvMvwvalXHQGes3lmzyq2YZynohJAaHXISrc",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    },
+    {
+      "path": "nixos-machine",
+      "fingerprint": "SHA256:pWLRa50op5h04FekVEigpzY1ft0rZ5FpnP8sCAMW7oE",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    },
+    {
+      "path": "paos_ed25519",
+      "fingerprint": "SHA256:tUbpROy8Wotf0adtBFK2GiiCj+veiJHOmtjvivuDPHg",
+      "private": true,
+      "hardware": false,
+      "protection": "empty_passphrase",
+      "pair_match": "matched"
+    }
+  ]
+}

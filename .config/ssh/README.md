@@ -1,6 +1,6 @@
 # SSH key registry contract
 
-Status: version 1 contract defined in Phase 1; read-only validator and audit implemented in Phase 2; Airborne baseline and registry draft populated in Phase 3. This directory contains metadata only. No live keys generated, moved, or deployed.
+Status: version 1 contract defined in Phase 1; read-only validator and audit implemented in Phase 2; Airborne baseline and registry draft populated in Phase 3; device-aware Home Manager wiring staged in Phase 5. This directory contains metadata only. No live keys generated, moved, or deployed.
 
 Phase 3 artifacts: `keys.yaml`, sanitized `baseline-airborne.json`, and `baseline-airborne.md`. Six Airborne pairs match; all six software keys usable with empty passphrase. Other devices remain unprovisioned. Registry awaits owner review before commit/sharing; runtime deployment deferred. Baseline report documents findings, provisional labels, inferred authorization scope, and operational gates.
 
@@ -13,7 +13,7 @@ Phase 3 artifacts: `keys.yaml`, sanitized `baseline-airborne.json`, and `baselin
 - Device selection: `--device NICKNAME` → nonempty `SSH_KEY_AUDIT_DEVICE` → normalized local hostname.
 - Explicit empty CLI values are argument errors. Explicit unknown device nicknames are errors; an unmatched automatically discovered hostname is informational and skips device-specific missing-key checks.
 
-Runtime discovery does not fall back to an undeployed repository registry. Before Phase 5 deployment, use an explicit registry path. Missing registry is an error except for `--init`, which inventories locally and emits starter YAML without requiring or modifying a registry.
+Runtime discovery does not fall back to an undeployed repository registry. Phase 5 stages deployment only; until separately approved activation, use an explicit registry path. Missing registry is an error except for `--init`, which inventories locally and emits starter YAML without requiring or modifying a registry.
 
 ## Read-only audit usage
 
@@ -42,9 +42,48 @@ Phase 2 tests cover Bash 3.2/current Bash on macOS, with mocked GNU stat/ACL and
 
 All four identities and users are confirmed in `flake.nix` and `hosts/*/default.nix`. Shared Darwin and NixOS profiles explicitly set `networking.hostName = hostname`; Darwin also sets `networking.computerName`. These normalized names may seed configuration-backed fallback aliases. Airborne's runtime hostname is also confirmed locally; activation/runtime agreement on other devices remains unverified. Record additional aliases only after confirmation; configured names do not prove deployed state.
 
-Home Manager receives the exact `hostname` argument through `extraSpecialArgs`; Phase 5 should use that explicit mapping for `SSH_KEY_AUDIT_DEVICE`. Hostname fallback lowercases and removes the domain suffix; no hyphen splitting. Require normalized aliases to be unique across devices.
+Home Manager receives the exact `hostname` argument through `extraSpecialArgs`; staged Phase 5 wiring uses that explicit mapping for `SSH_KEY_AUDIT_DEVICE`. Hostname fallback lowercases and removes the domain suffix; no hyphen splitting. Require normalized aliases to be unique across devices.
 
 `provisioning` records inventory state only: `unprovisioned` or `inventoried`. It does not authorize deployment and does not prove all keys exist. Per-device/per-key path cutover readiness remains explicit in Nix configuration and migration records; do not infer readiness from the desired name or provisioning field.
+
+## Staged Home Manager paths and deployment gates
+
+Implementation: `.config/nix/home/ssh-aliases.nix` deploys public registry metadata via `xdg.configFile."ssh/keys.yaml"`, with `force = false`. `.config/nix/home/ssh-key-paths.nix` holds explicit host mappings, inventory state, and independent readiness flags for Forgejo, Codeberg, and workstation keys. It never reads private-key contents or probes live key files. VM, PAOS, and default-key references remain outside this change.
+
+| Device | Inventory | Forgejo / Codeberg / workstations cutover | Selected paths |
+|---|---|---|---|
+| Airborne | Inventoried | Forgejo renamed; activation/remote verification pending. Others not migrated | Proposed Forgejo renamed path; others legacy |
+| Minicore | Unprovisioned | All pending separate inventory/onboarding approval | Existing legacy paths |
+| Rover | Unprovisioned | All pending separate inventory/onboarding approval | Existing legacy paths |
+| Quattro | Unprovisioned | All pending separate inventory/onboarding approval | Existing legacy paths |
+| Unsupported host | Unsupported | No intended paths or device environment invented | Existing legacy behavior |
+
+Intended paths use holder nickname, e.g. `~/.ssh/id_ed25519_airborne_forgejo` versus `~/.ssh/id_ed25519_minicore_forgejo`. Proposed Airborne Forgejo selection is now `id_ed25519_airborne_forgejo`; all other selections retain `id_ed25519_forgejo`, `id_ed25519_codeberg`, or `id_ed25519_workstation`. Airborne effective config still uses old Forgejo path through approved private/public compatibility symlinks until separate activation. On uninspected hosts, preserving these references does not claim files exist. Each evaluation emits a readiness warning. Generic tailnet identity selection, aliases, users, hostnames, ports, and host-key aliases remain unchanged.
+
+Readiness selects intended path only when device is inventoried and individual service flag is true. Inventory alone does not enable cutover. Readiness flags are repository declarations, not authorization or runtime existence checks; leave false until selected pair's prerequisites are verified and cutover explicitly approved.
+
+### Cutover and rollback review
+
+1. Review populated registry metadata before committing/sharing or deployment. Inspect runtime registry and `.backup` collision paths before activation. Existing integrated Home Manager policy uses `backupFileExtension = "backup"`; differing unmanaged regular files receive backup with a warning, existing conflicting backup blocks activation, and `force = false` does not bypass collision checks. Do not set overwrite-backup behavior or force replacement to bypass review.
+2. Select one confirmed pair and device; verify fingerprint, references, ownership/protection findings, destination collisions, and recovery access. Resolve selected pair's blockers. Other-device onboarding requires separate inventory; no private-key copying.
+3. Approve live rename and temporary old-path private/public compatibility links or coordinated local config cutover. Record paths/fingerprints in private rollback manifest outside Git. No copy bridge. Phase 5 alone performs none of these operations.
+4. After files/approved compatibility paths exist, update only selected device/service readiness and registry holder path; reevaluate proposed config. VM/local unmanaged references need separate coordinated updates. Until separately approved activation, old effective references must remain usable.
+5. Obtain separate rebuild/activation approval, then separately approved isolated connection verification. Compatibility-link cleanup needs its own confirmation after successful cutover; pending activation blocks completion.
+6. Rollback only recorded moves, migration-created links, selected readiness flag, and changed registry/config sections after collision and intervening-edit checks. Restore usable old paths in coordination with any separately approved rollback activation; repository revert alone does not restore effective Home Manager config. Preserve unrelated edits; no blanket reset.
+
+Verification: `.config/nix/tests/ssh-key-wiring/` checks all four supported hosts plus unsupported fallback. Full cached-input Home Manager option evaluation passes for all four hosts using repository-root path snapshot, including registry source existence. Ordinary Git-flake evaluation excludes untracked new modules until reviewed/tracked; snapshot root must include sibling `.config/ssh/`. No full build or activation performed. Live backup/collision behavior and native Linux execution not exercised; upstream Home Manager collision implementation reviewed.
+
+### Airborne Forgejo migration checkpoint
+
+Phase 6 approved scope: Forgejo private/public rename only, with temporary relative old-path symlinks and unchanged empty-passphrase state. Pair fingerprint remains `SHA256:2uikUsy/rGyU1EWnDqFWHGKlZ6UoVzy5tOXwqQutUeI`; file inodes and modes unchanged. Registry holder is `id_ed25519_airborne_forgejo`; Airborne Forgejo readiness true stages new `IdentityFile`. No other pair migrated.
+
+Compatibility links: `~/.ssh/id_ed25519_forgejo` → `id_ed25519_airborne_forgejo` and `~/.ssh/id_ed25519_forgejo.pub` → `id_ed25519_airborne_forgejo.pub`. Keep both until separately approved activation, isolated remote verification, and cleanup. Audit deliberately skips symlinks; links independently checked for exact targets and same underlying file identities.
+
+`ssh -G` checks for both Forgejo alias and FQDN confirm effective config unchanged, with old path resolving through link. Proposed private client-config snapshot includes reviewed system-wide defaults because `ssh -F` disables implicit system config; comparison differs only in Forgejo `IdentityFile`. OrbStack config inspected as text for safe evaluation; its identities not inventoried or changed. No proxy command or network authentication executed.
+
+Fresh audit: zero errors, warnings `20 → 18` after Forgejo's two naming warnings disappear. Original Phase 3 baseline had 18 warnings; fresh preflight additionally found two unregistered-key warnings for an Omarchy pair already present before this migration. That pair remains untouched and requires separate inventory review. Remaining findings: eight naming warnings, six empty-passphrase warnings, two unregistered-key warnings, two pre-existing directory-mode warnings. All fresh inventory fingerprints retained. Sanitized checkpoint: `migration-airborne-forgejo.json`; private rollback manifest and config snapshots remain outside Git.
+
+Status: rename locally verified, cutover incomplete. No rebuild, activation, registry deployment, remote verification, agent operations, or compatibility-link cleanup. Phase 6 paused at activation gate; do not migrate another pair implicitly.
 
 ## YAML structure and validation
 

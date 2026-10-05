@@ -23,16 +23,16 @@ keys:
     status: active
     holders:
       - device: airborne
-        path: id_ed25519_forgejo
+        path: id_ed25519_airborne_forgejo
         private_key_expected: true
         material_state: present
-        observed_at: "2026-10-04T18:10:14Z"
+        observed_at: "2026-10-04T20:43:56Z"
     created: null
     review_after_months: null
     backup: null
     replaces: null
     authorization_scope_complete: false
-    notes: Retain; rename candidate after separate migration approval. Service account identity unknown; SSH transport user forgejo is not account evidence.
+    notes: Pair renamed with approved old-path private/public compatibility symlinks; Home Manager activation and remote verification pending. Empty-passphrase state retained by owner approval. Service account identity unknown; SSH transport user forgejo is not account evidence.
     authorized:
       - kind: account
         host: forgejo.gerbil-matrix.ts.net
