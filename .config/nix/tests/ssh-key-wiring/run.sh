@@ -51,6 +51,7 @@ for host, nickname in nicknames.items():
   assert result["environment"] == ({"SSH_KEY_AUDIT_DEVICE": nickname} if nickname else {}), host
   assert result["registryExists"] and result["registrySourceCorrect"], host
   assert result["registryForce"] is False, host
+  assert result["registryEnabled"] is (nickname != "airborne"), host
   assert len(result["warnings"]) == 1 and "retaining legacy paths" in result["warnings"][0], host
   for purpose, current in legacy.items():
     service = paths["services"][purpose]

@@ -26,24 +26,24 @@ keys:
         path: id_ed25519_airborne_forgejo
         private_key_expected: true
         material_state: present
-        observed_at: "2026-10-04T20:43:56Z"
+        observed_at: "2026-10-05T03:02:23Z"
     created: null
     review_after_months: null
     backup: null
     replaces: null
     authorization_scope_complete: false
-    notes: Pair renamed with approved old-path private/public compatibility symlinks; Home Manager activation and remote verification pending. Empty-passphrase state retained by owner approval. Service account identity unknown; SSH transport user forgejo is not account evidence.
+    notes: Forgejo-only rename complete; owner confirmed external activation, isolated account authentication and narratr repository read passed, and approved compatibility-link cleanup. Fingerprint and empty-passphrase state unchanged. Write access and complete authorization scope unverified.
     authorized:
       - kind: account
         host: forgejo.gerbil-matrix.ts.net
-        account: null
+        account: jeridf
         repository: null
         ssh_alias: forgejo
-        verification_status: unverified
-        verified_at: null
+        verification_status: verified
+        verified_at: "2026-10-05T02:52:29Z"
         revocation_status: not_started
         revoked_at: null
-        evidence: Local client configuration reference only; effective remote authorization not tested.
+        evidence: Isolated SSH accepted this fingerprint and greeted jeridf; isolated git ls-remote read jeridf/narratr.git successfully. No write-access or complete-scope claim; details in build-airborne-review.md.
   - name: id_ed25519
     fingerprint: SHA256:IRTc3TlFNfGfZY09dsXQEnuB08qJFKmiOe80hdnt/DI
     purpose: unknown

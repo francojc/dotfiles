@@ -21,6 +21,7 @@ let
     registryExists = builtins.pathExists registry.source;
     registrySourceCorrect = registry.source == ../../../ssh/keys.yaml;
     registryForce = registry.force;
+    registryEnabled = registry.enable;
   };
 in
   builtins.listToAttrs (map (hostname: {

@@ -41,9 +41,12 @@
     '';
 in
 {
-  # Public metadata only. Normal Home Manager collision checks/backup policy
-  # apply; never force replacement of an unmanaged runtime registry.
+  # Airborne: ~/.config points into dotfiles. Managing this target would
+  # back up and replace the canonical Git file, even with force = false.
+  # Registry already resolves at its default runtime path; leave it unmanaged.
+  # Other hosts remain staged, pending filesystem review before activation.
   xdg.configFile."ssh/keys.yaml" = {
+    enable = hostname != "Macbook-Airborne";
     source = ../../ssh/keys.yaml;
     force = false;
   };
