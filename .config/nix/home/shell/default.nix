@@ -148,9 +148,6 @@
         zle -N vi-yank-clipboard
         bindkey -M vicmd y vi-yank-clipboard
 
-        # --- SECRETS (from `pass`) ---
-        source ${config.home.homeDirectory}/.variables.env
-
         # Set 'pbcopy' if not on darwin
         if [[ "$OSTYPE" != "darwin"* ]]; then
           # Check if xclip is installed

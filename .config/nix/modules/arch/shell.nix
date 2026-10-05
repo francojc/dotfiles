@@ -87,19 +87,13 @@
 
         # --- PI ENV VARIABLES ---
         # update provider/model with subscription changes
-        export PI_PROVIDER="openai-codex"
-        export PI_MODEL="gpt-5.6-luna"
-        export PI_FALLBACK_PROVIDER="ollama"
-        export PI_FALLBACK_MODEL="gemma4:31b-cloud"
+        export PI_PROVIDER="openai"
+        export PI_MODEL="gpt-6-luna"
 
         # --- PYTHON/UV CONFIGURATION ---
         # Point UV at the Home Manager profile Python. On generic Linux the
         # profile is linked at ~/.nix-profile and is on PATH.
         export UV_PYTHON="${config.home.profileDirectory}/bin/python3"
-
-        # --- SECRETS (from `pass`) ---
-        [ -r "${config.home.homeDirectory}/.variables.env" ] && \
-          source "${config.home.homeDirectory}/.variables.env"
 
         # --- WAYLAND CLIPBOARD ---
         # The shared aliases/functions assume macOS `pbcopy`/`pbpaste`.
