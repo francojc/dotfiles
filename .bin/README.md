@@ -101,6 +101,16 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 ### ssh- (SSH key management)
 
+Start with [SSH keys – What to do and what to look for](../.config/ssh/GUIDE.md). Guide covers current migration state, finding triage, onboarding, rotation/revocation, isolated identity verification, and rollback prerequisites. [Registry contract](../.config/ssh/README.md) defines exact metadata rules. These workflows do not approve live generation, activation, remote tests, permission repair, or deletion.
+
+- `ssh-key-audit` – Local, read-only registry/key audit. Checks public fingerprints, checkable software pairs, empty-passphrase observations, naming, ownership/modes/ACL gaps, and lifecycle metadata. Never runs SSH/agent/UI tools; hardware touch/PIN is not attempted. Symlinks, archived key-file inspection, and external included identities remain coverage gaps; remote authorization is not inspected.
+  - Start on Airborne: `ssh-key-audit --device airborne`. Structured report: `ssh-key-audit --device airborne --json`; warning-sensitive run: `ssh-key-audit --device airborne --strict`.
+  - Exit 0: completed without errors, warnings allowed. Exit 1: warnings with `--strict`. Exit 2: invalid arguments/registry, missing dependency, key-validation error, or failed required operation. JSON keeps diagnostics on stderr; inspect exit status and `completed`.
+  - Overrides: `--registry` → nonempty `SSH_KEYS_REGISTRY` → XDG runtime registry; `--ssh-dir` → nonempty `SSH_DIR` → `$HOME/.ssh`; `--device` → nonempty `SSH_KEY_AUDIT_DEVICE` → normalized hostname. Explicit unknown nickname fails; unmatched automatic hostname skips current-device missing checks and reports a gap. No undeployed-repository fallback.
+  - `--init` emits starter YAML only; never redirect it onto canonical registry. Review before merging. Cannot combine with `--json`. Audit is already read-only and does not accept every common flag; use its own `--help`.
+  - `--check-remote` remains rejected, exit 2; optional drift checker intentionally skipped. This differs from generator's explicit smoke-test flag below. Neither local audit nor smoke test proves complete authorization scope.
+  - Isolated tests: `bash .bin/tests/ssh-key-audit/run.sh` from repository root; select interpreter with `BASH_UNDER_TEST=/bin/bash`. Fixtures only, no live keys or network.
+
 - `ssh-key-setup` – Collision-safe Ed25519 generation with explicit nickname/purpose: `id_ed25519_<nickname>_<purpose>`, comment `<nickname> <purpose>`. Labels match `[a-z][a-z0-9_-]*`; unsafe labels are rejected, not sanitized. Version 2 replaces old identity/service arguments; `-f`/`--force` is rejected, never an overwrite permission.
   - Default performs local generation only; OpenSSH prompts for passphrase. Agent loading (`--load-agent`), clipboard (`--copy`), browser (`--open-url https://...`), and remote smoke test (`--check-remote user@host`) require separate explicit flags. No built-in destination guessing or browser prompts.
   - Refuses private/public collisions, directories, and dangling/live symlinks. Generates in mode-700 staging under SSH directory, then publishes each file with Bash `noclobber`; late regular-file/symlink collisions cannot overwrite existing keys. Publication is not atomic across both files. Failed generation/publication leaves reported partial new paths for manual inspection and explicit cleanup, never automatic deletion of destination paths. Successful staging is removed.
@@ -151,6 +161,7 @@ Shared helpers are provided in common and automatically sourced by converted scr
 
 - gh-cop-models: OPENAI_API_KEY required
 - wx: relies on wttr.in (no API key needed)
+- ssh-key-audit: Bash 3.2+, OpenSSH `ssh-keygen`, `jq`, Mike Farah `yq` v4 (`yq-go` in Nix), and standard file utilities. No SSH/agent/browser dependency for auditing; shared Home Manager already declares jq/yq-go. macOS and mocked Linux branches tested; native Linux, physical-token, and real extended-ACL coverage remain gaps.
 - ssh-key-setup: Bash 3.2+, `ssh-keygen`, `jq`, and standard file utilities. `SSH_DIR` overrides default `~/.ssh` output directory. `ssh-add`, clipboard tool (`pbcopy`, `xclip`, `xsel`), browser opener (`open`, `xdg-open`), and `ssh` are required only for selected opt-ins; remote timeout fixed at 10 seconds. Dry-run performs validation and collision checks only, without dependency execution, writes, or registry output.
 - Common dependencies: curl, jq, git, gh, ffmpeg, yt-dlp (depending on the script)
 

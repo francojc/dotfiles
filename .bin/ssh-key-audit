@@ -26,7 +26,7 @@ trap 'fail "Required audit operation failed"' ERR
 while (($#)); do
   case "$1" in
     -h|--help)
-      printf '%s\n' 'Usage: ssh-key-audit [--registry PATH] [--ssh-dir PATH] [--device NICKNAME]' '  --json --strict --init --verbose --version --help' '  --check-remote SSH_ALIAS: deferred to Phase 7; no network operations' 'Exit: 0 completed; 1 strict warnings; 2 invalid input or required operation failure.'
+      printf '%s\n' 'Usage: ssh-key-audit [--registry PATH] [--ssh-dir PATH] [--device NICKNAME]' '  --json --strict --init --verbose --version --help' '  --check-remote SSH_ALIAS: unsupported; optional checker skipped; no network operations' 'Exit: 0 completed; 1 strict warnings; 2 invalid input or required operation failure.'
       exit 0 ;;
     --version) print_version; exit 0 ;;
     --json) JSON=1 ;;
@@ -42,7 +42,7 @@ while (($#)); do
         --device) DEVICE=$2; EXPLICIT=1 ;;
       esac
       shift ;;
-    --check-remote) fail 'Remote checking deferred to Phase 7' ;;
+    --check-remote) fail 'Remote checking unsupported; optional checker skipped' ;;
     *) fail 'Unknown argument' ;;
   esac
   shift

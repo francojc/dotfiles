@@ -36,7 +36,10 @@ run 0 --version
 run 2 --json --registry ''
 assert jq -e '.completed==false' "$TMP/out"
 run 2 --json --check-remote test
-ok 'help, version, argument errors, deferred remote mode'
+assert jq -e '.completed==false' "$TMP/out"
+assert grep -F 'Remote checking unsupported; optional checker skipped' "$TMP/err"
+assert test ! -e "$TMP/forbidden"
+ok 'help, version, argument errors, unsupported remote mode'
 
 ssh-keygen -q -t ed25519 -N '' -f "$SSH_DIR/key one"
 ssh-keygen -q -t ed25519 -N 'fixture-passphrase' -f "$SSH_DIR/encrypted"
