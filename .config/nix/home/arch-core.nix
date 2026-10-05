@@ -87,6 +87,7 @@
     duf # Disk usage utility
     entr # Event notify tool
     file # File type identification
+    hostname # utility
     glancesNoCheck # System monitoring tool
     just # run project commands
     mpack # encoding/decoding MIME types
@@ -131,11 +132,11 @@ in {
 
   # GnuPG -- managed via home-manager for agent lifecycle control
   programs.gpg = {
-    enable = false;
+    enable = true;
   };
 
   services.gpg-agent = {
-    enable = false;
+    enable = true;
     defaultCacheTtl = 34560000;
     maxCacheTtl = 34560000;
     pinentry.package = pkgs.pinentry-tty;
