@@ -32,7 +32,7 @@ pi-commit() {
 
   message=$(
     print -r -- "$staged_diff" |
-      command pi --print --no-session --no-tools \
+      command pi-bolt --print --no-session --no-tools \
         --no-extensions --no-skills --no-prompt-templates \
         --no-context-files --no-approve \
         --system-prompt \
