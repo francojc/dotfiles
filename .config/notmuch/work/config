@@ -1,0 +1,19 @@
+[database]
+path=/Users/francojc/Mail/work
+
+[user]
+name=Jerid Francom
+primary_email=francojc@wfu.edu
+
+[new]
+tags=new
+ignore=.mbsyncstate;.uidvalidity;.mbsyncstate.journal;.mbsyncstate.new
+
+[search]
+exclude_tags=deleted;spam
+
+[maildir]
+synchronize_flags=true
+
+[index]
+decrypt=false

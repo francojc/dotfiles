@@ -1,0 +1,40 @@
+[Work]
+source        = imaps://francojc@wfu.edu@imap.gmail.com:993
+source-cred-cmd = pass show EMAIL/GMAIL
+outgoing      = smtps://francojc@wfu.edu@smtp.gmail.com:465
+outgoing-cred-cmd = pass show EMAIL/GMAIL
+from          = Jerid Francom <francojc@wfu.edu>
+signature-file = ~/.config/aerc/work-signature.md
+check-mail    = 5m
+cache-headers = true
+folders-exclude = Archive-old,Drafts-old,Sent-old,Trash-old,[Gmail]Trash
+folders-sort  =   Inbox,  Starred,  Archive,  Sent,  Drafts,  Spam,  Trash,
+default       =   Inbox
+archive       =   Archive
+postpone      =   Drafts
+copy-to       =   Sent
+copy-to-replied = false
+trash         =   Trash
+folder-map    = ~/.config/aerc/work-folder-map.map
+address-book-cmd=aerc-emailbook work %s
+
+[Mailbox]
+source = imaps://unaired@mailbox.org@imap.mailbox.org:993
+source-cred-cmd = pass show EMAIL/MAILBOX
+outgoing = smtps://unaired@mailbox.org@smtp.mailbox.org:465
+outgoing-cred-cmd = pass show EMAIL/MAILBOX
+from    = Jerid Francom <thatdude@mailbox.org>
+aliases = JC Francom <ramblinman@mailbox.org>, Jerid Francom <dodedo@mailbox.org>, Jerid Francom <deflation@mailbox.org>, JC Francom <comfortablynumb@mailbox.org>, JC Francom <swiper@mailbox.org>, Jerid Francom <appleaday@mailbox.org>, JC Francom <dailybugle@mailbox.org>, J Cole <sh021uai@mailbox.org>
+check-mail    = 5m
+cache-headers = true
+folders-sort  =   Inbox,  Archive,  Sent,  Drafts,  Spam,  Trash,   Notes,  2026
+default       =   Inbox
+archive       =   Archive
+postpone      =   Drafts
+copy-to       =   Sent
+copy-to-replied = false
+trash         =   Trash
+folder-map    = ~/.config/aerc/mailbox-folder-map.map
+address-book-cmd=aerc-emailbook personal %s
+
+
