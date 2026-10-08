@@ -86,3 +86,4 @@
 .pi/agent/trust.json
 .pi/models/
 
+/.config/ketch/config.json
