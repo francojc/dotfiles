@@ -66,9 +66,12 @@
 .aider.tags*
 
 # Pi coding agent
+
 .pi/agent/PI-INVENTORY.local.md
 .pi/agent/auth.json
+.pi/agent/cache/
 .pi/agent/google-workspace/
+.pi/agent/models-store.json
 .pi/agent/models-store.json
 .pi/agent/pi-crash.log
 .pi/agent/pi-guide-autoupdate-state.json
@@ -81,6 +84,5 @@
 .pi/agent/settings.json
 .pi/agent/themes/
 .pi/agent/trust.json
-.pi/agent/models-store.json
 .pi/models/
 

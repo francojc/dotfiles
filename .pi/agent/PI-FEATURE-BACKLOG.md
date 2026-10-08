@@ -24,8 +24,33 @@ Register of Pi changelog features worth exploring, with relevance notes and a st
 
 ## Baseline
 
-- Pi version at last review: 0.99.2.
+- Pi version at last review: 1.1.0.
 - Local context: many local extensions under `~/.pi/agent/extensions/`, packages installed via `~/.pi/agent/npm/`, TypeSafe, Ketch, worktree and coordinator workflows, course repos (Quarto, R, Spanish pedagogy).
+
+## 1.1.0 (2026-10-07)
+
+Reviewed: 2026-10-08.
+
+| Item | What it does | Why it may matter here | Status | Next action |
+| --- | --- | --- | --- | --- |
+| Program status reporting (OSC 7501) | Terminals and dashboards supporting OSC 7501 see whether Pi is working, blocked, done, or failed. `PI_PROGRAM_STATUS=1\|0` overrides detection. | Directly relevant to coordinator/worktree agents and `pi-waiting-events` extension; replaces polling for state. | `new` | Check whether Ghostty or a custom status bar picks it up; compare with the extension's current detection. |
+| `aborted` flag in `agent_settled` events | Session, extension, and JSON events now carry `aborted: boolean` so integrations distinguish cancelled from finished runs. | `pi-waiting-events` and any notification extension can suppress "done" alerts on Esc-cancelled runs. | `new` | Update `pi-waiting-events` to check the flag. |
+| `durationMs` in tool render context and `tool_execution_end` | Final tool results carry their wall-clock execution time; survives session reload. | Extensions that display or log timing (router, coordinator) can use the canonical value instead of measuring themselves. | `new` | Use in any extension that tracks tool latency. |
+| `+name`/`-name` for `--tools` CLI flag | `pi -t +codemode,-write` adjusts the default selection without replacing it. | Simplifies one-off codemode or tool toggling in scripts and shortcuts; mirrors existing `defaultTools` setting syntax. | `new` | Update relevant shortcuts to use the new form. |
+| GPT-6 Luna as classifier + images in `models.classify()` | GPT-6 Luna available through Decisions API; `models.classify()` accepts `images` array for vision-capable classifiers. | Extends TypeSafe/codemode classifier workflow: can now judge screenshots, charts, or course images without a full model turn. | `new` | Prototype one image-classification call in a codemode script. |
+| Native llama.cpp decision models | Julia-1, Laya, Kev, lev, OpenJev served by llama.cpp 0.6+ appear as classifiers under `/v1/systemone` instead of chat models. | Enables fully local semantic judgment (routing, scoring) without API costs; pairs with existing llama.cpp install. | `new` | Check llama.cpp version; try one classifier locally. |
+| Claude Haiku 5.5 | New fast model with adaptive thinking up to `xhigh`/`max` effort and prompt caching on Bedrock. | Potential cheaper/faster default for classification or short-turn coding; compare with existing Haiku or Luna. | `new` | Compare cost/quality on one real task before switching. |
+| Codemode output item separation | Multiple `text()` or `console.log()` calls in codemode scripts are separated with `==> text N/M <==` headers and `<console_output>` blocks. | Fixes models confusing parallel output in scripts with multiple calls; already relevant given heavy codemode use. | `adopted` | None; automatic improvement. |
+| `/mcp` usable during connect | MCP manager updates live; no longer blocks the panel until every server connects. | Removes friction when adding slow-starting MCP servers; `/mcp` remains responsive. | `new` | Confirm in next MCP server add. |
+| MCP OAuth sign-in cancellation and timeout fixes | Esc cancels sign-in at every step; session shutdown aborts running sign-in; each authorization request times out after 15 s. | Reliability fix for existing MCP OAuth servers; prevents stuck shutdowns. | `adopted` | None. |
+| Fullscreen text selection survives rebuild | Selection no longer bleeds into unrelated text after session switch or transcript rebuild. | Relevant since fullscreen is the default from 1.0.0. | `adopted` | None. |
+| `server_busy` retried instead of ending turn | Provider `server_busy` and Mistral `finish_reason: "error"` responses now trigger retry logic. | Fewer premature turn endings on busy providers; automatic. | `adopted` | None. |
+| Context-limit estimation tightened | Input estimated at 3.5 chars/token (was 4) for output-budget calculation. | Reduces context-limit request failures on longer prompts; automatic. | `adopted` | None. |
+| Managed install cleanup | `pi update` now keeps only the new release and the one updated from. | Disk space; no action needed unless disk pressure appears. | `adopted` | None. |
+
+Notes:
+- Intermediate releases 1.0.1–1.0.4 not yet reviewed in this backlog; check changelog if something broke.
+- Several fixes (clipboard in Termux, color-code fragments, image resize under `node --watch`, Hyper-V port fallback) are transparent and need no tracking.
 
 ## 1.0.0 (2026-10-01)
 
@@ -111,6 +136,9 @@ Pick from here when there is time for hands-on work.
 2. Add one small MCP server, confirm background connection behavior, and try `searchTools()` and `describeNamespace()`.
 3. Compare virtual models against the local `pi-model-router.ts` extension and decide on one approach.
 4. Try prompt cache warming on a long working session and check `/session` cost effects.
+5. Test program status OSC 7501 with Ghostty; see if `pi-waiting-events` can replace its polling with `aborted` flag + status events.
+6. Prototype image classification via `models.classify()` with GPT-6 Luna on a course screenshot or chart.
+7. Run a local decision model (Kev or Julia-1) through llama.cpp `/v1/systemone` and compare cost/latency against API classifiers.
 
 ## Future changelog template
 
