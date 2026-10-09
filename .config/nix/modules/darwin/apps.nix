@@ -95,9 +95,9 @@
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "quarto" # document editor
+      "signal" # secure messaging
       "supercmd" # launcher+
       "swiftbar" # menu-bar status icons
-      "telegram" # messaging (bot)
       "zoom" # video conferencing
       "zotero" # reference manager
       # "keycastr" # keystroke visualizer
