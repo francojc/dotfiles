@@ -1,43 +1,5 @@
 # --- GENERAL-PURPOSE SHELL FUNCTIONS ---
 
-# SSH connection helper
-# Usage: ssh_connect [host] [user] - host is an ssh_config alias; user overrides config User
-ssh_connect() {
-  local host="$1"
-  local user="$2"
-  local target="$host"
-  [ -n "$user" ] && target="$user@$host"
-  TERM=xterm-256color ssh "$target"
-}
-
-# Rsync files to a remote host (skips files newer on remote)
-# Usage: syncr <remote> <local_path> <remote_path>
-syncr() {
-  local remote
-  case "$1" in
-    minicore) remote="minicore" ;;
-    airborne) remote="airborne" ;;
-    rover) remote="rover" ;;
-    monitors) remote="monitors" ;;
-    services) remote="services" ;;
-    media) remote="media" ;;
-    hermes) remote="hermes" ;;
-    bifrost) remote="bifrost" ;;
-    omarchy) remote="omarchy" ;;
-    *)
-      echo "Unknown remote: $1"
-      echo "Available: minicore, airborne, rover"
-      echo "Usage: syncr <remote> <local_path> <remote_path>"
-      return 1
-      ;;
-  esac
-  if [[ -z "$2" || -z "$3" ]]; then
-    echo "Usage: syncr <remote> <local_path> <remote_path>"
-    return 1
-  fi
-  rsync -avu --exclude='.git' "$2" "$remote:$3"
-}
-
 # Attach to a named tmux session (1-based); create if absent
 # Usage: t [session_name] - creates or attaches to session
 t() {
