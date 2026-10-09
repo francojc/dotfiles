@@ -9,6 +9,21 @@
 
   plainHosts = [
     {
+      host = "minicore";
+      name = "mac-minicore";
+      user = "jeridf";
+    }
+    {
+      host = "airborne";
+      name = "macbook-airborne";
+      user = "francojc";
+    }
+    {
+      host = "rover";
+      name = "mini-rover";
+      user = "jeridf";
+    }
+    {
       host = "services";
       name = "core-services";
       user = "root";
