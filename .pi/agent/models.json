@@ -2,8 +2,8 @@
   "providers": {
     "wfu-gemma": {
       "api": "openai-completions",
-      "apiKey": "$GEMMA_4_31B_IT_API_KEY",
-      "baseUrl": "$GEMMA_4_31B_IT_API_URL",
+      "apiKey": "!pass show WFU/GEMMA_4_31B_IT_API_KEY",
+      "baseUrl": "!pass show WFU/GEMMA_4_31B_IT_API_URL",
       "models": [
         {
           "id": "google/gemma-4-31B-it",
@@ -24,7 +24,7 @@
     },
     "llama-router": {
       "api": "openai-completions",
-      "apiKey": "$LLAMA_API_KEY",
+      "apiKey": "!pass show API/LLAMA_API_KEY",
       "baseUrl": "http://100.101.38.4:8081/v1",
       "compat": {
         "supportsDeveloperRole": false,
