@@ -37,8 +37,10 @@ in {
         WorkingDirectory = cfg.workingDirectory;
         StandardOutPath = "/Users/${username}/.llama.cpp/logs/qwen-stdout.log";
         StandardErrorPath = "/Users/${username}/.llama.cpp/logs/qwen-stderr.log";
-        # Loaded at login but started only through llama-profile.sh, preventing Bonsai overlap.
-        RunAtLoad = false;
+        RunAtLoad = true;
+        KeepAlive = {
+          SuccessfulExit = false;
+        };
         ProcessType = "Interactive";
         Nice = cfg.nice;
         ThrottleInterval = 30;

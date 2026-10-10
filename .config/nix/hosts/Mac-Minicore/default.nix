@@ -23,7 +23,7 @@
       custom.services = {
         copilotApi.enable = true;
 
-        # Fixed Qwen3.5 9B chat endpoint on :8081
+        # Flagship Qwen3.6-35B-A3B-MTP chat endpoint on :8081
         llamaQwen = {
           enable = true;
           scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-qwen.sh";
