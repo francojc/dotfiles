@@ -89,7 +89,6 @@
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
-      "chatgpt" # ChatGPT
       "helium-browser" # browser (ungoogled-chromium)
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
@@ -97,7 +96,6 @@
       "quarto" # document editor
       "signal" # secure messaging
       "supercmd" # launcher+
-      "swiftbar" # menu-bar status icons
       "zoom" # video conferencing
       "zotero" # reference manager
       # "keycastr" # keystroke visualizer
