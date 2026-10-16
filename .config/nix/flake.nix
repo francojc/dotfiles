@@ -23,6 +23,17 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
     #
+    # Pimalaya tooling -- not in nixpkgs. Pin via flake inputs so
+    # `builtins.getFlake` is allowed without --impure and refs are locked.
+    himalaya-tui = {
+      url = "github:pimalaya/himalaya-tui";
+    };
+    cardamum = {
+      url = "github:pimalaya/cardamum";
+    };
+    calendula = {
+      url = "github:pimalaya/calendula";
+    };
   };
 
   outputs = inputs @ {
@@ -53,10 +64,15 @@
     # it is still Linux; only the management layer differs.
     mkSpecialArgs = hostname: hostConfig: isArch: let
       systemInfo = systemLib.supportedSystems.${hostConfig.system};
+      pimalaya = {
+        himalaya-tui = inputs.himalaya-tui.packages.${hostConfig.system}.default;
+        cardamum      = inputs.cardamum.packages.${hostConfig.system}.default;
+        calendula     = inputs.calendula.packages.${hostConfig.system}.default;
+      };
     in
       inputs
       // {
-        inherit self hostname isArch;
+        inherit self hostname isArch pimalaya;
         username = hostConfig.username;
         useremail = hostConfig.useremail;
         themeName = hostConfig.theme;
