@@ -1,0 +1,15 @@
+# Pandoc defaults for reading Word documents into clean Markdown.
+#
+#   pandoc input.docx --defaults=docx-clean
+#   marker-convert input.docx --pandoc-option --defaults=docx-clean
+#
+# Installed by home-manager to $XDG_DATA_HOME/pandoc/defaults, so it is found
+# by name from any working directory. `docx-clean.lua` is resolved from
+# $XDG_DATA_HOME/pandoc/filters.
+
+from: docx
+to: gfm
+wrap: none
+
+filters:
+  - docx-clean.lua
