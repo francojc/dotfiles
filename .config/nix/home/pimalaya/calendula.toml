@@ -14,7 +14,7 @@ caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX_CALDAV"]
 # mailbox.org Open-Xchange returns base64 calendar ids; pick the one
 # `calendula calendar list -a mailbox` shows under NAME = "Calendar".
 # Tasks (VTODO) lives at "MzU"; Birthdays at "Y2FsOi8vMS8w".
-# Override on a per-call basis with `-k <calendar-id>`.
+# Override on a per-call basis with `--calendar=<calendar-id>`.
 calendar.default = "Y2FsOi8vMC8zMw"
 
 # ---------------------------------------------------------------------------
