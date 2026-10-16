@@ -12,6 +12,13 @@ existing aerc + khal + vdirsyncer; does not replace them.
 | cardamum | `~/.config/cardamum/config.toml` | CardDAV |
 | calendula | `~/.config/calendula/config.toml` | CalDAV |
 
+## Package source
+
+Only `himalaya` CLI lives in nixpkgs. The other three (`himalaya-tui`,
+`cardamum`, `calendula`) are pulled from upstream GitHub flakes via
+`builtins.getFlake` — tracks master at every rebuild. To pin reproducible
+refs, add them as flake inputs in the top-level `~/.dotfiles/.config/nix/flake.nix`.
+
 Shared secrets via `pass`:
 
 - `EMAIL/GMAIL` → Gmail (francojc@wfu.edu)
