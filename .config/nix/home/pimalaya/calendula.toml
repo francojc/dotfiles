@@ -7,7 +7,7 @@
 default = true
 caldav.server = "https://dav.mailbox.org/"
 caldav.auth.basic.username = "unaired@mailbox.org"
-caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX_CALDAV"]
 
 # Run `calendula calendar list -a mailbox` after first activation to
 # discover the actual calendar id; replace the default below if needed.

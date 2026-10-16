@@ -7,7 +7,7 @@
 default = true
 carddav.server = "https://dav.mailbox.org/"
 carddav.auth.basic.username = "unaired@mailbox.org"
-carddav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+carddav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX_CARDDAV"]
 
 # Run `cardamum addressbook list -a mailbox` after first activation to
 # discover the actual addressbook id; replace the default below if needed.
