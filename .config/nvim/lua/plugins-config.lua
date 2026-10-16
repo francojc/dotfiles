@@ -865,6 +865,14 @@ local obsidian_workspaces = {
 }
 
 local function setup_obsidian()
+	-- obsidian.nvim's Workspace.setup does assert(vim.uv.cwd()). vim.uv.cwd()
+	-- returns (nil, errmsg) when the directory Neovim was launched from no
+	-- longer exists, and assert then raises ENOENT from inside the FileType
+	-- autocmd. Bail out instead of crashing the whole loader.
+	if not vim.uv.cwd() then
+		vim.notify("obsidian.nvim: current directory no longer exists; skipping setup", vim.log.levels.WARN)
+		return
+	end
 	require("obsidian").setup({
 		legacy_commands = false,
 		-- ui = { enable = false },
@@ -894,8 +902,12 @@ local function setup_obsidian()
 end
 
 local function cwd_in_obsidian_vault()
+	local cwd = vim.uv.cwd()
+	if not cwd then
+		return false
+	end
 	return vim.fs.find(".obsidian", {
-		path = vim.fn.getcwd(),
+		path = cwd,
 		upward = true,
 		type = "directory",
 	})[1] ~= nil
