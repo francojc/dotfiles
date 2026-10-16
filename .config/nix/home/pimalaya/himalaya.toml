@@ -46,11 +46,11 @@ signature-file = "~/.config/aerc/personal-signature.md"
 # ]
 
 imap.server = "imaps://imap.mailbox.org:993"
-imap.sasl.plain.username = "thatdude@mailbox.org"
+imap.sasl.plain.username = "unaired@mailbox.org"
 imap.sasl.plain.password.command = ["pass", "show", "EMAIL/MAILBOX"]
 
 smtp.server = "smtps://smtp.mailbox.org:465"
-smtp.sasl.plain.username = "thatdude@mailbox.org"
+smtp.sasl.plain.username = "unaired@mailbox.org"
 smtp.sasl.plain.password.command = ["pass", "show", "EMAIL/MAILBOX"]
 
 mailbox.alias.inbox = "INBOX"

@@ -5,8 +5,8 @@
 # ---------------------------------------------------------------------------
 [accounts.mailbox]
 default = true
-carddav.server = "https://carddav.mailbox.org/"
-carddav.auth.basic.username = "thatdude@mailbox.org"
+carddav.server = "https://dav.mailbox.org/"
+carddav.auth.basic.username = "unaired@mailbox.org"
 carddav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX"]
 
 # Run `cardamum addressbook list -a mailbox` after first activation to
