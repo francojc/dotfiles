@@ -1,0 +1,61 @@
+# himalaya + himalaya-tui share this file.
+# Mode B: live IMAP/SMTP, parallel to aerc. Pass creds mirror aerc/accounts.conf.
+
+# ---------------------------------------------------------------------------
+# Gmail (work) -- francojc@wfu.edu
+# ---------------------------------------------------------------------------
+[accounts.gmail]
+default = true
+email = "francojc@wfu.edu"
+display-name = "Jerid Francom"
+signature-file = "~/.config/aerc/work-signature.md"
+
+imap.server = "imaps://imap.gmail.com:993"
+imap.sasl.plain.username = "francojc@wfu.edu"
+imap.sasl.plain.password.command = ["pass", "show", "EMAIL/GMAIL"]
+
+smtp.server = "smtps://smtp.gmail.com:465"
+smtp.sasl.plain.username = "francojc@wfu.edu"
+smtp.sasl.plain.password.command = ["pass", "show", "EMAIL/GMAIL"]
+
+mailbox.alias.inbox = "INBOX"
+mailbox.alias.sent = "[Gmail]/Sent Mail"
+mailbox.alias.drafts = "[Gmail]/Drafts"
+mailbox.alias.trash = "[Gmail]/Trash"
+mailbox.alias.archive = "[Gmail]/All Mail"
+message.send.save-copy = "sent"
+
+# ---------------------------------------------------------------------------
+# Mailbox.org (personal) -- thatdude@mailbox.org with aliases
+# ---------------------------------------------------------------------------
+[accounts.mailbox]
+email = "thatdude@mailbox.org"
+display-name = "Jerid Francom"
+signature-file = "~/.config/aerc/personal-signature.md"
+
+# aerc aliases line -- uncomment to populate From: picker.
+# from.aliases = [
+#   "JC Francom <ramblinman@mailbox.org>",
+#   "Jerid Francom <dodedo@mailbox.org>",
+#   "Jerid Francom <deflation@mailbox.org>",
+#   "JC Francom <comfortablynumb@mailbox.org>",
+#   "JC Francom <swiper@mailbox.org>",
+#   "Jerid Francom <appleaday@mailbox.org>",
+#   "JC Francom <dailybugle@mailbox.org>",
+#   "J Cole <sh021uai@mailbox.org>",
+# ]
+
+imap.server = "imaps://imap.mailbox.org:993"
+imap.sasl.plain.username = "thatdude@mailbox.org"
+imap.sasl.plain.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+
+smtp.server = "smtps://smtp.mailbox.org:465"
+smtp.sasl.plain.username = "thatdude@mailbox.org"
+smtp.sasl.plain.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+
+mailbox.alias.inbox = "INBOX"
+mailbox.alias.sent = "Sent"
+mailbox.alias.drafts = "Drafts"
+mailbox.alias.trash = "Trash"
+mailbox.alias.archive = "Archive"
+message.send.save-copy = "sent"

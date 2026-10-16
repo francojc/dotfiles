@@ -1,0 +1,30 @@
+# cardamum -- contacts. Mailbox.org via CardDAV. Gmail optional via gpeople.
+
+# ---------------------------------------------------------------------------
+# Mailbox.org
+# ---------------------------------------------------------------------------
+[accounts.mailbox]
+default = true
+carddav.server = "https://carddav.mailbox.org/"
+carddav.auth.basic.username = "thatdude@mailbox.org"
+carddav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+
+# Run `cardamum addressbook list -a mailbox` after first activation to
+# discover the actual addressbook id; replace the default below if needed.
+addressbook.default = "Contacts"
+
+# ---------------------------------------------------------------------------
+# Gmail -- optional, requires Ortie OAuth broker (pimalaya/ortie).
+# Uncomment to enable; gated on Ortie configuration being available.
+# ---------------------------------------------------------------------------
+# [accounts.gmail]
+# gpeople.auth.token.command = ["ortie", "token", "show", "-a", "google"]
+# addressbook.default = "myContacts"
+
+# ---------------------------------------------------------------------------
+# Global
+# ---------------------------------------------------------------------------
+card.list.page-size = 50
+# Set VISUAL/EDITOR for interactive compose, or override per-run:
+#   cardamum card create --composer code --wait /path/to/vcf
+# card.composer = ["tcard", "edit"]

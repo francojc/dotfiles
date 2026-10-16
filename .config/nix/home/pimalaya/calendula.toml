@@ -1,0 +1,31 @@
+# calendula -- calendars. Mailbox.org via CalDAV. Gmail optional via gcal.
+
+# ---------------------------------------------------------------------------
+# Mailbox.org
+# ---------------------------------------------------------------------------
+[accounts.mailbox]
+default = true
+caldav.server = "https://caldav.mailbox.org/"
+caldav.auth.basic.username = "thatdude@mailbox.org"
+caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX"]
+
+# Run `calendula calendar list -a mailbox` after first activation to
+# discover the actual calendar id; replace the default below if needed.
+calendar.default = "default"
+
+# ---------------------------------------------------------------------------
+# Gmail -- optional, requires Ortie OAuth broker (pimalaya/ortie).
+# Uncomment to enable.
+# ---------------------------------------------------------------------------
+# [accounts.gmail]
+# gcal.auth.token.command = ["ortie", "token", "show", "-a", "google"]
+# # Primary calendar id == your email; secondaries end in @group.calendar.google.com
+# calendar.default = "francojc@wfu.edu"
+
+# ---------------------------------------------------------------------------
+# Global
+# ---------------------------------------------------------------------------
+event.list.page-size = 50
+todo.list.page-size = 50
+journal.list.page-size = 50
+# item.composer = ["tcal", "edit"]   # requires pimalaya/tcal
