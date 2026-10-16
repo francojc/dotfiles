@@ -11,7 +11,11 @@ caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX_CALDAV"]
 
 # Run `calendula calendar list -a mailbox` after first activation to
 # discover the actual calendar id; replace the default below if needed.
-calendar.default = "default"
+# mailbox.org Open-Xchange returns base64 calendar ids; pick the one
+# `calendula calendar list -a mailbox` shows under NAME = "Calendar".
+# Tasks (VTODO) lives at "MzU"; Birthdays at "Y2FsOi8vMS8w".
+# Override on a per-call basis with `-k <calendar-id>`.
+calendar.default = "Y2FsOi8vMC8zMw"
 
 # ---------------------------------------------------------------------------
 # Gmail -- optional, requires Ortie OAuth broker (pimalaya/ortie).
