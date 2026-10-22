@@ -1,0 +1,9 @@
+[accounts.google]
+endpoints.authorization = "https://accounts.google.com/o/oauth2/v2/auth"
+endpoints.token = "https://oauth2.googleapis.com/token"
+endpoints.redirection = "http://127.0.0.1:8081"
+scopes = ["https://www.googleapis.com/auth/calendar"]
+extras.access_type = "offline"
+client-id.fetch = ["command", "pass", "show", "GOOGLE/GOOGLE_CALENDAR_CLIENT"]
+client-secret.fetch = ["command", "pass", "show", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
+

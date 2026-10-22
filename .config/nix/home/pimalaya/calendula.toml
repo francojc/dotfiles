@@ -21,10 +21,10 @@ calendar.default = "Y2FsOi8vMC8zMw"
 # Gmail -- optional, requires Ortie OAuth broker (pimalaya/ortie).
 # Uncomment to enable.
 # ---------------------------------------------------------------------------
-# [accounts.gmail]
-# gcal.auth.token.command = ["ortie", "token", "show", "-a", "google"]
+[accounts.gmail]
+gcal.auth.token.command = ["ortie", "token", "show", "-a", "google"]
 # # Primary calendar id == your email; secondaries end in @group.calendar.google.com
-# calendar.default = "francojc@wfu.edu"
+calendar.default = "francojc@wfu.edu"
 
 # ---------------------------------------------------------------------------
 # Global
