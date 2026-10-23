@@ -61,6 +61,7 @@
     ];
 
     brews = [
+      "android-platform-tools" # android (TV)
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
       "hunk" # git diff tool
