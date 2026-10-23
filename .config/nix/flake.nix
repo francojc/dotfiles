@@ -34,6 +34,9 @@
     calendula = {
       url = "github:pimalaya/calendula";
     };
+    ortie = {
+      url = "github:pimalaya/ortie";
+    };
   };
 
   outputs = inputs @ {
@@ -68,6 +71,7 @@
         himalaya-tui = inputs.himalaya-tui.packages.${hostConfig.system}.default;
         cardamum      = inputs.cardamum.packages.${hostConfig.system}.default;
         calendula     = inputs.calendula.packages.${hostConfig.system}.default;
+        ortie         = inputs.ortie.packages.${hostConfig.system}.default;
       };
     in
       inputs

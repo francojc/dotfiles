@@ -3,7 +3,7 @@
 #
 # Package split:
 # - himalaya (CLI): nixpkgs (2.2.1) -- already bundles zsh completion
-# - himalaya-tui, cardamum, calendula: pulled from flake inputs declared in
+# - himalaya-tui, cardamum, calendula, ortie: pulled from flake inputs declared in
 #   the top-level flake.nix and surfaced via `extraSpecialArgs.pimalaya`.
 #   Each is wrapped here with `overrideAttrs` to add a postInstall step that
 #   copies its zsh completion into `share/zsh/site-functions/`. Home Manager's
@@ -28,13 +28,14 @@
   cardamum = pkgsWithCompletion pimalaya.cardamum "cardamum";
   calendula = pkgsWithCompletion pimalaya.calendula "calendula";
   himalaya-tui = pkgsWithCompletion pimalaya.himalaya-tui "himalaya-tui";
+  ortie = pkgsWithCompletion pimalaya.ortie "ortie";
 in {
   home.packages = [
     calendula
     cardamum
     himalaya-tui
+    ortie
     pkgs.himalaya
-    pkgs.ortie
   ];
 
   xdg.configFile."himalaya/config.toml".source = ./himalaya.toml;
