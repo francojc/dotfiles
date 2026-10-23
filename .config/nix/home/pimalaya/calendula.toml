@@ -4,7 +4,6 @@
 # Mailbox.org
 # ---------------------------------------------------------------------------
 [accounts.mailbox]
-default = true
 caldav.server = "https://dav.mailbox.org/"
 caldav.auth.basic.username = "unaired@mailbox.org"
 caldav.auth.basic.password.command = ["pass", "show", "EMAIL/MAILBOX_CALDAV"]
@@ -22,6 +21,7 @@ calendar.default = "Y2FsOi8vMC8zMw"
 # Uncomment to enable.
 # ---------------------------------------------------------------------------
 [accounts.gmail]
+default = true
 gcal.auth.token.command = ["ortie", "token", "show", "-a", "google"]
 # # Primary calendar id == your email; secondaries end in @group.calendar.google.com
 calendar.default = "francojc@wfu.edu"
