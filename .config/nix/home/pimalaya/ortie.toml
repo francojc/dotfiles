@@ -1,9 +1,30 @@
+# ortie -- OAuth 2.0 token broker. Feeds calendula's gcal backend (and
+# cardamum's gpeople), which need a live bearer token Google expires hourly.
+#
+# Field shapes differ from calendula: `client-id` is a plain string (it is
+# public, it shows up in the consent URL), while `client-secret` takes a
+# secret shape. Storage is required -- ortie persists no token itself.
+# The schema is `deny_unknown_fields`, so every key must be spelled exactly.
+
 [accounts.google]
 endpoints.authorization = "https://accounts.google.com/o/oauth2/v2/auth"
 endpoints.token = "https://oauth2.googleapis.com/token"
+# Must match a redirect URI registered on the GCP OAuth client. Desktop-app
+# clients accept any loopback port; web-app clients need an exact match.
 endpoints.redirection = "http://127.0.0.1:8081"
+# Full read/write Calendar API scope. Calendula's gcal backend writes events.
 scopes = ["https://www.googleapis.com/auth/calendar"]
 extras.access_type = "offline"
-client-id.fetch = ["command", "pass", "show", "GOOGLE/GOOGLE_CALENDAR_CLIENT"]
-client-secret.fetch = ["command", "pass", "show", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
 
+# Reuse the Google OAuth client vdirsyncer already uses for the Calendar API.
+# The id is inline (not secret); the secret stays in pass.
+client-id = "278359950805-jnr93ipc4cgp2h1g6n2i0cdjaea58mdi.apps.googleusercontent.com"
+client-secret.command = ["pass", "show", "GOOGLE/GOOGLE_CALENDAR_SECRET"]
+
+# A Google access token dies within the hour, so let `ortie token show`
+# (which calendula invokes) refresh an expired one by itself.
+auto-refresh = true
+
+# Required: read/write the persisted token through pass.
+storage.read.command = ["pass", "show", "ortie/google"]
+storage.write.command = "pass insert -m -f ortie/google"
