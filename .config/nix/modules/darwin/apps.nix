@@ -61,7 +61,6 @@
     ];
 
     brews = [
-      "android-platform-tools" # android (TV)
       "borders" # jankyborders
       "git-filter-repo" # remove files/dirs from git history
       "hunk" # git diff tool
@@ -78,6 +77,7 @@
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
+      "scrcpy" # Android screen mirroring
       "synapseq" # binaural sounds generator
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
@@ -86,6 +86,7 @@
     ];
 
     casks = [
+      "android-platform-tools" # android (TV)
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
