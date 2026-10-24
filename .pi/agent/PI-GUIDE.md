@@ -10,7 +10,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`.
+- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. `bifrost-models.ts` is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, and never blocks startup on an unreachable endpoint.
 
 ## Quick commands
 
@@ -74,6 +74,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `session-sync.json` | Trusted SSH source/destination registry roots for session-sync extension. | Config only. No session data is tracked. |
 | `auto-session-name.ts` | Sets content-derived session display names, then refreshes them with a cheap title model. | `/autoname` |
 | `ketch-guard.ts` | Prompt-injection guard for web research. Appends an untrusted-data rule to the system prompt and exposes `web_search` / `web_scrape` tools that wrap ketch output in a `<data trust="none">` boundary and strip injection-encoding characters. | Agent tools `web_search`, `web_scrape`; prefer these over raw `bash ketch` for web work. |
+| `bifrost-models.ts` | Registers a `bifrost` provider from a Bifrost LLM gateway's `GET /v1/models`, patches the gateway's thin metadata from models.dev, caches it locally, and hides models the gateway refuses. | Key from `pass show API/BIFROST_VK` by default; `BIFROST_BASE_URL`, `BIFROST_VK`, `BIFROST_VK_FILE`, `BIFROST_VK_PASS`, `BIFROST_MODEL_OVERRIDES`; `pi --list-models bifrost`. |
 
 ## Keybindings and terminal notes
 
@@ -473,6 +474,56 @@ Runtime environment inputs:
 - **Do not confuse endpoints:** `https://opencode.ai/zen/go/v1` is the inference/model endpoint used by `opencode-go-discovery.ts`; it does not expose the subscription usage snapshot.
 - **Update procedure:** if the command/footer becomes unavailable, first renew the browser auth cookie and verify the workspace ID. Then inspect authenticated dashboard HTML for changed hydration fields, update `parseWindow` in `opencode-go-usage.ts`, run the formatter/lifecycle checks, and update this section with the new parser signature and source date.
 - **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts).
+
+### Bifrost gateway models
+
+What it does:
+
+- Registers a `bifrost` provider from a Bifrost LLM gateway's `GET /v1/models`, so Pi reaches every upstream the gateway fronts through one credential and one base URL. Model IDs keep the gateway's provider prefix, such as `opencode-zen/glm-5.3`, which is the string Bifrost routes on.
+- Bifrost owns routing, fallbacks, retries, load balancing, caching, governance, and guardrails. Pi owns only the model catalog, prompt caching hints, and cost display.
+- Discovery runs through `refreshModels`, so it participates in startup refresh, `/model`, and `pi update --models`. A disk cache keeps the provider usable offline and when the gateway is down.
+- The gateway payload is thinner than Bifrost's docs describe: `id`, `normalized_name`, `created`, `owned_by`, `pricing`, and `context_length` / `max_output_tokens` on only a few entries. It omits names, modalities, reasoning efforts, protocol support, and per-model tool support.
+- The gap is filled by a generated patch file derived from models.dev, and by a probe that hides models the gateway refuses.
+
+Configuration:
+
+| Item | Value |
+| --- | --- |
+| Virtual key | `pass show API/BIFROST_VK` by default, resolved at request time |
+| `BIFROST_BASE_URL` | Base URL including `/v1`, defaults to the gateway hostname in the extension |
+| `BIFROST_VK`, `BIFROST_VK_FILE`, `BIFROST_VK_PASS` | Credential overrides for other keys or hosts |
+| `BIFROST_MODEL_OVERRIDES` | Patch file path override |
+| `pi --list-models bifrost` | Inspect the discovered catalog |
+| `pi update --models` | Force a refetch past the 6-hour freshness window |
+
+Files:
+
+- `~/.pi/agent/extensions/bifrost-models.ts` discovery, patch application, unreachable filter.
+- `~/.config/bifrost-gateway/model-overrides.json` generated patches: limits, cost, reasoning effort maps, compatibility flags, and probe verdicts. Keys are bare model names, so they survive a gateway provider-prefix change.
+- `~/.config/bifrost-gateway/gen-model-overrides.py` regenerates the patch file. Plain run uses models.dev only, `--probe` also probes each model, `--reprobe` ignores cached verdicts.
+- `~/.config/bifrost-gateway/probe-cache.json` probe verdicts, 7-day TTL. Re-runs only probe models new to the catalog.
+- `~/.cache/pi/bifrost-models.json` raw gateway catalog, 6-hour TTL, stored pre-patch so patch edits apply without a refetch.
+
+Gotchas:
+
+- Check the gateway before blaming Pi: Bifrost's `/v1/models` is authoritative for existence, not for usability. Verify a model with `curl` against `POST <base>/chat/completions` when something 400s.
+- Reasoning models need an explicit `thinkingLevelMap`. Without it Pi sends its default effort, and upstreams that accept only a subset reject the request with `medium reasoning effort is not supported`. Levels the upstream rejects are `null` in the map, and Pi clamps upward, which is why a gap in the middle degrades instead of failing.
+- Pi sends the `developer` role for reasoning models when compatibility allows it. Several upstreams behind the gateway reject that role, so every patch sets `supportsDeveloperRole: false` and Pi sends `system` instead.
+- Provider-level `compat` is not inherited by extension-defined models, only `api` and `baseUrl` are. Compatibility flags therefore live in the patch file, one entry per model.
+- Pi computes context usage, compaction, and cost display from the patch metadata, not from the gateway. A model missing `contextWindow` silently falls back to 128K, which corrupts compaction decisions for long-context models.
+- Bifrost provider entries are protocol specific. A provider configured for OpenAI chat completions answers `ModelProtocolUnsupported` for the Responses, Anthropic, and Google routes even when the upstream model exists. That is a gateway configuration fix, not a Pi fix.
+- Gateway virtual keys are scoped to providers, so one key can expose a subset of the catalog. Model IDs from a narrow key keep that provider prefix.
+- Some upstreams reject free-tier models for non-vendor clients with `403 FreeTierError`, and a dead upstream endpoint answers `410`. The probe treats `400`, `403`, `404`, and `422` as permanent refusals and leaves transient statuses visible.
+- Re-probing spends one token per model, so do not put `--probe` or `--reprobe` in a loop. Verdicts cache for a week and ordinary re-runs cost nothing.
+- JSON has no comment syntax, so the patch file records provenance under a `//` key. The extension ignores any key starting with `//` and any non-object value.
+
+Sources checked:
+
+- `~/.pi/agent/extensions/bifrost-models.ts`
+- `~/.config/bifrost-gateway/gen-model-overrides.py`
+- `@earendil-works/pi-coding-agent/docs/models.md`, `models-configuration.md`, `custom-provider.md`, `virtual-models.md`
+- Bifrost docs: `integrations/openai-sdk/overview`, `integrations/anthropic-sdk/overview`, `quickstart/gateway/setting-up`, `api-reference/models`
+- `https://models.dev/api.json` opencode catalog entries, including `reasoning_options` and `provider.api`
 
 ### Automatic session names
 
