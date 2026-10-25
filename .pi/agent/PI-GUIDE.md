@@ -10,7 +10,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. `bifrost-models.ts` is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, and never blocks startup on an unreachable endpoint.
+- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. The `pi-bifrost` package is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, ships its metadata baseline, and never blocks startup on an unreachable endpoint.
 
 ## Quick commands
 
@@ -53,6 +53,7 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
 | `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
 | `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
+| `pi-bifrost` | Bifrost gateway provider with disk-cached model discovery and a packaged metadata baseline. Installed from the `jeridf/pi-bifrost` Forgejo repo. |
 
 ## Local extensions
 
@@ -74,7 +75,6 @@ Loaded from `~/.pi/agent/extensions/`.
 | `session-sync.json` | Trusted SSH source/destination registry roots for session-sync extension. | Config only. No session data is tracked. |
 | `auto-session-name.ts` | Sets content-derived session display names, then refreshes them with a cheap title model. | `/autoname` |
 | `ketch-guard.ts` | Prompt-injection guard for web research. Appends an untrusted-data rule to the system prompt and exposes `web_search` / `web_scrape` tools that wrap ketch output in a `<data trust="none">` boundary and strip injection-encoding characters. | Agent tools `web_search`, `web_scrape`; prefer these over raw `bash ketch` for web work. |
-| `bifrost-models.ts` | Registers a `bifrost` provider from a Bifrost LLM gateway's `GET /v1/models`, patches the gateway's thin metadata from models.dev, caches it locally, and hides models the gateway refuses. | Key from `pass show API/BIFROST_VK` by default; `BIFROST_BASE_URL`, `BIFROST_VK`, `BIFROST_VK_FILE`, `BIFROST_VK_PASS`, `BIFROST_MODEL_OVERRIDES`; `pi --list-models bifrost`. |
 
 ## Keybindings and terminal notes
 
@@ -481,7 +481,7 @@ What it does:
 
 - Registers a `bifrost` provider from a Bifrost LLM gateway's `GET /v1/models`, so Pi reaches every upstream the gateway fronts through one credential and one base URL. Model IDs keep the gateway's provider prefix, such as `opencode-zen/glm-5.3`, which is the string Bifrost routes on.
 - Bifrost owns routing, fallbacks, retries, load balancing, caching, governance, and guardrails. Pi owns only the model catalog, prompt caching hints, and cost display.
-- Discovery runs through `refreshModels`, so it participates in startup refresh, `/model`, and `pi update --models`. A disk cache keeps the provider usable offline and when the gateway is down.
+- Discovery runs through `refreshModels`, so it participates in startup refresh and `/model`. A disk cache keeps the provider usable offline and when the gateway is down, so only the first fetch on a new host needs the gateway reachable.
 - The gateway payload is thinner than Bifrost's docs describe: `id`, `normalized_name`, `created`, `owned_by`, `pricing`, and `context_length` / `max_output_tokens` on only a few entries. It omits names, modalities, reasoning efforts, protocol support, and per-model tool support.
 - The gap is filled by a generated patch file derived from models.dev, and by a probe that hides models the gateway refuses.
 
@@ -489,19 +489,20 @@ Configuration:
 
 | Item | Value |
 | --- | --- |
+| Package | `pi-bifrost`, installed from the `jeridf/pi-bifrost` Forgejo repo as a pinned git source. Ships the extension plus its metadata baseline, so a host needs only the package and a virtual key. |
 | Virtual key | `pass show API/BIFROST_VK` by default, resolved at request time |
 | `BIFROST_BASE_URL` | Base URL including `/v1`, defaults to the gateway hostname in the extension |
 | `BIFROST_VK`, `BIFROST_VK_FILE`, `BIFROST_VK_PASS` | Credential overrides for other keys or hosts |
-| `BIFROST_MODEL_OVERRIDES` | Patch file path override |
-| `pi --list-models bifrost` | Inspect the discovered catalog |
-| `pi update --models` | Force a refetch past the 6-hour freshness window |
+| `BIFROST_MODEL_OVERRIDES` | Patch file path override, taking precedence over a host-regenerated file and the packaged baseline |
+| `pi --list-models bifrost` | Inspect the discovered catalog. Cache-only: it never fetches, so a fresh host shows nothing until the first interactive start. |
+| First interactive start or `/model` | Fetches the catalog past the 6-hour freshness window and writes the cache |
 
 Files:
 
-- `~/.pi/agent/extensions/bifrost-models.ts` discovery, patch application, unreachable filter.
-- `~/.config/bifrost-gateway/model-overrides.json` generated patches: limits, cost, reasoning effort maps, compatibility flags, and probe verdicts. Keys are bare model names, so they survive a gateway provider-prefix change.
-- `~/.config/bifrost-gateway/gen-model-overrides.py` regenerates the patch file. Plain run uses models.dev only, `--probe` also probes each model, `--reprobe` ignores cached verdicts.
-- `~/.config/bifrost-gateway/probe-cache.json` probe verdicts, 7-day TTL. Re-runs only probe models new to the catalog.
+- Package `index.ts`: discovery, patch application, unreachable filter.
+- Patch file precedence: `BIFROST_MODEL_OVERRIDES`, then `~/.config/bifrost-gateway/model-overrides.json` on a host that regenerates it, then `model-overrides.json` shipped inside the package. Keys are bare model names, so they survive a gateway provider-prefix change.
+- Package `scripts/gen-model-overrides.py` regenerates the patch file. A plain run uses models.dev only, `--probe` also probes each model, `--reprobe` ignores cached verdicts, `--out` relocates the result. It needs `BIFROST_VK` or the pass entry.
+- `~/.cache/pi/bifrost-probe-cache.json` probe verdicts, 7-day TTL. Re-runs only probe models new to the catalog.
 - `~/.cache/pi/bifrost-models.json` raw gateway catalog, 6-hour TTL, stored pre-patch so patch edits apply without a refetch.
 
 Gotchas:
@@ -515,13 +516,14 @@ Gotchas:
 - Gateway virtual keys are scoped to providers, so one key can expose a subset of the catalog. Model IDs from a narrow key keep that provider prefix.
 - Some upstreams reject free-tier models for non-vendor clients with `403 FreeTierError`, and a dead upstream endpoint answers `410`. The probe treats `400`, `403`, `404`, and `422` as permanent refusals and leaves transient statuses visible.
 - Re-probing spends one token per model, so do not put `--probe` or `--reprobe` in a loop. Verdicts cache for a week and ordinary re-runs cost nothing.
+- Regenerating the shipped baseline requires `--probe`. The script consults the verdict cache only while probing, so a metadata-only run silently drops every `unreachable` flag and re-exposes models the gateway refuses.
+- `pi update --models` does not load extension packages at all. Only interactive startup, `/model`, and RPC mode refresh an extension's catalog, and every other path runs cache-only.
 - JSON has no comment syntax, so the patch file records provenance under a `//` key. The extension ignores any key starting with `//` and any non-object value.
 
 Sources checked:
 
-- `~/.pi/agent/extensions/bifrost-models.ts`
-- `~/.config/bifrost-gateway/gen-model-overrides.py`
-- `@earendil-works/pi-coding-agent/docs/models.md`, `models-configuration.md`, `custom-provider.md`, `virtual-models.md`
+- `pi-bifrost` package `index.ts`, `model-overrides.json`, `scripts/gen-model-overrides.py`, `README.md`
+- `@earendil-works/pi-coding-agent/docs/models.md`, `models-configuration.md`, `custom-provider.md`, `virtual-models.md`, `packages.md`
 - Bifrost docs: `integrations/openai-sdk/overview`, `integrations/anthropic-sdk/overview`, `quickstart/gateway/setting-up`, `api-reference/models`
 - `https://models.dev/api.json` opencode catalog entries, including `reasoning_options` and `provider.api`
 
