@@ -69,7 +69,9 @@
 
 .pi/agent/PI-INVENTORY.local.md
 .pi/agent/auth.json
+.pi/agent/auto-session-name.json
 .pi/agent/cache/
+.pi/agent/crashes.json
 .pi/agent/google-workspace/
 .pi/agent/models-store.json
 .pi/agent/models-store.json
@@ -81,7 +83,6 @@
 .pi/agent/pi-typesafe/
 .pi/agent/pi-waiting-events.jsonl
 .pi/agent/sessions/*
-.pi/agent/settings.json
 .pi/agent/themes/
 .pi/agent/trust.json
 .pi/models/
