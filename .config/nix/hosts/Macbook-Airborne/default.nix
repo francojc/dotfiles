@@ -37,10 +37,10 @@
           "dropbox" # cloud storage
           "orbstack" # Docker alternative
           "transmission" # torrent client
-          # "android-platform-tools" # ADB and Fastboot (for TVs)
-          # "balenaetcher" # disk image writer
-          # "calibre" # eBook management
-          # "transcribe"
+          "android-platform-tools" # ADB and Fastboot (for TVs)
+          "balenaetcher" # disk image writer
+          "calibre" # eBook management
+          "transcribe" # help transcribe recorded music
         ];
       };
     }

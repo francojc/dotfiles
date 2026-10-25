@@ -79,11 +79,8 @@ in {
     plainHosts
     + ''
 
-      # Global defaults (must come last; ssh uses first-match-wins per option).
-      # Send a portable TERM so remotes without tmux-256color terminfo behave.
-      # Server must have `AcceptEnv TERM` (most sshd defaults include LANG/LC_* only,
-      # but TERM travels in the pty request; SetEnv covers non-pty paths like scp).
-      Host *
+      # Global defaults (must come last; ssh uses first-match-wins per option). Send a portable TERM so remotes without tmux-256color terminfo behave. Server must have `AcceptEnv TERM` (most sshd defaults include LANG/LC_* only, but TERM travels in the pty request; SetEnv covers non-pty paths like scp).
+      # Host *
         SetEnv TERM=xterm-256color
         AddKeysToAgent yes
     ''

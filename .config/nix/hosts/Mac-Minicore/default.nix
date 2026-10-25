@@ -44,20 +44,14 @@
 
       # Host-specific Homebrew packages (merged with shared apps.nix)
       homebrew = {
-        taps = [
-          {
-            name = "jundot/omlx"; # omlx llm
-            clone_target = "https://github.com/jundot/omlx";
-            trusted = true;
-          }
-        ];
+        taps = [];
         brews = [
           # Mac-Minicore-only brews here
           "llama.cpp" # LLaMA model inference
           "ollama" # Ollama
-          "omlx"
           "hf" # huggingface cli
           "llmfit" # LLM system fit
+          # Note: omlx installed via .dmg
         ];
         casks = [
           # Mac-Minicore-only casks here
