@@ -6,16 +6,31 @@ const EXTENSION_ID = "auto-session-name";
 const CONFIG_PATH = join(getAgentDir(), "auto-session-name.json");
 const DEFAULT_CONFIG: Config = {
   enabled: true,
-  model: "openrouter/openai/gpt-oss-20b",
+  provider: "openrouter",
+  model: "openai/gpt-oss-20b",
   refreshEveryUserTurns: 4,
   maxTranscriptChars: 6_000,
 };
 
 type Config = {
   enabled: boolean;
+  provider: string;
   model: string;
   refreshEveryUserTurns: number;
   maxTranscriptChars: number;
+};
+
+type ModelRef = {
+  provider: string;
+  model: string;
+};
+
+type StoredConfig = {
+  enabled?: unknown;
+  provider?: unknown;
+  model?: unknown;
+  refreshEveryUserTurns?: unknown;
+  maxTranscriptChars?: unknown;
 };
 
 type PersistedState = {
@@ -41,14 +56,42 @@ type TextBlock = {
   text?: string;
 };
 
+function splitModelRef(value: string): ModelRef | undefined {
+  const slash = value.indexOf("/");
+  if (slash < 1 || slash === value.length - 1) return undefined;
+  return { provider: value.slice(0, slash), model: value.slice(slash + 1) };
+}
+
+function resolveModelSpec(tokens: string[]): ModelRef | undefined {
+  const [first, ...rest] = tokens;
+  if (!first) return undefined;
+  if (rest.length > 0) return { provider: first, model: rest.join("/") };
+  return splitModelRef(first);
+}
+
+function normalizeModelRef(provider: unknown, model: unknown): ModelRef {
+  if (typeof provider === "string" && provider.trim() && typeof model === "string" && model.trim()) {
+    return { provider: provider.trim(), model: model.trim() };
+  }
+  if (typeof model === "string") {
+    const legacy = splitModelRef(model.trim());
+    if (legacy) return legacy;
+  }
+  return { provider: DEFAULT_CONFIG.provider, model: DEFAULT_CONFIG.model };
+}
+
 function loadConfig(): Config {
   try {
-    const parsed = JSON.parse(readFileSync(CONFIG_PATH, "utf8")) as Partial<Config>;
+    const parsed = JSON.parse(readFileSync(CONFIG_PATH, "utf8")) as StoredConfig;
+    const modelRef = normalizeModelRef(parsed.provider, parsed.model);
+    const refresh = typeof parsed.refreshEveryUserTurns === "number" ? parsed.refreshEveryUserTurns : 0;
+    const maxChars = typeof parsed.maxTranscriptChars === "number" ? parsed.maxTranscriptChars : 0;
     return {
-      enabled: parsed.enabled ?? DEFAULT_CONFIG.enabled,
-      model: typeof parsed.model === "string" && parsed.model.includes("/") ? parsed.model : DEFAULT_CONFIG.model,
-      refreshEveryUserTurns: Number.isInteger(parsed.refreshEveryUserTurns) && (parsed.refreshEveryUserTurns ?? 0) > 0 ? parsed.refreshEveryUserTurns! : DEFAULT_CONFIG.refreshEveryUserTurns,
-      maxTranscriptChars: Number.isInteger(parsed.maxTranscriptChars) && (parsed.maxTranscriptChars ?? 0) >= 1_000 ? parsed.maxTranscriptChars! : DEFAULT_CONFIG.maxTranscriptChars,
+      enabled: typeof parsed.enabled === "boolean" ? parsed.enabled : DEFAULT_CONFIG.enabled,
+      provider: modelRef.provider,
+      model: modelRef.model,
+      refreshEveryUserTurns: Number.isInteger(refresh) && refresh > 0 ? refresh : DEFAULT_CONFIG.refreshEveryUserTurns,
+      maxTranscriptChars: Number.isInteger(maxChars) && maxChars >= 1_000 ? maxChars : DEFAULT_CONFIG.maxTranscriptChars,
     };
   } catch {
     return { ...DEFAULT_CONFIG };
@@ -143,12 +186,6 @@ function getLatestState(entries: SessionEntry[]): PersistedState | undefined {
   return undefined;
 }
 
-function parseModel(value: string): { provider: string; id: string } | undefined {
-  const slash = value.indexOf("/");
-  if (slash < 1 || slash === value.length - 1) return undefined;
-  return { provider: value.slice(0, slash), id: value.slice(slash + 1) };
-}
-
 function titlePrompt(conversation: string): string {
   return [
     "Return only a short session title.",
@@ -169,6 +206,43 @@ export default function (pi: ExtensionAPI) {
   let pendingUserTurn = 0;
   let expectedAutoName: string | undefined;
   let titleRequestRunning = false;
+  let lastCtx: ExtensionContext | undefined;
+
+  const modelLabel = () => `${config.provider}/${config.model}`;
+
+  const completeAutoname = (prefix: string) => {
+    const tokens = prefix.split(/\s+/).filter(Boolean);
+    const available = lastCtx?.modelRegistry.getAvailable() ?? [];
+    const subcommands = ["off", "auto", "refresh", "model", "config"];
+    const providers = [...new Set(available.map((model) => model.provider))];
+
+    // `/autoname model ...` behaves like the bare form after the subcommand.
+    const isSub = tokens[0] === "model" || tokens[0] === "provider";
+    if (tokens.length === 0 || (tokens.length === 1 && !/\s$/.test(prefix))) {
+      const head = tokens[0] ?? "";
+      const options = [
+        ...subcommands.map((value) => ({ value, label: value, description: "autoname subcommand" })),
+        ...providers.map((provider) => ({ value: provider, label: provider, description: "provider" })),
+      ];
+      const filtered = options.filter((option) => option.value.startsWith(head));
+      return filtered.length > 0 ? filtered : null;
+    }
+
+    const rest = isSub ? tokens.slice(1) : tokens;
+    const provider = rest[0];
+    if (!provider) return providers.map((value) => ({ value, label: value, description: "provider" }));
+
+    const search = rest.slice(1).join("/");
+    const items = available
+      .filter((model) => model.provider === provider)
+      .filter((model) => `${provider}/${model.id}`.includes(search))
+      .map((model) => ({
+        value: `${provider}/${model.id}`,
+        label: model.id,
+        description: model.name,
+      }));
+    return items.length > 0 ? items : null;
+  };
 
   const saveState = () => pi.appendEntry(EXTENSION_ID, state);
 
@@ -194,11 +268,9 @@ export default function (pi: ExtensionAPI) {
     const sourceHash = hash(conversation);
     if (!force && state.sourceHash === sourceHash) return false;
 
-    const modelRef = parseModel(config.model);
-    if (!modelRef) return false;
-    const model = ctx.modelRegistry.find(modelRef.provider, modelRef.id);
+    const model = ctx.modelRegistry.find(config.provider, config.model);
     if (!model || !ctx.modelRegistry.hasConfiguredAuth(model)) {
-      if (ctx.hasUI) ctx.ui.notify(`Auto-name model unavailable: ${config.model}`, "warning");
+      if (ctx.hasUI) ctx.ui.notify(`Auto-name model unavailable: ${modelLabel()}`, "warning");
       return false;
     }
 
@@ -235,6 +307,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_start", (_event, ctx) => {
     config = loadConfig();
+    lastCtx = ctx;
     const branch = ctx.sessionManager.getBranch() as SessionEntry[];
     const saved = getLatestState(branch);
     state = saved ?? (pi.getSessionName() ? { mode: "manual" } : { mode: "auto" });
@@ -282,15 +355,16 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand("autoname", {
     description: "Show, refresh, pin, or configure automatic session naming",
+    getArgumentCompletions: completeAutoname,
     handler: async (args, ctx) => {
-      const [command, ...rest] = args.trim().split(/\s+/);
-      const value = rest.join(" ");
+      lastCtx = ctx;
+      const tokens = args.trim().split(/\s+/).filter(Boolean);
+      const [command, ...rest] = tokens;
 
       if (!command) {
-        ctx.ui.notify(`Auto-name: ${state.mode}; model: ${config.model}; refresh: every ${config.refreshEveryUserTurns} user turns`, "info");
+        ctx.ui.notify(`Auto-name: ${state.mode}; model: ${modelLabel()}; refresh: every ${config.refreshEveryUserTurns} user turns`, "info");
         return;
       }
-
       if (command === "off") {
         setManual();
         ctx.ui.notify("Auto-name pinned. Current name kept.", "info");
@@ -306,7 +380,7 @@ export default function (pi: ExtensionAPI) {
       }
 
       if (command === "refresh") {
-        const force = value === "--force";
+        const force = rest.includes("--force");
         if (state.mode === "manual" && !force) {
           ctx.ui.notify("Name pinned. Use /autoname refresh --force to replace it.", "warning");
           return;
@@ -316,24 +390,36 @@ export default function (pi: ExtensionAPI) {
         return;
       }
 
-      if (command === "model") {
-        const model = parseModel(value);
-        if (!model) {
-          ctx.ui.notify("Usage: /autoname model <provider/model>", "warning");
-          return;
-        }
-        config = { ...config, model: value };
-        saveConfig(config);
-        ctx.ui.notify(`Auto-name model: ${value}`, "info");
-        return;
-      }
-
       if (command === "config") {
         ctx.ui.notify(`Config: ${existsSync(CONFIG_PATH) ? CONFIG_PATH : `${CONFIG_PATH} (defaults active)`}`, "info");
         return;
       }
 
-      ctx.ui.notify("Usage: /autoname [off|auto|refresh [--force]|model <provider/model>|config]", "warning");
+      const isModelCommand = command === "model" || command === "provider";
+      const modelRef = isModelCommand ? resolveModelSpec(rest) : resolveModelSpec(tokens);
+      if (modelRef) {
+        const label = `${modelRef.provider}/${modelRef.model}`;
+        const model = ctx.modelRegistry.find(modelRef.provider, modelRef.model);
+        if (!model) {
+          ctx.ui.notify(`Unknown model: ${label}. Use /model to check available providers and models.`, "warning");
+          return;
+        }
+        config = { ...config, provider: modelRef.provider, model: modelRef.model };
+        saveConfig(config);
+        if (!ctx.modelRegistry.hasConfiguredAuth(model)) {
+          ctx.ui.notify(`Auto-name model: ${label} (no auth configured for provider)`, "warning");
+          return;
+        }
+        ctx.ui.notify(`Auto-name model: ${label}`, "info");
+        return;
+      }
+
+      if (isModelCommand) {
+        ctx.ui.notify("Usage: /autoname <provider> <model-id>  (e.g. /autoname bifrost opencode-zen/deepseek-v4.1-flash)", "warning");
+        return;
+      }
+
+      ctx.ui.notify("Usage: /autoname [off|auto|refresh [--force]|model <provider> <model-id>|config]", "warning");
     },
   });
 }
