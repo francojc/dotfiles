@@ -49,9 +49,9 @@ in {
 
       font_size ${toString (
         if hostname == "Mac-Minicore"
-        then 18
+        then 20
         else if hostname == "Macbook-Airborne"
-        then 16
+        then 17
         else 16
       )}
 

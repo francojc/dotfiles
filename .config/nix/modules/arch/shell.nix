@@ -36,10 +36,6 @@
         ${builtins.readFile ../../home/shell/repo.zsh}
         ${builtins.readFile ../../home/shell/fzf.zsh}
 
-        # aliases.zsh shadows the Omarchy CLI with an SSH helper of the same
-        # name. Restore the CLI on an actual Omarchy host.
-        unalias omarchy 2>/dev/null
-
         # Custom tool completions (not in carapace registry)
         # Wrapped in functions so zsh-defer can schedule them safely --
         # process substitutions must not be evaluated at parse time

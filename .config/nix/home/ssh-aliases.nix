@@ -1,5 +1,6 @@
 {
   hostname,
+  isDarwin,
   lib,
   ...
 }: let
@@ -75,5 +76,16 @@ in {
         HostName ${entry.name}.${tailnet}
         User ${entry.user}
     '')
-    plainHosts;
+    plainHosts
+    + ''
+
+      # Global defaults (must come last; ssh uses first-match-wins per option).
+      # Send a portable TERM so remotes without tmux-256color terminfo behave.
+      # Server must have `AcceptEnv TERM` (most sshd defaults include LANG/LC_* only,
+      # but TERM travels in the pty request; SetEnv covers non-pty paths like scp).
+      Host *
+        SetEnv TERM=xterm-256color
+        AddKeysToAgent yes
+    ''
+    + lib.optionalString isDarwin "  UseKeychain yes\n";
 }

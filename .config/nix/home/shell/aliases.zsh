@@ -38,19 +38,15 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # --- SSH ALIASES ---
 # Hosts are ssh_config aliases from config.d/nix-managed.conf, which carry the
-# FQDN HostName, User and key. Pass a user only for hosts with no config entry.
-alias minicore='ssh_connect minicore'
-alias airborne='ssh_connect airborne'
-alias rover='ssh_connect rover'
-alias proxmox='ssh_connect proxmox'
-alias adguard='ssh_connect adguard jeridf'
-alias monitors='ssh_connect monitors'
-alias services='ssh_connect services'
-alias media='ssh_connect media'
-alias homeassistant='ssh_connect homeassistant'
-alias hermes='ssh_connect hermes'
-alias bifrost='ssh_connect jeridf'
-alias omarchy='ssh_connect omarchy'
+# FQDN HostName, User and key. The generated `Host *` block sets TERM and
+# agent options, so plain `ssh <alias>` is all that's needed.
+alias minicore='ssh minicore'
+alias airborne='ssh airborne'
+alias rover='ssh rover'
+alias proxmox='ssh proxmox'
+alias services='ssh services'
+alias media='ssh media'
+alias homeassistant='ssh homeassistant'
 
 # --- GIT ALIASES ---
 # Lazygit
