@@ -1,7 +1,6 @@
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
-import { formatCompactSubscriptionStatus, parseCompactSubscriptionStatus } from "./subscription-usage-status";
 
 type GitStats = {
 	staged: number;
@@ -44,11 +43,6 @@ function formatTokens(count: number): string {
 
 function sanitizeStatusText(text: string): string {
 	return text.replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim();
-}
-
-function formatSubscriptionUsageStatus(status: string): string {
-	const parsed = parseCompactSubscriptionStatus(status);
-	return parsed ? formatCompactSubscriptionStatus(parsed) : status;
 }
 
 function formatBranchLabel(branch: string, stats: GitStats | null, theme: ExtensionContext["ui"]["theme"]): string {
@@ -225,7 +219,7 @@ export default function (pi: ExtensionAPI) {
 							const status = sanitizeStatusText(text);
 							if (!status) return "";
 							if (key === "idle") return `${theme.fg("dim", "voice: ")}${status}`;
-							if (key === "codex-usage" || key === "opencode-go-usage") return formatSubscriptionUsageStatus(status);
+
 							return status;
 						})
 						.filter(Boolean);

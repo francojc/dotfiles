@@ -16,7 +16,7 @@ Add Google Workspace support (Drive, Docs, Sheets, Slides) as a hand-rolled loca
 ### Repo conventions observed
 
 - Extensions are flat `.ts` files or single directories under `agent/extensions/`, tab-indented, no build step; pi loads them directly.
-- Secrets fetched from `pass` at runtime (`pass show ...`) with env-var override, e.g. `opencode-go-usage.ts` `readPassSecret()`.
+- Secrets fetched from `pass` at runtime (`pass show ...`) with env-var override, following the same pattern used in the `pi-bifrost` package.
 - User docs live in `agent/PI-GUIDE.md`; per-feature notes in `plans/`.
 - Dotfiles repo must never contain OAuth tokens or client secrets.
 

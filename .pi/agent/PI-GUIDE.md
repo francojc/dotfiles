@@ -10,7 +10,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Dynamic provider follow-up: `copilot-api-discovery.ts`, `openrouter-models.ts`, and `opencode-go-discovery.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. The `pi-bifrost` package is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, ships its metadata baseline, and never blocks startup on an unreachable endpoint.
+- Dynamic provider follow-up: `copilot-api-discovery.ts` and `openrouter-models.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. The `pi-bifrost` package is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, ships its metadata baseline, and never blocks startup on an unreachable endpoint.
 
 ## Quick commands
 
@@ -28,9 +28,6 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/copilot-quota` | Secondary focused Copilot quota/model view. |
 | `/copilot-models` | Secondary focused Copilot model billing view. |
 | `/copilot-sessions` | Browse Copilot SDK sessions. |
-| `/usage` | Show current-provider Codex, Copilot, or OpenRouter usage. |
-| `/opencode-go-status [--refresh]` | Show OpenCode Go five-hour, weekly, and monthly subscription usage. |
-| `/opencode-go-costs [day\|week\|30d\|all]` | Show locally recorded OpenCode Go cost by day, model, and response. Defaults to `week`. |
 | `/typesafe status` | Show TypeSafe consent, auth, usage, spend estimate, and caps. |
 | `/typesafe enable` | Allow agent `typesafe_evaluate` calls for current session after data notice. |
 | `/typesafe playground` | Edit and run Jev request without adding result to model context. |
@@ -49,7 +46,6 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `pi-caveman` | Terse output modes and status indicator. |
 | `pi-btw` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
-| `@narumitw/pi-usage` | `/usage` menu for current-provider usage, including Codex, Copilot, and OpenRouter usage data. |
 | `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
 | `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
 | `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
@@ -64,9 +60,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
 | `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot or `copilot-api` provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. Requires `gh auth login` and active Copilot access for quota. |
 | `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
-| `opencode-go-discovery.ts` | Registers `opencode-go` models from OpenCode plus models.dev metadata, with curated endpoint and thinking-level overrides for provider-specific models, then caches them locally. | Requires `OPENCODE_API_KEY` for actual use; `pi --list-models opencode-go`. |
 | `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
-| `subscription-usage-status.ts` | Shared formatter/parser helpers for compact subscription status. | Used by `opencode-go-usage.ts`. |
 | `pi-guide-autoupdate.ts` | Writes ignored local package, model, and extension inventory. It never edits this shared guide. | Automatic on interactive session start; set `PI_GUIDE_AUTOUPDATE=0` to disable. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
@@ -425,55 +419,6 @@ Sources checked:
 - `~/.pi/agent/extensions/copilot-usage/src/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/index.ts`
 - `~/.pi/agent/extensions/copilot-usage/package.json`
-- `~/.pi/agent/extensions/opencode-go-usage.ts`
-- `~/.pi/agent/extensions/opencode-go-costs.ts`
-- `~/.pi/agent/extensions/subscription-usage-status.ts`
-
-### OpenAI/OpenRouter usage
-
-What it does:
-
-- The global `@narumitw/pi-usage` package adds `/usage` as the main usage menu.
-- The menu covers OpenAI Codex subscription windows, resets, credits, model buckets, and OpenRouter per-key spend/credit limits.
-- It keeps the compact statusline scoped to the currently selected supported provider and runtime account.
-- Cross-provider queries are explicit menu actions, not slash-command flags.
-
-Auth and data caveats:
-
-- It resolves credentials through Pi and does not read Pi auth files, Codex CLI auth, or provider auth files directly.
-- OpenAI Codex usage is subscription usage, not API billing. OpenRouter usage is API-key spend/credit tracking, not consumer subscription quota.
-- The package does not pretend those limits have the same semantics.
-- Reload Pi after installing or updating the package.
-
-Sources checked:
-
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-usage/README.md`
-- `~/.pi/agent/npm/node_modules/@narumitw/pi-usage/package.json`
-
-### OpenCode Go usage
-
-What it does:
-
-- Shows a Codex-shaped remaining-quota footer meter only while an `opencode-go/*` model is selected.
-- `/opencode-go-status` shows five-hour, weekly, and monthly remaining percentage plus reset time. Use `/opencode-go-status --refresh` to bypass its short fresh cache.
-- Uses a 60-second fresh cache, a 10-minute stale fallback, and 60-second recursive polling after a short startup delay. Switching away from OpenCode Go or shutting down clears its status and invalidates late poll results.
-- `/opencode-go-costs [day|week|30d|all]` scans persisted Pi session JSONL files and reports daily spend bars, spend by model, and highest/lowest-cost responses. It defaults to `week`.
-- Cost values are Pi's per-response provider-price records, not a Go dashboard ledger. Forked/copied history is deduplicated by provider response ID. It only reports usage made through Pi on this machine, and `lowest-cost` means cheapest response, not quality-adjusted value.
-
-Runtime environment inputs:
-
-- By default, the extension reads `pass show USER/OPENCODE_GO_WORKSPACE_ID` for the workspace ID and `pass show COOKIE/OPENCODE_GO_AUTH_COOKIE` for the logged-in browser's raw `auth` cookie value. Store only the cookie value, not Netscape `cookies.txt` metadata or an `auth=` prefix.
-- `OPENCODE_GO_WORKSPACE_ID` and `OPENCODE_GO_AUTH_COOKIE` remain optional runtime-environment overrides, useful where `pass` is unavailable. Renew the cookie pass entry after dashboard authentication expires.
-- Do not commit either value, place it in `settings.json`, write it to logs/cache/error reports, or put it in Nix expressions/store paths. Treat the cookie like a password.
-
-#### Brittle integration breadcrumb
-
-- **Undocumented source:** `GET https://opencode.ai/workspace/<workspace-id>/go`, authenticated with `Cookie: auth=<cookie>`. By default, credentials come from `pass` entries `USER/OPENCODE_GO_WORKSPACE_ID` and `COOKIE/OPENCODE_GO_AUTH_COOKIE`; runtime environment values override them. This is dashboard HTML, not a supported public usage API.
-- **Parser signature:** dashboard hydration is currently expected to contain `rollingUsage:$R[n]={usagePercent:<number>,resetInSec:<number>}`, plus `weeklyUsage` and `monthlyUsage` equivalents in either property order. `usagePercent` is used quota, so the widget displays `100 - usagePercent` as remaining quota.
-- **Failure display:** missing credentials, expired auth, request failure, or a changed hydration layout displays `OpenCode Go unavailable`; stale data may be shown for at most 10 minutes. Cookie/header values are intentionally omitted from all errors.
-- **Do not confuse endpoints:** `https://opencode.ai/zen/go/v1` is the inference/model endpoint used by `opencode-go-discovery.ts`; it does not expose the subscription usage snapshot.
-- **Update procedure:** if the command/footer becomes unavailable, first renew the browser auth cookie and verify the workspace ID. Then inspect authenticated dashboard HTML for changed hydration fields, update `parseWindow` in `opencode-go-usage.ts`, run the formatter/lifecycle checks, and update this section with the new parser signature and source date.
-- **Sources:** [OpenCode Go docs](https://opencode.ai/docs/go/), [OpenCode Go console routes](https://github.com/anomalyco/opencode/tree/dev/packages/console/app/src/routes/zen/go/v1), and [`opencode-statusline` OpenCode Go collector](https://github.com/kalcohol/opencode-statusline/blob/main/src/lib/providers.ts).
 
 ### Bifrost gateway models
 

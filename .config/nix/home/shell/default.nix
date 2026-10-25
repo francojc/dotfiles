@@ -86,9 +86,10 @@
         export KETCH_CONFIG="${config.home.homeDirectory}/.config/ketch/config.json"
 
         # --- PI ENV VARIABLES ---
-        # update provider/model with subscription changes
-        export PI_PROVIDER="openai-codex"
-        export PI_MODEL="gpt-5.6-luna"
+        # Defaults a fresh Pi session to the Bifrost gateway and Qwen3.8 flash
+        # for a balanced default. Override per-shell or per-session as needed.
+        export PI_PROVIDER="bifrost"
+        export PI_MODEL="opencode-zen/qwen3.8-flash"
         export PI_FALLBACK_PROVIDER="ollama"
         export PI_FALLBACK_MODEL="gemma4:31b-cloud"
 

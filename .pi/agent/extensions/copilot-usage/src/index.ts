@@ -22,7 +22,6 @@ import { promisify } from "node:util";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
-import { clampPercent, quotaGlyph, remainingBar } from "../../subscription-usage-status";
 import type {
 	GetAuthStatusResponse,
 	GetStatusResponse,
@@ -197,6 +196,22 @@ function modelCostLabel(m: ModelBillingDisplay): string {
 	if (m.multiplier !== undefined) return m.multiplier === 1 ? "1×" : `${m.multiplier}×`;
 	if (m.tokenPricing) return "tokens";
 	return "included";
+}
+
+function clampPercent(percent: number): number {
+	return Math.max(0, Math.min(100, Number.isFinite(percent) ? percent : 0));
+}
+
+function quotaGlyph(percentRemaining: number): string {
+	const percent = clampPercent(percentRemaining);
+	if (percent > 25) return "✓";
+	if (percent > 10) return "!";
+	return "✗";
+}
+
+function remainingBar(percentRemaining: number, width = 10): string {
+	const filled = Math.round((clampPercent(percentRemaining) / 100) * width);
+	return `[${"█".repeat(filled)}${"░".repeat(width - filled)}]`;
 }
 
 function quotaThresholdGlyph(percentRemaining: number): string {

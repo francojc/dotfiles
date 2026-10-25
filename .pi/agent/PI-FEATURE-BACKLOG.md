@@ -78,12 +78,6 @@ Notes:
 | Prompt and model lookup speed fixes | Prompt submission no longer slows with session length; remote catalog merge no longer quadratic. | Direct benefit given the number of dynamic provider extensions and long sessions. | `new` | Nothing to configure; confirm the perceived speedup. |
 | Collapsed tool result preview limit | Long single-line output, such as minified JSON, no longer fills the screen. | Quality-of-life for MCP and codemode results. | `new` | Nothing to configure. |
 
-## 0.99.1 (2026-09-29)
-
-| Item | What it does | Why it may matter here | Status | Next action |
-| --- | --- | --- | --- | --- |
-| GPT-6.1 Sol | New model on OpenAI, Azure OpenAI, and OpenAI Codex; now the default Codex model. | Current default model is `gpt-6-luna` on `openai-codex`. Worth a comparison for coding and long-context work. | `new` | Compare against Luna on a real task before switching. |
-
 ## 0.99.0 (2026-09-29)
 
 | Item | What it does | Why it may matter here | Status | Next action |
