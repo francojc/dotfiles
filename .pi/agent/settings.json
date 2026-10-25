@@ -1,0 +1,35 @@
+{
+  "lastChangelogVersion": "1.4.0",
+  "defaultProvider": "bifrost",
+  "defaultModel": "opencode-zen/deepseek-v4.1-flash",
+  "defaultTools": [
+    "+codemode"
+  ],
+  "collapseChangelog": true,
+  "quietStartup": "header",
+  "enableInstallTelemetry": false,
+  "defaultThinkingLevel": "medium",
+  "theme": "dark",
+  "externalEditor": "nvim",
+  "hideThinkingBlock": false,
+  "showCacheMissNotices": true,
+  "outputPad": 0,
+  "transport": "auto",
+  "terminal": {
+    "showTerminalProgress": true,
+    "clearOnShrink": true
+  },
+  "packages": [
+    "npm:pi-caveman@1.0.7",
+    "npm:pi-btw@0.4.1",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-typesafe",
+    "git:ssh://forgejo@forgejo.gerbil-matrix.ts.net/jeridf/pi-bifrost.git@v0.2.1"
+  ],
+  "enabledModels": [],
+  "defaultProjectTrust": "always",
+  "doubleEscapeAction": "tree",
+  "treeFilterMode": "default",
+  "fullscreenScrollbar": "always",
+  "tuiMode": "regular"
+}
