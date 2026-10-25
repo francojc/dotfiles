@@ -73,6 +73,7 @@
 .pi/agent/cache/
 .pi/agent/crashes.json
 .pi/agent/google-workspace/
+.pi/agent/install/
 .pi/agent/models-store.json
 .pi/agent/models-store.json
 .pi/agent/pi-crash.log
