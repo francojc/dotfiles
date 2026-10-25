@@ -89,3 +89,4 @@
 .pi/models/
 
 /.config/ketch/config.json
+.pi/agent/fff/
