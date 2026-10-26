@@ -37,8 +37,11 @@ EXIT STATUS:
 
 NOTES:
     Calendula has no multi-calendar flag, so this makes one call per calendar.
-    Duplicate events cross-posted to two calendars are collapsed by
-    (day, start time, summary).
+    Duplicate events are collapsed by day + start time + end time, ignoring the
+    summary, so a cross-posted or source-duplicated copy collapses even when the
+    duplicate was renamed. A genuine double-booking keeps a distinct end time
+    and still appears. All-day events also key on title, since they carry no
+    time to compare.
 EOF
 }
 
@@ -87,17 +90,25 @@ while IFS=$'\t' read -r acct cal; do
     | select(.status != "CANCELLED")
     | [ .startsAt[0:10],
         (if .allDay then "0000" else (.startsAt[11:13] + .startsAt[14:16]) end),
-        (if .allDay then "all-day" else (.startsAt[11:16] + "-" + .endsAt[11:16]) end),
+        (if .allDay then "" else (.startsAt[11:16] + "-" + .endsAt[11:16]) end),
         .summary,
         (.location // "") ]
     | @tsv' >> "$tmp"
 done < <(yq -r '.calendar.calendars[] | [.account, .id] | @tsv' "$CFG")
 
 sort -k1,1 -k2,2 "$tmp" | awk -F'\t' '
-  # Collapse the same event cross-posted to two calendars.
-  { key = $1 FS $2 FS $4; if (seen[key]++) next }
+  # Collapse duplicate events. The calendars routinely hold the same event twice,
+  # either cross-posted from a second calendar or duplicated at the source, and the
+  # copy is often renamed. Identity is therefore day + start + end, ignoring summary,
+  # which also catches renamed copies. A real double-booking keeps a different end
+  # time, so it still shows.
+  # All-day events have no time to compare, so they key on summary too; otherwise two
+  # distinct all-day events on one day would collapse into one.
+  { key = ($3 == "" || $3 == "all-day") ? $1 FS "all-day" FS $4 : $1 FS $2 FS $3
+    if (seen[key]++) next }
   { if ($1 != prev) { if (prev != "") print ""; printf "## %s\n", $1; prev = $1 }
-    printf "- %s  %s", $3, $4
+    label = ($3 == "" || $3 == "all-day") ? "all-day" : $3
+    printf "- %s  %s", label, $4
     if ($5 != "") printf "  @%s", $5
     print "" }'
 
