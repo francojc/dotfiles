@@ -49,6 +49,47 @@ function M.toggle_wrap()
 	notify_toggle(vim.opt.wrap:get(), "Word wrap")
 end
 
+-- Markdown: turn the current line (normal mode) or selected lines (visual
+-- mode) into task list items, preserving indentation. An existing `-`, `+` or
+-- `*` bullet is converted rather than doubled up. Blank lines and lines that
+-- are already task items are skipped, so the mapping is idempotent.
+function M.markdown_task_item()
+	local mode = vim.api.nvim_get_mode().mode
+	local first = vim.fn.line("v")
+	local last = vim.fn.line(".")
+	if first > last then
+		first, last = last, first
+	end
+	-- In normal mode `v` is not the visual anchor; operate on the cursor line.
+	if not mode:match("^[vV\22]") then
+		first = vim.fn.line(".")
+		last = first
+	end
+
+	for l = first, last do
+		local line = vim.fn.getline(l)
+		if line:find("%S") and not line:find("^[ \t]*[-*+]%s+%[[ xX]%]") then
+			-- Reuse the existing bullet marker if there is one, otherwise add one.
+			local indent, rest = line:match("^([ \t]*)[-*+]%s+(.*)$")
+			if not indent then
+				indent = line:match("^([ \t]*)[-*+]$")
+				rest = ""
+			end
+			local new
+			if indent then
+				new = indent .. "- [ ] " .. rest
+			else
+				new = (line:gsub("^([ \t]*)", "%1- [ ] ", 1))
+			end
+			vim.fn.setline(l, new)
+		end
+	end
+
+	if mode:match("^[vV\22]") then
+		vim.cmd("normal! gv")
+	end
+end
+
 -- Close all buffers except the current one
 function M.close_other_buffers()
 	local current_buf = vim.fn.bufnr("%")
