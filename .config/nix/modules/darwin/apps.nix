@@ -82,7 +82,7 @@
       "tree-sitter-cli" # tree-sitter CLI
       "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
-      # "vhs" # cli for programmable terminal gifs
+      "vhs" # cli for programmable terminal gifs
     ];
 
     casks = [
@@ -96,7 +96,6 @@
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "quarto" # document editor
-      "signal" # secure messaging
       "supercmd" # launcher+
       "zoom" # video conferencing
       "zotero" # reference manager
