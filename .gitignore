@@ -34,6 +34,7 @@
 .tmux/plugins/
 
 # Runtime/generated app state that should live in real ~/.config, not dotfiles.
+
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
 .config/bifrost-gateway/
@@ -57,6 +58,12 @@
 .config/tmux/*
 .config/wezterm/wezterm.lua
 
+# Pimalaya (builds are host-specific)
+.config/calendula/config.toml
+.config/cardamum/config.toml
+.config/himalaya/config.toml
+.config/ortie/config.toml
+
 # ----------------------------------------------------------
 # Development Tools & AI Assistants
 # ----------------------------------------------------------
@@ -74,7 +81,6 @@
 .pi/agent/crashes.json
 .pi/agent/google-workspace/
 .pi/agent/install/
-.pi/agent/models-store.json
 .pi/agent/models-store.json
 .pi/agent/pi-crash.log
 .pi/agent/pi-guide-autoupdate-state.json
