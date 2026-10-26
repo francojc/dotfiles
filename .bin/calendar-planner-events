@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Description: Emit planner calendar events as markdown day sections.
+# Reads the calendar list from plan/config/schedule.yaml and queries each one
+# through calendula (Google Calendar via gcal, mailbox.org via CalDAV).
+# Apple Reminders are NOT included; use `reminders show-all --format json`.
+#
+# Usage: calendar-planner-events FROM TO        (both YYYY-MM-DD, inclusive)
+# Exit:  0 all calendars read, 1 one or more calendars failed (partial output kept).
+#
+# Dependencies: calendula, yq, jq
+
+set -uo pipefail
+
+show_help() {
+  cat <<'EOF'
+calendar-planner-events - list planner calendar events as markdown day sections
+
+USAGE:
+    calendar-planner-events FROM TO
+
+ARGS:
+    FROM    first day of the window, YYYY-MM-DD (inclusive)
+    TO      last day of the window, YYYY-MM-DD (inclusive)
+
+OUTPUT:
+    "## YYYY-MM-DD" heading per day, then "- HH:MM-HH:MM  Title  @Location".
+    All-day events render as "- all-day  Title".
+
+ENVIRONMENT:
+    CAL_PLANNER_CONFIG   override schedule.yaml path
+                         (default ~/Obsidian/Notes/plan/config/schedule.yaml)
+
+EXIT STATUS:
+    0  every configured calendar was read
+    1  one or more calendars failed; readable output is still emitted and a
+       per-calendar warning goes to stderr
+
+NOTES:
+    Calendula has no multi-calendar flag, so this makes one call per calendar.
+    Duplicate events cross-posted to two calendars are collapsed by
+    (day, start time, summary).
+EOF
+}
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
+if [[ $# -ne 2 ]]; then
+  show_help >&2
+  exit 2
+fi
+
+readonly CFG="${CAL_PLANNER_CONFIG:-$HOME/Obsidian/Notes/plan/config/schedule.yaml}"
+readonly FROM="$1"
+readonly TO="$2"
+
+for cmd in calendula yq jq; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    printf 'Error: required command not found: %s\n' "$cmd" >&2
+    exit 2
+  fi
+done
+
+if [[ ! -r "$CFG" ]]; then
+  printf 'Error: schedule config not readable: %s\n' "$CFG" >&2
+  exit 2
+fi
+
+status=0
+tmp=$(mktemp) || exit 2
+trap 'rm -f "$tmp"' EXIT
+: > "$tmp"
+
+while IFS=$'\t' read -r acct cal; do
+  [[ -z "$acct" || -z "$cal" ]] && continue
+  if ! out=$(calendula event list -a "$acct" -k "$cal" \
+               --from "$FROM" --to "$TO" --json 2>&1); then
+    printf 'WARN: calendula failed for %s/%s: %s\n' \
+      "$acct" "$cal" "$(printf '%s\n' "$out" | head -1)" >&2
+    status=1
+    continue
+  fi
+  printf '%s' "$out" | jq -r '
+    .events[]?
+    | select(.status != "CANCELLED")
+    | [ .startsAt[0:10],
+        (if .allDay then "0000" else (.startsAt[11:13] + .startsAt[14:16]) end),
+        (if .allDay then "all-day" else (.startsAt[11:16] + "-" + .endsAt[11:16]) end),
+        .summary,
+        (.location // "") ]
+    | @tsv' >> "$tmp"
+done < <(yq -r '.calendar.calendars[] | [.account, .id] | @tsv' "$CFG")
+
+sort -k1,1 -k2,2 "$tmp" | awk -F'\t' '
+  # Collapse the same event cross-posted to two calendars.
+  { key = $1 FS $2 FS $4; if (seen[key]++) next }
+  { if ($1 != prev) { if (prev != "") print ""; printf "## %s\n", $1; prev = $1 }
+    printf "- %s  %s", $3, $4
+    if ($5 != "") printf "  @%s", $5
+    print "" }'
+
+exit "$status"
