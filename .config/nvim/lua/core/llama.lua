@@ -10,7 +10,9 @@
 -- not fight pinentry-tty for the terminal). Set vim.g.llama_skip_pass = true
 -- to fall back to $LLAMA_API_KEY only.
 local function pass_secret(name)
-	if vim.g.llama_skip_pass then return nil end
+	if vim.g.llama_skip_pass then
+		return nil
+	end
 
 	-- fast path: pass + warm gpg-agent cache -> instant, no prompt
 	local ok, fetched = pcall(function()
@@ -24,19 +26,27 @@ local function pass_secret(name)
 		end
 		return false
 	end)
-	if ok and fetched then return vim.env.LLAMA_API_KEY end
+	if ok and fetched then
+		return vim.env.LLAMA_API_KEY
+	end
 
 	-- cold cache: loopback decrypt, passphrase fed to gpg via stdin
 	-- (--passphrase-fd 0) so it never lands on the command line
 	local store = vim.fn.expand("$HOME") .. "/.password-store/" .. name .. ".gpg"
 	local cmd = {
-		"gpg", "--batch", "--quiet", "--no-tty",
-		"--pinentry-mode", "loopback", "--passphrase-fd", "0",
-		"--decrypt", store,
+		"gpg",
+		"--batch",
+		"--quiet",
+		"--no-tty",
+		"--pinentry-mode",
+		"loopback",
+		"--passphrase-fd",
+		"0",
+		"--decrypt",
+		store,
 	}
 	for attempt = 1, 3 do
-		local pp = vim.fn.inputsecret(
-			"GPG passphrase for " .. name .. " (" .. attempt .. "/3): ")
+		local pp = vim.fn.inputsecret("GPG passphrase for " .. name .. " (" .. attempt .. "/3): ")
 		if pp == "" then
 			vim.cmd("redraw")
 			break
@@ -59,7 +69,10 @@ end
 
 local llama_api_key = pass_secret("API/LLAMA_API_KEY") or vim.env.LLAMA_API_KEY
 if not llama_api_key or llama_api_key == "" then
-	vim.notify("llama.vim: LLAMA_API_KEY unavailable from pass/$env; FIM requests will be rejected", vim.log.levels.WARN)
+	vim.notify(
+		"llama.vim: LLAMA_API_KEY unavailable from pass/$env; FIM requests will be rejected",
+		vim.log.levels.WARN
+	)
 	llama_api_key = ""
 end
 
@@ -75,7 +88,7 @@ vim.g.llama_config = {
 	-- Server connection
 	endpoint_fim = "http://100.101.38.4:8080/infill",
 	api_key = llama_api_key,
-	model_fim = "qwen2.5-coder-fim-7b-spec",
+	model_fim = "qwen2.5-coder-fim-0.5b", -- Trade-off for the Qwen3.6 A3B model.
 	-- Disable llama.vim instruction-editing mappings (FIM-only settings)
 	keymap_inst_trigger = "",
 	keymap_inst_rerun = "",
@@ -151,9 +164,11 @@ vim.schedule(function()
 
 		if status == "401" or status == "403" then
 			vim.notify(
-				"FIM: unauthorized (HTTP " .. status
-				.. "). API key rejected by server — check pass API/LLAMA_API_KEY vs the server --api-key-file. Run :LlamaPassReload",
-				vim.log.levels.ERROR)
+				"FIM: unauthorized (HTTP "
+					.. status
+					.. "). API key rejected by server — check pass API/LLAMA_API_KEY vs the server --api-key-file. Run :LlamaPassReload",
+				vim.log.levels.ERROR
+			)
 			return
 		elseif status ~= "200" then
 			vim.notify("FIM: server returned HTTP " .. (status ~= "" and status or result.code), vim.log.levels.ERROR)
@@ -173,12 +188,16 @@ vim.schedule(function()
 
 		-- explicit match against the configured name
 		local function matches(m)
-			if m.id == config.model_fim then return true end
+			if m.id == config.model_fim then
+				return true
+			end
 			for _, key in ipairs({ "aliases", "tags", "filenames" }) do
 				local list = m[key]
 				if type(list) == "table" then
 					for _, v in ipairs(list) do
-						if v == config.model_fim then return true end
+						if v == config.model_fim then
+							return true
+						end
 					end
 				end
 			end
@@ -194,14 +213,20 @@ vim.schedule(function()
 
 		-- upstream fallback: a single served model is assumed to be the FIM model
 		if #models == 1 then
-			vim.notify("FIM: ✅ Ready (" .. models[1].id .. "; served id differs from model_fim '" .. config.model_fim .. "')")
+			vim.notify(
+				"FIM: ✅ Ready (" .. models[1].id .. "; served id differs from model_fim '" .. config.model_fim .. "')"
+			)
 			return
 		end
 
 		local ids = {}
-		for _, m in ipairs(models) do ids[#ids + 1] = m.id end
-		vim.notify("FIM: model not loaded (" .. config.model_fim .. "); server offers: " .. table.concat(ids, ", "),
-			vim.log.levels.WARN)
+		for _, m in ipairs(models) do
+			ids[#ids + 1] = m.id
+		end
+		vim.notify(
+			"FIM: model not loaded (" .. config.model_fim .. "); server offers: " .. table.concat(ids, ", "),
+			vim.log.levels.WARN
+		)
 	end, { desc = "Check authenticated FIM endpoint" })
 
 	-- Re-pull the API key from `pass` without restarting Neovim. Updates
