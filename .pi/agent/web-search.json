@@ -1,0 +1,22 @@
+{
+  "braveApiKey": "!pass show API/KETCH_BRAVE_API_KEY",
+  "degoogBaseUrl": "https://degoog.gerbil-matrix.ts.net",
+  "degoogEngines": [
+    "degoog-engine",
+    "degoog-org-official-extensions-brave-api-search-engine",
+    "degoog-org-official-extensions-duckduckgo-engine",
+    "degoog-org-official-extensions-wikipedia-engine",
+    "degoog-org-official-extensions-reddit-engine"
+  ],
+  "ssrf": {
+    "allowRanges": ["100.69.188.50/32"]
+  },
+  "searchRouting": {
+    "providers": ["degoog", "brave", "duckduckgo"],
+    "fallbackOn": ["transient", "quota", "network", "invalid-response", "empty", "domain-miss"],
+    "timeoutMs": 45000
+  },
+  "webSearch": {
+    "enabled": true
+  }
+}

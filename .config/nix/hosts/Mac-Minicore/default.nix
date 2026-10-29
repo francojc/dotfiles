@@ -55,6 +55,7 @@
         ];
         casks = [
           # Mac-Minicore-only casks here
+          "transmission" # torrent client
           "google-drive" # Google Drive sync
           "lm-studio" # LLM interface
         ];

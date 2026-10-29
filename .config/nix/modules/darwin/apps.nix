@@ -6,6 +6,7 @@
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
     terminal-notifier # macOS notifications from command line
+    opencode-desktop #
   ];
 
   homebrew = {
