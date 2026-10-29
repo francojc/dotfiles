@@ -65,6 +65,7 @@
       pinentry-tty
       wl-clipboard
       xclip
+      brave-origin
     ]
     # These GNOME helpers are optional because the Quattro guest is a
     # Hyprland-only aarch64 system, and not every extension is built there.
