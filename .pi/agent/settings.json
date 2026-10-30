@@ -32,13 +32,5 @@
   "doubleEscapeAction": "tree",
   "treeFilterMode": "default",
   "fullscreenScrollbar": "always",
-  "tuiMode": "regular",
-  "piBolt": {
-    "packages": [
-      "npm:opensec-pi-subagents@0.20.9",
-      "npm:opensec-pi-todo@2.13.1",
-      "npm:opensec-pi-fff@0.11.0"
-    ],
-    "packagesOverlay": true
-  }
+  "tuiMode": "regular"
 }

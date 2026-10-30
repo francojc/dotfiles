@@ -32,7 +32,7 @@ pi-commit() {
 
   message=$(
     print -r -- "$staged_diff" |
-      command pi-bolt --print --no-session --no-tools \
+      command pi --print --no-session --no-tools \
         --no-extensions --no-skills --no-prompt-templates \
         --no-context-files --no-approve \
         --provider opencode --model glm-5.3-flash \
