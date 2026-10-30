@@ -90,6 +90,7 @@
 .pi/agent/pi-typesafe/
 .pi/agent/pi-waiting-events.jsonl
 .pi/agent/sessions/*
+.pi/agent/web-search-cache/
 .pi/agent/themes/
 .pi/agent/trust.json
 .pi/models/

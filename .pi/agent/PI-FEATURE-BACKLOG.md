@@ -25,7 +25,7 @@ Register of Pi changelog features worth exploring, with relevance notes and a st
 ## Baseline
 
 - Pi version at last review: 1.1.0.
-- Local context: many local extensions under `~/.pi/agent/extensions/`, packages installed via `~/.pi/agent/npm/`, TypeSafe, Ketch, worktree and coordinator workflows, course repos (Quarto, R, Spanish pedagogy).
+- Local context: many local extensions under `~/.pi/agent/extensions/`, packages installed via `~/.pi/agent/npm/`, TypeSafe, worktree and coordinator workflows, course repos (Quarto, R, Spanish pedagogy).
 
 ## 1.1.0 (2026-10-07)
 

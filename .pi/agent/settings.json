@@ -25,7 +25,8 @@
     "npm:@plannotator/pi-extension",
     "npm:pi-typesafe",
     "git:ssh://forgejo@forgejo.gerbil-matrix.ts.net/jeridf/pi-bifrost.git@v0.2.1",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:rpiv-todo"
   ],
   "enabledModels": [],
   "defaultProjectTrust": "always",
