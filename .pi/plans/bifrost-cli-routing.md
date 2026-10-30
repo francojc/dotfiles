@@ -657,7 +657,7 @@ Leave `packages`, `defaultTools`, and `thinkingLevel` untouched.
 - `iamaamir/pi-bifrost` is **not** installed. Two routers competing over the
   active model is the failure mode that extension's own docs warn about.
 - Any other consumer of `settings.json`/`models.json` — `pi-commit` in
-  `ai.zsh` calls `pi-bolt --provider opencode --model glm-5.3-flash` explicitly,
+  `ai.zsh` calls `pi --provider opencode --model glm-5.3-flash` explicitly,
   so it is unaffected.
 
 ---
