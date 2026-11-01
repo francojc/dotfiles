@@ -62,9 +62,15 @@ options(
 # The completion popup is styled by prompt_toolkit, independently of
 # radian.color_scheme (which only drives syntax highlighting). Override it via
 # an on-load hook. Requires the reticulate R package.
+#
+# radian snapshots PromptSession fields into _default_settings and restores
+# them on every mode switch, so the merged style must be written to both
+# session.style and session._default_settings["style"]. The try/except keeps
+# radian usable if a future radian/prompt_toolkit release renames either.
 options(
   radian.on_load_hooks = list(function() {
-    reticulate::py_run_string("
+    tryCatch(
+      reticulate::py_run_string("
 from radian.app import get_app
 from prompt_toolkit.styles import Style, merge_styles
 
@@ -80,7 +86,10 @@ session.style = merge_styles([
         'completion-menu.scrollbar.button': 'bg:#888888',
     }),
 ])
-")
+session._default_settings['style'] = session.style
+"),
+      error = function(e) message("radian completion-menu hook failed: ", conditionMessage(e))
+    )
   })
 )
 
