@@ -98,6 +98,7 @@
       "obsidian" # note-taking
       "quarto" # document editor
       "supercmd" # launcher+
+      "wezterm" # terminal
       "zoom" # video conferencing
       "zotero" # reference manager
       # "keycastr" # keystroke visualizer
