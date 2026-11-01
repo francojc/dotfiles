@@ -10,7 +10,7 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Dynamic provider follow-up: `copilot-api-discovery.ts` and `openrouter-models.ts` replace built-in provider catalogs. Evaluate removing them or migrating them to `refreshModels`, which integrates with `/model` refresh, `models-store.json`, and `pi update --models`. The `pi-bifrost` package is the current reference for that pattern: it discovers through `refreshModels`, caches to disk, ships its metadata baseline, and never blocks startup on an unreachable endpoint.
+- Model providers are managed through the `pi-bifrost` gateway package. The former `copilot-api-discovery.ts` and `openrouter-models.ts` extensions were removed in favor of it; the `pi-bifrost` pattern (discover through `refreshModels`, cache to disk, ship metadata baseline, never block startup) is the reference for any future dynamic provider.
 
 ## Quick commands
 
@@ -61,8 +61,7 @@ Loaded from `~/.pi/agent/extensions/`.
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
 | `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot or `copilot-api` provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. Requires `gh auth login` and active Copilot access for quota. |
-| `copilot-api-discovery.ts` | Registers `copilot-api` models from GitHub's raw Copilot `/models` endpoint and caches them locally. | Requires `GITHUB_COPILOT_API_KEY`; optional `GITHUB_COPILOT_BASE_URL`; `pi --list-models copilot-api`. |
-| `openrouter-models.ts` | Registers `openrouter` models from the OpenRouter API and caches them locally. | Requires `OPENROUTER_API_KEY`; `pi --list-models openrouter`. |
+| `atuin.ts` | Tracks bash tool commands in Atuin history with author `pi`, via `tool_call`/`tool_execution_end` events. | Requires Atuin; check with `atuin search --author pi`. |
 | `pi-guide-autoupdate.ts` | Writes ignored local package, model, and extension inventory. It never edits this shared guide. | Automatic on interactive session start; set `PI_GUIDE_AUTOUPDATE=0` to disable. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
 | `pi-notify-switch.ts` | Sends native terminal notifications when Pi is waiting and records TMUX panes for quick switching. | `/waiting`, TMUX `prefix N`, TMUX `prefix C-n` |
@@ -455,7 +454,7 @@ Sources checked:
 What it does:
 
 - Gives persistent sessions a fallback title from first substantive prompt before first assistant response writes JSONL.
-- Generates a short content title after first settled turn, then every four user turns. The current default is OpenRouter's paid `openai/gpt-oss-20b` model.
+- Generates a short content title after first settled turn, then every four user turns. Configured model lives in `~/.pi/agent/auto-session-name.json` (currently OpenCode `big-pickle`).
 - Treats `/name <title>` as a manual pin. Auto-refresh stops until `/autoname auto` or `/autoname refresh --force`.
 - Stores per-session auto/manual state in session custom entries, so reload, resume, and fork flows retain naming behavior.
 
