@@ -63,6 +63,96 @@
           "maxTokens": 2048
         }
       ]
+    },
+    "bifrost-auto": {
+      "name": "Bifrost auto (complexity)",
+      "api": "openai-completions",
+      "baseUrl": "https://bifrost.gerbil-matrix.ts.net/v1",
+      "apiKey": "!pass show API/BIFROST_VK",
+      "authHeader": true,
+      "compat": {
+        "supportsDeveloperRole": false
+      },
+      "models": [
+        {
+          "id": "auto",
+          "name": "auto",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 128000,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0.3,
+            "output": 1.2,
+            "cacheRead": 0.006,
+            "cacheWrite": 0.3
+          }
+        }
+      ]
+    },
+    "bifrost-fast": {
+      "name": "Bifrost fast (manual tier)",
+      "api": "openai-completions",
+      "baseUrl": "https://bifrost.gerbil-matrix.ts.net/v1",
+      "apiKey": "!pass show API/BIFROST_VK",
+      "authHeader": true,
+      "headers": {
+        "x-bf-tier": "fast"
+      },
+      "compat": {
+        "supportsDeveloperRole": false
+      },
+      "models": [
+        {
+          "id": "auto",
+          "name": "auto (fast)",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 128000,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0.15,
+            "output": 0.5,
+            "cacheRead": 0.003,
+            "cacheWrite": 0.15
+          }
+        }
+      ]
+    },
+    "bifrost-frontier": {
+      "name": "Bifrost frontier (manual tier)",
+      "api": "openai-completions",
+      "baseUrl": "https://bifrost.gerbil-matrix.ts.net/v1",
+      "apiKey": "!pass show API/BIFROST_VK",
+      "authHeader": true,
+      "headers": {
+        "x-bf-tier": "frontier"
+      },
+      "compat": {
+        "supportsDeveloperRole": false
+      },
+      "models": [
+        {
+          "id": "auto",
+          "name": "auto (frontier)",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 128000,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 2.0,
+            "output": 7.0,
+            "cacheRead": 0.25,
+            "cacheWrite": 2.0
+          }
+        }
+      ]
     }
   }
 }

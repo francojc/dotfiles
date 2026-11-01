@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "1.4.0",
-  "defaultProvider": "bifrost",
-  "defaultModel": "opencode-zen/deepseek-v4.1-flash",
+  "defaultProvider": "bifrost-auto",
+  "defaultModel": "auto",
   "defaultTools": [
     "+codemode"
   ],
