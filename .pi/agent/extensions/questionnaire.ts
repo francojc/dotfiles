@@ -7,7 +7,7 @@
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Editor, type EditorTheme, Key, matchesKey, Text, truncateToWidth } from "@earendil-works/pi-tui";
-import { addLine, borderLine, dimHint } from "./tui-utils";
+import { addLine, addWrappedWithPrefix, borderLine, dimHint } from "./tui-utils";
 import { Type } from "typebox";
 
 // ---------------------------------------------------------------------------
@@ -119,7 +119,7 @@ function renderOptions(
 	optionIndex: number,
 	inputMode: boolean,
 	theme: AnyTheme,
-	add: (s: string) => void,
+	addPrefixed: (prefix: string, s: string) => void,
 ): void {
 	for (let i = 0; i < opts.length; i++) {
 		const opt = opts[i];
@@ -127,13 +127,10 @@ function renderOptions(
 		const isOther = opt.isOther === true;
 		const prefix = selected ? theme.fg("accent", "> ") : "  ";
 		const color = selected ? "accent" : "text";
-		if (isOther && inputMode) {
-			add(prefix + theme.fg("accent", `${i + 1}. ${opt.label} ✎`));
-		} else {
-			add(prefix + theme.fg(color, `${i + 1}. ${opt.label}`));
-		}
+		const label = `${i + 1}. ${opt.label}${isOther && inputMode ? " ✎" : ""}`;
+		addPrefixed(prefix, theme.fg(selected || (isOther && inputMode) ? "accent" : color, label));
 		if (opt.description) {
-			add(`     ${theme.fg("muted", opt.description)}`);
+			addPrefixed("     ", theme.fg("muted", opt.description));
 		}
 	}
 }
@@ -146,45 +143,45 @@ function renderInputMode(
 	editor: Editor,
 	width: number,
 	theme: AnyTheme,
-	add: (s: string) => void,
+	addPrefixed: (prefix: string, s: string) => void,
 ): void {
-	add(theme.fg("text", ` ${q.prompt}`));
-	add("");
-	renderOptions(opts, optionIndex, inputMode, theme, add);
-	add("");
-	add(theme.fg("muted", " Your answer:"));
-	for (const line of editor.render(width - 2)) {
-		add(` ${line}`);
+	addPrefixed(" ", theme.fg("text", q.prompt));
+	addPrefixed(" ", "");
+	renderOptions(opts, optionIndex, inputMode, theme, addPrefixed);
+	addPrefixed(" ", "");
+	addPrefixed(" ", theme.fg("muted", "Your answer:"));
+	for (const line of editor.render(Math.max(1, width - 2))) {
+		addPrefixed(" ", line);
 	}
-	add("");
-	add(theme.fg("dim", " Enter to submit • Esc to cancel"));
+	addPrefixed(" ", "");
+	addPrefixed(" ", theme.fg("dim", "Enter to submit • Esc to cancel"));
 }
 
 function renderSubmitTab(
 	questions: Question[],
 	answers: Map<string, Answer>,
 	theme: AnyTheme,
-	add: (s: string) => void,
+	addPrefixed: (prefix: string, s: string) => void,
 ): void {
-	add(theme.fg("accent", theme.bold(" Ready to submit")));
-	add("");
+	addPrefixed(" ", theme.fg("accent", theme.bold("Ready to submit")));
+	addPrefixed(" ", "");
 	for (const question of questions) {
 		const answer = answers.get(question.id);
 		if (answer) {
 			const prefix = answer.wasCustom ? "(wrote) " : "";
-			add(`${theme.fg("muted", ` ${question.label}: `)}${theme.fg("text", prefix + answer.label)}`);
+			addPrefixed(" ", `${theme.fg("muted", `${question.label}: `)}${theme.fg("text", prefix + answer.label)}`);
 		}
 	}
-	add("");
+	addPrefixed(" ", "");
 	const allAnswered = questions.every((q) => answers.has(q.id));
 	if (allAnswered) {
-		add(theme.fg("success", " Press Enter to submit"));
+		addPrefixed(" ", theme.fg("success", "Press Enter to submit"));
 	} else {
 		const missing = questions
 			.filter((q) => !answers.has(q.id))
 			.map((q) => q.label)
 			.join(", ");
-		add(theme.fg("warning", ` Unanswered: ${missing}`));
+		addPrefixed(" ", theme.fg("warning", `Unanswered: ${missing}`));
 	}
 }
 
@@ -194,18 +191,18 @@ function renderQuestion(
 	optionIndex: number,
 	inputMode: boolean,
 	theme: AnyTheme,
-	add: (s: string) => void,
+	addPrefixed: (prefix: string, s: string) => void,
 ): void {
-	add(theme.fg("text", ` ${q.prompt}`));
-	add("");
-	renderOptions(opts, optionIndex, inputMode, theme, add);
+	addPrefixed(" ", theme.fg("text", q.prompt));
+	addPrefixed(" ", "");
+	renderOptions(opts, optionIndex, inputMode, theme, addPrefixed);
 }
 
 function renderHelpFooter(isMulti: boolean, inputMode: boolean, theme: AnyTheme): string {
 	if (inputMode) return "";
 	return isMulti
-		? " Tab/←→ navigate • ↑↓ select • Enter confirm • Esc cancel"
-		: " ↑↓ navigate • Enter select • Esc cancel";
+		? "Tab/←→ navigate • ↑↓ select • Enter confirm • Esc cancel"
+		: "↑↓ navigate • Enter select • Esc cancel";
 }
 
 // ---------------------------------------------------------------------------
@@ -401,6 +398,8 @@ export default function questionnaire(pi: ExtensionAPI) {
 					const q = currentQuestion();
 					const opts = currentOptions();
 
+					// Wrapping renderer callbacks: ANSI-aware wrap at current width.
+					const addPrefixed = (prefix: string, s: string) => addWrappedWithPrefix(lines, prefix, s, width);
 					const add = (s: string) => addLine(lines, s, width);
 
 					add(borderLine(width, theme));
@@ -411,16 +410,16 @@ export default function questionnaire(pi: ExtensionAPI) {
 					}
 
 					if (inputMode && q) {
-						renderInputMode(q, opts, optionIndex, inputMode, editor, width, theme, add);
+						renderInputMode(q, opts, optionIndex, inputMode, editor, width, theme, addPrefixed);
 					} else if (currentTab === questions.length) {
-						renderSubmitTab(questions, answers, theme, add);
+						renderSubmitTab(questions, answers, theme, addPrefixed);
 					} else if (q) {
-						renderQuestion(q, opts, optionIndex, inputMode, theme, add);
+						renderQuestion(q, opts, optionIndex, inputMode, theme, addPrefixed);
 					}
 
 					add("");
 					const help = renderHelpFooter(isMulti, inputMode, theme);
-					if (help) add(dimHint(help, theme));
+					if (help) addPrefixed(" ", dimHint(help, theme));
 					add(borderLine(width, theme));
 
 					cachedLines = lines;

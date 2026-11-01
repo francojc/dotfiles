@@ -5,7 +5,7 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth } from "@earendil-works/pi-tui";
+import { truncateToWidth, visibleWidth, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 
 /**
  * No-op extension factory so Pi doesn't reject this file as a utility module
@@ -23,6 +23,31 @@ type AnyTheme = any;
  */
 export function addLine(lines: string[], text: string, width: number): void {
 	lines.push(truncateToWidth(text, width));
+}
+
+/**
+ * Push text into the array, ANSI-aware wrapping to width.
+ */
+export function addWrapped(lines: string[], text: string, width: number): void {
+	lines.push(...wrapTextWithAnsi(text, Math.max(1, width)));
+}
+
+/**
+ * Push prefixed text into the array, wrapping at width minus prefix. Wrapped
+ * continuation lines align under the first content character.
+ */
+export function addWrappedWithPrefix(lines: string[], prefix: string, text: string, width: number): void {
+	const renderWidth = Math.max(1, width);
+	const prefixWidth = visibleWidth(prefix);
+	if (prefixWidth >= renderWidth) {
+		addWrapped(lines, prefix + text, renderWidth);
+		return;
+	}
+	const wrapped = wrapTextWithAnsi(text, renderWidth - prefixWidth);
+	const continuationPrefix = " ".repeat(prefixWidth);
+	for (let i = 0; i < wrapped.length; i++) {
+		lines.push(`${i === 0 ? prefix : continuationPrefix}${wrapped[i]}`);
+	}
 }
 
 /**
