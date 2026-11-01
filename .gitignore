@@ -83,6 +83,7 @@
 .pi/agent/install/
 .pi/agent/models-store.json
 .pi/agent/pi-crash.log
+.pi/agent/pi-tui-crash.log
 .pi/agent/pi-guide-autoupdate-state.json
 .pi/agent/pi-guide-autoupdate.lock
 .pi/agent/pi-guide-maintainer.log
