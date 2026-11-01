@@ -86,12 +86,9 @@
         export KETCH_CONFIG="${config.home.homeDirectory}/.config/ketch/config.json"
 
         # --- PI ENV VARIABLES ---
-        # Defaults a fresh Pi session to the Bifrost gateway and Qwen3.8 flash
-        # for a balanced default. Override per-shell or per-session as needed.
-        export PI_PROVIDER="bifrost"
-        export PI_MODEL="opencode-zen/qwen3.8-flash"
-        export PI_FALLBACK_PROVIDER="ollama"
-        export PI_FALLBACK_MODEL="gemma4:31b-cloud"
+        # Defaults a fresh Pi session to the Bifrost gateway 'auto' router
+        export PI_PROVIDER="bifrost-auto"
+        export PI_MODEL="auto"
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)
