@@ -12,9 +12,10 @@ Discovery mirrors Pi: user skills, .agents/skills, project skills, and skills
 shipped inside installed packages. Project `.agents/skills` is walked upward
 from the working directory until the repository root, as Pi does.
 
-Argument extraction is heuristic and says so. Pi substitutes `$ARGUMENTS` in
-prompt templates, not in skills, so a skill's arguments are whatever its prose
-describes — this script reports the evidence rather than inventing a grammar.
+Argument extraction is heuristic and says so. Built-in Pi substitutes `$ARGUMENTS`
+in prompt templates only; skills get it from @juicesharp/rpiv-args when installed.
+A skill's arguments are whatever its prose describes — this script reports the
+evidence rather than inventing a grammar.
 """
 
 import argparse

@@ -12,7 +12,7 @@ well-structured draft using the project's existing materials as source.
 
 ## Step 1 — Identify what to draft
 
-Check the user's message for the section or document to draft.
+Use `$ARGUMENTS` if given as the section or document to draft. Otherwise check the user's message for it.
 
 If not provided, use the `question` tool to ask:
 

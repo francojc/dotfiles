@@ -9,6 +9,8 @@ Create readable, syntactically valid `.spsq` scores from the user's description.
 
 Read `references/spsq-basics.md` before composing. Treat official syntax docs and installed validator as authoritative if details conflict. Check `synapseq -version` when version-sensitive syntax matters. Validate each new score with `synapseq -test <path>`; never render or play audio unless user explicitly asks.
 
+**Arguments:** `$ARGUMENTS` = listening-session description; may include one `%selector`.
+
 ## Gather essentials
 
 Infer intended listening character, duration, desired source/method, and an optional Freesound selector. For a vague request, ask only for missing essentials: duration and whether user wants a particular method or delegates that choice. Ask about headphones only if binaural is likely. Do not block on optional details; choose conservative defaults and state meaningful assumptions.

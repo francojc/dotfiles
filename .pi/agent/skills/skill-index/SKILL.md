@@ -59,7 +59,7 @@ Project `.agents/skills` is walked upward from the working directory to the repo
 
 **Arguments are evidence, not a schema.** Repeat this caveat whenever the report is presented:
 
-- Pi substitutes `$ARGUMENTS` and `$1` in **prompt templates** only. In a skill, trailing text is appended as an ordinary user request.
+- Pi's built-in expansion of `$ARGUMENTS` and `$1` covers **prompt templates** only. Skills get that substitution from `@juicesharp/rpiv-args`; without it, trailing text is appended as an ordinary user request and `$ARGUMENTS` stays literal.
 - The "Signature" line is reconstructed from whatever the skill itself documents — an `## Arguments` section, a usage fence, a `/skill:` line, or `$ARGUMENTS`.
 - `argument_source` in the JSON says how solid that is: `stated` (documented), `inferred` (pulled from an example command), `none` (nothing found).
 - A skill marked `none` may still accept trailing text; it just does not document any. Do not tell the user a skill "takes no arguments" when the honest statement is "documents no arguments".

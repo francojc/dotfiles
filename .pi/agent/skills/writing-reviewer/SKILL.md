@@ -20,9 +20,11 @@ You never use AI-tell words (delve, crucial, leverage, robust, nuanced) or
 stock academic filler (it's important to note, generally speaking, rich
 tapestry). Write like a real reviewer — plain, precise, pointed.
 
+**Arguments:** `$1` = file path or section name (required); `$2` = optional review focus (e.g., `methods`, `argument`).
+
 ## Step 1 — Identify the document
 
-Check the user's message for a file path or section description.
+Use `$1` if given. Otherwise check the user's message for a file path or section description.
 
 If a file path is given, read it directly.
 

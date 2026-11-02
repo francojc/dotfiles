@@ -7,9 +7,11 @@ disable-model-invocation: true
 
 # Academic writing refinement
 
+**Arguments:** `$1` = file path to refine.
+
 ## Step 1 — Identify the document
 
-Check the user's message for a file path.
+Use `$1` if given. Otherwise check the user's message for a file path.
 
 If no path is provided, use the `question` tool to ask:
 

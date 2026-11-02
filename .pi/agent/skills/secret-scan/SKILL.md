@@ -7,6 +7,8 @@ description: Scan files or directories for high-entropy strings, tokens, and sec
 
 Detect leaked secrets, tokens, and high-entropy strings in code and config files.
 
+**Arguments:** `$1` = file or directory to scan (default: `.`).
+
 ## Patterns
 
 ### Generic high-entropy

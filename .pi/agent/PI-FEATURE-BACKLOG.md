@@ -27,6 +27,19 @@ Register of Pi changelog features worth exploring, with relevance notes and a st
 - Pi version at last review: 1.1.0.
 - Local context: many local extensions under `~/.pi/agent/extensions/`, packages installed via `~/.pi/agent/npm/`, TypeSafe, worktree and coordinator workflows, course repos (Quarto, R, Spanish pedagogy).
 
+## Local packages and skills (2026-11-01)
+
+Reviewed: 2026-11-01. Source: `rpiv-*` review and `$ARGUMENTS` audit.
+
+| Item | What it does | Why it may matter here | Status | Next action |
+| --- | --- | --- | --- | --- |
+| `@juicesharp/rpiv-todo` 2.15.0 | Live todo overlay that survives `/reload` and compaction. Replaces unscoped `rpiv-todo` 1.1.0. | Same tool name; better persistence. | `exploring` | Verify `/todos` after reload. |
+| `@juicesharp/rpiv-ask-user-question` | `ask_user_question` tool with typed options. Replaces local `questionnaire.ts` (archived to `archive/questionnaire.ts.bak`). | Removes duplicate question tools. | `exploring` | Use in a few sessions; restore the archive if it misbehaves. |
+| `@juicesharp/rpiv-args` | `$1`, `$ARGUMENTS`, `${@:N}` in skill bodies, plus `` !`cmd` `` substitution. | Makes `$ARGUMENTS` work in skills. `merge`, `worktree`, `rebase` were silently broken before. | `adopted` | Keep. Skills below depend on it. |
+| `$ARGUMENTS` in skills | Added `**Arguments:**` lines to `writing-refine` (`$1`), `writing-reviewer` (`$1`, `$2`), `secret-scan` (`$1`), `orbitr`, `synapseq-create`, `writing-draft` (`$ARGUMENTS`). | Deterministic input instead of prose-guessing. | `exploring` | Test one call per skill. Then consider `tuicr`, `open-pr`, `skill-index`. |
+| Skipped: `rpiv-pi`, `rpiv-web-tools`, `rpiv-btw`, `rpiv-i18n` | Overlap with `rpiv-pi` skills, `pi-web-access`, `pi-btw`. | Avoid duplicates and intrusive `thoughts/` scaffolding. | `skipped` | Revisit `rpiv-pi` in a scratch repo only. |
+| `rpiv-advisor` | Second-opinion reviewer model. | Not yet installed. | `new` | Consider after `rpiv-args` is verified. |
+
 ## 1.1.0 (2026-10-07)
 
 Reviewed: 2026-10-08.

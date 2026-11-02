@@ -5,6 +5,8 @@ description: Search academic literature and manage references with the `orbitr` 
 
 # Orbitr Research Skill
 
+**Arguments:** `$ARGUMENTS` = search query, DOI, arXiv ID, or Semantic Scholar ID. Infer the operation (search, lookup, export) from it; ask only if ambiguous.
+
 ## Purpose
 
 Control the `orbitr` command-line bibliographic-search and reference-management tool. `orbitr` queries arXiv and Semantic Scholar concurrently, deduplicates results, and can export findings or add them directly to a Zotero library.
