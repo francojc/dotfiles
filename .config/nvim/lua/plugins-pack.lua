@@ -65,6 +65,7 @@ local eager_plugins = {
 	{ src = "https://github.com/folke/snacks.nvim" },
 	{ src = "https://github.com/folke/todo-comments.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
+	{ src = "https://github.com/github/copilot.vim" },
 	{ src = "https://github.com/ggml-org/llama.vim" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/mikavilpas/yazi.nvim" },

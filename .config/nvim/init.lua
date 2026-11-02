@@ -8,8 +8,10 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_python3_provider = 0
 
----| Llama.vim ----------------------------------
--- AI-powered code completion using local llama.cpp server
+---| Completion ----------------------------------
+-- copilot.vim is the default inline completion (keymaps bound after blink.cmp).
+-- llama.vim (local llama.cpp FIM) stays installed but starts disabled.
+require("core.copilot").pre_load()
 require("core.llama")
 
 ---| Active Theme (read before plugin loading) ------------
@@ -38,3 +40,4 @@ require("core.keymaps") -- key mappings
 ---| Plugin Configuration ---------------------------------------
 -- Configure eager-loaded plugins
 require("plugins-config")
+require("core.copilot").keymaps() -- after blink.cmp so our <Tab> wins

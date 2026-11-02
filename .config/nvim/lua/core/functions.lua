@@ -23,7 +23,7 @@ function M.toggle_image_rendering()
 	notify_toggle(M.image_rendering_enabled, "Image rendering")
 end
 
--- Toggle R language server (uses static config from plugins/lsp.lua)
+-- Toggle R language server
 function M.toggle_r_language_server()
 	local clients = vim.lsp.get_clients({ name = "r_language_server" })
 	if #clients > 0 then

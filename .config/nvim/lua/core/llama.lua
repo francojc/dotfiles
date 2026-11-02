@@ -82,7 +82,7 @@ end
 -- the built-in --fim-qwen-* preset instead of a custom --alias.
 vim.g.llama_config = {
 	-- Behavior
-	enable_at_startup = true,
+	enable_at_startup = false, -- copilot.vim is default; :LlamaEnable to opt in
 	auto_fim = true,
 	max_line_suffix = 8,
 	-- Server connection
@@ -112,7 +112,7 @@ vim.g.llama_config = {
 	ring_update_ms = 1000,
 	-- Keymaps
 	keymap_fim_trigger = "<M-l>", -- Trigger FIM
-	keymap_fim_accept_full = "<Tab>", -- Accept full
+	keymap_fim_accept_full = "<C-g>", -- Accept full (same key as copilot.vim)
 	keymap_fim_accept_line = "<C-F>", -- Accept line
 	keymap_fim_accept_word = "<C-D>", -- Accept word
 	keymap_fim_next = "<C-l>", -- Next FIM suggestion

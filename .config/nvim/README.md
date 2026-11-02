@@ -11,7 +11,7 @@ Modular Neovim 0.13+ config using native `vim.pack`, native LSP, and small focus
 - `jj` exits insert mode, `<Esc><Esc>` exits terminal mode.
 - Relative numbers, rounded borders, smartcase search, persistent undo, system clipboard, wrapped prose by default.
 - Auto-trim trailing whitespace on save and highlight yanks.
-- Per-window Lualine statuslines with Powerline section separators, branch, diff, diagnostics, search count, progress, location, filetype, and llama.vim status. Inactive split statuslines use an accent from current theme; Lualine regenerates palette after every colorscheme switch.
+- Per-window Lualine statuslines with Powerline section separators, branch, diff, diagnostics, search count, progress, location, filetype, and llama.vim status (when enabled). Inactive split statuslines use an accent from current theme; Lualine regenerates palette after every colorscheme switch.
 - Treesitter starts automatically per filetype, with regex syntax fallback.
 - Which-key uses Helix preset with leader-group labels.
 
@@ -21,11 +21,15 @@ Modular Neovim 0.13+ config using native `vim.pack`, native LSP, and small focus
 - Friendly snippets plus local snippets from `snippets/`.
 - Emoji completion for Markdown and Quarto.
 - Command-line completion for `:` commands.
-- `llama.vim` provides local FIM/code completion through configured llama.cpp endpoint.
-  - Trigger: `<M-l>`
-  - Accept full: `<Tab>`
-  - Accept line: `<C-F>`
-  - Accept word: `<C-D>`
+- `copilot.vim` provides default inline completion (GitHub Copilot, cloud). Run `:Copilot setup` once to authenticate.
+  - Accept full: `<C-g>` (Tab no longer accepts)
+  - Accept line: `<C-f>`
+  - Accept word: `<C-d>` (falls back to dedent with no suggestion)
+  - Next / previous: `<C-l>` / `<C-h>` (`<C-h>` falls back to backspace)
+  - Request suggestion: `<M-\>`; dismiss: `<C-]>`; alt suggestions: `<M-]>` / `<M-[>`
+  - Status / toggle: `:Copilot status`, `:Copilot enable`, `:Copilot disable`; panel: `:Copilot panel`
+- `llama.vim` (local llama.cpp FIM) is installed but disabled by default. Opt in with `:LlamaEnable`; `:LlamaToggle`, `:LlamaStatus`.
+  - Accept full: `<C-g>` (same key as Copilot). Only one of Copilot or llama is enabled at a time.
 
 ### Documents and Prose
 
@@ -159,7 +163,7 @@ Startup checks for plugin updates weekly.
 Current plugin shape:
 
 - 44 unique plugin directories declared.
-- Active colorscheme, completion, core UI, LSP helpers, treesitter, git signs, conform, yazi, llama, and title casing load eagerly.
+- Active colorscheme, completion, copilot, core UI, LSP helpers, treesitter, git signs, conform, yazi, and title casing load eagerly. llama is installed and loaded but disabled at startup.
 - Document/data/UI extras lazy-load by filetype or command.
 
 ## Key Bindings
@@ -360,10 +364,10 @@ Project spell language is stored in `.nvim_spell_lang` at project root. Project 
 │   │   ├── critic.lua            # Pandoc CriticMarkup filter
 │   │   ├── functions.lua         # Toggles and buffer helpers
 │   │   ├── keymaps.lua           # Global keymaps
-│   │   ├── llama.lua             # llama.vim setup
+│   │   ├── copilot.lua           # copilot.vim setup and keymaps
+│   │   ├── llama.lua             # llama.vim setup (disabled at startup)
 │   │   ├── options.lua           # Vim options and diagnostics
 │   │   └── pack-mgmt.lua         # vim.pack helper commands
-│   └── plugins/                  # Split plugin modules, currently not required by init.lua
 ├── after/
 │   └── ftplugin/
 │       ├── markdown.lua          # Markdown options, CriticMarkup maps, Critic commands
@@ -375,11 +379,12 @@ Project spell language is stored in `.nvim_spell_lang` at project root. Project 
 
 Load order:
 
-1. Providers disabled, llama config set.
+1. Providers disabled, copilot pre-load vars and llama config set.
 2. `theme-config.lua` read to determine active colorscheme.
 3. `plugins-pack.lua` declares/installs eager and opt plugins.
 4. Core options, functions, autocommands, and keymaps load.
 5. `plugins-config.lua` configures plugins, LSP, and lazy-load hooks.
+6. Copilot keymaps bind last, after blink.cmp.
 
 ## Adding Plugins
 

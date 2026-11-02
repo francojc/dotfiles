@@ -41,6 +41,7 @@
 .config/carapace/
 .config/gh/
 .config/gh/*
+.config/github-copilot/
 .config/git/*
 .config/hunk/state.json
 .config/kitty/kitty.conf
