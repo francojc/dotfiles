@@ -7,7 +7,8 @@
       "apiKey": "!pass show API/BIFROST_VK",
       "authHeader": true,
       "compat": {
-        "supportsDeveloperRole": false
+        "supportsDeveloperRole": false,
+        "supportsMidConvoSystemMessages": false
       },
       "models": [
         {
@@ -17,8 +18,8 @@
           "input": [
             "text"
           ],
-          "contextWindow": 128000,
-          "maxTokens": 16384,
+          "contextWindow": 262144,
+          "maxTokens": 128000,
           "cost": {
             "input": 0.3,
             "output": 1.2,
