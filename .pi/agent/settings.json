@@ -24,7 +24,7 @@
     "npm:pi-btw@0.4.1",
     "npm:@plannotator/pi-extension",
     "npm:pi-typesafe",
-    "git:ssh://forgejo@forgejo.gerbil-matrix.ts.net/jeridf/pi-bifrost.git@v0.2.1",
+    "git:ssh://forgejo@forgejo.gerbil-matrix.ts.net/jeridf/pi-bifrost.git@v0.2.2",
     "npm:pi-web-access",
     "npm:rpiv-todo"
   ],
