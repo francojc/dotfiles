@@ -31,7 +31,7 @@
     "npm:@juicesharp/rpiv-args"
   ],
   "enabledModels": [],
-  "defaultProjectTrust": "always",
+  "defaultProjectTrust": "ask",
   "doubleEscapeAction": "tree",
   "treeFilterMode": "default",
   "fullscreenScrollbar": "always",
