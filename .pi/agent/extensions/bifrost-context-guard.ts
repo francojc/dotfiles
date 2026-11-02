@@ -47,8 +47,6 @@ interface Warning {
 function routingProviders(): RoutingProvider[] {
 	return [
 		{ provider: "bifrost-auto", model: "auto", catalog: "bifrost" },
-		{ provider: "bifrost-fast", model: "auto", catalog: "bifrost" },
-		{ provider: "bifrost-frontier", model: "auto", catalog: "bifrost" },
 	];
 }
 

@@ -10,7 +10,9 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Model providers are managed through the `pi-bifrost` gateway package. The former `copilot-api-discovery.ts` and `openrouter-models.ts` extensions were removed in favor of it; the `pi-bifrost` pattern (discover through `refreshModels`, cache to disk, ship metadata baseline, never block startup) is the reference for any future dynamic provider.
+- Model providers are managed through the `pi-bifrost` gateway package. The former `copilot-api-discovery.ts`, `openrouter-models.ts`, and `copilot-usage/` extensions were removed in favor of it, or archived; the `pi-bifrost` pattern (discover through `refreshModels`, cache to disk, ship metadata baseline, never block startup) is the reference for any future dynamic provider.
+- One credential serves every model: the Bifrost virtual key from `pass show API/BIFROST_VK`. Direct providers (opencode, openrouter, github-copilot, typesafe) are not configured and hold no keys. `~/.pi/agent/auth.json` is not used; Pi may recreate it as an empty `{}`, which is harmless.
+- Two providers are registered: `bifrost` exposes the full gateway catalog, and `bifrost-auto` exposes only `auto` for the complexity router. Default is `bifrost-auto/auto`, because the router picks the model.
 
 ## Quick commands
 
@@ -24,10 +26,8 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/indicator` | Switch custom working indicator. |
 | `/todos` | Show current branch todo list. |
 | `/waiting` | List Pi agents awaiting attention and jump via TMUX. |
-| `/copilot` | Show visual GitHub Copilot dashboard: quota, model billing, sessions. |
-| `/copilot-quota` | Secondary focused Copilot quota/model view. |
-| `/copilot-models` | Secondary focused Copilot model billing view. |
-| `/copilot-sessions` | Browse Copilot SDK sessions. |
+| `/bifrost-context` | Show the routed model, its real window, and the declared window comparison. |
+| `/bifrost-clear` | Clear the Bifrost route status line. |
 | `/typesafe status` | Show TypeSafe consent, auth, usage, spend estimate, and caps. |
 | `/typesafe enable` | Allow agent `typesafe_evaluate` calls for current session after data notice. |
 | `/typesafe playground` | Edit and run Jev request without adding result to model context. |
@@ -48,7 +48,6 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `pi-btw` | Parallel side conversations in overlay, with handoff back to main session. |
 | `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
-| `@github/copilot-sdk` | Copilot usage dashboard, session browser, model billing view, and `copilot_usage` tool. Requires GitHub CLI auth. |
 | `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
 | `pi-bifrost` | Bifrost gateway provider with disk-cached model discovery and a packaged metadata baseline. Installed from the `jeridf/pi-bifrost` Forgejo repo. |
 | `pi-web-access` | Web search, URL fetching, PDF extraction, GitHub repo reading, and video understanding. Four agent tools plus the web curator. | `web_search`, `source_check`, `fetch_content`, `get_search_content`; `/websearch`, `/search`, `/curator`. Configured in `~/.pi/agent/web-search.json`. |
@@ -60,7 +59,6 @@ Loaded from `~/.pi/agent/extensions/`.
 | Extension | What it does | User-facing controls |
 | --- | --- | --- |
 | `git-branch-dirty-footer.ts` | Custom footer with cwd, git branch/dirty counts, token usage, context usage, model, and extension statuses. | Automatic. |
-| `copilot-usage/` | Shows GitHub Copilot quota, threshold footer meter, token-based billing state, model billing metadata, and Copilot SDK sessions. Footer polls quota every 60 s while a Copilot or `copilot-api` provider is active. | Primary: `/copilot`; secondary: `/copilot-quota`, `/copilot-models`, `/copilot-sessions`; agent `copilot_usage` tool. Requires `gh auth login` and active Copilot access for quota. |
 | `atuin.ts` | Tracks bash tool commands in Atuin history with author `pi`, via `tool_call`/`tool_execution_end` events. | Requires Atuin; check with `atuin search --author pi`. |
 | `pi-guide-autoupdate.ts` | Writes ignored local package, model, and extension inventory. It never edits this shared guide. | Automatic on interactive session start; set `PI_GUIDE_AUTOUPDATE=0` to disable. |
 | `working-indicator.ts` | Custom animated working indicator and rotating status words. | `/indicator [schwa|eye|pulse|bounce|spinner|none|default]` |
@@ -357,45 +355,27 @@ Sources checked:
 - `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/README.md`
 - `~/.pi/agent/npm/node_modules/@plannotator/pi-extension/package.json`
 
-### Copilot usage
+### Copilot usage (archived)
 
-What it does:
+Not loaded. The `copilot-usage` extension moved to `~/.pi/agent/archive/copilot-usage/` on 2026-11-02, with a note in its `ARCHIVED.md`.
 
-- Shows GitHub Copilot quota from `gh api /copilot_internal/user`.
-- Adds a threshold footer meter like ` Copilot [██████░░░░] 60%`, where the bar means remaining quota.
-- Detects token-based Copilot billing and uses `quota_remaining` decimals when GitHub reports them.
-- Fetches Copilot SDK session and model metadata in a short-lived child process, avoiding SDK socket leaks in the main Pi process.
-- Shows current Copilot model billing metadata. GitHub may return old-style `billing.multiplier` values or newer `token_prices`, so the dashboard displays whichever metadata is available, compares metered models relative to the cheapest metered model, compacts large raw token-price integers, and treats all-zero token prices as included.
-- The footer only stays active while a GitHub Copilot or `copilot-api` model is selected, and it refreshes on a 60 s polling loop after a short startup delay.
+Why: Pi's providers are now `bifrost` and `bifrost-auto` only. Copilot is reached through the Bifrost gateway rather than as a direct provider, so a local quota dashboard and Copilot SDK session browser have nothing to monitor. No Codex tooling is used either. `~/.codex` was moved to `~/.codex.archived-20261102`.
 
-Commands and tool:
+What it used to add, for the record:
 
-- `/copilot` is the primary visual dashboard: quota, included buckets, model billing, compact session counts, and recent sessions.
-- `/copilot-quota` is a secondary focused quota plus model billing view.
-- `/copilot-models` is a secondary focused model billing view.
-- `/copilot-sessions` browses Copilot SDK sessions.
-- Agent tool: `copilot_usage`, with optional period `today`, `week`, `month`, or `all`.
+- `/copilot`, `/copilot-quota`, `/copilot-models`, `/copilot-sessions`, and the `copilot_usage` agent tool.
+- A threshold footer quota meter, refreshed on a 60 s poll while a Copilot-capable provider was selected.
+- Copilot SDK session and model billing views, fetched in a short-lived child process to avoid SDK socket leaks.
 
-Requirements:
+Restoring:
 
-- GitHub CLI must be installed and authenticated with `gh auth login`.
-- GitHub Copilot access must be active for the authenticated GitHub account.
-- Local dependency `@github/copilot-sdk` is installed under `~/.pi/agent/extensions/copilot-usage/node_modules`.
+```
+mv ~/.pi/agent/archive/copilot-usage ~/.pi/agent/extensions/copilot-usage
+```
 
-Gotchas:
+Then `/reload`. Its git-ignored `node_modules/` moved with it.
 
-- Uses GitHub's internal `/copilot_internal/user` endpoint. It works now but may change without notice.
-- GitHub Copilot billing has shifted toward token-based billing. Old premium-request multipliers may not appear in SDK model data.
-- Footer polling runs every 60 seconds after a short startup delay, but only while `github-copilot/*` or `copilot-api/*` is selected. Switching away cancels polling, invalidates its cache, and clears the status.
-- The local extension is split between `extensions/copilot-usage/index.ts` and `extensions/copilot-usage/src/index.ts`; the package entrypoint re-exports the main source file.
-- Run `/reload` after edits or dependency updates.
-
-Sources checked:
-
-- `~/.pi/agent/extensions/copilot-usage/README.md`
-- `~/.pi/agent/extensions/copilot-usage/src/index.ts`
-- `~/.pi/agent/extensions/copilot-usage/index.ts`
-- `~/.pi/agent/extensions/copilot-usage/package.json`
+Left untouched: the nix-darwin `copilot-api` launchd service stays enabled, because something other than Pi on this host uses that loopback proxy.
 
 ### Bifrost gateway models
 
@@ -439,6 +419,9 @@ Gotchas:
 - Pi computes context usage, compaction, and cost display from the patch metadata, not from the gateway. A model missing `contextWindow` silently falls back to 128K, which corrupts compaction decisions for long-context models.
 - A routing provider's `contextWindow` is an estimate about what the gateway will pick, so it is derived from the tier pools rather than set by hand: minimum over every model the pools can reach. It changes when the pools change, which is why `gen-model-overrides.py` reports drift instead of trusting one value. The `bifrost-auto` routing rules are opencode-zen-scoped, so the copilot and openrouter routes the gateway does without a matching rule are not covered by that declaration — `bifrost-context-guard.ts` is what catches them at runtime.
 - Bifrost provider entries are protocol specific. A provider configured for OpenAI chat completions answers `ModelProtocolUnsupported` for the Responses, Anthropic, and Google routes even when the upstream model exists. That is a gateway configuration fix, not a Pi fix.
+- A gateway provider can accept a catalog entry and still refuse the route it is configured for. `typesafe/jev-latest` lists under `bifrost` but answers `400 unsupported_operation: chat_completion is not supported by typesafe provider`. Use the `typesafe_evaluate` tool for Jev, not a Pi chat model. Confirm any suspect model with a direct `POST /v1/chat/completions` before assuming Pi is at fault.
+- `auto` can fail without Pi being involved. When a routing rule targets a backend whose upstream credential is dead, the router still selects it and the request returns that backend's error, for example `401 github copilot: GitHub rejected the token`. Multi-request testing is the only way to see it, because `auto` succeeds whenever the router picks a live backend. Keep the gateway's routing rules pointed at backends whose credentials are current, or drop the dead backend from the eligible set. `bifrost-context-guard.ts` cannot catch this: it checks window size, not upstream auth.
+- Remote upstream keys live in the gateway, not on the host. Re-authenticating a fronted provider (Copilot, OpenRouter) happens in the Bifrost dashboard; `pass` and `auth.json` are not involved.
 - Gateway virtual keys are scoped to providers, so one key can expose a subset of the catalog. Model IDs from a narrow key keep that provider prefix.
 - Some upstreams reject free-tier models for non-vendor clients with `403 FreeTierError`, and a dead upstream endpoint answers `410`. The probe treats `400`, `403`, `404`, and `422` as permanent refusals and leaves transient statuses visible.
 - Re-probing spends one token per model, so do not put `--probe` or `--reprobe` in a loop. Verdicts cache for a week and ordinary re-runs cost nothing.
@@ -458,7 +441,7 @@ Sources checked:
 What it does:
 
 - Gives persistent sessions a fallback title from first substantive prompt before first assistant response writes JSONL.
-- Generates a short content title after first settled turn, then every four user turns. Configured model lives in `~/.pi/agent/auto-session-name.json` (currently OpenCode `big-pickle`).
+- Generates a short content title after first settled turn, then every four user turns. Configured model lives in `~/.pi/agent/auto-session-name.json` (currently `bifrost-auto/auto`, so the complexity router picks the title model).
 - Treats `/name <title>` as a manual pin. Auto-refresh stops until `/autoname auto` or `/autoname refresh --force`.
 - Stores per-session auto/manual state in session custom entries, so reload, resume, and fork flows retain naming behavior.
 

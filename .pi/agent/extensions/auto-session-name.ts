@@ -6,8 +6,8 @@ const EXTENSION_ID = "auto-session-name";
 const CONFIG_PATH = join(getAgentDir(), "auto-session-name.json");
 const DEFAULT_CONFIG: Config = {
   enabled: true,
-  provider: "openrouter",
-  model: "openai/gpt-oss-20b",
+  provider: "bifrost-auto",
+  model: "auto",
   refreshEveryUserTurns: 4,
   maxTranscriptChars: 6_000,
 };
