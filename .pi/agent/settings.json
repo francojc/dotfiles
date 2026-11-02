@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "defaultProvider": "opencode",
   "defaultModel": "claude-haiku-5-5",
   "defaultTools": [
@@ -35,5 +35,8 @@
   "doubleEscapeAction": "tree",
   "treeFilterMode": "default",
   "fullscreenScrollbar": "always",
-  "tuiMode": "regular"
+  "tuiMode": "regular",
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.46.0"
+  }
 }
