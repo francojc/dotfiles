@@ -99,8 +99,8 @@
       bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
       # Popups
-      # Obsidian vault popup which opens `~/Obsidian/Notes/Daily/{current_date}.md` in Neovim
-      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/plan/daily/$(date +'%Y-%m-%d').md"
+      # Obsidian vault popup which opens `~/Obsidian/Notes/weekly/{current_week_number}.md` in Neovim
+      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/plan/weekly/$(date +'%Y-W%V').md"
 
       # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
@@ -186,7 +186,7 @@
   # preserving any user modifications to these directories.
   #
   # Must run after writeBoundary since this is a filesystem mutation.
-  home.activation.createKeepFiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.createKeepFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
     mkdir -p "$HOME/.config/tmux" "$HOME/Obsidian/Notes"
     test -e "$HOME/.config/tmux/.keep" || : > "$HOME/.config/tmux/.keep"
     test -e "$HOME/Obsidian/Notes/.keep" || : > "$HOME/Obsidian/Notes/.keep"
