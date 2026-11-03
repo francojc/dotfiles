@@ -28,6 +28,38 @@
           }
         }
       ]
+    },
+    "bifrost-commit": {
+      "name": "Bifrost commit (qwen flash)",
+      "api": "openai-completions",
+      "baseUrl": "https://bifrost.gerbil-matrix.ts.net/openai/v1",
+      "apiKey": "!pass show API/BIFROST_VK",
+      "authHeader": true,
+      "compat": {
+        "supportsDeveloperRole": true,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "supportsStrictMode": true,
+        "maxTokensField": "max_completion_tokens"
+      },
+      "models": [
+        {
+          "id": "opencode-zen/qwen3.8-flash",
+          "name": "opencode-zen/qwen3.8-flash",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 1000000,
+          "maxTokens": 131072,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
     }
   }
 }
