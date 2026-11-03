@@ -85,10 +85,9 @@
         # --- CLI TOOLS ---
         export KETCH_CONFIG="${config.home.homeDirectory}/.config/ketch/config.json"
 
-        # --- PI ENV VARIABLES ---
-        # Defaults a fresh Pi session to the Bifrost gateway 'auto' router
-        export PI_PROVIDER="bifrost-auto"
-        export PI_MODEL="auto"
+        # PI_PROVIDER / PI_MODEL are NOT config input: Pi exports them to the
+        # shell commands it runs. Set the fresh-session default in
+        # ~/.pi/agent/settings.json (defaultProvider / defaultModel).
 
         # --- PYTHON/UV CONFIGURATION ---
         # Hybrid setup: nix (base) + UV (tools) + homebrew (C libs)

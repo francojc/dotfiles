@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "1.5.0",
-  "defaultProvider": "bifrost-auto",
-  "defaultModel": "auto",
+  "defaultProvider": "bifrost",
+  "defaultModel": "opencode-zen/qwen3.8-flash",
   "defaultTools": [
     "+codemode"
   ],
@@ -20,15 +20,15 @@
     "clearOnShrink": true
   },
   "packages": [
-    "npm:pi-caveman@1.0.7",
-    "npm:pi-btw@0.4.1",
-    "npm:@plannotator/pi-extension",
-    "npm:pi-typesafe",
-    "git:ssh://forgejo@forgejo.gerbil-matrix.ts.net/jeridf/pi-bifrost.git@v0.2.2",
-    "npm:pi-web-access",
-    "npm:@juicesharp/rpiv-todo",
+    "npm:@juicesharp/rpiv-args",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-args"
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-btw@0.4.1",
+    "npm:pi-caveman@1.0.7",
+    "npm:pi-typesafe",
+    "npm:pi-web-access",
+    "npm:pi-bifrost-provider"
   ],
   "enabledModels": [],
   "defaultProjectTrust": "ask",

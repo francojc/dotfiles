@@ -81,10 +81,9 @@
         # --- CLI TOOLS ---
         export KETCH_CONFIG="${config.home.homeDirectory}/.config/ketch/config.json"
 
-        # --- PI ENV VARIABLES ---
-        # update provider/model with subscription changes
-        export PI_PROVIDER="openai"
-        export PI_MODEL="gpt-6-luna"
+        # PI_PROVIDER / PI_MODEL are NOT config input: Pi exports them to the
+        # shell commands it runs. Set the fresh-session default in
+        # ~/.pi/agent/settings.json (defaultProvider / defaultModel).
 
         # --- PYTHON/UV CONFIGURATION ---
         # Point UV at the Home Manager profile Python. On generic Linux the
