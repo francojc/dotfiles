@@ -75,6 +75,18 @@
             "max": "max"
           }
         },
+        "opencode-zen/claude-sonnet-5-5": {
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": "minimal",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          }
+        },
         "opencode-zen/qwen3.8-flash": {
           "reasoning": true,
           "thinkingLevelMap": {
@@ -103,18 +115,6 @@
           "reasoning": true,
           "thinkingLevelMap": {
             "off": "none",
-            "minimal": "minimal",
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "xhigh",
-            "max": "max"
-          }
-        },
-        "opencode-zen/glm-5.3-flash": {
-          "reasoning": true,
-          "thinkingLevelMap": {
-            "off": null,
             "minimal": "minimal",
             "low": "low",
             "medium": "medium",

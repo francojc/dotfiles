@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "1.5.0",
   "defaultProvider": "bifrost",
-  "defaultModel": "opencode-zen/qwen3.8-flash",
+  "defaultModel": "opencode-zen/claude-haiku-5-5",
   "defaultTools": [
     "+codemode"
   ],
@@ -37,6 +37,6 @@
   "fullscreenScrollbar": "always",
   "tuiMode": "regular",
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.46.0"
+    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.47.0"
   }
 }
