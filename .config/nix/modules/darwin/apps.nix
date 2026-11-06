@@ -6,7 +6,6 @@
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
     terminal-notifier # macOS notifications from command line
-    opencode-desktop #
   ];
 
   homebrew = {
@@ -36,10 +35,6 @@
         trusted = true;
       }
       {
-        name = "raine/workmux"; # workmux
-        trusted = true;
-      }
-      {
         name = "1broseidon/tap"; # ketch
         trusted = true;
       }
@@ -63,7 +58,6 @@
 
     brews = [
       "borders" # jankyborders
-      "git-filter-repo" # remove files/dirs from git history
       "hunk" # git diff tool
       "ketch" # web search, library docs, scraping cli
       "koan" # Navidrome TUI player
@@ -73,32 +67,28 @@
       "mandible" # macOS app launcher
       "nmap" # network scanner
       "node" # Node.js
-      "officecli" # AI-accessible office conversion/creation
       "pandoc" # Document converter
       "pngpaste" # paste images
       "reminders-cli" # cli interface to macOS Reminders
       "rename" # file renaming utility
-      "scrcpy" # Android screen mirroring
       "synapseq" # binaural sounds generator
       "tree-sitter-cli" # tree-sitter CLI
-      "workmux" # agentic ai multiplexer
       "yt-dlp" # YouTube video downloader
-      "vhs" # cli for programmable terminal gifs
     ];
 
     casks = [
-      "android-platform-tools" # android (TV)
+      # "android-platform-tools" # android (TV)
       "appcleaner" # remove macOS apps
       "betterdisplay" # display tweaks
       "bettermouse" # mouse tweaks
       "bettershot" # screenshot tool
       "helium-browser" # browser (ungoogled-chromium)
+      "crest-browser" # browser
       "kap" # screen recording
       "kitty" # terminal emulator (moved to Nix)
       "obsidian" # note-taking
       "quarto" # document editor
       "supercmd" # launcher+
-      "wezterm" # terminal
       "zoom" # video conferencing
       "zotero" # reference manager
       # "keycastr" # keystroke visualizer

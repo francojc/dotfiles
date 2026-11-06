@@ -29,12 +29,11 @@
 
     # Language Servers (LSPs)
     bash-language-server # Bash LSP
-    copilot-language-server # Copilot LSP for Next Edit Suggestions
+    # copilot-language-server # Copilot LSP for Next Edit Suggestions
     golangci-lint-langserver # Go linter
     gopls # Go LSP
     lua-language-server # Lua LSP
     marksman # Markdown LSP
-    nix-doc # Nix documentation server
     nixd # Nix LSP
     pyright # Python LSP
     tinymist # Typst LSP
@@ -56,9 +55,9 @@
     ghostscript # PostScript/PDF interpreter (used by Snacks.image)
 
     # Academic/document rendering (for Quarto, markdown, snacks.nvim)
-    tectonic # LaTeX rendering for math expressions
-    chafa # Terminal image viewer (optional, enhances image support)
-    websocat # WebSocket client
+    # tectonic # LaTeX rendering for math expressions
+    # chafa # Terminal image viewer (optional, enhances image support)
+    # websocat # WebSocket client
   ];
 
   # Development and system tools
@@ -77,9 +76,8 @@
     gnumake # Native Node addon builds, including Pi Plannotator's node-pty
     home-manager # Essential for this config
     lazygit # TUI Git client
-    marp-cli # Markdown presentation tool
-    neovim # Stable Neovim 0.12+
-    nix-prefetch-git
+    # neovim # Stable Neovim 0.12+
+    # nix-prefetch-git
     nodejs-slim # was nodejs-slim_23
     nurl # Nix URL fetcher helper
     typescript # TypeScript compiler (tsc)
@@ -102,7 +100,7 @@
     fd # find replacement
     file # File type identification
     fzf # General fuzzy finder
-    glancesNoCheck # System monitoring tool
+    # glancesNoCheck # System monitoring tool
     jq # JSON processor
     mpack # encoding/decoding MIME types
     ncdu # Disk usage analyzer
@@ -130,7 +128,7 @@
   mediaDocumentPackages = with pkgs; [
     aerc # Email client
     ffmpeg # Multimedia framework
-    glow # Markdown renderer
+    # glow # Markdown renderer
     imagemagick # Image manipulation
     khal # Calendar
     mpv-unwrapped # Media player
