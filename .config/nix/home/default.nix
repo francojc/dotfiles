@@ -8,7 +8,7 @@
   imports =
     [
       ./themes/themes.nix
-      # ./syncthing.nix
+      ./syncthing.nix
       ./document-tools.nix
       ./ssh-aliases.nix
       ./pimalaya
