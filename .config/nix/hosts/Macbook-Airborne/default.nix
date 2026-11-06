@@ -30,17 +30,15 @@
         ];
         brews = [
           # Macbook-Airborne-only brews here
-          "transmission-cli" # command-line torrent client
           "macchanger" # MAC address changer
         ];
         casks = [
           "dropbox" # cloud storage
           "orbstack" # Docker alternative
-          "transmission" # torrent client
-          "android-platform-tools" # ADB and Fastboot (for TVs)
-          "balenaetcher" # disk image writer
-          "calibre" # eBook management
-          "transcribe" # help transcribe recorded music
+          # "android-platform-tools" # ADB and Fastboot (for TVs)
+          # "balenaetcher" # disk image writer
+          # "calibre" # eBook management
+          # "transcribe" # help transcribe recorded music
         ];
       };
     }
