@@ -59,6 +59,10 @@
   };
 
   programs.home-manager.enable = true;
+
+  # HM's manpage build pulls in options.json, which triggers a nixpkgs
+  # store-path-without-context warning. Not used here.
+  manual.manpages.enable = false;
   programs.zsh.enable = true;
 
   custom.documentTools.enable = true;
