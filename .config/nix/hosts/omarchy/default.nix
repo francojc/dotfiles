@@ -13,7 +13,7 @@
   # `nixosConfigurations`. See lib/systems.nix `helpers.platformOf`.
   platform = "arch";
 
-  username = "jcf";
+  username = "jeridf";
   useremail = "francojc@wfu.edu";
   # Matches the Omarchy "Tokyo Night" stock theme, so the small amount of
   # Nix-managed theming (nvim theme file, WezTerm) lines up with the desktop.

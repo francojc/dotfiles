@@ -1,153 +1,67 @@
-# Python Tools Managed by UV (not nix)
-#
-# Intentionally NOT in home.packages because UV provides:
-# - Faster updates (no waiting for nixpkgs)
-# - Isolated environments per tool
-# - Consistent Python version (nix 3.12)
-#
-# Current UV tools:
-#
-# dauber v0.1.15
-# marker-pdf v2.0.0
-# mlx v0.32.1
-# mlx-lm v0.31.3
-# orbitr v0.4.0
-# pyzotero v1.14.0
-# repoindex v2.2.1
-# termaid v0.8.0
-#
-# Update: uv tool upgrade --all
 {pkgs, ...}: let
-  # TODO: remove override once nixpkgs glances tests stop racing/failing under Python 3.14.
-  glancesNoCheck = pkgs.glances.overridePythonAttrs (_old: {
-    doCheck = false;
-  });
+  # Shared groups (also used by hosts/omarchy/packages.nix).
+  lsp = import ../lib/packages/lsp.nix pkgs;
+  cli = import ../lib/packages/cli.nix pkgs;
+  dev = import ../lib/packages/dev.nix pkgs;
+  media = import ../lib/packages/media.nix pkgs;
 
-  # Define packages primarily used with or by Neovim
-  neovimPackages = with pkgs; [
-    # Core dependencies
-
-    # Language Servers (LSPs)
-    bash-language-server # Bash LSP
-    # copilot-language-server # Copilot LSP for Next Edit Suggestions
-    golangci-lint-langserver # Go linter
-    gopls # Go LSP
-    lua-language-server # Lua LSP
-    marksman # Markdown LSP
-    nixd # Nix LSP
-    pyright # Python LSP
-    tinymist # Typst LSP
-    typescript-language-server # TypeScript LSP
-    vscode-json-languageserver # JSON LSP
-    yaml-language-server # YAML LSP
-
-    # Formatters & Linters commonly integrated with Neovim
-    air-formatter # R LSP/Formatter
-    alejandra # Nix formatter
-    mdformat # Markdown formatter
-    ruff # Python linter/formatter
-    shfmt # Shell formatter
-    stylua # Lua formatter
-
-    # Build dependencies for Neovim plugins (e.g., blink.cmp)
+  # macOS-only extras. Omarchy must not install these through Nix (see
+  # PLAN-nix-lite.md §4c): build toolchains, runtimes, GUI apps, and tools
+  # Omarchy ships through pacman.
+  macOnly = with pkgs; [
+    # Neovim build dependencies and toolchains
     rustc # Rust compiler, needed for many Neovim plugins
-    cargo # Rust package manager, needed for many Neovim plugins
+    cargo # Rust package manager
     ghostscript # PostScript/PDF interpreter (used by Snacks.image)
-
-    # Academic/document rendering (for Quarto, markdown, snacks.nvim)
-    # tectonic # LaTeX rendering for math expressions
-    # chafa # Terminal image viewer (optional, enhances image support)
-    # websocat # WebSocket client
-  ];
-
-  # Development and system tools
-  developmentPackages = with pkgs; [
-    # Note: Python CLI tools managed via UV, not nix
-    age # Encryption
-    bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
-    cachix # Nix package cache
-    carapace # Command-line completion
-    codespell # Spell checker
-    direnv # Environment manager
-    forgejo-cli # `fj` CLI for Forgejo
-    gh # GitHub CLI
-    git # Version control system
     go # Go programming language
     gnumake # Native Node addon builds, including Pi Plannotator's node-pty
+    nodejs-slim # was nodejs-slim_23
+    python312 # Python 3.12 for uv and general use
+    typescript # TypeScript compiler (tsc)
+    uv # Modern Python package and project manager
+
+    # Dev tools
+    bob-nvim # Neovim version manager (replaces Homebrew neovim HEAD)
+    gh # GitHub CLI
+    git # Version control system
     home-manager # Essential for this config
     lazygit # TUI Git client
-    # neovim # Stable Neovim 0.12+
-    # nix-prefetch-git
-    nodejs-slim # was nodejs-slim_23
-    nurl # Nix URL fetcher helper
-    typescript # TypeScript compiler (tsc)
-    python312 # Python 3.12 for uv and general use
-    stow # Symlink manager
-    uv # Modern Python package and project manager
-  ];
 
-  # Command-line utilities and system monitoring
-  cliUtilities = with pkgs; [
-    _7zz # Archive compression
-    atuin # Shell history manager
-    bat # Often used by fzf previews, etc. but also standalone
-    codesnap # CLI code snippet screenshot tool
-    duf # Disk usage utility
-    entr # Event notify tool
-    eza # ls replacement
-    fastfetch # System information tool
+    # CLI utilities that Omarchy ships via pacman
+    bat
+    eza
+    fastfetch
+    fd
+    fzf
+    jq
     onefetch # Git repository information tool
-    fd # find replacement
-    file # File type identification
-    fzf # General fuzzy finder
-    # glancesNoCheck # System monitoring tool
-    jq # JSON processor
-    mpack # encoding/decoding MIME types
-    ncdu # Disk usage analyzer
-    pass # Password manager
-    rclone # Cloud storage sync (Google Drive, S3, etc.)
-    repgrep # ripgrep across files
-    ripgrep # grep replacement
-    speedtest-cli # Internet speed test
-    sqlite # SQLite database engine
-    starship # Shell prompt
-    tirith # Terminal-based security for devs and AI
-    tldr # Simplified man pages
-    tmux # Terminal multiplexer
-    tree # Directory listing tool
-    tuicr # Git code review
-    which # Command location utility
-    whosthere # Local Area Network discovery tool
-    xan # data visualization from CSV files
-    yazi-unwrapped # Terminal file manager
-    yq-go # YAML processor
-    zoxide # Smarter cd command
-  ];
+    ripgrep
+    starship
+    tldr
+    tmux
+    zoxide
 
-  # Media and document processing
-  mediaDocumentPackages = with pkgs; [
-    aerc # Email client
-    ffmpeg # Multimedia framework
-    # glow # Markdown renderer
+    # Packages Omarchy already provides through pacman (see
+    # hosts/omarchy/packages.nix): these would shadow pacman copies on Omarchy.
+    file
+    pass
+    sqlite
+    tree
+    which
+    ffmpeg
+    poppler-utils
+
+    # Media and documents
     imagemagick # Image manipulation
-    khal # Calendar
     mpv-unwrapped # Media player
-    pianobar # Pandora client
-    poppler-utils # PDF utilities (pdftotext, etc.)
     typst # Document preparation system
-    vdirsyncer # CalDAV/CardDAV sync
-  ];
 
-  # YouTube content creation and streaming
-  youtubeContentPackages = with pkgs; [
+    # YouTube content creation
     tenacity # Audacity fork, more actively maintained
   ];
-
-  # Combined package list
-  generalPackages = neovimPackages ++ developmentPackages ++ cliUtilities ++ mediaDocumentPackages ++ youtubeContentPackages;
 in {
   # Install general packages globally for the user
-  home.packages = generalPackages;
+  home.packages = lsp ++ cli ++ dev ++ media ++ macOnly;
 
   # GnuPG — managed via home-manager for agent lifecycle control
   programs.gpg = {
