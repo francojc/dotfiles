@@ -133,8 +133,10 @@
         }
       ];
       shellAliases = {
-        # Switch the Omarchy Home Manager configuration
-        hms = "home-manager switch --flake ${config.home.homeDirectory}/.dotfiles/.config/nix#omarchy";
+        # Switch the Omarchy Home Manager configuration from any directory.
+        # `-b backup` moves conflicting unmanaged files aside (e.g. tmux.conf)
+        # instead of aborting. home-manager is not on PATH, so use `nix run`.
+        nswitch = "nix run home-manager/master -- switch -b backup --flake ${config.home.homeDirectory}/.dotfiles/.config/nix#omarchy";
       };
     };
 
