@@ -26,6 +26,7 @@ pkgs: let
     chafa # Terminal image viewer (snacks.nvim image support)
     websocat # WebSocket client
     glow # Markdown renderer
+    pandoc # Markdown converter (aerc text/html alternative via aerc-use-pandoc / emailmd-convert)
     marp-cli # Markdown presentation tool
     nix-prefetch-git
     just # run project commands

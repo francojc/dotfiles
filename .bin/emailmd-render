@@ -1,5 +1,29 @@
 #!/usr/bin/env node
-const { render } = require("/Users/jeridf/.npm-global/lib/node_modules/emailmd/dist/index.cjs");
+const { execSync } = require("child_process");
+const path = require("path");
+
+// Resolve emailmd without hardcoding a host-specific install prefix:
+// try normal resolution first, then the global npm root (works on macOS and Linux).
+function loadRender() {
+  try {
+    return require("emailmd").render;
+  } catch (_) {}
+  let root;
+  try {
+    root = execSync("npm root -g", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  } catch (_) {
+    throw new Error("emailmd not found and `npm root -g` failed; is npm installed?");
+  }
+  return require(path.join(root, "emailmd", "dist", "index.cjs")).render;
+}
+
+let render;
+try {
+  render = loadRender();
+} catch (err) {
+  process.stderr.write(`emailmd-render: ${err.message}\n`);
+  process.exit(1);
+}
 
 const chunks = [];
 process.stdin.on("data", (chunk) => chunks.push(chunk));

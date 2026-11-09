@@ -19,6 +19,7 @@ _complete() {
     personal) file="$EMAILBOOK_DIR/personal-emailbook.txt" ;;
     *) echo "Unknown emailbook: $1" >&2; exit 1 ;;
   esac
+  [ -r "$file" ] || { echo "Emailbook not found: $file" >&2; exit 1; }
   grep -i "$2" "$file" | awk '
     /^.* *<[^>]+>$/ {
       email=$0; gsub(/^.*<|>$/, "", email)
@@ -73,7 +74,13 @@ _add() {
     }
   done
 
-  $merge_after && bash "$EMAILBOOK_DIR/merge.sh"
+  if $merge_after; then
+    if [ -x "$EMAILBOOK_DIR/merge.sh" ]; then
+      bash "$EMAILBOOK_DIR/merge.sh" || { echo "merge.sh failed" >&2; return 1; }
+    else
+      echo "Warning: $EMAILBOOK_DIR/merge.sh missing; skipped merge" >&2
+    fi
+  fi
 }
 
 case "$1" in
