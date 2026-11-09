@@ -13,7 +13,6 @@
 .config/hypr
 .config/quickshell
 .config/systemd
-.config/tmux
 .config/wezterm
 .git
 .macos

@@ -5,7 +5,7 @@
 -- eager_plugins → pack/core/start/ (loaded immediately at startup)
 -- opt_plugins   → pack/core/opt/   (loaded on demand via :packadd)
 --
--- Themes: only the active colorscheme (from theme-config.lua) loads
+-- Themes: only the active colorscheme (from Omarchy, see omarchy-theme.lua) loads
 -- eagerly.  Rest are opt and loaded on demand by switch_colorscheme().
 
 --===========================================================================
@@ -34,6 +34,11 @@ local theme_registry = {
 	ayu = { src = "https://github.com/ayu-theme/ayu-vim" },
 	tender = { src = "https://github.com/jacoborus/tender.vim", name = "tender.vim" },
 }
+
+-- Omarchy themes (mapping in lua/omarchy-theme.lua) join the registry.
+for _, e in ipairs(require("omarchy-theme").registry_entries()) do
+	theme_registry[e.cs] = theme_registry[e.cs] or e.spec
+end
 
 local active_theme = vim.g.active_colorscheme or "gruvbox"
 local active_spec = theme_registry[active_theme]
@@ -107,9 +112,12 @@ local opt_plugins = {
 	-- Non-active themes (loaded on demand via switch_colorscheme)
 }
 
--- Add all non-active themes to opt
+-- Add all non-active themes to opt. One entry per repo: several colorschemes
+-- share a repo (e.g. tokyonight-*), and the active repo is already eager.
+local seen_src = { [active_spec.src] = true }
 for name, spec in pairs(theme_registry) do
-	if name ~= active_theme then
+	if name ~= active_theme and not seen_src[spec.src] then
+		seen_src[spec.src] = true
 		table.insert(opt_plugins, spec)
 	end
 end

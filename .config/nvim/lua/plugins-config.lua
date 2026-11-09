@@ -1,8 +1,8 @@
 ---| PLUGINS CONFIGURATION -----------------------------
 
 ---| UPFRONT ------------------------------------------
--- Load theme config early for colors used by plugins
-local theme_config = require("theme-config")
+-- Active colorscheme comes from Omarchy via lua/omarchy-theme.lua
+local active_colorscheme = vim.g.active_colorscheme
 
 ---=====================================================
 ---==== EAGER PLUGINS ====---
@@ -243,11 +243,15 @@ require("vscode").setup({
 -- No Lua setup required; `tender.vim` provides `:colorscheme tender`.
 
 ---| Activate Colorscheme ----------------------------------
-if theme_config.colorscheme == "ayu" then
+if active_colorscheme == "ayu" then
 	vim.g.ayucolor = "mirage" -- set ayu theme to mirage
 end
 
-vim.cmd("colorscheme " .. theme_config.colorscheme)
+local omarchy_theme = require("omarchy-theme")
+omarchy_theme.activate(active_colorscheme)
+
+-- Hot reload: re-apply when Omarchy switches theme (no restart needed)
+omarchy_theme.watch()
 
 ---| llama.vim Highlight Overrides ----------------------------------
 vim.api.nvim_set_hl(0, "llama_hl_fim_hint", { fg = "#918374", ctermfg = 59 })

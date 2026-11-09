@@ -29,7 +29,6 @@
 .config/hypr/
 .config/quickshell/
 .config/systemd/
-.config/tmux/
 .config/wezterm/
 .tmux/plugins/
 
@@ -56,7 +55,6 @@
 .config/pulse/*
 .config/raycast/*
 .config/rclone/rclone.conf
-.config/tmux/*
 .config/wezterm/wezterm.lua
 
 # Pimalaya (builds are host-specific)

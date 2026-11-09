@@ -29,6 +29,12 @@ pkgs: let
     marp-cli # Markdown presentation tool
     nix-prefetch-git
     just # run project commands
+    bob-nvim # Neovim version manager: pre-releases (repo needs Neovim 0.13+)
+
+    # tmux plugins loaded from ~/.nix-profile/share/tmux-plugins (.config/tmux/overrides.conf)
+    tmuxPlugins.fzf-tmux-url
+    tmuxPlugins.vim-tmux-navigator
+    tmuxPlugins.yank
     tectonic # LaTeX rendering for math expressions
     pass # Password manager (not shipped by Omarchy; was pacman explicit)
     tree # Directory listing tool (dependency of pass; moves with it)
