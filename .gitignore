@@ -31,6 +31,8 @@
 .config/systemd/
 .config/wezterm/
 .tmux/plugins/
+.config/tmux/tmux-weather.sh
+.config/tmux/tmux.conf
 
 # Runtime/generated app state that should live in real ~/.config, not dotfiles.
 
