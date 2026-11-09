@@ -7,7 +7,7 @@
 fail_mode: open
 
 # Paranoia level (1-4): higher = more sensitive detection
-paranoia: 1
+paranoia: 3
 
 # Allow TIRITH=0 bypass in interactive terminals
 allow_bypass_env: true
