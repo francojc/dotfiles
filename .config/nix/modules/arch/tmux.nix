@@ -147,6 +147,25 @@
 
       # Join pane to current window
       bind ¡ choose-window 'join-pane -s "%%"'
+
+      # -------------------------------------------------
+      # THEME (basic)
+      # -------------------------------------------------
+
+      # Status bar
+      set -g status on
+      set -g status-position bottom
+      set -g status-justify left
+
+      set -g status-left '   #S  ▌  '
+      set -g status-left-length 40
+      set -g window-status-current-format ' #I:#W#F '
+
+      set -g status-right ' ▌   #P ▌   #h ▌ %H:%M '
+      set -g status-right-length 110
+
+      # Pane border colors
+      set -g pane-border-lines single
     '';
 
     plugins = with pkgs.tmuxPlugins; [
