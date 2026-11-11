@@ -42,12 +42,16 @@ for _, e in ipairs(require("omarchy-theme").registry_entries()) do
 end
 
 local active_theme = vim.g.active_colorscheme or "gruvbox"
-local active_spec = theme_registry[active_theme]
+-- Omarchy's rendered neovim.lua can name a plugin the registry does not know
+-- (e.g. aether); use its spec directly. Otherwise look up the registry.
+local resolved = require("omarchy-theme").current or {}
+local active_spec = resolved.spec or theme_registry[active_theme]
 if not active_spec then
 	vim.notify("Unknown colorscheme '" .. active_theme .. "', falling back to gruvbox", vim.log.levels.WARN)
 	active_theme = "gruvbox"
 	active_spec = theme_registry.gruvbox
 	vim.g.active_colorscheme = "gruvbox"
+	require("omarchy-theme").current = { cs = "gruvbox", spec = active_spec, source = "nix" }
 end
 
 --===========================================================================

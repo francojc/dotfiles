@@ -1,7 +1,7 @@
 ---| PLUGINS CONFIGURATION -----------------------------
 
 ---| UPFRONT ------------------------------------------
--- Active colorscheme comes from Omarchy via lua/omarchy-theme.lua
+-- Active colorscheme is resolved in lua/omarchy-theme.lua (Omarchy, else Nix)
 local active_colorscheme = vim.g.active_colorscheme
 
 ---=====================================================
@@ -248,7 +248,7 @@ if active_colorscheme == "ayu" then
 end
 
 local omarchy_theme = require("omarchy-theme")
-omarchy_theme.activate(active_colorscheme)
+omarchy_theme.activate(omarchy_theme.current)
 
 -- Hot reload: re-apply when Omarchy switches theme (no restart needed)
 omarchy_theme.watch()

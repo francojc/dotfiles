@@ -17,7 +17,8 @@ require("core.llama")
 ---| Active Theme (read before plugin loading) ------------
 -- Follows Omarchy's active theme (lua/omarchy-theme.lua). Only the active
 -- colorscheme plugin loads eagerly; the rest are opt.
-vim.g.active_colorscheme = require("omarchy-theme").colorscheme()
+local omarchy_theme = require("omarchy-theme")
+vim.g.active_colorscheme = omarchy_theme.resolve().cs -- full record: omarchy_theme.current
 
 ---| Plugin Management (vim.pack) ---------------------------------
 -- Install and declare plugins using Neovim 0.12+ native vim.pack
