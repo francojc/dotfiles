@@ -16,6 +16,7 @@
 
 local theme_registry = {
 	arthur = { src = "https://github.com/thenewvu/vim-colors-arthur" },
+	marduk = { src = "https://github.com/metalelf0/black-metal-theme-neovim" },
 	autumn = { src = "https://github.com/wolloda/vim-autumn" },
 	["black-metal"] = { src = "https://github.com/metalelf0/black-metal-theme-neovim" },
 	catppuccin = { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },

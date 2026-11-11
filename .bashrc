@@ -27,6 +27,11 @@ source "$OMARCHY_PATH/default/bash/rc"
 export GCAL='-s 1 --iso-week-number=yes'
 export KETCH_CONFIG="$HOME/.config/ketch/config.json"
 
+# Tirith
+# export TIRITH=0
+# export TIRITH_BASH_MODE=preexec
+# export TIRITH_BASH_PREEXEC_ENFORCE=1
+
 # Vi editing mode, as in the zsh config (defaultKeymap viins).
 set -o vi
 

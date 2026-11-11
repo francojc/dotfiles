@@ -8,7 +8,17 @@
 -- /usr/share/omarchy/themes/<name>/). Themes without one use M.default.
 local M = {}
 
-M.default = "gruvbox"
+-- Static colorscheme for non-Omarchy hosts: the one Nix declared for this host
+-- (home/themes/themes.nix writes lua/theme-config.lua). Falls back to gruvbox
+-- when that file is absent.
+local function nix_colorscheme()
+	local ok, cfg = pcall(require, "theme-config")
+	if ok and type(cfg) == "table" and type(cfg.colorscheme) == "string" then
+		return cfg.colorscheme
+	end
+end
+
+M.default = nix_colorscheme() or "gruvbox"
 
 -- Overridable for testing: OMARCHY_THEME_STATE=/some/dir nvim
 M.state_dir = vim.env.OMARCHY_THEME_STATE or (vim.env.HOME .. "/.local/state/omarchy/current")
@@ -43,9 +53,17 @@ function M.theme_name()
 	return name and vim.trim(name) or nil
 end
 
--- Colorscheme for the active Omarchy theme.
+-- True when Omarchy has written a theme name (state file present).
+function M.is_omarchy()
+	return M.theme_name() ~= nil
+end
+
+-- Colorscheme for the active Omarchy theme, or the Nix-declared default.
 function M.colorscheme()
-	local entry = M.themes[M.theme_name() or ""]
+	if not M.is_omarchy() then
+		return M.default
+	end
+	local entry = M.themes[M.theme_name()]
 	return entry and entry.cs or M.default
 end
 
@@ -81,6 +99,10 @@ end
 -- Re-apply the colorscheme whenever Omarchy changes the active theme.
 -- Returns the fs_event handle (nil when the state directory does not exist).
 function M.watch()
+	-- Static (Nix-managed) hosts never hot reload.
+	if not M.is_omarchy() then
+		return nil
+	end
 	local handle = vim.uv.new_fs_event()
 	if not handle then
 		return nil
