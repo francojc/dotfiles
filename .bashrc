@@ -52,7 +52,9 @@ unset _f
 command -v atuin &>/dev/null && eval "$(atuin init bash --disable-up-arrow)"
 command -v carapace &>/dev/null && source <(carapace _carapace bash)
 command -v direnv &>/dev/null && eval "$(direnv hook bash)"
-command -v tirith &>/dev/null && eval "$(tirith init --shell bash)"
+# Skip under ble.sh: tirith's DEBUG trap clashes with ble.sh and scans its internals.
+# ble.sh integration lives in ~/.blerc (PREEXEC hook).
+[[ -z ${BLE_VERSION-} ]] && command -v tirith &>/dev/null && eval "$(tirith init --shell bash)"
 
 # Re-assert bob's Neovim first on PATH (Omarchy's rc and mise init can reorder PATH).
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"

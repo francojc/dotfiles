@@ -15,6 +15,13 @@ ble-face menu_complete_match=bold,underline
 
 # Hooks -----
 
+# tirith: warn-only check on each typed line (ble.sh PREEXEC gets the command as $1).
+function my/tirith-preexec {
+  command -v tirith &>/dev/null || return 0
+  command tirith check --shell posix --warn-only -- "$1" || true
+}
+blehook PREEXEC+=my/tirith-preexec
+
 function my/vim-load-hook {
   bleopt keymap_vi_mode_show=
   ble-bind -m vi_imap --cursor 6
