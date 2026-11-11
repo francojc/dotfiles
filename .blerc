@@ -9,6 +9,9 @@ bleopt highlight_variable=
 # Face -----
 
 ble-face syntax_default=none
+ble-face auto_complete=fg=242
+ble-face region_insert=fg=242,underline
+ble-face menu_complete_match=bold,underline
 
 # Hooks -----
 
