@@ -1,6 +1,5 @@
 # --- FZF (bash port of home/shell/fzf.zsh) ---
-# FZF Base Configuration
-export FZF_DEFAULT_COMMAND="rg --files"
+# FZF_DEFAULT_COMMAND is exported from env.bash.
 
 # Nightfox-inspired Color Theme
 # set_fzf_colors() {

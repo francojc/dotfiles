@@ -127,3 +127,9 @@ alias nswitch='nix run home-manager/master -- switch -b backup --flake $HOME/.do
 # --- MISC ---
 alias last='fc -ln -1'
 alias lastrun='fc -e -'
+
+# macOS clipboard names used by the shared aliases map to Wayland tools on Omarchy.
+if command -v wl-copy &>/dev/null; then
+  alias pbcopy='wl-copy'
+  alias pbpaste='wl-paste'
+fi

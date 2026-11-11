@@ -1,64 +1,47 @@
 # ~/.bashrc -- managed by stow from ~/.dotfiles (edit it there).
 #
-# Omarchy's migrations leave a symlinked ~/.bashrc alone, so this file is safe
-# to keep in the repo.
+# Phase-ordered loader. Order matters; don't reshuffle without reading the notes.
+#   1. Omarchy env + PATH        (non-interactive safe)
+#   2. ~/.config/bash/env.bash   (PATH pin, exports)
+#   3. Interactive guard
+#   4. ble.sh --attach=none      (must load before Omarchy's rc so Starship hooks in)
+#   5. Omarchy default rc        (aliases, functions, starship/zoxide/mise init)
+#   6. Personal aliases/functions/tools
+#   7. Integrations (atuin, carapace, direnv, tirith)
+#   8. Re-pin PATH, then ble-attach last (wraps the final prompt setup)
 
-# Omarchy environment (OMARCHY_PATH + PATH). Needed even for non-interactive shells.
+# --- 1. Omarchy environment (needed even for non-interactive shells) ---
 [[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
 
-# bob-managed Neovim (0.13) must precede /usr/bin/nvim (pacman 0.12).
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+# --- 2. Personal env and PATH ---
+source "$HOME/.config/bash/env.bash"
 
-# If not running interactively, stop here.
+# --- 3. Stop here for non-interactive shells ---
 [[ $- != *i* ]] && return
 
-# ble.sh (bash line editor, AUR blesh-git 0.4+). Load before Omarchy's rc so
-# Starship's bash init sees BLE_VERSION and hooks its right prompt (prompt_rps1)
-# into ble.sh. Starship requires _ble_version >= 400; 0.3.x silently skips it.
-# --noattach: attach at the end of this file, after everything else is set up.
+# --- 4. ble.sh line editor (AUR blesh-git 0.4+; Starship needs _ble_version >= 400) ---
+# Hooks (tirith PREEXEC, vi cursor) live in ~/.config/bash/blerc.
 if [[ -r /usr/share/blesh/ble.sh ]]; then
-  source /usr/share/blesh/ble.sh --attach=none --rcfile="$HOME/.blerc"
+  source /usr/share/blesh/ble.sh --attach=none --rcfile="$HOME/.config/bash/blerc"
 fi
 
-# Omarchy's aliases, functions and defaults. Don't edit those; override below.
+# --- 5. Omarchy's aliases, functions and defaults. Don't edit those; override below. ---
 source "$OMARCHY_PATH/default/bash/rc"
 
-# --- Personal environment (does not override Omarchy's EDITOR, PAGER, BROWSER, ...) ---
-export GCAL='-s 1 --iso-week-number=yes'
-export KETCH_CONFIG="$HOME/.config/ketch/config.json"
-
-# Tirith
-# export TIRITH=0
-# export TIRITH_BASH_MODE=preexec
-# export TIRITH_BASH_PREEXEC_ENFORCE=1
-
-# Vi editing mode, as in the zsh config (defaultKeymap viins).
+# --- 6. Interactive options and personal modules ---
 set -o vi
 
-# macOS clipboard names used by the shared aliases map to Wayland tools on Omarchy.
-if command -v wl-copy &>/dev/null; then
-  alias pbcopy='wl-copy'
-  alias pbpaste='wl-paste'
-fi
-
-# --- Personal aliases, functions and helpers (~/.config/bash/*.bash, stowed from the repo) ---
 for _f in aliases functions ai repo fzf; do
   [[ -r $HOME/.config/bash/$_f.bash ]] && source "$HOME/.config/bash/$_f.bash"
 done
 unset _f
 
-# --- Shell integrations (bash equivalents of the zsh init lines) ---
-# starship, zoxide, mise and fzf key bindings are initialised by Omarchy's rc.
-command -v atuin &>/dev/null && eval "$(atuin init bash --disable-up-arrow)"
-command -v carapace &>/dev/null && source <(carapace _carapace bash)
-command -v direnv &>/dev/null && eval "$(direnv hook bash)"
-# Skip under ble.sh: tirith's DEBUG trap clashes with ble.sh and scans its internals.
-# ble.sh integration lives in ~/.blerc (PREEXEC hook).
-[[ -z ${BLE_VERSION-} ]] && command -v tirith &>/dev/null && eval "$(tirith init --shell bash)"
+# --- 7. Tool integrations ---
+[[ -r $HOME/.config/bash/integrations.bash ]] && source "$HOME/.config/bash/integrations.bash"
 
-# Re-assert bob's Neovim first on PATH (Omarchy's rc and mise init can reorder PATH).
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-
-# Attach ble.sh last so it wraps the final prompt setup (Starship included).
-[[ ${BLE_VERSION-} ]] && ble-attach
-
+# --- 8. Final PATH pin, then attach ble.sh ---
+_pin_bob_nvim
+unset -f _pin_bob_nvim
+if [[ ${BLE_VERSION-} ]]; then
+  ble-attach
+fi
