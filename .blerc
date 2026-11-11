@@ -1,0 +1,22 @@
+# ble.sh rc
+
+# Options -----
+
+bleopt highlight_syntax=
+bleopt highlight_filename=
+bleopt highlight_variable=
+
+# Face -----
+
+ble-face syntax_default=none
+
+# Hooks -----
+
+function my/vim-load-hook {
+  bleopt keymap_vi_mode_show=
+  ble-bind -m vi_imap --cursor 6
+  ble-bind -m vi_nmap --cursor 2
+  ble-bind -m vi_omap --cursor 2
+}
+
+blehook/eval-after-load keymap_vi my/vim-load-hook

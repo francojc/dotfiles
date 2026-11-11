@@ -154,7 +154,7 @@
 
       # Status bar
       set -g status on
-      set -g status-position bottom
+      set -g status-position top
       set -g status-justify left
 
       set -g status-left '   #S  ▌  '

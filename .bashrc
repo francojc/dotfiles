@@ -12,6 +12,14 @@ export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 # If not running interactively, stop here.
 [[ $- != *i* ]] && return
 
+# ble.sh (bash line editor, AUR blesh-git 0.4+). Load before Omarchy's rc so
+# Starship's bash init sees BLE_VERSION and hooks its right prompt (prompt_rps1)
+# into ble.sh. Starship requires _ble_version >= 400; 0.3.x silently skips it.
+# --noattach: attach at the end of this file, after everything else is set up.
+if [[ -r /usr/share/blesh/ble.sh ]]; then
+  source /usr/share/blesh/ble.sh --attach=none --rcfile="$HOME/.blerc"
+fi
+
 # Omarchy's aliases, functions and defaults. Don't edit those; override below.
 source "$OMARCHY_PATH/default/bash/rc"
 
@@ -43,3 +51,7 @@ command -v tirith &>/dev/null && eval "$(tirith init --shell bash)"
 
 # Re-assert bob's Neovim first on PATH (Omarchy's rc and mise init can reorder PATH).
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
+# Attach ble.sh last so it wraps the final prompt setup (Starship included).
+[[ ${BLE_VERSION-} ]] && ble-attach
+
