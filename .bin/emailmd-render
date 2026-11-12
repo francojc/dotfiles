@@ -29,6 +29,11 @@ const chunks = [];
 process.stdin.on("data", (chunk) => chunks.push(chunk));
 process.stdin.on("end", () => {
   const markdown = Buffer.concat(chunks).toString("utf8");
-  const { html } = render(markdown);
-  process.stdout.write(html);
+  // emailmd >= 0.3: render() is async and resolves to { html, text, meta }
+  render(markdown)
+    .then(({ html }) => process.stdout.write(html))
+    .catch((err) => {
+      process.stderr.write(`emailmd-render: ${err.message}\n`);
+      process.exit(1);
+    });
 });
