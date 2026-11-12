@@ -52,6 +52,7 @@ repo-bootstrap() {
 # Usage: cd into a Drive directory containing a .git repo, then run: repo-migrate
 repo-migrate() {
   local drive_dir="$PWD"
+  local input_name proceed do_create visibility description tags has_pages
 
   # Guard: confirm we are inside a Drive-synced directory
   if [[ "$drive_dir" != *"/Library/CloudStorage/"* ]]; then
@@ -86,14 +87,14 @@ repo-migrate() {
 
   # Prompt for GitHub user if not detected
   if [[ -z "$gh_user" ]]; then
-    read "gh_user?GitHub username or org [francojc]: "
+    read -rp "GitHub username or org [francojc]: " gh_user
     gh_user="${gh_user:-francojc}"
   else
     echo "Detected GitHub owner: $gh_user"
   fi
 
   # Prompt for repo name, defaulting to detected value
-  read "input_name?Repo name [$repo_name]: "
+  read -rp "Repo name [$repo_name]: " input_name
   repo_name="${input_name:-$repo_name}"
 
   local dest="$HOME/Projects/$gh_user/$repo_name"
@@ -127,7 +128,7 @@ repo-migrate() {
     echo "The Drive copy has work that is not on GitHub."
     echo "You should commit and push before migrating, or choose"
     echo "the rclone path below to preserve the Drive copy exactly."
-    read "proceed?Continue anyway? (y/n) [n]: "
+    read -rp "Continue anyway? (y/n) [n]: " proceed
     [[ "${proceed:-n}" != "y" ]] && return 1
   fi
 
@@ -180,11 +181,11 @@ repo-migrate() {
     fi
 
     # Create GitHub repo
-    read "do_create?Create GitHub repo? (y/n) [y]: "
+    read -rp "Create GitHub repo? (y/n) [y]: " do_create
     if [[ "${do_create:-y}" == "y" ]]; then
-      read "visibility?Visibility (public/private) [private]: "
+      read -rp "Visibility (public/private) [private]: " visibility
       visibility="${visibility:-private}"
-      read "description?Description: "
+      read -rp "Description: " description
 
       gh repo create "$gh_user/$repo_name" \
         --"$visibility" \
@@ -199,8 +200,8 @@ repo-migrate() {
   fi
 
   # Gather metadata for marker and tagging
-  read "tags?repoindex tags (space-separated): "
-  read "has_pages?Publishes to GitHub Pages? (y/n) [n]: "
+  read -rp "repoindex tags (space-separated): " tags
+  read -rp "Publishes to GitHub Pages? (y/n) [n]: " has_pages
   has_pages="${has_pages:-n}"
 
   # Write _repo.md marker into the Drive directory
@@ -234,7 +235,9 @@ repo-migrate() {
   # Register in repoindex
   repoindex refresh --path "$dest" 2>/dev/null
   if [[ -n "$tags" ]]; then
-    for tag in ${=tags}; do
+    local tag tag_list
+    read -ra tag_list <<<"$tags"
+    for tag in "${tag_list[@]}"; do
       repoindex tag add "$repo_name" "$tag"
     done
     echo "Tagged: $tags"
@@ -251,12 +254,13 @@ repo-migrate() {
 # Usage: cd into a Drive project folder (no existing .git), then run: repo-init
 repo-init() {
   local drive_dir="$PWD"
+  local confirm gh_user repo_name description visibility tags has_pages do_create
 
   # Guard: confirm we are inside a Drive-synced directory
   if [[ "$drive_dir" != *"/Library/CloudStorage/"* ]]; then
     echo "Warning: current directory does not appear to be inside Google Drive."
     echo "  $drive_dir"
-    read "confirm?Continue anyway? (y/n) [n]: "
+    read -rp "Continue anyway? (y/n) [n]: " confirm
     [[ "${confirm:-n}" != "y" ]] && return 1
   fi
 
@@ -265,15 +269,15 @@ repo-init() {
   echo ""
 
   # Gather details interactively
-  read "gh_user?GitHub username or org [francojc]: "
+  read -rp "GitHub username or org [francojc]: " gh_user
   gh_user="${gh_user:-francojc}"
-  read "repo_name?Repo name: "
+  read -rp "Repo name: " repo_name
   [[ -z "$repo_name" ]] && { echo "Repo name required. Aborting."; return 1; }
-  read "description?Description: "
-  read "visibility?Visibility (public/private) [private]: "
+  read -rp "Description: " description
+  read -rp "Visibility (public/private) [private]: " visibility
   visibility="${visibility:-private}"
-  read "tags?repoindex tags (space-separated, e.g. 'research lang:r active'): "
-  read "has_pages?Publishes to GitHub Pages? (y/n) [n]: "
+  read -rp "repoindex tags (space-separated, e.g. 'research lang:r active'): " tags
+  read -rp "Publishes to GitHub Pages? (y/n) [n]: " has_pages
   has_pages="${has_pages:-n}"
 
   local repo_dir="$HOME/Projects/$gh_user/$repo_name"
@@ -288,7 +292,7 @@ repo-init() {
     git clone "$ssh_url" "$repo_dir" --quiet
   else
     echo ""
-    read "do_create?Repo not found on GitHub. Create it now? (y/n) [y]: "
+    read -rp "Repo not found on GitHub. Create it now? (y/n) [y]: " do_create
     do_create="${do_create:-y}"
     mkdir -p "$repo_dir"
     git -C "$repo_dir" init --quiet
@@ -323,7 +327,9 @@ repo-init() {
   # Register and tag in repoindex
   repoindex refresh --path "$repo_dir" 2>/dev/null
   if [[ -n "$tags" ]]; then
-    for tag in ${=tags}; do
+    local tag tag_list
+    read -ra tag_list <<<"$tags"
+    for tag in "${tag_list[@]}"; do
       repoindex tag add "$repo_name" "$tag"
     done
     echo "Tagged: $tags"
@@ -341,19 +347,19 @@ drive-cleanup() {
   echo "Drive directories flagged for cleanup:"
   echo ""
 
-  grep -rl "Drive copy can be removed" \
+  # Process substitution (not a pipe) keeps the loop in this shell so
+  # `count` survives it.
+  local marker dir repo_line
+  while read -r marker; do
+    dir="$(dirname "$marker")"
+    repo_line=$(grep "GitHub" "$marker" | head -1 | sed 's/.*\*\*: //')
+    echo "  $dir"
+    [[ -n "$repo_line" ]] && echo "    -> $repo_line"
+    echo ""
+    ((++count))
+  done < <(grep -rl "Drive copy can be removed" \
     ~/Library/CloudStorage/GoogleDrive-*/My\ Drive/ \
-    --include="_repo.md" 2>/dev/null | \
-    while read -r marker; do
-      local dir
-      dir="$(dirname "$marker")"
-      local repo_line
-      repo_line=$(grep "GitHub" "$marker" | head -1 | sed 's/.*\*\*: //')
-      echo "  $dir"
-      [[ -n "$repo_line" ]] && echo "    -> $repo_line"
-      echo ""
-      ((count++))
-    done
+    --include="_repo.md" 2>/dev/null)
 
   if [[ $count -eq 0 ]]; then
     echo "  (none found)"
