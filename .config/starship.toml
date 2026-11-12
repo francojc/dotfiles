@@ -55,7 +55,8 @@ style = 'green italic'
 format = "[$symbol]($style)"
 style = "bold italic bright-purple"
 symbol = "⋈┈"
-disabled = false
+# Off: forks `sudo -n true` on every prompt (~5-9 ms). Flip to false to restore.
+disabled = true
 
 [username]
 style_user = "bright-yellow bold italic"

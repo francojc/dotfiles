@@ -16,8 +16,15 @@ ble-face menu_complete_match=bold,underline
 # Hooks -----
 
 # tirith: warn-only check on each typed line (ble.sh PREEXEC gets the command as $1).
+# Each check forks tirith (~20-50 ms), so skip lines that cannot match any rule:
+# plain ASCII words only, no paths, URLs, pipes, redirects, expansions,
+# assignments, quotes, or IP-like tokens, and no network/exec tools (schemeless
+# URLs like `curl example.com` are plain ASCII). Everything else is checked.
 function my/tirith-preexec {
   command -v tirith &>/dev/null || return 0
+  local LC_ALL=C
+  local net='(^|[ ])(curl|wget|http|https|xh|scp|rsync|ssh|nc|ncat|socat|docker|podman|base64|eval|source|tar|unzip)([ ]|$)'
+  [[ $1 =~ ^[A-Za-z0-9\ _.,@%+-]*$ && ! $1 =~ [0-9]\.[0-9] && ! $1 =~ $net ]] && return 0
   command tirith check --shell posix --warn-only -- "$1" || true
 }
 blehook PREEXEC+=my/tirith-preexec

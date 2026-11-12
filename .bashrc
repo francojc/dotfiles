@@ -4,8 +4,9 @@
 #   1. Omarchy env + PATH        (non-interactive safe)
 #   2. ~/.config/bash/env.bash   (PATH pin, exports)
 #   3. Interactive guard
-#   4. ble.sh --attach=none      (must load before Omarchy's rc so Starship hooks in)
-#   5. Omarchy default rc        (aliases, functions, starship/zoxide/mise init)
+#   4. Omarchy inputrc, then ble.sh --attach=none (ble before Omarchy so Starship hooks in;
+#      inputrc before ble because ble's readline emulation makes `bind -f` ~200x slower)
+#   5. Omarchy rc, ble-aware copy (~/.config/bash/omarchy.bash)
 #   6. Personal aliases/functions/tools
 #   7. Integrations (atuin, carapace, direnv, tirith)
 #   8. Re-pin PATH, then ble-attach last (wraps the final prompt setup)
@@ -21,12 +22,14 @@ source "$HOME/.config/bash/env.bash"
 
 # --- 4. ble.sh line editor (AUR blesh-git 0.4+; Starship needs _ble_version >= 400) ---
 # Hooks (tirith PREEXEC, vi cursor) live in ~/.config/bash/blerc.
+bind -f "$OMARCHY_PATH/default/bash/inputrc"
 if [[ -r /usr/share/blesh/ble.sh ]]; then
   source /usr/share/blesh/ble.sh --attach=none --rcfile="$HOME/.config/bash/blerc"
 fi
 
 # --- 5. Omarchy's aliases, functions and defaults. Don't edit those; override below. ---
-source "$OMARCHY_PATH/default/bash/rc"
+# Local copy of $OMARCHY_PATH/default/bash/rc tuned for ble.sh; see its header.
+source "$HOME/.config/bash/omarchy.bash"
 
 # --- 6. Interactive options and personal modules ---
 set -o vi
@@ -41,7 +44,8 @@ unset _f
 
 # --- 8. Final PATH pin, then attach ble.sh ---
 _pin_bob_nvim
-unset -f _pin_bob_nvim
+_path_dedupe
+unset -f _pin_bob_nvim _path_front _path_dedupe
 if [[ ${BLE_VERSION-} ]]; then
   ble-attach
 fi
