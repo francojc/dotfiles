@@ -1,7 +1,7 @@
 ---
 name: writing-reviewer
 description: Critique a document as a tough but fair peer reviewer (Reviewer 2). Use when a draft section, full paper, proposal, or lit review needs rigorous evaluation of argument logic, evidence quality, methods validity, and writing clarity. Searches literature to back critiques with citations. Produces a structured review and a revision task list.
-allowed-tools: Read, Write, Bash, Grep, question, web_search, mcp__zotero__zotero_search_items, mcp__mcp-research__search_papers, mcp__mcp-research__get_paper_details, mcp__mcp-research__get_paper_citations, mcp__mcp-research__get_paper_references, todo
+allowed-tools: read, write, bash, ask_user_question, web_search, todo
 disable-model-invocation: true
 ---
 
@@ -32,7 +32,7 @@ If a section name or topic is described but no path is given, use Bash to
 search the project for matching files: `find . -name '*.md' | xargs grep -l
 "<keyword>" 2>/dev/null`.
 
-If nothing is provided or the target is ambiguous, use the `question` tool:
+If nothing is provided or the target is ambiguous, use the `ask_user_question` tool:
 
 > What document or section should I review?
 
@@ -87,12 +87,14 @@ Evaluate the document on these dimensions, as appropriate to the document type:
 
 For the weakest claims and most significant gaps identified in Step 3:
 
-- Search the user's Zotero library via `mcp__zotero__zotero_search_items`
+Use the `orbitr` CLI via `bash` (see the `orbitr` skill for full syntax):
+
+- Search the user's Zotero library with `orbitr zotero search "QUERY"`
   for relevant work the author may have missed.
-- Search Semantic Scholar via `mcp__mcp-research__search_papers` for
-  contradictory findings, competing frameworks, or stronger evidence.
-- Use `mcp__mcp-research__get_paper_details` to verify specific claims
-  against source material when something looks wrong.
+- Search the literature with `orbitr search "QUERY" [--from YYYY] [--sort citations]`
+  for contradictory findings, competing frameworks, or stronger evidence.
+- Use `orbitr paper <doi|arxiv-id>` to verify specific claims against source
+  material, and `orbitr cite <id>` to follow citation networks.
 
 Incorporate what you find into your critique. Cite specific papers when
 pointing out gaps or contradictions. Do not fabricate references.
@@ -134,7 +136,7 @@ this section." Say what is wrong and what would fix it.
 
 ## Step 6 — Build a revision task list
 
-Before creating tasks, use the `question` tool to ask:
+Before creating tasks, use the `ask_user_question` tool to ask:
 
 > Should the task list include only revision tasks, or also research and
 > analysis tasks?
@@ -144,7 +146,7 @@ With options:
 - Revision + research — also include running analyses, collecting data,
   investigating claims
 
-Then use `todo` (action: `add`) for each task:
+Then use `todo` (action: `create`) for each task:
 
 - One task per major concern, with a clear description of what needs to change.
 - Group minor concerns into 1-2 tasks where they cluster by section or type.

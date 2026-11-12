@@ -1,7 +1,7 @@
 ---
 name: writing-refine
 description: Analyze a document for AI writing artifacts across 7 categories and rewrite it with corrections. Use when a draft needs to be cleaned of detectable AI patterns — overused vocabulary, hedging, structural monotony, voice issues, formatting problems, technical artifacts, and unsupported generalizations. Preserves meaning and author intent throughout.
-allowed-tools: Read, Write, Edit, Grep, Bash, question
+allowed-tools: read, write, edit, bash, ask_user_question
 disable-model-invocation: true
 ---
 
@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 Use `$1` if given. Otherwise check the user's message for a file path.
 
-If no path is provided, use the `question` tool to ask:
+If no path is provided, use the `ask_user_question` tool to ask:
 
 > Which file should I refine?
 

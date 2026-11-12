@@ -1,7 +1,7 @@
 ---
 name: project-plan-session
 description: Plan a focused work session with dependency-linked tasks for the current project. Use at the start of a work session to assess project state, agree on session goals, and build a concrete task graph. Reads git history, specs, and logs to surface project context before asking what to accomplish. Each task is tagged with a complexity signal (routine / analytical / generative) to guide model and reasoning-effort selection.
-allowed-tools: Read, Bash, Grep, todo, question
+allowed-tools: read, bash, todo, ask_user_question
 disable-model-invocation: true
 ---
 
@@ -31,7 +31,7 @@ Write a brief (5-10 line) summary of where the project stands:
 
 ## Step 3 — Ask the user for session goals
 
-Use the `question` tool to ask what the user wants to accomplish. Provide
+Use the `ask_user_question` tool to ask what the user wants to accomplish. Provide
 2-3 suggested goals derived from the project state as options, plus a
 "Something else" option so the user can type freely.
 
@@ -60,7 +60,7 @@ Based on the user's answer:
      draft a new section, make a key trade-off decision, produce a
      recommendation from ambiguous evidence). A strong model at high reasoning
      effort is warranted.
-3. Use the `todo` tool (action: `add`) for each task. Format the text as:
+3. Use the `todo` tool (action: `create`) for each task. Format the subject as:
    `[complexity] imperative phrase`
    e.g., `[routine] Run ruff formatter across src/`
          `[analytical] Trace source of cache miss on repeated queries`

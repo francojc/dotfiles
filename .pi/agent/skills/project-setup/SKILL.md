@@ -1,7 +1,7 @@
 ---
 name: project-setup
 description: Scaffold a complete project structure for research, teaching, grant, service, or development projects. Creates AGENTS.md, specs/ (planning, progress, implementation), logs/, flake.nix, and .gitignore from context-aware templates. Requires a project description document (README.md or equivalent) before running. Supports fork-contribution mode for development projects.
-allowed-tools: Read, Grep, Edit, Bash, Write, question
+allowed-tools: read, edit, bash, write, ask_user_question
 disable-model-invocation: true
 ---
 
@@ -33,7 +33,7 @@ Then check the user's message for the project type and optional project name.
 
 **Supported types:** `research`, `teaching`, `grant`, `service`, `development`
 
-If the type is not in the message, use the `question` tool to ask:
+If the type is not in the message, use the `ask_user_question` tool to ask:
 
 > What type of project is this?
 
@@ -50,7 +50,7 @@ of the description file. Fall back to the current directory name.
 ## Step 2 — Confirm project details
 
 After reading the description, present a brief summary of what you understood
-and confirm with the user before generating anything. Use the `question` tool:
+and confirm with the user before generating anything. Use the `ask_user_question` tool:
 
 > I'll set up a **[type]** project named **"[name]"** with this focus:
 > [1-sentence summary from the description].
@@ -67,7 +67,7 @@ When the type is `development`, check for fork indicators:
 - Does a git remote named `upstream` exist (`git remote get-url upstream`)?
 - Does the `origin` remote URL not contain the user's usual identity?
 
-If any indicators are found, use the `question` tool:
+If any indicators are found, use the `ask_user_question` tool:
 
 > Fork indicators detected: [list signals found].
 > Is this a fork you plan to contribute to upstream?

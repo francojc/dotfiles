@@ -12,7 +12,8 @@
 //   TIRITH_HOOK_WARN_ACTION — "allow" (default) or "deny"
 //   TIRITH_FAIL_OPEN        — "1" to allow on error (default: deny)
 
-import { execFile, execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 function hookEvent(event: string, detail?: string) {
@@ -26,6 +27,8 @@ function hookEvent(event: string, detail?: string) {
   } catch {}
 }
 
+const execFileAsync = promisify(execFile);
+
 export default function (pi: ExtensionAPI) {
   pi.on("tool_call", async (event, ctx) => {
     if (event.toolName !== "bash") return undefined;
@@ -36,7 +39,8 @@ export default function (pi: ExtensionAPI) {
     const tirithBin = process.env.TIRITH_BIN || "tirith";
 
     try {
-      execFileSync(
+      // Async so Pi's event loop (TUI, streaming) never stalls on the check.
+      await execFileAsync(
         tirithBin,
         ["check", "--json", "--non-interactive", "--shell", "posix", "--", command],
         { timeout: 10_000, encoding: "utf-8", env: { ...process.env, TIRITH_INTEGRATION: "pi-cli" } },
@@ -45,7 +49,7 @@ export default function (pi: ExtensionAPI) {
       hookEvent("check_ok");
       return undefined;
     } catch (err: any) {
-      // execFileSync throws on non-zero exit or other errors
+      // execFile rejects on non-zero exit or spawn errors
       if (err.code === "ENOENT") {
         if (process.env.TIRITH_FAIL_OPEN === "1") return undefined;
         return {
@@ -60,7 +64,8 @@ export default function (pi: ExtensionAPI) {
         return { block: true, reason: "tirith: check timed out — blocked for safety" };
       }
 
-      const exitCode: number | undefined = err.status;
+      // Async execFile puts the numeric exit code in err.code (string codes = spawn errors)
+      const exitCode: number | undefined = typeof err.code === "number" ? err.code : undefined;
       if (exitCode == null) {
         hookEvent("unexpected_exit", err.message || "unknown");
         if (process.env.TIRITH_FAIL_OPEN === "1") return undefined;

@@ -28,7 +28,8 @@
     "npm:pi-caveman@1.0.7",
     "npm:pi-typesafe",
     "npm:pi-web-access",
-    "npm:pi-bifrost-provider"
+    "npm:pi-bifrost-provider",
+    "https://github.com/earendil-works/pi-claude-code"
   ],
   "enabledModels": [],
   "defaultProjectTrust": "ask",

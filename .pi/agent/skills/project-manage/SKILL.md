@@ -1,7 +1,7 @@
 ---
 name: project-manage
 description: "Unified project management interface for research, teaching, grant, service, and development projects. Supports four operations: update (sync docs and get AI recommendations), track (milestones, tasks, deadlines), address (analyze and fix a GitHub issue), and create (generate specs/ documentation). Use when managing ongoing project work in a structured project directory."
-allowed-tools: Read, Grep, Edit, Bash, Write, question, todo
+allowed-tools: read, edit, bash, write, ask_user_question, todo
 disable-model-invocation: true
 ---
 
@@ -23,7 +23,7 @@ Check the user's message for a sub-command:
 If no sub-command is provided, run `update` by default.
 
 If the sub-command is unrecognized, list the available options and ask the
-user to clarify using the `question` tool.
+user to clarify using the `ask_user_question` tool.
 
 ## Step 2 — Validate project context
 
@@ -101,8 +101,8 @@ Generate project-type-specific guidance after syncing:
 Use the `todo` tool to surface and manage active tasks:
 
 - Use `todo` (action: `list`) to show the current task list
-- Use `todo` (action: `add`) to register newly identified tasks
-- Use `todo` (action: `toggle`) to mark completed tasks done
+- Use `todo` (action: `create`) to register newly identified tasks
+- Use `todo` (action: `update`, `status: "completed"`) to mark completed tasks done
 
 ### Output
 
@@ -120,7 +120,7 @@ Present a prioritized view of:
 The issue number or identifier appears in the user's message
 (e.g., `address 123` or `address bug-login`).
 
-If no issue is specified, use the `question` tool to ask for one.
+If no issue is specified, use the `ask_user_question` tool to ask for one.
 
 ### Issue workflow
 
@@ -160,7 +160,7 @@ If no issue is specified, use the `question` tool to ask for one.
 The document type appears in the user's message
 (e.g., `create planning` or `create specs`).
 
-If no type is specified, use the `question` tool to ask:
+If no type is specified, use the `ask_user_question` tool to ask:
 
 > Which document(s) do you want to create?
 

@@ -1,7 +1,7 @@
 ---
 name: writing-draft
 description: Draft a document section or document using project context, specs, and source materials. Use when starting a new section of a paper, proposal, report, or any academic or professional document. Grounds the draft in existing project files and analysis outputs. Follows academic writing conventions and flags gaps with TODO markers.
-allowed-tools: Read, Bash, Grep, Write, Edit, question
+allowed-tools: read, bash, write, edit, ask_user_question
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,7 @@ well-structured draft using the project's existing materials as source.
 
 Use `$ARGUMENTS` if given as the section or document to draft. Otherwise check the user's message for it.
 
-If not provided, use the `question` tool to ask:
+If not provided, use the `ask_user_question` tool to ask:
 
 > What section or document do you want to draft?
 
@@ -40,7 +40,7 @@ Present a list of discovered files that may inform this section:
 - Existing draft sections or outlines
 - README or documentation files
 
-Use the `question` tool to ask the user to confirm these sources or add
+Use the `ask_user_question` tool to ask the user to confirm these sources or add
 others. Also ask about specific requirements (length, audience, key points
 to cover).
 
@@ -65,7 +65,7 @@ are needed with `[TODO: ...]` markers.
 
 ## Step 5 — Write to file
 
-Use the `question` tool to ask the user where to save the draft. Suggest a
+Use the `ask_user_question` tool to ask the user where to save the draft. Suggest a
 path based on project structure. Write the file and confirm the output
 location.
 

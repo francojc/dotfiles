@@ -67,6 +67,8 @@ Loaded from `~/.pi/agent/extensions/`.
 | `session-sync/` | Checks trusted SSH destinations and pulls new Pi session transcripts. | `/session-sync-status`, `/session-sync-pull [host]` |
 | `session-sync.json` | Trusted SSH source/destination registry roots for session-sync extension. | Config only. No session data is tracked. |
 | `auto-session-name.ts` | Sets content-derived session display names, then refreshes them with a cheap title model. | `/autoname` |
+| `omarchy-theme.ts` | On Omarchy hosts, applies the generated `omarchy-system` theme and follows Omarchy theme switches live. No-op on macOS. | Automatic; set `PI_OMARCHY_THEME=0` to disable. |
+| `tirith-guard.ts` | Runs `tirith check` on every bash tool call (async) and blocks flagged commands. Fails closed. | `TIRITH_FAIL_OPEN=1`, `TIRITH_HOOK_WARN_ACTION=deny` |
 
 ## Keybindings and terminal notes
 
@@ -484,6 +486,24 @@ Commands:
 Source checked:
 
 - `~/.pi/agent/extensions/working-indicator.ts`
+
+### Omarchy theme
+
+What it does:
+
+- `omarchy-theme-set-pi` (run by Omarchy on theme change) writes `~/.pi/agent/themes/omarchy-system.json`. That directory is gitignored.
+- If the file exists, the extension applies it as an in-memory theme instance, so the shared `settings.json` keeps `"theme": "dark"` for macOS.
+- Watches the themes directory and recolors Pi when the Omarchy theme changes.
+
+Gotchas:
+
+- Do not run `omarchy-theme-set-pi --activate`; it writes `"theme": "omarchy-system"` into the shared, stowed `settings.json`.
+- Picking a theme in `/settings` persists that theme to `settings.json` on every host; the extension still overrides it on Omarchy at the next session start.
+
+Source checked:
+
+- `~/.pi/agent/extensions/omarchy-theme.ts`
+- `/usr/bin/omarchy-theme-set-pi`
 
 ### Pi notify switch
 
