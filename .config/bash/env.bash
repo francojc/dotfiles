@@ -12,3 +12,5 @@ _pin_bob_nvim
 export GCAL='-s 1 --iso-week-number=yes'
 export KETCH_CONFIG="$HOME/.config/ketch/config.json"
 export FZF_DEFAULT_COMMAND="rg --files"
+
+export PATH="$HOME/.bin:$PATH"

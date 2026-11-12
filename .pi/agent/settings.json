@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "1.5.2",
-  "defaultProvider": "bifrost",
-  "defaultModel": "opencode-zen/claude-haiku-5-5",
+  "defaultProvider": "opencode",
+  "defaultModel": "claude-haiku-5-5",
   "defaultTools": [
     "+codemode"
   ],
