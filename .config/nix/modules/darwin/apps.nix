@@ -6,7 +6,8 @@
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
     terminal-notifier # macOS notifications from command line
-    cliamp
+    cliamp # music player
+    avahi # mDNS/ DNS-SD service discovery
   ];
 
   homebrew = {
