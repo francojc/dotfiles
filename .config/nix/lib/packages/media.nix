@@ -5,4 +5,5 @@ with pkgs; [
   khal # Calendar
   pianobar # Pandora client
   vdirsyncer # CalDAV/CardDAV sync
+  sioyek # PDF viewer
 ]
