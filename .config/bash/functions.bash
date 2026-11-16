@@ -4,11 +4,11 @@
 # otherwise bash expands the alias inside the function definition below.
 unalias t 2>/dev/null
 
-# Attach to a named tmux session (default 1); create if absent
+# Attach to a named tmux session (default config); create if absent
 # Usage: t [session_name]
 t() {
   if [ $# -eq 0 ]; then
-    tmux new-session -As 1
+    tmux new-session -As config
   else
     tmux new-session -As "$1"
   fi
