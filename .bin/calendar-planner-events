@@ -28,7 +28,7 @@ OUTPUT:
 
 ENVIRONMENT:
     CAL_PLANNER_CONFIG   override schedule.yaml path
-                         (default ~/Obsidian/Notes/plan/config/schedule.yaml)
+                         (default ~/Projects/obsidian/notes/plan/config/schedule.yaml)
 
 EXIT STATUS:
     0  every configured calendar was read
@@ -55,7 +55,7 @@ if [[ $# -ne 2 ]]; then
   exit 2
 fi
 
-readonly CFG="${CAL_PLANNER_CONFIG:-$HOME/Obsidian/Notes/plan/config/schedule.yaml}"
+readonly CFG="${CAL_PLANNER_CONFIG:-$HOME/Projects/obsidian/notes/plan/config/schedule.yaml}"
 readonly FROM="$1"
 readonly TO="$2"
 

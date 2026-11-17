@@ -91,8 +91,8 @@ alias tko='tmux kill-server'
 alias v='nvim'
 
 # Obsidian notes
-alias on='cd ~/Obsidian/Notes && nvim'
-alias op='cd ~/Obsidian/Personal && nvim'
+alias on='cd ~/Projects/obsidian/notes && nvim'
+alias op='cd ~/Projects/obsidian/personal && nvim'
 
 # --- QUARTO ALIASES ---
 # Quarto comes from per-project flake devShells, not the global profile.

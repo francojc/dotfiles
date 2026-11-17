@@ -9,7 +9,7 @@ LOG_FILE="${LOG_DIR}/karakeep-sync.log"
 main() {
   echo "--- $(date '+%Y-%m-%d %H:%M:%S') ---"
   log_info "Running karakeep-sync.sh..."
-  bash "${HOME}/Obsidian/Notes/.pi/skills/_shared/scripts/karakeep-sync.sh"
+  bash "${HOME}/Projects/obsidian/notes/.pi/skills/_shared/scripts/karakeep-sync.sh"
 }
 
 main >> "$LOG_FILE" 2>&1

@@ -317,8 +317,8 @@ CriticMarkup commands:
 
 Configured workspaces:
 
-- `~/Obsidian/Notes/`
-- `~/Obsidian/Personal/`
+- `~/Projects/obsidian/notes/`
+- `~/Projects/obsidian/personal/`
 
 ### References and Citations
 
