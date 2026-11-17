@@ -99,8 +99,8 @@
       bind-key f display-popup -w 80% -h 60% -E "tmux new-session -s popup -c '#{pane_current_path}' \\; set-option destroy-unattached on"
 
       # Popups
-      # Obsidian vault popup which opens `~/Obsidian/Notes/weekly/{current_week_number}.md` in Neovim
-      bind-key o display-popup -w 80% -h 60% -d ~/Obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Obsidian/Notes/plan/weekly/$(date +'%Y-W%V').md"
+      # Obsidian vault popup which opens `~/Projects/obsidian/notes/weekly/{current_week_number}.md` in Neovim
+      bind-key o display-popup -w 80% -h 60% -d ~/projects/obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Projects/obsidian/notes/plan/weekly/$(date +'%Y-W%V').md"
 
       # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit

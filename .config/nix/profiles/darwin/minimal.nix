@@ -12,7 +12,6 @@
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
     terminal-notifier # macOS notifications from command line
-    cliamp # music player
     avahi # mDNS/ DNS-SD service discovery
   ];
 
@@ -58,10 +57,8 @@
 
     brews = [
       "borders" # jankyborders (macOS only)
-      "koan" # Navidrome TUI player (tap only, no nixpkgs package)
       "linecast" # TUI weather (not in the locked nixpkgs; move to Nix after the next flake update)
       "mole" # terminal cleanup app for macOS
-      "mandible" # macOS app launcher
       "node" # Node.js; copilot-api launchd service and npm-global tools need it
       "pngpaste" # paste images (macOS only)
       "reminders-cli" # cli interface to macOS Reminders
