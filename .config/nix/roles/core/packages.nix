@@ -1,9 +1,9 @@
 {pkgs, ...}: let
   # Shared groups (also used by lib/packages/arch.nix).
-  lsp = import ../lib/packages/lsp.nix pkgs;
-  cli = import ../lib/packages/cli.nix pkgs;
-  dev = import ../lib/packages/dev.nix pkgs;
-  media = import ../lib/packages/media.nix pkgs;
+  lsp = import ../../lib/packages/lsp.nix pkgs;
+  cli = import ../../lib/packages/cli.nix pkgs;
+  dev = import ../../lib/packages/dev.nix pkgs;
+  media = import ../../lib/packages/media.nix pkgs;
 
   # macOS-only extras. Omarchy must not install these through Nix (see
   # PLAN-nix-lite.md §4c): build toolchains, runtimes, GUI apps, and tools
@@ -62,19 +62,4 @@
 in {
   # Install general packages globally for the user
   home.packages = lsp ++ cli ++ dev ++ media ++ macOnly;
-
-  # GnuPG — managed via home-manager for agent lifecycle control
-  programs.gpg = {
-    enable = true;
-  };
-
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 34560000;
-    maxCacheTtl = 34560000;
-    pinentry.package = pkgs.pinentry-tty;
-    extraConfig = ''
-      allow-loopback-pinentry
-    '';
-  };
 }

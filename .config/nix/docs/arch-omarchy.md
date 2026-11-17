@@ -45,10 +45,10 @@ for `homeConfigurations` while `nixosConfigurations` is unaffected.
 | File | Purpose |
 |------|---------|
 | `hosts/Omarchy-Air/default.nix` | Host definition: system, `platform = "arch"`, user, theme, `homeModules` |
-| `profiles/arch/configuration.nix` | HM module: `targets.genericLinux`, flake overlay, `allowUnfree`, Omarchy env bootstrap |
-| `home/arch-core.nix` | Arch counterpart to `core.nix`: only packages Omarchy does not ship |
-| `modules/arch/shell.nix` | Arch zsh: portable shell setup without macOS-isms |
-| `modules/arch/tmux.nix` | Arch tmux: keybindings/plugins, no theme block |
+| `profiles/arch/base.nix` | HM module: `targets.genericLinux`, flake overlay, `allowUnfree`, Omarchy env bootstrap |
+| `roles/core/packages-arch.nix` | Arch counterpart to `core.nix`: only packages Omarchy does not ship |
+| `roles/core/shell-arch.nix` | Arch zsh: portable shell setup without macOS-isms |
+| `roles/core/tmux-arch.nix` | Arch tmux: keybindings/plugins, no theme block |
 
 `home/default.nix` uses `isArch` to choose these instead of the shared/macOS
 modules.
@@ -76,7 +76,7 @@ formatter / build toolchain — and documents the omissions.
 
 `omarchy-theme-set-tmux` themes the **running** server at runtime with
 `tmux set-option` (`window-style`, `cursor-colour`) and OSC sequences; it does
-not rewrite `~/.config/tmux/tmux.conf`. `modules/arch/tmux.nix` keeps the
+not rewrite `~/.config/tmux/tmux.conf`. `roles/core/tmux-arch.nix` keeps the
 keybindings and plugins but drops the themed status bar so the two do not
 mismatch. `omarchy refresh tmux` **does** overwrite `tmux.conf`; do not run it
 while Home Manager manages that file.
@@ -90,7 +90,7 @@ configuration.nix` sources the POSIX `env-bootstrap` from zsh's `profileExtra`
 so `OMARCHY_PATH` and the Omarchy `PATH` entries survive. The bash-only rc chain
 (`aliases`, `functions`, `inputrc`) is not sourced.
 
-`modules/arch/shell.nix` restores the `omarchy` command after sourcing the
+`roles/core/shell-arch.nix` restores the `omarchy` command after sourcing the
 shared `aliases.zsh`, which aliases `omarchy` to an SSH helper.
 
 ## Usage

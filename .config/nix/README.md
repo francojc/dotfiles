@@ -94,7 +94,7 @@ Legacy NixOS workstation running on x86_64 (Mac Mini 2011). Configured with the 
 
 ### Omarchy-Air
 
-Arch Linux + Hyprland desktop managed by [Omarchy](https://omarchy.org/). Unlike the other Linux hosts, this is **not** a NixOS system: Omarchy owns the OS, and Nix manages only the user environment through a standalone Home Manager configuration (`homeConfigurations.Omarchy-Air`). The host sets `platform = "arch"` to route it away from `nixosConfigurations`, and `home/default.nix` uses `isArch` to select Arch-adjusted modules (`home/arch-core.nix`, `modules/arch/`) that avoid shadowing Omarchy's packages and fighting its theme engine. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md) for the full design.
+Arch Linux + Hyprland desktop managed by [Omarchy](https://omarchy.org/). Unlike the other Linux hosts, this is **not** a NixOS system: Omarchy owns the OS, and Nix manages only the user environment through a standalone Home Manager configuration (`homeConfigurations.Omarchy-Air`). The host sets `platform = "arch"` to route it away from `nixosConfigurations`, and `home/default.nix` uses `isArch` to select Arch-adjusted modules (`roles/core/packages-arch.nix`, `roles/core/*-arch.nix`) that avoid shadowing Omarchy's packages and fighting its theme engine. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md) for the full design.
 
 ## Custom Services
 

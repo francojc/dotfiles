@@ -1,44 +1,14 @@
 {
   username,
   isDarwin,
-  isArch ? false,
   ...
 }: {
-  # Accept standard HM args
-  imports =
-    [
-      ./themes/themes.nix
-      ./syncthing.nix
-      ./document-tools.nix
-      ./ssh-aliases.nix
-      ./pimalaya
-    ]
-    ++ (
-      if isArch
-      then [
-        # Arch / Omarchy: Nix manages only the user environment. The package
-        # list and app configs are curated to avoid shadowing Omarchy's pacman
-        # packages and fighting its theme engine. See docs/arch-omarchy.md.
-        #
-        # Deliberately excluded on Arch: core.nix (use arch-core.nix), git.nix
-        # and kitty.nix (Omarchy/themes own them), shell/default.nix and
-        # tmux.nix (macOS/theme-coupled; see modules/arch/).
-        ./arch-core.nix
-        ../modules/arch/shell.nix
-        ../modules/arch/tmux.nix
-        ./wezterm.nix
-        ./vim.nix
-      ]
-      else [
-        ./core.nix
-        ./git.nix
-        ./kitty.nix
-        ./wezterm.nix
-        ./shell/default.nix
-        ./tmux.nix
-        ./vim.nix
-      ]
-    );
+  # Host-specific tooling is chosen by each host through `homeModules` (see
+  # roles/default.nix). Only truly universal modules live here.
+  imports = [
+    ./themes/themes.nix
+    ./ssh-aliases.nix
+  ];
 
   home = {
     # Use args passed by Home Manager
@@ -64,6 +34,4 @@
   # store-path-without-context warning. Not used here.
   manual.manpages.enable = false;
   programs.zsh.enable = true;
-
-  custom.documentTools.enable = true;
 }

@@ -73,8 +73,5 @@
   ];
 
   # Home Manager host-specific modules (if any)
-  homeModules = [
-    # Add host-specific home manager modules here if needed
-    # ./home.nix
-  ];
+  homeModules = (import ../../roles).legacyFull;
 }

@@ -18,7 +18,9 @@
   ];
 
   # Home Manager host-specific modules (if any)
-  homeModules = [
-    ../../home/gnome.nix
-  ];
+  homeModules =
+    (import ../../roles).legacyFull
+    ++ [
+      ../../home/gnome.nix
+    ];
 }

@@ -21,8 +21,11 @@
   theme = "tokyonight";
 
   # Appended to ./home by the standalone Home Manager builder.
-  homeModules = [
-    ../../profiles/arch/configuration.nix
-    ./local.nix # host-specific tweaks; keep last
-  ];
+  homeModules =
+    (import ../../roles).arch
+    ++ [
+      ../../profiles/arch/base.nix
+      ../../profiles/arch/native.nix
+      ./local.nix # host-specific tweaks; keep last
+    ];
 }
