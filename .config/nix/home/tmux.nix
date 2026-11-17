@@ -100,7 +100,7 @@
 
       # Popups
       # Obsidian vault popup which opens `~/Projects/obsidian/notes/weekly/{current_week_number}.md` in Neovim
-      bind-key o display-popup -w 80% -h 60% -d ~/projects/obsidian/Notes -T "Obsidian Daily Note" -E "nvim ~/Projects/obsidian/notes/plan/weekly/$(date +'%Y-W%V').md"
+      bind-key o display-popup -w 80% -h 60% -d ~/Projects/obsidian/notes -T "Obsidian Daily Note" -E "nvim ~/Projects/obsidian/notes/plan/weekly/$(date +'%Y-W%V').md"
 
       # Floating Git status popup using lazygit
       bind-key g display-popup -w 80% -h 60% -d '#{pane_current_path}' -T "Git Status" -E lazygit
@@ -181,15 +181,14 @@
   };
 
   # Create empty directories with .keep files so other tooling
-  # (e.g., tmux weather script, Obsidian) has somewhere to write.
+  # (e.g., the tmux weather script) has somewhere to write.
   # Only creates the .keep files if they do not already exist,
   # preserving any user modifications to these directories.
   #
   # Must run after writeBoundary since this is a filesystem mutation.
   home.activation.createKeepFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    mkdir -p "$HOME/.config/tmux" "$HOME/Obsidian/Notes"
+    mkdir -p "$HOME/.config/tmux"
     test -e "$HOME/.config/tmux/.keep" || : > "$HOME/.config/tmux/.keep"
-    test -e "$HOME/Obsidian/Notes/.keep" || : > "$HOME/Obsidian/Notes/.keep"
   '';
 
   # Cached weather script for the status bar.
