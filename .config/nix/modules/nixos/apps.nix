@@ -67,8 +67,8 @@
       xclip
       brave-origin
     ]
-    # These GNOME helpers are optional because the Quattro guest is a
-    # Hyprland-only aarch64 system, and not every extension is built there.
+    # These GNOME helpers are optional because not every extension is built
+    # on every nixpkgs system.
     ++ lib.optional (builtins.hasAttr "gnome-extensions-manager" pkgs) gnome-extensions-manager
     ++ lib.optional (builtins.hasAttr "gnome-tweaks" pkgs) gnome-tweaks
     ++ lib.optional (builtins.hasAttr "paperwm" gnomeExtensions) gnomeExtensions.paperwm

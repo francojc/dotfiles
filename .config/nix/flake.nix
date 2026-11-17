@@ -57,7 +57,6 @@
       "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
       "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
       "Mini-Rover" = import ./hosts/Mini-Rover/default.nix;
-      "nixos-quattro" = import ./hosts/nixos-quattro/default.nix;
       "omarchy" = import ./hosts/omarchy/default.nix;
     };
 
