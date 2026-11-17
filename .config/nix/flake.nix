@@ -203,19 +203,23 @@
     # Generate standalone Home Manager configurations for Arch/Omarchy hosts
     homeConfigurations = builtins.mapAttrs mkHomeConfig (filterHostsByPlatform "arch");
 
-    # Omarchy Nix-lite global tools, installed with `nix profile install`.
-    # Not a Home Manager output; see hosts/omarchy/packages.nix and PLAN-nix-lite.md.
-    packages.aarch64-linux.omarchy-global-tools = let
+    # Global tools for each Arch/Omarchy host, installed with `nix profile
+    # install .#<host>-global-tools`. Not a Home Manager output; the package
+    # list is shared in lib/packages/arch.nix.
+    packages.aarch64-linux = let
       pkgs = import nixpkgs {
         system = "aarch64-linux";
         config.allowUnfreePredicate = pkg:
           builtins.elem (nixpkgs.lib.getName pkg) ["copilot-language-server"];
       };
     in
-      pkgs.buildEnv {
-        name = "omarchy-global-tools";
-        paths = import ./hosts/omarchy/packages.nix pkgs;
-      };
+      nixpkgs.lib.mapAttrs' (
+        hostname: _:
+          nixpkgs.lib.nameValuePair "${hostname}-global-tools" (pkgs.buildEnv {
+            name = "${hostname}-global-tools";
+            paths = import ./lib/packages/arch.nix pkgs;
+          })
+      ) (nixpkgs.lib.filterAttrs (_: h: h.system == "aarch64-linux") (filterHostsByPlatform "arch"));
 
     # Formatters for supported systems
     formatter =

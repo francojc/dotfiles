@@ -1,8 +1,10 @@
-# Omarchy Nix-lite global package list (PLAN-nix-lite.md §4c).
+# Arch / Omarchy package list, shared by every Arch host (Omarchy-Air,
+# Omarchy-Mini, ...). Lives next to the other shared groups in lib/packages.
 #
 # Consumed by:
-#   - flake.nix: packages.aarch64-linux.omarchy-global-tools (nix profile install)
-#   - home/arch-core.nix: home.packages (Home Manager phase, not activated yet)
+#   - flake.nix: packages.aarch64-linux.<host>-global-tools, one per Arch host
+#     (nix profile install)
+#   - home/arch-core.nix: home.packages
 #
 # Not here, on purpose:
 #   - compilers and build tools (gcc, make, rustc, cargo, go, gnumake): pacman
@@ -14,10 +16,10 @@
 #   - anything Omarchy declares in /etc/mise/conf.d/omarchy-tools.toml or offers
 #     through omarchy-install-* (e.g. go, rust via dev-env)
 pkgs: let
-  lsp = import ../../lib/packages/lsp.nix pkgs;
-  cli = import ../../lib/packages/cli.nix pkgs;
-  dev = import ../../lib/packages/dev.nix pkgs;
-  media = import ../../lib/packages/media.nix pkgs;
+  lsp = import ./lsp.nix pkgs;
+  cli = import ./cli.nix pkgs;
+  dev = import ./dev.nix pkgs;
+  media = import ./media.nix pkgs;
 
   # Omarchy-only additions
   omarchyOnly = with pkgs; [

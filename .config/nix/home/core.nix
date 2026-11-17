@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  # Shared groups (also used by hosts/omarchy/packages.nix).
+  # Shared groups (also used by lib/packages/arch.nix).
   lsp = import ../lib/packages/lsp.nix pkgs;
   cli = import ../lib/packages/cli.nix pkgs;
   dev = import ../lib/packages/dev.nix pkgs;
@@ -42,7 +42,7 @@
     zoxide
 
     # Packages Omarchy already provides through pacman (see
-    # hosts/omarchy/packages.nix): these would shadow pacman copies on Omarchy.
+    # lib/packages/arch.nix): these would shadow pacman copies on Omarchy.
     file
     pass
     sqlite
