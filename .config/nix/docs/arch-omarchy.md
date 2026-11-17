@@ -106,6 +106,21 @@ Build without activating:
 nix build .#homeConfigurations.Omarchy-Air.activationPackage
 ```
 
+## Migrating the live machine after the rename
+
+Run on Omarchy-Air (the host was previously `omarchy`):
+
+```sh
+# Global tools output is now per host
+nix profile remove omarchy-global-tools
+nix profile install ~/.dotfiles/.config/nix#Omarchy-Air-global-tools
+
+# First switch uses the new host name
+home-manager switch --flake ~/.dotfiles/.config/nix#Omarchy-Air
+```
+
+SSH key files keep the `omarchy` nickname (`~/.ssh/id_ed25519_omarchy_*`), so existing remotes keep working.
+
 ## Follow-ups
 
 - The shared `home/shell/*.zsh` snippets still contain macOS-only helpers
