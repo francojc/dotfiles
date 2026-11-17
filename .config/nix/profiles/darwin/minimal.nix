@@ -38,19 +38,7 @@
         trusted = true;
       }
       {
-        name = "radiosilence/koan"; # koan
-        trusted = true;
-      }
-      {
         name = "ashuttl/linecast"; # linecast
-        trusted = true;
-      }
-      {
-        name = "as-foss/mandible"; # mandible
-        trusted = true;
-      }
-      {
-        name = "synapseq-foundation/synapseq"; # synapseq
         trusted = true;
       }
     ];
@@ -62,7 +50,6 @@
       "node" # Node.js; copilot-api launchd service and npm-global tools need it
       "pngpaste" # paste images (macOS only)
       "reminders-cli" # cli interface to macOS Reminders
-      "synapseq" # binaural sounds generator (tap only, no nixpkgs package)
     ];
 
     casks = [
