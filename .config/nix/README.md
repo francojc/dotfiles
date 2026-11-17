@@ -46,7 +46,7 @@
 │   ├── Mac-Minicore
 │   ├── Macbook-Airborne
 │   ├── Mini-Rover
-│   └── omarchy
+│   └── Omarchy-Air
 ├── Justfile
 ├── lib
 │   ├── packages
@@ -76,7 +76,7 @@ This flake manages four hosts (two nix-darwin, one NixOS, one Arch/Omarchy) with
 | **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | gruvbox | macOS | - |
 | **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
 | **Mini-Rover** | x86_64-linux (Mac Mini 2011) | ayu | GNOME (X11) | - |
-| **omarchy** | aarch64-linux (Arch Linux + Hyprland) | tokyonight | Omarchy (Home Manager standalone) | - |
+| **Omarchy-Air** | aarch64-linux (Omarchy dual-boot on MacBook Air) | tokyonight | Omarchy (Home Manager standalone) | - |
 
 ### Mac-Minicore
 
@@ -92,9 +92,9 @@ Portable development machine running macOS on Apple Silicon (MacBook Air M2/M3).
 
 Legacy NixOS workstation running on x86_64 (Mac Mini 2011). Configured with the "ayu" theme and the GNOME desktop (`home/gnome.nix`). This is a pure NixOS configuration without the Darwin-specific services.
 
-### omarchy
+### Omarchy-Air
 
-Arch Linux + Hyprland desktop managed by [Omarchy](https://omarchy.org/). Unlike the other Linux hosts, this is **not** a NixOS system: Omarchy owns the OS, and Nix manages only the user environment through a standalone Home Manager configuration (`homeConfigurations.omarchy`). The host sets `platform = "arch"` to route it away from `nixosConfigurations`, and `home/default.nix` uses `isArch` to select Arch-adjusted modules (`home/arch-core.nix`, `modules/arch/`) that avoid shadowing Omarchy's packages and fighting its theme engine. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md) for the full design.
+Arch Linux + Hyprland desktop managed by [Omarchy](https://omarchy.org/). Unlike the other Linux hosts, this is **not** a NixOS system: Omarchy owns the OS, and Nix manages only the user environment through a standalone Home Manager configuration (`homeConfigurations.Omarchy-Air`). The host sets `platform = "arch"` to route it away from `nixosConfigurations`, and `home/default.nix` uses `isArch` to select Arch-adjusted modules (`home/arch-core.nix`, `modules/arch/`) that avoid shadowing Omarchy's packages and fighting its theme engine. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md) for the full design.
 
 ## Custom Services
 
@@ -260,16 +260,16 @@ Omarchy is Arch Linux + Hyprland. Install Nix (the [Determinate Systems installe
 
 2. **Apply the configuration**:
    ```bash
-   home-manager switch --flake ~/.dotfiles/.config/nix#omarchy
-   # or, from the nix directory: just omarchy
+   home-manager switch --flake ~/.dotfiles/.config/nix#Omarchy-Air
+   # or, from the nix directory: just arch Omarchy-Air
    ```
 
 3. **Build without activating**:
    ```bash
-   nix build .#homeConfigurations.omarchy.activationPackage
+   nix build .#homeConfigurations.Omarchy-Air.activationPackage
    ```
 
-The host lives in `hosts/omarchy/default.nix`. System packages stay managed by Omarchy (`omarchy pkg add`, `pacman`, `yay`); only packages Omarchy does not ship are installed by Nix. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md).
+The host lives in `hosts/Omarchy-Air/default.nix`. System packages stay managed by Omarchy (`omarchy pkg add`, `pacman`, `yay`); only packages Omarchy does not ship are installed by Nix. See [`docs/arch-omarchy.md`](docs/arch-omarchy.md).
 
 ### Common Operations
 

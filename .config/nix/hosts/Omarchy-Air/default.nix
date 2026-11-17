@@ -1,4 +1,5 @@
-# Omarchy (Arch Linux + Hyprland) user environment.
+# Omarchy-Air: Omarchy (Arch Linux + Hyprland) dual-booted on the MacBook Air.
+# Native install with Nix added for the user environment.
 #
 # This host is deliberately NOT a NixOS system. Omarchy owns the OS (kernel,
 # systemd, pacman packages, theming); Nix manages only the user environment
@@ -22,5 +23,6 @@
   # Appended to ./home by the standalone Home Manager builder.
   homeModules = [
     ../../profiles/arch/configuration.nix
+    ./local.nix # host-specific tweaks; keep last
   ];
 }

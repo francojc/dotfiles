@@ -4,7 +4,9 @@
     "Macbook-Airborne" = "airborne";
     "Mac-Minicore" = "minicore";
     "Mini-Rover" = "rover";
-    "omarchy" = "omarchy";
+    # Nickname kept as "omarchy" so existing ~/.ssh/id_ed25519_omarchy_* keys
+    # on the Air keep working after the host rename.
+    "Omarchy-Air" = "omarchy";
   };
   nickname = devices.${hostname} or null;
 in {

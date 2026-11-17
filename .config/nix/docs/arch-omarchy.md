@@ -1,6 +1,6 @@
 # Arch / Omarchy (Home Manager standalone)
 
-This document describes how the `omarchy` host works in this flake. Omarchy is
+This document describes how the `Omarchy-Air` host works in this flake. Omarchy is
 Arch Linux + Hyprland, so it is **not** a NixOS system. Nix manages only the
 user environment through a standalone Home Manager configuration; the OS
 (kernel, systemd, pacman packages, Hyprland, the Omarchy shell and its theme
@@ -33,7 +33,7 @@ platformOf = host:
   else supportedSystems.${host.system}.platform;
 ```
 
-`hosts/omarchy/default.nix` sets `system = "aarch64-linux"` (a real nixpkgs
+`hosts/Omarchy-Air/default.nix` sets `system = "aarch64-linux"` (a real nixpkgs
 system) but `platform = "arch"`, so `filterHostsByPlatform "arch"` selects it
 for `homeConfigurations` while `nixosConfigurations` is unaffected.
 
@@ -44,7 +44,7 @@ for `homeConfigurations` while `nixosConfigurations` is unaffected.
 
 | File | Purpose |
 |------|---------|
-| `hosts/omarchy/default.nix` | Host definition: system, `platform = "arch"`, user, theme, `homeModules` |
+| `hosts/Omarchy-Air/default.nix` | Host definition: system, `platform = "arch"`, user, theme, `homeModules` |
 | `profiles/arch/configuration.nix` | HM module: `targets.genericLinux`, flake overlay, `allowUnfree`, Omarchy env bootstrap |
 | `home/arch-core.nix` | Arch counterpart to `core.nix`: only packages Omarchy does not ship |
 | `modules/arch/shell.nix` | Arch zsh: portable shell setup without macOS-isms |
@@ -97,13 +97,13 @@ shared `aliases.zsh`, which aliases `omarchy` to an SSH helper.
 
 ```sh
 # from ~/.dotfiles/.config/nix
-home-manager switch --flake .#omarchy      # or: just omarchy
+home-manager switch --flake .#Omarchy-Air      # or: just arch Omarchy-Air
 ```
 
 Build without activating:
 
 ```sh
-nix build .#homeConfigurations.omarchy.activationPackage
+nix build .#homeConfigurations.Omarchy-Air.activationPackage
 ```
 
 ## Follow-ups

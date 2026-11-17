@@ -41,12 +41,14 @@ nixos:
 
 # Build and activate the Omarchy standalone Home Manager configuration.
 # Omarchy owns the OS; this only switches the user environment.
-omarchy:
-  home-manager switch --flake .#omarchy
+# Defaults to this machine's hostname; pass the flake host name otherwise
+# (e.g. `just arch Omarchy-Air`).
+arch host=hostname:
+  home-manager switch --flake .#{{host}}
 
-# Build the Omarchy Home Manager configuration without activating it
-omarchy-build:
-  nix build .#homeConfigurations.omarchy.activationPackage
+# Build an Arch/Omarchy Home Manager configuration without activating it
+arch-build host=hostname:
+  nix build .#homeConfigurations.{{host}}.activationPackage
 
 ############################################################################
 #

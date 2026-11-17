@@ -57,7 +57,7 @@
       "Macbook-Airborne" = import ./hosts/Macbook-Airborne/default.nix;
       "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
       "Mini-Rover" = import ./hosts/Mini-Rover/default.nix;
-      "omarchy" = import ./hosts/omarchy/default.nix;
+      "Omarchy-Air" = import ./hosts/Omarchy-Air/default.nix;
     };
 
     # Special args shared by every builder. `isArch` distinguishes an Omarchy

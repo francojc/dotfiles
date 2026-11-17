@@ -25,6 +25,11 @@
       user = "jeridf";
     }
     {
+      host = "omarchy-air";
+      name = "omarchy-air";
+      user = "jeridf";
+    }
+    {
       host = "services";
       name = "core-services";
       user = "root";
