@@ -2,7 +2,7 @@
 
 <!--toc:start-->
 
-- [My Nix Darwin/NixOS Configuration](#my-nix-darwinnixos-configuration)
+- [My Nix Darwin/NixOS/Omarchy Configuration](#my-nix-darwinnixosomarchy-configuration)
   - [Configuration Structure](#configuration-structure)
   - [Host Configurations](#host-configurations)
   - [Custom Services](#custom-services)
@@ -22,91 +22,75 @@
 ```txt
 ├── flake.lock
 ├── flake.nix
+├── docs
+│   └── arch-omarchy.md
 ├── home
+│   ├── arch-core.nix
 │   ├── core.nix
 │   ├── default.nix
+│   ├── document-tools.nix
 │   ├── git.nix
-│   ├── i3
-│   │   └── default.nix
+│   ├── gnome.nix
 │   ├── kitty.nix
+│   ├── pimalaya
 │   ├── shell
-│   │   ├── aliases.zsh
-│   │   ├── default.nix
-│   │   └── fzf.zsh
-│   ├── sway
-│   │   ├── sway.nix
-│   │   ├── waybar.nix
-│   │   └── wofi.nix
+│   ├── ssh-aliases.nix
+│   ├── ssh-key-paths.nix
 │   ├── syncthing.nix
-│   ├── themes.nix
+│   ├── themes
+│   │   └── themes.nix
 │   ├── tmux.nix
 │   ├── vim.nix
 │   └── wezterm.nix
 ├── hosts
 │   ├── Mac-Minicore
-│   │   └── default.nix
 │   ├── Macbook-Airborne
-│   │   └── default.nix
-│   └── Mini-Rover
-│       ├── configuration.nix
-│       ├── default.nix
-│       └── hardware-configuration.nix
+│   ├── Mini-Rover
+│   └── omarchy
 ├── Justfile
 ├── lib
+│   ├── packages
 │   └── systems.nix
 ├── modules
+│   ├── arch
 │   ├── darwin
-│   │   ├── apps.nix
 │   ├── nixos
-│   │   └── apps.nix
 │   └── shared
-│       ├── fonts.nix
-│       ├── nix-core.nix
-│       └── packages.nix
+├── pkgs
 ├── profiles
+│   ├── arch
 │   ├── darwin
-│   │   └── configuration.nix
 │   └── nixos
-│       ├── configuration.nix
-│       ├── i3.nix
-│       └── sway.nix
 ├── README.md
 └── templates
     ├── academic-project
-    │   └── flake.nix
     └── data-science
-        └── flake.nix
 ```
 
 ## Host Configurations
 
-This flake manages three distinct hosts with different hardware platforms and purposes:
+This flake manages four hosts (two nix-darwin, one NixOS, one Arch/Omarchy) with different hardware platforms and purposes:
 
 | Host | Platform | Theme | Desktop | Services |
 |------|----------|-------|---------|----------|
-| **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | ayu | macOS | - |
+| **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | gruvbox | macOS | - |
 | **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
-| **Mini-Rover** | x86_64-linux (Mac Mini 2011) | nightfox | i3 (X11) | - |
-| **nixos-quattro** | aarch64-linux (Parallels on Apple Silicon) | ayu | Hyprland + Quickshell | Tailscale |
+| **Mini-Rover** | x86_64-linux (Mac Mini 2011) | ayu | GNOME (X11) | - |
 | **omarchy** | aarch64-linux (Arch Linux + Hyprland) | tokyonight | Omarchy (Home Manager standalone) | - |
 
 ### Mac-Minicore
 
-Primary development machine running macOS on Apple Silicon (M4 Mac Mini). Configured with the "ayu" theme and runs all custom services:
+Primary development machine running macOS on Apple Silicon (M4 Mac Mini). Configured with the "gruvbox" theme and runs the custom services (Copilot API proxy and the llama.cpp chat, embedding and FIM servers).
 
 Includes custom keyboard mapping (Fn key → Right Option).
 
 ### Macbook-Airborne
 
-Portable development machine running macOS on Apple Silicon (MacBook Air M2/M3). Configured with the "gruvbox" theme. Runs only the **reddix** service for lightweight operation, relying on Mac-Minicore for AI services via Tailscale.
-
-### nixos-quattro
-
-Apple Silicon NixOS lab host for a Hyprland + Quickshell proof of concept. The full implementation plan, Parallels VM creation instructions, guest partitioning/install sequence, validation checklist, and rollback path are in [`docs/nixos-quattro-parallels.md`](docs/nixos-quattro-parallels.md).
+Portable development machine running macOS on Apple Silicon (MacBook Air M2/M3). Configured with the "gruvbox" theme. Runs only the Copilot API proxy, relying on Mac-Minicore for local model servers via Tailscale.
 
 ### Mini-Rover
 
-Legacy NixOS workstation running on x86_64 (Mac Mini 2011). Configured with the "nightfox" theme and i3 window manager on X11. This is a pure NixOS configuration without the Darwin-specific services.
+Legacy NixOS workstation running on x86_64 (Mac Mini 2011). Configured with the "ayu" theme and the GNOME desktop (`home/gnome.nix`). This is a pure NixOS configuration without the Darwin-specific services.
 
 ### omarchy
 
@@ -121,7 +105,7 @@ A token sharing proxy for GitHub Copilot that prevents OAuth conflicts when usin
 - **Module**: `modules/darwin/copilot-api.nix`
 - **Port**: 4141 (accessible via Tailscale at 0.0.0.0)
 - **Purpose**: Share GitHub Copilot authentication tokens across multiple development machines
-- **Active on**: Mac-Minicore only
+- **Active on**: Mac-Minicore and Macbook-Airborne
 
 ## Theme System
 
@@ -129,23 +113,11 @@ This configuration includes a comprehensive theming system that applies consiste
 
 ### Available Themes
 
-The configuration supports 11 distinct themes, each with carefully coordinated color palettes:
-
-1. **arthur** - Classic desert-inspired warm tones
-2. **autumn** - Rich fall colors with deep browns and oranges
-3. **ayu** - Modern bluish-gray color scheme (Ayu Mirage variant)
-4. **blackmetal** - High-contrast monochromatic theme
-5. **catppuccin** - Popular pastel-inspired color scheme (Mocha variant)
-6. **gruvbox** - Retro groove colors with warm contrast
-7. **nightfox** - Deep blue night-time color palette
-8. **onedark** - Atom editor-inspired dark theme
-9. **tokyonight** - Tokyo night cityscape-inspired colors
-10. **vague** - Subtle, muted color scheme
-11. **vscode** - Visual Studio Code Dark+ theme
+The configuration supports 13 themes: `arthur`, `ayu`, `blackmetal`, `catppuccin`, `gruvbox`, `iceberg`, `kanso`, `nightfox`, `onedark`, `tender`, `tokyonight`, `vague`, and `vscode`. Each has a coordinated color palette; wallpapers live in `home/themes/images/`. On Omarchy hosts, Omarchy's own theme engine owns most theming (see `docs/arch-omarchy.md`).
 
 ### How Themes Work
 
-- **Definition**: All themes are defined in `home/themes.nix` with color palettes and application-specific settings
+- **Definition**: All themes are defined in `home/themes/themes.nix` with color palettes and application-specific settings
 - **Selection**: Each host declares its theme in `hosts/*/default.nix` (e.g., `theme = "ayu";`)
 - **Application**: Themes are applied system-wide to:
   - Terminal emulators (Kitty, WezTerm)
@@ -221,7 +193,7 @@ cd my-research
 This configuration includes Flatpak support:
 
 - **Aliases**: Defined in `home/shell/default.nix` for common Flatpak commands (e.g., `flat`, `flat-install`, `flat-search`).
-- **Service Enablement**: Flatpak services are enabled in `profiles/nixos/sway.nix`.
+- **Service Enablement**: Flatpak services are enabled in `modules/nixos/apps.nix`.
 - **Repositories**: Configured in `modules/nixos/apps.nix`.
 - **Integration**: Uses `nix-flatpak` for managing Flatpak packages, as defined in `flake.nix`.
 
