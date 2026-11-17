@@ -46,7 +46,8 @@
 │   ├── Mac-Minicore
 │   ├── Macbook-Airborne
 │   ├── Mini-Rover
-│   └── Omarchy-Air
+│   ├── Omarchy-Air
+│   └── Omarchy-Mini
 ├── Justfile
 ├── lib
 │   ├── packages
@@ -76,6 +77,7 @@ This flake manages four hosts (two nix-darwin, one NixOS, one Arch/Omarchy) with
 | **Mac-Minicore** | aarch64-darwin (M4 Mac Mini) | gruvbox | macOS | - |
 | **Macbook-Airborne** | aarch64-darwin (MacBook Air M2/M3) | gruvbox | macOS | - |
 | **Mini-Rover** | x86_64-linux (Mac Mini 2011) | ayu | GNOME (X11) | - |
+| **Omarchy-Mini** | aarch64-linux (Omarchy in a try-omarchy VM on Mac-Minicore) | tokyonight | Omarchy (Home Manager standalone) | - |
 | **Omarchy-Air** | aarch64-linux (Omarchy dual-boot on MacBook Air) | tokyonight | Omarchy (Home Manager standalone) | - |
 
 ### Mac-Minicore

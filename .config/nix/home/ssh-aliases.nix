@@ -30,6 +30,11 @@
       user = "jeridf";
     }
     {
+      host = "omarchy-mini";
+      name = "omarchy-mini";
+      user = "jeridf";
+    }
+    {
       host = "services";
       name = "core-services";
       user = "root";

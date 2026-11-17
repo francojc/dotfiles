@@ -7,6 +7,7 @@
     # Nickname kept as "omarchy" so existing ~/.ssh/id_ed25519_omarchy_* keys
     # on the Air keep working after the host rename.
     "Omarchy-Air" = "omarchy";
+    "Omarchy-Mini" = "omarchymini";
   };
   nickname = devices.${hostname} or null;
 in {

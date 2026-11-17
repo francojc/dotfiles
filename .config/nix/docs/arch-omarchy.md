@@ -121,6 +121,27 @@ home-manager switch --flake ~/.dotfiles/.config/nix#Omarchy-Air
 
 SSH key files keep the `omarchy` nickname (`~/.ssh/id_ed25519_omarchy_*`), so existing remotes keep working.
 
+## Two Omarchy hosts
+
+| | `Omarchy-Air` | `Omarchy-Mini` |
+|---|---|---|
+| Machine | MacBook Air, native dual-boot | try-omarchy VM on Mac-Minicore |
+| Profiles | `arch/base` + `arch/native` | `arch/base` + `arch/vm` |
+| Roles | `roles` `arch` list (same) | `roles` `arch` list (same) |
+| Tweak file | `hosts/Omarchy-Air/local.nix` | `hosts/Omarchy-Mini/local.nix` |
+| SSH key nickname | `omarchy` | `omarchymini` |
+
+- **Shared**: `roles/default.nix` (`arch` list), `profiles/arch/base.nix`, `lib/packages/arch.nix`.
+- **`native.nix`**: laptop/hardware settings for bare metal. Empty for now.
+- **`vm.nix`**: try-omarchy guest notes. It sets `PROJECTS_DIR` for the shared folder (`/Users/jeridf/Projects` on the Mac, mounted at `/mnt/mac`, linked to `~/Projects`). Keep databases, SQLite WAL and build caches on the guest disk.
+- **`local.nix`**: per-host manual tweaks, listed last in `homeModules`.
+- Each host gets its own `<host>-global-tools` flake output.
+
+```sh
+home-manager switch --flake .#Omarchy-Mini   # inside the VM
+just arch Omarchy-Mini
+```
+
 ## Follow-ups
 
 - The shared `home/shell/*.zsh` snippets still contain macOS-only helpers

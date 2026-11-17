@@ -58,6 +58,7 @@
       "Mac-Minicore" = import ./hosts/Mac-Minicore/default.nix;
       "Mini-Rover" = import ./hosts/Mini-Rover/default.nix;
       "Omarchy-Air" = import ./hosts/Omarchy-Air/default.nix;
+      "Omarchy-Mini" = import ./hosts/Omarchy-Mini/default.nix;
     };
 
     # Special args shared by every builder. `isArch` distinguishes an Omarchy
