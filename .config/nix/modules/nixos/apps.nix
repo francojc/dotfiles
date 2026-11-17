@@ -6,7 +6,7 @@
   # System Services
   services.tailscale.enable = true;
 
-  # Flatpak Configuration (mirrors homebrew structure from darwin/apps.nix)
+  # Flatpak Configuration (mirrors the homebrew structure in profiles/darwin/minimal.nix)
   services.flatpak = {
     enable = true;
 

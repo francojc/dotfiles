@@ -1,4 +1,7 @@
 # Host-specific configuration for Mac-Minicore
+#
+# Thin macOS host: system defaults, the LLM servers (Metal stays on macOS) and
+# a try-omarchy VM (Omarchy-Mini) that does the real work.
 {
   # System configuration
   system = "aarch64-darwin";
@@ -12,55 +15,12 @@
 
   # Host-specific modules
   hostModules = [
-    ../../profiles/darwin/configuration.nix
-    ../../modules/darwin/llama-qwen-server.nix
-    ../../modules/darwin/llama-embed-server.nix
-    ../../modules/darwin/llama-fim-server.nix
-    ../../modules/darwin/copilot-api.nix
+    ../../profiles/darwin/base.nix
+    ../../profiles/darwin/minimal.nix
+    ../../profiles/darwin/llm-host.nix
 
-    # Inline module for host-specific service configuration
+    # Inline module for host-specific configuration
     {
-      custom.services = {
-        copilotApi.enable = true;
-
-        # Flagship Qwen3.6-35B-A3B-MTP chat endpoint on :8081
-        llamaQwen = {
-          enable = true;
-          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-qwen.sh";
-        };
-
-        # Dedicated embeddings endpoint on :8082
-        llamaEmbed = {
-          enable = true;
-          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-embed.sh";
-        };
-
-        # Fill-in-the-middle code completion endpoint on :8080
-        llamaFim = {
-          enable = true;
-          scriptPath = "/Users/jeridf/.llama.cpp/scripts/start-llama-fim.sh";
-        };
-      };
-
-      # Host-specific Homebrew packages (merged with shared apps.nix)
-      homebrew = {
-        taps = [];
-        brews = [
-          # Mac-Minicore-only brews here
-          "llama.cpp" # LLaMA model inference
-          "ollama" # Ollama
-          "hf" # huggingface cli
-          "llmfit" # LLM system fit
-          # Note: omlx installed via .dmg
-        ];
-        casks = [
-          # Mac-Minicore-only casks here
-          "transmission" # torrent client
-          "google-drive" # Google Drive sync
-          "lm-studio" # LLM interface
-        ];
-      };
-
       system.keyboard = {
         userKeyMapping = [
           {
@@ -72,6 +32,6 @@
     }
   ];
 
-  # Home Manager host-specific modules (if any)
-  homeModules = (import ../../roles).legacyFull;
+  # Home Manager modules (see roles/default.nix)
+  homeModules = (import ../../roles).mac;
 }

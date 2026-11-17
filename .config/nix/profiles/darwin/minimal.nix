@@ -1,7 +1,13 @@
-# Shared Homebrew packages for all Darwin hosts.
-# Host-specific packages live in each host's default.nix.
+# Minimal macOS host profile, shared by Mac-Minicore and Macbook-Airborne.
+#
+# The Macs are thin hosts now: real tooling lives on the Omarchy hosts
+# (Omarchy-Air natively, Omarchy-Mini in a try-omarchy VM). Only keep here:
+#   - formulae with no aarch64-linux nixpkgs package (macOS-only tools)
+#   - `node`, which the copilot-api launchd service needs
+#   - the two GUI apps: orbstack and helium-browser
+# `cleanup = "zap"` is on, so removing an entry uninstalls it and its data.
+# Host-specific entries live in each host's default.nix / profiles.
 {pkgs, ...}: {
-  # Add system packages
   environment.systemPackages = with pkgs; [
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command
@@ -37,19 +43,11 @@
         trusted = true;
       }
       {
-        name = "1broseidon/tap"; # ketch
-        trusted = true;
-      }
-      {
         name = "ashuttl/linecast"; # linecast
         trusted = true;
       }
       {
         name = "as-foss/mandible"; # mandible
-        trusted = true;
-      }
-      {
-        name = "shobhit99/tap"; # supercmd
         trusted = true;
       }
       {
@@ -59,41 +57,20 @@
     ];
 
     brews = [
-      "borders" # jankyborders
-      "hunk" # git diff tool
-      "ketch" # web search, library docs, scraping cli
-      "koan" # Navidrome TUI player
-      "linecast" # TUI weather
-      "llm" # llm.dataset.io
+      "borders" # jankyborders (macOS only)
+      "koan" # Navidrome TUI player (tap only, no nixpkgs package)
+      "linecast" # TUI weather (not in the locked nixpkgs; move to Nix after the next flake update)
       "mole" # terminal cleanup app for macOS
       "mandible" # macOS app launcher
-      "nmap" # network scanner
-      "node" # Node.js
-      "pandoc" # Document converter
-      "pngpaste" # paste images
+      "node" # Node.js; copilot-api launchd service and npm-global tools need it
+      "pngpaste" # paste images (macOS only)
       "reminders-cli" # cli interface to macOS Reminders
-      "rename" # file renaming utility
-      "synapseq" # binaural sounds generator
-      "tree-sitter-cli" # tree-sitter CLI
-      "yt-dlp" # YouTube video downloader
+      "synapseq" # binaural sounds generator (tap only, no nixpkgs package)
     ];
 
     casks = [
-      # "android-platform-tools" # android (TV)
-      "appcleaner" # remove macOS apps
-      "betterdisplay" # display tweaks
-      "bettermouse" # mouse tweaks
-      "bettershot" # screenshot tool
       "helium-browser" # browser (ungoogled-chromium)
-      "crest-browser" # browser
-      "kap" # screen recording
-      "kitty" # terminal emulator (moved to Nix)
-      "obsidian" # note-taking
-      "quarto" # document editor
-      "supercmd" # launcher+
-      "zoom" # video conferencing
-      "zotero" # reference manager
-      # "keycastr" # keystroke visualizer
+      "orbstack" # Docker/Linux containers
     ];
   };
 }

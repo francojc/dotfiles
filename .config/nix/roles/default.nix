@@ -8,13 +8,24 @@ let
 in rec {
   # Everything the old non-Arch branch of home/default.nix imported
   # (plus the shared sync/docs/mail modules that every host used to get).
-  # Used by Mac-Minicore, Macbook-Airborne and Mini-Rover until step 6 trims
-  # the Macs.
+  # Now used only by Mini-Rover (untouched by the Mac demotion).
   legacyFull = [
     (heavy + "/sync.nix")
     (heavy + "/docs.nix")
     (heavy + "/mail.nix")
     (core + "/packages.nix")
+    (core + "/gpg.nix")
+    (core + "/git.nix")
+    (core + "/terminal.nix")
+    (core + "/shell.nix")
+    (core + "/tmux.nix")
+    (core + "/editor.nix")
+  ];
+
+  # Minimal macOS hosts (Mac-Minicore, Macbook-Airborne): shell, git, editor,
+  # tmux, terminal, gpg and a short package list. No mail, docs, sync or LSPs.
+  mac = [
+    (core + "/packages-mac.nix")
     (core + "/gpg.nix")
     (core + "/git.nix")
     (core + "/terminal.nix")

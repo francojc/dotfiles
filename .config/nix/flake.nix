@@ -18,10 +18,6 @@
     determinate = {
       url = "github:DeterminateSystems/determinate";
     };
-    virby = {
-      url = "github:quinneden/virby-nix-darwin";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
     #
     # Pimalaya tooling -- not in nixpkgs. Pin via flake inputs so
     # `builtins.getFlake` is allowed without --impure and refs are locked.
@@ -46,7 +42,6 @@
     home-manager,
     nix-flatpak,
     determinate,
-    virby,
     ...
   }: let
     # Import system definitions and host configurations
@@ -122,8 +117,6 @@
           modules =
             commonModules
             ++ [
-              # Darwin-specific modules
-              ./modules/darwin/apps.nix
               # Rosetta Linux builder (bootstraps via Determinate native Linux builder)
               # nix-rosetta-builder.darwinModules.default
               # {

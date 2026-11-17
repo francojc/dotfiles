@@ -1,4 +1,7 @@
 # Host-specific configuration for Macbook-Airborne
+#
+# Thin macOS host. Runs only the Copilot API proxy; local model servers live on
+# Mac-Minicore (reached over Tailscale). Real tooling lives on Omarchy-Air.
 {
   # System configuration
   system = "aarch64-darwin";
@@ -12,38 +15,15 @@
 
   # Host-specific modules
   hostModules = [
-    ../../profiles/darwin/configuration.nix
-    ../../modules/darwin/virby.nix
+    ../../profiles/darwin/base.nix
+    ../../profiles/darwin/minimal.nix
+    ../../modules/darwin/determinate.nix
     ../../modules/darwin/copilot-api.nix
     {
       custom.services.copilotApi.enable = true;
     }
-
-    # Host-specific Homebrew packages (merged with shared apps.nix)
-    {
-      homebrew = {
-        taps = [
-          {
-            name = "acrogenesis/macchanger";
-            trusted = true;
-          } # macchanger
-        ];
-        brews = [
-          # Macbook-Airborne-only brews here
-          "macchanger" # MAC address changer
-        ];
-        casks = [
-          "dropbox" # cloud storage
-          "orbstack" # Docker alternative
-          # "android-platform-tools" # ADB and Fastboot (for TVs)
-          # "balenaetcher" # disk image writer
-          # "calibre" # eBook management
-          # "transcribe" # help transcribe recorded music
-        ];
-      };
-    }
   ];
 
-  # Home Manager host-specific modules (if any)
-  homeModules = (import ../../roles).legacyFull;
+  # Home Manager modules (see roles/default.nix)
+  homeModules = (import ../../roles).mac;
 }
