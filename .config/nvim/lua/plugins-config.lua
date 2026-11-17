@@ -864,8 +864,8 @@ local function load(name, fn)
 end
 
 local obsidian_workspaces = {
-	{ name = "Notes", path = "~/Obsidian/Notes/" },
-	{ name = "Personal", path = "~/Obsidian/Personal/" },
+	{ name = "Notes", path = "~/Projects/obsidian/notes/" },
+	{ name = "Personal", path = "~/Projects/obsidian/personal/" },
 }
 
 local function setup_obsidian()
