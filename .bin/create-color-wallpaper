@@ -19,7 +19,7 @@ USAGE:
 DESCRIPTION:
     Creates solid color wallpaper images from hex color values read from
     standard input. Each color generates a 1920x1080 PNG file with the
-    naming pattern: color-{hex_value}.png
+    naming pattern: color-{hex_value}.png (no # in file name)
 
     Colors should be provided in hex format (e.g., #FF0000, #00FF00, #0000FF).
 
@@ -32,13 +32,13 @@ INPUT:
 
 OUTPUT:
     - Creates PNG files in current directory
-    - File names: color-{hex_value}.png
+    - File names: color-{hex_value}.png (e.g. color-ff0000.png)
     - Image size: 1920x1080 pixels
     - Format: PNG
 
 EXAMPLES:
     echo "#FF0000" | create-color-wallpaper
-    # Creates color-#FF0000.png (red wallpaper)
+    # Creates color-FF0000.png (red wallpaper)
 
     cat colors.txt | create-color-wallpaper
     # Process multiple colors from file
@@ -65,7 +65,9 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 fi
 
 while read color; do
-    magick -size 1920x1080 xc:"${color}" "color-${color}.png"
+    color="${color#\#}"
+    [[ -z "$color" ]] && continue
+    magick -size 1920x1080 xc:"#${color}" "color-${color}.png"
 done
 
 # End of create-color-wallpaper.sh
