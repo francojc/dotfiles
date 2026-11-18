@@ -24,7 +24,13 @@ source "$HOME/.config/bash/env.bash"
 # Hooks (tirith PREEXEC, vi cursor) live in ~/.config/bash/blerc.
 bind -f "$OMARCHY_PATH/default/bash/inputrc"
 if [[ -r /usr/share/blesh/ble.sh ]]; then
-  source /usr/share/blesh/ble.sh --attach=none --rcfile="$HOME/.config/bash/blerc"
+  _blesh=/usr/share/blesh/ble.sh
+elif [[ -r $HOME/.nix-profile/share/blesh/ble.sh ]]; then
+  _blesh=$HOME/.nix-profile/share/blesh/ble.sh
+fi
+if [[ -n ${_blesh-} ]]; then
+  source "$_blesh" --attach=none --rcfile="$HOME/.config/bash/blerc"
+  unset _blesh
 fi
 
 # --- 5. Omarchy's aliases, functions and defaults. Don't edit those; override below. ---
