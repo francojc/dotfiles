@@ -142,9 +142,10 @@
       # -------------------------------------------------
 
       # Status bar
-      set -g status on
+      set -g status 2
+      set -g status-format[1] ""
       set -g status-position top # top/bottom
-      set -g status-style bg='${theme.colors.bg1}',fg='${theme.colors.fg1}'
+      set -g status-style bg='#1c1c1c',fg='#e8e6e1'
       set -g status-justify left
 
       # Status bar configuration with theme colors
@@ -179,17 +180,6 @@
       yank
     ];
   };
-
-  # Create empty directories with .keep files so other tooling
-  # (e.g., the tmux weather script) has somewhere to write.
-  # Only creates the .keep files if they do not already exist,
-  # preserving any user modifications to these directories.
-  #
-  # Must run after writeBoundary since this is a filesystem mutation.
-  home.activation.createKeepFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    mkdir -p "$HOME/.config/tmux"
-    test -e "$HOME/.config/tmux/.keep" || : > "$HOME/.config/tmux/.keep"
-  '';
 
   # Cached weather script for the status bar.
   xdg.configFile."tmux/tmux-weather.sh" = {

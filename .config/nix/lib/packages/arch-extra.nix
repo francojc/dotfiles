@@ -25,7 +25,7 @@ with pkgs; [
   just # run project commands
   bob-nvim # Neovim version manager: pre-releases (repo needs Neovim 0.13+)
 
-  # tmux plugins loaded from ~/.nix-profile/share/tmux-plugins (.config/tmux/overrides.conf)
+  # tmux plugins (loaded by roles/core/tmux-arch.nix)
   tmuxPlugins.fzf-tmux-url
   tmuxPlugins.vim-tmux-navigator
   tmuxPlugins.yank

@@ -153,9 +153,11 @@
       # -------------------------------------------------
 
       # Status bar
-      set -g status on
+      set -g status 2
+      set -g status-format[1] ""
       set -g status-position top
       set -g status-justify left
+      set -g status-style bg='#1c1c1c',fg='#e8e6e1'
 
       set -g status-left '   #S  ▌  '
       set -g status-left-length 40
@@ -181,13 +183,6 @@
     fzf
     wl-clipboard
   ];
-
-  # Create empty directories with .keep files so other tooling
-  # (e.g., the tmux weather script) has somewhere to write.
-  home.activation.createKeepFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    mkdir -p "$HOME/.config/tmux"
-    test -e "$HOME/.config/tmux/.keep" || : > "$HOME/.config/tmux/.keep"
-  '';
 
   # Pi awaiting-agent switcher.
   home.file.".local/bin/pi-waiting" = {
