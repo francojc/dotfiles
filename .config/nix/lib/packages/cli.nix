@@ -12,6 +12,7 @@ with pkgs; [
   ncdu # Disk usage analyzer
   rclone # Cloud storage sync
   repgrep # ripgrep across files
+  sniffnet # Network packet sniffer
   speedtest-cli # Internet speed test
   tirith # Terminal-based security for devs and AI
   tuicr # Git code review
