@@ -13,6 +13,7 @@ with pkgs; [
   yt-dlp # YouTube video downloader
 
   # Arch-only additions
+  blesh # Bash shell customization
   copilot-language-server # Copilot LSP for Next Edit Suggestions
   nix-doc # Nix documentation server
   chafa # Terminal image viewer (snacks.nvim image support)
