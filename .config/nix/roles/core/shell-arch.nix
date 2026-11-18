@@ -10,6 +10,7 @@
 {
   config,
   pkgs,
+  hostname,
   ...
 }: {
   programs = {
@@ -136,7 +137,7 @@
         # Switch the Omarchy Home Manager configuration from any directory.
         # `-b backup` moves conflicting unmanaged files aside (e.g. tmux.conf)
         # instead of aborting. home-manager is not on PATH, so use `nix run`.
-        nswitch = "nix run home-manager/master -- switch -b backup --flake ${config.home.homeDirectory}/.dotfiles/.config/nix#omarchy";
+        nswitch = "nix run home-manager/master -- switch -b backup --flake ${config.home.homeDirectory}/.dotfiles/.config/nix.#${hostname}";
       };
     };
 
