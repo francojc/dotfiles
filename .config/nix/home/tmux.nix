@@ -145,7 +145,7 @@
       set -g status 2
       set -g status-format[1] ""
       set -g status-position top # top/bottom
-      set -g status-style bg='#1c1c1c',fg='#e8e6e1'
+      set -g status-style bg=default,fg='#e8e6e1'
       set -g status-justify left
 
       # Status bar configuration with theme colors

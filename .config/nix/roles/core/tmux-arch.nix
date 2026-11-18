@@ -153,11 +153,11 @@
       # -------------------------------------------------
 
       # Status bar
-      set -g status 2
-      set -g status-format[1] ""
+      set -g status 1
+      # set -g status-format[1] ""
       set -g status-position top
       set -g status-justify left
-      set -g status-style bg='#1c1c1c',fg='#e8e6e1'
+      set -g status-style bg=default,fg='#e8e6e1'
 
       set -g status-left '   #S  ▌  '
       set -g status-left-length 40
