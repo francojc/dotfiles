@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# tidemail wrapper — enables TideMail's built-in Gmail OAuth by exporting the
+# Google Desktop client from pass (EMAIL/GMAIL_OAUTH_CLIENT, shared with gmail-oauth).
+# TideMail only offers Gmail OAuth when both env vars are set.
+set -euo pipefail
+
+if [[ -z "${TIDEMAIL_GOOGLE_CLIENT_ID:-}" ]]; then
+  if client_json=$(pass show EMAIL/GMAIL_OAUTH_CLIENT 2>/dev/null); then
+    {
+      read -r TIDEMAIL_GOOGLE_CLIENT_ID
+      read -r TIDEMAIL_GOOGLE_CLIENT_SECRET
+    } < <(python3 -I -c '
+import json, sys
+d = json.load(sys.stdin)
+c = d.get("installed") or d.get("web")
+print(c["client_id"]); print(c["client_secret"])
+' <<<"$client_json")
+    export TIDEMAIL_GOOGLE_CLIENT_ID TIDEMAIL_GOOGLE_CLIENT_SECRET
+  else
+    echo "tidemail wrapper: pass EMAIL/GMAIL_OAUTH_CLIENT unavailable; Gmail OAuth disabled" >&2
+  fi
+fi
+
+exec /usr/bin/tidemail "$@"

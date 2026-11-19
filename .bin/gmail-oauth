@@ -1,0 +1,136 @@
+#!/usr/bin/env -S python3 -I
+"""gmail-oauth — OAuth2 helper for aerc + Gmail (XOAUTH2).
+
+Secrets live in pass:
+  EMAIL/GMAIL_OAUTH_CLIENT  Google "installed app" client JSON
+  EMAIL/GMAIL_OAUTH         refresh token (first line)
+
+Usage:
+  gmail-oauth import-client <client_secret.json>   # store client JSON in pass
+  gmail-oauth authorize <email>                    # browser consent, store refresh token
+  gmail-oauth token                                # print fresh access token (aerc cred-cmd)
+"""
+import http.server
+import json
+import secrets
+import subprocess
+import sys
+import urllib.parse
+import urllib.request
+import webbrowser
+
+CLIENT_ENTRY = "EMAIL/GMAIL_OAUTH_CLIENT"
+TOKEN_ENTRY = "EMAIL/GMAIL_OAUTH"
+SCOPE = "https://mail.google.com/"
+TOKEN_URI = "https://oauth2.googleapis.com/token"
+AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
+
+
+def die(msg):
+    print(f"gmail-oauth: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def pass_show(entry):
+    r = subprocess.run(["pass", "show", entry], capture_output=True, text=True)
+    if r.returncode != 0:
+        die(f"pass show {entry} failed: {r.stderr.strip()}")
+    return r.stdout
+
+
+def pass_insert(entry, content):
+    r = subprocess.run(["pass", "insert", "-m", "-f", entry], input=content, text=True,
+                       capture_output=True)
+    if r.returncode != 0:
+        die(f"pass insert {entry} failed: {r.stderr.strip()}")
+
+
+def client():
+    data = json.loads(pass_show(CLIENT_ENTRY))
+    return data.get("installed") or data.get("web") or die("bad client JSON")
+
+
+def post(url, fields):
+    req = urllib.request.Request(url, data=urllib.parse.urlencode(fields).encode())
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.load(r)
+    except urllib.error.HTTPError as e:
+        die(f"token endpoint HTTP {e.code}: {e.read().decode(errors='replace')}")
+
+
+def import_client(path):
+    with open(path) as f:
+        raw = f.read()
+    json.loads(raw)  # validate
+    pass_insert(CLIENT_ENTRY, raw)
+    print(f"stored client in pass:{CLIENT_ENTRY}")
+
+
+def authorize(email):
+    c = client()
+    state = secrets.token_urlsafe(16)
+    result = {}
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            if q.get("state", [None])[0] != state:
+                self.send_response(400); self.end_headers(); return
+            result.update({k: v[0] for k, v in q.items()})
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"Done. You can close this tab.")
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+    redirect = f"http://localhost:{srv.server_port}"
+    url = AUTH_URI + "?" + urllib.parse.urlencode({
+        "client_id": c["client_id"], "redirect_uri": redirect, "response_type": "code",
+        "scope": SCOPE, "access_type": "offline", "prompt": "consent",
+        "login_hint": email, "state": state,
+    })
+    print("Open this URL if a browser does not launch:\n\n" + url + "\n", file=sys.stderr)
+    webbrowser.open(url)
+    while not result:
+        srv.handle_request()
+    if "error" in result:
+        die(f"auth error: {result['error']}")
+
+    tok = post(c.get("token_uri", TOKEN_URI), {
+        "code": result["code"], "client_id": c["client_id"],
+        "client_secret": c["client_secret"], "redirect_uri": redirect,
+        "grant_type": "authorization_code",
+    })
+    if "refresh_token" not in tok:
+        die(f"no refresh_token in response: {tok}")
+    pass_insert(TOKEN_ENTRY, tok["refresh_token"] + "\n")
+    print(f"stored refresh token in pass:{TOKEN_ENTRY}")
+
+
+def token():
+    c = client()
+    refresh = pass_show(TOKEN_ENTRY).splitlines()[0].strip()
+    tok = post(c.get("token_uri", TOKEN_URI), {
+        "refresh_token": refresh, "client_id": c["client_id"],
+        "client_secret": c["client_secret"], "grant_type": "refresh_token",
+    })
+    print(tok["access_token"])
+
+
+def main(argv):
+    if len(argv) == 3 and argv[1] == "import-client":
+        import_client(argv[2])
+    elif len(argv) == 3 and argv[1] == "authorize":
+        authorize(argv[2])
+    elif len(argv) == 2 and argv[1] == "token":
+        token()
+    else:
+        die(__doc__)
+
+
+if __name__ == "__main__":
+    main(sys.argv)
