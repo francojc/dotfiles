@@ -1,6 +1,7 @@
 ---
 name: tuicr
-description: Use tuicr persisted review sessions to launch a local Git-diff review in tmux, read user-authored inline comments, and apply requested fixes. Use when user asks to review Pi changes, comments added in tuicr, a commit range, or a local Git diff.
+description: Launch a tuicr Git-diff review in tmux, read inline comments, apply requested fixes.
+disable-model-invocation: true
 ---
 
 # tuicr Review Workflow

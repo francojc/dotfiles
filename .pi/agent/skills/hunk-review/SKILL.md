@@ -1,6 +1,7 @@
 ---
 name: hunk-review
-description: Interacts with live Hunk diff review sessions via CLI. Inspects review focus, navigates files and hunks, reloads session contents, and adds inline review comments. Use when the user has a Hunk session running or wants to review diffs interactively.
+description: "Interact with live Hunk diff review sessions via CLI: navigate files and hunks, reload contents, add inline review comments."
+disable-model-invocation: true
 ---
 
 # Hunk Review

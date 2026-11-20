@@ -1,6 +1,7 @@
 ---
 name: skill-index
-description: List and describe the Pi skills installed on this machine — where each one lives, how to invoke it, and which arguments it documents. Use when the user asks what skills exist, what a skill is called, how to invoke a skill, what arguments or flags a skill takes, which skills are project vs user vs package scope, or wants a quick reference of available skills instead of reading every SKILL.md.
+description: "List installed Pi skills: location, invocation, documented arguments, scope (project, user, package)."
+disable-model-invocation: true
 ---
 
 # Skill index

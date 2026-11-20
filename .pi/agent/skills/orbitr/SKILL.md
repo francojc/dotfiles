@@ -1,6 +1,6 @@
 ---
 name: orbitr
-description: Search academic literature and manage references with the `orbitr` CLI. Use for academic literature searches, paper lookups, citation exploration, finding related work, author bibliographies, query translation, exporting references to BibTeX/RIS/CSL-JSON, and managing a Zotero library.
+description: "Search academic literature and manage references with the orbitr CLI: paper lookups, citation exploration, related work, author bibliographies, BibTeX/RIS/CSL-JSON export, Zotero library management."
 ---
 
 # Orbitr Research Skill

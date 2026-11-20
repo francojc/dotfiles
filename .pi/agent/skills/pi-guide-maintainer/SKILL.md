@@ -1,6 +1,6 @@
 ---
 name: pi-guide-maintainer
-description: Maintain Jerid's user-facing Pi Guide markdown document for installed Pi packages, global/local extensions, skills, shortcuts, commands, configuration, best practices, and gotchas. Use when Pi extensions or packages are installed, removed, updated, diagnosed, or when the user asks to document Pi behavior.
+description: Maintain Jerid's Pi Guide doc (packages, extensions, skills, shortcuts, commands, config, gotchas). Use when Pi extensions or packages change or when asked to document Pi behavior.
 ---
 
 # Pi Guide Maintainer

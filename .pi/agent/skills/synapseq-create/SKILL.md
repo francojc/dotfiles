@@ -1,6 +1,7 @@
 ---
 name: synapseq-create
-description: Create new SynapSeq .spsq score files from natural-language sound or listening-session descriptions. Supports optional `%ambience` selectors that retrieve and locally integrate Freesound field-recording/nature backgrounds.
+description: Create SynapSeq .spsq score files from sound or listening-session descriptions, with optional %ambience Freesound backgrounds.
+disable-model-invocation: true
 ---
 
 # Create SynapSeq Scores

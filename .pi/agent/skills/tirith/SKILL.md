@@ -1,14 +1,7 @@
 ---
 name: tirith
 description: >
-  Terminal security analysis with tirith. Use when the user asks about
-  protecting shell environments, intercepting dangerous commands, scanning
-  repositories for hidden content or config poisoning, scoring URLs for
-  homograph attacks, safely downloading and executing scripts, managing trust
-  patterns, or investigating tirith blocks. Also respond to mentions of
-  "tirith", "pipe-to-shell", "homograph", "ANSI injection", "bidi override",
-  "zero-width", "punycode", "terminal security", "shell hook",
-  "invisible unicode", or "config poisoning".
+  Terminal security with tirith: intercept dangerous commands, scan repos for hidden content, score URLs, safe pipe-to-shell alternatives, trust patterns, block investigation. Triggers: tirith, pipe-to-shell, homograph, ANSI injection, bidi override, zero-width, punycode, invisible unicode, config poisoning.
 ---
 
 # tirith — Terminal Security (Pi setup)
