@@ -123,6 +123,8 @@ alias kcr='ketch crawl'
 # Switch the Omarchy Home Manager config from any directory. Mirrors the zsh
 # alias in modules/arch/shell.nix (shellAliases); HM only generates zsh aliases.
 alias nswitch='nix run home-manager/master -- switch -b backup --flake $HOME/.dotfiles/.config/nix#$(hostname)'
+# Show Home Manager news entries for this host's flake config.
+alias hmnews='home-manager news --flake $HOME/.dotfiles/.config/nix#$(hostname)'
 
 # --- MISC ---
 alias last='fc -ln -1'

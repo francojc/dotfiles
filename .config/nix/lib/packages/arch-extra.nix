@@ -10,6 +10,7 @@ with pkgs; [
   nmap # network scanner
   rename # file renaming utility
   tree-sitter # tree-sitter CLI
+  ttyper # typing speed test
   yt-dlp # YouTube video downloader
 
   # Arch-only additions
