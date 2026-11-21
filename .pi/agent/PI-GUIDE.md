@@ -10,9 +10,8 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 - Machine-local package versions, model configuration, theme, and extension inventory live in ignored `~/.pi/agent/PI-INVENTORY.local.md`.
 - `pi-guide-autoupdate.ts` refreshes local inventory at interactive startup. Set `PI_GUIDE_AUTOUPDATE=0` to disable it.
 - Package or local-extension changes that alter user-facing behavior need a deliberate guide edit. Refresh Pi with `/reload` after config changes.
-- Model providers are managed through the `pi-bifrost` gateway package. The former `copilot-api-discovery.ts`, `openrouter-models.ts`, and `copilot-usage/` extensions were removed in favor of it, or archived; the `pi-bifrost` pattern (discover through `refreshModels`, cache to disk, ship metadata baseline, never block startup) is the reference for any future dynamic provider.
-- One credential serves every model: the Bifrost virtual key from `pass show API/BIFROST_VK`. Direct providers (opencode, openrouter, github-copilot, typesafe) are not configured and hold no keys. `~/.pi/agent/auth.json` is not used; Pi may recreate it as an empty `{}`, which is harmless.
-- Two providers are registered: `bifrost` exposes the full gateway catalog, and `bifrost-auto` exposes only `auto` for the complexity router. Default is `bifrost-auto/auto`, because the router picks the model.
+- Model providers are built into Pi. Copilot models come from `github-copilot` via `~/.pi/agent/auth.json`. The former `copilot-api-discovery.ts`, `openrouter-models.ts`, and `copilot-usage/` extensions were removed or archived.
+- Automatic session names and commit-message generation use `github-copilot/claude-haiku-5.5`.
 
 ## Quick commands
 
@@ -26,8 +25,6 @@ Living guide for Jerid's Pi setup. Maintained by `/skill:pi-guide-maintainer`.
 | `/indicator` | Switch custom working indicator. |
 | `/todos` | Show current branch todo list. |
 | `/waiting` | List Pi agents awaiting attention and jump via TMUX. |
-| `/bifrost-context` | Show the routed model, its real window, and the declared window comparison. |
-| `/bifrost-clear` | Clear the Bifrost route status line. |
 | `/typesafe status` | Show TypeSafe consent, auth, usage, spend estimate, and caps. |
 | `/typesafe enable` | Allow agent `typesafe_evaluate` calls for current session after data notice. |
 | `/typesafe playground` | Edit and run Jev request without adding result to model context. |
@@ -49,7 +46,6 @@ Package inventory and resolved versions are machine-local. See `~/.pi/agent/PI-I
 | `@plannotator/pi-extension` | Plan mode, browser-based plan review/annotation, restricted planning phase. |
 | `pi-typesafe` | Jev `typesafe_evaluate` tool, `/typesafe` playground/auth/status commands, and typed API for other extensions. |
 | `@earendil-works/pi-coding-agent` | Runtime API used by local extensions and dynamic model discovery. |
-| `pi-bifrost` | Bifrost gateway provider with disk-cached model discovery and a packaged metadata baseline. Installed from the `jeridf/pi-bifrost` Forgejo repo. |
 | `pi-web-access` | Web search, URL fetching, PDF extraction, GitHub repo reading, and video understanding. Four agent tools plus the web curator. | `web_search`, `source_check`, `fetch_content`, `get_search_content`; `/websearch`, `/search`, `/curator`. Configured in `~/.pi/agent/web-search.json`. |
 
 ## Local extensions
@@ -361,7 +357,7 @@ Sources checked:
 
 Not loaded. The `copilot-usage` extension moved to `~/.pi/agent/archive/copilot-usage/` on 2026-11-02, with a note in its `ARCHIVED.md`.
 
-Why: Pi's providers are now `bifrost` and `bifrost-auto` only. Copilot is reached through the Bifrost gateway rather than as a direct provider, so a local quota dashboard and Copilot SDK session browser have nothing to monitor. No Codex tooling is used either. `~/.codex` was moved to `~/.codex.archived-20261102`.
+Why: a local quota dashboard and Copilot SDK session browser had nothing to monitor once the gateway routed Copilot traffic. No Codex tooling is used either. `~/.codex` was moved to `~/.codex.archived-20261102`.
 
 What it used to add, for the record:
 
@@ -379,71 +375,12 @@ Then `/reload`. Its git-ignored `node_modules/` moved with it.
 
 Left untouched: the nix-darwin `copilot-api` launchd service stays enabled, because something other than Pi on this host uses that loopback proxy.
 
-### Bifrost gateway models
-
-What it does:
-
-- Registers a `bifrost` provider from a Bifrost LLM gateway's `GET /v1/models`, so Pi reaches every upstream the gateway fronts through one credential and one base URL. Model IDs keep the gateway's provider prefix, such as `opencode-zen/glm-5.3`, which is the string Bifrost routes on.
-- Bifrost owns routing, fallbacks, retries, load balancing, caching, governance, and guardrails. Pi owns only the model catalog, prompt caching hints, and cost display.
-- Discovery runs through `refreshModels`, so it participates in startup refresh and `/model`. A disk cache keeps the provider usable offline and when the gateway is down, so only the first fetch on a new host needs the gateway reachable.
-- The gateway payload is thinner than Bifrost's docs describe: `id`, `normalized_name`, `created`, `owned_by`, `pricing`, and `context_length` / `max_output_tokens` on only a few entries. It omits names, modalities, reasoning efforts, protocol support, and per-model tool support.
-- The gap is filled by a generated patch file derived from models.dev, and by a probe that hides models the gateway refuses.
-
-Configuration:
-
-| Item | Value |
-| --- | --- |
-| Package | `pi-bifrost`, installed from the `jeridf/pi-bifrost` Forgejo repo as a pinned git source. Ships the extension plus its metadata baseline, so a host needs only the package and a virtual key. |
-| Virtual key | `pass show API/BIFROST_VK` by default, resolved at request time |
-| `BIFROST_BASE_URL` | Base URL including `/v1`, defaults to the gateway hostname in the extension |
-| `BIFROST_VK`, `BIFROST_VK_FILE`, `BIFROST_VK_PASS` | Credential overrides for other keys or hosts |
-| `BIFROST_MODEL_OVERRIDES` | Patch file path override, taking precedence over a host-regenerated file and the packaged baseline |
-| `pi --list-models bifrost` | Inspect the discovered catalog. Cache-only: it never fetches, so a fresh host shows nothing until the first interactive start. |
-| First interactive start or `/model` | Fetches the catalog past the 6-hour freshness window and writes the cache |
-
-Files:
-
-- Package `index.ts`: discovery, patch application, unreachable filter.
-- Patch file precedence: `BIFROST_MODEL_OVERRIDES`, then `~/.config/bifrost-gateway/model-overrides.json` on a host that regenerates it, then `model-overrides.json` shipped inside the package. Keys are bare model names, so they survive a gateway provider-prefix change.
-- Package `scripts/gen-model-overrides.py` regenerates the patch file. A plain run uses models.dev only, `--probe` also probes each model, `--reprobe` ignores cached verdicts, `--out` relocates the result, `--tiers` relocates the tier file, `--sync-models` writes computed limits into `models.json`. It needs `BIFROST_VK` or the pass entry.
-- Package `config/auto-tiers.json` mirrors the gateway's routing rules: the tier pools a routing provider can reach, targets and fallbacks. The generator resolves every member and reports the intersection as the limits that provider should declare, plus a `stale` line when `models.json` disagrees. Keeping this file in sync with the dashboard rules is what makes the declared window honest.
-- Limits prefer each gateway provider's own models.dev catalog, because they disagree: `glm-5.3` is 1,000,000 on opencode and 1,048,576 on openrouter, and `minimax-m3` is 512,000 against 1,048,576. Patches stay keyed by bare name except where one bare name resolves differently through two gateway providers; those are keyed by full gateway ID.
-- `.pi/agent/extensions/bifrost-context-guard.ts` reads `x-bifrost-routing-info-model` and compares the routed model's patched window against what the routing provider declares. Warns once per route on an over-send, and again on each new 90%-of-window high-water mark. `/bifrost-context` prints the current comparison.
-- `~/.cache/pi/bifrost-probe-cache.json` probe verdicts, 7-day TTL. Re-runs only probe models new to the catalog.
-- `~/.cache/pi/bifrost-models.json` raw gateway catalog, 6-hour TTL, stored pre-patch so patch edits apply without a refetch.
-
-Gotchas:
-
-- Check the gateway before blaming Pi: Bifrost's `/v1/models` is authoritative for existence, not for usability. Verify a model with `curl` against `POST <base>/chat/completions` when something 400s.
-- Reasoning models need an explicit `thinkingLevelMap`. Without it Pi sends its default effort, and upstreams that accept only a subset reject the request with `medium reasoning effort is not supported`. Levels the upstream rejects are `null` in the map, and Pi clamps upward, which is why a gap in the middle degrades instead of failing.
-- Pi sends the `developer` role for reasoning models when compatibility allows it. Several upstreams behind the gateway reject that role, so every patch sets `supportsDeveloperRole: false` and Pi sends `system` instead.
-- Provider-level `compat` is not inherited by extension-defined models, only `api` and `baseUrl` are. Compatibility flags therefore live in the patch file, one entry per model.
-- Pi computes context usage, compaction, and cost display from the patch metadata, not from the gateway. A model missing `contextWindow` silently falls back to 128K, which corrupts compaction decisions for long-context models.
-- A routing provider's `contextWindow` is an estimate about what the gateway will pick, so it is derived from the tier pools rather than set by hand: minimum over every model the pools can reach. It changes when the pools change, which is why `gen-model-overrides.py` reports drift instead of trusting one value. The `bifrost-auto` routing rules are opencode-zen-scoped, so the copilot and openrouter routes the gateway does without a matching rule are not covered by that declaration — `bifrost-context-guard.ts` is what catches them at runtime.
-- Bifrost provider entries are protocol specific. A provider configured for OpenAI chat completions answers `ModelProtocolUnsupported` for the Responses, Anthropic, and Google routes even when the upstream model exists. That is a gateway configuration fix, not a Pi fix.
-- A gateway provider can accept a catalog entry and still refuse the route it is configured for. `typesafe/jev-latest` lists under `bifrost` but answers `400 unsupported_operation: chat_completion is not supported by typesafe provider`. Use the `typesafe_evaluate` tool for Jev, not a Pi chat model. Confirm any suspect model with a direct `POST /v1/chat/completions` before assuming Pi is at fault.
-- `auto` can fail without Pi being involved. When a routing rule targets a backend whose upstream credential is dead, the router still selects it and the request returns that backend's error, for example `401 github copilot: GitHub rejected the token`. Multi-request testing is the only way to see it, because `auto` succeeds whenever the router picks a live backend. Keep the gateway's routing rules pointed at backends whose credentials are current, or drop the dead backend from the eligible set. `bifrost-context-guard.ts` cannot catch this: it checks window size, not upstream auth.
-- Remote upstream keys live in the gateway, not on the host. Re-authenticating a fronted provider (Copilot, OpenRouter) happens in the Bifrost dashboard; `pass` and `auth.json` are not involved.
-- Gateway virtual keys are scoped to providers, so one key can expose a subset of the catalog. Model IDs from a narrow key keep that provider prefix.
-- Some upstreams reject free-tier models for non-vendor clients with `403 FreeTierError`, and a dead upstream endpoint answers `410`. The probe treats `400`, `403`, `404`, and `422` as permanent refusals and leaves transient statuses visible.
-- Re-probing spends one token per model, so do not put `--probe` or `--reprobe` in a loop. Verdicts cache for a week and ordinary re-runs cost nothing.
-- Regenerating the shipped baseline requires `--probe`. The script consults the verdict cache only while probing, so a metadata-only run silently drops every `unreachable` flag and re-exposes models the gateway refuses.
-- `pi update --models` does not load extension packages at all. Only interactive startup, `/model`, and RPC mode refresh an extension's catalog, and every other path runs cache-only.
-- JSON has no comment syntax, so the patch file records provenance under a `//` key. The extension ignores any key starting with `//` and any non-object value.
-
-Sources checked:
-
-- `pi-bifrost` package `index.ts`, `model-overrides.json`, `scripts/gen-model-overrides.py`, `README.md`
-- `@earendil-works/pi-coding-agent/docs/models.md`, `models-configuration.md`, `custom-provider.md`, `virtual-models.md`, `packages.md`
-- Bifrost docs: `integrations/openai-sdk/overview`, `integrations/anthropic-sdk/overview`, `quickstart/gateway/setting-up`, `api-reference/models`
-- `https://models.dev/api.json` opencode catalog entries, including `reasoning_options` and `provider.api`
-
 ### Automatic session names
 
 What it does:
 
 - Gives persistent sessions a fallback title from first substantive prompt before first assistant response writes JSONL.
-- Generates a short content title after first settled turn, then every four user turns. Configured model lives in `~/.pi/agent/auto-session-name.json` (currently `bifrost-auto/auto`, so the complexity router picks the title model).
+- Generates a short content title after first settled turn, then every four user turns. Configured model lives in `~/.pi/agent/auto-session-name.json` (currently `github-copilot/claude-haiku-5.5`).
 - Treats `/name <title>` as a manual pin. Auto-refresh stops until `/autoname auto` or `/autoname refresh --force`.
 - Stores per-session auto/manual state in session custom entries, so reload, resume, and fork flows retain naming behavior.
 

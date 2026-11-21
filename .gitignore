@@ -42,7 +42,6 @@ __pycache__/
 
 .config/aerc/google-aerc-credentials.json
 .config/aerc/token.pickle
-.config/bifrost-gateway/
 .config/carapace/
 .config/gh/
 .config/gh/*

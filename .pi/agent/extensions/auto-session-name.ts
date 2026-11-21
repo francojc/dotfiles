@@ -6,8 +6,8 @@ const EXTENSION_ID = "auto-session-name";
 const CONFIG_PATH = join(getAgentDir(), "auto-session-name.json");
 const DEFAULT_CONFIG: Config = {
   enabled: true,
-  provider: "bifrost-auto",
-  model: "auto",
+  provider: "github-copilot",
+  model: "claude-haiku-5.5",
   refreshEveryUserTurns: 4,
   maxTranscriptChars: 6_000,
 };
@@ -415,7 +415,7 @@ export default function (pi: ExtensionAPI) {
       }
 
       if (isModelCommand) {
-        ctx.ui.notify("Usage: /autoname <provider> <model-id>  (e.g. /autoname bifrost opencode-zen/deepseek-v4.1-flash)", "warning");
+        ctx.ui.notify("Usage: /autoname <provider> <model-id>  (e.g. /autoname github-copilot claude-haiku-5.5)", "warning");
         return;
       }
 
