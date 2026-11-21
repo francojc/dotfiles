@@ -153,8 +153,6 @@
       # -------------------------------------------------
 
       # Status bar
-      set -g status 1
-      # set -g status-format[1] ""
       set -g status-position top
       set -g status-justify left
       set -g status-style bg=default,fg='#e8e6e1'
