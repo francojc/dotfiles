@@ -6,7 +6,7 @@
     "+codemode"
   ],
   "collapseChangelog": true,
-  "quietStartup": "header",
+  "quietStartup": true,
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "low",
   "theme": "dark",
