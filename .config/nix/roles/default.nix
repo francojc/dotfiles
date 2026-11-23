@@ -12,7 +12,7 @@ in rec {
   legacyFull = [
     (heavy + "/sync.nix")
     (heavy + "/docs.nix")
-  #  (heavy + "/mail.nix")
+    (heavy + "/mail.nix")
     (core + "/packages.nix")
     (core + "/gpg.nix")
     (core + "/git.nix")
@@ -39,7 +39,7 @@ in rec {
   arch = [
     (heavy + "/sync.nix")
     (heavy + "/docs.nix")
-  #  (heavy + "/mail.nix")
+    (heavy + "/mail.nix")
     (heavy + "/dev-tools.nix")
     (heavy + "/media.nix")
     (core + "/packages-arch.nix")
