@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Description: Quick-add a task to the mailbox.org Tasks list (CalDAV VTODO).
+#
+# Usage: task-add [-d DUE] [-p PRIORITY] [-n NOTE] TITLE...
+#   -d DUE       YYYY-MM-DD, or "today", "tomorrow", or "+Nd"
+#   -p PRIORITY  1 (high) .. 9 (low), iCalendar scale
+#   -n NOTE      free-text description
+# Env:  TASKS_ACCOUNT (default mailbox), TASKS_CALENDAR (default MzU = Tasks)
+# Exit: 0 added, 1 calendula failed, 2 usage or dependency error
+set -uo pipefail
+
+due=""; prio=""; note=""
+while getopts ":d:p:n:h" opt; do
+  case "$opt" in
+    d) due="$OPTARG" ;;
+    p) prio="$OPTARG" ;;
+    n) note="$OPTARG" ;;
+    h) sed -n '2,10p' "$0"; exit 0 ;;
+    *) echo "task-add: bad option -$OPTARG" >&2; exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+title="$*"
+[[ -n "$title" ]] || { echo "usage: task-add [-d DUE] [-p 1-9] [-n NOTE] TITLE" >&2; exit 2; }
+command -v calendula >/dev/null 2>&1 || { echo "task-add: missing calendula" >&2; exit 2; }
+
+case "$due" in
+  "") ;;
+  today) due=$(date +%F) ;;
+  tomorrow) due=$(date -d tomorrow +%F) ;;
+  +[0-9]*d) due=$(date -d "${due//[^0-9]/} days" +%F) ;;
+  [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]) ;;
+  *) echo "task-add: bad due date: $due" >&2; exit 2 ;;
+esac
+[[ -z "$prio" || "$prio" =~ ^[1-9]$ ]] || { echo "task-add: priority must be 1-9" >&2; exit 2; }
+
+ical=$(TITLE="$title" DUE="$due" PRIO="$prio" NOTE="$note" python3 - <<'PY'
+import datetime as d, os, uuid
+def esc(s):
+    return (s.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,")
+             .replace("\r", "").replace("\n", "\\n"))
+now = d.datetime.now(d.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+uid = str(uuid.uuid4())
+lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//jeridf//task-add//EN",
+         "BEGIN:VTODO", f"UID:{uid}", f"DTSTAMP:{now}", f"CREATED:{now}",
+         f"SUMMARY:{esc(os.environ['TITLE'])}", "STATUS:NEEDS-ACTION"]
+if os.environ["NOTE"]:
+    lines.append(f"DESCRIPTION:{esc(os.environ['NOTE'])}")
+if os.environ["DUE"]:
+    lines.append("DUE;VALUE=DATE:" + os.environ["DUE"].replace("-", ""))
+if os.environ["PRIO"]:
+    lines.append(f"PRIORITY:{os.environ['PRIO']}")
+lines += ["END:VTODO", "END:VCALENDAR"]
+print("\r\n".join(lines))
+PY
+)
+out=$(printf '%s\n' "$ical" | calendula item add -a "${TASKS_ACCOUNT:-mailbox}" -k "${TASKS_CALENDAR:-MzU}" --json - 2>&1) || {
+  echo "task-add: calendula failed: $(printf '%s' "$out" | head -1)" >&2
+  exit 1
+}
+echo "added: $title${due:+ (due $due)}"

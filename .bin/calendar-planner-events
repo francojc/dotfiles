@@ -88,9 +88,9 @@ while IFS=$'\t' read -r acct cal; do
   printf '%s' "$out" | jq -r '
     .events[]?
     | select(.status != "CANCELLED")
-    | [ .startsAt[0:10],
-        (if .allDay then "0000" else (.startsAt[11:13] + .startsAt[14:16]) end),
-        (if .allDay then "" else (.startsAt[11:16] + "-" + .endsAt[11:16]) end),
+    | [ .start[0:10],
+        (if .allDay then "0000" else (.start[11:13] + .start[14:16]) end),
+        (if .allDay then "" else (.start[11:16] + "-" + .end[11:16]) end),
         .summary,
         (.location // "") ]
     | @tsv' >> "$tmp"

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Description: Interactive quick-add for tasks (gum prompts). Meant for a floating
+# terminal bound to a key; calls task-add.
+# Exit: 0 added or cancelled, otherwise task-add's status.
+set -uo pipefail
+command -v gum >/dev/null 2>&1 || { echo "task-add-prompt: gum not found" >&2; exit 2; }
+
+title=$(gum input --prompt "Task > " --placeholder "what needs doing" --width 60) || exit 0
+[[ -n "$title" ]] || exit 0
+due=$(gum input --prompt "Due  > " --placeholder "blank, today, tomorrow, +3d, or YYYY-MM-DD" --width 60) || exit 0
+
+args=()
+[[ -n "$due" ]] && args+=(-d "$due")
+exec "$HOME/.bin/task-add" "${args[@]}" "$title"

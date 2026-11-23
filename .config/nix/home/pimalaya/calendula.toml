@@ -32,6 +32,5 @@ calendar.default = "francojc@wfu.edu"
 # Global
 # ---------------------------------------------------------------------------
 event.list.page-size = 50
-todo.list.page-size = 50
-journal.list.page-size = 50
+item.list.page-size = 50
 # item.composer = ["tcal", "edit"]   # requires pimalaya/tcal

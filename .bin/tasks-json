@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Description: Emit mailbox.org CalDAV tasks (VTODO) as the JSON array that the
+# planning gather expects in REMINDERS_CMD.
+#
+# Usage: tasks-json [--include-completed]
+# Output: [{"title","list","dueDate","isCompleted","externalId","priority"}]
+#   dueDate is ISO 8601 with offset (date-only DUE becomes local midnight, so the
+#   gather's UTC-to-local conversion cannot shift it a day). Tasks without DUE
+#   carry dueDate null.
+# Env:    TASKS_ACCOUNT (default mailbox), TASKS_CALENDAR (default MzU = Tasks),
+#         TASKS_LIST_NAME (default Tasks), TZ (default America/New_York)
+# Exit:   0 ok, 1 calendula failed, 2 missing dependency
+set -uo pipefail
+
+INCLUDE_COMPLETED=0
+[[ "${1:-}" == "--include-completed" ]] && INCLUDE_COMPLETED=1
+for cmd in calendula python3; do
+  command -v "$cmd" >/dev/null 2>&1 || { echo "tasks-json: missing $cmd" >&2; exit 2; }
+done
+
+raw=$(calendula item list -a "${TASKS_ACCOUNT:-mailbox}" -k "${TASKS_CALENDAR:-MzU}" -s 0 --json 2>&1) || {
+  echo "tasks-json: calendula failed: $(printf '%s' "$raw" | head -1)" >&2
+  exit 1
+}
+
+printf '%s' "$raw" | INCLUDE_COMPLETED="$INCLUDE_COMPLETED" \
+  LIST_NAME="${TASKS_LIST_NAME:-Tasks}" TZNAME="${TZ:-America/New_York}" python3 -c '
+import datetime as d, json, os, re, sys
+from zoneinfo import ZoneInfo
+tz = ZoneInfo(os.environ["TZNAME"])
+include = os.environ["INCLUDE_COMPLETED"] == "1"
+
+def unfold(text):
+    return re.sub(r"\r?\n[ \t]", "", text)
+
+def unescape(v):
+    return (v.replace("\\n", "\n").replace("\\N", "\n").replace("\\,", ",")
+             .replace("\\;", ";").replace("\\\\", "\\"))
+
+def parse_due(params, value):
+    if "VALUE=DATE" in params or re.fullmatch(r"\d{8}", value):
+        day = d.datetime.strptime(value, "%Y%m%d").replace(tzinfo=tz)
+        return day.isoformat()
+    m = re.fullmatch(r"(\d{8}T\d{6})(Z?)", value)
+    if not m:
+        return None
+    naive = d.datetime.strptime(m.group(1), "%Y%m%dT%H%M%S")
+    if m.group(2):
+        return naive.replace(tzinfo=d.timezone.utc).astimezone(tz).isoformat()
+    tzid = re.search(r"TZID=([^;:]+)", params)
+    zone = ZoneInfo(tzid.group(1)) if tzid else tz
+    return naive.replace(tzinfo=zone).astimezone(tz).isoformat()
+
+out = []
+for item in json.load(sys.stdin).get("items", []):
+    body = unfold(item.get("contents", ""))
+    m = re.search(r"BEGIN:VTODO(.*?)END:VTODO", body, re.S)
+    if not m:
+        continue
+    props = {}
+    for line in m.group(1).splitlines():
+        if ":" not in line or line.startswith(" "):
+            continue
+        head, _, value = line.partition(":")
+        name, _, params = head.partition(";")
+        props.setdefault(name.upper(), (params, value))
+    status = props.get("STATUS", ("", ""))[1].upper()
+    done = status == "COMPLETED" or "COMPLETED" in props
+    if status == "CANCELLED" or (done and not include):
+        continue
+    due = props.get("DUE")
+    out.append({
+        "title": unescape(props.get("SUMMARY", ("", "(untitled)"))[1]),
+        "list": os.environ["LIST_NAME"],
+        "dueDate": parse_due(*due) if due else None,
+        "isCompleted": done,
+        "externalId": props.get("UID", ("", item.get("id", "")))[1],
+        "priority": int(props.get("PRIORITY", ("", "0"))[1] or 0),
+    })
+json.dump(out, sys.stdout, ensure_ascii=False)
+print()
+'

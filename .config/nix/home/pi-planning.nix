@@ -60,6 +60,8 @@ in {
           "PATH=${path}"
           "PLANNING_VAULT=${vault}"
           "TZ=America/New_York"
+          # Task source for the gather: mailbox.org CalDAV Tasks via ~/.bin/tasks-json.
+          "REMINDERS_CMD=tasks-json"
         ];
         ExecStart = "${pkgs.bash}/bin/bash ${vault}/.pi/scripts/planning-cron.sh ${job.args}";
         TimeoutStartSec = "30min";
