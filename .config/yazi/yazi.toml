@@ -37,58 +37,61 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 google_drive = [
-  { run = 'google-drive-files.sh "$@"', orphan = true, for = "macos" },
+  { run = 'google-drive-files.sh %s', orphan = true, for = "macos" },
 ]
 excel = [
-  { run = 'open -a "Microsoft Excel" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Microsoft Excel" %s', orphan = true, for = "macos" },
+  { run = 'libreoffice --calc %s', orphan = true, desc = "LibreOffice Calc", for = "linux" },
 ]
 word = [
-  { run = 'open -a "Microsoft Word" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Microsoft Word" %s', orphan = true, for = "macos" },
+  { run = 'libreoffice --writer %s', orphan = true, desc = "LibreOffice Writer", for = "linux" },
 ]
 powerpoint = [
-  { run = 'open -a "Microsoft PowerPoint" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Microsoft PowerPoint" %s', orphan = true, for = "macos" },
+  { run = 'libreoffice --impress %s', orphan = true, desc = "LibreOffice Impress", for = "linux" },
 ]
 pages = [
-  { run = 'open -a "Pages" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Pages" %s', orphan = true, for = "macos" },
 ]
 numbers = [
-  { run = 'open -a "Numbers" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Numbers" %s', orphan = true, for = "macos" },
 ]
 keynote = [
-  { run = 'open -a "Keynote" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "Keynote" %s', orphan = true, for = "macos" },
 ]
 drawio = [
-  { run = 'open -a "draw.io" "$@"', orphan = true, for = "macos" },
+  { run = 'open -a "draw.io" %s', orphan = true, for = "macos" },
 ]
 edit = [
-	{ run = '${EDITOR:=nvim} "$@"', desc = "$EDITOR", block = true, for = "unix" },
+	{ run = '${EDITOR:=nvim} %s', desc = "$EDITOR", block = true, for = "unix" },
 	{ run = "code %s",          desc = "code",         for = "windows", orphan = true },
 	{ run = "code -w %s",       desc = "code (block)", for = "windows", block = true },
 ]
 play = [
-	{ run = 'mpv "$@" --player-operation-mode=pseudo-gui', orphan = true, for = "unix" },
+	{ run = 'mpv %s --player-operation-mode=pseudo-gui', orphan = true, for = "unix" },
 	{ run = "xdg-open %s1",                desc = "Play", for = "linux" },
 	{ run = "open %s",                     desc = "Play", for = "macos" },
 	{ run = 'start "" %s1', orphan = true, desc = "Play", for = "windows" },
 	{ run = "termux-open %s1",             desc = "Play", for = "android" },
-	{ run = 'mediainfo "$1"; echo "Press enter to exit"; read _', block = true, desc = "Show media info", for = "unix" },
+	{ run = 'mediainfo %s1; echo "Press enter to exit"; read _', block = true, desc = "Show media info", for = "unix" },
 	{ run = "mediainfo %s1 & pause", block = true, desc = "Show media info", for = "windows" },
 ]
 open = [
-	{ run = 'open "$@"', desc = "Open", for = "macos" },
-	{ run = 'xdg-open "$@"', desc = "Open", for = "linux" },
+	{ run = 'open %s', desc = "Open", for = "macos" },
+	{ run = 'xdg-open %s1', desc = "Open", for = "linux" },
 	{ run = 'start "" %s1',    desc = "Open", for = "windows", orphan = true },
 	{ run = "termux-open %s1", desc = "Open", for = "android" },
 ]
 reveal = [
-	{ run = 'open -R "$1"', desc = "Reveal", for = "macos" },
+	{ run = 'open -R %s1', desc = "Reveal", for = "macos" },
 	{ run = "xdg-open %d1",         desc = "Reveal", for = "linux" },
 	{ run = "explorer /select,%s1", desc = "Reveal", for = "windows", orphan = true },
 	{ run = "termux-open %d1",      desc = "Reveal", for = "android" },
-	{ run = 'exiftool "$1"; echo "Press enter to exit"; read _', block = true, desc = "Show EXIF", for = "unix" },
+	{ run = 'exiftool %s1; echo "Press enter to exit"; read _', block = true, desc = "Show EXIF", for = "unix" },
 ]
 extract = [
-	{ run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+	{ run = 'ya pub extract --list %s', desc = "Extract here", for = "unix" },
 ]
 download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
@@ -164,6 +167,22 @@ spotters = [
 	{ mime = "null/*", run = "null" },
 	# Fallback
 	{ url = "*", run = "file" },
+]
+prepend_preloaders = [
+	# Office documents (office.yazi)
+	{ mime = "application/openxmlformats-officedocument.*", run = "office" },
+	{ mime = "application/oasis.opendocument.*", run = "office" },
+	{ mime = "application/ms-{excel,powerpoint,word}*", run = "office" },
+	{ mime = "application/msword", run = "office" },
+	{ url = "*.docx", run = "office" },
+]
+prepend_previewers = [
+	# Office documents (office.yazi)
+	{ mime = "application/openxmlformats-officedocument.*", run = "office" },
+	{ mime = "application/oasis.opendocument.*", run = "office" },
+	{ mime = "application/ms-{excel,powerpoint,word}*", run = "office" },
+	{ mime = "application/msword", run = "office" },
+	{ url = "*.docx", run = "office" },
 ]
 preloaders = [
 	# Image
