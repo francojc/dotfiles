@@ -5,4 +5,8 @@
 # last in `homeModules` so `lib.mkForce` / `lib.mkDefault` behave predictably.
 # Anything shared with Omarchy-Air belongs in profiles/arch/ or roles/.
 {...}: {
+  imports = [
+    ../../home/pimalaya # calendula, for the planning gather
+    ../../home/pi-planning.nix # planning timers
+  ];
 }
