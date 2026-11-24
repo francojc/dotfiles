@@ -158,7 +158,7 @@
 
       set -g status-position top
       set -g status-justify left
-      set -g status-style bg=default,fg='#e8e6e1'
+      set -g status-style bg=default,fg=default
 
       set -g status-left '   #S  ▌  '
       set -g status-left-length 40
