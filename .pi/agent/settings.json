@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.6.1",
+  "lastChangelogVersion": "1.7.0",
   "defaultProvider": "claude-code",
   "defaultModel": "claude-haiku-5-5",
   "defaultTools": [
