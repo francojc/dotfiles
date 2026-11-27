@@ -155,6 +155,7 @@
       # Status bar
 
       set -g status 2
+      set -g status-format[1] ""
 
       set -g status-position top
       set -g status-justify left

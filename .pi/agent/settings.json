@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.6.0",
+  "lastChangelogVersion": "1.6.1",
   "defaultProvider": "claude-code",
   "defaultModel": "claude-haiku-5-5",
   "defaultTools": [
@@ -12,7 +12,6 @@
   "theme": "dark",
   "externalEditor": "nvim",
   "hideThinkingBlock": true,
-  "showCacheMissNotices": true,
   "outputPad": 0,
   "transport": "auto",
   "terminal": {
@@ -38,5 +37,11 @@
   "tuiMode": "regular",
   "extensionChangelogVersions": {
     "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.48.0"
+  },
+  "notices": {
+    "cacheMisses": true,
+    "cacheWarming": true,
+    "compactionCosts": true,
+    "reasoningDrops": true
   }
 }
