@@ -6,7 +6,7 @@
 #   - `node`, which the copilot-api launchd service and npm-global tools use
 #     (the only Node on the Macs; nixpkgs nodejs is not installed here)
 #   - GUI apps as casks (land in /Applications, so Spotlight indexes them):
-#     caffeine, helium-browser, kitty, orbstack
+#     betterdisplay, bettermouse, caffeine, helium-browser, kitty, orbstack
 # `cleanup = "zap"` is on, so removing an entry uninstalls it and its data.
 # Host-specific entries live in each host's default.nix / profiles.
 #
@@ -63,6 +63,8 @@
     ];
 
     casks = [
+      "betterdisplay" # display management (HiDPI scaling, brightness, virtual screens)
+      "bettermouse" # 3rd-party mouse tuning (paid license; self-updates)
       "caffeine" # menu bar keep-awake
       "helium-browser" # browser (ungoogled-chromium)
       "kitty" # terminal; also links /opt/homebrew/bin/{kitty,kitten}. Config: home/kitty.nix
