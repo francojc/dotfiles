@@ -27,8 +27,17 @@
     tirith # shell init in zprofile calls it
     uv
     viu # ~/.bin/am album art
+    yazi-unwrapped # file manager (same as Arch: lib/packages/cli.nix); config in ~/.config/yazi
     # kitty.app (Home Manager Apps). lowPrio so the software-GL wrapper in
     # home/kitty.nix keeps owning bin/kitty.
     (lib.lowPrio kitty)
   ];
+
+  # Copy .app bundles into ~/Applications/Home Manager Apps instead of
+  # symlinking them into /nix/store: Spotlight, Launchpad and Finder's
+  # Applications view ignore symlinked apps. (HM only defaults to copyApps
+  # for stateVersion >= 25.11; ours is 24.05.) First switch needs App
+  # Management permission for the terminal running it.
+  targets.darwin.linkApps.enable = false;
+  targets.darwin.copyApps.enable = true;
 }
