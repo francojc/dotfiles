@@ -11,6 +11,7 @@
 }: {
   home.packages = with pkgs; [
     bat
+    caffeine # menu bar keep-awake (Caffeine.app; copied via copyApps below)
     bob-nvim # Neovim version manager (nvim itself comes from bob)
     duf # used by aliases.zsh
     eza
