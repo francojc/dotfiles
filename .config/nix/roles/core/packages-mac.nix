@@ -26,6 +26,7 @@
     ripgrep
     tirith # shell init in zprofile calls it
     uv
+    viu # ~/.bin/am album art
     # kitty.app (Home Manager Apps). lowPrio so the software-GL wrapper in
     # home/kitty.nix keeps owning bin/kitty.
     (lib.lowPrio kitty)

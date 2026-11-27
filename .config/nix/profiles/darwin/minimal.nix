@@ -3,11 +3,20 @@
 # The Macs are thin hosts now: real tooling lives on the Omarchy hosts
 # (Omarchy-Air natively, Omarchy-Mini in a try-omarchy VM). Only keep here:
 #   - formulae with no aarch64-linux nixpkgs package (macOS-only tools)
-#   - `node`, which the copilot-api launchd service needs
+#   - `node`, which the copilot-api launchd service and npm-global tools use
+#     (the only Node on the Macs; nixpkgs nodejs is not installed here)
 #   - the two GUI apps: orbstack and helium-browser
 # `cleanup = "zap"` is on, so removing an entry uninstalls it and its data.
 # Host-specific entries live in each host's default.nix / profiles.
+#
+# Both Macs run Determinate Nix as the installer/daemon, so both import the
+# Determinate module (it forces `nix.enable = false` and owns
+# /etc/nix/nix.custom.conf).
 {pkgs, ...}: {
+  imports = [
+    ../../modules/darwin/determinate.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     coreutils-prefixed # GNU coreutils with g-prefix (avoids shadowing BSD commands)
     gcal # GNU cal command

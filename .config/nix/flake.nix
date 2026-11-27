@@ -95,12 +95,13 @@
       };
     };
 
-    # Common system modules (shared between Darwin and NixOS)
+    # Common system modules (shared between Darwin and NixOS). System-wide CLI
+    # packages are NixOS-only (modules/nixos/packages.nix); the Macs get their
+    # tools from Home Manager (roles/core/packages-mac.nix).
     commonModules = [
       ./modules/shared/overlays.nix
       ./modules/shared/fonts.nix
       ./modules/shared/nix-core.nix
-      ./modules/shared/packages.nix
     ];
 
     # Build a nix-darwin or NixOS system configuration.
@@ -141,6 +142,7 @@
             ++ [
               # NixOS-specific modules
               ./modules/nixos/apps.nix
+              ./modules/nixos/packages.nix
 
               # nix-flatpak system module
               nix-flatpak.nixosModules.nix-flatpak

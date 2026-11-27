@@ -20,7 +20,7 @@
       push.autoSetupRemote = true;
       pull.rebase = true;
       credential.helper =
-        if pkgs.stdenv.isDarwin
+        if pkgs.stdenv.hostPlatform.isDarwin
         then "osxkeychain"
         else "${pkgs.git.override {withLibsecret = true;}}/bin/git-credential-libsecret";
 

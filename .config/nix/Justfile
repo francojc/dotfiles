@@ -1,4 +1,4 @@
-# Justfile for nix-darwin and nixos
+# Justfile for nix-darwin, NixOS, and Omarchy (standalone Home Manager)
 
 default:
   @just --list

@@ -17,7 +17,6 @@
   hostModules = [
     ../../profiles/darwin/base.nix
     ../../profiles/darwin/minimal.nix
-    ../../modules/darwin/determinate.nix
     ../../modules/darwin/copilot-api.nix
     {
       custom.services.copilotApi.enable = true;

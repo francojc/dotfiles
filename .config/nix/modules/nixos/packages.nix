@@ -1,3 +1,5 @@
+# System-wide CLI packages for NixOS hosts (Mini-Rover). Used to be shared
+# with the Macs; the thin Darwin hosts now rely on Home Manager instead.
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     btop # Interactive process viewer

@@ -3,7 +3,7 @@ pkgs: let
   # Linux only: make sioyek's file dialog (`o`) use the XDG desktop portal
   # so it routes to Strata. On macOS the native Cocoa dialog is used as-is.
   sioyek =
-    if pkgs.stdenv.isLinux
+    if pkgs.stdenv.hostPlatform.isLinux
     then
       pkgs.sioyek.overrideAttrs (o: {
         qtWrapperArgs =

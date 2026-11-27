@@ -246,7 +246,7 @@ Cross-evaluating the aarch64-linux Home Manager configs from darwin works for `n
 Implementation notes from execution (2026-11-17):
 
 - Step 4 used `roles/default.nix` lists (`legacyFull`, `arch`, `mac`) rather than per-file imports in each host. Verified: Omarchy-Air and Mini-Rover packages and generated files are unchanged.
-- Step 6: `linecast` is not in the locked nixpkgs, so it stays a Homebrew formula (tap kept) until the next `nix flake update`. The `kitty` cask became `pkgs.kitty` (lowPrio) in `roles/core/packages-mac.nix` (D1 default). Minicore did not import Determinate before and still does not; only Airborne does (via `modules/darwin/determinate.nix`).
+- Step 6: `linecast` is not in the locked nixpkgs, so it stays a Homebrew formula (tap kept) until the next `nix flake update`. The `kitty` cask became `pkgs.kitty` (lowPrio) in `roles/core/packages-mac.nix` (D1 default). Minicore did not import Determinate at first; it now does too, since `modules/darwin/determinate.nix` is imported by `profiles/darwin/minimal.nix` (both Macs).
 - Mac system closure: 8.4 GiB before, 3.6 GiB after. `cliamp` alone is about 2 GB of what is left.
 
 ### Step 1 – Remove `nixos-quattro` and dead sway/i3 code  `[x]`
