@@ -12,7 +12,9 @@
     '';
   };
 in {
-  home.packages = [kittySoftware];
+  # Software-GL wrapper for Linux VMs only. On macOS the kitty Homebrew cask
+  # provides kitty.app and /opt/homebrew/bin/kitty; this module only writes config.
+  home.packages = lib.optional pkgs.stdenv.hostPlatform.isLinux kittySoftware;
 
   # Prefer the virgl-safe renderer for launcher/menu starts as well as shell starts.
   # xdg.desktopEntries is Linux-only; skip on macOS/darwin.

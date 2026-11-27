@@ -5,7 +5,8 @@
 #   - formulae with no aarch64-linux nixpkgs package (macOS-only tools)
 #   - `node`, which the copilot-api launchd service and npm-global tools use
 #     (the only Node on the Macs; nixpkgs nodejs is not installed here)
-#   - the two GUI apps: orbstack and helium-browser
+#   - GUI apps as casks (land in /Applications, so Spotlight indexes them):
+#     caffeine, helium-browser, kitty, orbstack
 # `cleanup = "zap"` is on, so removing an entry uninstalls it and its data.
 # Host-specific entries live in each host's default.nix / profiles.
 #
@@ -62,7 +63,9 @@
     ];
 
     casks = [
+      "caffeine" # menu bar keep-awake
       "helium-browser" # browser (ungoogled-chromium)
+      "kitty" # terminal; also links /opt/homebrew/bin/{kitty,kitten}. Config: home/kitty.nix
       "orbstack" # Docker/Linux containers
     ];
   };

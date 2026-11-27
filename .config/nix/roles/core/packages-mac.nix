@@ -4,14 +4,9 @@
 # Omarchy hosts. Several of these are also pulled in by Home Manager `programs.*`
 # modules (fzf, starship, zoxide, atuin, direnv, carapace, tmux, git); they are
 # listed here only when a shell alias or config calls them directly.
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     bat
-    caffeine # menu bar keep-awake (Caffeine.app; copied via copyApps below)
     bob-nvim # Neovim version manager (nvim itself comes from bob)
     duf # used by aliases.zsh
     eza
@@ -30,16 +25,14 @@
     uv
     viu # ~/.bin/am album art
     yazi-unwrapped # file manager (same as Arch: lib/packages/cli.nix); config in ~/.config/yazi
-    # kitty.app (Home Manager Apps). lowPrio so the software-GL wrapper in
-    # home/kitty.nix keeps owning bin/kitty.
-    (lib.lowPrio kitty)
   ];
+  # GUI apps (kitty, Caffeine) are Homebrew casks in profiles/darwin/minimal.nix:
+  # they land in /Applications, which Spotlight indexes reliably.
 
-  # Copy .app bundles into ~/Applications/Home Manager Apps instead of
-  # symlinking them into /nix/store: Spotlight, Launchpad and Finder's
-  # Applications view ignore symlinked apps. (HM only defaults to copyApps
-  # for stateVersion >= 25.11; ours is 24.05.) First switch needs App
-  # Management permission for the terminal running it.
+  # Copy (not symlink) any Nix .app bundles into ~/Applications/Home Manager
+  # Apps. No GUI apps come from Nix right now, so the directory stays empty;
+  # copyApps (rsync --delete) also cleans out the old kitty/Caffeine copies.
+  # HM only defaults to copyApps for stateVersion >= 25.11; ours is 24.05.
   targets.darwin.linkApps.enable = false;
   targets.darwin.copyApps.enable = true;
 }
