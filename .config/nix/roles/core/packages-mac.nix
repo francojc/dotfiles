@@ -22,6 +22,7 @@
     jq
     just
     lazygit
+    pass # password store (~/.password-store; gpg-agent via roles/core/gpg.nix)
     python312 # UV_PYTHON target (home/shell/default.nix)
     ripgrep
     tirith # shell init in zprofile calls it
